@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>IUPAC নামকরণ ব্যাটল</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #8b5cf6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; text-align: center; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #334155; color: white; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        .game-card { max-width: 600px; margin: 80px auto; background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #334155; border: 2px solid transparent; color: white; border-radius: 12px; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
+        .btn:hover { border-color: var(--accent); background: #475569; }
+        .hint-btn { background: #6366f1; margin-top: 20px; }
+        /* নতুন স্টাইল: গেম ওভার কার্ড */
+        .game-over-box { animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div class="game-card">
+    <h1 style="color: var(--accent);">🧪 IUPAC নামকরণ ব্যাটল</h1>
+    <div style="font-size: 1.2rem; margin-bottom: 20px;">স্কোর: <span id="score">0</span> | কম্বো: <span id="combo">0</span></div>
+    <h2 id="compound" style="font-size: 2.5rem; margin: 20px 0;">?</h2>
+    <div id="hint-box" style="margin-bottom: 20px; color: #94a3b8; font-style: italic;"></div>
+    <div id="options"></div>
+    <button class="btn hint-btn" onclick="giveHint()">হিন্ট নিন (-২০ পয়েন্ট)</button>
+</div>
+
+<script>
+    let score = 0, combo = 0, currentItem;
+    const data = [
+        { c: "CH3CH2CH2CH3", a: "বিউটেন", h: "এটি ৪ কার্বন বিশিষ্ট সরল অ্যালকেন।", o: ["প্রোপেন", "বিউটেন", "পেন্টেন", "ইথেন"] },
+        { c: "CH3CH(CH3)CH3", a: "২-মিথাইল প্রোপেন", h: "এর ২ নম্বর কার্বনে একটি মিথাইল শাখা আছে।", o: ["বিউটেন", "২-মিথাইল প্রোপেন", "আইসোবিউটেন", "প্রোপেন"] },
+        { c: "CH3CH2OH", a: "ইথানল", h: "এর শেষে -OH মূলক আছে এবং ২ টি কার্বন।", o: ["মিথানল", "ইথানল", "প্রোপানল", "ইথান্যাল"] },
+        { c: "CH3COCH3", a: "প্রোপানোন", h: "এটি ৩ কার্বনের একটি কিটোন।", o: ["প্রোপানোন", "বিউটানোন", "ইথানোন", "প্রোপান্যাল"] }
+    ];
+
+    function endGame(msg, correctAns) {
+        document.querySelector('.game-card').innerHTML = `
+            <div class="game-over-box">
+                <h1 style="color: #ef4444;">❌ গেম ওভার!</h1>
+                <p style="font-size: 1.2rem;">${msg}</p>
+                <div style="background: #334155; padding: 15px; border-radius: 15px; margin: 20px 0;">
+                    সঠিক উত্তর ছিল: <span style="color: #22c55e; font-weight: bold;">${correctAns}</span><br>
+                    তোমার চূড়ান্ত স্কোর: <span style="font-size: 1.5rem; color: #f59e0b;">${score}</span>
+                </div>
+                <button class="btn" style="background: var(--accent);" onclick="location.reload()">পুনরায় চেষ্টা করো 🔄</button>
+                <a href="games.html" class="btn" style="text-decoration:none;">ড্যাশবোর্ডে ফিরে যান</a>
+            </div>
+        `;
+    }
+
+    function giveHint() {
+        if(score >= 20) {
+            score -= 20;
+            document.getElementById('hint-box').innerText = "💡 " + currentItem.h;
+            document.getElementById('score').innerText = score;
+        } else {
+            alert("পয়েন্ট কম! খেলার মাধ্যমে পয়েন্ট বাড়াও।");
+        }
+    }
+
+    function play() {
+        currentItem = data[Math.floor(Math.random() * data.length)];
+        document.getElementById('compound').innerText = currentItem.c;
+        document.getElementById('hint-box').innerText = "";
+        let grid = document.getElementById('options');
+        grid.innerHTML = '';
+        
+        currentItem.o.sort(() => Math.random() - 0.5).forEach(opt => {
+            let b = document.createElement('button');
+            b.className = 'btn'; b.innerText = opt;
+            b.onclick = () => {
+                if(opt === currentItem.a) {
+                    combo++;
+                    score += (combo >= 3) ? 20 : 10;
+                    document.getElementById('score').innerText = score;
+                    document.getElementById('combo').innerText = combo;
+                    play();
+                } else {
+                    endGame("ভুল উত্তর দিয়েছো!", currentItem.a);
+                }
+            };
+            grid.appendChild(b);
+        });
+    }
+    play();
+</script>
+</body>
+</html>

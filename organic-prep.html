@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কীভাবে তৈরি হয় (বিক্রিয়ার সূত্র)</title>
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #cbd5e1;
+            --shadow: rgba(15, 23, 42, 0.05);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 25px 40px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .top-action-bar {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .back-home-btn {
+            display: inline-flex;
+            align-items: center;
+            background: #10b981;
+            color: white !important;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 15px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .hub-header-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .hub-main-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: #d97706;
+            margin: 0 0 12px 0;
+        }
+        [data-theme="dark"] .hub-main-title { color: #f59e0b; }
+
+        .hub-subtitle {
+            font-size: 16px;
+            color: #475569;
+            margin: 0;
+        }
+        [data-theme="dark"] .hub-subtitle { color: #94a3b8; }
+
+        .organic-menu-line {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .organic-menu-line::-webkit-scrollbar { height: 6px; }
+        .organic-menu-line::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .menu-opt-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            white-space: nowrap;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+        .menu-opt-btn:hover, .menu-opt-btn.active {
+            background: #10b981;
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        .prep-card-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 10px 30px var(--shadow);
+            min-height: 250px;
+            line-height: 1.7;
+        }
+
+        .formula-style {
+            font-family: 'Courier New', Courier, monospace;
+            background: rgba(217, 119, 6, 0.08);
+            color: #d97706;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+        [data-theme="dark"] .formula-style { background: rgba(255,255,255,0.1); color: #f8fafc; }
+        
+        .placeholder-text {
+            text-align: center;
+            opacity: 0.6;
+            padding: 50px 0;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 20px; }
+            .hub-main-title { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-action-bar">
+            <a href="organic.html" class="back-home-btn">← ফিরে যান</a>
+        </div>
+
+        <div class="hub-header-section">
+            <h1 class="hub-main-title">🧪 কীভাবে তৈরি হয় (বিক্রিয়ার সূত্র)</h1>
+            <p class="hub-subtitle">ওপরের মেনু থেকে সিলেক্ট করে ল্যাবরেটরি ও শিল্প কারখানার জৈব যৌগ প্রস্তুতি সমীকরণ দেখে নাও।</p>
+        </div>
+
+        <div class="organic-menu-line">
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'alkane')">⛽ অ্যালকেন প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'alkene')">🧪 অ্যালকিন প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'alkyne')">🔥 অ্যালকাইন প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'alcohol')">💧 অ্যালকোহল প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'aldehyde')">🍏 অ্যালডিহাইড প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'acid')">🍋 জৈব এসিড প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'ketone')">🍭 কিটোন প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'ether')">☁️ ইথার প্রস্তুতি</button>
+    <button class="menu-opt-btn" onclick="loadPrep(this, 'ester')">🌸 এস্টার প্রস্তুতি</button>
+</div>
+
+        <div class="prep-card-box" id="prep-display-box">
+            <div class="placeholder-text">
+                <h2>☝️ ওপরের মেনু থেকে যেকোনো একটি অপশন সিলেক্ট করো!</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prepDb = {
+            alkane: {
+                name: "⛽ অ্যালকেন প্রস্তুতি সমীকরণ",
+                equations: `
+                    <p><strong>🧪 ১. ডিকার্বক্সিলেশন বিক্রিয়া (ল্যাবরেটরি পদ্ধতি):</strong></p>
+                    <p>ফ্যাটি এসিডের সোডিয়াম লবণকে (সোডিয়াম ইথানয়েট) সোডালাইমের (<span style="color:#10b981; font-weight:bold;">NaOH + CaO</span>) সাথে তীব্র তাপ দিলে কার্বন সংখ্যা এক হ্রাস পেয়ে মিথেন উৎপন্ন হয়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_3COONa + NaOH [CaO + Heat] → CH_4 + Na_2CO_3</span></p>
+                    <hr style="border:0; border-top:1px dashed var(--border-color); margin:20px 0;">
+                    <p><strong>🧪 ২. কার্বন ডাইঅক্সাইড থেকে (শিল্প পদ্ধতি):</strong></p>
+                    <p>নিকেল (<span class="formula-style" style="padding:2px 6px;">Ni</span>) প্রভাবকের উপস্থিতিতে ২৫০°C তাপমাত্রায় কার্বন ডাইঅক্সাইডের সাথে হাইড্রোজেন গ্যাস যুক্ত করে মিথেন গ্যাস বানানো যায়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CO_2 + 4H_2 [Ni / 250°C] → CH_4 + 2H_2O</span></p>
+                `
+            },
+            alkene: {
+                name: "🧪 অ্যালকিন প্রস্তুতি সমীকরণ",
+                equations: `
+                    <p><strong>🧪 ১. অ্যালকোহলের নিরোদন (Dehydration) পদ্ধতি:</strong></p>
+                    <p>ইথানলকে অতিরিক্ত গাঢ় সালফিউরিক এসিড (<span class="formula-style" style="padding:2px 6px;">H_2SO_4</span>) সহ প্রায় ১৭০°C তাপমাত্রায় উত্তপ্ত করলে ইথানল থেকে এক অণু পানি অপসারিত হয়ে ইথিন গ্যাস তৈরি হয়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_3-CH_2OH [গাঢ় H_2SO_4 / 170°C] → CH_2=CH_2 + H_2O</span></p>
+                    <hr style="border:0; border-top:1px dashed var(--border-color); margin:20px 0;">
+                    <p><strong>🧪 ২. অ্যালকাইল হ্যালাইড থেকে অপসারন বিক্রিয়া:</strong></p>
+                    <p>ইথাইল ক্লোরাইডের সাথে অ্যালকোহলীয় সোডিয়াম হাইড্রোক্সাইডের তীব্র মিশ্রণ উত্তপ্ত করলে অ্যালকিন পাওয়া যায়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_3-CH_2Cl + NaOH (alc) → CH_2=CH_2 + NaCl + H_2O</span></p>
+                `
+            },
+            alkyne: {
+                name: "🔥 অ্যালকাইন প্রস্তুতি সমীকরণ",
+                equations: `
+                    <p><strong>🧪 ক্যালসিয়াম কার্বাইডের আর্দ্রতা বিশ্লেষণ (ল্যাব পদ্ধতি):</strong></p>
+                    <p>ক্যালসিয়াম কার্বাইডের (<span class="formula-style" style="padding:2px 6px;">CaC_2</span>) শক্ত টুকরার উপর ফোঁটায় ফোঁটায় সাধারণ পানি ড্রপ করলে কক্ষ তাপমাত্রাতেই ইথাইন গ্যাস বুদবুদ আকারে বের হয়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CaC_2 + 2H_2O → C_2H_2 + Ca(OH)_2</span></p>
+                `
+            },
+            alcohol: {
+                name: "💧 অ্যালকোহল প্রস্তুতি সমীকরণ",
+                equations: `
+                    <p><strong>🧪 ১. অ্যালকাইল হ্যালাইডের হাইড্রোলাইসিস:</strong></p>
+                    <p>ইথাইল ব্রোমাইডকে সোডিয়াম হাইড্রোক্সাইডের জলীয় দ্রবণ (<span class="formula-style" style="padding:2px 6px;">NaOH aq</span>) সহ ফুটালে ইথানল অ্যালকোহল পাওয়া যায়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_3-CH_2Br + NaOH (aq) → CH_3-CH_2OH + NaBr</span></p>
+                    <hr style="border:0; border-top:1px dashed var(--border-color); margin:20px 0;">
+                    <p><strong>🧪 ২. অ্যালকিন থেকে জলীয় বাষ্প সংযোগ পদ্ধতি:</strong></p>
+                    <p>উচ্চ তাপমাত্রা ও চাপে ফসফরিক এসিড প্রভাবকের উপস্থিতিতে ইথিনের সাথে জলীয় বাষ্প যুক্ত করলে শিল্প কারখানায় ইথানল তৈরি করা হয়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_2=CH_2 + H_2O [H_3PO_4 / High Press & Temp] → CH_3-CH_2OH</span></p>
+                `
+            },
+            aldehyde: {
+                name: "🍏 অ্যালডিহাইড প্রস্তুতি সমীকরণ",
+                equations: `
+                    <p><strong>🧪 ইথাইন গ্যাসের হাইড্রেশন বিক্রিয়া:</strong></p>
+                    <p>৮০°C তাপমাত্রায় ২০% সালফিউরিক এসিড এবং ২% মারকিউরিক সালফেট দ্রবণের মধ্য দিয়ে ইথাইন গ্যাস চালনা করলে পানি যুক্ত হয়ে ইথান্যাল তৈরি হয়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">C_2H_2 + H_2O [20% H_2SO_4 / 2% HgSO_4 / 80°C] → CH_3CHO</span></p>
+                `
+            },
+            acid: {
+                name: "🍋 জৈব এসিড প্রস্তুতি সমীকরণ",
+                equations: `
+                    <p><strong>🧪 অ্যালডিহাইডের তীব্র জারণ (Oxidation):</strong></p>
+                    <p>ইথান্যালকে শক্তিশালী জারক পটাশিয়াম ডাইক্রোমেট (<span class="formula-style" style="padding:2px 6px;">K_2Cr_2O_7</span>) এবং সালফিউরিক এসিডের মিশ্রণ দ্বারা উৎপন্ন জায়মান অক্সিজেন দিয়ে জারিত করলে সরাসরি ইথানয়িক এসিড উৎপন্ন হয়।</p>
+                    <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_3CHO + [O] [K_2Cr_2O_7 + H_2SO_4] → CH_3COOH</span></p>
+                `
+            },
+ketone: {
+        name: "🍭 কিটোন প্রস্তুতি সমীকরণ",
+        equations: `
+            <p><strong>🧪 ২-প্রোপানল (সেকেন্ডারি অ্যালকোহল) এর জারণ দ্বারা:</strong></p>
+            <p>একটি ২ ডিগ্রি বা সেকেন্ডারি অ্যালকোহলকে শক্তিশালী জারক পটাশিয়াম ডাইক্রোমেট (<span class="formula-style" style="padding:2px 6px;">K_2Cr_2O_7</span>) ও গাঢ় সালফিউরিক এসিড দ্বারা জারিত করলে কিটোন (অ্যাসিটোন) পাওয়া যায়।</p>
+            <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_3-CH(OH)-CH_3 + [O] → CH_3COCH_3 + H_2O</span></p>
+        `
+    },
+    ether: {
+        name: "☁️ ইথার প্রস্তুতি সমীকরণ",
+        equations: `
+            <p><strong>🧪 উইলিয়ামসন ইথার সংশ্লেষণ (Williamson Synthesis):</strong></p>
+            <p>অ্যালকাইল হ্যালাইডের (যেমন ইথাইল আয়োডাইড) সাথে সোডিয়াম অ্যালকোক্সাইড (সোডিয়াম ইথোক্সাইড) উত্তপ্ত করলে চমৎকারভাবে ইথার তৈরি হয়।</p>
+            <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">C_2H_5ONa + C_2H_5I → C_2H_5-O-C_2H_5 + NaI</span></p>
+        `
+    },
+    ester: {
+        name: "🌸 এস্টার প্রস্তুতি সমীকরণ (Esterification)",
+        equations: `
+            <p><strong>🧪 এস্টারিফিকেশন বিক্রিয়া (এসিড ও অ্যালকোহলের মিলন):</strong></p>
+            <p>গাঢ় সালফিউরিক এসিড (<span class="formula-style" style="padding:2px 6px;">H_2SO_4</span>) এর উপস্থিতিতে জৈব কার্বক্সিলিক এসিড ও অ্যালকোহল একসাথে মিশ্রিত করে রিফ্লাক্স বা উত্তপ্ত করলে মিষ্টি সুগন্ধি এস্টার ও পানি উৎপন্ন হয়।</p>
+            <p><strong>📝 সূত্র:</strong> <br><span class="formula-style">CH_3COOH (জৈব এসিড) + C_2H_5OH (অ্যালকোহল) → CH_3COOC_2H_5 (এস্টার) + H_2O</span></p>
+        `
+    }
+        };
+
+        function loadPrep(btn, key) {
+            document.querySelectorAll('.menu-opt-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const compound = prepDb[key];
+            document.getElementById('prep-display-box').innerHTML = `
+                <h2 style="margin-top:0; color:#d97706; font-size: 26px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">${compound.name}</h2>
+                <div style="margin-top: 20px;">${compound.equations}</div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Periodic Group Identifier - ChromaChem Labs</title>
+    <style>
+        :root { 
+            --bg-color: #000000; 
+            --card-color: #0b0f17;
+            --text-color: #f8fafc; 
+            --accent-color: #38bdf8;
+            --purple-glow: #c084fc;
+            --border-color: #1e293b;
+        }
+        
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            padding: 20px; 
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .back-btn { 
+            position: fixed; top: 15px; left: 15px; 
+            background: #1e293b; color: #94a3b8; 
+            padding: 8px 16px; border-radius: 10px; 
+            text-decoration: none; font-weight: 600; 
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease; z-index: 100;
+        }
+        .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
+
+        .header-section { max-width: 1440px; margin: 50px auto 15px auto; }
+        h1 {
+            font-size: 2.2rem; font-weight: 800; margin: 0 0 5px 0;
+            background: linear-gradient(to right, var(--accent-color), #a855f7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        p.subtitle { color: #64748b; margin: 0; font-size: 1.05rem; }
+
+        /* Main Workspace Split Layout */
+        .workspace {
+            display: flex; gap: 25px; max-width: 1440px; margin: auto; align-items: flex-start;
+        }
+
+        /* Left Side: Controls & Full 18-Column Grid */
+        .left-side { flex: 1.4; }
+
+        /* Group Selector Buttons Group */
+        .selector-container {
+            background: var(--card-color); padding: 12px; border-radius: 14px;
+            border: 1px solid var(--border-color); margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px;
+        }
+        .group-btn {
+            background: #1e293b; border: 1px solid var(--border-color);
+            color: #94a3b8; padding: 8px 10px; border-radius: 8px;
+            font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;
+            text-align: center;
+        }
+        .group-btn:hover, .group-btn.active {
+            background: var(--accent-color); color: #000000;
+            box-shadow: 0 0 15px var(--accent-color); border-color: var(--accent-color);
+        }
+
+        /* Full Periodic 18-Column Grid Architecture */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(18, 1fr); 
+            gap: 6px; 
+            background: #040711; 
+            padding: 15px; 
+            border-radius: 16px; 
+            border: 1px solid #111827; 
+        }
+        .cell { 
+            aspect-ratio: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; border-radius: 8px; 
+            border: 1px solid #1e293b; font-weight: 700; font-size: 1.05rem; 
+            background: #0f172a; color: #64748b; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0.4; /* আপগ্রেড করা হয়েছে: বাইরে থেকেও এখন সুন্দরভাবে বোঝা যাবে */
+        }
+        
+        /* Empty Spacers for Periodic Table Layout */
+        .space-p1-r1 { grid-column: span 16; }
+        .space-p2-r2 { grid-column: span 10; }
+
+        /* আল্ট্রা-পপআপ এবং নিয়ন গ্লো স্টেট (যখন গ্রুপ সিলেক্ট হবে) */
+        .cell.highlight {
+            opacity: 1 !important; 
+            transform: scale(1.18) translateY(-5px); /* অনেকখানি উপরে ভেসে উঠবে */
+            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.6), 0 0 10px rgba(56, 189, 248, 0.4);
+            border-color: var(--accent-color) !important; 
+            color: #ffffff !important;
+            z-index: 10; 
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+        }
+
+        /* Right Side: Luxury Information Panel */
+        .right-side { 
+            flex: 0.8; background: var(--card-color); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 30px; min-height: 520px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7); position: sticky; top: 20px;
+            box-sizing: border-box;
+        }
+
+        /* প্রিমিয়াম টাইপোগ্রাফি স্টাইলিং */
+        .info-box h2 {
+            margin-top: 0; font-size: 1.65rem; font-weight: 800; color: var(--accent-color);
+            border-bottom: 2px solid #1e293b; padding-bottom: 14px;
+            letter-spacing: -0.5px; line-height: 1.3;
+        }
+        .info-section { margin-top: 25px; margin-bottom: 25px; }
+        .info-section h3 { 
+            font-size: 1.15rem; color: var(--purple-glow); margin-bottom: 12px; 
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        .info-section ul { padding-left: 20px; margin: 0; }
+        .info-section li { 
+            color: #cbd5e1; font-size: 1rem; line-height: 1.6; 
+            margin-bottom: 10px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        /* গর্জিয়াস ছন্দ ও ট্রিকস কার্ড */
+        .trick-card {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.07), rgba(56, 189, 248, 0.03));
+            border-left: 4px solid #a855f7; border-top: 1px solid #3b0764;
+            border-right: 1px solid #3b0764; border-bottom: 1px solid #3b0764;
+            padding: 18px; border-radius: 0 14px 14px 0; font-size: 1.05rem;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+        }
+        .trick-card strong { color: #f43f5e; font-weight: 700; }
+        .moulo-list { color: var(--accent-color) !important; margin-top: 8px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<a href="visualizations.html" class="back-btn">← ফিরে যান</a>
+
+<div class="header-section">
+    <h1>সম্পূর্ণ পর্যায় সারণি গ্রাফ ও গ্রুপ আইডেন্টিফায়ার</h1>
+    <p class="subtitle">১৮টি গ্রুপের যেকোনো বাটন ক্লিক করে পুরো কলামের মৌল হাইলাইট করুন এবং বিস্তারিত তথ্য জানুন।</p>
+</div>
+
+<div class="workspace">
+    <div class="left-side">
+        <div class="selector-container">
+            <script>
+                for(let i=1; i<=18; i++) {
+                    document.write(`<button class="group-btn" onclick="highlightGroup(${i}, this)">G-${i}</button>`);
+                }
+            </script>
+        </div>
+
+        <div class="grid">
+            <div class="cell" data-group="1">H</div>
+            <div class="space-p1-r1"></div>
+            <div class="cell" data-group="18">He</div>
+            
+            <div class="cell" data-group="1">Li</div>
+            <div class="cell" data-group="2">Be</div>
+            <div class="space-p2-r2"></div>
+            <div class="cell" data-group="13">B</div>
+            <div class="cell" data-group="14">C</div>
+            <div class="cell" data-group="15">N</div>
+            <div class="cell" data-group="16">O</div>
+            <div class="cell" data-group="17">F</div>
+            <div class="cell" data-group="18">Ne</div>
+
+            <div class="cell" data-group="1">Na</div>
+            <div class="cell" data-group="2">Mg</div>
+            <div class="space-p2-r2"></div>
+            <div class="cell" data-group="13">Al</div>
+            <div class="cell" data-group="14">Si</div>
+            <div class="cell" data-group="15">P</div>
+            <div class="cell" data-group="16">S</div>
+            <div class="cell" data-group="17">Cl</div>
+            <div class="cell" data-group="18">Ar</div>
+
+            <script>
+                const p4 = [
+                    {s:'K',g:1},{s:'Ca',g:2},{s:'Sc',g:3},{s:'Ti',g:4},{s:'V',g:5},{s:'Cr',g:6},{s:'Mn',g:7},{s:'Fe',g:8},{s:'Co',g:9},
+                    {s:'Ni',g:10},{s:'Cu',g:11},{s:'Zn',g:12},{s:'Ga',g:13},{s:'Ge',g:14},{s:'As',g:15},{s:'Se',g:16},{s:'Br',g:17},{s:'Kr',g:18}
+                ];
+                p4.forEach(e => document.write(`<div class="cell" data-group="${e.g}">${e.s}</div>`));
+            </script>
+
+            <script>
+                const p5 = [
+                    {s:'Rb',g:1},{s:'Sr',g:2},{s:'Y',g:3},{s:'Zr',g:4},{s:'Nb',g:5},{s:'Mo',g:6},{s:'Tc',g:7},{s:'Ru',g:8},{s:'Rh',g:9},
+                    {s:'Pd',g:10},{s:'Ag',g:11},{s:'Cd',g:12},{s:'In',g:13},{s:'Sn',g:14},{s:'Sb',g:15},{s:'Te',g:16},{s:'I',g:17},{s:'Xe',g:18}
+                ];
+                p5.forEach(e => document.write(`<div class="cell" data-group="${e.g}">${e.s}</div>`));
+            </script>
+
+            <script>
+                const p6 = [
+                    {s:'Cs',g:1},{s:'Ba',g:2},{s:'La',g:3},{s:'Hf',g:4},{s:'Ta',g:5},{s:'W',g:6},{s:'Re',g:7},{s:'Os',g:8},{s:'Ir',g:9},
+                    {s:'Pt',g:10},{s:'Au',g:11},{s:'Hg',g:12},{s:'Tl',g:13},{s:'Pb',g:14},{s:'Bi',g:15},{s:'Po',g:16},{s:'At',g:17},{s:'Rn',g:18}
+                ];
+                p6.forEach(e => document.write(`<div class="cell" data-group="${e.g}">${e.s}</div>`));
+            </script>
+        </div>
+    </div>
+
+    <div class="right-side" id="info-panel">
+        <div class="info-box">
+            <h2>গ্রুপ সিলেক্ট করুন</h2>
+            <p style="color: #64748b; text-align: center; margin-top: 140px; font-size: 1.1rem; line-height: 1.6;">
+                যেকোনো গ্রুপ বাটনে ক্লিক করলে ১৮টি কলামের সেই নির্দিষ্ট কলামটি চমৎকারভাবে সামনে ভেসে উঠবে এবং তার ম্যাজিক ছন্দ এখানে লোড হবে।
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ১৮টি গ্রুপের ডাটা ব্যাংক
+    const groupData = {
+        1: { title: "গ্রুপ ১ - ক্ষار ধাতু (Alkali Metals)", features: ["এরা অত্যন্ত নরম ধাতু এবং পানির সাথে তীব্র বিক্রিয়ায় শক্তিশালী ক্ষার ও হাইড্রোজেন গ্যাস তৈরি করে।", "এদের সর্ববহিঃস্থ স্তরে মাত্র ১টি ইলেকট্রন থাকে ($ns^1$) এবং এরা অত্যন্ত সক্রিয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> লি না কে রুবি ছেঁচে ফেলেছে।<div class='moulo-list'>মৌলসমূহ: Li, Na, K, Rb, Cs, Fr</div>" },
+        2: { title: "গ্রুপ ২ - মৃৎক্ষার ধাতু (Alkaline Earth Metals)", features: ["এদের মাটিতে বিভিন্ন যৌগ (বিশেষ করে কার্বনেট) হিসেবে পাওয়া যায় এবং এরা ক্ষার উৎপন্ন করে।", "এদের যোজনী স্তরের সাধারণ ইলেকট্রন বিন্যাস $ns^2$ এবং যোজনী ২।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> বিরিয়ানি মোগলাই কাবাব সরিয়ে বাটিতে রাখো।<div class='moulo-list'>মৌলসমূহ: Be, Mg, Ca, Sr, Ba, Ra</div>" },
+        3: { title: "গ্রুপ ৩ - স্ক্যান্ডিয়াম গ্রুপ (Transition Metals)", features: ["এরা অবস্থান্তর বা ট্রানজিশন ধাতু পরিবারের অন্তর্ভুক্ত গুরুত্বপূর্ণ সদস্য।", "এদের ডি-অরবিটাল আংশিক পূর্ণ থাকায় এরা বিভিন্ন রঙিন যৌগ ও জটিল আয়ন গঠন করে।"], trick: "<strong>মনে রাখার উপায়:</strong> স্ক্যান্ডিয়াম (Sc), ইট্রিয়াম (Y), ল্যান্থানাম (La) সমূহ।" },
+        4: { title: "গ্রুপ ৪ - টাইটানিয়াম গ্রুপ", features: ["উচ্চ গলনাঙ্ক বিশিষ্ট এবং অত্যন্ত শক্তিশালী ক্ষয়রোধকারী রিফ্র্যাক্টরি ধাতু।", "টাইটানিয়াম ধাতু মহাকাশযান এবং কৃত্রিম হাড়ের জয়েন্ট তৈরিতে ব্যাপকভাবে ব্যবহৃত হয়।"], trick: "<strong>মনে রাখার উপায়:</strong> টাইটানিয়াম (Ti), জার্কোনিয়াম (Zr), হ্যাফনিয়াম (Hf)।" },
+        5: { title: "গ্রুপ ৫ - ভ্যানাডিয়াম গ্রুপ", features: ["ধাতুগুলো অত্যন্ত শক্ত এবং এদের প্রকৃতিতে বিভিন্ন জারণ অবস্থা (Oxidation State) দেখা যায়।", "ইস্পাতের স্থায়িত্ব ও শক্তি বহুগুণ বাড়াতে ভ্যানাডিয়াম অ্যালয় ব্যবহার করা হয়।"], trick: "<strong>মনে রাখার উপায়:</strong> ভ্যানাডিয়াম (V), নায়োবিয়াম (Nb), ট্যানটালাম (Ta)।" },
+        6: { title: "গ্রুপ ৬ - ক্রোমিয়াম গ্রুপ", features: ["ক্রোমিয়াম চকচকে মরিচারোধক স্টেইনলেস স্টিল ও ক্রোম প্লেটিং তৈরিতে অপরিহার্য।", "টাংস্টেন (W)-এর গলনাঙ্ক সমস্ত ধাতুর মধ্যে সর্বোচ্চ হওয়ায় এটি বাল্বের ফিলামেন্টে ব্যবহৃত হতো।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ক্রোমিয়াম মলি টাংস্টেন।<div class='moulo-list'>মৌলসমূহ: Cr, Mo, W</div>" },
+        7: { title: "গ্রুপ ७ - ম্যাঙ্গানিজ গ্রুপ", features: ["এরা জটিল রাসায়নিক বিক্রিয়ায় এবং ড্রাই সেল ব্যাটারিতে ক্যাটালিস্ট বা অনুঘটক হিসেবে কাজ করে।", "টেকনেশিয়াম (Tc) হলো মানবসৃষ্ট প্রথম কৃত্রিম তেজস্ক্রিয় মৌল যা চিকিৎসাবিজ্ঞানে ইমেজিং-এ ব্যবহৃত হয়।"], trick: "<strong>মনে রাখার উপায়:</strong> ম্যাঙ্গানিজ (Mn), টেকনেশিয়াম (Tc), রেনিয়াম (Re)।" },
+        8: { title: "গ্রুপ ৮ - আয়রন গ্রুপ", features: ["লোহা বা আয়রন (Fe) পৃথিবীর কেন্দ্রের প্রধান উপাদান এবং এটি একটি শক্তিশালী ফেরোচৌম্বক মৌল।", "মানবদেহের রক্তে হিমোগ্লোবিন গঠনে আয়রন প্রধান ভূমিকা পালন করে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ফেলে রুটি ওড়াও।<div class='moulo-list'>মৌলসমূহ: Fe, Ru, Os</div>" },
+        9: { title: "গ্রুপ ৯ - কোবাল্ট গ্রুপ", features: ["কোবাল্ট ভিটামিন B12 এর একটি প্রধান গাঠনিক উপাদান।", "এরা অত্যন্ত শক্তিশালী ও উচ্চ তাপমাত্রাসহনশীল স্থায়ী চৌম্বক তৈরিতে ব্যবহৃত হয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> কোবাল্ট রড ইরিন।<div class='moulo-list'>মৌলসমূহ: Co, Rh, Ir</div>" },
+        10: { title: "গ্রুপ ১০ - নিকেল গ্রুপ", features: ["নিকেল ও প্লাটিনাম বিভিন্ন জৈব রাসায়নিক বিক্রিয়ায় (যেমন হাইড্রোজেনেশন) তীব্র অনুঘটক হিসেবে কাজ করে।", "এদের ক্ষয়রোধ ক্ষমতা অনন্য হওয়ায় বিভিন্ন ধাতুর ওপর প্রলেপ দিতে ব্যবহৃত হয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> নিকেলের পোড়া প্লাটিনাম।<div class='moulo-list'>মৌলসমূহ: Ni, Pd, Pt</div>" },
+        11: { title: "গ্রুপ ১১ - মুদ্রা ধাতু (Coinage Metals)", features: ["প্রাচীনকাল থেকে মুদ্রা, কয়েন এবং মূল্যবান অলঙ্কার তৈরিতে এই ধাতুগুলো ব্যবহৃত হয়ে আসছে।", "কপার (Cu) এবং সিলভার (Ag) বিদ্যুৎ ও তাপের সর্বোত্তম পরিবাহী হিসেবে পরিচিত।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> তামা রূপা সোনা।<div class='moulo-list'>মৌলসমূহ: কপার (Cu), সিলভার (Ag), গোল্ড (Au)</div>" },
+        12: { title: "গ্রুপ ১২ - জিংক গ্রুপ", features: ["এদের গলনাঙ্ক অন্যান্য ট্রানজিশন ধাতুর চেয়ে বেশ কম এবং এরা তুলনামূলক নরম।", "পারদ (Hg) এই গ্রুপের অন্তর্ভুক্ত যা একমাত্র ধাতু, যা সাধারণ তাপমাত্রায় তরল থাকে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> জিংক ক্যাডমিয়াম পারদ।<div class='moulo-list'>মৌলসমূহ: Zn, Cd, Hg</div>" },
+        13: { title: "গ্রুপ ১৩ - বোরন গ্রুপ (Icosagens)", features: ["বোরন একটি অপধাতু কিন্তু অ্যালুমিনিয়াম এই গ্রুপের একটি বিখ্যাত এবং বহুল ব্যবহৃত হালকা ধাতু।", "এদের সর্ববহিঃস্থ স্তরে ৩টি ইলেকট্রন থাকে ($ns^2 np^1$) এবং সাধারণ যোজনী ৩।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> বলগা গেল ইন্ডিয়া ও থাইল্যান্ড।<div class='moulo-list'>মৌলসমূহ: B, Al, Ga, In, Tl</div>" },
+        14: { title: "গ্রুপ ১৪ - কার্বন গ্রুপ (Crystallogens)", features: ["কার্বন পৃথিবীর সমস্ত জীবন এবং কোটি কোটি জৈব যৌগের মূল ভিত্তি (ক্যাটিনেশন ধর্ম দেখায়)।", "সিলিকন (Si) ও জার্মেনিয়াম (Ge) আধুনিক ইলেকট্রনিক্স ও আইসি চিপের প্রধান সেমিকন্ডাক্টর।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> কাল শুনলে সিনিয়র পাপ্পু কাঁদবে।<div class='moulo-list'>মৌলসমূহ: C, Si, Ge, Sn, Pb</div>" },
+        15: { title: "গ্রুপ ১৫ - নিকটোজেন (Pnictogens)", features: ["নিকটোজেন শব্দের অর্থ শ্বাসরোধকারী বা দমবন্ধকর গ্যাস। নাইট্রোজেন আমাদের বায়ুমণ্ডলে ৭৮% থাকে।", "ফসফরাস (P) উদ্ভিদের বৃদ্ধি, ডিএনএ স্ট্রাকচার এবং হাড়ের গঠনে অপরিহার্য উপাদান।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> নাগমা পাশা আজকে সব বেচবে।<div class='moulo-list'>মৌলসমূহ: N, P, As, Sb, Bi</div>" },
+        16: { title: "গ্রুপ ১৬ - চালকোজেন (Chalcogens)", features: ["চালকোজেন শব্দের অর্থ আকরিক উৎপাদনকারী মৌল। বেশিরভাগ ধাতু প্রকৃতিতে অক্সাইড বা সালফাইড আকরিক হিসেবে থাকে।", "অক্সিজেন প্রাণের শ্বসনে এবং সালফার সালফিউরিক এসিডের মতো গুরুত্বপূর্ণ রাসায়নিক উৎপাদনে ব্যবহৃত হয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ও এস এস সিতে পড়ে।<div class='moulo-list'>মৌলসমূহ: O, S, Se, Te, Po</div>" },
+        17: { title: "গ্রুপ ১৭ - হ্যালোজেন গ্রুপ (Halogens)", features: ["হ্যালোজেন শব্দের অর্থ সামুদ্রিক লবণ উৎপাদনকারী তীব্র সক্রিয় অধাতু।", "এদের যোজনী স্তরে ৭টি ইলেকট্রন থাকে এবং এরা ক্ষার ধাতুর সাথে সরাসরি যুক্ত হয়ে লবণ গঠন করে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ফেলে কাল বাজারে এল আতর।<div class='moulo-list'>মৌলসমূহ: F, Cl, Br, I, At</div>" },
+        18: { title: "গ্রুপ ১৮ - নিষ্ক্রিয় গ্যাস (Noble Gases)", features: ["যোজনী স্তর ইলেকট্রন দ্বারা পূর্ণ ($ns^2 np^6$) থাকায় এরা রাসায়নিকভাবে সম্পূর্ণ নিষ্ক্রিয় ও আসক্তিহীন।", "সাধারণ তাপমাত্রায় এরা সবাই একপরমাণুক গ্যাস (Monoatomic Gas) হিসেবে অবস্থান করে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> হিলিয়াম নিয়ন আর ক্রিপ্টন যাবে রমনায়।<div class='moulo-list'>মৌলসমূহ: He, Ne, Ar, Kr, Xe, Rn</div>" }
+    };
+
+    function highlightGroup(groupNum, btnElement) {
+        document.querySelectorAll('.group-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            if (cell.getAttribute('data-group') == groupNum) {
+                cell.classList.add('highlight');
+            } else {
+                cell.classList.remove('highlight');
+            }
+        });
+
+        const data = groupData[groupNum];
+        const infoPanel = document.getElementById('info-panel');
+        
+        let featuresHTML = '';
+        data.features.forEach(f => { featuresHTML += `<li>${f}</li>`; });
+
+        infoPanel.innerHTML = `
+            <div class="info-box">
+                <h2>${data.title}</h2>
+                <div class="info-section">
+                    <h3>📢 প্রধান বৈশিষ্ট্যসমূহ:</h3>
+                    <ul>${featuresHTML}</ul>
+                </div>
+                <div class="info-section">
+                    <h3>💡 মনে রাখার ম্যাজিক ট্রিকস:</h3>
+                    <div class="trick-card">${data.trick}</div>
+                </div>
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পেজ ২: সর্বমোট গ্রুপভিত্তিক ধর্মের তুলনা</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #cbd5e1;
+            --shadow: rgba(15, 23, 42, 0.08);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 30px 15px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container { width: 100%; max-width: 950px; }
+        
+        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
+        .back-btn {
+            text-decoration: none; color: var(--text-color); font-weight: bold; background: var(--card-bg);
+            padding: 10px 18px; border-radius: 14px; border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px var(--shadow); transition: all 0.2s; cursor: pointer;
+        }
+        .back-btn:hover { transform: translateX(-3px); }
+
+        header h2 {
+            font-size: 28px;
+            margin: 0 0 5px 0;
+            background: linear-gradient(45deg, #e67e22, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+        header p { margin-bottom: 30px; opacity: 0.8; font-size: 15px; text-align: center; }
+
+        /* Multi-row Responsive Menu */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        .btn-toggle {
+            padding: 14px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 3px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+        
+        /* Distinct Group button colors when active */
+        .g1-act.active { background: #e67e22 !important; border-color: #d35400 !important; color: white !important; }
+        .g2-act.active { background: #2ecc71 !important; border-color: #27ae60 !important; color: white !important; }
+        .g17-act.active { background: #9b59b6 !important; border-color: #8e44ad !important; color: white !important; }
+        .g18-act.active { background: #1abc9c !important; border-color: #16a085 !important; color: white !important; }
+
+        .chart-box {
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 30px var(--shadow);
+            position: relative;
+            margin-bottom: 25px;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Physical State Badge Row */
+        .state-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .state-badge {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        /* State Card Colors */
+        .solid { background: #d35400; }  /* কঠিন = গাঢ় কমলা */
+        .liquid { background: #2980b9; } /* তরল = নীল */
+        .gas { background: #7f8c8d; }    /* গ্যাস = ধূসর */
+
+        .analysis-text {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 14.5px;
+            line-height: 1.6;
+            text-align: left;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-nav">
+            <a href="visualizations.html" class="back-btn">← ভিজ্যুয়ালাইজেশন হাবে ফিরুন</a>
+        </div>
+
+        <header>
+            <h2>📊 গ্রুপভিত্তিক ধর্মের মেগা তুলনা (Group Properties Panel)</h2>
+            <p>গ্রুপ ১, ২, ১৭ এবং ১৮ এর মৌলসমূহের গলনাঙ্ক, স্ফুটনাঙ্ক ও ভৌত অবস্থার ইন্টারঅ্যাক্টিভ চার্ট</p>
+        </header>
+
+        <div class="controls-grid">
+            <button id="g1Btn" class="btn-toggle g1-act active" onclick="switchMegaGroup('g1')">গ্রুপ ১: ক্ষার ধাতু 🟠</button>
+            <button id="g2Btn" class="btn-toggle g2-act" onclick="switchMegaGroup('g2')">গ্রুপ ২: মৃৎক্ষার ধাতু 🟢</button>
+            <button id="g17Btn" class="btn-toggle g17-act" onclick="switchMegaGroup('g17')">গ্রুপ ১৭: হ্যালোজেন 🟣</button>
+            <button id="g18Btn" class="btn-toggle g18-act" onclick="switchMegaGroup('g18')">গ্রুপ ১৮: নিষ্ক্রিয় গ্যাস 🔵</button>
+        </div>
+
+        <div class="state-panel" id="badgeContainer">
+            </div>
+
+        <div class="chart-box" id="graphBorder">
+            <canvas id="megaGroupChart" style="width: 100%; height: 420px;"></canvas>
+        </div>
+
+        <div class="analysis-text" id="megaAnalysisBox">
+            </div>
+    </div>
+
+    <script>
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+
+        // Mega Pool Dataset with Highly Contrasting Bar Colors
+        // Melting = #f1c40f (উজ্জ্বল হলুদ), Boiling = #2980b9 (রয়্যাল ব্লু)
+        const database = {
+            g1: {
+                labels: ['Li (৩)', 'Na (১১)', 'K (১৯)', 'Rb (৩৭)', 'Cs (৫৫)'],
+                melting: [180.5, 97.8, 63.5, 39.3, 28.4],
+                boiling: [1342, 883, 759, 688, 671],
+                borderTheme: '#e67e22',
+                states: [
+                    {m: 'Li', s: 'কঠিন', c: 'solid'}, {m: 'Na', s: 'কঠিন', c: 'solid'},
+                    {m: 'K', s: 'কঠিন', c: 'solid'}, {m: 'Rb', s: 'কঠิน', c: 'solid'},
+                    {m: 'Cs', s: 'কঠিন', c: 'solid'}
+                ],
+                desc: `<strong>💡 গ্রুপ-১ (ক্ষার ধাতু) ট্রেন্ড বিশ্লেষণ:</strong><br>• উপর থেকে নিচে নামলে পারমাণবিক ব্যাসার্ধ বড় হওয়ায় ধাতব বন্ধন দুর্বল হয়ে পড়ে। ফলে গলনাঙ্ক ও স্ফুটনাঙ্ক ক্রমান্বয়ে **কমতে থাকে**। এই গ্রুপের সব ধাতুই নরম ও কম গলনাঙ্ক বিশিষ্ট হয়।`
+            },
+            g2: {
+                labels: ['Be (৪)', 'Mg (১২)', 'Ca (২০)', 'Sr (৩৮)', 'Ba (৫৬)'],
+                melting: [1287, 650, 842, 777, 727],
+                boiling: [2471, 1090, 1484, 1382, 1897],
+                borderTheme: '#2ecc71',
+                states: [
+                    {m: 'Be', s: 'কঠিন', c: 'solid'}, {m: 'Mg', s: 'কঠিন', c: 'solid'},
+                    {m: 'Ca', s: 'কঠিন', c: 'solid'}, {m: 'Sr', s: 'কঠিন', c: 'solid'},
+                    {m: 'Ba', s: 'কঠিন', c: 'solid'}
+                ],
+                desc: `<strong>💡 গ্রুপ-২ (মৃৎক্ষার ধাতু) ট্রেন্ড বিশ্লেষণ:</strong><br>• গ্রুপ-১ এর চেয়ে এদের ধাতব বন্ধন তুলনামূলক শক্তিশালী, তাই এদের গলনাঙ্ক-স্ফুটনাঙ্ক ক্ষার ধাতুর চেয়ে **অনেক বেশি** হয়। উপর থেকে নিচে নামলে গলনাঙ্ক কমলেও এদের ভেতর কিছু অনিয়মিত পরিবর্তন বা ব্যতিক্রম দেখা যায়।`
+            },
+            g17: {
+                labels: ['F (৯)', 'Cl (১৭)', 'Br (৩৫)', 'I (৫৩)'],
+                melting: [-219.6, -101.5, -7.2, 113.7],
+                boiling: [-188.1, -34.0, 58.8, 184.3],
+                borderTheme: '#9b59b6',
+                states: [
+                    {m: 'F', s: 'গ্যাস', c: 'gas'}, {m: 'Cl', s: 'গ্যাস', c: 'gas'},
+                    {m: 'Br', s: 'তরল', c: 'liquid'}, {m: 'I', s: 'কঠিন', c: 'solid'}
+                ],
+                desc: `<strong>💡 গ্রুপ-১৭ (হ্যালোজেন অধাতু) ট্রেন্ড বিশ্লেষণ:</strong><br>• অধাতুর ক্ষেত্রে উপর থেকে নিচে নামলে অণুর ভর ও আকার বাড়ে, যার ফলে আকর্ষণ বল বা **ভ্যান ডার ওয়ালস বল** বৃদ্ধি পায়।<br>• তাই উপর থেকে নিচে গলনাঙ্ক ও স্ফুটনাঙ্ক ক্রমান্বয়ে **বৃদ্ধি পায়**! এজন্যই ফ্লোরিন-ক্লোরিন গ্যাস হলেও ব্রোমিন তরল এবং আয়োডিন একটি কঠিন পদার্থ।`
+            },
+            g18: {
+                labels: ['He (২)', 'Ne (১০)', 'Ar (১৮)', 'Kr (৩৬)'],
+                melting: [-272.2, -248.5, -189.3, -157.3],
+                boiling: [-268.9, -246.0, -185.8, -153.2],
+                borderTheme: '#1abc9c',
+                states: [
+                    {m: 'He', s: 'গ্যাস', c: 'gas'}, {m: 'Ne', s: 'গ্যাস', c: 'gas'},
+                    {m: 'Ar', s: 'গ্যাস', c: 'gas'}, {m: 'Kr', s: 'গ্যাস', c: 'gas'}
+                ],
+                desc: `<strong>💡 গ্রুপ-১৮ (নিষ্ক্রিয় গ্যাস) ট্রেন্ড বিশ্লেষণ:</strong><br>• এরা একক পরমাণু বিশিষ্ট নিষ্ক্রিয় গ্যাস। এদের মধ্যকার আন্তঃআণবিক আকর্ষণ বল সর্বনিম্ন হওয়ায় এদের গলনাঙ্ক ও স্ফুটনাঙ্ক মাইনাস (-) ডিগ্রির অনেক নিচে, অর্থাৎ পরম শূন্য তাপমাত্রার কাছাকাছি। উপর থেকে নিচে নামলে এদের ভর বৃদ্ধি পাওয়ায় ফুটনাঙ্ক সামান্য **বাড়ে**।`
+            }
+        };
+
+        let currentChartInstance = null;
+
+        function drawMegaChart(targetGroup) {
+            const ctx = document.getElementById('megaGroupChart').getContext('2d');
+            if (currentChartInstance) { currentChartInstance.destroy(); }
+
+            let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            let gridColor = isDark ? '#334155' : '#cbd5e1';
+            let textColor = isDark ? '#f8fafc' : '#0f172a';
+
+            let currentData = database[targetGroup];
+
+            // Change chart container border dynamically based on group theme color
+            document.getElementById('graphBorder').style.borderColor = currentData.borderTheme;
+
+            currentChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: currentData.labels,
+                    datasets: [
+                        {
+                            label: 'গলনাঙ্ক (Melting Point °C) 🟡',
+                            data: currentData.melting,
+                            backgroundColor: '#f1c40f', // উজ্জ্বল হলুদ
+                            borderColor: '#d4ac0d',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'স্ফুটনাঙ্ক (Boiling Point °C) 🔵',
+                            data: currentData.boiling,
+                            backgroundColor: '#2980b9', // রয়্যাল ব্লু
+                            borderColor: '#1f618d',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: textColor, font: { size: 14, weight: 'bold' } } }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { weight: 'bold', size: 13 } },
+                            title: { display: true, text: 'মৌলের প্রতীক (পারমাণবিক সংখ্যা)', color: textColor, font: { weight: 'bold' } }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { weight: 'bold' } },
+                            title: { display: true, text: 'তাপমাত্রা (°C)', color: textColor, font: { weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            renderBadgesAndTexts(currentData);
+        }
+
+        function renderBadgesAndTexts(dataObj) {
+            let badgeBox = document.getElementById('badgeContainer');
+            badgeBox.innerHTML = "<span style='font-size:14px; font-weight:bold; margin-right:5px;'>ভৌত অবস্থা (25°C):</span>";
+            
+            dataObj.states.forEach(item => {
+                badgeBox.innerHTML += `<div class="state-badge ${item.c}">${item.m}: ${item.s}</div>`;
+            });
+
+            document.getElementById('megaAnalysisBox').innerHTML = dataObj.desc;
+        }
+
+        function switchMegaGroup(groupKey) {
+            const buttons = ['g1', 'g2', 'g17', 'g18'];
+            buttons.forEach(b => {
+                document.getElementById(b + 'Btn').classList.remove('active');
+            });
+
+            document.getElementById(groupKey + 'Btn').classList.add('active');
+            drawMegaChart(groupKey);
+        }
+
+        drawMegaChart('g1');
+    </script>
+</body>
+</html>

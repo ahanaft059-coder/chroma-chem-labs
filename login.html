@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register - ChromaChem Labs</title>
+    <style>
+        :root {
+            --bg-black: #000000;
+            --neon-cyan: #06b6d4;
+            --neon-purple: #a855f7;
+            --text-white: #f8fafc;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-black);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-white);
+            overflow: hidden;
+        }
+
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .auth-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(11, 15, 25, 0.9);
+            border: 2px solid var(--neon-cyan);
+            padding: 30px 25px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 0 50px rgba(6, 182, 212, 0.35);
+            box-sizing: border-box;
+            backdrop-filter: blur(12px);
+        }
+
+        /* Tabs Header */
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .auth-card h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-white);
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .input-group select option {
+            background: #0b0f19;
+            color: var(--text-white);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+            transition: all 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6);
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--neon-cyan);
+        }
+
+        .visitor-count {
+            color: var(--neon-cyan);
+            background: rgba(6, 182, 212, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="auth-card">
+        <!-- ট্যাব অপশন -->
+        <div class="auth-tabs">
+            <button class="tab-btn active" onclick="switchTab('register', event)">রেজিস্ট্রেশন</button>
+            <button class="tab-btn" onclick="switchTab('login', event)">লগইন</button>
+        </div>
+
+        <!-- রেজিস্ট্রেশন ফর্ম -->
+        <div id="register-section" class="form-section active">
+            <h2>নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+            <form onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <label>আপনার পূর্ণ নাম</label>
+                    <input type="text" id="regName" placeholder="যেমন: আপনার নাম..." required>
+                </div>
+                <div class="input-group">
+                    <label>ইমেইল অথবা ফোন নম্বর</label>
+                    <input type="text" id="regContact" placeholder="ইমেইল বা মোবাইল নম্বর দিন" required>
+                </div>
+                <div class="input-group">
+                    <label>স্কুলের নাম</label>
+                    <input type="text" id="regSchool" placeholder="স্কুলের নাম লিখুন..." required>
+                </div>
+                <div class="input-group">
+                    <label>শ্রেণি (Class)</label>
+                    <select id="regClass" required>
+                        <option value="">শ্রেণি নির্বাচন করুন</option>
+                        <option value="Class 4">চতুর্থ শ্রেণি (Class 4)</option>
+                        <option value="Class 5">পঞ্চম শ্রেণি (Class 5)</option>
+                        <option value="Class 6">ষষ্ঠ শ্রেণি (Class 6)</option>
+                        <option value="Class 7">সপ্তম শ্রেণি (Class 7)</option>
+                        <option value="Class 8">অষ্টম শ্রেণি (Class 8)</option>
+                        <option value="Class 9">নবম শ্রেণি (Class 9)</option>
+                        <option value="Class 10">দশম শ্রেণি (Class 10)</option>
+                        <option value="Class 11">একাদশ শ্রেণি (Class 11)</option>
+                        <option value="Class 12">দ্বাদশ শ্রেণি (Class 12)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="regPass" placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড" required>
+                </div>
+                <button type="submit" class="submit-btn">রেজিস্ট্রেশন সম্পন্ন করুন &rarr;</button>
+            </form>
+        </div>
+
+        <!-- লগইন ফর্ম -->
+        <div id="login-section" class="form-section">
+            <h2>ল্যাবে প্রবেশ করুন</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label>ইমেইল অথবা ফোন নম্বর</label>
+                    <input type="text" id="loginContact" placeholder="আপনার ইমেইল বা ফোন নম্বর" required>
+                </div>
+                <div class="input-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="loginPass" placeholder="আপনার পাসওয়ার্ড দিন" required>
+                </div>
+                <button type="submit" class="submit-btn">লগইন করুন &rarr;</button>
+            </form>
+        </div>
+
+        <div class="footer-info">
+            <a href="welcome.html" class="back-link">&larr; হোমপেজ</a>
+            <div class="visitor-count">👤 ভিজিটর: <span id="user-count-num">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        // লাইভ ইউজার কাউন্টার লজিক
+        let visits = localStorage.getItem('siteTotalVisits') || 1250;
+        visits = parseInt(visits) + 1;
+        localStorage.setItem('siteTotalVisits', visits);
+        document.getElementById('user-count-num').innerText = visits;
+
+        // ট্যাব সুইচিং লজিক
+        function switchTab(tab, evt) {
+            const regSec = document.getElementById('register-section');
+            const logSec = document.getElementById('login-section');
+            const buttons = document.querySelectorAll('.tab-btn');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+
+            if (tab === 'register') {
+                regSec.classList.add('active');
+                logSec.classList.remove('active');
+            } else {
+                logSec.classList.add('active');
+                regSec.classList.remove('active');
+            }
+        }
+
+        // রেজিস্ট্রেশন হ্যান্ডলার
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const contact = document.getElementById('regContact').value.trim();
+            const school = document.getElementById('regSchool').value.trim();
+            const studentClass = document.getElementById('regClass').value;
+            const pass = document.getElementById('regPass').value;
+
+            const userData = { name, contact, school, studentClass, pass, time: new Date().toLocaleString() };
+
+            let allUsers = JSON.parse(localStorage.getItem('chemAllRegisteredUsers')) || [];
+            
+            let existing = allUsers.find(u => u.contact === contact);
+            if (existing) {
+                alert('এই ইমেইল বা ফোন নম্বর দিয়ে আগেই অ্যাকাউন্ট খোলা হয়েছে!');
+                return;
+            }
+
+            allUsers.push(userData);
+            localStorage.setItem('chemAllRegisteredUsers', JSON.stringify(allUsers));
+
+            localStorage.setItem('chemUserName', name);
+            localStorage.setItem('chemSchoolName', school);
+            localStorage.setItem('chemUserContact', contact);
+
+            alert('রেজিস্ট্রেশন সফল হয়েছে!');
+            window.location.href = 'index.html';
+        }
+
+        // লগইন হ্যান্ডলার
+        function handleLogin(e) {
+            e.preventDefault();
+            const contact = document.getElementById('loginContact').value.trim();
+            const pass = document.getElementById('loginPass').value;
+
+            let allUsers = JSON.parse(localStorage.getItem('chemAllRegisteredUsers')) || [];
+            let foundUser = allUsers.find(u => u.contact === contact && u.pass === pass);
+
+            if (foundUser) {
+                localStorage.setItem('chemUserName', foundUser.name);
+                localStorage.setItem('chemSchoolName', foundUser.school);
+                localStorage.setItem('chemUserContact', foundUser.contact);
+
+                window.location.href = 'index.html';
+            } else {
+                alert('ইমেইল/ফোন নম্বর অথবা পাসওয়ার্ড ভুল হয়েছে!');
+            }
+        }
+
+        // ব্যাকগ্রাউন্ড অ্যানিমেশন
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 40;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * -0.4 - 0.1;
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = Math.random() > 0.5 ? '#06b6d4' : '#a855f7';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = ctx.fillStyle;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>আণবিক ভর শিকারী - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg: #000000; 
+            --card: #0b0f17; 
+            --text: #f8fafc; 
+            --accent: #f97316; /* Premium Neon Orange Accent */
+            --accent-glow: rgba(249, 115, 22, 0.2);
+            --border: #1e293b;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            padding: 20px; 
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s; 
+        }
+        
+        /* Premium Back Button */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: #f8fafc; 
+            transform: translateX(-3px);
+        }
+        
+        /* Theme indicator icon hidden or made minimal since it's pure black mode now */
+        .theme-btn { display: none; }
+        
+        /* Premium Game Card */
+        .game-card { 
+            max-width: 500px; 
+            width: 100%;
+            background: var(--card); 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
+            text-align: center;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            background: linear-gradient(to right, #fb923c, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Stats dashboard */
+        .stats-bar {
+            display: flex; 
+            justify-content: space-between; 
+            font-weight: 600; 
+            margin: 20px 0;
+            background: rgba(255,255,255,0.02);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.03);
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+        
+        /* Neon Formula Glowing Box */
+        .formula-box { 
+            background: rgba(249, 115, 22, 0.03); 
+            padding: 25px 15px; 
+            border-radius: 18px; 
+            font-size: 3rem; 
+            color: #fb923c; 
+            font-weight: 800; 
+            margin: 20px 0 10px 0; 
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            box-shadow: inset 0 0 20px var(--accent-glow), 0 10px 20px rgba(0,0,0,0.3);
+            text-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+        }
+        
+        /* Premium Game Options Grid */
+        .btn { 
+            padding: 16px; 
+            border: 1px solid var(--border); 
+            border-radius: 14px; 
+            background: rgba(255,255,255,0.02); 
+            color: #cbd5e1; 
+            cursor: pointer; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .btn:hover:not(:disabled) { 
+            background: var(--accent); 
+            color: white; 
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.35);
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            cursor: default;
+        }
+        
+        /* Dynamic Game Over Screen */
+        #gameOverCard { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            z-index: 1000; 
+            width: 85%; 
+            max-width: 400px; 
+            background: #0f1422; 
+            padding: 40px; 
+            border-radius: 28px; 
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+        
+        .restart-btn {
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .restart-btn:hover {
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div id="gameContainer" class="game-card">
+    <h1 class="game-title">🟠 আণবিক ভর শিকারী</h1>
+    <p style="color: #64748b; font-size: 0.95rem; margin: 0;">সঠিক আণবিক ভর (Molecular Mass) বেছে নাও!</p>
+    
+    <div class="stats-bar">
+        <span>স্কোর: <span id="score" style="color: #fb923c;">0</span></span>
+        <span style="color: #f59e0b;">সেরা: <span id="highScore">0</span></span>
+        <span>জীবন: <span id="lives">❤️❤️❤️</span></span>
+    </div>
+    
+    <div id="formula" class="formula-box">--</div>
+    <div id="name" style="margin-bottom: 25px; color: #94a3b8; font-weight: 600; font-size: 1.1rem;">--</div>
+    <div id="options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
+</div>
+
+<div id="gameOverCard">
+    <h2 id="endTitle" style="font-size: 2rem; margin-top: 0;">💥 গেম ওভার!</h2>
+    <p id="msg" style="font-size: 1.05rem; color: #94a3b8; margin-bottom: 25px;"></p>
+    <div style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">অর্জিত স্কোর</div>
+    <h1 id="finalScore" style="color: #fb923c; font-size: 3.5rem; margin: 5px 0 30px 0; font-weight: 800;">0</h1>
+    <button onclick="location.reload()" class="restart-btn">আবার চেষ্টা করুন 🔄</button>
+</div>
+
+<script>
+    let highScore = localStorage.getItem('molecular_highscore') || 0;
+    document.getElementById('highScore').innerText = highScore;
+
+    const data = [
+        {f: "H", n: "হাইড্রোজেন", m: 1}, {f: "He", n: "হিলিয়াম", m: 4}, {f: "Li", n: "লিথিয়াম", m: 7},
+        {f: "C", n: "কার্বন", m: 12}, {f: "N", n: "নাইট্রোজেন", m: 14}, {f: "O", n: "অক্সিজেন", m: 16}, {f: "H", n: "হাইড্রোজেন", m: 1}, {f: "He", n: "হিলিয়াম", m: 4}, {f: "C", n: "কার্বন", m: 12},
+        {f: "N", n: "নাইট্রোজেন", m: 14}, {f: "O", n: "অক্সিজেন", m: 16}, {f: "Na", n: "সোডিয়াম", m: 23},
+        {f: "Mg", n: "ম্যাগনেসিয়াম", m: 24}, {f: "Al", n: "অ্যালুমিনিয়াম", m: 27}, {f: "Cl", n: "ক্লোরিন", m: 35.5},
+        {f: "K", n: "পটাশিয়াম", m: 39}, {f: "Ca", n: "ক্যালসিয়াম", m: 40}, {f: "Fe", n: "আয়রন", m: 56},
+        {f: "Cu", n: "কপার", m: 63.5}, {f: "Ag", n: "সিলভার", m: 108}, {f: "Au", n: "গোল্ড", m: 197}, {f: "H2O", n: "পানি", m: 18}, {f: "CO2", n: "কার্বন ডাই অক্সাইড", m: 44},
+        {f: "NH3", n: "অ্যামোনিয়া", m: 17}, {f: "CH4", n: "মিথেন", m: 16},
+        {f: "HCl", n: "হাইড্রোক্লোরিক অ্যাসিড", m: 36.5}, {f: "NaCl", n: "সোডিয়াম ক্লোরাইড", m: 58.5},
+        {f: "NaOH", n: "সোডিয়াম হাইড্রোক্সাইড", m: 40}, {f: "CaO", n: "ক্যালসিয়াম অক্সাইড", m: 56},
+        {f: "Na", n: "সোডিয়াম", m: 23}, {f: "Mg", n: "ম্যাগনেসিয়াম", m: 24}, {f: "Cl", n: "ক্লোরিন", m: 35.5},
+        {f: "H2O", n: "পানি", m: 18}, {f: "CO2", n: "কার্বন ডাই অক্সাইড", m: 44}, {f: "NaCl", n: "সোডিয়াম ক্লোরাইড", m: 58.5},
+        {f: "H2SO4", n: "সালফিউরিক অ্যাসিড", m: 98}, {f: "C6H12O6", n: "গ্লুকোজ", m: 180}, {f: "H2SO4", n: "সালফিউরিক অ্যাসিড", m: 98}, {f: "HNO3", n: "নাইট্রিক অ্যাসিড", m: 63},
+        {f: "C6H12O6", n: "গ্লুকোজ", m: 180}, {f: "CaCO3", n: "ক্যালসিয়াম কার্বনেট", m: 100},
+        {f: "CH3COOH", n: "অ্যাসিটিক অ্যাসিড", m: 60}, {f: "KMnO4", n: "পটাশিয়াম পারম্যাঙ্গানেট", m: 158},
+        {f: "FeSO4", n: "ফেরাস সালফেট", m: 152}, {f: "C2H5OH", n: "ইথানল", m: 46}, {f: "CuSO4·5H2O", n: "কপার সালফেট পেন্টাহাইড্রেট", m: 249.5},
+        {f: "Al2(SO4)3", n: "অ্যালুমিনিয়াম সালফেট", m: 342},
+        {f: "KAl(SO4)2·12H2O", n: "পটাশ অ্যালাম (ফিটকিরি)", m: 474},
+        {f: "C12H22O11", n: "সুক্রোজ (চিনি)", m: 342},
+        {f: "Fe2(SO4)3", n: "ফেরিক সালফেট", m: 400},
+        {f: "K2Cr2O7", n: "পটাশিয়াম ডাইক্রোমেট", m: 294},
+        {f: "Na2CO3·10H2O", n: "ওয়াশিং সোডা", m: 286},
+        {f: "Ca3(PO4)2", n: "ক্যালসিয়াম ফসফেট", m: 310},
+        {f: "C8H10N4O2", n: "ক্যাফেইন", m: 194},
+        {f: "Mg(OH)2", n: "ম্যাগনেসিয়াম হাইড্রোক্সাইড", m: 58},
+        {f: "CuSO4·5H2O", n: "কপার সালফেট পেন্টাহাইড্রেট", m: 249.5}, {f: "Al2(SO4)3", n: "অ্যালুমিনিয়াম সালফেট", m: 342}
+    ];
+
+    let score = 0, lives = 3;
+
+    function play() {
+        if(score >= 500) {
+            if (score > highScore) localStorage.setItem('molecular_highscore', score);
+            document.getElementById('endTitle').innerText = "🎉 অভিনন্দন!";
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('msg').innerText = "তুমি আণবিক ভর মাস্টার!";
+            document.getElementById('gameOverCard').style.display = 'block';
+            document.getElementById('gameContainer').style.filter = 'blur(6px)';
+            document.getElementById('gameContainer').style.opacity = '0.3';
+            return;
+        }
+
+        let item = data[Math.floor(Math.random() * data.length)];
+        document.getElementById('formula').innerText = item.f;
+        document.getElementById('name').innerText = item.n;
+
+        let opts = [item.m, item.m+5, item.m+10, item.m-2].sort(() => Math.random() - 0.5);
+        let grid = document.getElementById('options');
+        grid.innerHTML = '';
+        
+        opts.forEach(val => {
+            let b = document.createElement('button');
+            b.className = 'btn'; b.innerText = val;
+            b.onclick = () => {
+                document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+                if(val === item.m) {
+                    b.style.background = "#22c55e"; b.style.color = "white"; b.style.borderColor = "#22c55e";
+                    score += 10; document.getElementById('score').innerText = score;
+                    setTimeout(play, 800);
+                } else {
+                    b.style.background = "#ef4444"; b.style.color = "white"; b.style.borderColor = "#ef4444";
+                    Array.from(grid.children).forEach(btn => {
+                        if(parseFloat(btn.innerText) === item.m) {
+                            btn.style.background = "#22c55e";
+                            btn.style.color = "white";
+                            btn.style.borderColor = "#22c55e";
+                        }
+                    });
+                    lives--; document.getElementById('lives').innerText = "❤️".repeat(lives);
+                    if(lives === 0) {
+                        if (score > highScore) localStorage.setItem('molecular_highscore', score);
+                        document.getElementById('finalScore').innerText = score;
+                        document.getElementById('msg').innerText = (score < 50) ? "আরেকটু ভালো করে পড়ো!" : "দারুণ খেলেছো!";
+                        document.getElementById('gameOverCard').style.display = 'block';
+                        document.getElementById('gameContainer').style.filter = 'blur(6px)';
+                        document.getElementById('gameContainer').style.opacity = '0.3';
+                    } else { setTimeout(play, 1200); }
+                }
+            };
+            grid.appendChild(b);
+        });
+    }
+    play();
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valency Finder | যোজনী সার্চার</title>
+    <style>
+        :root { --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --accent: #3b82f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+        .back-btn-top { position: absolute; top: 20px; left: 20px; background: #334155; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; }
+        .back-btn-top:hover { background: #475569; }
+
+        .card { background: var(--card-bg); padding: 40px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 500px; border: 1px solid #334155; }
+        h2 { text-align: center; color: var(--accent); margin-bottom: 25px; }
+        
+        input { width: 100%; padding: 15px; border: 2px solid #334155; border-radius: 12px; font-size: 1rem; background: #0f172a; color: white; box-sizing: border-box; }
+        input:focus { outline: none; border-color: var(--accent); }
+        
+        button#search-btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; margin-top: 15px; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        button#search-btn:hover { background: #2563eb; }
+        
+        #result { margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 10px; text-align: center; border-left: 5px solid var(--accent); min-height: 25px; }
+        
+        .manual-rules { margin-top: 30px; font-size: 0.9rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <button class="back-btn-top" onclick="window.location.href='calculators.html'">⬅️ Back/ফিরে যান</button>
+
+    <div class="card">
+        <h2>⚛️ Valency Finder / যোজনী সার্চার</h2>
+        <input type="text" id="input" placeholder="Name or symbol (মৌলের নাম বা সংকেত)...">
+        <button id="search-btn" onclick="search()">Search / খুঁজুন</button>
+        
+        <div id="result">Result will appear here / ফলাফল এখানে দেখুন...</div>
+
+        <div class="manual-rules">
+            <p>✔ Valencies are swapped during compound formation. / যৌগ গঠনের সময় যোজনী অদলবদল হয়।</p>
+            <p>✔ Valency of 1 is usually omitted. / যোজনী ১ হলে সংকেতে লেখার প্রয়োজন হয় না।</p>
+        </div>
+    </div>
+
+    <script>
+    const db = {
+        "hydrogen": 1, "h": 1, "lithium": 1, "li": 1, "sodium": 1, "na": 1, "potassium": 1, "k": 1,
+        "beryllium": 2, "be": 2, "magnesium": 2, "mg": 2, "calcium": 2, "ca": 2, "zinc": 2, "zn": 2,
+        "boron": 3, "b": 3, "aluminium": 3, "al": 3,
+        "carbon": 4, "c": 4, "silicon": 4, "si": 4,
+        "nitrogen": 3, "n": 3, "phosphorus": 3, "p": 3,
+        "oxygen": 2, "o": 2, "sulfur": 2, "s": 2,
+        "fluorine": 1, "f": 1, "chlorine": 1, "cl": 1, "bromine": 1, "br": 1, "iodine": 1, "i": 1,
+        "iron": "2, 3", "fe": "2, 3",
+        "copper": "1, 2", "cu": "1, 2",
+        "gold": "1, 3", "au": "1, 3",
+        "silver": 1, "ag": 1,
+        "mercury": "1, 2", "hg": "1, 2",
+        "lead": "2, 4", "pb": "2, 4",
+        "tin": "2, 4", "sn": "2, 4",
+        "ammonium": 1, "nh4": 1,
+        "hydroxide": 1, "oh": 1,
+        "nitrate": 1, "no3": 1,
+        "bicarbonate": 1, "hco3": 1,
+        "sulfate": 2, "so4": 2,
+        "carbonate": 2, "co3": 2,
+        "phosphate": 3, "po4": 3
+    };
+
+    function search() {
+        let val = document.getElementById('input').value.toLowerCase().trim();
+        let res = document.getElementById('result');
+        if(db[val]) {
+            res.innerHTML = `Valency of <strong>${val.toUpperCase()}</strong>: <strong>${db[val]}</strong><br>
+                             <strong>${val.toUpperCase()}</strong> এর যোজনী: <strong>${db[val]}</strong>`;
+            res.style.borderColor = "#10b981";
+        } else {
+            res.innerHTML = "❌ Sorry! Not found. / দুঃখিত! খুঁজে পাওয়া যায়নি।";
+            res.style.borderColor = "#ef4444";
+        }
+    }
+
+    document.getElementById('input').addEventListener("keypress", (e) => { 
+        if(e.key === "Enter") search(); 
+    });
+    </script>
+</body>
+</html>

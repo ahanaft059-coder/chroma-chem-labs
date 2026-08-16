@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আণবিক ভর ক্যালকুলেটর</title>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #cbd5e1;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --primary: #9b59b6;
+            --secondary: #34495e;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 30px 15px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container { width: 100%; max-width: 500px; }
+        
+        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
+        .back-btn {
+            text-decoration: none; color: var(--text-color); font-weight: bold; background: var(--card-bg);
+            padding: 10px 18px; border-radius: 14px; border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px var(--shadow); transition: all 0.2s; cursor: pointer;
+        }
+        .back-btn:hover { transform: translateX(-3px); }
+
+        header h2 {
+            font-size: 28px;
+            margin: 0 0 5px 0;
+            background: linear-gradient(45deg, #9b59b6, #34495e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+        header p { margin-bottom: 25px; opacity: 0.8; font-size: 14px; text-align: center; }
+
+        .calc-box {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-calc {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+            transition: 0.2s;
+        }
+        .btn-calc:hover { transform: scale(1.02); opacity: 0.9; }
+
+        /* Results Panel */
+        .result-panel {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(155, 89, 182, 0.05);
+            border: 1px dashed var(--primary);
+            border-radius: 16px;
+            display: none;
+            text-align: left;
+        }
+        .result-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; opacity: 0.8; }
+        .result-value { font-size: 36px; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+        .result-breakdown { font-size: 14px; line-height: 1.6; border-top: 1px solid var(--border-color); padding-top: 10px; }
+
+        .helper-text {
+            margin-top: 20px;
+            font-size: 13px;
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-nav">
+            <a href="calculators.html" class="back-btn">← ক্যালকুলেটর হাবে ফিরুন</a>
+        </div>
+
+        <header>
+            <h2>🧬 আণবিক ভর ক্যালকুলেটর</h2>
+            <p>যেকোনো রাসায়নিক সংকেত লেখো, নিখুঁত আণবিক ভর লাইভ বের হয়ে যাবে!</p>
+        </header>
+
+        <div class="calc-box">
+            <div class="input-group">
+                <label for="formulaInput">যৌগের সংকেত লিখুন (যেমন: H2O, CaCO3, H2SO4):</label>
+                <input type="text" id="formulaInput" class="input-field" placeholder="H2SO4..." autocomplete="off">
+            </div>
+
+            <button class="btn-calc" onclick="calculateMolecularMass()">আণবিক ভর বের করো ⚡</button>
+
+            <div class="result-panel" id="resultPanel">
+                <div class="result-title">মোট আণবিক ভর ($Molecular\ Mass$):</div>
+                <div class="result-value" id="massOutput">0</div>
+                <div class="result-breakdown" id="breakdownOutput"></div>
+            </div>
+        </div>
+
+        <div class="helper-text">
+            <strong>⚠️ লিখার নিয়ম:</strong> মৌলের প্রথম অক্ষর বড় হাতের ($Capital\ Letter$) এবং পরের অক্ষর ছোট হাতের ($Small\ Letter$) দিতে হবে। যেমন: সোডিয়াম ক্লোরাইডের জন্য লিখবে <strong>NaCl</strong> (সব বড় হাতের NACL লিখলে কাজ করবে না)। সংখ্যাগুলো সাধারণ কিবোর্ড দিয়ে লিখলেই হবে (যেমন: H2O)।
+        </div>
+    </div>
+
+    <script>
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+
+        // Atomic weights pool for elements 1 to 36
+        const atomicWeights = {
+            'H': 1, 'He': 4, 'Li': 6.9, 'Be': 9, 'B': 10.8, 'C': 12, 'N': 14, 'O': 16,
+            'F': 19, 'Ne': 20.2, 'Na': 23, 'Mg': 24.3, 'Al': 27, 'Si': 28.1, 'P': 31,
+            'S': 32, 'Cl': 35.5, 'Ar': 39.9, 'K': 39.1, 'Ca': 40.1, 'Sc': 45, 'Ti': 47.9,
+            'V': 50.9, 'Cr': 52, 'Mn': 54.9, 'Fe': 55.8, 'Co': 58.9, 'Ni': 58.7, 'Cu': 63.5,
+            'Zn': 65.4, 'Ga': 69.7, 'Ge': 72.6, 'As': 74.9, 'Se': 79, 'Br': 79.9, 'Kr': 83.8
+        };
+
+        function calculateMolecularMass() {
+            let formula = document.getElementById('formulaInput').value.trim();
+            if (!formula) return;
+
+            // Regex pattern to extract element and count (e.g., Na2, Cl, H)
+            let regex = /([A-Z][a-z]*)(\d*\.?\d*)/g;
+            let match;
+            let totalMass = 0;
+            let breakdownList = [];
+            let isValid = true;
+            let parsedAtomsCount = 0;
+
+            while ((match = regex.exec(formula)) !== null) {
+                parsedAtomsCount++;
+                let element = match[1];
+                let countStr = match[2];
+                let count = countStr === "" ? 1 : parseFloat(countStr);
+
+                if (atomicWeights.hasOwnProperty(element)) {
+                    let weight = atomicWeights[element];
+                    let subTotal = weight * count;
+                    totalMass += subTotal;
+                    breakdownList.push(`• ${element} (${weight}) × ${count} = ${subTotal.toFixed(1)}`);
+                } else {
+                    isValid = false;
+                    alert(`দুঃখিত! '${element}' মৌলটি আমাদের তালিকায় নেই অথবা সংকেত লিখতে ভুল হয়েছে (১-৩৬ মৌলের মধ্যে লিখুন)।`);
+                    break;
+                }
+            }
+
+            // Fallback for completely invalid text that doesn't trigger match
+            if (parsedAtomsCount === 0 || !isValid) {
+                document.getElementById('resultPanel').style.display = 'none';
+                return;
+            }
+
+            // Render output
+            document.getElementById('massOutput').innerText = parseFloat(totalMass.toFixed(3));
+            document.getElementById('breakdownOutput').innerHTML = "<strong>হিসাবের বিশদ বিবরণ:</strong><br>" + breakdownList.join("<br>");
+            document.getElementById('resultPanel').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

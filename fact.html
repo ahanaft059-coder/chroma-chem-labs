@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রসায়ন জ্ঞানকোষ ও ফান ফ্যাক্টস</title>
+    
+    <!-- Font Awesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --section-border: rgba(168, 85, 247, 0.3);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-color: #f8fafc;
+            --border-color: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --section-border: rgba(168, 85, 247, 0.4);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Top Back & Theme Navigation */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .back-btn {
+            text-decoration: none;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: 0.2s;
+        }
+        .back-btn:hover {
+            transform: scale(1.02);
+            color: #00f2fe;
+        }
+
+        .page-title-area {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-title-area h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #a855f7;
+        }
+        .page-title-area p {
+            opacity: 0.8;
+            font-size: 16px;
+        }
+
+        /* Category Sections */
+        .category-section {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+        .section-heading {
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .item-card {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.08), rgba(168, 85, 247, 0.08));
+            border: 2px solid var(--section-border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .item-card:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(135deg, #00f2fe, #3b82f6);
+            color: #0b0f19;
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
+        }
+        .item-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        /* Popup Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: left;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 10px 30px var(--shadow);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close-btn {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            margin-top: 20px;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Header with Back Button -->
+        <div class="page-header">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> হোম পেজে ফিরে যাও</a>
+            <button class="back-btn" onclick="toggleTheme()"> 🌓 থিম </button>
+        </div>
+
+        <div class="page-title-area">
+            <h1> 🧠 রসায়ন  ফান ফ্যাক্টস </h1>
+            <p> মৌল, বিভিন্ন দেশের অবদান এবং বিজ্ঞানীদের আবিষ্কার নিয়ে সাজানো তথ্যভাণ্ডার।</p>
+        </div>
+
+        <!-- ১. মৌলসমূহ (Elements Section) -->
+        <div class="category-section">
+            <h2 class="section-heading">⚛️ মৌলসমূহ ও তাদের মজার তথ্য</h2>
+            <p style="opacity: 0.8; font-size: 14px;">নিচ থেকে যেকোনো মৌলের কার্ডে ক্লিক করো এবং তার অসাধারণ সব ফান ফ্যাক্ট জেনে নাও!</p>
+            
+            <div class="item-grid">
+                <div class="item-card" onclick="showDetail('hydrogen')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">হাইড্রোজেন (H)</div>
+                </div>
+                
+                <div class="item-card" onclick="showDetail('oxygen')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">অক্সিজেন (O)</div>
+                </div>
+                
+                <div class="item-card" onclick="showDetail('carbon')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">কার্বন (C)</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('sodium')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">সোডিয়াম (Na)</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('helium')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">হিলিয়াম (He)</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('gold')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">স্বর্ণ বা গোল্ড (Au)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ২. রসায়নে বিভিন্ন দেশের অবদান (Countries Section) -->
+        <div class="category-section">
+            <h2 class="section-heading">🗺️ রসায়নে বিভিন্ন দেশের অবদান</h2>
+            <p style="opacity: 0.8; font-size: 14px;">কোন দেশের বিজ্ঞানীরা রসায়ন শাস্ত্রে কেমন অবদান রেখেছেন তা জানতে নিচে ক্লিক করো!</p>
+            
+            <div class="item-grid">
+                <div class="item-card" onclick="showDetail('egypt_greece')">
+                    <div style="font-size: 26px;">🏛️</div>
+                    <div class="item-title">মিশর ও গ্রিস (আলকেমি)</div>
+                </div>
+                
+                <div class="item-card" onclick="showDetail('arabia')">
+                    <div style="font-size: 26px;">📜</div>
+                    <div class="item-title">আরব বিশ্ব</div>
+                </div>
+                
+                <div class="item-card" onclick="showDetail('france')">
+                    <div style="font-size: 26px;">🇫🇷</div>
+                    <div class="item-title">ফ্রান্স</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('germany')">
+                    <div style="font-size: 26px;">🇩🇪</div>
+                    <div class="item-title">জার্মানি</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('uk')">
+                    <div style="font-size: 26px;">🇬🇧</div>
+                    <div class="item-title">যুক্তরাজ্য (UK)</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('usa')">
+                    <div style="font-size: 26px;">🇺🇸</div>
+                    <div class="item-title">যুক্তরাষ্ট্র (USA)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৩. প্রখ্যাত বিজ্ঞানীগণ (Scientists Section) -->
+        <div class="category-section">
+            <h2 class="section-heading">👨‍🔬 প্রখ্যাত বিজ্ঞানী ও তাদের অবদান</h2>
+            <p style="opacity: 0.8; font-size: 14px;">নিচ থেকে যেকোনো বিজ্ঞানীর নামের কার্ডে ক্লিক করো এবং রসায়নে তাদের বিশেষ অবদান সম্পর্কে বিস্তারিত জেনে নাও!</p>
+            
+            <div class="item-grid">
+                <div class="item-card" onclick="showDetail('lavoisier')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">অঁতোয়ান লাভোভিসিয়ে</div>
+                </div>
+                
+                <div class="item-card" onclick="showDetail('mendeleev')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">দিমিত্রি মেন্দিভ</div>
+                </div>
+                
+                <div class="item-card" onclick="showDetail('curie')">
+                    <div style="font-size: 26px;">⚡</div>
+                    <div class="item-title">ম্যাসুরি কুরি</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('dalton')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">জন ডাল্টন</div>
+                </div>
+
+                <div class="item-card" onclick="showDetail('boyle')">
+                    <div style="font-size: 26px;"></div>
+                    <div class="item-title">রবার্ট বয়েল</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Modal -->
+    <div id="chemModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0; color: #a855f7;" id="modal-title">তথ্য</h3>
+            <p id="fact-text" style="font-size: 15px; opacity: 0.9; line-height: 1.6;"></p>
+            <button class="close-btn" onclick="closeModal()">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            document.documentElement.setAttribute('data-theme', next);
+        }
+
+        // সম্প্রসারিত ও সমৃদ্ধ ডাটাবেস
+        const database = {
+            hydrogen: {
+                title: " হাইড্রোজেন (Hydrogen)",
+                facts: [
+                    "১. মহাবিশ্বের মোট ভরের প্রায় ৭৫% জুড়েই রয়েছে শুধু হাইড্রোজেন।",
+                    "২. এটি পর্যায় সারণীর সবচেয়ে হালকা এবং প্রথম মৌল (পারমাণবিক সংখ্যা ১)।",
+                    "৩. তরল হাইড্রোজেন রকেটের জ্বালানি হিসেবে মহাশূন্যে ব্যবহার করা হয়।"
+                ]
+            },
+            oxygen: {
+                title: " অক্সিজেন (Oxygen)",
+                facts: [
+                    "১. পৃথিবীর ভূত্বকের সবচেয়ে বেশি পরিমাণে থাকা মৌল হলো অক্সিজেন (প্রায় ৪৬%)।",
+                    "২. তরল বা কঠিন অবস্থায় অক্সিজেনের রঙ ফ্যাকাশে নীল দেখায়।",
+                    "৩. পৃথিবীর বায়ুমণ্ডলের প্রায় ২১% অংশজুড়ে অক্সিজেন গ্যাস রয়েছে।"
+                ]
+            },
+            carbon: {
+                title: " কার্বন (Carbon)",
+                facts: [
+                    "১. কার্বনের দুটি বিপরীত রূপ হলো গ্রাফাইট ও হীরা।",
+                    "২. পৃথিবীতে যত জৈব যৌগ পাওয়া যায়, তার প্রতিটিতেই কার্বন প্রধান উপাদান।",
+                    "৩. কার্বনের যোজনী সবসময় ৪ (টেট্রাভ্যালেন্ট)।"
+                ]
+            },
+            sodium: {
+                title: " সোডিয়াম (Sodium - Na)",
+                facts: [
+                    "১. সোডিয়াম এত নরম ধাতু যে এটি ছুরি দিয়ে মাখনের মতো কাটা যায়।",
+                    "২. এটি বাতাসে খোলা রাখলে আগুন ধরে যায় এবং পানির সাথে তীব্র বিক্রিয়া করে।",
+                    "৩. ক্লোরিনের সাথে যুক্ত হয়ে এটি আমাদের খাবার লবণ (NaCl) তৈরি করে।"
+                ]
+            },
+            helium: {
+                title: " হিলিয়াম (Helium - He)",
+                facts: [
+                    "১. হিলিয়াম মহাবিশ্বের দ্বিতীয় সবচেয়ে হালকা এবং সহজলভ্য মৌল।",
+                    "২. এটি বাতাসে বেলুন ওড়াতে ব্যবহৃত হয় কারণ এটি অত্যন্ত হালকা এবং অদাহ্য।",
+                    "৩. এটি গ্রহের বায়ুমণ্ডল থেকে মহাশূন্যে সহজে হারিয়ে যেতে পারে।"
+                ]
+            },
+            gold: {
+                title: " স্বর্ণ বা গোল্ড (Gold - Au)",
+                facts: [
+                    "১. এটি এমন এক নোবেল ধাতু যা কখনো বায়ুর সংস্পর্শে এসে জং ধরে না বা নষ্ট হয় না।",
+                    "২. ১ গ্রাম সোনা দিয়ে প্রায় ২ কিলোমিটার লম্বা সুক্ষ্ম তার তৈরি করা সম্ভব।",
+                    "৩. এর রাসায়নিক প্রতীক 'Au' এসেছে ল্যাটিন শব্দ 'Aurum' থেকে।"
+                ]
+            },
+            egypt_greece: {
+                title: "🏛️ মিশর ও গ্রিসের অবদান",
+                facts: [
+                    "১. প্রাচীন মিশরে সোনা তৈরি এবং ধাতু নিষ্কাশনের মাধ্যমে আলকেমি বা রসায়নের প্রাথমিক চর্চা শুরু হয়েছিল।",
+                    "২. গ্রিক দার্শনিকরা প্রথম পদার্থের ক্ষুদ্রতম কণা বা 'অ্যাটম' ধারণার প্রস্তাব করেছিলেন।"
+                ]
+            },
+            arabia: {
+                title: "📜 আরব বিশ্বের অবদান",
+                facts: [
+                    "১. আরব বিজ্ঞানীরা (যেমন জাবির ইবনে হাইয়ান) পরীক্ষাগারে পাতন (Distillation) পদ্ধতি এবং বিভিন্ন অ্যাসিড আবিষ্কার করেন।",
+                    "২. 'আল-কিমিয়া' শব্দটি থেকে বর্তমানের 'কেমিস্ট্রি' বা রসায়ন নামটি এসেছে।"
+                ]
+            },
+            france: {
+                title: "🇫🇷 ফ্রান্সের অবদান",
+                facts: [
+                    "১. আধুনিক রসায়নের জনক অঁতোয়ান লাভোভিসিয়ে ফ্রান্সে বসেই মৌলের নামকরণ করেন।",
+                    "২. তারা ওজন ও পরিমাপের মেট্রিক পদ্ধতি চালু করেন যা রসায়নের গণনায় বিপ্লব আনে।"
+                ]
+            },
+            germany: {
+                title: "🇩🇪 জার্মানির অবদান",
+                facts: [
+                    "১. জার্মানি জৈব রসায়ন, রঞ্জক পদার্থ (Dye industry) এবং রাসায়নিক শিল্প উৎপাদনে বিশ্বে নেতৃত্ব দিয়েছিল।",
+                    "২. তারা সারের কারখানা এবং সিন্থেটিক উপাদান আবিষ্কারে বিরাট ভূমিকা রাখে।"
+                ]
+            },
+            uk: {
+                title: "🇬🇧 যুক্তরাজ্যের অবদান",
+                facts: [
+                    "১. রবার্ট বয়েল এবং জন ডাল্টনের হাত ধরে যুক্তরাজ্যে আধুনিক রসায়নের পরীক্ষামূলক ভিত্তি স্থাপন হয়।",
+                    "২. গ্যাসীয় পদার্থের চাপ ও আয়তনের মধ্যকার সম্পর্ক (বয়েলের সূত্র) এখানেই আবিষ্কৃত হয়।"
+                ]
+            },
+            usa: {
+                title: "🇺🇸 যুক্তরাষ্ট্রের অবদান",
+                facts: [
+                    "১. পারমাণবিক রসায়ন ও সিন্থেটিক ভারী মৌল (যেমন প্লুটোনিয়াম, ইউরেনিয়াম পরবর্তী মৌল) আবিষ্কারে যুক্তরাষ্ট্র অনন্য ভূমিকা রেখেছে।",
+                    "২. আধুনিক পলিমার ও পেট্রোকেমিক্যাল শিল্পে তাদের অবদান সবচেয়ে বেশি।"
+                ]
+            },
+            lavoisier: {
+                title: " অঁতোয়ান লাভোভিসিয়ে (Antoine Lavoisier)",
+                facts: [
+                    "১. **আধুনিক রসায়নের জনক:** তাকে আধুনিক রসায়নের প্রতিষ্ঠাতা বলা হয়।",
+                    "২. **ভরের সংরক্ষণ সূত্র:** বিক্রিয়ার আগে ও পরে পদার্থের মোট ভর সর্বদা সমান থাকে।",
+                    "৩. **অক্সিজেনের নামকরণ:** তিনি বাতাসের উপাদান পরীক্ষা করে অক্সিজেন নামকরণ করেন।"
+                ]
+            },
+            mendeleev: {
+                title: " দিমিত্রি মেন্দিভ (Dmitri Mendeleev)",
+                facts: [
+                    "১. **পর্যায় সারণী প্রণেতা:** মৌলগুলোকে সাজিয়ে প্রথম কার্যকরী পর্যায় সারণী তৈরি করেন।",
+                    "২. **ভবিষ্যদ্বাণী:** অজানা মৌলগুলোর জন্য ফাঁকা স্থান রেখে গিয়েছিলেন যা পরে সঠিক প্রমাণিত হয়।"
+                ]
+            },
+            curie: {
+                title: " ম্যাসুরি কুরি (Marie Curie)",
+                facts: [
+                    "১. **তেজস্ক্রিয়তা গবেষণা:** তেজস্ক্রিয়তা নিয়ে অসামান্য গবেষণা করেন।",
+                    "২. **নতুন মৌল আবিষ্কার:** রেডিয়াম ও পোলোনিয়াম আবিষ্কার করেন।",
+                    "৩. **নোবেল রেকর্ড:** তিনিই একমাত্র বিজ্ঞানী যিনি পদার্থ ও রসায়ন উভয় বিষয়ে নোবেল পান।"
+                ]
+            },
+            dalton: {
+                title: " জন ডাল্টন (John Dalton)",
+                facts: [
+                    "১. **পারমাণবিক তত্ত্ব:** ১৮০৩ সালে বিখ্যাত ডাল্টনের পারমাণবিক তত্ত্ব প্রকাশ করেন।",
+                    "২. **পরমাণু ধারণা:** প্রতিটি মৌল অবিভাজ্য কণা বা পরমাণু দ্বারা গঠিত।"
+                ]
+            },
+            boyle: {
+                title: " রবার্ট বয়েল (Robert Boyle)",
+                facts: [
+                    "১. **আধুনিক রসায়নের অগ্রদূত:** তিনি আলকেমি থেকে বের করে রসায়নকে একটি পরীক্ষামূলক বিজ্ঞানের রূপ দিতে সাহায্য করেন।",
+                    "২. **বয়েলের সূত্র:** নির্দিষ্ট তাপমাত্রায় গ্যাসের আয়তন ও চাপের বিপরীত সম্পর্কিত বিখ্যাত সূত্রটি তিনি আবিষ্কার করেন।"
+                ]
+            }
+        };
+
+        function showDetail(key) {
+            const data = database[key];
+            if (!data) return;
+
+            let formattedText = data.facts.join("<br><br>");
+            
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('fact-text').innerHTML = formattedText;
+            document.getElementById('chemModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('chemModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

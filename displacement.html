@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>প্রতিস্থাপন বিক্রিয়া সলভার</title>
+    <style>
+        body { font-family: sans-serif; background: #f8fafc; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .solver-box { max-width: 500px; margin: 100px auto; padding: 30px; background: #ffffff; border-radius: 15px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        .solve-btn { width: 100%; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #output { margin-top: 20px; padding: 15px; background: #ecfdf5; border-radius: 8px; border-left: 5px solid #059669; text-align: left; }
+        .note { text-align: left; margin-top: 30px; padding: 15px; background: #fffbeb; border-left: 5px solid #f59e0b; border-radius: 8px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <button class="back-btn" onclick="window.history.back()">⬅️ ব্যাক</button>
+
+    <div class="solver-box">
+        <h3>প্রতিস্থাপন বিক্রিয়া সলভার</h3>
+        <input type="text" id="reactants" placeholder="যেমন: Zn+CuSO4">
+        <button class="solve-btn" onclick="solve()">সমাধান দেখুন</button>
+        <div id="output">ফলাফল এখানে আসবে।</div>
+
+        <div class="note">
+            <strong>📝 নিয়মাবলী:</strong>
+            <ul>
+                <li>সঠিক সংকেত ও ফরম্যাট (Case-sensitive) মেনে চলতে হবে।</li>
+                <li>কোনো স্পেস (Space) দেওয়া যাবে না।</li>
+                <li>অধিক সক্রিয় মৌলটি কম সক্রিয় মৌলকে প্রতিস্থাপন করে।</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const displacementReactions = [
+            { r: "Zn+CuSO4", p: "Zn + CuSO₄ → ZnSO₄ + Cu" },
+            { r: "Fe+CuSO4", p: "Fe + CuSO₄ → FeSO₄ + Cu" },
+            { r: "Mg+2HCl", p: "Mg + 2HCl → MgCl₂ + H₂" },
+            { r: "Cl2+2KI", p: "Cl₂ + 2KI → 2KCl + I₂" },
+            { r: "Zn+2HCl", p: "Zn + 2HCl → ZnCl₂ + H₂" },
+            { r: "2Na+2H2O", p: "2Na + 2H₂O → 2NaOH + H₂" }
+        ];
+
+        function solve() {
+            let input = document.getElementById('reactants').value;
+            let output = document.getElementById('output');
+            let match = displacementReactions.find(item => item.r === input);
+            
+            if (match) {
+                output.innerHTML = `<strong>বিক্রিয়া:</strong><br>${match.p} <br><br> <strong>ব্যাখ্যা:</strong> অধিক সক্রিয় মৌল কম সক্রিয় মৌলকে সরিয়ে নিজে স্থান দখল করেছে।`;
+            } else {
+                output.innerHTML = "ভুল ফরম্যাট! দয়া করে সঠিক সংকেত ও ফরম্যাটে লিখুন।";
+            }
+        }
+    </script>
+</body>
+</html>

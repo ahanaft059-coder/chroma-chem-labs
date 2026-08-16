@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>সংযোজন বিক্রিয়া সলভার</title>
+    <style>
+        body { font-family: sans-serif; background: #f8fafc; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .solver-box { max-width: 500px; margin: 100px auto; padding: 30px; background: #ffffff; border-radius: 15px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        .solve-btn { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #output { margin-top: 20px; padding: 15px; background: #eff6ff; border-radius: 8px; border-left: 5px solid #2563eb; text-align: left; }
+        .note { text-align: left; margin-top: 30px; padding: 15px; background: #fffbeb; border-left: 5px solid #f59e0b; border-radius: 8px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <button class="back-btn" onclick="window.history.back()">⬅️ ব্যাক</button>
+
+    <div class="solver-box">
+        <h3>সংযোজন বিক্রিয়া সলভার</h3>
+        <input type="text" id="reactants" placeholder="সঠিক ফরম্যাটে লিখুন (যেমন: Na+Cl2)">
+        <button class="solve-btn" onclick="solve()">সমাধান দেখুন</button>
+        <div id="output">ফলাফল এখানে আসবে।</div>
+
+        <div class="note">
+            <strong>📝 নিয়মাবলী:</strong>
+            <ul>
+                <li>সঠিক কেস (Case-sensitive) মেনে চলতে হবে (যেমন: Na+Cl2 লিখতে হবে, na+cl2 নয়)।</li>
+                <li>কোনো স্পেস (Space) দেওয়া যাবে না।</li>
+                <li>সঠিক সংকেত না হলে রেজাল্ট দেখাবে না।</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const combinationReactions = [
+            { r: "Na+Cl2", p: "2Na + Cl₂ → 2NaCl" }, 
+            { r: "Mg+O2", p: "2Mg + O₂ → 2MgO" },
+            { r: "H2+Cl2", p: "H₂ + Cl₂ → 2HCl" }, 
+            { r: "N2+3H2", p: "N₂ + 3H₂ → 2NH₃" },
+            { r: "CaO+H2O", p: "CaO + H₂O → Ca(OH)₂" }, 
+            { r: "Fe+S", p: "Fe + S → FeS" },
+            { r: "C+O2", p: "C + O₂ → CO₂" }, 
+            { r: "SO2+O2", p: "2SO₂ + O₂ → 2SO₃" }
+        ];
+
+        function solve() {
+            let input = document.getElementById('reactants').value;
+            let output = document.getElementById('output');
+            let match = combinationReactions.find(item => item.r === input);
+            
+            if (match) {
+                output.innerHTML = `<strong>উৎপাদ:</strong><br>${match.p}`;
+            } else {
+                output.innerHTML = "ভুল ফরম্যাট! দয়া করে সঠিক সংকেত ও ফরম্যাটে লিখুন।";
+            }
+        }
+    </script>
+</body>
+</html>

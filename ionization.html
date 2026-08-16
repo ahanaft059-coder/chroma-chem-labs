@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Ionization Energy Explorer - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg-color: #000000; 
+            --card-color: #0b0f17;
+            --text-color: #f8fafc; 
+            --accent-color: #f43f5e; /* Premium Rose/Red Glow Accent */
+            --border-color: #1e293b;
+        }
+        
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 40px 20px; 
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container { 
+            max-width: 750px; /* ৮ কলাম গ্রিড এবং বড় ফন্টের জন্য অপ্টিমাইজড উইডথ */
+            margin: 80px auto auto auto;
+        }
+
+        /* Premium Back Button linked to properties_page.html */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: #f8fafc; 
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: 2.2rem; /* বড় শিরোনাম */
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #f43f5e, #be123c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .note { 
+            background: var(--card-color); 
+            border-left: 5px solid var(--accent-color); 
+            padding: 20px; 
+            margin-bottom: 35px; 
+            border-radius: 14px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            color: #e2e8f0; 
+            font-size: 1.1rem; /* স্পষ্ট বড় ফন্ট */
+            line-height: 1.7;
+            text-align: left;
+        }
+        .note strong {
+            color: var(--accent-color);
+            font-size: 1.15rem;
+        }
+        
+        /* ৮ কলামের টাইট গ্রিড আর্কিটেকচার */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(8, 1fr); 
+            gap: 12px; 
+        }
+        
+        .cell { 
+            aspect-ratio: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 14px; 
+            border: 1px solid var(--border-color); 
+            font-weight: 850; 
+            font-size: 1.5rem; /* মৌলের প্রতীক অনেক বড় ও আকর্ষণীয় করা হয়েছে */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        
+        .cell:hover { 
+            transform: scale(1.15); 
+            z-index: 10; 
+            box-shadow: 0 10px 25px rgba(244, 63, 94, 0.5); 
+        }
+        
+        /* ১ম লাইনে H এবং He এর মাঝের গ্যাপের ঘর */
+        .empty-cell {
+            grid-column: span 6;
+        }
+        
+        .val { 
+            font-size: 0.75rem; /* স্পষ্ট বড় ফন্টে আয়নীকরণ শক্তির মান */
+            font-weight: 700; 
+            margin-top: 6px; 
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="properties_page.html" class="back-btn">← ফিরে যান</a>
+
+<div class="container">
+    <h1>আয়নীকরণ শক্তি (Ionization Energy Chart)</h1>
+    <div class="note">
+        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে বাম থেকে ডানে গেলে আয়নীকরণ শক্তি বৃদ্ধি পায়, আর ওপর থেকে নিচে গেলে এটি হ্রাস পায়। (একক: kJ/mol)
+    </div>
+
+    <div class="grid">
+        <div class="cell" style="background-color: hsl(350, 80%, 26%); color: #f8fafc; border-color: rgba(244, 63, 94, 0.25);">H<div class="val" style="color: #fda4af;">1312</div></div>
+        <div class="empty-cell"></div>
+        <div class="cell" style="background-color: hsl(350, 80%, 42%); color: #ffffff; border-color: rgba(244, 63, 94, 0.45); box-shadow: 0 0 15px rgba(244, 63, 94, 0.25);">He<div class="val" style="color: #ffe4e6;">2372</div></div>
+        
+        <script>
+            const elements = [
+                {s: 'Li', v: 520}, {s: 'Be', v: 899}, {s: 'B', v: 801}, {s: 'C', v: 1086}, {s: 'N', v: 1402}, {s: 'O', v: 1314}, {s: 'F', v: 1681}, {s: 'Ne', v: 2080},
+                {s: 'Na', v: 496}, {s: 'Mg', v: 738}, {s: 'Al', v: 578}, {s: 'Si', v: 787}, {s: 'P', v: 1012}, {s: 'S', v: 1000}, {s: 'Cl', v: 1251}, {s: 'Ar', v: 1520},
+                {s: 'K', v: 419}, {s: 'Ca', v: 590}, {s: 'Ga', v: 579}, {s: 'Ge', v: 762}, {s: 'As', v: 947}, {s: 'Se', v: 941}, {s: 'Br', v: 1140}, {s: 'Kr', v: 1351},
+                {s: 'Rb', v: 403}, {s: 'Sr', v: 549}, {s: 'In', v: 558}, {s: 'Sn', v: 709}, {s: 'Sb', v: 834}, {s: 'Te', v: 869}, {s: 'I', v: 1008}, {s: 'Xe', v: 1170}
+            ];
+
+            elements.forEach(e => {
+                // ডার্ক মোডের জন্য অপ্টিমাইজড কালার লজিক (শক্তি যত বেশি, কোষের রঙ তত উজ্জ্বল লাল দেখাবে)
+                let lightness = 10 + (e.v / 65); 
+                let textColor = lightness > 55 ? '#000000' : '#f8fafc';
+                let subTextColor = lightness > 55 ? 'rgba(0,0,0,0.8)' : '#fda4af';
+                
+                document.write(`<div class="cell" style="background-color: hsl(350, 80%, ${lightness}%); color: ${textColor}; border-color: rgba(244, 63, 94, 0.2);">
+                    ${e.s}<div class="val" style="color: ${subTextColor}">${e.v}</div>
+                </div>`);
+            });
+        </script>
+    </div>
+</div>
+</body>
+</html>

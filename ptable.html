@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আধুনিক পর্যায় সারণী</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #cbd5e1;
+            --shadow: rgba(15, 23, 42, 0.15);
+            --primary: #2ecc71;
+            --cell-txt: #0f172a;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --cell-txt: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 30px 15px;
+            margin: 0;
+            text-align: center;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container { max-width: 1300px; margin: 0 auto; position: relative; }
+        
+        header h2 {
+            font-size: 32px;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #2ecc71, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p { margin-bottom: 25px; opacity: 0.8; font-size: 15px; }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            padding: 5px;
+        }
+        .periodic-table {
+            display: grid;
+            grid-template-columns: repeat(18, minmax(60px, 1fr));
+            gap: 8px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 10px 25px var(--shadow);
+            min-width: 1150px;
+        }
+        
+        .element-cell {
+            padding: 8px 4px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid rgba(0,0,0,0.08);
+            color: var(--cell-txt);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 75px;
+            box-sizing: border-box;
+        }
+        .element-cell:hover { 
+            transform: scale(1.2); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+            z-index: 99;
+        }
+        
+        /* Category Colors */
+        .alkali { background: #ff7675; color: #fff !important; }
+        .alkaline { background: #ffeaa7; color: #2d3436 !important; }
+        .transition-metal { background: #74b9ff; color: #fff !important; }
+        .post-transition { background: #55efc4; color: #2d3436 !important; }
+        .metalloid { background: #a29bfe; color: #fff !important; }
+        .nonmetal { background: #fab1a0; color: #2d3436 !important; }
+        .halogen { background: #fd79a8; color: #fff !important; }
+        .noble { background: #00cec9; color: #fff !important; }
+        
+        .empty-cell { visibility: hidden; }
+
+        /* Floating Overlay/Popup Panel ( ভেসে উঠার জন্য ) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .info-panel {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: left;
+            width: 90%;
+            max-width: 750px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: popupSmooth 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popupSmooth {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 32px; font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer; opacity: 0.6;
+            transition: 0.2s;
+        }
+        .close-btn:hover { opacity: 1; transform: scale(1.1); }
+        
+        .info-title-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .big-badge {
+            font-size: 26px;
+            padding: 12px 22px;
+            border-radius: 12px;
+            color: #fff !important;
+            font-weight: 800;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        @media (min-width: 550px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .info-box {
+            background: rgba(0,0,0,0.02);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        [data-theme="dark"] .info-box { background: rgba(255,255,255,0.02); }
+        
+        .info-box span {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+        
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn, .theme-btn {
+            text-decoration: none; color: var(--text-color); font-weight: bold; background: var(--card-bg);
+            padding: 10px 18px; border-radius: 14px; border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px var(--shadow); transition: all 0.2s; cursor: pointer;
+        }
+        .back-btn:hover { transform: translateX(-3px); }
+        .theme-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-nav">
+            <a href="index.html" class="back-btn">← হোমে ফিরে যাও</a>
+            <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+        </div>
+
+        <header>
+            <h2>আধুনিক পর্যায় সারণী 🗺️</h2>
+            <p>সবকটি মৌলের সম্পূর্ণ ইন্টারেক্টিভ ১৮-গ্রুপ গ্রিড লেআউট</p>
+        </header>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color alkali"></div> ক্ষার ধাতু</div>
+            <div class="legend-item"><div class="legend-color alkaline"></div> মৃৎ ক্ষার ধাতু</div>
+            <div class="legend-item"><div class="legend-color transition-metal"></div> অবস্থান্তর ধাতু</div>
+            <div class="legend-item"><div class="legend-color post-transition"></div> অন্যান্য ধাতু</div>
+            <div class="legend-item"><div class="legend-color metalloid"></div> অপধাতু/উপধাতু</div>
+            <div class="legend-item"><div class="legend-color nonmetal"></div> অধাতু</div>
+            <div class="legend-item"><div class="legend-color halogen"></div> হ্যালোজেন</div>
+            <div class="legend-item"><div class="legend-color noble"></div> নিষ্ক্রিয় গ্যাস</div>
+            </div>
+
+        <div class="table-container">
+            <div class="periodic-table" id="tableGrid"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closePopupOutside(event)">
+        <div class="info-panel" id="infoPanel">
+            <span class="close-btn" onclick="closeElementDetails()">&times;</span>
+            
+            <div class="info-title-area">
+                <div id="m-badge" class="big-badge">H</div>
+                <div>
+                    <h3 id="m-name" style="margin:0; font-size:26px;"></h3>
+                    <small id="m-group-name" style="opacity:0.7; font-weight:600; font-size:14px;"></small>
+                </div>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-box" style="border-left: 4px solid #e67e22;">পারমাণবিক সংখ্যা <span id="m-num" style="color:#e67e22;"></span></div>
+                <div class="info-box" style="border-left: 4px solid #3498db;">আপেক্ষিক পারমাণবিক ভর <span id="m-mass" style="color:#3498db;"></span></div>
+                <div class="info-box" style="border-left: 4px solid #2ecc71;">পর্যায় ও গ্রুপ <span id="m-pg" style="color:#2ecc71;"></span></div>
+                <div class="info-box" style="border-left: 4px solid #9b59b6;">যোজনী (Valency) <span id="m-valency" style="color:#9b59b6;"></span></div>
+                
+                <div class="info-box" style="grid-column: span 2; border-left: 4px solid #00cec9;">ইলেকট্রন বিন্যাস <span id="m-ec" style="color:#00cec9; font-family: monospace;"></span></div>
+                <div class="info-box" style="border-left: 4px solid #e74c3c;">গলনাঙ্ক ও স্ফুটনাঙ্ক <span id="m-temp" style="color:#e74c3c;"></span></div>
+                <div class="info-box" style="border-left: 4px solid #f1c40f;">অবস্থা (State) <span id="m-state" style="color:#f1c40f;"></span></div>
+            </div>
+            
+            <p style="margin-top:20px; background:rgba(0,0,0,0.02); padding:15px; border-radius:10px; border-left:4px solid var(--primary); line-height: 1.6;">
+                <strong>বৈশিষ্ট্য ও বাস্তব জীবনের ব্যবহার:</strong> <br><span id="m-desc"></span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+        }
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            document.documentElement.setAttribute('data-theme', next);
+        }
+        applyTheme();
+
+        const elements = [
+            { num: 1, sym: 'H', name: 'হাইড্রোজেন', mass: '1.008', row: 1, col: 1, type: 'nonmetal', gName: 'অধাতু', val: '1', ec: '1s1', mp: '-259.1 C', bp: '-252.9 C', st: 'গ্যাসীয়', desc: 'মহাবিশ্বের সবচেয়ে হালকা ও প্রচুর পরিমাণে থাকা মৌল। এটি ভবিষ্যতের জ্বালানি ও পানির অন্যতম উপাদান।' },
+            { num: 2, sym: 'He', name: 'হিলিয়াম', mass: '4.003', row: 1, col: 18, type: 'noble', gName: 'নিষ্ক্রিয় গ্যাস', val: '0', ec: '1s2', mp: '-272.2 C', bp: '-268.9 C', st: 'গ্যাসীয়', desc: 'বেলুনে এবং ক্রায়োজেনিক্স গবেষণায় ব্যাপকভাবে ব্যবহৃত একটি অত্যন্ত হালকা ও নিষ্ক্রিয় গ্যাস।' },
+            { num: 3, sym: 'Li', name: 'লিথিয়াম', mass: '6.94', row: 2, col: 1, type: 'alkali', gName: 'ক্ষার ধাতু', val: '1', ec: '1s2 2s1', mp: '180.5 C', bp: '1342 C', st: 'কঠিন', desc: 'সবচেয়ে হালকা শক্ত ধাতু। মোবাইল, ল্যাপটপ এবং ইভি-র রিচার্জেবল লিথিয়াম ব্যাটারির মূল উপাদান।' },
+            { num: 4, sym: 'Be', name: 'বেরিলিয়াম', mass: '9.012', row: 2, col: 2, type: 'alkaline', gName: 'মৃত্তিকা ক্ষার ধাতু', val: '2', ec: '1s2 2s2', mp: '1287 C', bp: '2471 C', st: 'কঠিন', desc: 'মহাকাশযান, স্যাটেলাইট, এক্স-রে টিউবের উইন্ডো এবং স্পেশাল সংকর ধাতু তৈরিতে এটি ব্যবহৃত হয়।' },
+            { num: 5, sym: 'B', name: 'বোরন', mass: '10.81', row: 2, col: 13, type: 'metalloid', gName: 'অপধাতু', val: '3', ec: '1s2 2s2 2p1', mp: '2076 C', bp: '3927 C', st: 'কঠিন', desc: 'উচ্চমানের বোরোসিলিকেট কাচ, ল্যাবরেটরির গ্লাসসামগ্রী এবং চোখের ড্রপ তৈরিতে ব্যবহৃত হয়।' },
+            { num: 6, sym: 'C', name: 'কার্বন', mass: '12.011', row: 2, col: 14, type: 'nonmetal', gName: 'অধাতু', val: '4', ec: '1s2 2s2 2p2', mp: '3550 C', bp: '4827 C', st: 'কঠিন', desc: 'সমগ্র জৈব রসায়নের মূল ভিত্তি। হীরা, গ্রাফাইট ও চারকোল হিসেবে প্রকৃতিতে নানারূপে পাওয়া যায়।' },
+            { num: 7, sym: 'N', name: 'নাইট্রোজেন', mass: '14.007', row: 2, col: 15, type: 'nonmetal', gName: 'অধাতু', val: '3, 5', ec: '1s2 2s2 2p3', mp: '-210 C', bp: '-195.8 C', st: 'গ্যাসীয়', desc: 'বায়ুমণ্ডলের প্রায় ৭৮% জুড়ে থাকা গ্যাস। চিপসের প্যাকেট ও লিকুইড নাইট্রোজেন হিসেবে হিমায়নে ব্যবহৃত হয়।' },
+            { num: 8, sym: 'O', name: 'অক্সিজেন', mass: '15.999', row: 2, col: 16, type: 'nonmetal', gName: 'অধাতু', val: '2', ec: '1s2 2s2 2p4', mp: '-218.7 C', bp: '-183 C', st: 'গ্যাসীয়', desc: 'প্রাণীকুলের বেঁচে থাকার জন্য এবং যেকোনো ধরনের দহন বা আগুন জ্বলতে সাহায্যকারী অত্যাবশ্যকীয় উপাদান।' },
+            { num: 9, sym: 'F', name: 'ফ্লোরিন', mass: '18.998', row: 2, col: 17, type: 'halogen', gName: 'হ্যালোজেন', val: '1', ec: '1s2 2s2 2p5', mp: '-219.6 C', bp: '-188.1 C', st: 'গ্যাসীয়', desc: 'পর্যায় সারণির সর্বোচ্চ তীব্র তড়িৎ ঋণাত্মক মৌল। দাঁতের ক্ষয়রোধে টুথপেস্টে এর ফ্লোরাইড ব্যবহৃত হয়।' },
+            { num: 10, sym: 'Ne', name: 'নিয়ন', mass: '20.18', row: 2, col: 18, type: 'noble', gName: 'নিষ্ক্রিয় গ্যাস', val: '0', ec: '1s2 2s2 2p6', mp: '-248.6 C', bp: '-246.1 C', st: 'গ্যাসীয়', desc: 'উজ্জ্বল নিয়ন সাইন বোর্ড ও বিজ্ঞাপনের আলোকসজ্জায় চমৎকার লালচে-কমলা আলো সৃষ্টি করে।' },
+            { num: 11, sym: 'Na', name: 'সোডিয়াম', mass: '22.99', row: 3, col: 1, type: 'alkali', gName: 'ক্ষার ধাতু', val: '1', ec: '1s2 2s2 2p6 3s1', mp: '97.8 C', bp: '883 C', st: 'কঠিন', desc: 'অত্যন্ত নরম ধাতু যা ছুড়ি দিয়ে কাটা যায়। পানির সাথে তীব্র বিক্রিয়া করে। এটি খাবার লবণের প্রধান উপাদান।' },
+            { num: 12, sym: 'Mg', name: 'ম্যাগনেসিয়াম', mass: '24.305', row: 3, col: 2, type: 'alkaline', gName: 'মৃত্তিকা ক্ষার ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2', mp: '650 C', bp: '1090 C', st: 'কঠিন', desc: 'গাছের ক্লোরোফিলের কেন্দ্রীয় ধাতু। এটি আতশবাজি ও সংকর ধাতু তৈরিতে ব্যবহৃত হয়। আঁশযুক্ত বা ফাইবারযুক্ত খাবারে সাধারণত ম্যাগনেসিয়াম বেশি থাকে' },
+            { num: 13, sym: 'Al', name: 'অ্যালুমিনিয়াম', mass: '26.982', row: 3, col: 13, type: 'post-transition', gName: 'অন্যান্য ধাতু', val: '3', ec: '1s2 2s2 2p6 3s2 3p1', mp: '660.3 C', bp: '2519 C', st: 'کঠিন', desc: 'হালকা ও মরিচারোধী। উড়োজাহাজের বডি, রান্নার হাঁড়ি-পাতিল এবং ফয়েল পেপারে এর ব্যাপক ব্যবহার।' },
+            { num: 14, sym: 'Si', name: 'সিলিকন', mass: '28.085', row: 3, col: 14, type: 'metalloid', gName: 'অপধাতু', val: '4', ec: '1s2 2s2 2p6 3s2 3p2', mp: '1414 C', bp: '3265 C', st: 'কঠিন', desc: 'কম্পিউটার প্রসেসর চিপস, ট্রানজিস্টর, সোলার প্যানেল এবং গ্লাস ইন্ডাস্ট্রির মূল উপাদান।' },
+            { num: 15, sym: 'P', name: 'ফসফরাস', mass: '30.974', row: 3, col: 15, type: 'nonmetal', gName: 'অধাতু', val: '3, 5', ec: '1s2 2s2 2p6 3s2 3p3', mp: '44.1 C', bp: '280.5 C', st: 'কঠিন', desc: 'হাড়ের গঠন এবং ডিএনএ-র অন্যতম গুরুত্বপূর্ণ অংশ। এটি দেশলাই বা ম্যাচের কাঠি তৈরিতে ব্যবহৃত হয়।' },
+            { num: 16, sym: 'S', name: 'সালফার', mass: '32.06', row: 3, col: 16, type: 'nonmetal', gName: 'অধাতু', val: '2, 4, 6', ec: '1s2 2s2 2p6 3s2 3p4', mp: '115.2 C', bp: '444.6 C', st: 'کঠিন', desc: 'হলুদ বর্ণের গুঁড়ো অধাতু। সালফিউরিক এসিডের উৎপাদন এবং রাবার ভলকানাইজিংয়ে অত্যাবশ্যকীয়।' },
+            { num: 17, sym: 'Cl', name: 'ক্লোরিন', mass: '35.45', row: 3, col: 17, type: 'halogen', gName: 'হ্যালোজেন', val: '1', ec: '1s2 2s2 2p6 3s2 3p5', mp: '-101.5 C', bp: '-34 C', st: 'গ্যাসীয়', desc: 'তীব্র ঝাঁঝালো গ্যাস। খাবার পানি ও সুইমিং пул জীবাণুমুক্তকরণ এবং ব্লিচিং পাউডার তৈরিতে ব্যবহৃত হয়।' },
+            { num: 18, sym: 'Ar', name: 'আর্গন', mass: '39.948', row: 3, col: 18, type: 'noble', gName: 'নিষ্ক্রিয় গ্যাস', val: '0', ec: '1s2 2s2 2p6 3s2 3p6', mp: '-189.3 C', bp: '-185.8 C', st: 'গ্যাসীয়', desc: 'বৈদ্যুতিক টাংস্টেন বাল্ব এবং ডাবল গ্লেজিং জানালায় নিষ্ক্রিয় পরিবেশ বজায় রাখতে ব্যবহৃত হয়।' },
+            { num: 19, sym: 'K', name: 'পটাশিয়াম', mass: '39.098', row: 4, col: 1, type: 'alkali', gName: 'ক্ষার ধাতু', val: '1', ec: '1s2 2s2 2p6 3s2 3p6 4s1', mp: '63.5 C', bp: '759 C', st: 'কঠিন', desc: 'অত্যন্ত সক্রিয় ধাতু। উদ্ভিদের জন্য ক্ষারীয় সার (MOP) এবং মানুষের শরীরে নার্ভ সিগন্যালিংয়ে ভূমিকা রাখে।' },
+            { num: 20, sym: 'Ca', name: 'ক্যালসিয়াম', mass: '40.078', row: 4, col: 2, type: 'alkaline', gName: 'مৃত্তিকা ক্ষার ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2 3p6 4s2', mp: '842 C', bp: '1484 C', st: 'কঠিন', desc: 'মানবদেহের হাড় ও দাঁতের মূল উপাদান। এটি চুন, সিমেন্ট এবং চক তৈরিতেও বহুল ব্যবহৃত।' },
+            { num: 21, sym: 'Sc', name: 'স্ক্যান্ডিয়াম', mass: '44.956', row: 4, col: 3, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d1 4s2', mp: '1541 C', bp: '2831 C', st: 'কঠিন', desc: 'প্রথম অবস্থান্তর ধাতু। অ্যালুমিনিয়ামের সাথে মিশিয়ে স্পোর্টস বাইসাইকেল ও বিমানের পার্টস শক্তিশালী করা হয়।' },
+            { num: 22, sym: 'Ti', name: 'টাইটানিয়াম', mass: '47.867', row: 4, col: 4, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '4', ec: '1s2 2s2 2p6 3s2 3p6 3d2 4s2', mp: '1668 C', bp: '3287 C', st: 'কঠিন', desc: 'ইস্পাতের মতো শক্ত কিন্তু ওজনে হালকা এবং শতভাগ মরিচারোধী ধাতু। কৃত্রিম জয়েন্ট তৈরিতে লাগে।' },
+            { num: 23, sym: 'V', name: 'ভ্যানাডিয়াম', mass: '50.942', row: 4, col: 5, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '5', ec: '1s2 2s2 2p6 3s2 3p6 3d3 4s2', mp: '1910 C', bp: '3407 C', st: 'কঠিন', desc: 'একটি শক্ত ধাতু যা অটোমোবাইল পার্টস এবং হাই-স্পিড মেটাল টুলস তৈরিতে ব্যবহৃত হয়।' },
+            { num: 24, sym: 'Cr', name: 'ক্রোমিয়াম', mass: '51.996', row: 4, col: 6, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '3, 6', ec: '1s2 2s2 2p6 3s2 3p6 3d5 4s1', mp: '1907 C', bp: '2671 C', st: 'কঠিন', desc: 'ব্যতিক্রমী ইলেকট্রন বিন্যাস। স্টেইনলেস স্টিল (মরিচারোধী লোহা) এবং চকচকে মেটাল প্লেٹنگ-এ ব্যবহৃত হয়।' },
+            { num: 25, sym: 'Mn', name: 'ম্যাঙ্গানিজ', mass: '54.938', row: 4, col: 7, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2, 4, 7', ec: '1s2 2s2 2p6 3s2 3p6 3d5 4s2', mp: '1246 C', bp: '2061 C', st: 'কঠিন', desc: 'রেললাইনের শক্ত পাত ও ড্রাই-সেল ব্যাটারির ভেতরে ক্যাথোড ম্যাটেরিয়াল হিসেবে ব্যবহৃত হয়। প্রোটিন, কার্বোহাইড্রেট এবং কোলেস্টেরল ভাঙতে সাহায্যকারী এনজাইমগুলোকে সক্রিয় করে' },
+            { num: 26, sym: 'Fe', name: 'আয়রন', mass: '55.845', row: 4, col: 8, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d6 4s2', mp: '1538 C', bp: '2862 C', st: 'কঠিন', desc: 'মানব সভ্যতার মেরুদণ্ড। রক্তের হিমোগ্লোবিনের মূল উপাদান এবং অবকাঠামো নির্মাণের প্রধান ধাতু।' },
+            { num: 27, sym: 'Co', name: 'কোবাল্ট', mass: '58.933', row: 4, col: 9, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d7 4s2', mp: '1495 C', bp: '2927 C', st: 'কঠিন', desc: 'চৌম্বকীয় ধাতু। শক্তিশালী স্থায়ী আলনিকো চুম্বক এবং আধুনিক রিচার্জেবল ব্যাটারি তৈরিতে অত্যন্ত গুরুত্বপূর্ণ।' },
+            { num: 28, sym: 'Ni', name: 'নিকেল', mass: '58.693', row: 4, col: 10, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2 3p6 3d8 4s2', mp: '1455 C', bp: '2732 C', st: 'কঠিন', desc: 'রুপালি চকচকে প্রতিরক্ষামূলক ধাতু। ধাতব মুদ্রা এবং মরিচারোধী প্রলেপ দিতে ব্যবহৃত হয়।' },
+            { num: 29, sym: 'Cu', name: 'কপার', mass: '63.546', row: 4, col: 11, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '1, 2', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s1', mp: '1085 C', bp: '2562 C', st: 'কঠিন', desc: 'ব্যতিক্রমী ইলেকট্রন বিন্যাস। চমৎকার বিদ্যুৎ পরিবাহী হওয়ায় ঘরের তার ও বৈদ্যুতিক জেনারেটরের কুণ্ডলীতে ব্যবহৃত হয়।' },
+            { num: 30, sym: 'Zn', name: 'জিঙ্ক', mass: '65.38', row: 4, col: 12, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2', mp: '419.5 C', bp: '907 C', st: 'কঠিন', desc: 'লোহাকে মরিচা থেকে বাঁচাতে গ্যালভানাইজিং করতে এর প্রলেপ দেওয়া হয়। এছাড়া মানবদেহের রোগ প্রতিরোধে দরকারি।' },
+            { num: 31, sym: 'Ga', name: 'গ্যালিয়াম', mass: '69.723', row: 4, col: 13, type: 'post-transition', gName: 'অন্যান্য ধাতু', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p1', mp: '29.8 C', bp: '2229 C', st: 'কঠিন', desc: 'হাতের তালুর গরমে গলে তরল হয়ে যাওয়া একটি অদ্ভুত ধাতু। এটি ব্লু-এলইডি এবং হাই-স্পিড সেমিকন্ডাক্টরে লাগে।' },
+            { num: 32, sym: 'Ge', name: 'জার্মেনিয়াম', mass: '72.63', row: 4, col: 14, type: 'metalloid', gName: 'অপধাতু', val: '4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p2', mp: '937.4 C', bp: '2833 C', st: 'কঠিন', desc: 'একটি চমৎকার সেমিকন্ডাক্টর। এটি ইনফ্রারেড নাইট-ভিশন লেন্স এবং ফাইবার অপটিক্যাল ক্যাবল তৈরিতে ব্যবহৃত হয়।' },
+            { num: 33, sym: 'As', name: 'আর্সেনিক', mass: '74.922', row: 4, col: 15, type: 'metalloid', gName: 'অপধাতু', val: '3, 5', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p3', mp: '817 C', bp: '613 C', st: 'কঠিন', desc: 'একটি সুপরিচিত বিষাক্ত অপধাতু। তবে স্পেশাল লেজার ডায়োড ও চিপস তৈরিতে এর প্রয়োগ রয়েছে।' },
+            { num: 34, sym: 'Se', name: 'সিলেনিয়াম', mass: '78.971', row: 4, col: 16, type: 'nonmetal', gName: 'অধাতু', val: '2, 4, 6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p4', mp: '221 C', bp: '685 C', st: 'কঠিন', desc: 'আলোক-সংবেদনশীল মৌল (আলো পড়লে বিদ্যুৎ পরিবাহিতা বাড়ে)। ফটোকপিয়ার মেশিন ও শ্যাম্পুতে ব্যবহৃত হয়।' },
+            { num: 35, sym: 'Br', name: 'ব্রোমিন', mass: '79.904', row: 4, col: 17, type: 'halogen', gName: 'হ্যালোজেন', val: '1', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p5', mp: '-7.2 C', bp: '58.8 C', st: 'তরল', desc: 'একমাত্র অধাতু যা সাধারণ তাপমাত্রায় তরল অবস্থায় থাকে। এটি ওষুধ ও ডাই ইন্ডাস্ট্রিতে লাগে।' },
+            { num: 36, sym: 'Kr', name: 'ক্রিপ্টন', mass: '83.798', row: 4, col: 18, type: 'noble', gName: 'নিষ্ক্রিয় গ্যাস', val: '0', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6', mp: '-157.4 C', bp: '-153.2 C', st: 'গ্যাসীয়', desc: 'নিষ্ক্রিয় গ্যাস। এয়ারপোর্টের রানওয়ের হাই-ইনটেনসিটি লাইট এবং হাই-স্পিড ফটোগ্রাফির ফ্ল্যাশ ল্যাম্পে ব্যবহৃত হয়।' },
+            { num: 37, sym: 'Rb', name: 'রুবিডিয়াম', mass: '85.468', row: 5, col: 1, type: 'alkali', gName: 'ক্ষার ধাতু', val: '1', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s1', mp: '39.3 C', bp: '688 C', st: 'কঠিন', desc: 'অত্যন্ত সক্রিয় ধাতু, যা বাতাসের সংস্পর্শে এলে জ্বলে উঠতে পারে।' },
+    { num: 38, sym: 'Sr', name: 'স্ট্রনশিয়াম', mass: '87.62', row: 5, col: 2, type: 'alkaline', gName: 'মৃত্তিকা ক্ষার ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s2', mp: '777 C', bp: '1382 C', st: 'কঠিন', desc: 'আতশবাজিতে উজ্জ্বল লাল রঙ তৈরির জন্য ব্যবহৃত হয়।' },
+    { num: 39, sym: 'Y', name: 'ইট্রিয়াম', mass: '88.906', row: 5, col: 3, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d1 5s2', mp: '1522 C', bp: '3338 C', st: 'কঠিন', desc: 'কালার টেলিভিশন এবং সুপারকন্ডাক্টর তৈরিতে ব্যবহৃত হয়।' },
+    { num: 40, sym: 'Zr', name: 'জিরকোনিয়াম', mass: '91.224', row: 5, col: 4, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d2 5s2', mp: '1855 C', bp: '4409 C', st: 'কঠিন', desc: 'অত্যন্ত ক্ষয়রোধী, পারমাণবিক চুল্লিতে ব্যবহৃত হয়।' },
+    { num: 41, sym: 'Nb', name: 'নিওবিয়াম', mass: '92.906', row: 5, col: 5, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '5', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d4 5s1', mp: '2477 C', bp: '4744 C', st: 'কঠিন', desc: 'সুপারঅ্যালয় এবং সুপারকন্ডাক্টিং চুম্বক তৈরিতে কাজে লাগে।' },
+    { num: 42, sym: 'Mo', name: 'মলিবডেনাম', mass: '95.95', row: 5, col: 6, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s1', mp: '2623 C', bp: '4639 C', st: 'কঠিন', desc: 'ইস্পাতকে শক্ত ও তাপসহিষ্ণু করার জন্য মিশ্রিত করা হয়।' },
+    { num: 43, sym: 'Tc', name: 'টেকনেশিয়াম', mass: '98', row: 5, col: 7, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '7', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s2', mp: '2157 C', bp: '4265 C', st: 'কঠিন', desc: 'প্রথম কৃত্রিম মৌল, চিকিৎসাবিজ্ঞানে ইমেজিংয়ে ব্যবহৃত হয়।' },
+    { num: 44, sym: 'Ru', name: 'রুথেনিয়াম', mass: '101.07', row: 5, col: 8, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d7 5s1', mp: '2334 C', bp: '4150 C', st: 'কঠিন', desc: 'বৈদ্যুতিক কন্টাক্ট এবং গয়নার প্লেটিংয়ে ব্যবহৃত হয়।' },
+    { num: 45, sym: 'Rh', name: 'রোডিয়াম', mass: '102.91', row: 5, col: 9, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d8 5s1', mp: '1964 C', bp: '3695 C', st: 'কঠিন', desc: 'ক্যাটালিটিক কনভার্টার তৈরিতে ব্যবহৃত একটি দুর্লভ ধাতু।' },
+    { num: 46, sym: 'Pd', name: 'প্যালেডিয়াম', mass: '106.42', row: 5, col: 10, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10', mp: '1555 C', bp: '2963 C', st: 'কঠিন', desc: 'হাইড্রোজেন শোষণে সক্ষম, এটি রাসায়নিক বিক্রিয়ায় প্রভাবক হিসেবে কাজ করে।' },
+    { num: 47, sym: 'Ag', name: 'সিলভার', mass: '107.87', row: 5, col: 11, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '1', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s1', mp: '961.8 C', bp: '2162 C', st: 'কঠিন', desc: 'সবচেয়ে ভালো বিদ্যুৎ ও তাপ পরিবাহী, গয়না ও মুদ্রা তৈরিতে ব্যবহৃত হয়।' },
+    { num: 48, sym: 'Cd', name: 'ক্যাডমিয়াম', mass: '112.41', row: 5, col: 12, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2', mp: '321 C', bp: '767 C', st: 'কঠিন', desc: 'নিকেল-ক্যাডমিয়াম ব্যাটারিতে ব্যবহৃত হয়, তবে এটি বিষাক্ত।' },
+    { num: 49, sym: 'In', name: 'ইন্ডিয়াম', mass: '114.82', row: 5, col: 13, type: 'post-transition', gName: 'অন্যান্য ধাতু', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p1', mp: '156.6 C', bp: '2072 C', st: 'কঠিন', desc: 'টাচস্ক্রিন এবং এলসিডি ডিসপ্লে তৈরিতে ব্যবহৃত হয়।' },
+    { num: 50, sym: 'Sn', name: 'টিন', mass: '118.71', row: 5, col: 14, type: 'post-transition', gName: 'অন্যান্য ধাতু', val: '2, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p2', mp: '231.9 C', bp: '2602 C', st: 'কঠিন', desc: 'লোহার ওপর প্রলেপ দিয়ে টিনপ্লেট তৈরি করা হয়।' },
+    { num: 51, sym: 'Sb', name: 'অ্যান্টিমনি', mass: '121.76', row: 5, col: 15, type: 'metalloid', gName: 'অপধাতু', val: '3, 5', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p3', mp: '630.6 C', bp: '1587 C', st: 'কঠিন', desc: 'অগ্নি প্রতিরোধক উপাদান হিসেবে এর ব্যবহার রয়েছে।' },
+    { num: 52, sym: 'Te', name: 'টেলুরিয়াম', mass: '127.6', row: 5, col: 16, type: 'metalloid', gName: 'অপধাতু', val: '2, 4, 6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p4', mp: '449.5 C', bp: '988 C', st: 'কঠিন', desc: 'সৌর প্যানেল এবং থার্মোইলেকট্রিক ডিভাইসে ব্যবহৃত হয়।' },
+    { num: 53, sym: 'I', name: 'আয়োডিন', mass: '126.9', row: 5, col: 17, type: 'halogen', gName: 'হ্যালোজেন', val: '1', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p5', mp: '113.7 C', bp: '184.3 C', st: 'কঠিন', desc: 'থাইরয়েড গ্রন্থির জন্য প্রয়োজনীয়, জীবাণুনাশক হিসেবেও ব্যবহৃত হয়।' },
+    { num: 54, sym: 'Xe', name: 'জেনন', mass: '131.29', row: 5, col: 18, type: 'noble', gName: 'নিষ্ক্রিয় গ্যাস', val: '0', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6', mp: '-111.7 C', bp: '-108.1 C', st: 'গ্যাসীয়', desc: 'হাই-স্পিড ক্যামেরা ফ্ল্যাশ এবং বিশেষ ল্যাম্পে ব্যবহৃত হয়।' },
+    // ৫৫ এবং ৫৬ নম্বর মৌল (৬ষ্ঠ পর্যায়ের শুরু)
+{ num: 55, sym: 'Cs', name: 'সিজিয়াম',mass: '132.91', row: 6, col: 1, type: 'alkali', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s1' },
+{ num: 56, sym: 'Ba', name: 'বেরিয়াম',mass: '137.33', row: 6, col: 2, type: 'alkaline', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s2' },
+
+// ৫৭-৭১ পর্যন্ত ল্যান্থানাইড সিরিজের জন্য জায়গা ফাঁকা রেখে ৭২ থেকে ৮৬ যোগ করছি
+{ num: 72, sym: 'Hf', name: 'হাফনিয়াম', mass: '178.49', row: 6, col: 4, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d2 6s2', mp: '2233 C', bp: '4603 C', st: 'কঠিন', desc: 'পারমাণবিক চুল্লির কন্ট্রোল রড এবং সুপার-অ্যালয় তৈরিতে ব্যবহৃত হয়।' },
+{ num: 73, sym: 'Ta', name: 'ট্যান্টালাম',mass: '180.95', row: 6, col: 5, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '5', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d3 6s2', mp: '3017 C', bp: '5458 C', st: 'কঠিন', desc: 'ইলেকট্রনিক ক্যাপাসিটার এবং সার্জিক্যাল ইমপ্ল্যান্ট তৈরিতে ব্যবহৃত হয়।' },
+{ num: 74, sym: 'W', name: 'টাংস্টেন',mass: '183.84', row: 6, col: 6, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d4 6s2', mp: '3422 C', bp: '5555 C', st: 'কঠিন', desc: 'বাল্বের ফিলামেন্ট এবং উচ্চ-গতির কাটিং টুল তৈরিতে ব্যবহৃত হয়।' },
+{ num: 75, sym: 'Re', name: 'রেনিয়াম',mass: '186.21', row: 6, col: 7, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2, 4, 6, 7', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d5 6s2', mp: '3186 C', bp: '5630 C', st: 'কঠিন', desc: 'জেট ইঞ্জিনের সংকর ধাতু এবং পেট্রোলিয়াম সংশোধনে অনুঘটক হিসেবে ব্যবহৃত হয়।' },
+{ num: 76, sym: 'Os', name: 'অসমিয়াম',mass: '190.23', row: 6, col: 8, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2, 3, 4, 8', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d6 6s2', mp: '3033 C', bp: '5012 C', st: 'কঠিন', desc: 'কলমের নিব এবং ঘড়ির যন্ত্রাংশ তৈরিতে ব্যবহৃত হয়।' },
+{ num: 77, sym: 'Ir', name: 'ইরিডিয়াম',mass: '192.22', row: 6, col: 9, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '3, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d7 6s2', mp: '2446 C', bp: '4428 C', st: 'কঠিন', desc: 'উচ্চ তাপমাত্রার ক্রুশিবল এবং স্পার্ক প্লাগ তৈরিতে ব্যবহৃত হয়।' },
+{ num: 78, sym: 'Pt', name: 'প্ল্যাটিনাম',mass: '195.08', row: 6, col: 10, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '2, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d9 6s1', mp: '1768 C', bp: '3825 C', st: 'কঠিন', desc: 'গয়না তৈরি এবং গাড়ির ক্যাটালিটিক কনভার্টারে ব্যবহৃত হয়।' },
+{ num: 79, sym: 'Au', name: 'সোনা',mass: '196.97', row: 6, col: 11, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '1, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s1', mp: '1064 C', bp: '2856 C', st: 'কঠিন', desc: 'মুদ্রা, অলঙ্কার এবং ইলেকট্রনিক্সের পরিবাহী হিসেবে ব্যবহৃত হয়।' },
+{ num: 80, sym: 'Hg', name: 'পারদ',mass: '200.59', row: 6, col: 12, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '1, 2', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2', mp: '-38.8 C', bp: '356.7 C', st: 'তরল', desc: 'থার্মোমিটার, ব্যারোমিটার এবং বৈদ্যুতিক সুইচ তৈরিতে ব্যবহৃত হয়।' },
+{ num: 81, sym: 'Tl', name: 'থ্যালিয়াম',mass: '204.38', row: 6, col: 13, type: 'post-transition', gName: 'পোস্ট-ট্রানজিশন ধাতু', val: '1, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p1', mp: '304 C', bp: '1473 C', st: 'কঠিন', desc: 'বিশেষ ধরনের কাচ এবং ফটোইলেকট্রিক সেলে ব্যবহৃত হয়।' },
+{ num: 82, sym: 'Pb', name: 'সীসা',mass: '207.2', row: 6, col: 14, type: 'post-transition', gName: 'পোস্ট-ট্রানজিশন ধাতু', val: '2, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p2', mp: '327.5 C', bp: '1749 C', st: 'কঠিন', desc: 'লেড-অ্যাসিড ব্যাটারি এবং বিকিরণ থেকে সুরক্ষার শিল্ড হিসেবে ব্যবহৃত হয়।' },
+{ num: 83, sym: 'Bi', name: 'বিস্মাথ',mass: '208.98', row: 6, col: 15, type: 'post-transition', gName: 'পোস্ট-ট্রানজিশন ধাতু', val: '3, 5', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p3', mp: '271.4 C', bp: '1564 C', st: 'কঠিন', desc: 'ওষুধ এবং প্রসাধনী শিল্পে ব্যবহৃত হয়।' },
+{ num: 84, sym: 'Po', name: 'পোলোনিয়াম',mass: '209', row: 6, col: 16, type: 'post-transition', gName: 'অপধাতু', val: '2, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p4', mp: '254 C', bp: '962 C', st: 'কঠিন', desc: 'মহাকাশযানের তাপবিদ্যুৎ উৎসে এবং স্ট্যাটিক এলিমিনেটরে ব্যবহৃত হয়।' },
+{ num: 85, sym: 'At', name: 'অ্যাস্টাটাইন',mass: '210', row: 6, col: 17, type: 'halogen', gName: 'অপধাতু', val: '1, 3, 5, 7', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p5', mp: '302 C', bp: '337 C', st: 'কঠিন', desc: 'রেডিওথেরাপিতে এবং গবেষণামূলক কাজে ব্যবহৃত হয়।' },
+{ num: 86, sym: 'Rn', name: 'রেডন',mass: '222', row: 6, col: 18, type: 'noble', gName: 'নিষ্ক্রিয় গ্যাস', val: '0', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6', mp: '-71 C', bp: '-61.7 C', st: 'গ্যাস', desc: 'ক্যান্সার চিকিৎসায় রেডিওথেরাপি হিসেবে ব্যবহৃত হয়।' },
+// ৮৭ এবং ৮৮ নম্বর মৌল (৭ম পর্যায়ের শুরু)
+{ num: 87, sym: 'Fr', name: 'ফ্রান্সিয়াম',mass: '223', row: 7, col: 1, type: 'alkali', gName: 'ক্ষার ধাতু', val: '1', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 7s1', mp: '27 C', bp: '677 C', st: 'কঠিন', desc: 'এটি অত্যন্ত তেজস্ক্রিয়, গবেষণামূলক কাজে ব্যবহৃত হয়।' },
+{ num: 88, sym: 'Ra', name: 'রেডিয়াম',mass: '226', row: 7, col: 2, type: 'alkaline', gName: 'ক্ষারীয় মৃত্তিকা ধাতু', val: '2', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 7s2', mp: '700 C', bp: '1737 C', st: 'কঠিন', desc: 'অতীতের লুমিনাস পেইন্ট তৈরিতে এবং ক্যান্সার গবেষণায় ব্যবহৃত হতো।' },
+// ৮৯-১০৩ পর্যন্ত অ্যাক্টিনাইড সিরিজের জন্য জায়গা ফাঁকা রেখে ১০৪ থেকে ১১৮ যোগ করছি
+{ num: 104, sym: 'Rf', name: 'রাদারফোর্ডিয়াম',mass: '267', row: 7, col: 4, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d2 7s2', mp: '—', bp: '—', st: 'কঠিন', desc: 'প্রথম ট্রান্সঅ্যাক্টিনাইড মৌল, গবেষণাগারে তৈরি করা হয়।' },
+{ num: 105, sym: 'Db', name: 'ডুবনিয়াম',mass: '268', row: 7, col: 5, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '5', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d3 7s2', mp: '—', bp: '—', st: 'কঠিন', desc: 'উচ্চ তেজস্ক্রিয় কৃত্রিম মৌল, কোনো ব্যবহারিক প্রয়োগ নেই।' },
+{ num: 106, sym: 'Sg', name: 'সি বোর্জিয়াম',mass: '269', row: 7, col: 6, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d4 7s2', mp: '—', bp: '—', st: 'কঠিন', desc: 'অত্যন্ত অস্থির তেজস্ক্রিয় মৌল, শুধুমাত্র গবেষণার কাজে ব্যবহৃত হয়।' },
+{ num: 107, sym: 'Bh', name: 'বোহরিয়াম',mass: '270', row: 7, col: 7, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '7', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d5 7s2', mp: '—', bp: '—', st: 'কঠিন', desc: 'কৃত্রিমভাবে উৎপাদিত তেজস্ক্রিয় মৌল, কোনো ব্যবহারিক প্রয়োগ নেই।' },
+{ num: 108, sym: 'Hs', name: 'হাসিয়াম',mass: '277', row: 7, col: 8, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '8', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d6 7s2', mp: '—', bp: '—', st: 'কঠিন', desc: 'ল্যাবরেটরিতে তৈরি অত্যন্ত স্বল্পস্থায়ী তেজস্ক্রিয় মৌল।' },
+{ num: 109, sym: 'Mt', name: 'মেইটনেরিয়াম',mass: '278', row: 7, col: 9, type: 'transition-metal' , gName: 'অবস্থান্তর ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d7 7s2', mp: '—', bp: '—', st: 'কঠিন', desc: 'কৃত্রিম মৌল, যার রাসায়নিক বৈশিষ্ট্য এখনও পুরোপুরি জানা সম্ভব হয়নি।'},
+{ num: 110, sym: 'Ds', name: 'ডামস্টাটিয়াম',mass: '281', row: 7, col: 10, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d9 7s1', mp: '—', bp: '—', st: 'কঠিন', desc: 'শুধুমাত্র বৈজ্ঞানিক গবেষণায় উৎপাদিত অত্যন্ত তেজস্ক্রিয় মৌল।' },
+{ num: 111, sym: 'Rg', name: 'রন্টজেনিয়াম',mass: '282', row: 7, col: 11, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s1', mp: '—', bp: '—', st: 'কঠিন', desc: 'অত্যন্ত স্বল্পস্থায়ী কৃত্রিম মৌল।' },
+{ num: 112, sym: 'Cn', name: 'কপারনিশিয়াম',mass: '285', row: 7, col: 12, type: 'transition-metal', gName: 'অবস্থান্তর ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2', mp: '—', bp: '—', st: 'কঠিন', desc: 'অত্যন্ত তেজস্ক্রিয় কৃত্রিম মৌল, যার আয়ু খুবই কম।' },
+{ num: 113, sym: 'Nh', name: 'নিহোনিয়াম',mass: '286', row: 7, col: 13, type: 'post-transition', gName: 'পোস্ট-ট্রানজিশন ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p1', mp: '—', bp: '—', st: 'কঠিন', desc: 'জাপানে আবিষ্কৃত একটি অত্যন্ত অস্থায়ী কৃত্রিম মৌল।' },
+{ num: 114, sym: 'Fl', name: 'ফ্লেরোভিয়াম',mass: '289', row: 7, col: 14, type: 'post-transition', gName: 'পোস্ট-ট্রানজিশন ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p2', mp: '—', bp: '—', st: 'কঠিন', desc: 'পরীক্ষাগারে তৈরি একটি ভারী ও তেজস্ক্রিয় মৌল।' },
+{ num: 115, sym: 'Mc', name: 'মস্কোভিয়াম',mass: '290', row: 7, col: 15, type: 'post-transition', gName: 'পোস্ট-ট্রানজিশন ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p3', mp: '—', bp: '—', st: 'কঠিন', desc: 'অত্যন্ত দ্রুত ক্ষয়প্রাপ্ত কৃত্রিম মৌল।' },
+{ num: 116, sym: 'Lv', name: 'লিভারমোরিয়াম',mass: '293', row: 7, col: 16, type: 'post-transition', gName: 'পোস্ট-ট্রানজিশন ধাতু', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p4', mp: '—', bp: '—', st: 'কঠিন', desc: 'তেজস্ক্রিয় গবেষণায় ব্যবহৃত একটি কৃত্রিম মৌল।' },
+{ num: 117, sym: 'Ts', name: 'টেনেসিন',mass: '294', row: 7, col: 17, type: 'halogen', gName: 'হ্যালোজেন', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p5', mp: '—', bp: '—', st: 'কঠিন', desc: 'অত্যন্ত ভারী এবং অস্থির একটি হ্যালোজেন মৌল।' },
+{ num: 118, sym: 'Og', name: 'ওগানেসন',mass: '294', row: 7, col: 18, type: 'noble', gName: 'নিষ্ক্রিয় গ্যাস', val: '—', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p6', mp: '—', bp: '—', st: 'গ্যাস', desc: 'পর্যায় সারণীর সর্বশেষ মৌল, এটি একটি অত্যন্ত তেজস্ক্রিয় এবং কৃত্রিম মৌল।' },
+// ৮৯ থেকে ১০৩ পর্যন্ত অ্যাক্টিনাইড সিরিজের মৌল
+{ num: 89, sym: 'Ac', name: 'অ্যাক্টিনিয়াম',mass: '227', row: 9, col: 3, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 6d1 7s2', mp: '1050 C', bp: '3198 C', st: 'কঠিন', desc: 'নিউটনের উৎস হিসেবে এবং রেডিওথেরাপিতে ব্যবহৃত হয়।' },
+{ num: 90, sym: 'Th', name: 'থোরিয়াম',mass: '232.04', row: 9, col: 4, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 6d2 7s2', mp: '1750 C', bp: '4788 C', st: 'কঠিন', desc: 'গ্যাসের ম্যান্টল তৈরিতে এবং পারমাণবিক জ্বালানি হিসেবে গবেষণায় ব্যবহৃত হয়।' },
+{ num: 91, sym: 'Pa', name: 'প্রোট্যাক্টিনিয়াম',mass: '231.04', row: 9, col: 5, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '4, 5', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f2 6d1 7s2', mp: '1568 C', bp: '4027 C', st: 'কঠিন', desc: 'এটি অত্যন্ত তেজস্ক্রিয় এবং মূলত বৈজ্ঞানিক গবেষণায় ব্যবহৃত হয়।' },
+{ num: 92, sym: 'U', name: 'ইউরেনিয়াম',mass: '238.03', row: 9, col: 6, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3, 4, 5, 6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f3 6d1 7s2', mp: '1132 C', bp: '4131 C', st: 'কঠিন', desc: 'পারমাণবিক বিদ্যুৎকেন্দ্রে জ্বালানি হিসেবে ব্যবহৃত হয়।' },
+{ num: 93, sym: 'Np', name: 'নেপচুনিয়াম',mass: '237', row: 9, col: 7, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3, 4, 5, 6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f4 6d1 7s2', mp: '644 C', bp: '3902 C', st: 'কঠিন', desc: 'প্লুটোনিয়াম উৎপাদন এবং নিউট্রন শনাক্তকরণে ব্যবহৃত হয়।' },
+{ num: 94, sym: 'Pu', name: 'প্লুটোনিয়াম',mass: '244', row: 9, col: 8, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3, 4, 5, 6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f6 7s2', mp: '640 C', bp: '3228 C', st: 'কঠিন', desc: 'পারমাণবিক অস্ত্র এবং মহাকাশযানের তেজস্ক্রিয় আইসোটোপ থার্মোইলেকট্রিক জেনারেটরে ব্যবহৃত হয়।' },
+{ num: 95, sym: 'Am', name: 'অ্যামেরিসিয়াম',mass: '243', row: 9, col: 9, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3, 4, 5, 6', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f7 7s2', mp: '1176 C', bp: '2607 C', st: 'কঠিন', desc: 'স্মোক ডিটেক্টর (ধোঁয়া শনাক্তকারী যন্ত্র) এবং শিল্প পরিমাপের যন্ত্রে ব্যবহৃত হয়।' },
+{ num: 96, sym: 'Cm', name: 'কিউরিয়াম',mass: '247', row: 9, col: 10, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f7 6d1 7s2', mp: '1340 C', bp: '3110 C', st: 'কঠিন', desc: 'মহাকাশ গবেষণায় আলফা-পার্টিকল এক্স-রে স্পেকট্রোমিটারে ব্যবহৃত হয়।' },
+{ num: 97, sym: 'Bk', name: 'বার্কেলিয়াম',mass: '247', row: 9, col: 11, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f9 7s2', mp: '986 C', bp: '2627 C', st: 'কঠিন', desc: 'অন্যান্য ভারী মৌল সংশ্লেষণের জন্য গবেষণায় ব্যবহৃত হয়।' },
+{ num: 98, sym: 'Cf', name: 'ক্যালিফোর্নিয়াম',mass: '251', row: 9, col: 12, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f10 7s2', mp: '900 C', bp: '1470 C', st: 'কঠিন', desc: 'নিউক্লিয়ার রিয়্যাক্টরের স্টার্ট-আপ সোর্স এবং ক্যান্সার চিকিৎসায় ব্যবহৃত হয়।' },
+{ num: 99, sym: 'Es', name: 'আইনস্টাইনিয়াম',mass: '252', row: 9, col: 13, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f11 7s2', mp: '860 C', bp: '996 C', st: 'কঠিন', desc: 'মূলত বৈজ্ঞানিক গবেষণায় নতুন মৌল তৈরিতে ব্যবহৃত হয়।' },
+{ num: 100, sym: 'Fm', name: 'ফার্মিয়াম',mass: '257', row: 9, col: 14, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f12 7s2', mp: '1527 C', bp: '—', st: 'কঠিন', desc: 'অত্যন্ত স্বল্পস্থায়ী তেজস্ক্রিয় মৌল, শুধুমাত্র গবেষণাগারে প্রস্তুত করা হয়।' },
+{ num: 101, sym: 'Md', name: 'মেন্ডেলিভিয়াম',mass: '258', row: 9, col: 15, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '2, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f13 7s2', mp: '827 C', bp: '—', st: 'কঠিন', desc: 'গবেষণাগারে কৃত্রিমভাবে উৎপাদিত তেজস্ক্রিয় মৌল।' },
+{ num: 102, sym: 'No', name: 'নোবেলিয়াম',mass: '259', row: 9, col: 16, type: 'transition-metal' , gName: 'অ্যাক্টিনাইড', val: '2, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 7s2', mp: '827 C', bp: '—', st: 'কঠিন', desc: 'অত্যন্ত দ্রুত ক্ষয়প্রাপ্ত তেজস্ক্রিয় মৌল।'},
+{ num: 103, sym: 'Lr', name: 'লরেনসিয়াম',mass: '266', row: 9, col: 17, type: 'transition-metal', gName: 'অ্যাক্টিনাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 7s2 7p1', mp: '1627 C', bp: '—', st: 'কঠিন', desc: 'অ্যাক্টিনাইড সিরিজের শেষ মৌল, গবেষণায় ব্যবহৃত হয়।' },
+// ৫৭ থেকে ৭১ পর্যন্ত ল্যান্থানাইড সিরিজের মৌল
+{ num: 57, sym: 'La', name: 'ল্যান্থানাম', mass: '138.91', row: 8, col: 3, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 5d1 6s2', mp: '920 C', bp: '3464 C', st: 'কঠিন', desc: 'ক্যামেরা লেন্সের প্রতিসরাঙ্ক বৃদ্ধিতে এবং হাইড্রোজেন স্টোরেজ ব্যাটারিতে ব্যবহৃত হয়।' },
+{ num: 58, sym: 'Ce', name: 'সেরিয়াম', mass: '140.12', row: 8, col: 4, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f1 5d1 6s2', mp: '795 C', bp: '3443 C', st: 'কঠিন', desc: 'মেশিনাইজিং লোহা এবং সেলফ-ক্লিনিং ওভেনে অনুঘটক হিসেবে ব্যবহৃত হয়।' },
+{ num: 59, sym: 'Pr', name: 'প্রাসিওডিমিয়াম', mass: '140.91', row: 8, col: 5, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f3 6s2', mp: '935 C', bp: '3127 C', st: 'কঠিন', desc: 'উচ্চ শক্তিসম্পন্ন চুম্বক এবং কাচ রং করার কাজে ব্যবহৃত হয়।' },
+{ num: 60, sym: 'Nd', name: 'নিওডিমিয়াম', mass: '144.24', row: 8, col: 6, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f4 6s2', mp: '1024 C', bp: '3074 C', st: 'কঠিন', desc: 'শক্তিশালী স্থায়ী চুম্বক তৈরিতে এবং লেজারে ব্যবহৃত হয়।' },
+{ num: 61, sym: 'Pm', name: 'প্রমিথিয়াম', mass: '145', row: 8, col: 7, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f5 6s2', mp: '1042 C', bp: '3000 C', st: 'কঠিন', desc: 'পারমাণবিক ব্যাটারি এবং আলোকিত রং তৈরিতে ব্যবহৃত হয়।' },
+{ num: 62, sym: 'Sm', name: 'সামারিয়াম', mass: '150.36', row: 8, col: 8, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '2, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f6 6s2', mp: '1072 C', bp: '1794 C', st: 'কঠিন', desc: 'উচ্চ তাপমাত্রার চুম্বক এবং পারমাণবিক চুল্লিতে ব্যবহৃত হয়।' },
+{ num: 63, sym: 'Eu', name: 'ইউরোপিয়াম', mass: '151.96', row: 8, col: 9, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '2, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f7 6s2', mp: '822 C', bp: '1529 C', st: 'কঠিন', desc: 'টেলিভিশনের স্ক্রিন এবং ফ্লুরোসেন্ট ল্যাম্পে উজ্জ্বল রং তৈরিতে ব্যবহৃত হয়।' },
+{ num: 64, sym: 'Gd', name: 'গ্যাডোলিনিয়াম', mass: '157.25', row: 8, col: 10, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f7 5d1 6s2', mp: '1312 C', bp: '3273 C', st: 'কঠিন', desc: 'এমআরআই (MRI) স্ক্যানিংয়ে কন্ট্রাস্ট এজেন্ট হিসেবে ব্যবহৃত হয়।' },
+{ num: 65, sym: 'Tb', name: 'টার্বিয়াম', mass: '158.93', row: 8, col: 11, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3, 4', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f9 6s2', mp: '1356 C', bp: '3230 C', st: 'কঠিন', desc: 'সলিড-স্টেট ডিভাইস এবং রঙিন টেলিভিশনের ফসফোরে ব্যবহৃত হয়।' },
+{ num: 66, sym: 'Dy', name: 'ডিসপ্রোসিয়াম', mass: '162.50', row: 8, col: 12, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f10 6s2', mp: '1412 C', bp: '2567 C', st: 'কঠিন', desc: 'উচ্চ শক্তিসম্পন্ন চুম্বক এবং পারমাণবিক চুল্লির কন্ট্রোল রডে ব্যবহৃত হয়।' },
+{ num: 67, sym: 'Ho', name: 'হোলমিয়াম', mass: '164.93', row: 8, col: 13, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f11 6s2', mp: '1474 C', bp: '2700 C', st: 'কঠিন', desc: 'মেডিকেল লেজার এবং পারমাণবিক চুল্লির ফ্লাক্স কনসেন্ট্রেটর হিসেবে ব্যবহৃত হয়।' },
+{ num: 68, sym: 'Er', name: 'আরবিয়াম', mass: '167.26', row: 8, col: 14, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f12 6s2', mp: '1529 C', bp: '2868 C', st: 'কঠিন', desc: 'অপটিক্যাল ফাইবার যোগাযোগ এবং বিশেষ কাচ তৈরিতে ব্যবহৃত হয়।' },
+{ num: 69, sym: 'Tm', name: 'থুলিয়াম', mass: '168.93', row: 8, col: 15, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f13 6s2', mp: '1545 C', bp: '1950 C', st: 'কঠিন', desc: 'পোর্টেবল এক্স-রে যন্ত্র এবং সলিড-স্টেট লেজারে ব্যবহৃত হয়।' },
+{ num: 70, sym: 'Yb', name: 'ইটারবিয়াম', mass: '173.05', row: 8, col: 16, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '2, 3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 6s2', mp: '824 C', bp: '1196 C', st: 'কঠিন', desc: 'স্টেইনলেস স্টিলের বৈশিষ্ট্য উন্নত করতে এবং ফাইবার অপটিক্যাল প্রযুক্তিতে ব্যবহৃত হয়।' },
+{ num: 71, sym: 'Lu', name: 'লুটিশিয়াম', mass: '174.97', row: 8, col: 17, type: 'transition-metal', gName: 'ল্যান্থানাইড', val: '3', ec: '1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d1 6s2', mp: '1663 C', bp: '3402 C', st: 'কঠিন', desc: 'পেট (PET) স্ক্যানার ডিটেক্টর এবং তেল শোধনাগারে অনুঘটক হিসেবে ব্যবহৃত হয়।' }
+        ];
+
+        const grid = document.getElementById('tableGrid');
+
+        for (let r = 1; r <= 9; r++) {
+    for (let c = 1; c <= 18; c++) {
+        const match = elements.find(e => e.row === r && e.col === c);
+        let cell = document.createElement('div');
+        
+        if (match) {
+            cell.className = `element-cell ${match.type}`;
+            cell.innerHTML = `
+                <span style="font-size:11px; opacity:0.85; text-align:left; display:block; width:100%; padding-left:2px;">${match.num}</span>
+                <span style="font-size:19px; display:block; margin-top:-4px;">${match.sym}</span>
+                <span style="font-size:11px; font-weight:normal; opacity:0.95; display:block; white-space:nowrap; overflow:hidden;">${match.name}</span>
+            `;
+            cell.onclick = () => showElementDetails(match);
+        } else {
+            // ল্যান্থানাইড ও অ্যাক্টিনাইড সিরিজের কন্ডিশন
+            if (r === 6 && c === 3) {
+                cell.className = 'element-cell'; 
+                cell.style.backgroundColor = "#eee"; // আলাদা রঙ
+                cell.innerHTML = '<span style="font-size:9px; font-weight:bold;">Lanthanide<br>Series</span>';
+            } else if (r === 7 && c === 3) {
+                cell.className = 'element-cell'; 
+                cell.style.backgroundColor = "#eee";
+                cell.innerHTML = '<span style="font-size:9px; font-weight:bold;">Actinide<br>Series</span>';
+            } else {
+                cell.className = 'empty-cell';
+            }
+        }
+        // সবশেষে সেলটি গ্রিডে যোগ করতে হবে (এটিই আপনার কোডে মিসিং ছিল)
+        grid.appendChild(cell); 
+    }
+}
+
+        function showElementDetails(elem) {
+            document.getElementById('m-badge').innerText = elem.sym;
+            document.getElementById('m-badge').className = `big-badge ${elem.type}`;
+            document.getElementById('m-name').innerText = elem.name + " (" + elem.sym + ")";
+            document.getElementById('m-group-name').innerText = elem.gName;
+            
+            document.getElementById('m-num').innerText = elem.num;
+            document.getElementById('m-mass').innerText = elem.mass;
+            document.getElementById('m-pg').innerText = "পর্যায়: " + elem.row + " | গ্রুপ: " + elem.col;
+            document.getElementById('m-valency').innerText = elem.val;
+            document.getElementById('m-ec').innerText = elem.ec;
+            document.getElementById('m-temp').innerText = "MP: " + elem.mp + " | BP: " + elem.bp;
+            document.getElementById('m-state').innerText = elem.st;
+            document.getElementById('m-desc').innerText = elem.desc;
+            
+            // Popup Overlay চালু করা
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function closeElementDetails() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+
+        // পপআপের বাইরে ক্লিক করলে যাতে বন্ধ হয়ে যায়
+        function closePopupOutside(event) {
+            if (event.target.id === 'modalOverlay') {
+                closeElementDetails();
+            }
+        }
+    </script>
+</body>
+</html>

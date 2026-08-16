@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রসায়নের ইতিহাস ও আবিষ্কারের সম্পূর্ণ টাইমলাইন</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-color: #f3f4f6;
+            --accent-color: #38bdf8;
+            --border-color: #1f2937;
+            --year-color: #f43f5e;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .timeline-container {
+            max-width: 850px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Center vertical line */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            width: 4px;
+            background: linear-gradient(to bottom, #38bdf8, #a855f7, #f43f5e, #10b981);
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 28px;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            text-align: center;
+            font-size: 15px;
+            color: #9ca3af;
+            margin-bottom: 50px;
+        }
+
+        .epoch-heading {
+            font-size: 20px;
+            color: #a855f7;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin: 40px 0 25px 55px;
+            font-weight: bold;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            margin-left: 65px;
+        }
+
+        /* Timeline Dot */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -41px;
+            top: 15px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 3px solid var(--bg-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .timeline-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--year-color);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .timeline-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            font-size: 14px;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 600px) {
+            .timeline-container::before { left: 15px; }
+            .timeline-item { margin-left: 40px; }
+            .timeline-item::before { left: -29px; }
+            .epoch-heading { margin-left: 30px; font-size: 17px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="timeline-container">
+        <h1 class="header-title">রসায়নের ইতিহাস ও আবিষ্কারের  টাইমলাইন</h1>
+        <p class="header-subtitle">সভ্যতার সূচনা থেকে আধুনিক যুগ পর্যন্ত</p>
+
+        <!-- যুগ ১ -->
+        <div class="epoch-heading">যুগ ১: প্রাচীনকাল ও আলকেমি যুগ (খ্রিস্টপূর্ব ৪০০০ - ১৬শ শতাব্দী)</div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">খ্রিস্টপূর্ব ৪০০০ অব্দ</div>
+                <div class="timeline-title">ধাতু নিষ্কাশন ও ব্যবহার</div>
+                <p class="timeline-desc">প্রকৃতি থেকে তামা সংগ্রহ এবং তা গলিয়ে বিভিন্ন ব্যবহারের জিনিস তৈরির সূচনা হয়, যা মেটালার্জির ভিত্তি গড়ে দেয়।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">খ্রিস্টপূর্ব ৩৫০০ অব্দ</div>
+                <div class="timeline-title">ব্রোঞ্জের আবিষ্কার</div>
+                <p class="timeline-desc">তামা এবং টিন একত্রে মিশিয়ে তুলনামূলক শক্ত ধাতু বা ব্রোঞ্জ তৈরির কৌশল আবিষ্কৃত হয়।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">খ্রিস্টপূর্ব ১২০০ অব্দ</div>
+                <div class="timeline-title">লৌহ যুগের সূচনা</div>
+                <p class="timeline-desc">আয়রন ওর বা আকরিক থেকে লোহা গলিয়ে অস্ত্র ও শক্ত যন্ত্রপাতি তৈরির প্রযুক্তি মানুষের আয়ত্তে আসে।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">খ্রিস্টপূর্ব ৩০০ অব্দ</div>
+                <div class="timeline-title">অ্যারিস্টোটলের উপাদান তত্ত্ব</div>
+                <p class="timeline-desc"> অ্যারিস্টোটল মাটি, পানি, বাতাস ও আগুন—এই চারটি মূল উপাদানের ধারণা দেন</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">৮০০ শতাব্দী</div>
+                <div class="timeline-title">জাবের ইবনে হাইয়ানের স্বর্ণযুগ</div>
+                <p class="timeline-desc">মুসলিম বিজ্ঞানী জাবের ইবনে হাইয়ান পাতন (Distillation), কেলাসন (Crystallization) এবং সালফিউরিক এসিড আবিষ্কার করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">৯০০ শতাব্দী</div>
+                <div class="timeline-title">আল-রাজি ও অ্যালকোহল আবিষ্কার</div>
+                <p class="timeline-desc">রাজি (Rhazes) পাতন প্রক্রিয়ার মাধ্যমে বিশুদ্ধ ইথানল বা অ্যালকোহল প্রস্তুত করেন এবং চিকিৎসা রসায়নে অবদান রাখেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৫৫০ শতাব্দী</div>
+                <div class="timeline-title">জর্জেস আগ্রিকোলার মেটালার্জি</div>
+                <p class="timeline-desc">খনিজ পদার্থ ও ধাতু নিষ্কাশন নিয়ে প্রথম বিজ্ঞানভিত্তিক প্রামাণ্য গ্রন্থ 'ডি রে মেটালিকা' প্রকাশিত হয়।</p>
+            </div>
+        </div>
+
+
+        <!-- যুগ ২ -->
+        <div class="epoch-heading">যুগ ২: বৈজ্ঞানিক বিপ্লব ও বায়ু গবেষণা (১৭শ - ১৮শ শতাব্দী)</div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৬৬১</div>
+                <div class="timeline-title">বয়েলের 'The Sceptical Chymist' প্রকাশ</div>
+                <p class="timeline-desc">রবার্ট বয়েল আলকেমির ধারণা থেকে বেরিয়ে এসে মৌল এবং যৌগের আধুনিক বৈজ্ঞানিক সংজ্ঞা প্রদান করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৬৬২</div>
+                <div class="timeline-title">বয়েলের সূত্র</div>
+                <p class="timeline-desc">নির্দিষ্ট তাপমাত্রায় গ্যাসের চাপ ও আয়তনের ব্যস্তানুপাতিক সম্পর্ক বৈজ্ঞানিক পরীক্ষার মাধ্যমে প্রমাণ করা হয়।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৭৫৪</div>
+                <div class="timeline-title">কার্বন ডাই-অক্সাইড আবিষ্কার</div>
+                <p class="timeline-desc">স্কটিশ বিজ্ঞানী জোসেফ ব্ল্যাক 'নির্দিষ্ট বায়ু' বা কার্বন ডাই-অক্সাইড গ্যাস পৃথক করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৭৬৬</div>
+                <div class="timeline-title">হাইড্রোজেন গ্যাস আবিষ্কার</div>
+                <p class="timeline-desc">হেনরি ক্যাভেন্ডিশ অত্যন্ত হালকা ও দহনশীল গ্যাস হিসেবে হাইড্রোজেন আবিষ্কার করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৭৭৪</div>
+                <div class="timeline-title">অক্সিজেন আবিষ্কার</div>
+                <p class="timeline-desc">জোসেফ প্রিস্টলি ও কার্ল ভিলহেল্ম শেলি স্বাধীনভাবে অক্সিজেন গ্যাস আবিষ্কার করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৭৭৯</div>
+                <div class="timeline-title">ল্যাভয়সিয়ে ও ভরের নিত্যতা সূত্র</div>
+                <p class="timeline-desc">অ্যান্টোইন ল্যাভয়সিয়ে দহনে অক্সিজেনের ভূমিকা প্রমাণ করেন এবং 'ভরের নিত্যতা সূত্র' প্রতিষ্ঠা করে আধুনিক রসায়নের ভিত্তি গড়েন।</p>
+            </div>
+        </div>
+
+
+        <!-- যুগ ৩ -->
+        <div class="epoch-heading">যুগ ৩: পারমাণবিক তত্ত্ব ও পর্যায় সারণির বিকাশ (১৯শ শতাব্দী)</div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮০৩</div>
+                <div class="timeline-title">ডালটনের পারমাণবিক তত্ত্ব</div>
+                <p class="timeline-desc">জন ডালটন পরমাণু নিয়ে প্রথম পূর্ণাঙ্গ ও সুসংহত বৈজ্ঞানিক তত্ত্ব প্রকাশ করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮০৮</div>
+                <div class="timeline-title">গে-লুসাকের গ্যাস আয়তন সূত্র</div>
+                <p class="timeline-desc">জোসেফ লুই গে-লুসাক গ্যাসীয় বিক্রিয়ায় আয়তনের সরল অনুপাতের সূত্র প্রদান করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮১১</div>
+                <div class="timeline-title">অ্যাভোগাদ্রোর অনুকল্প</div>
+                <p class="timeline-desc">আমাদেও অ্যাভোগাদ্রো সম আয়তনের সকল গ্যাসে সমান সংখ্যক অণু থাকে মর্মে হাইপোথিসিস দেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮২৮</div>
+                <div class="timeline-title">জৈব যৌগের কৃত্রিম সংশ্লেষণ</div>
+                <p class="timeline-desc">ফ্রেডরিখ ভোলার অজৈব পদার্থ থেকে ইউরিয়া তৈরি করে প্রমাণ করেন জৈব যৌগ শুধু প্রাণদেহে নয়, পরীক্ষাগারেও তৈরি সম্ভব।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮৬০</div>
+                <div class="timeline-title">কার্লস্রুহে কংগ্রেস</div>
+                <p class="timeline-desc">পরমাণু ভর ও আণবিক সূত্র নির্ধারণের জন্য বিজ্ঞানীদের প্রথম আন্তর্জাতিক সম্মেলন অনুষ্ঠিত হয়।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮৬৫</div>
+                <div class="timeline-title">কাকুলির বেনজিন রিং আবিষ্কার</div>
+                <p class="timeline-desc">আগস্ট কাকুলি বেনজিনের ষাটভুজাকৃতির চক্রাকার গঠন আবিষ্কার করে জৈব রসায়নে বিপ্লব ঘটান।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮৬৯</div>
+                <div class="timeline-title">মেন্ডেলিভের পর্যায় সারণি</div>
+                <p class="timeline-desc">দিমিত্রি মেন্ডেলিভ মৌলগুলোর রাসায়নিক ধর্ম ও পারমাণবিক ভরভিত্তিক পর্যায় সারণি প্রকাশ করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮৮৫</div>
+                <div class="timeline-title">ভ্যান্ট হফ ও আরহেনিয়াসের দ্রবণ তত্ত্ব</div>
+                <p class="timeline-desc">জ্যাকুয়াস হেনরিকাস ভ্যান্ট হফ রাসায়নিক গতিবিদ্যা ও অসমোটিক চাপ আবিষ্কার করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮৯৭</div>
+                <div class="timeline-title">ইলেকট্রন আবিষ্কার</div>
+                <p class="timeline-desc">জে. জে. থমসন ক্যাথোড রশ্মি পরীক্ষার মাধ্যমে পরমাণুর ভেতরে ইলেকট্রন কণা আবিষ্কার করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৮৯৮</div>
+                <div class="timeline-title">রেডিয়াম ও পোলোনিয়াম আবিষ্কার</div>
+                <p class="timeline-desc">পিয়েরে কুরি ও মারি কুরি তেজস্ক্রিয় মৌল রেডিয়াম ও পোলোনিয়াম আবিষ্কার করে বিজ্ঞানে নতুন দিগন্ত উন্মোচন করেন।</p>
+            </div>
+        </div>
+
+
+        <!-- যুগ ৪ -->
+        <div class="epoch-heading">যুগ ৪: আধুনিক পরমাণু ও কোয়ান্টাম রসায়ন (২০শ শতাব্দী)</div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯০৯</div>
+                <div class="timeline-title">হাবার-বশ পদ্ধতি (Haber-Bosch Process)</div>
+                <p class="timeline-desc">ফ্রিটজ হাবার ও কার্ল বশ বায়ু থেকে অ্যামোনিয়া গ্যাস সংশ্লেষণের মাধ্যমে কৃত্রিম সার তৈরির পথ উন্মুক্ত করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯১১</div>
+                <div class="timeline-title">রাদারফোর্ডের নিউক্লিয়াস আবিষ্কার</div>
+                <p class="timeline-desc">আলফা কণা বিচ্ছুরণ পরীক্ষার মাধ্যমে রাদারফোর্ড পরমাণুর কেন্দ্রস্থলে নিউক্লিয়াস আবিষ্কার করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯১৩</div>
+                <div class="timeline-title">বোরের পরমাণু মডেল ও pH স্কেল</div>
+                <p class="timeline-desc">নিলস বোর শক্তিস্তরভিত্তিক পরমাণু মডেল দেন এবং সোরেনসেন পিএইচ (pH) স্কেলের প্রবর্তন করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯১৪</div>
+                <div class="timeline-title">হেনরি মোসলে ও পারমাণবিক সংখ্যা</div>
+                <p class="timeline-desc">মোসলে এক্স-রে স্পেকট্রোস্কোপি ব্যবহার করে পারমাণবিক ভরের পরিবর্তে পারমাণবিক সংখ্যার ভিত্তিতে পর্যায় সারণিকে নতুন রূপ দেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯১৯</div>
+                <div class="timeline-title">নাইট্রোজেনের কৃত্রিম রূপান্তর</div>
+                <p class="timeline-desc">আর্নেস্ট রাদারফোর্ড আলফা কণা দিয়ে নাইট্রোজেনকে অক্সিজেনে রূপান্তর করে প্রথম কৃত্রিম তেজস্ক্রিয়তা ও নিউক্লিয়ার বিক্রিয়া ঘটান।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯৩২</div>
+                <div class="timeline-title">নিউট্রন আবিষ্কার</div>
+                <p class="timeline-desc">জেমস চ্যাডউইক পরমাণুর নিউক্লিয়াসে আধানহীন কণা নিউট্রন আবিষ্কার করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯৩৪</div>
+                <div class="timeline-title">কৃত্রিম তেজস্ক্রিয়তা আবিষ্কার</div>
+                <p class="timeline-desc">আইরিন জুলিও-কুরি ও ফ্রেডরিখ জুলিও-কুরি কৃত্রিম উপায়ে তেজস্ক্রিয় মৌল তৈরি করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯৩৮</div>
+                <div class="timeline-title">পারমাণবিক বিভাজন (Nuclear Fission)</div>
+                <p class="timeline-desc">অটো হান ও ফ্রিটজ স্ট্রেসম্যান ইউরেনিয়াম নিউক্লিয়াস বিভাজনে সক্ষম হন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯৫৪</div>
+                <div class="timeline-title">পলুং-এর রাসায়নিক বন্ধন তত্ত্ব</div>
+                <p class="timeline-desc">লাইনুস পাউলিং রাসায়নিক বন্ধন ও তড়িৎ ঋণাত্মকতার ধারণা দিয়ে আধুনিক রসায়নে নোবেল অর্জন করেন।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯৬২</div>
+                <div class="timeline-title">প্রথম নোবল গ্যাস যৌগ তৈরি</div>
+                <p class="timeline-desc">নিল বার্টলেট জেনন হেক্সাফ্লুরোplatinate তৈরি করে প্রমাণ করেন যে নিষ্ক্রিয় গ্যাসও যৌগ গঠন করতে পারে।</p>
+            </div>
+        </div>
+
+
+        <!-- যুগ ৫ -->
+        <div class="epoch-heading">যুগ ৫: ন্যানোটেকনোলজি ও বর্তমান যুগ (একবিংশ শতাব্দী)</div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯৮৫</div>
+                <div class="timeline-title">ফুলরিন (Fullerene) আবিষ্কার</div>
+                <p class="timeline-desc">কার্বনের নতুন রূপভেদ বাকিবল বা ফুলরিন ($C_{60}$) আবিষ্কৃত হয়, যা ন্যানোটেকনোলজির দুয়ার খুলে দেয়।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">১৯৯৬</div>
+                <div class="timeline-title">ক্লোনিং ও ডলি ভেড়া</div>
+                <p class="timeline-desc">রসায়নের জৈব-প্রযুক্তির শাখায় ডিএনএ এবং আণবিক পর্যায়ে এক বিশাল মাইলফলক অর্জিত হয়।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">২০০৪</div>
+                <div class="timeline-title">গ্রাফিন (Graphene) পৃথকীকরণ</div>
+                <p class="timeline-desc">গ্রাফাইট থেকে অত্যন্ত শক্তিশালী ও পাতলা এক পরমাণু পুরু কার্বনের স্তর গ্রাফিন তৈরি করা হয়।</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-card">
+                <div class="timeline-year">২০২০ - বর্তমান</div>
+                <div class="timeline-title">এআই চালিত রসায়ন ও গ্রিন কেমিস্ট্রি</div>
+                <p class="timeline-desc">কৃত্রিম বুদ্ধিমত্তা (AI) ব্যবহার করে নতুন উপাদান ও ওষুধ ডিজাইন এবং পরিবেশবান্ধব রাসায়নিক প্রক্রিয়া নিয়ে বিশ্বব্যাপী গবেষণা চলছে।</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

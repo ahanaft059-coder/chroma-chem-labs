@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফাংশনাল গ্রুপ চ্যালেঞ্জ</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #f59e0b; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; text-align: center; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #334155; color: white; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        
+        .game-card { max-width: 600px; margin: 80px auto; background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid #334155; }
+        .game-title { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; font-weight: 800; text-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+        
+        .score-box { font-size: 1.5rem; margin-bottom: 20px; }
+        #combo-badge { color: #22c55e; font-weight: bold; margin-left: 10px; }
+        
+        #timer-bar { width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-bottom: 30px; }
+        #timer-progress { width: 100%; height: 100%; background: var(--accent); }
+        
+        .btn { display: block; width: 100%; padding: 18px; margin: 12px 0; background: #334155; border: 2px solid transparent; color: white; border-radius: 15px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+        .btn:hover { border-color: var(--accent); background: #475569; }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div class="game-card">
+    <h1 class="game-title">ফাংশনাল গ্রুপ চ্যালেঞ্জ</h1>
+    <div class="score-box">স্কোর: <span id="score">0</span> <span id="combo-badge"></span></div>
+    <div id="timer-bar"><div id="timer-progress"></div></div>
+    <h1 id="question" style="font-size: 4rem; margin: 20px 0;">?</h1>
+    <div id="options"></div>
+</div>
+
+<script>
+    let score = 0, combo = 0, timeLeft = 10, timer, currentAnswer = "";
+    
+    function startTimer() {
+        timeLeft = 10;
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft -= 0.1;
+            document.getElementById('timer-progress').style.width = (timeLeft/10)*100 + "%";
+            if(timeLeft <= 0) endGame("⏰ সময় শেষ! আপনার স্কোর: " + score);
+        }, 100);
+    }
+
+    function endGame(msg) {
+        clearInterval(timer);
+        const parts = msg.split("!");
+        document.getElementById('question').innerHTML = `
+            <div style="font-size: 1rem; color: #94a3b8;">গেমের ফলাফল</div>
+            <div style="font-size: 2.5rem; color: #ef4444; font-weight: 800;">${parts[0]}!</div>
+            <div style="font-size: 1.2rem;">${parts[1] || ""}</div>
+        `;
+        document.getElementById('options').innerHTML = `<button class="btn" style="background:var(--accent)" onclick="location.reload()">পুনরায় শুরু করুন 🔄</button>`;
+    }
+
+    function play() {
+        const questions = [
+    // ১. অ্যালকেন
+    { q: "CH4", a: "অ্যালকেন" }, { q: "C2H6", a: "অ্যালকেন" }, { q: "C3H8", a: "অ্যালকেন" }, { q: "C4H10", a: "অ্যালকেন" }, { q: "C5H12", a: "অ্যালকেন" }, { q: "C6H14", a: "অ্যালকেন" }, { q: "C7H16", a: "অ্যালকেন" }, { q: "C8H18", a: "অ্যালকেন" }, { q: "C9H20", a: "অ্যালকেন" }, { q: "C10H22", a: "অ্যালকেন" },
+    
+    // ২. অ্যালকিন
+    { q: "C2H4", a: "অ্যালকিন" }, { q: "C3H6", a: "অ্যালকিন" }, { q: "C4H8", a: "অ্যালকিন" }, { q: "C5H10", a: "অ্যালকিন" }, { q: "C6H12", a: "অ্যালকিন" }, { q: "C7H14", a: "অ্যালকিন" }, { q: "C8H16", a: "অ্যালকিন" }, { q: "C9H18", a: "অ্যালকিন" }, { q: "C10H20", a: "অ্যালকিন" }, { q: "CH2=CH-CH2-CH3", a: "অ্যালকিন" },
+    
+    // ৩. অ্যালকোহল
+    { q: "CH3OH", a: "অ্যালকোহল" }, { q: "C2H5OH", a: "অ্যালকোহল" }, { q: "C3H7OH", a: "অ্যালকোহল" }, { q: "C4H9OH", a: "অ্যালকোহল" }, { q: "C5H11OH", a: "অ্যালকোহল" }, { q: "C6H13OH", a: "অ্যালকোহল" }, { q: "CH3-CH(OH)-CH3", a: "অ্যালকোহল" }, { q: "CH3-CH2-CH(OH)-CH3", a: "অ্যালকোহল" }, { q: "HO-CH2-CH2-OH", a: "অ্যালকোহল" }, { q: "C3H5(OH)3", a: "অ্যালকোহল" },
+    
+    // ৪. অ্যালডিহাইড
+    { q: "HCHO", a: "অ্যালডিহাইড" }, { q: "CH3CHO", a: "অ্যালডিহাইড" }, { q: "C2H5CHO", a: "অ্যালডিহাইড" }, { q: "C3H7CHO", a: "অ্যালডিহাইড" }, { q: "C4H9CHO", a: "অ্যালডিহাইড" }, { q: "C6H5CHO", a: "অ্যালডিহাইড" }, { q: "C5H11CHO", a: "অ্যালডিহাইড" }, { q: "C6H13CHO", a: "অ্যালডিহাইড" }, { q: "C7H15CHO", a: "অ্যালডিহাইড" }, { q: "C8H17CHO", a: "অ্যালডিহাইড" },
+    
+    // ৫. কিটোন
+    { q: "CH3COCH3", a: "কিটোন" }, { q: "CH3COCH2CH3", a: "কিটোন" }, { q: "CH3CO(CH2)2CH3", a: "কিটোন" }, { q: "CH3CO(CH2)3CH3", a: "কিটোন" }, { q: "CH3CH2COCH2CH3", a: "কিটোন" }, { q: "C6H5COCH3", a: "কিটোন" }, { q: "CH3CO(CH2)4CH3", a: "কিটোন" }, { q: "CH3CO(CH2)5CH3", a: "কিটোন" }, { q: "CH3CO(CH2)6CH3", a: "কিটোন" }, { q: "CH3CO(CH2)7CH3", a: "কিটোন" },
+    
+    // ৬. কার্বক্সিলিক অ্যাসিড
+    { q: "HCOOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "CH3COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C2H5COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C3H7COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C4H9COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C5H11COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C6H13COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C6H5COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "HOOC-COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "HOOC-CH2-COOH", a: "কার্বক্সিলিক অ্যাসিড" },
+    
+    // ৭. অ্যামিন
+    { q: "CH3NH2", a: "অ্যামিন" }, { q: "C2H5NH2", a: "অ্যামিন" }, { q: "(CH3)2NH", a: "অ্যামিন" }, { q: "(CH3)3N", a: "অ্যামিন" }, { q: "C3H7NH2", a: "অ্যামিন" }, { q: "C4H9NH2", a: "অ্যামিন" }, { q: "C6H5NH2", a: "অ্যামিন" }, { q: "C5H11NH2", a: "অ্যামিন" }, { q: "CH3CH2CH2CH2NH2", a: "অ্যামিন" }, { q: "NH2-CH2-CH2-NH2", a: "অ্যামিন" },
+    
+    // ৮. হ্যালোজেন ডেরিভেটিভস
+    { q: "CH3Cl", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "C2H5Br", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH3CH2CH2Cl", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH3CHClCH3", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "C4H9Cl", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH3I", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH2Cl2", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CHCl3", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CCl4", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "C6H5Cl", a: "হ্যালোজেন ডেরিভেটিভস" },
+    
+    // ৯. এস্টার
+    { q: "HCOOCH3", a: "এস্টার" }, { q: "CH3COOCH3", a: "এস্টার" }, { q: "CH3COOC2H5", a: "এস্টার" }, { q: "HCOOC2H5", a: "এস্টার" }, { q: "C2H5COOCH3", a: "এস্টার" }, { q: "CH3COOC3H7", a: "এস্টার" }, { q: "CH3COOC4H9", a: "এস্টার" }, { q: "CH3COOC6H13", a: "এস্টার" }, { q: "C6H5COOCH3", a: "এস্টার" }, { q: "C2H5COOC2H5", a: "এস্টার" },
+    
+    // ১০. অ্যারোমেটিক ও অন্যান্য
+    { q: "C6H6", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C6H5CH3", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C6H5OH", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C6H5NO2", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-O-CH3", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-O-C2H5", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C2H5-O-C2H5", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-C≡N", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-CONH2", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH2=CH-Cl", a: "অ্যারোমেটিক ও অন্যান্য" }
+];
+        let item = questions[Math.floor(Math.random() * questions.length)];
+        currentAnswer = item.a;
+        document.getElementById('question').innerText = item.q;
+        let grid = document.getElementById('options');
+        grid.innerHTML = '';
+        
+        ["অ্যালকোহল", "অ্যালডিহাইড", "কিটোন", "কার্বক্সিলিক অ্যাসিড", "অ্যামিন"].sort(() => Math.random() - 0.5).forEach(opt => {
+            let b = document.createElement('button');
+            b.className = 'btn'; b.innerText = opt;
+            b.onclick = () => {
+                if(opt === currentAnswer) {
+                    combo++;
+                    let points = (combo >= 3) ? 20 : 10;
+                    score += points;
+                    document.getElementById('score').innerText = score;
+                    document.getElementById('combo-badge').innerText = (combo >= 3) ? "🔥 কম্বো মোড!" : "";
+                    if(score >= 200) endGame("🏆 অভিনন্দন! তুমি বিজয়ী! স্কোর: " + score);
+                    else play();
+                } else {
+                    combo = 0;
+                    endGame("❌ ভুল উত্তর! সঠিকটি ছিল: " + currentAnswer + ". স্কোর: " + score);
+                }
+            };
+            grid.appendChild(b);
+        });
+        startTimer();
+    }
+    play();
+</script>
+</body>
+</html>

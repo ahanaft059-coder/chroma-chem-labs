@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Cyber-Element Hunter 2026</title>
+    <style>
+        :root { 
+            --bg: #05070c; --card: rgba(15, 20, 34, 0.7); 
+            --danger: #ef4444; --accent: #3b82f6;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .back-btn { position: fixed; top: 30px; left: 30px; padding: 12px 25px; background: #1e293b; color: #94a3b8; border-radius: 12px; text-decoration: none; border: 1px solid #334155; transition: 0.3s; z-index: 1000; }
+        .back-btn:hover { background: #334155; color: white; transform: translateX(-5px); }
+        #gameArea { width: 90%; max-width: 650px; background: var(--card); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
+        .elements-pool { display: flex; justify-content: center; gap: 15px; margin: 30px 0; min-height: 80px; }
+        .element { width: 75px; height: 75px; background: #1a2234; border: 2px solid; display: flex; align-items: center; justify-content: center; cursor: grab; border-radius: 20px; font-weight: bold; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(255,255,255,0.2); } 50% { box-shadow: 0 0 20px rgba(255,255,255,0.3); } }
+        .zone { padding: 15px; border: 2px dashed #334155; border-radius: 15px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
+        .zone:hover { background: rgba(255,255,255,0.05); }
+        #score-board { font-size: 1.6rem; margin-bottom: 20px; background: linear-gradient(to right, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div id="gameContainer" class="game-card">
+    <h1 class="game-title">Element Hunter 🧪</h1>
+
+<div id="gameArea">
+    <div id="score-board">স্কোর: <span id="score">0</span> | Combo: x<span id="combo">1</span></div>
+    <div class="elements-pool" id="pool"></div>
+    <div id="zoneContainer" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;"></div>
+    <div id="msg" style="margin-top:25px; font-weight:600; color: #94a3b8;">নিচের মৌলগুলো টেনে সঠিক বক্সে বসাও!</div>
+</div>
+
+<script>
+    const elementDB = {
+        categories: {
+            Alkali: { name: "ক্ষার ধাতু", color: "#f87171" },
+            Noble:  { name: "নিষ্ক্রিয় গ্যাস", color: "#38bdf8" },
+            Halogen:{ name: "হ্যালোজেন", color: "#a78bfa" },
+            Earth:  { name: "মৃত্তিকা ধাতু", color: "#fbbf24" },
+            Transition: { name: "অবস্থান্তর ধাতু", color: "#10b981" },
+            Lanthanide: { name: "ল্যান্থানাইড", color: "#ec4899" }
+        },
+        elements: [
+            {id: "Li", name: "Li", type: "Alkali"}, {id: "Na", name: "Na", type: "Alkali"}, {id: "K", name: "K", type: "Alkali"},
+            {id: "He", name: "He", type: "Noble"}, {id: "Ne", name: "Ne", type: "Noble"}, {id: "Ar", name: "Ar", type: "Noble"},
+            {id: "F", name: "F", type: "Halogen"}, {id: "Cl", name: "Cl", type: "Halogen"}, {id: "Br", name: "Br", type: "Halogen"},
+            {id: "Be", name: "Be", type: "Earth"}, {id: "Mg", name: "Mg", type: "Earth"}, {id: "Ca", name: "Ca", type: "Earth"},
+            {id: "Fe", name: "Fe", type: "Transition"}, {id: "Cu", name: "Cu", type: "Transition"}, {id: "Zn", name: "Zn", type: "Transition"},
+            {id: "La", name: "La", type: "Lanthanide"}, {id: "Ce", name: "Ce", type: "Lanthanide"}
+        ]
+    };
+
+    let score = 0, lives = 3, combo = 1;
+    let activeElements = Array.from({length: 4}, () => elementDB.elements[Math.floor(Math.random() * elementDB.elements.length)]);
+
+    function renderZones() {
+        document.getElementById('zoneContainer').innerHTML = Object.keys(elementDB.categories).map(cat => `
+            <div class="zone" ondrop="drop(event, '${cat}')" ondragover="event.preventDefault()" style="border-color: ${elementDB.categories[cat].color}">
+                ${elementDB.categories[cat].name}
+            </div>
+        `).join('');
+    }
+
+    function renderPool() {
+        document.getElementById('pool').innerHTML = activeElements.map((el, i) => `
+            <div class="element" draggable="true" ondragstart="event.dataTransfer.setData('idx', ${i})" 
+            style="border-color:${elementDB.categories[el.type].color}; color:${elementDB.categories[el.type].color}">${el.name}</div>
+        `).join('');
+    }
+
+    function drop(ev, cat) {
+        let idx = ev.dataTransfer.getData('idx');
+        let el = activeElements[idx];
+        let msg = document.getElementById('msg');
+
+        if(el.type === cat) {
+            score += (10 * combo); combo++;
+            msg.innerHTML = `<span style="color:#22c55e">দারুণ! কম্বো x${combo-1} (+${10*(combo-1)})</span>`;
+            activeElements[idx] = elementDB.elements[Math.floor(Math.random() * elementDB.elements.length)];
+        } else {
+            lives--; combo = 1; score = Math.max(0, score - 5);
+            msg.innerHTML = `<span style="color:#ef4444">ভুল হয়েছে! জীবন বাকি: ${lives}</span>`;
+            if(lives <= 0) gameOver();
+        }
+        document.getElementById('score').innerText = score;
+        document.getElementById('combo').innerText = combo;
+        renderPool();
+    }
+
+    function gameOver() {
+        document.getElementById('gameArea').innerHTML = `
+            <div style="padding: 40px;">
+                <h1 style="color:var(--danger); font-size: 2.5rem;">গেম ওভার!</h1>
+                <p style="font-size: 1.2rem; margin: 20px 0;">ফাইনাল স্কোর: ${score}</p>
+                <button onclick="location.reload()" style="padding: 15px 30px; border-radius: 12px; background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold;">পুনরায় খেলো 🔄</button>
+            </div>
+        `;
+    }
+
+    renderZones();
+    renderPool();
+</script>
+</body>
+</html>

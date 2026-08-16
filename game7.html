@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>রিঅ্যাকশন চেইন রিয়্যাক্টর</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #10b981; --danger: #ef4444; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #f8fafc; text-align: center; padding: 20px; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #334155; color: white; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        .reactor-card { max-width: 600px; margin: 60px auto; background: var(--card); padding: 30px; border-radius: 25px; border: 2px solid var(--accent); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        .scoreboard { display: flex; justify-content: space-around; margin-bottom: 20px; font-size: 1.2rem; background: #0f172a; padding: 15px; border-radius: 12px; }
+        .reaction-display { font-size: 2.2rem; margin: 30px 0; padding: 30px; background: #334155; border-radius: 15px; color: var(--accent); font-weight: bold; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #334155; border: none; color: white; border-radius: 12px; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
+        .btn:hover { background: var(--accent); color: var(--bg); transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div class="reactor-card" id="game-container">
+    <h1>🔥 রিঅ্যাকশন চেইন রিয়্যাক্টর</h1>
+    <div class="scoreboard">
+        <div>চেইন লেভেল: <span id="chain-count" style="color: var(--accent);">1</span></div>
+        <div>মোট স্কোর: <span id="score" style="color: var(--accent);">0</span></div>
+    </div>
+    <div class="reaction-display" id="reaction">?</div>
+    <div id="options"></div>
+</div>
+
+<script>
+    let chain = 1, score = 0;
+    const reactions = [
+        { r: "CH4 + Cl2 (UV)", p: "CH3Cl", o: ["CH3Cl", "CH2Cl2", "CCl4", "C2H6"] },
+        { r: "CH2=CH2 + H2O", p: "CH3CH2OH", o: ["CH3CH3", "CH3CH2OH", "CH3CHO", "CH4"] },
+        { r: "CH3CHO + [O]", p: "CH3COOH", o: ["CH3OH", "CH3CH2OH", "CH3COOH", "CH4"] },
+        { r: "CH3OH + HCl", p: "CH3Cl", o: ["CH3Cl", "CH3OCH3", "CH3COOH", "CH4"] }
+    ];
+
+    function showGameOver(finalScore) {
+        let motivation = (finalScore <= 30) ? 
+            "হতাশ হয়ো না! রসায়ন একটু জটিল, আবার চেষ্টা করো—তুমি নিশ্চয়ই পারবে! 💪" : 
+            "চমৎকার খেলেছ! তোমার রসায়নের জ্ঞান দারুণ!";
+
+        document.getElementById('game-container').innerHTML = `
+            <h1 style="color:var(--danger)">⚠️ চেইন ভেঙে গেছে!</h1>
+            <div style="font-size: 1.2rem; margin: 20px 0;">${motivation}</div>
+            <div style="font-size: 2rem; margin: 20px 0;">মোট স্কোর: ${finalScore}</div>
+            <button class="btn" style="background:var(--accent)" onclick="location.reload()">আবার শুরু করো 🔄</button>
+            <a href="games.html" class="btn" style="text-decoration:none;">ড্যাশবোর্ডে ফিরে যান</a>
+        `;
+    }
+
+    function play() {
+        let item = reactions[Math.floor(Math.random() * reactions.length)];
+        document.getElementById('reaction').innerText = item.r + " → ?";
+        let grid = document.getElementById('options');
+        grid.innerHTML = '';
+        
+        item.o.sort(() => Math.random() - 0.5).forEach(opt => {
+            let b = document.createElement('button');
+            b.className = 'btn'; b.innerText = opt;
+            b.onclick = () => {
+                if(opt === item.p) {
+                    score += (chain * 10);
+                    chain++;
+                    document.getElementById('chain-count').innerText = chain;
+                    document.getElementById('score').innerText = score;
+                    play();
+                } else {
+                    showGameOver(score);
+                }
+            };
+            grid.appendChild(b);
+        });
+    }
+    play();
+</script>
+</body>
+</html>

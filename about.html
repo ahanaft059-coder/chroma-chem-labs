@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমাদের গল্প - Fahad's Tutorial - FT</title>
+    
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #111111;
+            --text-color: #f8fafc;
+            --border-color: #222222;
+            --section-border: rgba(168, 85, 247, 0.4);
+            --primary-glow: rgba(0, 242, 254, 0.15);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header / Navbar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            color: #000000;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .logo-text h1 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: #00f2fe;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #00f2fe;
+        }
+
+        /* Story Main Section */
+        .story-card {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 24px;
+            padding: 45px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 0 0 20px var(--primary-glow);
+        }
+
+        .story-tag {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .story-card h2 {
+            font-size: 32px;
+            margin-top: 0;
+            color: #00f2fe;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .story-card p {
+            font-size: 16px;
+            line-height: 1.9;
+            opacity: 0.88;
+            margin-bottom: 22px;
+        }
+
+        .highlight-text {
+            font-weight: bold;
+            color: #a855f7;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .back-btn:hover { 
+            transform: scale(1.03); 
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <div class="logo-badge">Ch</div>
+                <div class="logo-text">
+                    <h1>CHEMISTRY LAB</h1>
+                    <span>Interactive Learning</span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">হোম</a></li>
+                <li><a href="story.html" style="color: #00f2fe;">আমাদের গল্প</a></li>
+            </ul>
+        </header>
+
+        <!-- Main Story Section -->
+        <div class="story-card">
+            <span class="story-tag">OUR STORY</span>
+            <h2>আমাদের গল্প</h2>
+            
+            <p>
+                Welcome to <strong>Chemistry Hub</strong>! আমরা বিশ্বাস করি রসায়নের কঠিন তত্ত্বগুলো মুখস্থ করার বিষয় নয়, বরং উপলব্ধি করার বিষয়। গতানুগতিক পাঠ্যবইয়ের বোরিং পড়াশোনাকে আধুনিক ডিজিটাল প্রযুক্তির ছোঁয়ায় আরও সহজ, আকর্ষণীয় এবং ভিজ্যুয়াল করে তোলা আমাদের মূল লক্ষ্য।
+            </p>
+            
+            <p>
+                ভিশন ২০২৬ এবং তারুণ্যের উদ্ভাবন
+বিজ্ঞান ও প্রযুক্তির এই যুগে শিক্ষার্থীদের স্মার্ট নাগরিক হিসেবে গড়ে তুলতে আমরা বদ্ধপরিকর। তত্ত্বীয় রসায়নকে সহজতর করতে আমাদের এই প্ল্যাটফর্মটি এমনভাবে ডিজাইন করা হয়েছে, যেন যেকোনো শিক্ষার্থী যেকোনো সময় যেকোনো জায়গা থেকে নিখুঁত ও গোছানো নলেজ এক্সেস করতে পারে।
+            </p>
+
+            
+        </div>
+    </div>
+
+</body>
+</html>

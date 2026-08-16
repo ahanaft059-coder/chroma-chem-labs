@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রসায়ন গেম জোন (Chemistry Game Hub)</title>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 40px 20px; transition: background 0.3s, color 0.3s; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 { font-size: 36px; margin-bottom: 10px; background: linear-gradient(135deg, #e67e22, #f1c40f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        @media (max-width: 700px) { .games-grid { grid-template-columns: 1fr; } }
+
+        .game-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; padding: 25px; box-shadow: 0 8px 20px var(--shadow); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
+        .game-card:hover { transform: translateY(-5px); }
+        .game-icon { font-size: 48px; margin-bottom: 15px; }
+        .game-title { font-size: 22px; margin: 0 0 10px 0; }
+        .game-desc { font-size: 14px; opacity: 0.8; line-height: 1.5; margin-bottom: 20px; }
+        .play-btn { display: block; text-align: center; background: linear-gradient(135deg, #3498db, #2ecc71); color: white; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: bold; }
+        .locked { opacity: 0.6; }
+        .locked .play-btn { background: #7f8c8d; cursor: not-allowed; }
+    </style>
+
+<div class="container">
+    <!-- ফিরে যান বাটন -->
+    <div class="top-action-bar">
+        <a href="index.html" class="back-home-btn">← ফিরে যান</a>
+    </div>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🎮 রসায়ন গেম হাব (Chemistry Game Hub)</h1>
+            <p>তোমার পছন্দের গেমটি বেছে নাও এবং খেলা শুরু করো!</p>
+        </header>
+
+        <div class="games-grid">
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">🕹️</div>
+                    <h3 class="game-title">যোজনী মেলানো চ্যালেঞ্জ</h3>
+                    <p class="game-desc">মৌলের প্রতীক দেখে সঠিক যোজনী মেলাও।</p>
+                </div>
+                <a href="game1.html" class="play-btn">খেলুন ⚡</a>
+            </div>
+
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">🎯</div>
+                    <h3 class="game-title">আণবিক ভর শিকারী</h3>
+                    <p class="game-desc">স্ক্রিনে আসা সংকেত দেখে দ্রুত মনে মনে হিসাব করে সঠিক আণবিক ভর অপশন থেকে খুঁজে নাও। জীবন ফুরিয়ে যাওয়ার আগেই সর্বোচ্চ স্কোর করো!</p>
+                </div>
+                <a href="game2.html" class="play-btn">খেলুন ⚡</a>
+            </div>
+
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">🧩</div>
+                    <h3 class="game-title">সংকেত মেকার</h3>
+                    <p class="game-desc">ক্যাটায়ন আর অ্যানায়ন জোড়া দিয়ে সঠিক সংকেত তৈরি করো।</p>
+                </div>
+                <a href="game3.html" class="play-btn">খেলুন ⚡</a>
+            </div>
+
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">🧪</div>
+                    <h3 class="game-title">রাসায়নিক বিক্রিয়া শিকারী</h3>
+                    <p class="game-desc">সঠিক উৎপাদ বেছে নিয়ে বিক্রিয়া সম্পন্ন করো।</p>
+                </div>
+                <a href="game4.html" class="play-btn">খেলুন ⚡</a>
+            </div>
+
+            <!-- গেম ৫: ফাংশনাল গ্রুপ চ্যালেঞ্জ -->
+<div class="game-card">
+    <div>
+        <div class="game-icon">🧪</div>
+        <h3 class="game-title">ফাংশনাল গ্রুপ চ্যালেঞ্জ</h3>
+        <p class="game-desc">সঠিক ফাংশনাল গ্রুপ চিহ্নিত করে মাস্টার হয়ে ওঠো!</p>
+    </div>
+    <a href="game5.html" class="play-btn">খেলুন ⚡</a>
+</div>
+
+<!-- গেম ৬: IUPAC নামকরণ ব্যাটল -->
+<div class="game-card">
+    <div>
+        <div class="game-icon">📝</div>
+        <h3 class="game-title">IUPAC নামকরণ ব্যাটল</h3>
+        <p class="game-desc">যৌগের সংকেত দেখে সঠিক IUPAC নাম বেছে নাও।</p>
+    </div>
+    <a href="game6.html" class="play-btn">খেলুন ⚡</a>
+</div>
+
+<!-- গেম ৭: রিঅ্যাকশন চেইন রিয়্যাক্টর -->
+<div class="game-card">
+    <div>
+        <div class="game-icon">⚡</div>
+        <h3 class="game-title">রিঅ্যাকশন চেইন রিয়্যাক্টর</h3>
+        <p class="game-desc">বিক্রিয়ার চেইন ধরে রেখে সর্বোচ্চ স্কোর করো!</p>
+    </div>
+    <a href="game7.html" class="play-btn">খেলুন ⚡</a>
+</div>
+
+<div class="game-card">
+    <div>
+        <div class="game-icon">📝</div>
+        <h3 class="game-title">Element Hunter 🧪</h3>
+        <p class="game-desc">মৌলের রাজ্যে রহস্যের সমাধান করো—সঠিক গ্রুপ, সঠিক পরিচয়!</p>
+    </div>
+    <a href="game8.html" class="play-btn">খেলুন ⚡</a>
+</div>
+
+<div class="game-card">
+    <div>
+        <div class="game-icon">📝</div>
+        <h3 class="game-title">pH Lab:Expert Mode</h3>
+        <p class="game-desc">ঘড়ির কাঁটা আর লিকুইডের লড়াইয়ে জয়ী হতে প্রয়োজন নিখুঁত ভারসাম্য!</p>
+    </div>
+    <a href="game9.html" class="play-btn">খেলুন ⚡</a>
+</div>
+
+            <div class="game-card locked">
+                <div>
+                    <div class="game-icon">🔒</div>
+                    <h3 class="game-title">গেম 10: (আসন্ন)</h3>
+                    <p class="game-desc">নতুন চ্যালেঞ্জ আসছে! শীঘ্রই উন্মুক্ত করা হবে।</p>
+                </div>
+                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
+            </div>
+
+            
+
+            
+        </div>
+    </div>
+
+    <script>
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    </script>
+</body>
+</html>

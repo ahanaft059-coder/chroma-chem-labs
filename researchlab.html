@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ultimate Chemical Synthesis Lab</title>
+    <style>
+        :root { --neon: #00ff9d; --bg: #050608; --panel: #0d1117; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; padding: 20px; }
+        .lab-ui { max-width: 900px; margin: auto; background: var(--panel); padding: 30px; border: 1px solid #333; border-radius: 15px; box-shadow: 0 0 20px rgba(0, 255, 157, 0.1); }
+        .btn { padding: 10px 20px; background: transparent; color: var(--neon); border: 1px solid var(--neon); cursor: pointer; margin: 5px; }
+        .btn:hover { background: var(--neon); color: #000; }
+        .chamber { min-height: 120px; border: 2px dashed #30363d; margin: 25px 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-wrap: wrap; padding: 10px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid #333; padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="lab-ui">
+    <h1 style="text-align:center;">🧪 ADVANCED CHEMICAL RESEARCH LAB</h1>
+    <div style="text-align:center;">
+        <select id="elementSelect" style="background:#1a1f26; color:var(--neon); padding:10px; border:1px solid var(--neon);"></select>
+        <button class="btn" onclick="addAtom()">+ ADD ATOM</button>
+        <button class="btn" onclick="resetLab()" style="border-color: #ff4757; color: #ff4757;">RESET</button>
+    </div>
+
+    <div class="chamber" id="chamber">EMPTY CHAMBER</div>
+    
+    <div class="stats-grid">
+        <div id="result">Compound: N/A</div>
+        <div id="info">Atomic Mass: 0.00 u</div>
+    </div>
+</div>
+
+<script>
+    const elements = {
+        "H": 1.008, "He": 4.002, "Li": 6.94, "Be": 9.012, "B": 10.81, "C": 12.011, "N": 14.007, "O": 15.999, "F": 18.998, "Ne": 20.180,
+        "Na": 22.990, "Mg": 24.305, "Al": 26.982, "Si": 28.085, "P": 30.974, "S": 32.06, "Cl": 35.45, "Ar": 39.948, "K": 39.098, "Ca": 40.078,
+        "Sc": 44.956, "Ti": 47.867, "V": 50.942, "Cr": 51.996, "Mn": 54.938, "Fe": 55.845, "Co": 58.933, "Ni": 58.693, "Cu": 63.546, "Zn": 65.38,
+        "Ga": 69.723, "Ge": 72.63, "As": 74.922, "Se": 78.971, "Br": 79.904, "Kr": 83.798, "Rb": 85.468, "Sr": 87.62, "Y": 88.906, "Zr": 91.224,
+        "Nb": 92.906, "Mo": 95.95, "Tc": 98, "Ru": 101.07, "Rh": 102.91, "Pd": 106.42, "Ag": 107.87, "Cd": 112.41, "In": 114.82, "Sn": 118.71,
+        "Sb": 121.76, "Te": 127.60, "I": 126.90, "Xe": 131.29, "Cs": 132.91, "Ba": 137.33, "La": 138.91, "Ce": 140.12, "Pr": 140.91, "Nd": 144.24,
+        "Pm": 145, "Sm": 150.36, "Eu": 151.96, "Gd": 157.25, "Tb": 158.93, "Dy": 162.50, "Ho": 164.93, "Er": 167.26, "Tm": 168.93, "Yb": 173.05,
+        "Lu": 174.97, "Hf": 178.49, "Ta": 180.95, "W": 183.84, "Re": 186.21, "Os": 190.23, "Ir": 192.22, "Pt": 195.08, "Au": 196.97, "Hg": 200.59,
+        "Tl": 204.38, "Pb": 207.2, "Bi": 208.98, "Po": 209, "At": 210, "Rn": 222, "Fr": 223, "Ra": 226, "Ac": 227, "Th": 232.04,
+        "Pa": 231.04, "U": 238.03, "Np": 237, "Pu": 244, "Am": 243, "Cm": 247, "Bk": 247, "Cf": 251, "Es": 252, "Fm": 257,
+        "Md": 258, "No": 259, "Lr": 266, "Rf": 267, "Db": 268, "Sg": 269, "Bh": 270, "Hs": 269, "Mt": 278, "Ds": 281,
+        "Rg": 282, "Cn": 285, "Nh": 286, "Fl": 289, "Mc": 290, "Lv": 293, "Ts": 294, "Og": 294
+    };
+    const compounds = [
+        { formula: {H:2, O:1}, name: "Water (H₂O)", type: "Covalent" },
+        { formula: {C:1, O:2}, name: "Carbon Dioxide (CO₂)", type: "Covalent" },
+        { formula: {Na:1, Cl:1}, name: "Table Salt (NaCl)", type: "Ionic" },
+        { formula: {N:1, H:3}, name: "Ammonia (NH₃)", type: "Covalent" },
+        { formula: {H:1, Cl:1}, name: "Hydrochloric Acid (HCl)", type: "Covalent" },
+        { formula: {H:2, S:1, O:4}, name: "Sulfuric Acid (H₂SO₄)", type: "Covalent" },
+        { formula: {C:6, H:12, O:6}, name: "Glucose (C₆H₁₂O₆)", type: "Covalent" },
+        { formula: {C:2, H:6, O:1}, name: "Ethanol (C₂H₆O)", type: "Covalent" },
+        { formula: {C:1, H:4}, name: "Methane (CH₄)", type: "Covalent" },
+        { formula: {C:1, Ca:1, O:3}, name: "Calcium Carbonate (CaCO₃)", type: "Ionic" },
+        { formula: {N:2, O:1}, name: "Nitrous Oxide (N₂O)", type: "Covalent" },
+        { formula: {K:1, N:1, O:3}, name: "Potassium Nitrate (KNO₃)", type: "Ionic" },
+        { formula: {Mg:1, O:1}, name: "Magnesium Oxide (MgO)", type: "Ionic" },
+        { formula: {Al:2, O:3}, name: "Aluminum Oxide (Al₂O₃)", type: "Ionic" },
+        { formula: {Fe:2, O:3}, name: "Iron(III) Oxide (Fe₂O₃)", type: "Ionic" },
+        { formula: {C:1, H:2, O:1}, name: "Formaldehyde (CH₂O)", type: "Covalent" },
+        { formula: {S:1, O:2}, name: "Sulfur Dioxide (SO₂)", type: "Covalent" },
+        { formula: {P:2, O:5}, name: "Phosphorus Pentoxide (P₂O₅)", type: "Covalent" },
+        { formula: {Cu:1, S:1}, name: "Copper Sulfide (CuS)", type: "Ionic" },
+        { formula: {Ag:1, Cl:1}, name: "Silver Chloride (AgCl)", type: "Ionic" },
+        { formula: {C:12, H:22, O:11}, name: "Sucrose (C₁₂H₂₂O₁₁)", type: "Covalent" },
+        { formula: {H:3, P:1, O:4}, name: "Phosphoric Acid (H₃PO₄)", type: "Covalent" },
+        { formula: {N:1, O:2}, name: "Nitrogen Dioxide (NO₂)", type: "Covalent" },
+        { formula: {S:1, O:3}, name: "Sulfur Trioxide (SO₃)", type: "Covalent" },
+        { formula: {C:1, O:1}, name: "Carbon Monoxide (CO)", type: "Covalent" },
+        { formula: {H:1, F:1}, name: "Hydrofluoric Acid (HF)", type: "Covalent" },
+        { formula: {Na:1, H:1, C:1, O:3}, name: "Sodium Bicarbonate (NaHCO₃)", type: "Ionic" },
+        { formula: {H:2, O:2}, name: "Hydrogen Peroxide (H₂O₂)", type: "Covalent" },
+        { formula: {K:1, O:1, H:1}, name: "Potassium Hydroxide (KOH)", type: "Ionic" },
+        { formula: {Na:1, O:1, H:1}, name: "Sodium Hydroxide (NaOH)", type: "Ionic" }
+    ];
+
+    const select = document.getElementById('elementSelect');
+    Object.keys(elements).forEach(el => {
+        let opt = document.createElement('option');
+        opt.value = el; opt.innerHTML = `${el}`;
+        select.appendChild(opt);
+    });
+
+    let chamber = [];
+    function addAtom() {
+        chamber.push(select.value);
+        document.getElementById('chamber').innerText = chamber.join(' + ');
+        analyze();
+    }
+
+    function analyze() {
+        let count = {}; chamber.forEach(a => count[a] = (count[a] || 0) + 1);
+        let mass = chamber.reduce((acc, el) => acc + elements[el], 0);
+        let match = compounds.find(c => JSON.stringify(c.formula) === JSON.stringify(count));
+        
+        document.getElementById('info').innerText = `Atomic Mass: ${mass.toFixed(3)} u`;
+        document.getElementById('result').innerHTML = match ? 
+            `Compound: <b>${match.name}</b><br>Type: ${match.type}` : 
+            `Compound: <b>Unknown Mixture</b>`;
+    }
+
+    function resetLab() { chamber = []; document.getElementById('chamber').innerText = "EMPTY CHAMBER"; document.getElementById('result').innerHTML = "Compound: N/A"; document.getElementById('info').innerText = "Atomic Mass: 0.00 u"; }
+</script>
+</body>
+</html>

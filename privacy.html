@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --primary: #8b5cf6;
+            --primary-gradient: linear-gradient(135deg, #a855f7, #3b82f6);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .hub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            padding: 25px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px var(--shadow);
+            margin-bottom: 30px;
+        }
+        .back-btn {
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .back-btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Privacy Policy Card Box */
+        .privacy-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .privacy-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .privacy-intro {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .policy-section {
+            margin-bottom: 25px;
+        }
+
+        .policy-section h3 {
+            font-size: 18px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .policy-section p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin: 0;
+            padding-left: 28px;
+        }
+
+        .last-updated {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 13px;
+            color: #a855f7;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .highlight-text {
+            color: #a855f7;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="hub-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 36px;">🔒</div>
+                <div>
+                    <h2 style="margin: 0; font-size: 22px;">Chemistry Lab</h2>
+                    <span style="font-size: 13px; color: #a855f7; font-weight: 600;"><span class="highlight-text">#SmartEducation</span> Platform</span>
+                </div>
+            </div>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> হোমপেজে ফিরুন</a>
+        </div>
+
+        <!-- Privacy Policy Content Box -->
+        <div class="privacy-card">
+            <div class="privacy-title">
+                <i class="fas fa-shield-alt" style="color: #a855f7;"></i> Privacy Policy
+            </div>
+            
+            <div class="privacy-intro">
+                Chemistry Lab is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you interact with our platform and services.
+            </div>
+
+            <div class="policy-section">
+                <h3><i class="fas fa-circle-chevron-right" style="font-size: 12px; color: #a855f7;"></i> 1. Information We Collect</h3>
+                <p>We may collect personal information such as your name, email address, phone number when you sign up for our services or interact with our platform.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3><i class="fas fa-circle-chevron-right" style="font-size: 12px; color: #a855f7;"></i> 2. How We Use Your Information</h3>
+                <p>Your information is used to deliver our services, send important notifications, and improve your overall learning experience.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3><i class="fas fa-circle-chevron-right" style="font-size: 12px; color: #a855f7;"></i> 3. Data Protection</h3>
+                <p>We implement industry-standard security measures to protect your data from unauthorized access, alteration, or disclosure.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3><i class="fas fa-circle-chevron-right" style="font-size: 12px; color: #a855f7;"></i> 4. Third-Party Services</h3>
+                <p>We may use trusted third-party tools for payment processing, analytics, and email communication. These services are obligated to protect your data as per applicable laws.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3><i class="fas fa-circle-chevron-right" style="font-size: 12px; color: #a855f7;"></i> 5. Cookies</h3>
+                <p>Our website may use cookies to enhance user experience and track usage patterns. You can control or disable cookies through your browser settings.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3><i class="fas fa-circle-chevron-right" style="font-size: 12px; color: #a855f7;"></i> 6. Your Rights</h3>
+                <p>You have the right to access, update, or delete your personal information. Please contact us if you have any privacy-related concerns or requests.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3><i class="fas fa-circle-chevron-right" style="font-size: 12px; color: #a855f7;"></i> 7. Updates to this Policy</h3>
+                <p>We reserve the right to update this Privacy Policy at any time. Changes will be posted on this page with the revised date.</p>
+            </div>
+
+            <div class="last-updated">
+                Last updated: July 16, 2025
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

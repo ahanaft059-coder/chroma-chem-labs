@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Nuclear Simulator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+        body { background: #05070a; color: #fff; font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .lab-console { width: 95%; max-width: 600px; background: #0d1117; border: 2px solid #30363d; border-radius: 30px; padding: 30px; text-align: center; box-shadow: 0 0 40px rgba(0, 245, 212, 0.1); }
+        .atom-core { width: 100px; height: 100px; background: radial-gradient(circle, #00f5d4, #005f56); border-radius: 50%; margin: 20px auto; transition: 0.3s; }
+        .meter-bg { width: 100%; height: 15px; background: #161b22; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        #meter-fill { height: 100%; width: 100%; background: #00f5d4; transition: 0.5s; }
+        .stats-box { margin: 15px 0; font-size: 1.2rem; color: #00f5d4; }
+        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .control-btn { background: transparent; border: 1px solid #00f5d4; color: #00f5d4; padding: 10px; border-radius: 8px; cursor: pointer; }
+        .control-btn:hover { background: #00f5d4; color: #000; }
+        .shake { animation: shake 0.2s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -2px); } 100% { transform: translate(1px, 1px); } }
+        #successDisplay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.95); flex-direction: column; justify-content: center; align-items: center; z-index: 10; }
+    </style>
+</head>
+<body>
+
+<div class="lab-console">
+    <h3>QUANTUM RESEARCH LAB</h3>
+    <h2 id="missionTitle">মিশন ১: হাইড্রোজেন-১</h2>
+    <div class="atom-core" id="core"></div>
+    <div class="meter-bg"><div id="meter-fill"></div></div>
+    <div class="stats-box">ভর সংখ্যা (A): <b id="massA">1</b> | Z: <b id="atomicZ">1</b></div>
+
+    <div class="data-grid">
+        <div>প্রোটন: <h2 id="pCount">1</h2> <button class="control-btn" onclick="change('p',1)">+</button><button class="control-btn" onclick="change('p',-1)">-</button></div>
+        <div>নিউট্রন:<h2 id="nCount">0</h2> <button class="control-btn" onclick="change('n',1)">+</button><button class="control-btn" onclick="change('n',-1)">-</button></div>
+        <div>ইলেকট্রন: <h2 id="eCount">1</h2> <button class="control-btn" onclick="change('e',1)">+</button><button class="control-btn" onclick="change('e',-1)">-</button></div>
+    </div>
+</div>
+
+<div id="successDisplay">
+    <div style="background:#161b22; padding:40px; border-radius:20px; border:2px solid #00f5d4; text-align:center;">
+        <h1>অভিনন্দন!</h1>
+        <p id="msg">মিশন সফল!</p>
+        <button class="control-btn" onclick="nextMission()">Next Mission ➡️</button>
+    </div>
+</div>
+
+<script>
+    let p=1, n=0, e=1, currentMission=0;
+    const missions = [
+        {p:1, n:0, e:1, title: "মিশন ১: হাইড্রোজেন-১"}, {p:1, n:1, e:1, title: "মিশন ২: ডিউটেরিয়াম"}, {p:1, n:2, e:1, title: "মিশন ৩: ট্রিটিয়াম"}, {p:2, n:1, e:2, title: "মিশন ৪: হিলিয়াম-৩"}, {p:2, n:2, e:2, title: "মিশন ৫: হিলিয়াম-৪"},
+        {p:3, n:3, e:3, title: "মিশন ৬: লিথিয়াম-৬"}, {p:3, n:4, e:3, title: "মিশন ৭: লিথিয়াম-৭"}, {p:4, n:5, e:4, title: "মিশন ৮: বেরিলিয়াম-৯"}, {p:5, n:5, e:5, title: "মিশন ৯: বোরন-১০"}, {p:5, n:6, e:5, title: "মিশন ১০: বোরন-১১"},
+        {p:6, n:6, e:6, title: "মিশন ১১: কার্বন-১২"}, {p:6, n:7, e:6, title: "মিশন ১২: কার্বন-১৩"}, {p:6, n:8, e:6, title: "মিশন ১৩: কার্বন-১৪"}, {p:7, n:7, e:7, title: "মিশন ১৪: নাইট্রোজেন-১৪"}, {p:7, n:8, e:7, title: "মিশন ১৫: নাইট্রোজেন-১৫"},
+        {p:8, n:8, e:8, title: "মিশন ১৬: অক্সিজেন-১৬"}, {p:8, n:9, e:8, title: "মিশন ১৭: অক্সিজেন-১৭"}, {p:8, n:10, e:8, title: "মিশন ১৮: অক্সিজেন-১৮"}, {p:9, n:10, e:9, title: "মিশন ১৯: ফ্লোরিন-১৯"}, {p:10, n:10, e:10, title: "মিশন ২০: নিয়ন-২০"},
+        {p:10, n:11, e:10, title: "মিশন ২১: নিয়ন-২১"}, {p:10, n:12, e:10, title: "মিশন ২২: নিয়ন-২২"}, {p:11, n:12, e:11, title: "মিশন ২৩: সোডিয়াম-২৩"}, {p:12, n:12, e:12, title: "মিশন ২৪: ম্যাগনেসিয়াম-২৪"}, {p:12, n:13, e:12, title: "মিশন ২৫: ম্যাগনেসিয়াম-২৫"},
+        {p:12, n:14, e:12, title: "মিশন ২৬: ম্যাগনেসিয়াম-২৬"}, {p:13, n:14, e:13, title: "মিশন ২৭: অ্যালুমিনিয়াম-২৭"}, {p:14, n:14, e:14, title: "মিশন ২৮: সিলিকন-২৮"}, {p:14, n:15, e:14, title: "মিশন ২৯: সিলিকন-২৯"}, {p:14, n:16, e:14, title: "মিশন ৩০: সিলিকন-৩০"},
+        {p:15, n:16, e:15, title: "মিশন ৩১: ফসফরাস-৩১"}, {p:16, n:16, e:16, title: "মিশন ৩২: সালফার-৩২"}, {p:16, n:17, e:16, title: "মিশন ৩৩: সালফার-৩৩"}, {p:16, n:18, e:16, title: "মিশন ৩৪: সালফার-৩৪"}, {p:17, n:18, e:17, title: "মিশন ৩৫: ক্লোরিন-৩৫"},
+        {p:17, n:20, e:17, title: "মিশন ৩৬: ক্লোরিন-৩৭"}, {p:18, n:22, e:18, title: "মিশন ৩৭: আর্গন-৪০"}, {p:19, n:20, e:19, title: "মিশন ৩৮: পটাশিয়াম-৩৯"}, {p:19, n:21, e:19, title: "মিশন ৩৯: পটাশিয়াম-৪০"}, {p:20, n:20, e:20, title: "মিশন ৪০: ক্যালসিয়াম-৪০"},
+        {p:20, n:22, e:20, title: "মিশন ৪১: ক্যালসিয়াম-৪২"}, {p:21, n:24, e:21, title: "মিশন ৪২: স্ক্যানডিয়াম-৪৫"}, {p:22, n:26, e:22, title: "মিশন ৪৩: টাইটানিয়াম-৪৮"}, {p:23, n:28, e:23, title: "মিশন ৪৪: ভ্যানাডিয়াম-৫১"}, {p:24, n:28, e:24, title: "মিশন ৪৫: ক্রোমিয়াম-৫২"},
+        {p:25, n:30, e:25, title: "মিশন ৪৬: ম্যাঙ্গানিজ-৫৫"}, {p:26, n:30, e:26, title: "মিশন ৪৭: আয়রন-৫৬"}, {p:27, n:32, e:27, title: "মিশন ৪৮: কোবাল্ট-৫৯"}, {p:28, n:30, e:28, title: "মিশন ৪৯: নিকেল-৫৮"}, {p:29, n:34, e:29, title: "মিশন ৫০: কপার-৬৩"}
+    ];
+
+    function change(type, val) {
+        if(type=='p') p=Math.max(0, p+val); if(type=='n') n=Math.max(0, n+val); if(type=='e') e=Math.max(0, e+val);
+        update();
+    }
+
+    function update() {
+        document.getElementById('pCount').innerText = p;
+        document.getElementById('nCount').innerText = n;
+        document.getElementById('eCount').innerText = e;
+        document.getElementById('massA').innerText = p + n;
+        document.getElementById('atomicZ').innerText = p;
+
+        let m = missions[currentMission];
+        let diff = Math.abs(p - m.p) + Math.abs(n - m.n);
+        let health = Math.max(0, 100 - (diff * 25));
+        
+        document.getElementById('meter-fill').style.width = health + "%";
+        document.getElementById('meter-fill').style.backgroundColor = health < 50 ? "#ff4757" : "#00f5d4";
+        document.getElementById('core').className = health < 50 ? "atom-core shake" : "atom-core";
+
+        if(p == m.p && n == m.n && e == m.e) document.getElementById('successDisplay').style.display = "flex";
+    }
+
+    function nextMission() {
+        if(currentMission < 49) {
+            currentMission++;
+            document.getElementById('missionTitle').innerText = missions[currentMission].title;
+            p=1; n=0; e=1; update();
+            document.getElementById('successDisplay').style.display = "none";
+        } else { alert("আপনি একজন নিউক্লিয়ার ল্যাব মাস্টার!"); location.reload(); }
+    }
+</script>
+</body>
+</html>

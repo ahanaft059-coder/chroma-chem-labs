@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রসায়ন ড্যাশবোর্ড (Chemistry Dashboard)</title>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --section-border: rgba(168, 85, 247, 0.3);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-color: #f8fafc;
+            --border-color: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --section-border: rgba(168, 85, 247, 0.4);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+            transition: background 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ফিক্সড মাসকট ও পপআপ চ্যাট বক্স স্টাইল */
+        .chemmy-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 3000;
+            text-decoration: none;
+        }
+
+        /* চ্যাট মেসেজ পপআপ ববল */
+        .chemmy-chat-bubble {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            padding: 12px 18px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            animation: floatBubble 3s ease-in-out infinite alternate;
+            transition: transform 0.3s;
+        }
+        .chemmy-chat-bubble:hover {
+            transform: scale(1.05);
+        }
+        .chemmy-title {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #a855f7;
+        }
+        .chemmy-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            white-space: nowrap;
+        }
+
+        @keyframes floatBubble {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        /* ফ্লাস্ক আইকন মাসকট ও ব্লিঙ্কিং অ্যানিমেশন */
+        .chemmy-flask {
+            width: 65px;
+            height: 75px;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 2px solid #a855f7;
+            border-radius: 12px 12px 20px 20px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        /* ফ্লাস্কের গলা */
+        .chemmy-flask::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            width: 24px;
+            height: 12px;
+            background: #312e81;
+            border: 2px solid #a855f7;
+            border-radius: 4px;
+        }
+        .chemmy-flask:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* ফ্লাস্কের ভেতরের তরল ও বুদবুদ */
+        .flask-liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(180deg, #c084fc, #7c3aed);
+            opacity: 0.85;
+        }
+        .bubble-dot {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: riseBubble 2s infinite linear;
+        }
+        .bubble-dot:nth-child(1) { width: 6px; height: 6px; left: 20px; bottom: 5px; animation-delay: 0s; }
+        .bubble-dot:nth-child(2) { width: 4px; height: 4px; left: 40px; bottom: 10px; animation-delay: 0.8s; }
+
+        @keyframes riseBubble {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-25px); opacity: 0; }
+        }
+
+        /* মাসকটের চোখ (Blink অ্যানিমেশনসহ) */
+        .flask-face {
+            position: absolute;
+            top: 32px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            z-index: 5;
+        }
+        .eye {
+            width: 6px;
+            height: 6px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #ffffff;
+            animation: blink 4s infinite;
+        }
+        @keyframes blink {
+            0%, 96%, 100% { transform: scaleY(1); }
+            98% { transform: scaleY(0.1); }
+        }
+
+        /* Background Chemistry Floating Elements */
+        .chem-bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+        }
+        [data-theme="dark"] .chem-bg-elements { opacity: 0.15; }
+        .chem-item {
+            position: absolute;
+            color: #00f2fe;
+            font-size: 26px;
+            user-select: none;
+            animation: floatSlow 10s ease-in-out infinite alternate;
+        }
+        @keyframes floatSlow {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-15px) rotate(10deg); }
+        }
+        .chem-item:nth-child(1) { top: 10%; left: 5%; font-size: 45px; }
+        .chem-item:nth-child(2) { top: 40%; left: 2%; font-size: 35px; color: #4facfe; }
+        .chem-item:nth-child(3) { top: 15%; right: 5%; font-size: 50px; color: #a855f7; }
+        .chem-item:nth-child(4) { top: 75%; right: 8%; font-size: 40px; color: #00f2fe; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Layout */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            color: #0b0f19;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .logo-text h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 0.5px;
+            color: var(--text-color);
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: #00f2fe;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active-nav {
+            color: #00f2fe;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-calendar {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2ecc71;
+            cursor: pointer;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: 0.2s;
+        }
+        .nav-calendar:hover { transform: scale(1.03); }
+
+        .theme-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: 0.2s;
+        }
+        .theme-btn:hover { transform: scale(1.05); }
+
+        /* Banner Slider Section with Swipe Support */
+        .slider-wrapper {
+            margin-bottom: 40px;
+            position: relative;
+            cursor: grab;
+            user-select: none;
+        }
+        .slider-wrapper:active { cursor: grabbing; }
+        
+        .banner-container {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px var(--shadow);
+            text-align: center;
+            padding: 40px 30px;
+            display: none;
+        }
+        .banner-container.active { display: block; }
+        
+        .banner-tag {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .banner-container h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        .banner-container p {
+            font-size: 15px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            color: var(--text-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px var(--shadow);
+            transition: 0.2s;
+            z-index: 10;
+        }
+        .slider-arrow:hover { background: #a855f7; color: white; border-color: #a855f7; }
+        .slider-prev { left: -15px; }
+        .slider-next { right: -15px; }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .dot.active { background: #a855f7; width: 25px; border-radius: 5px; }
+
+        /* Main Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        @media (max-width: 850px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .slider-prev { left: 5px; }
+            .slider-next { right: 5px; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 25px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(168, 85, 247, 0.8);
+            box-shadow: 0 15px 35px var(--shadow), 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        .card-title {
+            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-image-box {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(0, 242, 254, 0.08));
+            border-radius: 16px;
+            height: 140px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            border: 1px dashed var(--section-border);
+        }
+
+        .card-desc {
+            font-size: 15px;
+            opacity: 0.8;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-link {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+            transition: opacity 0.2s, transform 0.2s;
+            border: none;
+            width: 100%;
+        }
+        .btn-link:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Footer Section Styling */
+        .site-footer {
+            background-color: #0d233a;
+            color: #ffffff;
+            padding-top: 50px;
+            border-radius: 24px 24px 0 0;
+            margin-top: 40px;
+            box-shadow: 0 -10px 25px var(--shadow);
+        }
+
+        .footer-content {
+            max-width: 1120px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0 20px 40px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+            padding: 0 15px;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .footer-col p, .footer-col li a {
+            color: #cbd5e1;
+            font-size: 14px;
+            line-height: 1.8;
+            text-decoration: none;
+        }
+
+        .footer-col h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ffffff;
+            border-bottom: 2px solid #38bdf8;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .footer-col h4 {
+            font-size: 15px;
+            margin: 15px 0 10px 0;
+            color: #ffffff;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-col ul li a:hover {
+            color: #38bdf8;
+            padding-left: 5px;
+            transition: 0.3s;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-radius: 50%;
+            margin-right: 10px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: #38bdf8;
+            color: #0d233a;
+        }
+
+        .footer-credit-bar {
+            background-color: #071626;
+            padding: 20px;
+            border-radius: 0 0 24px 24px;
+            text-align: center;
+        }
+        .footer-credit-text {
+            font-size: 14px;
+            color: #cbd5e1;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        .footer-credit-text span {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
+        /* Popup Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+        .close-btn {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            margin-top: 20px;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Chemmy মাসকট ও পপআপ বক্স (যাতে ক্লিক করলে chemmy.html এ যাবে) -->
+    <a href="chemmy.html" class="chemmy-container">
+        <div class="chemmy-chat-bubble">
+            <span class="chemmy-title">CHEMMY • AI</span>
+            <span class="chemmy-text">হাই! কেমিস্ট্রি শিখতে সাহায্য লাগবে?</span>
+        </div>
+        <div class="chemmy-flask">
+            <div class="flask-liquid">
+                <div class="bubble-dot"></div>
+                <div class="bubble-dot"></div>
+            </div>
+            <div class="flask-face">
+                <div class="eye"></div>
+                <div class="eye"></div>
+            </div>
+        </div>
+    </a>
+
+    <!-- Background Chemistry Elements -->
+    <div class="chem-bg-elements">
+        <div class="chem-item">🧪 H₂SO₄</div>
+        <div class="chem-item">⚗️</div>
+        <div class="chem-item">🔬 CO₂</div>
+        <div class="chem-item">⚡ Na</div>
+    </div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo-area" onclick="location.href='index.html'">
+                <div class="logo-badge">Ch</div>
+                <div class="logo-text">
+                    <h1>CHEMISTRY LAB</h1>
+                    <span>Interactive Learning</span>
+                </div>
+            </div>
+
+            <!-- Header Menu Links -->
+            <ul class="nav-links">
+                <li><a href="index.html" class="active-nav">হোম</a></li>
+                <li><a href="exam.html">পরীক্ষা</a></li>
+                <li><a href="about.html">আমাদের সম্পর্কে</a></li>
+            </ul>
+
+            <div class="header-right">
+                <div class="nav-calendar" onclick="showChemistryFact()" title="আজকের রসায়ন ইতিহাস দেখতে ক্লিক করুন">
+                    <span>📅</span>
+                    <span id="current-date">Loading...</span>
+                </div>
+                <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+            </div>
+        </header>
+
+        <!-- Banner Slider Section -->
+        <div class="slider-wrapper" id="sliderWrapper">
+            <div class="slider-arrow slider-prev" onclick="prevSlide()">❮</div>
+            <div class="slider-arrow slider-next" onclick="nextSlide()">❯</div>
+
+            <div class="banner-container active">
+                <span class="banner-tag">ইতিহাস ও ঐতিহ্য</span>
+                <h2>রসায়ন বিজ্ঞানের ইতিহাস</h2>
+                <p>প্রাচীন আলকেমি থেকে শুরু করে আধুনিক রসায়নের যাত্রার এবং বিভিন্ন মৌলিক আবিষ্কারের গল্প।</p>
+                <a href="history.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
+            </div>
+
+            <div class="banner-container">
+                <span class="banner-tag">রসায়ন ফান ফ্যাক্টস</span>
+                <h2>জানা অজানার রসায়ন</h2>
+                <p>মৌল, বিভিন্ন দেশের অবদান এবং বিজ্ঞানীদের আবিষ্কার নিয়ে সাজানো তথ্যভাণ্ডার</p>
+                <a href="fact.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
+            </div>
+
+            <div class="banner-container">
+                <span class="banner-tag">সূত্র ও থিওরি</span>
+                <h2>রসায়ন সূত্র ও থিওরি</h2>
+                <p>রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত নিয়ে সাজানো তথ্যভাণ্ডার</p>
+                <a href="theoryhub.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
+            </div>
+
+            <div class="slider-dots">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards Grid -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <div>
+                    <h2 class="card-title">📊 আধুনিক পর্যায় সারণী</h2>
+                    <div class="card-image-box">📊</div>
+                    <p class="card-desc">সবকটি মৌলের সম্পূর্ণ ইন্টারেক্টিভ গ্রিড লেআউট। যেকোনো মৌলের উপর ক্লিক করলেই স্ক্রিনের ওপরে তার যোজনী, ইলেকট্রন বিন্যাস ও বাস্তব ব্যবহার ভেসে উঠবে।</p>
+                </div>
+                <a href="ptable.html" class="btn-link">পর্যায় সারণী দেখুন →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">🕹️ রসায়ন গেম জোন</h2>
+                    <div class="card-image-box">🕹️</div>
+                    <p class="card-desc">মৌল, যোজনী এবং সংকেত চেনার মজার সব চ্যালেঞ্জিং গেম। এখানে তোমার রসায়নের দক্ষতা পরীক্ষা করার জন্য বিভিন্ন গেম রয়েছে।</p>
+                </div>
+                <a href="games.html" class="btn-link">গেম জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">🔢 ক্যালকুলেটর হাব</h2>
+                    <div class="card-image-box">🔢</div>
+                    <p class="card-desc">রসায়নের জটিল হিসাব-নিকাশ, পিএইচ (pH), মোলারিটি এবং আণবিক ভর সহজে সমাধান করার জন্য কাস্টম সায়েন্টিফিক ও ডেডিকেটেড ক্যালকুলেটর প্যানেল।</p>
+                </div>
+                <a href="calculators.html" class="btn-link">ক্যালকুলেটর জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">📈 ভিজ্যুয়ালাইজেশন</h2>
+                    <div class="card-image-box">📈</div>
+                    <p class="card-desc">রসায়নের বিভিন্ন ল্যাব ডাটা, পর্যায়বৃত্ত ধর্ম, পারমাণবিক ব্যাসার্ধ এবং গলনাঙ্ক-স্ফুটনাঙ্কের ট্রেন্ড গ্রাফ ও চার্টের মাধ্যমে সুন্দর উপায়ে বিশ্লেষণ করার মূল জোন।</p>
+                </div>
+                <a href="visualizations.html" class="btn-link">ভিজ্যুয়ালাইজেশন জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">🥽 জৈব যৌগ (Organic Chemistry)</h2>
+                    <div class="card-image-box">🥽</div>
+                    <p class="card-desc">জৈব যৌগের শ্রেণীবিভাগ, প্রস্তুতি এবং IUPAC নামকরণের সহজ ও বিস্তারিত ব্যাখ্যা।</p>
+                </div>
+                <a href="organic.html" class="btn-link">জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">⚛️ রাসায়নিক বিক্রিয়া ল্যাব</h2>
+                    <div class="card-image-box">⚛️</div>
+                    <p class="card-desc">বিভিন্ন প্রকার রাসায়নিক বিক্রিয়ার কৌশল, সমীকরণ ও গাণিতিক রূপ বিশ্লেষণ।</p>
+                </div>
+                <a href="reaction_page.html" class="btn-link">জোনে প্রবেশ করো →</a>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3 class="footer-logo">ChromaChemLabs</h3>
+                    <p>ট্রেড লাইসেন্স: ***</p>
+                    <h4>আমাদের সাথে যুক্ত হোন</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>যোগাযোগ</h3>
+                    <p><i class="fas fa-phone-alt"></i> 01724****</p>
+                    <p><i class="fas fa-envelope"></i> ahanaft059@gmail.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> kayetpara, Panchagarh Sadar, Panchagarh - 5000</p>
+                </div>
+
+                <div class="footer-col">
+                    <h3>কোম্পানি</h3>
+                    <ul>
+                        <li><a href="about.html">আমাদের সম্পর্কে</a></li>
+                        <li><a href="terms.html">টার্মস এবং শর্তাবলী</a></li>
+                        <li><a href="privacy.html">প্রাইভেসি পলিসি</a></li>
+                        <li><a href="refund.html">রিফান্ড পলিসি</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-credit-bar">
+                <div class="footer-credit-text">
+                    © 2026 <span>Chemputer</span>. Designed for Students | SSC & HSC Chemistry
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Popup Modal -->
+    <div id="chemModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0; color: #a855f7;">🧪 আজকের রসায়ন ইতিহাস</h3>
+            <p id="fact-text" style="font-size: 15px; opacity: 0.9; line-height: 1.6;"></p>
+            <button class="close-btn" onclick="closeModal()">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            document.documentElement.setAttribute('data-theme', next);
+        }
+
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const todayDate = new Date();
+        document.getElementById('current-date').innerText = todayDate.toLocaleDateString('en-GB', options);
+
+        function showChemistryFact() {
+            const facts = [
+                "আজকের দিনে রসায়ন গবেষণায় বিভিন্ন গুরুত্বপূর্ণ যৌগ ও মৌলের আচরণ নিয়ে বিশেষ পরীক্ষা চালানো হয়েছিল।",
+                "রসায়নের ইতিহাসে আজকের দিনটি পরীক্ষাগারে নতুন আবিষ্কার ও রাসায়নিক সূত্র প্রমাণের জন্য স্মরণীয়।",
+                "বিজ্ঞানী ল্যাভোসিয়ের এবং আধুনিক রসায়নের অগ্রগামীরা এই ধরনের দিনে তাদের গবেষণাপত্র প্রস্তুত করতেন।"
+            ];
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            document.getElementById('fact-text').innerText = randomFact;
+            document.getElementById('chemModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('chemModal').style.display = 'none';
+        }
+
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.banner-container');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            if (n >= slides.length) { slideIndex = 0; }
+            if (n < 0) { slideIndex = slides.length - 1; }
+            
+            slides[slideIndex].classList.add('active');
+            dots[slideIndex].classList.add('active');
+        }
+
+        function nextSlide() {
+            clearInterval(slideTimer);
+            slideIndex++;
+            showSlide(slideIndex);
+            slideTimer = setInterval(autoSlide, 5000);
+        }
+
+        function prevSlide() {
+            clearInterval(slideTimer);
+            slideIndex--;
+            showSlide(slideIndex);
+            slideTimer = setInterval(autoSlide, 5000);
+        }
+
+        function autoSlide() {
+            slideIndex++;
+            showSlide(slideIndex);
+        }
+
+        let slideTimer = setInterval(autoSlide, 5000);
+
+        function currentSlide(n) {
+            clearInterval(slideTimer);
+            slideIndex = n;
+            showSlide(slideIndex);
+            slideTimer = setInterval(autoSlide, 5000);
+        }
+
+        // Touch & Mouse Drag (Swipe) Support for Slider
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        let startX = 0;
+        let isDragging = false;
+
+        if(sliderWrapper) {
+            sliderWrapper.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            });
+
+            sliderWrapper.addEventListener('touchend', (e) => {
+                let endX = e.changedTouches[0].clientX;
+                handleSwipe(startX, endX);
+            });
+
+            sliderWrapper.addEventListener('mousedown', (e) => {
+                startX = e.clientX;
+                isDragging = true;
+            });
+
+            sliderWrapper.addEventListener('mouseup', (e) => {
+                if (!isDragging) return;
+                let endX = e.clientX;
+                isDragging = false;
+                handleSwipe(startX, endX);
+            });
+
+            sliderWrapper.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+        }
+
+        function handleSwipe(start, end) {
+            let threshold = 50; 
+            if (start - end > threshold) {
+                nextSlide(); 
+            } else if (end - start > threshold) {
+                prevSlide(); 
+            }
+        }
+    </script>
+</body>
+</html>

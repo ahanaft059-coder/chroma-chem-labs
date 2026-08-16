@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Bohr Model Explorer - ChromaChem Labs</title>
+    <style>
+        /* Premium AMOLED Black Setup */
+        :root {
+            --bg-color: #000000;
+            --card-bg: #0b0f17;
+            --text-color: #f8fafc;
+            --border-color: #1e293b;
+            --accent: #00ffcc;
+            --alert-glow: #f43f5e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 30px 15px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container { width: 100%; max-width: 1050px; }
+        
+        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 25px; }
+        .back-btn {
+            text-decoration: none; color: #94a3b8; font-weight: 600; background: #1e293b;
+            padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border-color);
+            transition: all 0.2s ease; cursor: pointer;
+        }
+        .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
+
+        header h2 {
+            font-size: 2.2rem;
+            font-weight: 850;
+            margin: 0 0 8px 0;
+            background: linear-gradient(45deg, #2980b9, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+        header p { margin-bottom: 40px; color: #64748b; font-size: 1.1rem; text-align: center; }
+
+        /* Workspace Core Layout Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        @media (min-width: 850px) {
+            .workspace { grid-template-columns: 1.2fr 1fr; }
+        }
+
+        /* Control Panels Style */
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .select-box {
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
+            background: #0f172a;
+            color: var(--text-color);
+            margin-bottom: 25px;
+            cursor: pointer;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .select-box:focus { border-color: var(--accent); }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 15px;
+        }
+        .data-row span:first-child { color: #94a3b8; }
+        .data-row strong { color: var(--accent); font-size: 1.1rem; }
+
+        /* Advanced Controller Tools */
+        .control-group {
+            margin-bottom: 20px;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .slider-bar {
+            width: 100%;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .btn-hub {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #1e293b;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background: #334155; }
+
+        /* Subshell Output Box & Exception Indicator */
+        .subshell-box {
+            font-family: 'Courier New', Courier, monospace;
+            background: #000000;
+            color: var(--accent);
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 5px;
+            border: 1px solid #1e293b;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .exception-alert {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            background: rgba(244, 63, 94, 0.1);
+            border: 1px solid var(--alert-glow);
+            border-radius: 10px;
+            color: #fda4af;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Animation Display Box */
+        .canvas-container {
+            background: #030712; 
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            min-height: 460px;
+            box-shadow: inset 0 4px 30px rgba(0,0,0,0.8);
+        }
+        canvas { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-nav">
+            <a href="visualizations.html" class="back-btn">← ভিজ্যুয়ালাইজেশন হাবে ফিরুন</a>
+        </div>
+
+        <header>
+            <h2>⚛️ কোয়ান্টাম বোর পরমাণু মডেল ল্যাব</h2>
+            <p>ঘূর্ণন গতি নিয়ন্ত্রক, নিউক্লিয়াস কনফিগারেশন এবং ব্যতিক্রমী ইলেকট্রন বিন্যাস ট্র্যাকার</p>
+        </header>
+
+        <div class="workspace">
+            <div class="canvas-container">
+                <canvas id="bohrCanvas" width="460" height="460"></canvas>
+            </div>
+
+            <div class="panel">
+                <label for="elementSelect" style="font-weight: 700; margin-bottom: 10px; font-size: 15px; color: var(--accent);">🔍 মৌল নির্বাচন করো:</label>
+                <select id="elementSelect" class="select-box" onchange="loadElementAnimation()">
+                </select>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>সিমুলেশন গতি নিয়ন্ত্রণ (Speed)</span>
+                        <span id="speedValue">1.0x</span>
+                    </div>
+                    <input type="range" id="speedSlider" class="slider-bar" min="0" max="3" step="0.2" value="1" oninput="updateSpeed()">
+                    <div class="btn-hub">
+                        <button id="pauseBtn" class="action-btn" onclick="togglePlayPause()">Pause</button>
+                        <button class="action-btn" onclick="resetAngle()">Reset Position</button>
+                    </div>
+                </div>
+
+                <h3 style="margin: 15px 0 5px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; font-size: 1.2rem;">📋 কোয়ান্টাম ডাটা এনালিটিক্স</h3>
+                
+                <div class="data-row">
+                    <span>মৌলের নাম ও প্রতীক:</span>
+                    <span id="infoName" style="font-weight: bold; color: #ffffff;">Hydrogen (H)</span>
+                </div>
+                <div class="data-row">
+                    <span>পারমাণবিক সংখ্যা (Protons / Z):</span>
+                    <span id="infoZ" style="font-weight: bold; color: #ffffff;">১</span>
+                </div>
+                <div class="data-row">
+                    <span>নিউট্রন সংখ্যা (Neutrons / A-Z):</span>
+                    <span id="infoNeutrons" style="font-weight: bold; color: #ffffff;">০</span>
+                </div>
+                <div class="data-row">
+                    <span>কক্ষপথ বিন্যাস (K, L, M, N):</span>
+                    <strong id="infoShells">১</strong>
+                </div>
+                <div class="data-row" style="border-bottom: none; flex-direction: column; align-items: flex-start; gap: 8px;">
+                    <span>অফবাউ নীতি উপশক্তিস্তর বিন্যাস (Subshells):</span>
+                    <div id="infoSubshells" class="subshell-box">1s¹</div>
+                    <div id="exceptionBox" class="exception-alert"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mega Elements Database Pool (Z = 1 to 36)
+        const elementsData = {
+            1: { name: 'Hydrogen (H)', mass: 1, shells: [1], sub: '1s¹', exception: false },
+            2: { name: 'Helium (He)', mass: 4, shells: [2], sub: '1s²', exception: false },
+            3: { name: 'Lithium (Li)', mass: 7, shells: [2, 1], sub: '1s² 2s¹', exception: false },
+            4: { name: 'Beryllium (Be)', mass: 9, shells: [2, 2], sub: '1s² 2s²', exception: false },
+            5: { name: 'Boron (B)', mass: 11, shells: [2, 3], sub: '1s² 2s² 2p¹', exception: false },
+            6: { name: 'Carbon (C)', mass: 12, shells: [2, 4], sub: '1s² 2s² 2p²', exception: false },
+            7: { name: 'Nitrogen (N)', mass: 14, shells: [2, 5], sub: '1s² 2s² 2p³', exception: false },
+            8: { name: 'Oxygen (O)', mass: 16, shells: [2, 6], sub: '1s² 2s² 2p⁴', exception: false },
+            9: { name: 'Fluorine (F)', mass: 19, shells: [2, 7], sub: '1s² 2s² 2p⁵', exception: false },
+            10: { name: 'Neon (Ne)', mass: 20, shells: [2, 8], sub: '1s² 2s² 2p⁶', exception: false },
+            11: { name: 'Sodium (Na)', mass: 23, shells: [2, 8, 1], sub: '1s² 2s² 2p⁶ 3s¹', exception: false },
+            12: { name: 'Magnesium (Mg)', mass: 24, shells: [2, 8, 2], sub: '1s² 2s² 2p⁶ 3s²', exception: false },
+            13: { name: 'Aluminum (Al)', mass: 27, shells: [2, 8, 3], sub: '1s² 2s² 2p⁶ 3s² 3p¹', exception: false },
+            14: { name: 'Silicon (Si)', mass: 28, shells: [2, 8, 4], sub: '1s² 2s² 2p⁶ 3s² 3p²', exception: false },
+            15: { name: 'Phosphorus (P)', mass: 31, shells: [2, 8, 5], sub: '1s² 2s² 2p⁶ 3s² 3p³', exception: false },
+            16: { name: 'Sulfur (S)', mass: 32, shells: [2, 8, 6], sub: '1s² 2s² 2p⁶ 3s² 3p⁴', exception: false },
+            17: { name: 'Chlorine (Cl)', mass: 35.5, shells: [2, 8, 7], sub: '1s² 2s² 2p⁶ 3s² 3p⁵', exception: false },
+            18: { name: 'Argon (Ar)', mass: 40, shells: [2, 8, 8], sub: '1s² 2s² 2p⁶ 3s² 3p⁶', exception: false },
+            19: { name: 'Potassium (K)', mass: 39, shells: [2, 8, 8, 1], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹', exception: false },
+            20: { name: 'Calcium (Ca)', mass: 40, shells: [2, 8, 8, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 4s²', exception: false },
+            21: { name: 'Scandium (Sc)', mass: 45, shells: [2, 8, 9, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹ 4s²', exception: false },
+            22: { name: 'Titanium (Ti)', mass: 48, shells: [2, 8, 10, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d² 4s²', exception: false },
+            23: { name: 'Vanadium (V)', mass: 51, shells: [2, 8, 11, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d³ 4s²', exception: false },
+            24: { name: 'Chromium (Cr)', mass: 52, shells: [2, 8, 13, 1], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s¹', exception: '⚠️ অর্ধপূর্ণ d-অরবিটাল ($3d^5 4s^1$) পূর্ণ বা অর্ধপূর্ণ সাবশেল বেশি স্থিতিশীল হওয়ায় অফবাউ নীতির ব্যতিক্রম ঘটেছে।' },
+            25: { name: 'Manganese (Mn)', mass: 55, shells: [2, 8, 13, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s²', exception: false },
+            26: { name: 'Iron (Fe)', mass: 56, shells: [2, 8, 14, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁶ 4s²', exception: false },
+            27: { name: 'Cobalt (Co)', mass: 59, shells: [2, 8, 15, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁷ 4s²', exception: false },
+            28: { name: 'Nickel (Ni)', mass: 59, shells: [2, 8, 16, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁸ 4s²', exception: false },
+            29: { name: 'Copper (Cu)', mass: 64, shells: [2, 8, 18, 1], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s¹', exception: '⚠️ সম্পূর্ণ পূর্ণ d-অরবিটাল ($3d^{10} 4s^1$) উপস্তর পূর্ণ বিন্যাস অর্জন করায় এটি অফবাউ নিয়মের ব্যতিক্রম দেখায়।' },
+            30: { name: 'Zinc (Zn)', mass: 65, shells: [2, 8, 18, 2], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s²', exception: false },
+            31: { name: 'Gallium (Ga)', mass: 70, shells: [2, 8, 18, 3], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p¹', exception: false },
+            32: { name: 'Germanium (Ge)', mass: 73, shells: [2, 8, 18, 4], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p²', exception: false },
+            33: { name: 'Arsenic (As)', mass: 75, shells: [2, 8, 18, 5], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p³', exception: false },
+            34: { name: 'Selenium (Se)', mass: 79, shells: [2, 8, 18, 6], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁴', exception: false },
+            35: { name: 'Bromine (Br)', mass: 80, shells: [2, 8, 18, 7], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁵', exception: false },
+            36: { name: 'Krypton (Kr)', mass: 84, shells: [2, 8, 18, 8], sub: '1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶', exception: false }
+        };
+
+        // Inject select node list
+        const selector = document.getElementById('elementSelect');
+        for (let i = 1; i <= 36; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.innerHTML = `Z = ${i} : ${elementsData[i].name.split(' ')[0]}`;
+            selector.appendChild(opt);
+        }
+
+        // Canvas Simulation Controllers
+        const canvas = document.getElementById('bohrCanvas');
+        const ctx = canvas.getContext('2d');
+        let angle = 0;
+        let animationFrameId = null;
+        let speedFactor = 1.0;
+        let isPlaying = true;
+
+        function updateSpeed() {
+            speedFactor = parseFloat(document.getElementById('speedSlider').value);
+            document.getElementById('speedValue').innerText = speedFactor.toFixed(1) + 'x';
+        }
+
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            document.getElementById('pauseBtn').innerText = isPlaying ? 'Pause' : 'Play';
+            if (isPlaying) { loadElementAnimation(); }
+        }
+
+        function resetAngle() {
+            angle = 0;
+            if (!isPlaying) { isPlaying = true; document.getElementById('pauseBtn').innerText = 'Pause'; }
+            loadElementAnimation();
+        }
+
+        function loadElementAnimation() {
+            let atomicNumber = parseInt(document.getElementById('elementSelect').value);
+            let data = elementsData[atomicNumber];
+
+            // Map data items
+            document.getElementById('infoName').innerText = data.name;
+            document.getElementById('infoZ').innerText = atomicNumber;
+            document.getElementById('infoNeutrons').innerText = Math.round(data.mass - atomicNumber);
+            document.getElementById('infoShells').innerText = data.shells.join(', ');
+            document.getElementById('infoSubshells').innerText = data.sub;
+
+            // Exception UI Handling
+            const subBox = document.getElementById('infoSubshells');
+            const exBox = document.getElementById('exceptionBox');
+            if (data.exception) {
+                subBox.style.borderColor = 'var(--alert-glow)';
+                subBox.style.color = '#ff8598';
+                exBox.style.display = 'block';
+                exBox.innerHTML = data.exception;
+            } else {
+                subBox.style.borderColor = '#1e293b';
+                subBox.style.color = 'var(--accent)';
+                exBox.style.display = 'none';
+            }
+
+            if (animationFrameId) { cancelAnimationFrame(animationFrameId); }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let cx = canvas.width / 2;
+                let cy = canvas.height / 2;
+
+                // ১. গ্লোয়িং নিউক্লিয়াস কোর ড্রইং
+                ctx.beginPath();
+                ctx.arc(cx, cy, 26, 0, 2 * Math.PI);
+                ctx.fillStyle = '#e74c3c';
+                ctx.shadowBlur = 18;
+                ctx.shadowColor = '#e74c3c';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 14px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('+' + atomicNumber, cx, cy);
+
+                // ২. শক্তিস্তর ট্র্যাকিং রেডিয়াল আর্কিটেকচার
+                let startRadius = 60;
+                let stepRadius = 42;
+
+                data.shells.forEach((electronCount, index) => {
+                    let currentRadius = startRadius + (index * stepRadius);
+
+                    // শক্তিস্তর রিং অবয়ব
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, currentRadius, 0, 2 * Math.PI);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([6, 6]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // কক্ষপথে ঘূর্ণায়মান ইলেকট্রন ট্র্যাকার লুপ
+                    for (let i = 0; i < electronCount; i++) {
+                        let direction = (index % 2 === 0) ? 1 : -1.1; // অল্টারনেট কক্ষপথ ডিরেকশন রোটেশন
+                        let currentAngle = (angle * direction) + (i * (2 * Math.PI / electronCount));
+
+                        let ex = cx + currentRadius * Math.cos(currentAngle);
+                        let ey = cy + currentRadius * Math.sin(currentAngle);
+
+                        ctx.beginPath();
+                        ctx.arc(ex, ey, 6.5, 0, 2 * Math.PI);
+                        ctx.fillStyle = data.exception ? '#ff3366' : 'var(--accent)'; // ব্যতিক্রমী মৌলে লালচে ইলেকট্রন আভা
+                        ctx.shadowBlur = 14;
+                        ctx.shadowColor = ctx.fillStyle;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                });
+
+                if (isPlaying) {
+                    angle += 0.012 * speedFactor;
+                    animationFrameId = requestAnimationFrame(animate);
+                }
+            }
+            animate();
+        }
+
+        // Initial launch core config
+        loadElementAnimation();
+    </script>
+</body>
+</html>

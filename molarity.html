@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Molarity Lab</title>
+    <style>
+        body { 
+            background: radial-gradient(circle at center, #0f172a, #020617); 
+            color: #e6f1ff; font-family: 'Segoe UI', sans-serif; margin: 0; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh;
+        }
+        
+        .back-btn { 
+            position: absolute; top: 30px; left: 30px; 
+            background: transparent; border: 1px solid #00d4ff; 
+            color: #00d4ff; padding: 10px 20px; font-size: 14px; 
+            cursor: pointer; border-radius: 8px; text-transform: uppercase;
+            font-weight: bold; transition: all 0.3s;
+        }
+        .back-btn:hover { background: #00d4ff; color: #0a192f; box-shadow: 0 0 15px #00d4ff; }
+        
+        .box { 
+            width: 380px; padding: 40px; 
+            background: rgba(17, 34, 64, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px; 
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        h3 { margin: 0 0 25px 0; font-size: 26px; color: #00d4ff; letter-spacing: 1px; }
+        
+        input { 
+            width: 100%; padding: 15px; margin-bottom: 20px; 
+            background: rgba(10, 25, 47, 0.5); border: 1px solid #233554; 
+            color: white; border-radius: 10px; box-sizing: border-box; 
+            font-size: 16px; transition: 0.3s;
+        }
+        input:focus { outline: none; border-color: #00d4ff; box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
+        
+        button.calc-btn { 
+            width: 100%; padding: 15px; background: #00d4ff; 
+            border: none; color: #0a192f; font-weight: bold; 
+            border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 16px;
+        }
+        button.calc-btn:hover { background: #0088aa; transform: scale(1.02); }
+        
+        #res { margin-top: 25px; font-size: 20px; font-weight: bold; color: #fff; }
+
+        /* Manual Calculation Section */
+        .manual-section {
+            margin-top: 40px; color: #a8b2d1; max-width: 400px; 
+            text-align: left; font-size: 14px; line-height: 1.6;
+            padding: 20px; background: rgba(17, 34, 64, 0.4);
+            border-radius: 15px; border: 1px solid #233554;
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="window.location.href='calculators.html'">Back</button>
+
+<div class="box">
+    <h3>Molarity Calculator</h3>
+    <input type="number" id="moles" placeholder="Enter Moles (n)" step="any">
+    <input type="number" id="volume" placeholder="Enter Volume (L)" step="any">
+    <button class="calc-btn" onclick="calc()">Calculate</button>
+    <div id="res">Result will appear here</div>
+</div>
+
+<div class="manual-section">
+    <h4 style="color: #00d4ff; margin-top: 0;">How to Calculate Manually:</h4>
+    <p>1. <b>Find Moles (n):</b> Mass (g) / Molecular Weight (g/mol)</p>
+    <p>2. <b>Volume (V):</b> Ensure it is in Liters (mL / 1000)</p>
+    <p>3. <b>Molarity (M):</b> M = n / V</p>
+</div>
+
+<script>
+    function calc() {
+        let n = parseFloat(document.getElementById('moles').value);
+        let v = parseFloat(document.getElementById('volume').value);
+        let res = document.getElementById('res');
+
+        if (isNaN(n) || isNaN(v)) {
+            res.innerText = "Please enter valid numbers!";
+            res.style.color = "#ff4d4d";
+        } else if (v <= 0) {
+            res.innerText = "Volume must be greater than 0";
+            res.style.color = "#ff4d4d";
+        } else {
+            let molarity = n / v;
+            res.innerText = "Molarity = " + molarity.toFixed(4) + " M";
+            res.style.color = "#00d4ff";
+        }
+    }
+</script>
+</body>
+</html>

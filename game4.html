@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>রাসায়নিক বিক্রিয়া শিকারী - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg: #000000; 
+            --card: #0b0f17; 
+            --text: #f8fafc; 
+            --accent: #06b6d4; /* Premium Cyber Cyan Accent */
+            --accent-glow: rgba(6, 182, 212, 0.2);
+            --border: #1e293b;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            padding: 20px; 
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s; 
+        }
+        
+        /* Premium Back Button linked to games.html */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: #f8fafc; 
+            transform: translateX(-3px);
+        }
+        
+        .theme-btn { display: none; }
+        
+        /* Premium Game Card Layout */
+        .game-card { 
+            max-width: 500px; 
+            width: 100%;
+            background: var(--card); 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
+            text-align: center;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            background: linear-gradient(to right, #22d3ee, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Interactive Stats Bar */
+        .stats-bar {
+            display: flex; 
+            justify-content: space-between; 
+            font-weight: 600; 
+            margin: 20px 0;
+            background: rgba(255,255,255,0.02);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.03);
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+        
+        /* Glowing Cyan Reaction Formula Box */
+        .reaction-box { 
+            background: rgba(6, 182, 212, 0.03); 
+            padding: 25px 15px; 
+            border-radius: 18px; 
+            font-size: 2.2rem; 
+            color: #22d3ee; 
+            font-weight: 800; 
+            margin: 20px 0; 
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            box-shadow: inset 0 0 20px var(--accent-glow), 0 10px 20px rgba(0,0,0,0.3);
+            text-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            word-break: break-word;
+        }
+        
+        .options-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+        }
+        
+        /* Sleek Button Mechanics */
+        .btn { 
+            padding: 16px; 
+            border: 1px solid var(--border); 
+            border-radius: 14px; 
+            background: rgba(255,255,255,0.02); 
+            color: #cbd5e1; 
+            cursor: pointer; 
+            font-size: 1.05rem; 
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .btn:hover:not(:disabled) { 
+            background: var(--accent); 
+            color: white; 
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.35);
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            cursor: default;
+        }
+        
+        /* Centered Overlay Game Over Card */
+        #gameOverCard { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            z-index: 1000; 
+            width: 85%; 
+            max-width: 400px; 
+            background: #0f1422; 
+            padding: 40px; 
+            border-radius: 28px; 
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+        
+        .restart-btn {
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .restart-btn:hover {
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div id="gameContainer" class="game-card">
+    <h1 class="game-title">🧪  রাসায়নিক বিক্রিয়া শিকারী</h1>
+    <p style="color: #64748b; font-size: 0.95rem; margin: 0;">সঠিক উৎপাদ (Product) বেছে নাও!</p>
+    
+    <div class="stats-bar">
+        <span>স্কোর: <span id="score" style="color: #22d3ee;">0</span></span>
+        <span style="color: #f59e0b;">সেরা: <span id="highScore">0</span></span>
+        <span>জীবন: <span id="lives">❤️❤️❤️</span></span>
+    </div>
+    
+    <div id="reaction" class="reaction-box">--</div>
+    <div id="options" class="options-grid"></div>
+</div>
+
+<div id="gameOverCard">
+    <h2 id="endTitle" style="font-size: 2rem; margin-top: 0;">💥 গেম ওভার!</h2>
+    <p id="msg" style="font-size: 1.05rem; color: #94a3b8; margin-bottom: 25px;"></p>
+    <div style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">অর্জিত স্কোর</div>
+    <h1 id="finalScore" style="color: #22d3ee; font-size: 3.5rem; margin: 5px 0 30px 0; font-weight: 800;">0</h1>
+    <button onclick="location.reload()" class="restart-btn">আবার চেষ্টা করুন 🔄</button>
+</div>
+
+<script>
+    // Force direct Black Mode activation instantly
+    document.body.classList.add('dark-mode');
+    localStorage.setItem('darkMode', 'true');
+
+    // Premium High Score Management
+    let highScore = localStorage.getItem('reaction_highscore') || 0;
+    document.getElementById('highScore').innerText = highScore;
+
+    let correctSound, wrongSound;
+    try {
+        correctSound = new Audio('correct.mp3');
+        wrongSound = new Audio('wrong.mp3');
+    } catch(e) { console.log("সাউন্ড ফাইল লোড করা যায়নি"); }
+
+    const reactions = [
+        { r: "NaOH + HCl → ?", a: "NaCl + H2O" },
+        { r: "KOH + HNO3 → ?", a: "KNO3 + H2O" },
+        { r: "Ca(OH)2 + 2HCl → ?", a: "CaCl2 + 2H2O" },
+        { r: "2H2 + O2 → ?", a: "2H2O" },
+        { r: "C + O2 → ?", a: "CO2" },
+        { r: "2Mg + O2 → ?", a: "2MgO" },
+        { r: "2Na + Cl2 → ?", a: "2NaCl" },
+        { r: "CaO + CO2 → ?", a: "CaCO3" },
+        { r: "NH3 + HCl → ?", a: "NH4Cl" },
+        { r: "SO2 + O2 → ?", a: "2SO3" },
+        { r: "N2 + 3H2 → ?", a: "2NH3" },
+        { r: "CaCO3 (তাপ) → ?", a: "CaO + CO2" },
+        { r: "2H2O (তড়িৎ বিশ্লেষণ) → ?", a: "2H2 + O2" },
+        { r: "2KClO3 (তাপ) → ?", a: "2KCl + 3O2" },
+        { r: "Zn + H2SO4 → ?", a: "ZnSO4 + H2" },
+        { r: "Fe + CuSO4 → ?", a: "FeSO4 + Cu" },
+        { r: "Mg + 2HCl → ?", a: "MgCl2 + H2" }
+    ];
+
+    let score = 0, lives = 3;
+
+    function play() {
+        if(score >= 500) {
+            if (score > highScore) localStorage.setItem('reaction_highscore', score);
+            document.getElementById('endTitle').innerText = "🎉 অভিনন্দন!";
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('msg').innerText = "তুমি বিক্রিয়া মাস্টার!";
+            document.getElementById('gameOverCard').style.display = 'block';
+            document.getElementById('gameContainer').style.filter = 'blur(6px)';
+            document.getElementById('gameContainer').style.opacity = '0.3';
+            return;
+        }
+
+        let item = reactions[Math.floor(Math.random() * reactions.length)];
+        document.getElementById('reaction').innerText = item.r;
+
+        let allAnswers = ["NaCl + H2O", "2H2O", "Ca(OH)2", "CaO + CO2", "2NaCl", "NH4Cl", "CO2", "2MgO", "CaCl2 + 2H2O", "KNO3 + H2O", "2SO3", "2NH3", "2KCl + 3O2", "ZnSO4 + H2", "FeSO4 + Cu", "MgCl2 + H2"];
+        let wrongAnswers = allAnswers.filter(ans => ans !== item.a);
+        let options = [item.a, ...wrongAnswers.sort(() => Math.random() - 0.5).slice(0, 3)].sort(() => Math.random() - 0.5);
+        
+        let grid = document.getElementById('options');
+        grid.innerHTML = '';
+        
+        options.forEach(opt => {
+            let b = document.createElement('button');
+            b.className = 'btn'; b.innerText = opt;
+            b.onclick = () => {
+                document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+                if(opt === item.a) {
+                    if(correctSound) correctSound.play().catch(()=>{});
+                    b.style.background = "#22c55e"; b.style.color = "white"; b.style.borderColor = "#22c55e";
+                    score += 10; document.getElementById('score').innerText = score;
+                    setTimeout(play, 800);
+                } else {
+                    if(wrongSound) wrongSound.play().catch(()=>{});
+                    b.style.background = "#ef4444"; b.style.color = "white"; b.style.borderColor = "#ef4444";
+                    Array.from(grid.children).forEach(btn => {
+                        if(btn.innerText === item.a) {
+                            btn.style.background = "#22c55e";
+                            btn.style.color = "white";
+                            btn.style.borderColor = "#22c55e";
+                        }
+                    });
+                    lives--; document.getElementById('lives').innerText = "❤️".repeat(lives);
+                    if(lives === 0) {
+                        if (score > highScore) localStorage.setItem('reaction_highscore', score);
+                        document.getElementById('finalScore').innerText = score;
+                        document.getElementById('msg').innerText = "গেম ওভার! আবার চেষ্টা করো।";
+                        document.getElementById('gameOverCard').style.display = 'block';
+                        document.getElementById('gameContainer').style.filter = 'blur(6px)';
+                        document.getElementById('gameContainer').style.opacity = '0.3';
+                    } else { setTimeout(play, 1200); }
+                }
+            };
+            grid.appendChild(b);
+        });
+    }
+    play();
+</script>
+</body>
+</html>

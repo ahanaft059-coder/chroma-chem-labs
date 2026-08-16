@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>পর্যায় সারণী ক্যালকুলেটর | ল্যাব</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #10b981; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 40px; margin: 0; }
+        
+        .back-btn { position: fixed; top: 20px; left: 20px; background: #334155; color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        .back-btn:hover { background: #475569; }
+
+        .calc-box { max-width: 600px; margin: 40px auto; background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        select { width: 100%; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 1rem; }
+        
+        .res-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .res-card { background: #334155; padding: 20px; border-radius: 15px; }
+        .res-card strong { font-size: 2rem; color: var(--accent); display: block; margin-top: 10px; }
+
+        .rules-section { max-width: 800px; margin: 40px auto; padding: 30px; background: var(--card); border-radius: 20px; border: 1px solid #334155; }
+        h2 { color: var(--accent); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<a href="calculators.html" class="back-btn">⬅ ফিরে যান</a>
+
+<div class="calc-box">
+    <h2>⚛️ পর্যায় ও গ্রুপ ক্যালকুলেটর</h2>
+    <select id="sel" onchange="calc()"></select>
+    <div class="res-container">
+        <div class="res-card">গ্রুপ<br><strong id="g">-</strong></div>
+        <div class="res-card">পর্যায়<br><strong id="p">-</strong></div>
+    </div>
+</div>
+
+<div class="rules-section">
+    <h2>⚛️ গ্রুপ ও পর্যায় বের করার নিয়ম</h2>
+    <div style="line-height: 1.8; opacity: 0.9;">
+        <p><strong>নিয়ম ১:</strong> বাইরের প্রধান শক্তিস্তরে শুধু <strong>s</strong> অরবিটাল থাকলে, সেই ইলেকট্রন সংখ্যাই গ্রুপ নম্বর।</p>
+        <p><strong>নিয়ম ২:</strong> <strong>s ও p</strong> অরবিটাল থাকলে, ইলেকট্রন সংখ্যার সাথে 10 যোগ করলে গ্রুপ নম্বর পাওয়া যায়।</p>
+        <p><strong>নিয়ম ৩:</strong> <strong>s ও d</strong> অরবিটাল থাকলে, ইলেকট্রন যোগ করলেই গ্রুপ নম্বর পাওয়া যায়।</p>
+        <p style="margin-top: 20px; font-style: italic;">* ইলেকট্রন বিন্যাসের সর্বোচ্চ প্রধান শক্তিস্তর (n) হলো পর্যায় নম্বর।</p>
+    </div>
+</div>
+
+<script>
+    const data = [
+        {n:"Hydrogen", g:1, p:1}, {n:"Helium", g:18, p:1}, {n:"Lithium", g:1, p:2}, {n:"Beryllium", g:2, p:2}, 
+        {n:"Boron", g:13, p:2}, {n:"Carbon", g:14, p:2}, {n:"Nitrogen", g:15, p:2}, {n:"Oxygen", g:16, p:2}, 
+        {n:"Fluorine", g:17, p:2}, {n:"Neon", g:18, p:2}, {n:"Sodium", g:1, p:3}, {n:"Magnesium", g:2, p:3},
+        {n:"Aluminum", g:13, p:3}, {n:"Silicon", g:14, p:3}, {n:"Phosphorus", g:15, p:3}, {n:"Sulfur", g:16, p:3},
+        {n:"Chlorine", g:17, p:3}, {n:"Argon", g:18, p:3}, {n:"Potassium", g:1, p:4}, {n:"Calcium", g:2, p:4}
+        // প্রয়োজনে আরও ডাটা এখানে যোগ করুন...
+    ];
+
+    const s = document.getElementById('sel');
+    data.forEach((m, i) => s.innerHTML += `<option value="${i}">${i+1}. ${m.n}</option>`);
+    
+    function calc() {
+        let m = data[s.value];
+        document.getElementById('g').innerText = m.g;
+        document.getElementById('p').innerText = m.p;
+    }
+    calc();
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Atomic Radius Explorer - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg-color: #000000; 
+            --card-color: #0b0f17;
+            --text-color: #f8fafc; 
+            --accent-color: #38bdf8;
+            --border-color: #1e293b;
+        }
+        
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 40px 20px; 
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container { 
+            max-width: 750px; /* লেখা বড় করার কারণে গ্রিড উইডথ সামান্য বাড়ানো হয়েছে */
+            margin: 80px auto auto auto;
+        }
+
+        /* Premium Back Button linked to properties_page.html */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: #f8fafc; 
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: 2.2rem; /* বড় শিরোনাম */
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #38bdf8, #0369a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .note { 
+            background: var(--card-color); 
+            border-left: 5px solid var(--accent-color); 
+            padding: 20px; 
+            margin-bottom: 35px; 
+            border-radius: 14px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            color: #e2e8f0; /* নোটের লেখা আরও উজ্জ্বল করা হয়েছে */
+            font-size: 1.1rem; /* নোটের ফন্ট সাইজ বড় করা হয়েছে */
+            line-height: 1.7;
+            text-align: left;
+        }
+        .note strong {
+            color: var(--accent-color);
+            font-size: 1.15rem;
+        }
+        
+        /* ৮ কলামের গ্রিড */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(8, 1fr); 
+            gap: 12px; /* সেলগুলোর মাঝে গ্যাপ সামান্য বাড়ানো হয়েছে */
+        }
+        
+        .cell { 
+            aspect-ratio: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 14px; 
+            border: 1px solid var(--border-color); 
+            font-weight: 850; 
+            font-size: 1.5rem; /* মৌলের প্রতীকের সাইজ বড় করা হয়েছে (যেমন: Li, Be) */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        
+        .cell:hover { 
+            transform: scale(1.15); 
+            z-index: 10; 
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.5); 
+        }
+        
+        /* ফাঁকা গ্যাপের জন্য স্প্যান */
+        .empty-cell {
+            grid-column: span 6;
+        }
+        
+        .val { 
+            font-size: 0.75rem; /* ব্যাসার্ধের মান বা সংখ্যাগুলোর সাইজ বড় করা হয়েছে (যেমন: 152 pm) */
+            font-weight: 700; 
+            margin-top: 6px; 
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="properties_page.html" class="back-btn">← ফিরে যান</a>
+
+<div class="container">
+    <h1>পারমাণবিক ব্যাসার্ধ (Atomic Radius Explorer)</h1>
+    <div class="note">
+        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে বাম থেকে ডানে গেলে নিউক্লীয় আকর্ষণ বল বাড়ার কারণে পারমাণবিক ব্যাসার্ধ হ্রাস পায়। আবার ওপর থেকে নিচে গেলে নতুন কক্ষপথ যুক্ত হওয়ায় ব্যাসার্ধ বৃদ্ধি পায়।
+    </div>
+
+    <div class="grid">
+        <div class="cell" style="background-color: hsl(190, 85%, 15%); color: #e0f2fe; border-color: rgba(56, 189, 248, 0.25);">H<div class="val" style="color: #7dd3fc;">37 pm</div></div>
+        <div class="empty-cell"></div>
+        <div class="cell" style="background-color: hsl(190, 85%, 12%); color: #e0f2fe; border-color: rgba(56, 189, 248, 0.25);">He<div class="val" style="color: #7dd3fc;">31 pm</div></div>
+        
+        <script>
+            const elements = [
+                {s: 'Li', v: 152}, {s: 'Be', v: 112}, {s: 'B', v: 85}, {s: 'C', v: 77}, {s: 'N', v: 75}, {s: 'O', v: 73},
+                {s: 'F', v: 72}, {s: 'Ne', v: 70}, {s: 'Na', v: 186}, {s: 'Mg', v: 160}, {s: 'Al', v: 143}, {s: 'Si', v: 118},
+                {s: 'P', v: 110}, {s: 'S', v: 103}, {s: 'Cl', v: 99}, {s: 'Ar', v: 98}, {s: 'K', v: 227}, {s: 'Ca', v: 197},
+                {s: 'Ga', v: 135}, {s: 'Ge', v: 123}, {s: 'As', v: 120}, {s: 'Se', v: 117}, {s: 'Br', v: 114}, {s: 'Kr', v: 112},
+                {s: 'Rb', v: 248}, {s: 'Sr', v: 215}, {s: 'In', v: 166}, {s: 'Sn', v: 140}, {s: 'Sb', v: 141}, {s: 'Te', v: 143},
+                {s: 'I', v: 133}, {s: 'Xe', v: 131}
+            ];
+
+            elements.forEach(e => {
+                let lightness = 10 + (e.v / 6); 
+                let textColor = lightness > 45 ? '#000000' : '#f8fafc';
+                let subTextColor = lightness > 45 ? 'rgba(0,0,0,0.8)' : '#38bdf8';
+                
+                document.write(`<div class="cell" style="background-color: hsl(190, 85%, ${lightness}%); color: ${textColor}; border-color: rgba(56, 189, 248, 0.2);">
+                    ${e.s}<div class="val" style="color: ${subTextColor}">${e.v} pm</div>
+                </div>`);
+            });
+        </script>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রসায়ন ড্যাশবোর্ড | পর্যায়বৃত্ত ধর্ম</title>
+    <style>
+        :root { 
+            --bg-color: #0f172a; 
+            --card-bg: #1e293b; 
+            --text-main: #f8fafc;
+            --accent: #10b981; 
+            --secondary: #3b82f6;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 40px; }
+        .container { max-width: 950px; margin: 0 auto; }
+        
+        /* ব্যাক বাটন স্টাইল */
+        .back-btn { display: inline-flex; align-items: center; margin-bottom: 20px; color: #94a3b8; text-decoration: none; font-weight: 600; font-size: 15px; transition: 0.3s; }
+        .back-btn:hover { color: var(--text-main); transform: translateX(-5px); }
+        
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { font-size: 2.8rem; background: linear-gradient(to right, #10b981, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        
+        .card { 
+            background: var(--card-bg); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid #334155; 
+            transition: 0.4s; 
+        }
+        .card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
+        
+        .card h3 { color: var(--accent); margin-top: 0; font-size: 1.4rem; }
+        .card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+        
+        .btn-link { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            background: transparent; 
+            border: 1px solid var(--secondary); 
+            color: var(--secondary); 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            transition: 0.3s; 
+        }
+        .btn-link:hover { background: var(--secondary); color: white; }
+
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn">← মূল পৃষ্ঠায় ফিরে যান</a>
+
+    <div class="header">
+        <h1>পর্যায়বৃত্ত ধর্ম</h1>
+        <p>মৌলসমূহের ভৌত ও রাসায়নিক ধর্মের পর্যায়বৃত্ত পরিবর্তনের বিস্তারিত হাব</p>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h3>পারমাণবিক ব্যাসার্ধ</h3>
+            <p>পর্যায় ও গ্রুপ অনুযায়ী মৌলের আকার পরিবর্তনের ধারা বিশ্লেষণ।</p>
+            <a href="atomic_radius.html" class="btn-link">বিশ্লেষণ দেখুন →</a>
+        </div>
+        <div class="card">
+            <h3>আয়নীকরণ শক্তি</h3>
+            <p>ইলেকট্রন অপসারণে প্রয়োজনীয় শক্তির গাণিতিক ধারণা।</p>
+            <a href="ionization.html" class="btn-link">বিশ্লেষণ দেখুন →</a>
+        </div>
+        <div class="card">
+            <h3>ইলেকট্রন আসক্তি</h3>
+            <p>ইলেকট্রন যুক্ত হওয়ার সময় নির্গত শক্তির চমৎকার ব্যাখ্যা।</p>
+            <a href="electron_affinity.html" class="btn-link">বিশ্লেষণ দেখুন →</a>
+        </div>
+        <div class="card">
+            <h3>তড়িৎ ঋণাত্মকতা</h3>
+            <p>শেয়ারকৃত ইলেকট্রন জোড় আকর্ষণের ক্ষমতার স্কেল পরিমাপ।</p>
+            <a href="electronegativity.html" class="btn-link">বিশ্লেষণ দেখুন →</a>
+        </div>
+        <div class="card">
+            <h3>ধাতব ধর্ম</h3>
+            <p>ইলেকট্রন ত্যাগের প্রবণতার বৈজ্ঞানিক ভিজ্যুয়ালাইজেশন।</p>
+            <a href="metallic_character.html" class="btn-link">বিশ্লেষণ দেখুন →</a>
+        </div>
+        <div class="card">
+            <h3>অধাতব ধর্ম</h3>
+            <p>ইলেকট্রন গ্রহণের প্রবণতা ও পর্যায়বৃত্তিক পরিবর্তনের বিশ্লেষণ।</p>
+            <a href="non_metallic_character.html" class="btn-link">বিশ্লেষণ দেখুন →</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

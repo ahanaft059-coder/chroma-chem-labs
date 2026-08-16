@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পরীক্ষা জোন - রসায়ন ড্যাশবোর্ড</title>
+    
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #111111;
+            --text-color: #f8fafc;
+            --border-color: #222222;
+            --section-border: rgba(168, 85, 247, 0.4);
+            --primary-grad: linear-gradient(135deg, #a855f7, #3b82f6);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header / Navbar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            color: #000000;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .logo-text h1 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: #00f2fe;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #00f2fe;
+        }
+
+        /* Set Navigation Tabs */
+        .set-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .set-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .set-btn.active {
+            background: var(--primary-grad);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+        }
+        .set-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Exam Card Container */
+        .exam-card {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+            margin-bottom: 30px;
+            display: none; /* বাই ডিফল্ট সব হাইড থাকবে, JS দিয়ে কন্ট্রোল হবে */
+        }
+        .exam-card.active-set {
+            display: block; /* যেটি সিলেক্ট করা থাকবে সেটি দেখাবে */
+        }
+
+        .exam-title {
+            text-align: center;
+            color: #00f2fe;
+            font-size: 26px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .exam-subtitle {
+            text-align: center;
+            color: #a855f7;
+            font-size: 14px;
+            margin-bottom: 35px;
+            font-weight: bold;
+        }
+
+        /* Question Box */
+        .question-box {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-box h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: #f8fafc;
+            line-height: 1.5;
+        }
+
+        /* Options */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 12px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+
+        .option-label:hover {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .option-label input {
+            accent-color: #a855f7;
+            transform: scale(1.2);
+        }
+
+        /* Correct / Incorrect Feedback Colors */
+        .correct {
+            background: rgba(46, 204, 113, 0.2) !important;
+            border-color: #2ecc71 !important;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            background: rgba(231, 76, 60, 0.2) !important;
+            border-color: #e74c3c !important;
+            color: #e74c3c;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background: var(--primary-grad);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            transition: opacity 0.2s, transform 0.2s;
+            margin-top: 20px;
+        }
+        .submit-btn:hover { opacity: 0.95; transform: scale(1.01); }
+
+        /* Popup Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #161616;
+            border: 2px solid #a855f7;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+            animation: popIn 0.3s ease-in-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #00f2fe;
+            font-size: 24px;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            font-size: 32px;
+            font-weight: bold;
+            background: var(--primary-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+
+        .modal-comment {
+            font-size: 15px;
+            margin: 15px 0 25px 0;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+
+        .close-modal-btn {
+            background: var(--primary-grad);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .close-modal-btn:hover { opacity: 0.9; }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-btn:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <div class="logo-badge">FT</div>
+                <div class="logo-text">
+                    <h1>ChromaChemLabs</h1>
+                    <span>Interactive Learning</span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">হোম</a></li>
+                <li><a href="exam.html" style="color: #00f2fe;">পরীক্ষা</a></li>
+            </ul>
+        </header>
+
+        <!-- Set Navigation Tabs (1-4 Open, 5-10 Locked) -->
+        <div class="set-tabs">
+            <button class="set-btn active" onclick="switchSet(1)">সেট ১</button>
+            <button class="set-btn" onclick="switchSet(2)">সেট ২</button>
+            <button class="set-btn" onclick="switchSet(3)" title="শীঘ্রই আসছে বা কোড বসবে">সেট ৩</button>
+            <button class="set-btn" onclick="switchSet(4)" title="শীঘ্রই আসছে বা কোড বসবে">সেট ৪</button>
+            <button class="set-btn locked">সেট ৫</button>
+            <button class="set-btn locked">সেট ৬</button>
+            <button class="set-btn locked">সেট ৭</button>
+            <button class="set-btn locked">সেট ৮</button>
+            <button class="set-btn locked">সেট ৯</button>
+            <button class="set-btn locked">সেট ১০</button>
+        </div>
+
+        <!-- ==================== সেট ১ ==================== -->
+        <div class="exam-card active-set" id="set1-card">
+            <h2 class="exam-title">🧪 রসায়ন মডেল টেস্ট - সেট ১</h2>
+            <div class="exam-subtitle">২৫টি গুরুত্বপূর্ণ এসএসসি স্ট্যান্ডার্ড MCQ প্রশ্ন</div>
+            
+            <form id="quizForm1">
+                <!-- Question 1 -->
+                <div class="question-box" data-correct="q1-c">
+                    <h3>১. সোডিয়ামের প্রতীক নিচের কোনটি?</h3>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="set1_q1" value="q1-a"> ক) K</label>
+                        <label class="option-label"><input type="radio" name="set1_q1" value="q1-b"> খ) S</label>
+                        <label class="option-label"><input type="radio" name="set1_q1" value="q1-c"> গ) Na</label>
+                        <label class="option-label"><input type="radio" name="set1_q1" value="q1-d"> ঘ) Cl</label>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question-box" data-correct="q2-a">
+                    <h3>২. পানির অণুতে হাইড্রোজেন ও অক্সিজেনের পরমাণুর অনুপাত কত?</h3>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="set1_q2" value="q2-a"> ক) ২:১</label>
+                        <label class="option-label"><input type="radio" name="set1_q2" value="q2-b"> খ) ১:২</label>
+                        <label class="option-label"><input type="radio" name="set1_q2" value="q2-c"> গ) ১:১</label>
+                        <label class="option-label"><input type="radio" name="set1_q2" value="q2-d"> ঘ) ৩:১</label>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="question-box" data-correct="q3-b">
+                    <h3>৩. বায়ুমণ্ডলে সবচেয়ে বেশি পরিমাণে কোন গ্যাসটি থাকে?</h3>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="set1_q3" value="q3-a"> ক) অক্সিজেন</label>
+                        <label class="option-label"><input type="radio" name="set1_q3" value="q3-b"> খ) নাইট্রোজেন</label>
+                        <label class="option-label"><input type="radio" name="set1_q3" value="q3-c"> গ) কার্বন ডাই-অক্সাইড</label>
+                        <label class="option-label"><input type="radio" name="set1_q3" value="q3-d"> ঘ) আর্গন</label>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+        <div class="question-box" data-correct="q4-d">
+            <h3>৪. বিশুদ্ধ পানির pH এর মান কত?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q4" value="q4-a"> ক) ০</label>
+                <label class="option-label"><input type="radio" name="q4" value="q4-b"> খ) ৫</label>
+                <label class="option-label"><input type="radio" name="q4" value="q4-c"> গ) ১৪</label>
+                <label class="option-label"><input type="radio" name="q4" value="q4-d"> ঘ) ৭</label>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question-box" data-correct="q5-c">
+            <h3>৫. খাবার লবণের রাসায়নিক নাম কী?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q5" value="q5-a"> ক) ক্যালসিয়াম কার্বনেট</label>
+                <label class="option-label"><input type="radio" name="q5" value="q5-b"> খ) কপার সালফেট</label>
+                <label class="option-label"><input type="radio" name="q5" value="q5-c"> গ) সোডিয়াম ক্লোরাইড</label>
+                <label class="option-label"><input type="radio" name="q5" value="q5-d"> ঘ) ম্যাগনেসিয়াম অক্সাইড</label>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="question-box" data-correct="q6-a">
+            <h3>৬. পদার্থের কঠিন অবস্থা থেকে সরাসরি গ্যাসীয় অবস্থায় রূপান্তরকে কী বলে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q6" value="q6-a"> ক) ঊর্ধ্বপাতন</label>
+                <label class="option-label"><input type="radio" name="q6" value="q6-b"> খ) বাষ্পীভবন</label>
+                <label class="option-label"><input type="radio" name="q6" value="q6-c"> গ) ঘনীভবন</label>
+                <label class="option-label"><input type="radio" name="q6" value="q6-d"> ঘ) গলন</label>
+            </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="question-box" data-correct="q7-b">
+            <h3>৭. বয়েলের সূত্রে নিচের কোনটি স্থির থাকে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q7" value="q7-a"> ক) চাপ</label>
+                <label class="option-label"><input type="radio" name="q7" value="q7-b"> খ) তাপমাত্রা</label>
+                <label class="option-label"><input type="radio" name="q7" value="q7-c"> গ) আয়তন</label>
+                <label class="option-label"><input type="radio" name="q7" value="q7-d"> ঘ) ঘনত্ব</label>
+            </div>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="question-box" data-correct="q8-a">
+            <h3>৮. চার্সের সূত্রে নিচের কোনটি স্থির থাকে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q8" value="q8-a"> ক) চাপ</label>
+                <label class="option-label"><input type="radio" name="q8" value="q8-b"> খ) তাপমাত্রা</label>
+                <label class="option-label"><input type="radio" name="q8" value="q8-c"> গ) আয়তন</label>
+                <label class="option-label"><input type="radio" name="q8" value="q8-d"> ঘ) ভর</label>
+            </div>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="question-box" data-correct="q9-d">
+            <h3>৯. একটি মৌলের পারমাণবিক সংখ্যা ১১ এবং ভর সংখ্যা ২৩ হলে, এতে নিউট্রন সংখ্যা কত?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q9" value="q9-a"> ক) ১১</label>
+                <label class="option-label"><input type="radio" name="q9" value="q9-b"> খ) ২৩</label>
+                <label class="option-label"><input type="radio" name="q9" value="q9-c"> গ) ৩৪</label>
+                <label class="option-label"><input type="radio" name="q9" value="q9-d"> ঘ) ১২</label>
+            </div>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="question-box" data-correct="q10-b">
+            <h3>১০. বেকিং সোডার রাসায়নিক সংকেত কী?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q10" value="q10-a"> ক) Na2CO3</label>
+                <label class="option-label"><input type="radio" name="q10" value="q10-b"> খ) NaHCO3</label>
+                <label class="option-label"><input type="radio" name="q10" value="q10-c"> গ) NaOH</label>
+                <label class="option-label"><input type="radio" name="q10" value="q10-d"> ঘ) NaCl</label>
+            </div>
+        </div>
+
+        <!-- Question 11 -->
+        <div class="question-box" data-correct="q11-a">
+            <h3>১১. ওয়াশিং সোডার রাসায়নিক সংকেত কী?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q11" value="q11-a"> ক) Na2CO3 \cdot 10H_2O$</label>
+                <label class="option-label"><input type="radio" name="q11" value="q11-b"> খ) NaHCO3</label>
+                <label class="option-label"><input type="radio" name="q11" value="q11-c"> গ) CaSO4 \cdot 2H_2O$</label>
+                <label class="option-label"><input type="radio" name="q11" value="q11-d"> ঘ) CuSO4 \cdot 5H_2O$</label>
+            </div>
+        </div>
+
+        <!-- Question 12 -->
+        <div class="question-box" data-correct="q12-d">
+            <h3>১২. কোন গ্যাসটি পচা ডিমের গন্ধযুক্ত?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q12" value="q12-a"> ক) NH3</label>
+                <label class="option-label"><input type="radio" name="q12" value="q12-b"> খ) SO2</label>
+                <label class="option-label"><input type="radio" name="q12" value="q12-c"> গ) CO2</label>
+                <label class="option-label"><input type="radio" name="q12" value="q12-d"> ঘ) H2S</label>
+            </div>
+        </div>
+
+        <!-- Question 13 -->
+        <div class="question-box" data-correct="q13-b">
+            <h3>১৩. নিচের কোনটি একটি ক্ষারকের উদাহরণ কিন্তু ক্ষার নয়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q13" value="q13-a"> ক) NaOH</label>
+                <label class="option-label"><input type="radio" name="q13" value="q13-b"> খ) Al(OH)3</label>
+                <label class="option-label"><input type="radio" name="q13" value="q13-c"> গ) KOH</label>
+                <label class="option-label"><input type="radio" name="q13" value="q13-d"> ঘ) Ca(OH)2</label>
+            </div>
+        </div>
+
+        <!-- Question 14 -->
+        <div class="question-box" data-correct="q14-c">
+            <h3>১৪. ফ্লোরিনের যোজনী কত?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q14" value="q14-a"> ক) ০</label>
+                <label class="option-label"><input type="radio" name="q14" value="q14-b"> খ) ২</label>
+                <label class="option-label"><input type="radio" name="q14" value="q14-c"> গ) ১</label>
+                <label class="option-label"><input type="radio" name="q14" value="q14-d"> ঘ) ৩</label>
+            </div>
+        </div>
+
+        <!-- Question 15 -->
+        <div class="question-box" data-correct="q15-b">
+            <h3>১৫. প্রমাণ তাপমাত্রা ও চাপে ১ মোল গ্যাসের মোলার আয়তন কত?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q15" value="q15-a"> ক) ২২.৪ লিটার</label>
+                <label class="option-label"><input type="radio" name="q15" value="q15-b"> খ) ২২.৪০ লিটার (এসটিপিতে)</label>
+                <label class="option-label"><input type="radio" name="q15" value="q15-c"> গ) ১১.২ লিটার</label>
+                <label class="option-label"><input type="radio" name="q15" value="q15-d"> ঘ) ২৪.৭৯ লিটার</label>
+            </div>
+        </div>
+
+        <!-- Question 16 -->
+        <div class="question-box" data-correct="q16-c">
+            <h3>১৬. নিচের কোন যৌগটিতে আয়নিক বন্ধন বিদ্যমান?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q16" value="q16-a"> ক) H2O</label>
+                <label class="option-label"><input type="radio" name="q16" value="q16-b"> খ) CO2</label>
+                <label class="option-label"><input type="radio" name="q16" value="q16-c"> গ) MgO</label>
+                <label class="option-label"><input type="radio" name="q16" value="q16-d"> ঘ) CH4</label>
+            </div>
+        </div>
+
+        <!-- Question 17 -->
+        <div class="question-box" data-correct="q17-a">
+            <h3>১৭. কোন ধাতুটি সাধারণ তাপমাত্রায় তরল অবস্থায় থাকে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q17" value="q17-a"> ক) পারদ (Hg)</label>
+                <label class="option-label"><input type="radio" name="q17" value="q17-b"> খ) সোডিয়াম</label>
+                <label class="option-label"><input type="radio" name="q17" value="q17-c"> গ) লোহা</label>
+                <label class="option-label"><input type="radio" name="q17" value="q17-d"> ঘ) ম্যাগনেসিয়াম</label>
+            </div>
+        </div>
+
+        <!-- Question 18 -->
+        <div class="question-box" data-correct="q18-b">
+            <h3>১৮. কোন অধাতুটি সাধারণ তাপমাত্রায় তরল অবস্থায় থাকে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q18" value="q18-a"> ক) আয়োডিন</label>
+                <label class="option-label"><input type="radio" name="q18" value="q18-b"> খ) ব্রোমিন (Br)</label>
+                <label class="option-label"><input type="radio" name="q18" value="q18-c"> গ) কার্বন</label>
+                <label class="option-label"><input type="radio" name="q18" value="q18-d"> ঘ) সালফার</label>
+            </div>
+        </div>
+
+        <!-- Question 19 -->
+        <div class="question-box" data-correct="q19-d">
+            <h3>১৯. রাদারফোর্ডের পরমাণু মডেলকে কিসের সাথে তুলনা করা হয়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q19" value="q19-a"> ক) তরমুজ মডেল</label>
+                <label class="option-label"><input type="radio" name="q19" value="q19-b"> খ) পডিং মডেল</label>
+                <label class="option-label"><input type="radio" name="q19" value="q19-c"> গ) স্পঞ্জ মডেল</label>
+                <label class="option-label"><input type="radio" name="q19" value="q19-d"> ঘ) সৌরজগৎ মডেল</label>
+            </div>
+        </div>
+
+        <!-- Question 20 -->
+        <div class="question-box" data-correct="q20-a">
+            <h3>২০. পরমাণুর নিউক্লিয়াসে প্রধানত কোন দুটি কণা থাকে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q20" value="q20-a"> ক) প্রোটন ও নিউট্রন</label>
+                <label class="option-label"><input type="radio" name="q20" value="q20-b"> খ) প্রোটন ও ইলেকট্রন</label>
+                <label class="option-label"><input type="radio" name="q20" value="q20-c"> গ) ইলেকট্রন ও নিউট্রন</label>
+                <label class="option-label"><input type="radio" name="q20" value="q20-d"> ঘ) শুধু ইলেকট্রন</label>
+            </div>
+        </div>
+
+        <!-- Question 21 -->
+        <div class="question-box" data-correct="q21-c">
+            <h3>২১. নিচের কোনটি তড়িৎ বিশ্লেষ্য পদার্থ নয়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q21" value="q21-a"> ক) সোডিয়াম ক্লোরাইড</label>
+                <label class="option-label"><input type="radio" name="q21" value="q21-b"> খ) হাইড্রোক্লোরিক এসিড</label>
+                <label class="option-label"><input type="radio" name="q21" value="q21-c"> গ) চিনি (সুক্রোজ)</label>
+                <label class="option-label"><input type="radio" name="q21" value="q21-d"> ঘ) কপার সালফেট</label>
+            </div>
+        </div>
+
+        <!-- Question 22 -->
+        <div class="question-box" data-correct="q22-b">
+            <h3>২২. সাবান তৈরিতে প্রধান কাঁচামাল হিসেবে নিচের কোনটি লাগে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q22" value="q22-a"> ক) খনিজ তেল ও এসিড</label>
+                <label class="option-label"><input type="radio" name="q22" value="q22-b"> খ) চর্বি বা তেল এবং কস্টিক সোডা ($NaOH$)</label>
+                <label class="option-label"><input type="radio" name="q22" value="q22-c"> গ) গ্লুকোজ ও পানি</label>
+                <label class="option-label"><input type="radio" name="q22" value="q22-d"> ঘ) মোম ও অ্যালকোহল</label>
+            </div>
+        </div>
+
+        <!-- Question 23 -->
+        <div class="question-box" data-correct="q23-a">
+            <h3>২৩. এসিড বৃষ্টিতে মূলত কোন গ্যাসগুলোর প্রধান ভূমিকা থাকে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q23" value="q23-a"> ক) SO2 এবং NO2</label>
+                <label class="option-label"><input type="radio" name="q23" value="q23-b"> খ) CO এবং CO2</label>
+                <label class="option-label"><input type="radio" name="q23" value="q23-c"> গ) CH4 এবং NH3</label>
+                <label class="option-label"><input type="radio" name="q23" value="q23-d"> ঘ) O2 এবং N2</label>
+            </div>
+        </div>
+
+        <!-- Question 24 -->
+        <div class="question-box" data-correct="q24-c">
+            <h3>২৪. ক্যালসিয়াম কার্বনেটকে উত্তপ্ত করলে কোন গ্যাসটি উৎপন্ন হয়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q24" value="q24-a"> ক) হাইড্রোজেন</label>
+                <label class="option-label"><input type="radio" name="q24" value="q24-b"> খ) অক্সিজেন</label>
+                <label class="option-label"><input type="radio" name="q24" value="q24-c"> গ) কার্বন ডাই-অক্সাইড (CO2)</label>
+                <label class="option-label"><input type="radio" name="q24" value="q24-d"> ঘ) নাইট্রোজেন</label>
+            </div>
+        </div>
+
+        <!-- Question 25 -->
+        <div class="question-box" data-correct="q25-b">
+            <h3>২৫. মরিচার রাসায়নিক সংকেত কোনটি?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q25" value="q25-a"> ক) FeO</label>
+                <label class="option-label"><input type="radio" name="q25" value="q25-b"> খ) Fe2O3 \cdot xH_2O$</label>
+                <label class="option-label"><input type="radio" name="q25" value="q25-c"> গ) Fe3O4</label>
+                <label class="option-label"><input type="radio" name="q25" value="q25-d"> ঘ) FeSO4 \cdot 7H_2O$</label>
+            </div>
+        </div>
+
+                <button type="button" class="submit-btn" onclick="checkAnswers('set1-card')">সেট ১ এর ফলাফল দেখুন</button>
+            </form>
+            <div style="text-align: center;"><a href="index.html" class="back-btn">← হোম পেজে ফিরে যান</a></div>
+        </div>
+
+
+        <!-- ==================== সেট ২ ==================== -->
+        <div class="exam-card" id="set2-card">
+            <h2 class="exam-title">🧪 রসায়ন মডেল টেস্ট - সেট ২</h2>
+            <div class="exam-subtitle">২৫টি গুরুত্বপূর্ণ এসএসসি স্ট্যান্ডার্ড MCQ প্রশ্ন</div>
+            
+            <form id="quizForm2">
+                <!-- Question 1 -->
+                <div class="question-box" data-correct="q1-a">
+                    <h3>১. নিচের কোনটি উর্ধ্বপাতিত পদার্থ নয়?</h3>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="set2_q1" value="q1-a"> ক) সোডিয়াম ক্লোরাইড</label>
+                        <label class="option-label"><input type="radio" name="set2_q1" value="q1-b"> খ) কর্পূর</label>
+                        <label class="option-label"><input type="radio" name="set2_q1" value="q1-c"> গ) আয়োডিন</label>
+                        <label class="option-label"><input type="radio" name="set2_q1" value="q1-d"> ঘ) শুষ্ক বরফ</label>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question-box" data-correct="q2-c">
+                    <h3>২. পেট্রোলিয়ামকে আংশিক পাতন করলে নিচের কোন ভগ্নাংশটি সবার নিচে পাওয়া যায়?</h3>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="set2_q2" value="q2-a"> ক) পেট্রোল</label>
+                        <label class="option-label"><input type="radio" name="set2_q2" value="q2-b"> খ) কেরোসিন</label>
+                        <label class="option-label"><input type="radio" name="set2_q2" value="q2-c"> গ) পিচ বা বিটুমিন</label>
+                        <label class="option-label"><input type="radio" name="set2_q2" value="q2-d"> ঘ) ডিজেল</label>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+        <div class="question-box" data-correct="q3-b">
+            <h3>৩. anode-এ সংঘটিত বিক্রিয়াটি হলো—</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q3" value="q3-a"> ক) বিজারণ</label>
+                <label class="option-label"><input type="radio" name="q3" value="q3-b"> খ) জারণ</label>
+                <label class="option-label"><input type="radio" name="q3" value="q3-c"> গ) প্রসমন</label>
+                <label class="option-label"><input type="radio" name="q3" value="q3-d"> ঘ) পলিমারকরণ</label>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question-box" data-correct="q4-d">
+            <h3>৪. ১টি কার্বন-১২ পরমাণুর ভরের ১/১২ অংশকে কী বলা হয়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q4" value="q4-a"> ক) আণবিক ভর</label>
+                <label class="option-label"><input type="radio" name="q4" value="q4-b"> খ) পারমাণবিক ভর</label>
+                <label class="option-label"><input type="radio" name="q4" value="q4-c"> গ) মোলার ভর</label>
+                <label class="option-label"><input type="radio" name="q4" value="q4-d"> ঘ) এক অভেদ পারমাণবিক ভর একক (amu)</label>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question-box" data-correct="q5-a">
+            <h3>৫. সালফিউরিক এসিড ($H_2SO_4$) এর আণবিক ভর কত?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q5" value="q5-a"> ক) 98 amu</label>
+                <label class="option-label"><input type="radio" name="q5" value="q5-b"> খ) 36.5 amu</label>
+                <label class="option-label"><input type="radio" name="q5" value="q5-c"> গ) 60 amu</label>
+                <label class="option-label"><input type="radio" name="q5" value="q5-d"> ঘ) 44 amu</label>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="question-box" data-correct="q6-c">
+            <h3>৬. নিচের কোনটিতে সমযোজী বন্ধন বিদ্যমান?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q6" value="q6-a"> ক) NaCl</label>
+                <label class="option-label"><input type="radio" name="q6" value="q6-b"> খ) MgO</label>
+                <label class="option-label"><input type="radio" name="q6" value="q6-c"> গ) CH4</label>
+                <label class="option-label"><input type="radio" name="q6" value="q6-d"> ঘ) CaCl2</label>
+            </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="question-box" data-correct="q7-b">
+            <h3>৭. পর্যায় সারণির একই গ্রুপের উপর থেকে নিচে নামলে পারমাণবিক ব্যাসার্ধের কী ঘটে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q7" value="q7-a"> ক) হ্রাস পায়</label>
+                <label class="option-label"><input type="radio" name="q7" value="q7-b"> খ) বৃদ্ধি পায়</label>
+                <label class="option-label"><input type="radio" name="q7" value="q7-c"> গ) অপরিবর্তিত থাকে</label>
+                <label class="option-label"><input type="radio" name="q7" value="q7-d"> ঘ) প্রথমে বাড়ে পরে কমে</label>
+            </div>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="question-box" data-correct="q8-a">
+            <h3>৮. কুইকলাইম বা কলিচুন তৈরিতে প্রধান কাঁচামাল হিসেবে কোনটি ব্যবহৃত হয়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q8" value="q8-a"> ক) চুনাপাথর ($CaCO_3$)</label>
+                <label class="option-label"><input type="radio" name="q8" value="q8-b"> খ) জিপসাম</label>
+                <label class="option-label"><input type="radio" name="q8" value="q8-c"> গ) ডলোমাইট</label>
+                <label class="option-label"><input type="radio" name="q8" value="q8-d"> ঘ) বালি</label>
+            </div>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="question-box" data-correct="q8-d">
+            <h3>৯. ব্লিচিং পাউডারের রাসায়নিক সংকেত কোনটি?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q9" value="q9-a"> ক) Ca(OH)2</label>
+                <label class="option-label"><input type="radio" name="q9" value="q9-b"> খ) CaSO_4 \cdot 2H_2O$</label>
+                <label class="option-label"><input type="radio" name="q9" value="q9-c"> গ) NaHCO_3</label>
+                <label class="option-label"><input type="radio" name="q9" value="q9-d"> ঘ) CaOCl2</label>
+            </div>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="question-box" data-correct="q10-b">
+            <h3>১০. নিচের কোন গ্যাসটি আদর্শ গ্যাস আচরণ থেকে বিচ্যুতি ঘটায়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q10" value="q10-a"> ক) H2</label>
+                <label class="option-label"><input type="radio" name="q10" value="q10-b"> খ) NH3</label>
+                <label class="option-label"><input type="radio" name="q10" value="q10-c"> গ) He</label>
+                <label class="option-label"><input type="radio" name="q10" value="q10-d"> ঘ) N2</label>
+            </div>
+        </div>
+
+        <!-- Question 11 -->
+        <div class="question-box" data-correct="q11-c">
+            <h3>১১. অ্যালকেন পরিবারের সাধারণ সংকেত কোনটি?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q11" value="q11-a"> ক) CnH{2n}</label>
+                <label class="option-label"><input type="radio" name="q11" value="q11-b"> খ) CnH{2n-2}</label>
+                <label class="option-label"><input type="radio" name="q11" value="q11-c"> গ) CnH{2n+2}</label>
+                <label class="option-label"><input type="radio" name="q11" value="q11-d"> ঘ) CnH{2n+1}</label>
+            </div>
+        </div>
+
+        <!-- Question 12 -->
+        <div class="question-box" data-correct="q12-a">
+            <h3>১২. পলিথিন কোন monomer থেকে তৈরি পলিমার?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q12" value="q12-a"> ক) ইথিন</label>
+                <label class="option-label"><input type="radio" name="q12" value="q12-b"> খ) মিথেন</label>
+                <label class="option-label"><input type="radio" name="q12" value="q12-c"> গ) প্রোপিন</label>
+                <label class="option-label"><input type="radio" name="q12" value="q12-d"> ঘ) এসিটিলিন</label>
+            </div>
+        </div>
+
+        <!-- Question 13 -->
+        <div class="question-box" data-correct="q13-d">
+            <h3>১৩. ফরমালিন হলো—</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q13" value="q13-a"> ক) ৪০% ইথানলের জলীয় দ্রবণ</label>
+                <label class="option-label"><input type="radio" name="q13" value="q13-b"> খ) ১০% ফরমিক এসিড</label>
+                <label class="option-label"><input type="radio" name="q13" value="q13-c"> গ) ১০% ফরমালডিহাইড</label>
+                <label class="option-label"><input type="radio" name="q13" value="q13-d"> ঘ) ৪০% ফরমালডিহাইডের জলীয় দ্রবণ</label>
+            </div>
+        </div>
+
+        <!-- Question 14 -->
+        <div class="question-box" data-correct="q14-b">
+            <h3>১৪. নিচের কোন ধাতুটি পানির সাথে তীব্রভাবে বিক্রিয়া করে হাইড্রোজেন গ্যাস উৎপন্ন করে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q14" value="q14-a"> ক) কপার (Cu)</label>
+                <label class="option-label"><input type="radio" name="q14" value="q14-b"> খ) সোডিয়াম (Na)</label>
+                <label class="option-label"><input type="radio" name="q14" value="q14-c"> গ) লোহা (Fe)</label>
+                <label class="option-label"><input type="radio" name="q14" value="q14-d"> ঘ) সিলভার (Ag)</label>
+            </div>
+        </div>
+
+        <!-- Question 15 -->
+        <div class="question-box" data-correct="q15-c">
+            <h3>১৫. ভিনেগারে কত পারcent এসিটিক এসিড থাকে?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q15" value="q15-a"> ক) ১% - ৩%</label>
+                <label class="option-label"><input type="radio" name="q15" value="q15-b"> খ) ৩০% - ৪০%</label>
+                <label class="option-label"><input type="radio" name="q15" value="q15-c"> গ) ৬% - ১০%</label>
+                <label class="option-label"><input type="radio" name="q15" value="q15-d"> ঘ) ১০০%</label>
+            </div>
+        </div>
+
+        <!-- Question 16 -->
+        <div class="question-box" data-correct="q16-a">
+            <h3>১৬. গ্রিনহাউস গ্যাসবাহিনীর প্রধান গ্যাস কোনটি?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q16" value="q16-a"> ক) কার্বন ডাই-অক্সাইড ($CO_2$)</label>
+                <label class="option-label"><input type="radio" name="q16" value="q16-b"> খ) অক্সিজেন</label>
+                <label class="option-label"><input type="radio" name="q16" value="q16-c"> গ) নাইট্রোজেন</label>
+                <label class="option-label"><input type="radio" name="q16" value="q16-d"> ঘ) হাইড্রোজেন</label>
+            </div>
+        </div>
+
+        <!-- Question 17 -->
+        <div class="question-box" data-correct="q17-b">
+            <h3>১৭. রাদারফোর্ডের পরমাণু মডেল অনুসারে ইলেকট্রনগুলোর গতিপথ কেমন?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q17" value="q17-a"> ক) সরলরৈখিক</label>
+                <label class="option-label"><input type="radio" name="q17" value="q17-b"> খ) বৃত্তাকার বা উপবৃত্তাকার</label>
+                <label class="option-label"><input type="radio" name="q17" value="q17-c"> গ) স্থির</label>
+                <label class="option-label"><input type="radio" name="q17" value="q17-d"> ঘ) ত্রিমাত্রিক তরঙ্গাকৃতি</label>
+            </div>
+        </div>
+
+        <!-- Question 18 -->
+        <div class="question-box" data-correct="q18-d">
+            <h3>১৮. পর্যায় সারণির হ্যালোজেন মৌলগুলো কোন গ্রুপের অন্তর্ভুক্ত?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q18" value="q18-a"> ক) গ্রুপ ১</label>
+                <label class="option-label"><input type="radio" name="q18" value="q18-b"> খ) গ্রুপ ২</label>
+                <label class="option-label"><input type="radio" name="q18" value="q18-c"> গ) গ্রুপ ১৬</label>
+                <label class="option-label"><input type="radio" name="q18" value="q18-d"> ঘ) গ্রুপ ১৭</label>
+            </div>
+        </div>
+
+        <!-- Question 19 -->
+        <div class="question-box" data-correct="q19-c">
+            <h3>১৯. নিচের কোনটিতে আইসোটোপের শতকরা হার সবচেয়ে বেশি কাজে লাগিয়ে পারমাণবিক বিদ্যুৎ উৎপাদন করা হয়?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q19" value="q19-a"> ক) কোবাল্ট-৬০</label>
+                <label class="option-label"><input type="radio" name="q19" value="q19-b"> খ) কার্বন-১৪</label>
+                <label class="option-label"><input type="radio" name="q19" value="q19-c"> গ) ইউরেনিয়াম-২৩৫</label>
+                <label class="option-label"><input type="radio" name="q19" value="q19-d"> ঘ) আয়োডিন-১৩১</label>
+            </div>
+        </div>
+
+        <!-- Question 20 -->
+        <div class="question-box" data-correct="q20-a">
+            <h3>২০. নিচের কোনটি মৃদু এসিডের উদাহরণ?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q20" value="q20-a"> ক) সাইট্রিক এসিড</label>
+                <label class="option-label"><input type="radio" name="q20" value="q20-b"> খ) হাইড্রোক্লোরিক এসিড</label>
+                <label class="option-label"><input type="radio" name="q20" value="q20-c"> গ) নাইট্রিক এসিড</label>
+                <label class="option-label"><input type="radio" name="q20" value="q20-d"> ঘ) সালফিউরিক এসিড</label>
+            </div>
+        </div>
+
+        <!-- Question 21 -->
+        <div class="question-box" data-correct="q21-b">
+            <h3>২১. ডালটনের পরমাণুবাদের প্রধান সীমাবদ্ধতা কোনটি ছিল?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q21" value="q21-a"> ক) পরমাণু অবিভাজ্য নয়</label>
+                <label class="option-label"><input type="radio" name="q21" value="q21-b"> খ) আইসোটোপের অস্তিত্ব ব্যাখ্যা করতে না পারা</label>
+                <label class="option-label"><input type="radio" name="q21" value="q21-c"> গ) যৌগের সংযুক্তি</label>
+                <label class="option-label"><input type="radio" name="q21" value="q21-d"> ঘ) রাসায়নিক বিক্রিয়া হার</label>
+            </div>
+        </div>
+
+        <!-- Question 22 -->
+        <div class="question-box" data-correct="q22-c">
+            <h3>২২. একটি মৌলের পরমাণুর শক্তিস্তরে সর্বোচ্চ ইলেকট্রন ধারণ ক্ষমতার সূত্র কোনটি?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q22" value="q22-a"> ক) n+1</label>
+                <label class="option-label"><input type="radio" name="q22" value="q22-b"> খ) 2n-1</label>
+                <label class="option-label"><input type="radio" name="q22" value="q22-c"> গ) 2n^2</label>
+                <label class="option-label"><input type="radio" name="q22" value="q22-d"> ঘ) n^2</label>
+            </div>
+        </div>
+
+        <!-- Question 23 -->
+        <div class="question-box" data-correct="q23-a">
+            <h3>২৩. সাবান হলো উচ্চতর ফ্যাটি এসিডের কী?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q23" value="q23-a"> ক) সোডিয়াম বা পটাশিয়াম লবণ</label>
+                <label class="option-label"><input type="radio" name="q23" value="q23-b"> খ) ক্যালসিয়াম লবণ</label>
+                <label class="option-label"><input type="radio" name="q23" value="q23-c"> গ) ম্যাগনেসিয়াম লবণ</label>
+                <label class="option-label"><input type="radio" name="q23" value="q23-d"> ঘ) এস্টার যৌগ</label>
+            </div>
+        </div>
+
+        <!-- Question 24 -->
+        <div class="question-box" data-correct="q24-b">
+            <h3>২৪. তাপ উৎপাদী বিক্রিয়ায় বিক্রিয়ক ও উৎপাদের তাপশক্তির সম্পর্ক কেমন?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q24" value="q24-a"> ক) উৎপাদের শক্তি বেশি</label>
+                <label class="option-label"><input type="radio" name="q24" value="q24-b"> খ) বিক্রিয়কের মোট শক্তি উৎপাদের চেয়ে বেশি</label>
+                <label class="option-label"><input type="radio" name="q24" value="q24-c"> গ) উভয় সমান</label>
+                <label class="option-label"><input type="radio" name="q24" value="q24-d"> ঘ) কোনো তাপশক্তি থাকে না</label>
+            </div>
+        </div>
+
+        <!-- Question 25 -->
+        <div class="question-box" data-correct="q25-c">
+            <h3>২৫. পটাশিয়াম পারম্যাঙ্গানেট ($KMnO_4$) এর বর্ণ কেমন?</h3>
+            <div class="options-list">
+                <label class="option-label"><input type="radio" name="q25" value="q25-a"> ক) হলুদ</label>
+                <label class="option-label"><input type="radio" name="q25" value="q25-b"> খ) সবুজ</label>
+                <label class="option-label"><input type="radio" name="q25" value="q25-c"> গ) গাঢ় বেগুনি</label>
+                <label class="option-label"><input type="radio" name="q25" value="q25-d"> ঘ) বর্ণহীন</label>
+            </div>
+        </div>
+
+                <button type="button" class="submit-btn" onclick="checkAnswers('set2-card')">সেট ২ এর ফলাফল দেখুন</button>
+            </form>
+            <div style="text-align: center;"><a href="index.html" class="back-btn">← হোম পেজে ফিরে যান</a></div>
+        </div>
+
+    </div>
+
+    <!-- Result Popup Modal -->
+    <div id="resultModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>পরীক্ষার ফলাফল</h2>
+            <div id="modalScoreText" style="font-size: 18px; font-weight: bold; margin-top: 5px;"></div>
+            <div id="modalGrade" class="grade-badge"></div>
+            <div id="modalComment" class="modal-comment"></div>
+            <button class="close-modal-btn" onclick="closeModal()">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <script>
+        function switchSet(setNumber) {
+            // শুধু ১ এবং ২ নম্বর সেট ট্যাগের জন্য সুইচিং কাজ করবে (যেহেতু ৩ ও ৪ এ এখনো কোড বসানো হয়নি)
+            if(setNumber > 2) {
+                alert("সেট ৩ এবং সেট ৪ এর প্রশ্ন খুব শীঘ্রই যুক্ত করা হবে!");
+                return;
+            }
+
+            //setActive tab design
+            const buttons = document.querySelectorAll('.set-btn');
+            buttons.forEach((btn, index) => {
+                if(index + 1 === setNumber) {
+                    btn.classList.add('active');
+                } else if(index < 4) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Card Hide/Show Switch
+            document.querySelectorAll('.exam-card').forEach(card => {
+                card.classList.remove('active-set');
+            });
+            document.getElementById(`set${setNumber}-card`).classList.add('active-set');
+        }
+
+        function checkAnswers(cardId) {
+            let card = document.getElementById(cardId);
+            let score = 0;
+            let questions = card.querySelectorAll('.question-box');
+            let total = questions.length;
+
+            questions.forEach((qBox) => {
+                const correctAnswer = qBox.getAttribute('data-correct');
+                const selectedInput = qBox.querySelector('input[type="radio"]:checked');
+                const labels = qBox.querySelectorAll('.option-label');
+
+                labels.forEach(l => l.classList.remove('correct', 'incorrect'));
+
+                if (selectedInput) {
+                    const selectedLabel = selectedInput.parentElement;
+                    if (selectedInput.value === correctAnswer) {
+                        selectedLabel.classList.add('correct');
+                        score++;
+                    } else {
+                        selectedLabel.classList.add('incorrect');
+                        labels.forEach(l => {
+                            if (l.querySelector('input').value === correctAnswer) {
+                                l.classList.add('correct');
+                            }
+                        });
+                    }
+                }
+            });
+
+            let percentage = (score / total) * 100;
+            let gradeText = "";
+            let commentText = "";
+
+            if (percentage >= 80) {
+                gradeText = "Grade: A+ 🎉";
+                commentText = "অসাধারণ ফলাফল! তোমার প্রস্তুতি চমৎকার হয়েছে।";
+            } else if (percentage < 40) {
+                gradeText = "Grade: F (Fail) ❌";
+                commentText = "আরও মনোযোগ দিয়ে পড়াশোনা করো, সামনে আরও ভালো করবে!";
+            } else {
+                gradeText = "Grade: Pass 👍";
+                commentText = "ভালো চেষ্টা করেছো! আরও একটু পরিশ্রম করলে ভালো হবে।";
+            }
+
+            document.getElementById('modalScoreText').innerText = `আপনার স্কোর: ${score} / ${total} (${percentage.toFixed(1)}%)`;
+            document.getElementById('modalGrade').innerText = gradeText;
+            document.getElementById('modalComment').innerText = commentText;
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>pH Lab: Expert Mode</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #05070c; color: #e2e8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        
+        .back-btn { position: fixed; top: 15px; left: 15px; color: #38bdf8; text-decoration: none; font-weight: bold; font-size: 1.1rem; padding: 10px; z-index: 1000; border: 1px solid #38bdf8; border-radius: 8px; }
+        .back-btn:hover { background: #38bdf8; color: #05070c; }
+
+        .lab-panel { background: #111827; padding: 30px; border-radius: 30px; border: 2px solid #334155; width: 400px; text-align: center; }
+        .game-title { color: #fbbf24; font-size: 1.6rem; margin-bottom: 20px; border-bottom: 2px solid #fbbf24; padding-bottom: 10px; }
+        
+        .ph-gauge { width: 100%; height: 25px; background: #1e293b; border-radius: 12px; margin: 20px 0; overflow: hidden; border: 1px solid #475569; }
+        #bar { height: 100%; width: 50%; transition: 0.5s; }
+        
+        input { width: 90px; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #05070c; color: white; text-align: center; font-size: 1.5rem; margin-bottom: 15px; }
+        
+        .controls button { padding: 12px 25px; margin: 5px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
+        .info-box { margin-top: 20px; padding: 15px; background: #1e293b; border-radius: 15px; display: none; text-align: left; border-left: 5px solid #3b82f6; }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">ফিরে যান</a>
+
+<div class="lab-panel">
+    <h1 class="game-title">pH Lab: Expert Mode</h1>
+    
+    <h3 style="color:#38bdf8;">🧪 স্যাম্পল: <span id="sampleName" style="color:#fff"></span></h3>
+    
+    <div class="ph-gauge"><div id="bar"></div></div>
+    
+    <div>
+        <input type="number" id="phInput" value="7.0" step="0.1" oninput="updateFromInput()">
+    </div>
+    
+    <div class="controls">
+        <button style="background:#ef4444; color:white" onclick="adjust(-0.1)">এসিড (-)</button>
+        <button style="background:#22c55e; color:white" onclick="adjust(0.1)">ক্ষার (+)</button>
+    </div>
+    
+    <button onclick="submit()" style="margin-top:20px; padding:12px 40px; background:#3b82f6; color:white; border-radius:10px; border:none; cursor:pointer; font-size:1rem;">সাবমিট স্যাম্পল</button>
+    
+    <div id="info" class="info-box">
+        <strong id="usageTitle" style="color:#38bdf8"></strong><br>
+        <span id="usageDetails"></span>
+    </div>
+    <p id="feedback" style="margin-top:15px; font-weight:bold;"></p>
+</div>
+
+<script>
+    const samples = [
+        {name: "পেটের এসিড", ph: 1.5, use: "হজমে সহায়তা ও ব্যাকটেরিয়া ধ্বংস করে।"},
+        {name: "লেবুর রস", ph: 2.2, use: "ভিটামিন-সি ও খাবার সংরক্ষণ।"},
+        {name: "ভিনেগার", ph: 2.9, use: "রান্নায় স্বাদ ও জীবাণুনাশক।"},
+        {name: "আপেল", ph: 3.5, use: "পুষ্টি ও ফাইবার সরবরাহ করে।"},
+        {name: "কমলা", ph: 3.8, use: "সাইট্রিক অ্যাসিড ও অ্যান্টিঅক্সিডেন্ট।"},
+        {name: "টমেটো", ph: 4.3, use: "ভিটামিন ও লাইকোপেন সমৃদ্ধ।"},
+        {name: "কফি", ph: 5.0, use: "ক্লান্তি দূর ও সতেজতা।"},
+        {name: "চা", ph: 5.5, use: "অ্যান্টিঅক্সিডেন্ট ও ক্যাফেইন।"},
+        {name: "দুধ", ph: 6.5, use: "ক্যালসিয়াম ও হাড়ের পুষ্টি।"},
+        {name: "বিশুদ্ধ পানি", ph: 7.0, use: "জীবনের অস্তিত্ব ও দ্রাবক।"},
+        {name: "রক্ত", ph: 7.4, use: "অক্সিজেন ও পুষ্টি পরিবহন।"},
+        {name: "ডিম", ph: 7.8, use: "উচ্চমানের প্রোটিনের উৎস।"},
+        {name: "বেকিং সোডা", ph: 8.5, use: "রান্নায় ফুলে ওঠার জন্য।"},
+        {name: "সাবান পানি", ph: 10.0, use: "ময়লা ও তেল দূর করে।"},
+        {name: "অ্যামোনিয়া", ph: 11.5, use: "পরিষ্কারক ও সারের উপাদান।"},
+        {name: "ব্লিচ", ph: 12.5, use: "জীবাণুনাশক ও দাগ তোলা।"},
+        {name: "কলা", ph: 4.8, use: "পটাশিয়াম ও শক্তির উৎস।"},
+        {name: "আঙ্গুর", ph: 3.5, use: "ভিটামিন ও খনিজ উপাদান।"},
+        {name: "পেঁয়াজ", ph: 5.5, use: "রান্নায় স্বাদ ও ভেষজ গুণ।"},
+        {name: "আলু", ph: 5.8, use: "কার্বোহাইড্রেট ও শক্তি সরবরাহ।"},
+        {name: "লবণ পানি", ph: 7.0, use: "ইলেক্ট্রোলাইট ভারসাম্য।"},
+        {name: "লালা (Saliva)", ph: 6.8, use: "মুখের পরিপাক ও সুরক্ষা।"},
+        {name: "সামুদ্রিক পানি", ph: 8.1, use: "সামুদ্রিক জীবের ভারসাম্য।"},
+        {name: "মধু", ph: 3.9, use: "প্রাকৃতিক মিষ্টি ও ঔষধি।"},
+        {name: "বিয়ার", ph: 4.5, use: "খাদ্য ও পানীয়।"},
+        {name: "वाइन", ph: 3.8, use: "খাদ্য ও উৎসব।"},
+        {name: "গাজরের রস", ph: 6.0, use: "ভিটামিন-এ সমৃদ্ধ।"},
+        {name: "শসা", ph: 5.1, use: "হাইড্রেটিং ও পুষ্টি।"},
+        {name: "দই", ph: 4.5, use: "প্রোবায়োটিক ও হজম।"},
+        {name: "চিজ", ph: 5.9, use: "ক্যালসিয়াম ও প্রোটিন।"},
+        {name: "মাখন", ph: 6.1, use: "ফ্যাট ও ভিটামিন।"},
+        {name: "মাংস", ph: 6.0, use: "প্রোটিন ও শক্তি।"},
+        {name: "মাছ", ph: 6.5, use: "ওমেগা-৩ ও প্রোটিন।"},
+        {name: "চিনি", ph: 7.0, use: "শক্তির দ্রুত উৎস।"},
+        {name: "টুথপেস্ট", ph: 8.0, use: "দাঁত পরিষ্কার ও সুরক্ষা।"},
+        {name: "ম্যাগনেসিয়া", ph: 10.5, use: "অ্যাসিডিটি কমাতে।"},
+        {name: "চুনের পানি", ph: 12.4, use: "নির্মাণ শিল্পে ব্যবহৃত।"},
+        {name: "পিতল ক্লিনার", ph: 9.5, use: "ধাতু পরিষ্কার।"},
+        {name: "ডিটারজেন্ট", ph: 9.0, use: "কাপড় পরিষ্কার।"},
+        {name: "শ্যাম্পু", ph: 6.0, use: "চুল ও ত্বক পরিষ্কার।"},
+        {name: "কন্ডিশনার", ph: 5.5, use: "চুল মসৃণ রাখা।"},
+        {name: "স্কিন ক্রিম", ph: 6.0, use: "ত্বকের আর্দ্রতা।"},
+        {name: "ঘাম", ph: 5.5, use: "শরীরের তাপমাত্রা নিয়ন্ত্রণ।"},
+        {name: "মূত্র", ph: 6.0, use: "বর্জ্য নিঃসরণ।"},
+        {name: "বৃষ্টির পানি", ph: 5.6, use: "প্রাকৃতিক সেচ।"},
+        {name: "ভেষজ চা", ph: 6.5, use: "মানসিক প্রশান্তি।"},
+        {name: "সয়া সস", ph: 4.8, use: "রান্নায় লবণের উৎস।"},
+        {name: "কোকাকোলা", ph: 2.5, use: "পানীয় হিসেবে জনপ্রিয়।"},
+        {name: "মিষ্টি আলু", ph: 5.5, use: "ভিটামিন ও ফাইবার।"},
+        {name: "পাউরুটি", ph: 5.5, use: "শক্তির উৎস।" }
+    ];
+
+    let current = samples[Math.floor(Math.random() * samples.length)];
+    
+    function update() {
+        document.getElementById('sampleName').innerText = current.name;
+        let val = parseFloat(document.getElementById('phInput').value);
+        document.getElementById('bar').style.width = (val / 14) * 100 + "%";
+        
+        let bar = document.getElementById('bar');
+        if (val < 6.5) bar.style.background = "#ef4444";
+        else if (val > 7.5) bar.style.background = "#22c55e";
+        else bar.style.background = "#3b82f6";
+    }
+
+    function adjust(n) {
+        let input = document.getElementById('phInput');
+        input.value = parseFloat((parseFloat(input.value) + n).toFixed(1));
+        update();
+    }
+
+    function updateFromInput() { update(); }
+
+    function submit() {
+        let val = parseFloat(document.getElementById('phInput').value);
+        let fb = document.getElementById('feedback');
+        let info = document.getElementById('info');
+        
+        if(Math.abs(val - current.ph) < 0.2) {
+            fb.innerHTML = "<span style='color:#22c55e'>✅ সঠিক! স্যাম্পল ব্যালেন্সড।</span>";
+            info.style.display = "block";
+            document.getElementById('usageTitle').innerText = current.name + " এর ব্যবহার:";
+            document.getElementById('usageDetails').innerText = current.use;
+            setTimeout(() => { 
+                current = samples[Math.floor(Math.random() * samples.length)];
+                document.getElementById('phInput').value = 7.0;
+                fb.innerText = ""; info.style.display = "none"; update();
+            }, 5000);
+        } else {
+            fb.innerHTML = val < current.ph ? "❌ ভুল! স্যাম্পলটি আরও ক্ষারীয় হবে।" : "❌ ভুল! স্যাম্পলটি আরও এসিডিক হবে।";
+        }
+    }
+    update();
+</script>
+</body>
+</html>

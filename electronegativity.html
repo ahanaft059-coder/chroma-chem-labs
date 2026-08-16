@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Electronegativity Explorer - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg-color: #000000; 
+            --card-color: #0b0f17;
+            --text-color: #f8fafc; 
+            --accent-color: #8b5cf6; /* Premium Purple/Violet Glow Accent */
+            --border-color: #1e293b;
+        }
+        
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 40px 20px; 
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container { 
+            max-width: 750px; 
+            margin: 80px auto auto auto;
+        }
+
+        /* Premium Back Button linked to properties_page.html */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: #f8fafc; 
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: 2.2rem; /* স্পষ্ট বড় শিরোনাম */
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #8b5cf6, #6d28d9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .note { 
+            background: var(--card-color); 
+            border-left: 5px solid var(--accent-color); 
+            padding: 20px; 
+            margin-bottom: 35px; 
+            border-radius: 14px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            color: #e2e8f0; 
+            font-size: 1.1rem; /* স্পষ্ট বড় ফন্ট */
+            line-height: 1.7;
+            text-align: left;
+        }
+        .note strong {
+            color: var(--accent-color);
+            font-size: 1.15rem;
+        }
+        
+        /* ৮ কলামের পারফেক্ট গ্রিড */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(8, 1fr); 
+            gap: 12px; 
+        }
+        
+        .cell { 
+            aspect-ratio: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 14px; 
+            border: 1px solid var(--border-color); 
+            font-weight: 850; 
+            font-size: 1.5rem; /* মৌলের প্রতীক অনেক বড় ও স্পষ্ট */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        
+        .cell:hover { 
+            transform: scale(1.15); 
+            z-index: 10; 
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.5); 
+        }
+        
+        /* ১ম লাইনে H এবং He এর মাঝের ফাকা অংশ */
+        .empty-cell {
+            grid-column: span 6;
+        }
+        
+        .val { 
+            font-size: 0.75rem; /* মানের সাইজ বড় ও রিডেবল */
+            font-weight: 700; 
+            margin-top: 6px; 
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="properties_page.html" class="back-btn">← ফিরে যান</a>
+
+<div class="container">
+    <h1>তড়িৎ ঋণাত্মকতা (Electronegativity - Pauling Scale)</h1>
+    <div class="note">
+        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে বাম থেকে ডানে গেলে তড়িৎ ঋণাত্মকতা বৃদ্ধি পায়, আর ওপর থেকে নিচে গেলে এটি হ্রাস পায়।
+    </div>
+
+    <div class="grid">
+        <div class="cell" style="background-color: hsl(260, 60%, 26%); color: #f8fafc; border-color: rgba(139, 92, 246, 0.25);">H<div class="val" style="color: #c084fc;">2.20</div></div>
+        <div class="empty-cell"></div>
+        <div class="cell" style="background-color: hsl(260, 60%, 8%); color: #64748b; border-color: rgba(139, 92, 246, 0.1);">He<div class="val" style="color: #475569;">-</div></div>
+        
+        <script>
+            // ডাটা সেফটি নিশ্চিত করতে ড্যাশ ভ্যালুগুলোকে স্ট্রিং করা হয়েছে
+            const elements = [
+                {s: 'Li', v: 0.98}, {s: 'Be', v: 1.57}, {s: 'B', v: 2.04}, {s: 'C', v: 2.55}, {s: 'N', v: 3.04}, {s: 'O', v: 3.44}, {s: 'F', v: 3.98}, {s: 'Ne', v: '-'},
+                {s: 'Na', v: 0.93}, {s: 'Mg', v: 1.31}, {s: 'Al', v: 1.61}, {s: 'Si', v: 1.90}, {s: 'P', v: 2.19}, {s: 'S', v: 2.58}, {s: 'Cl', v: 3.16}, {s: 'Ar', v: '-'},
+                {s: 'K', v: 0.82}, {s: 'Ca', v: 1.00}, {s: 'Ga', v: 1.81}, {s: 'Ge', v: 2.01}, {s: 'As', v: 2.18}, {s: 'Se', v: 2.55}, {s: 'Br', v: 2.96}, {s: 'Kr', v: 3.00},
+                {s: 'Rb', v: 0.82}, {s: 'Sr', v: 0.95}, {s: 'In', v: 1.78}, {s: 'Sn', v: 1.96}, {s: 'Sb', v: 2.05}, {s: 'Te', v: 2.10}, {s: 'I', v: 2.66}, {s: 'Xe', v: 2.60}
+            ];
+
+            elements.forEach(e => {
+                let bg;
+                let textColor;
+                let subTextColor;
+
+                if (e.v === '-') {
+                    bg = 'hsl(260, 60%, 8%)';
+                    textColor = '#64748b';
+                    subTextColor = '#475569';
+                } else {
+                    // ডার্ক মোডের জন্য অপ্টিমাইজড কালার ইনটেনসিটি লজিক
+                    let colorIntensity = (e.v / 4) * 100;
+                    let lightness = 10 + (colorIntensity / 2.5); 
+                    bg = `hsl(260, 60%, ${lightness}%)`;
+                    textColor = lightness > 55 ? '#000000' : '#f8fafc';
+                    subTextColor = lightness > 55 ? 'rgba(0,0,0,0.8)' : '#a78bfa';
+                }
+                
+                document.write(`<div class="cell" style="background-color: ${bg}; color: ${textColor}; border-color: rgba(139, 92, 246, 0.2);">
+                    ${e.s}<div class="val" style="color: ${subTextColor}">${e.v}</div>
+                </div>`);
+            });
+        </script>
+    </div>
+</div>
+</body>
+</html>

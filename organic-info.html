@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জৈব যৌগের তথ্য ও পরিচিতি</title>
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #cbd5e1;
+            --info-color: #10b981;
+            --shadow: rgba(15, 23, 42, 0.05);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 25px 40px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .top-action-bar {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .back-home-btn {
+            display: inline-flex;
+            align-items: center;
+            background: #10b981;
+            color: white !important;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 15px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .hub-header-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .hub-main-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: #d97706;
+            margin: 0 0 12px 0;
+        }
+        [data-theme="dark"] .hub-main-title { color: #f59e0b; }
+
+        .hub-subtitle {
+            font-size: 16px;
+            color: #475569;
+            margin: 0;
+        }
+        [data-theme="dark"] .hub-subtitle { color: #94a3b8; }
+
+        /* স্ক্রোলযোগ্য বাটন লাইন */
+        .organic-menu-line {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .organic-menu-line::-webkit-scrollbar { height: 6px; }
+        .organic-menu-line::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .menu-opt-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            white-space: nowrap;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+        .menu-opt-btn:hover, .menu-opt-btn.active {
+            background: #10b981;
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        /* তথ্য দেখানোর কার্ড বক্স */
+        .info-card-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 10px 30px var(--shadow);
+            min-height: 250px;
+            line-height: 1.7;
+        }
+
+        .formula-style {
+            font-family: 'Courier New', Courier, monospace;
+            background: rgba(16, 185, 129, 0.08);
+            color: #10b981;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+        }
+        [data-theme="dark"] .formula-style { background: rgba(255,255,255,0.1); color: #f8fafc; }
+        
+        .placeholder-text {
+            text-align: center;
+            opacity: 0.6;
+            padding: 50px 0;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+            background: rgba(217, 119, 6, 0.1);
+            color: #d97706;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 20px; }
+            .hub-main-title { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-action-bar">
+            <a href="organic.html" class="back-home-btn">← ফিরে যান</a>
+        </div>
+
+        <div class="hub-header-section">
+            <h1 class="hub-main-title">ℹ️ জৈব যৌগের তথ্য ও পরিচিতি</h1>
+            <p class="hub-subtitle">যেকোনো হাইড্রোকার্বন বা যৌগ সিলেক্ট করে তার সংকেত, মূলক ও বৈশিষ্ট্য দেখে নাও।</p>
+        </div>
+
+        <div class="organic-menu-line">
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'alkane')">⛽ অ্যালকেন</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'alkene')">🧪 অ্যালকিন</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'alkyne')">🔥 অ্যালকাইন</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'alcohol')">💧 অ্যালকোহল</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'aldehyde')">🍏 অ্যালডিহাইড</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'acid')">🍋 জৈব এসিড</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'ketone')">🍭 কিটোন</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'ether')">☁️ ইথার</button>
+    <button class="menu-opt-btn" onclick="loadInfo(this, 'ester')">🌸 এস্টার</button>
+</div>
+
+        <div class="info-card-box" id="info-display-box">
+            <div class="placeholder-text">
+                <h2>☝️ ওপরের মেনু থেকে যেকোনো একটি যৌগ সিলেক্ট করো!</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const infoDb = {
+            alkane: {
+                name: "⛽ অ্যালকেন (Alkane)",
+                details: `
+                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">C_nH_{2n+2}</span></p>
+                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-C-C- (কার্বন-কার্বন একক বন্ধন)</code></p>
+                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> অ্যালকেনসমূহকে <strong>'প্যারাফিন'</strong> বলা হয়। প্যারাফিন শব্দের অর্থ হলো আসক্তিহীন। এরা রাসায়নিকভাবে বেশ নিষ্ক্রিয় হওয়ায় সাধারণ অবস্থায় এসিড, ক্ষার বা জারকের সাথে কোনো বিক্রিয়া করতে চায় না।</p>
+                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথেন (<span class="formula-style">CH_4</span>), ইথেন (<span class="formula-style">C_2H_6</span>)</p>
+                `
+            },
+            alkene: {
+                name: "🧪 অ্যালকিন (Alkene)",
+                details: `
+                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">C_nH_{2n}</span></p>
+                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-C=C- (কার্বন-কার্বন দ্বিবন্ধন)</code></p>
+                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> এরা অসম্পৃক্ত হাইড্রোকার্বন। এদের প্রথম সদস্যদের হ্যালোজেনের সাথে বিক্রিয়ায় তৈলাক্ত পদার্থ উৎপন্ন হওয়ার কারণে এদের <strong>'অলেফিন'</strong> (তৈল উৎপাদনকারী) বলা হয়। ব্রোমিন পানি পরীক্ষা দিয়ে সহজেই এদের সনাক্ত করা যায়।</p>
+                    <p><strong>🔹 প্রধান উদাহরণ:</strong> ইথিন (<span class="formula-style">C_2H_4</span>), প্রোপিন (<span class="formula-style">C_3H_6</span>)</p>
+                `
+            },
+            alkyne: {
+                name: "🔥 অ্যালকাইন (Alkyne)",
+                details: `
+                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">C_nH_{2n-2}</span></p>
+                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-C≡C- (কার্বন-কার্বন ত্রিবন্ধন)</code></p>
+                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> এরাও অত্যন্ত অসম্পৃক্ত হাইড্রোকার্বন। প্রথম সদস্য ইথাইন (অ্যাসিটিলিন) গ্যাস সিলিন্ডারে ভরে উচ্চ তাপমাত্রার অক্সি-অ্যাসিটিলিন শিখা তৈরি করে মেটাল বা লোহা কাটার ও ঝালাইয়ের কাজে ব্যবহার করা হয়।</p>
+                    <p><strong>🔹 প্রধান উদাহরণ:</strong> ইথাইন (<span class="formula-style">C_2H_2</span>)</p>
+                `
+            },
+            alcohol: {
+                name: "💧 অ্যালকোহল (Alcohol)",
+                details: `
+                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-OH</span> বা <span class="formula-style">C_nH_{2n+1}OH</span></p>
+                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-OH (হাইড্রোক্সিল মূলক)</code></p>
+                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> হাইড্রোকার্বনের হাইড্রোজেন পরমাণু হাইড্রোক্সিল গ্রুপ দ্বারা প্রতিস্থাপিত হলে অ্যালকোহল তৈরি হয়। ইথানল পারফিউম শিল্প, কসমেটিকস ও হ্যান্ড স্যানিটাইজার তৈরিতে ব্যাপক ব্যবহৃত হয়।</p>
+                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথানল (<span class="formula-style">CH_3OH</span>), ইথানল (<span class="formula-style">C_2H_5OH</span>)</p>
+                `
+            },
+            aldehyde: {
+                name: "🍏 অ্যালডিহাইড (Aldehyde)",
+                details: `
+                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-CHO</span></p>
+                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-CHO (অ্যালডিহাইড মূলক)</code></p>
+                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> মিথান্যালের (ফরমালডিহাইড) ৪০% জলীয় দ্রবণকে <strong>ফরমালিন</strong> বলা হয়, যা ল্যাবরেটরিতে ও মেডিকেল গবেষণাগারে মৃত জীবদেহ ও নমুনা পচন ছাড়াই দীর্ঘ বছর সংরক্ষণ করতে অত্যন্ত প্রয়োজনীয়।</p>
+                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথান্যাল (<span class="formula-style">HCHO</span>), ইথান্যাল (<span class="formula-style">CH_3CHO</span>)</p>
+                `
+            },
+            acid: {
+                name: "🍋 জৈব এসিড (Organic Carboxylic Acid)",
+                details: `
+                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-COOH</span></p>
+                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-COOH (কার্বক্সিলিক মূলক)</code></p>
+                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> ইথানয়িক এসিডের ৪-১০% জলীয় দ্রবণকে <strong>ভিনেগার</strong> বলা হয়। এটি একটি মৃদু এসিড যা বিভিন্ন আচার, চাটনি এবং খাদ্যদ্রব্য প্রিজারভেটিভ হিসেবে ব্যাকটেরিয়ার হাত থেকে দীর্ঘদিনের জন্য ভালো রাখে।</p>
+                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথানয়িক এসিড (<span class="formula-style">HCOOH</span>), ইথানয়িক এসিড (<span class="formula-style">CH_3COOH</span>)</p>
+                `
+            },
+             ketone: {
+        name: "🍭 কিটোন (Ketone)",
+        details: `
+            <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-CO-R'</span> বা <span class="formula-style">C_nH_{2n}O</span> (যেখানে n ≥ 3)</p>
+            <p><strong>🔹 কার্যকরী মূলক:</strong> <code>&gt;C=O (কার্বনিল বা কিটো মূলক)</code></p>
+            <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> কার্বনিল মূলকের উভয় পাশে অ্যালকাইল মূলক যুক্ত থাকলে তাকে কিটোন বলে। এর প্রথম সদস্য প্রোপানন বা <strong>অ্যাসিটোন</strong>, যা ল্যাবরেটরিতে দ্রাবক হিসেবে এবং সাধারণত মেয়েরা নেইল পলিশ রিমুভার হিসেবে ব্যবহার করে।</p>
+            <p><strong>🔹 প্রধান উদাহরণ:</strong> প্রোপানন / অ্যাসিটোন (<span class="formula-style">CH_3COCH_3</span>)</p>
+        `
+    },
+    ether: {
+        name: "☁️ ইথার (Ether)",
+        details: `
+            <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-O-R'</span></p>
+            <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-O- (ইথারীয় লিংকেজ)</code></p>
+            <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> একটি অক্সিজেন পরমাণুর দুই পাশে দুটি অ্যালকাইল মূলক যুক্ত থাকলে তাকে ইথার বলা হয়। ইথার অত্যন্ত উদ্বায়ী (উড়ে যায় এমন) এবং দাহ্য তরল। চিকিৎসা বিজ্ঞানে ডাই-ইথাইল ইথার একসময় চেতনা নাশক বা অজ্ঞান করার কাজে ব্যাপক ব্যবহৃত হতো।</p>
+            <p><strong>🔹 প্রধান উদাহরণ:</strong> ডাই-মিথাইল ইথার (<span class="formula-style">CH_3-O-CH_3</span>), ডাই-ইথাইল ইথার (<span class="formula-style">C_2H_5-O-C_2H_5</span>)</p>
+        `
+    },
+    ester: {
+        name: "🌸 এস্টার (Ester)",
+        details: `
+            <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-COO-R'</span></p>
+            <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-COO- (এস্টার মূলক)</code></p>
+            <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> জৈব এসিড ও অ্যালকোহলের বিক্রিয়ায় এস্টার ও পানি উৎপন্ন হয়। এস্টারসমূহের চমৎকার মিষ্টি ফলের মতো সুগন্ধ থাকে। বিভিন্ন কৃত্রিম পারফিউম, এসেন্স এবং পাকা ফলের সুবাস (যেমন কমলার সুবাসে অক্টাইল অ্যাসিটেট) তৈরিতে এর ভূমিকা প্রধান।</p>
+            <p><strong>🔹 প্রধান উদাহরণ:</strong> ইথাইল ইথানয়েট (<span class="formula-style">CH_3COOC_2H_5</span>)</p>
+        `
+    }
+        };
+
+        function loadInfo(btn, key) {
+            document.querySelectorAll('.menu-opt-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const compound = infoDb[key];
+            document.getElementById('info-display-box').innerHTML = `
+                <h2 style="margin-top:0; color:#d97706; font-size: 26px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">${compound.name}</h2>
+                <div style="margin-top: 20px;">${compound.details}</div>
+            `;
+        }
+    </script>
+</body>
+</html>

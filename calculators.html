@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রসায়ন ক্যালকুলেটর হাব</title>
+    <style>
+        :root { 
+            --bg-color: #0f172a; 
+            --card-bg: #1e293b; 
+            --text-main: #f8fafc;
+            --accent: #10b981; 
+            --secondary: #d97706;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 40px; }
+        .container { max-width: 950px; margin: 0 auto; }
+        
+        /* আগের মতো ব্যাক বাটন */
+        .back-btn { display: inline-flex; align-items: center; margin-bottom: 20px; color: #94a3b8; text-decoration: none; font-weight: 600; font-size: 15px; transition: 0.3s; }
+        .back-btn:hover { color: var(--text-main); transform: translateX(-5px); }
+        
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { font-size: 2.8rem; background: linear-gradient(to right, #fbbf24, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        
+        .card { 
+            background: var(--card-bg); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid #334155; 
+            transition: 0.4s; 
+        }
+        .card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
+        
+        .card h2 { color: var(--accent); margin-top: 0; font-size: 1.4rem; }
+        .card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+        
+        .btn { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            background: transparent; 
+            border: 1px solid var(--accent); 
+            color: var(--accent); 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            transition: 0.3s; 
+        }
+        .btn:hover { background: var(--accent); color: white; }
+        .locked-btn { 
+            background: #334155; color: #94a3b8; padding: 10px 20px; border-radius: 8px; 
+            text-decoration: none; font-weight: 600; cursor: not-allowed; 
+        }
+
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn">← মূল পৃষ্ঠায় ফিরে যান</a>
+
+    <div class="header">
+        <h1>🧪 রসায়ন ক্যালকুলেটর হাব</h1>
+        <p>সঠিক হিসাবের জন্য তোমার পছন্দের ক্যালকুলেটরটি বেছে নাও!</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>যোজনী ক্যালকুলেটর</h2>
+            <p>মৌলের নাম ও সংকেত লিখে তার সঠিক যোজনী জেনে নাও।</p>
+            <a href="yojoni.html" class="btn">হিসাব করুন ⚡</a>
+        </div>
+        <div class="card">
+            <h2>পর্যায় সারণী ক্যালকুলেটর</h2>
+            <p>পর্যায় সারণিতে মৌলের সঠিক অবস্থান জেনে নাও।</p>
+            <a href="porjay.html" class="btn">হিসাব করুন ⚡</a>
+        </div>
+        <div class="card">
+            <h2>আণবিক ভর ক্যালকুলেটর</h2>
+            <p>যৌগের সংকেত লিখলেই আণবিক ভর পেয়ে যাবে।</p>
+            <a href="anobik.html" class="btn">হিসাব করুন ⚡</a>
+        </div>
+        <div class="card">
+            <h2>pH ক্যালকুলেটর</h2>
+            <p>দ্রবণের অম্লত্ব বা ক্ষারত্ব নির্ণয় করো।</p>
+            <a href="ph.html" class="btn">হিসাব করুন ⚡</a>
+        </div>
+        <div class="card">
+            <h2>মোলারিটি ক্যালকুলেটর</h2>
+            <p>দ্রবণের ঘনমাত্রা নির্ণয় করুন</p>
+            <a href="molarity.html" class="btn">হিসাব করুন ⚡</a>
+        </div>
+        <div class="card">
+            <h2>ডাইলুশন ক্যালকুলেটর</h2>
+            <p>ডাইলুশন নির্ণয় করুন</p>
+            <a href="dilution.html" class="btn">হিসাব করুন ⚡</a>
+        </div>
+        <div class="card">
+            <h2>টেম্পারেচার বা তাপমাত্রা  ক্যালকুলেটর</h2>
+            <p>তাপমাত্রা নির্ণয় করুন (শীঘ্রই আসছে)।</p>
+            <span class="locked-btn">লকড 🔒</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

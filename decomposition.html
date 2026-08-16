@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>বিয়োজন বিক্রিয়া সলভার</title>
+    <style>
+        body { font-family: sans-serif; background: #f8fafc; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .solver-box { max-width: 500px; margin: 100px auto; padding: 30px; background: #ffffff; border-radius: 15px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        .solve-btn { width: 100%; padding: 12px; background: #e11d48; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #output { margin-top: 20px; padding: 15px; background: #fff1f2; border-radius: 8px; border-left: 5px solid #e11d48; text-align: left; }
+        .note { text-align: left; margin-top: 30px; padding: 15px; background: #fffbeb; border-left: 5px solid #f59e0b; border-radius: 8px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <button class="back-btn" onclick="window.history.back()">⬅️ ব্যাক</button>
+
+    <div class="solver-box">
+        <h3>বিয়োজন বিক্রিয়া সলভার</h3>
+        <input type="text" id="reactants" placeholder="যেমন: CaCO3">
+        <button class="solve-btn" onclick="solve()">সমাধান দেখুন</button>
+        <div id="output">ফলাফল এখানে আসবে।</div>
+
+        <div class="note">
+            <strong>📝 নিয়মাবলী:</strong>
+            <ul>
+                <li>সঠিক কেস (Case-sensitive) মেনে চলতে হবে।</li>
+                <li>কোনো স্পেস (Space) দেওয়া যাবে না।</li>
+                <li>ডাটাবেসে থাকা সঠিক সংকেত লিখতে হবে।</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const decompositionReactions = [
+            { r: "CaCO3", p: "CaCO₃ → CaO + CO₂" },
+            { r: "2KClO3", p: "2KClO₃ → 2KCl + 3O₂" },
+            { r: "2H2O2", p: "2H₂O₂ → 2H₂O + O₂" },
+            { r: "Fe2(SO4)3", p: "Fe₂(SO₄)₃ → Fe₂O₃ + 3SO₃" },
+            { r: "NH4Cl", p: "NH₄Cl → NH₃ + HCl" },
+            { r: "MgCO3", p: "MgCO₃ → MgO + CO₂" },
+            { r: "2HgO", p: "2HgO → 2Hg + O₂" }
+        ];
+
+        function solve() {
+            let input = document.getElementById('reactants').value;
+            let output = document.getElementById('output');
+            let match = decompositionReactions.find(item => item.r === input);
+            
+            if (match) {
+                output.innerHTML = `<strong>উৎপাদ:</strong><br>${match.p}`;
+            } else {
+                output.innerHTML = "ভুল ফরম্যাট! দয়া করে সঠিক সংকেত ও ফরম্যাটে লিখুন।";
+            }
+        }
+    </script>
+</body>
+</html>

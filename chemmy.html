@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemmy AI - রসায়ন সহকারী</title>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --section-border: rgba(168, 85, 247, 0.3);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-color: #f8fafc;
+            --border-color: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --section-border: rgba(168, 85, 247, 0.4);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation/Header */
+        .chemmy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px var(--shadow);
+            margin-bottom: 30px;
+        }
+        .back-btn {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .back-btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Chat Interface */
+        .chat-box {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .message.ai {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid var(--section-border);
+            color: var(--text-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Loading Animation */
+        .message.loading span {
+            display: inline-block;
+            animation: blinkLoading 1.4s infinite both;
+            font-size: 20px;
+        }
+        .message.loading span:nth-child(2) { animation-delay: .2s; }
+        .message.loading span:nth-child(3) { animation-delay: .4s; }
+        @keyframes blinkLoading {
+            0% { opacity: .2; }
+            20% { opacity: 1; }
+            100% { opacity: .2; }
+        }
+
+        /* Chat Input Area */
+        .chat-input-area {
+            flex-shrink: 0;
+            display: flex;
+            padding: 20px;
+            background: var(--card-bg);
+            border-top: 2px solid var(--border-color);
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input:focus {
+            border-color: #a855f7;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .send-btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="chemmy-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 32px;">🧪</div>
+                <div>
+                    <h2 style="margin: 0; font-size: 20px;">Chemmy AI Assistant</h2>
+                    <span style="font-size: 13px; color: #a855f7; font-weight: 600;">আপনার পার্সোনাল কেমিস্ট্রি স্টাডি পার্টনার</span>
+                </div>
+            </div>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> ড্যাশবোর্ডে ফিরুন</a>
+        </div>
+
+        <!-- Chat Box -->
+        <div class="chat-box">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    হায়! আমি **Chemmy**। আমি কেবল তোমার কেমিস্ট্রি ও পড়াশোনা বিষয়ক স্টাডি পার্টনার। সাধারণ আড্ডা বা গল্প এখানে করা যাবে না। বলো, আজ রসায়নের কোন বিষয়টি নিয়ে পড়াশোনা করবে? 🧪✨
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="userInput" class="chat-input" placeholder="এখানে তোমার পড়াশোনা সম্পর্কিত প্রশ্ন লিখো..." onkeypress="handleKeyPress(event)">
+                <button class="send-btn" onclick="sendMessage()">পাঠাও <i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getSmartChemmyResponse(query) {
+            const q = query.toLowerCase();
+
+            // যদি সাধারণ আড্ডা বা হাই-হ্যালো বোঝায়
+            if (q.includes('hi') || q.includes('hello') || q.includes('কেমন আছ') || q.includes('kemon')) {
+                return "হ্যালো! আমি কৌতুক বা সাধারণ আড্ডা দেওয়ার জন্য তৈরি নই। আমি তোমার কেমিস্ট্রি স্টাডি পার্টনার। বলো, রসায়নের কোন টপিক বা বিক্রিয়া নিয়ে আলোচনা করব?";
+            }
+
+            // যোজনী বা ভ্যালেন্সি সম্পর্কিত প্রশ্ন
+            if (q.includes('jojoni') || q.includes('valency') || q.includes('যোজনী')) {
+                if (q.includes('h') || q.includes('হাইড্রোজেন')) {
+                    return "হাইড্রোজেন (H)-এর যোজনী হলো **১**। এর পারমাণবিক সংখ্যা ১ এবং এটি ইলেকট্রন শেয়ার বা ত্যাগ করে নিষ্ক্রিয় গ্যাসের কাঠামো অর্জন করতে চায়।";
+                }
+                if (q.includes('o') || q.includes('অক্সিজেন')) {
+                    return "অক্সিজেন (O)-এর যোজনী হলো **২**। এর পারমাণবিক সংখ্যা ৮।";
+                }
+                if (q.includes('n') || q.includes('নাইট্রোজেন')) {
+                    return "নাইট্রোজেন (N)-এর যোজনী সাধারণত **৩** (তবে এটি ৩ ও ৫ উভয় যোজনীই দেখাতে পারে)।";
+                }
+                return "যোজনী হলো কোনো মৌলের একটি পরমাণু অন্য কোনো মৌলের কতটি পরমাণুর সাথে যুক্ত হতে পারে তার সংখ্যা। তুমি কোন নির্দিষ্ট মৌলের যোজনী জানতে চাও তা আমাকে বলতে পারো!";
+            }
+
+            // পানির সংকেত বা গঠন
+            if (q.includes('pani') || q.includes('water') || q.includes('পানি')) {
+                return "পানির রাসায়নিক সংকেত হলো **H₂O**। এর একটি অণুতে দুটি হাইড্রোজেন পরমাণু এবং একটি অক্সিজেন পরমাণু সমযোজী বন্ধনে যুক্ত থাকে।";
+            }
+
+            // এসিড বা ক্ষার সম্পর্কিত
+            if (q.includes('acid') || q.includes('এসিড') || q.includes('khar') || q.includes('ক্ষার')) {
+                return "এসিড হলো এমন রাসায়নিক যৌগ যা জলীয় দ্রবণে প্রোটন বা হাইড্রোজেন আয়ন ($H^+$) উৎপন্ন করে এবং নীল লিটমাস পেপারকে লাল করে। অন্যদিকে ক্ষার বা ক্ষারক হলো যা হাইড্রোক্সাইড আয়ন ($OH^-$) উৎপন্ন করে। এসিড-ক্ষার নিয়ে কি কোনো নির্দিষ্ট প্রশ্ন আছে?";
+            }
+
+            // পরমাণু বা ইলেকট্রন বিন্যাস
+            if (q.includes('poromanu') || q.includes('atom') || q.includes('electron') || q.includes('ইলেকট্রন')) {
+                return "পরমাণু হলো পদার্থের ক্ষুদ্রতম কণা। এর কেন্দ্র বা নিউক্লিয়াসে প্রোটন ও নিউট্রন থাকে এবং বাইরে কক্ষপথে ইলেকট্রনগুলো ঘুরে বেড়ায়। ইলেকট্রন বিন্যাসের সাধারণ নিয়ম হলো 2n² সূত্র।";
+            }
+
+            // ডিফল্ট কেমিস্ট্রি উত্তর
+            return `তুমি খুব সুন্দর একটি প্রশ্ন করেছ! "${query}" বিষয়টি রসায়নের দৃষ্টিতে বেশ গুরুত্বপূর্ণ। কেমিস্ট্রির নিয়ম অনুযায়ী এটি পদার্থের গঠন, অণু-পারমাণবিক কণা কিংবা রাসায়নিক বিক্রিয়ার সাথে সরাসরি সম্পর্কিত। এই বিষয়ে আরও বিস্তারিত জানতে তোমার পাঠ্যবইয়ের নির্দিষ্ট অধ্যায়টি দেখতে পারো অথবা সুনির্দিষ্ট প্রশ্ন করতে পারো! 🧪`;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const messageText = input.value.trim();
+            if (messageText === '') return;
+
+            const chatMessages = document.getElementById('chatMessages');
+
+            // User Message Add
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerText = messageText;
+            chatMessages.appendChild(userMsg);
+
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Loading Indicator Add
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'message ai loading';
+            loadingMsg.innerHTML = 'Chemmy ভাবছে<span>.</span><span>.</span><span>.</span>';
+            chatMessages.appendChild(loadingMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate AI thinking delay
+            setTimeout(() => {
+                chatMessages.removeChild(loadingMsg);
+                
+                const aiReply = getSmartChemmyResponse(messageText);
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai';
+                aiMsg.innerHTML = aiReply;
+                chatMessages.appendChild(aiMsg);
+                
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 800);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>

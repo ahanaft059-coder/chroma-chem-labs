@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Non-Metallic Character Explorer</title>
+    <style>
+        :root { 
+            --bg-color: #000000; 
+            --card-color: #0b0f17;
+            --text-color: #f8fafc; 
+            --accent-color: #ef4444; /* অধাতব ধর্মের জন্য লালচে শেড */
+            --border-color: #1e293b;
+        }
+        body { background: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px 20px; margin: 0; min-height: 100vh; }
+        .container { max-width: 750px; margin: 80px auto auto auto; }
+
+        .back-btn { position: fixed; top: 20px; left: 20px; background: #1e293b; color: #94a3b8; padding: 10px 20px; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid var(--border-color); transition: all 0.2s ease; z-index: 50; }
+        .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
+
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(to right, #f87171, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .note { background: var(--card-color); border-left: 5px solid var(--accent-color); padding: 20px; margin-bottom: 35px; border-radius: 14px; border: 1px solid var(--border-color); color: #e2e8f0; line-height: 1.7; }
+        
+        .grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
+        
+        .cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border-color); font-weight: 850; font-size: 1.5rem; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .cell:hover { transform: scale(1.15); z-index: 10; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); border-color: var(--accent-color); }
+        
+        .val { font-size: 0.75rem; font-weight: 700; margin-top: 6px; color: #fca5a5; }
+        
+        .explanation-box { margin-top: 40px; background: #0b0f17; padding: 25px; border-radius: 14px; border: 1px solid var(--border-color); color: #cbd5e1; line-height: 1.8; }
+        .explanation-box h3 { color: var(--accent-color); margin-top: 0; }
+    </style>
+</head>
+<body>
+
+<a href="properties_page.html" class="back-btn">← ফিরে যান</a>
+
+<div class="container">
+    <h1>মৌলের অধাতব ধর্ম (Non-Metallic Character)</h1>
+    
+    <div class="note">
+        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে সাধারণত বাম থেকে ডানে অধাতব ধর্ম বৃদ্ধি পায় এবং ওপর থেকে নিচে অধাতব ধর্ম হ্রাস পায়। (মান: ১-১০ স্কেল)
+    </div>
+
+    <div class="grid" id="grid">
+        <script>
+            // অধাতব ধর্মের আপেক্ষিক মান
+            const elements = [
+                {s: 'H', v: 4}, {e: 6}, {s: 'He', v: 0},
+                {s: 'Li', v: 1}, {s: 'Be', v: 2}, {s: 'B', v: 5}, {s: 'C', v: 8}, {s: 'N', v: 9}, {s: 'O', v: 10}, {s: 'F', v: 10}, {s: 'Ne', v: 0},
+                {s: 'Na', v: 0.5}, {s: 'Mg', v: 1}, {s: 'Al', v: 3}, {s: 'Si', v: 6}, {s: 'P', v: 7}, {s: 'S', v: 9}, {s: 'Cl', v: 10}, {s: 'Ar', v: 0},
+                {s: 'K', v: 0.2}, {s: 'Ca', v: 0.5}, {s: 'Ga', v: 2}, {s: 'Ge', v: 4}, {s: 'As', v: 6}, {s: 'Se', v: 8}, {s: 'Br', v: 9.5}, {s: 'Kr', v: 0}
+            ];
+
+            const grid = document.getElementById('grid');
+            elements.forEach(el => {
+                if (el.e) {
+                    grid.innerHTML += `<div style="grid-column: span ${el.e}"></div>`;
+                } else {
+                    let intensity = 15 + (el.v * 6);
+                    grid.innerHTML += `
+                        <div class="cell" style="background-color: hsl(0, 70%, ${intensity}%);">
+                            ${el.s}<div class="val">${el.v}</div>
+                        </div>`;
+                }
+            });
+        </script>
+    </div>
+
+    <div class="explanation-box">
+        <h3>কেন এমনটি ঘটে?</h3>
+        <p>অধাতব ধর্ম হলো ইলেকট্রন গ্রহণের প্রবণতা।</p>
+        <ul style="padding-left: 20px;">
+            <li><strong>একই পর্যায়ে বাম থেকে ডানে:</strong> পরমাণুর আকার ছোট হয় এবং নিউক্লিয়াসের আকর্ষণ বাড়ে, তাই সহজেই নতুন ইলেকট্রন গ্রহণ করতে পারে (অধাতব ধর্ম বাড়ে)।</li>
+            <li><strong>গ্রুপে ওপর থেকে নিচে:</strong> আকার বড় হওয়ার কারণে নতুন ইলেকট্রনের প্রতি নিউক্লিয়াসের আকর্ষণ কমে যায় (অধাতব ধর্ম কমে)।</li>
+        </ul>
+        <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px;">* d-ব্লক মৌলসমূহকে সরলতার জন্য এই ভিজ্যুয়ালাইজেশন থেকে বাদ দেওয়া হয়েছে।</p>
+    </div>
+</div>
+
+</body>
+</html>

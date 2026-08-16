@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Theory Hub - রসায়ন তত্ত্ব ভাণ্ডার</title>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --primary: #8b5cf6;
+            --primary-gradient: linear-gradient(135deg, #a855f7, #3b82f6);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .hub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            padding: 25px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px var(--shadow);
+            margin-bottom: 30px;
+        }
+        .back-btn {
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .back-btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Search Bar */
+        .search-bar {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+        }
+        .search-input {
+            flex: 1;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 15px;
+            outline: none;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .search-input:focus { border-color: #a855f7; }
+
+        /* Theory Grid Layout */
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .theory-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px var(--shadow);
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .theory-card:hover {
+            transform: translateY(-5px);
+            border-color: #a855f7;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .card-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .formula-box {
+            background: var(--bg-color);
+            border: 1px dashed var(--border-color);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: #a855f7;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .details-btn {
+            background: transparent;
+            border: 2px solid #a855f7;
+            color: #a855f7;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .details-btn:hover {
+            background: #a855f7;
+            color: white;
+        }
+
+        /* Modal Popup Styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-box {
+            background: var(--card-bg);
+            border: 2px solid #a855f7;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: 0.3s ease;
+            position: relative;
+        }
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        .modal-close:hover { background: #a855f7; color: white; border-color: #a855f7; }
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .modal-body {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .modal-body h4 {
+            color: var(--text-color);
+            margin: 15px 0 5px 0;
+            font-size: 16px;
+        }
+        .modal-body ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        .modal-body li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="hub-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 36px;">📖</div>
+                <div>
+                    <h2 style="margin: 0; font-size: 22px;">Chemistry Theory Hub</h2>
+                    <span style="font-size: 13px; color: #a855f7; font-weight: 600;">রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত হ্যান্ডবুক</span>
+                </div>
+            </div>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> ড্যাশবোর্ডে ফিরুন</a>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="যেকোনো তত্ত্ব বা সূত্র সার্চ করুন..." onkeyup="filterTheories()">
+        </div>
+
+        <!-- Theory Cards Grid -->
+        <div class="theory-grid" id="theoryGrid">
+            
+            <!-- Card 1 -->
+            <div class="theory-card" data-name="বয়েলের সূত্র boyle law">
+                <div>
+                    <div class="card-icon">🎈</div>
+                    <div class="card-title">বয়েলের সূত্র (Boyle's Law)</div>
+                    <div class="card-desc">স্থির তাপমাত্রায় নির্দিষ্ট ভরের গ্যাসের আয়তন প্রযুক্ত চাপের ব্যস্তানুপাতিক।</div>
+                    <div class="formula-box">P ∝ 1/V  =>  P₁V₁ = P₂V₂</div>
+                </div>
+                <button class="details-btn" onclick="openModal('বয়েলের সূত্র (Boyle\'s Law)', '🎈', 'রবার্ট বয়েল ১৬৬২ সালে এই বিখ্যাত গ্যাসীয় সূত্রটি আবিষ্কার করেন।', '<h4>মূল ধারণা:</h4><p>স্থির তাপমাত্রায় নির্দিষ্ট ভরের কোনো গ্যাসের আয়তন (V) তার ওপর প্রযুক্ত চাপের (P) ব্যস্তানুপাতিক। অর্থাৎ চাপ বাড়ালে আয়তন কমে যায়।</p><h4>গাণিতিক রূপ:</h4><p>PV = k (ধ্রুবক)। দুটি ভিন্ন অবস্থার জন্য: P₁V₁ = P₂V₂</p><h4>বাস্তব প্রয়োগ ও উদাহরণ:</h4><ul><li>শ্বাস-প্রশ্বাসের সময় ফুসফুসের ভেতরের বায়ুর চাপ ও আয়তনের পরিবর্তন।</li><li>গভীর পানির নিচে থাকা মাছের বুদ্বুদ যখন পানির উপরে আসে, তখন চাপ কমে যাওয়ায় তার আয়তন বৃদ্ধি পায়।</li><li>সাইকেলের পাম্পে বাতাস ভরার সময় সিলিন্ডারের ভেতরের চাপ বৃদ্ধি পাওয়া।</li></ul>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="theory-card" data-name="চার্লসের সূত্র charles law">
+                <div>
+                    <div class="card-icon">🌡️</div>
+                    <div class="card-title">চার্লসের সূত্র (Charles's Law)</div>
+                    <div class="card-desc">স্থির চাপে নির্দিষ্ট ভরের গ্যাসের তাপমাত্রা পরিবর্তনে আয়তন পরিবর্তিত হয়।</div>
+                    <div class="formula-box">V ∝ T  =>  V₁/T₁ = V₂/T₂</div>
+                </div>
+                <button class="details-btn" onclick="openModal('চার্লসের সূত্র (Charles\'s Law)', '🌡️', 'ফরাসি বিজ্ঞানী জাক চার্লস ১৭৮৭ সালে এই সূত্রটি উপস্থাপন করেন (পরবর্তীতে জোসেফ লুই গে-লুসাক এটি পরিমার্জন করেন)।', '<h4>মূল ধারণা:</h4><p>স্থির চাপে নির্দিষ্ট ভরের কোনো গ্যাসের তাপমাত্রা ১°C বাড়ালে বা কমালে এর 0°C তাপমাত্রার যে আয়তন থাকে, তার ১/২৭৩ অংশ যথাক্রমে বৃদ্ধি বা হ্রাস পায়। তাপমাত্রা বাড়লে গ্যাসের আয়তন সমানুপাতিক হারে বাড়ে।</p><h4>গাণিতিক রূপ:</h4><p>V ∝ T (যেখানে T হলো পরম তাপমাত্রা বা কেলভিন স্কেল, T = °C + 273)। সুতরাং, V/T = k বা V₁/T₁ = V₂/T₂</p><h4>বাস্তব প্রয়োগ ও উদাহরণ:</h4><ul><li>গরমের দিনে গাড়ির টায়ার অনেক সময় বেশি চাপে ফেটে যাওয়া (তাপমাত্রা বাড়ায় ভেতরের বায়ুর আয়তন প্রসারণের চেষ্টা)।</li><li>হট এয়ার বেলুন (Hot Air Balloon)-এর ভেতরে বাতাস গরম করলে আয়তন বেড়ে বেলুন হালকা হয়ে আকাশে ওড়ে।</li></ul>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="theory-card" data-name="রাদারফোর্ড পরমাণু মডেল rutherford model">
+                <div>
+                    <div class="card-icon">⚛️</div>
+                    <div class="card-title">রাদারফোর্ড পরমাণু মডেল</div>
+                    <div class="card-desc">পরমাণুর কেন্দ্রে ধনাত্মক চার্জযুক্ত ভারী নিউক্লিয়াস থাকে এবং ইলেকট্রন ঘোরে।</div>
+                    <div class="formula-box">নিউক্লিয়াস + ঘূর্ণনশীল ইলেকট্রন</div>
+                </div>
+                <button class="details-btn" onclick="openModal('রাদারফোর্ড পরমাণু মডেল (Rutherford Model)', '⚛️', 'বিজ্ঞানী আর্নেস্ট রাদারফোর্ড ১৯১১ সালে তাঁর বিখ্যাত আলফা কণা বিচ্ছুরণ পরীক্ষার মাধ্যমে এই মডেল প্রকাশ করেন।', '<h4>প্রধান বৈশিষ্ট্যসমূহ:</h4><ul><li>পরমাণুর কেন্দ্রস্থলে একটি ক্ষুদ্র ও ধনাত্মক চার্জযুক্ত ভারী অংশ থাকে, যার নাম নিউক্লিয়াস। পরমাণুর সমস্ত ভর এই নিউক্লিয়াসে পুঞ্জীভূত থাকে।</li><li>পরমাণুর বেশিরভাগ স্থানই ফাঁকা।</li><li>সৌরজগতের গ্রহগুলোর মতো ইলেকট্রনগুলো নিউক্লিয়াসকে কেন্দ্র করে নির্দিষ্ট বৃত্তাকার পথে চারদিকে ঘুরছে।</li></ul><h4>প্রধান সীমাবদ্ধতা বা ত্রুটি:</h4><p>ম্যাক্সওয়েলের তড়িৎ-চুম্বকীয় তত্ত্ব অনুযায়ী, ঘূর্ণনশীল ইলেকট্রন অবিরাম শক্তি বিকিরণ করতে করতে শেষ পর্যন্ত নিউক্লিয়াসে গিয়ে পড়ার কথা, যার ফলে পরমাণু ধ্বংস হয়ে যাওয়ার কথা। কিন্তু বাস্তবে পরমাণু স্থায়ী। রাদারফোর্ড এই স্থায়িত্বের কোনো ব্যাখ্যা দিতে পারেননি।</p>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="theory-card" data-name="বোর পরমাণু মডেল bohr model">
+                <div>
+                    <div class="card-icon">🌀</div>
+                    <div class="card-title">বোর পরমাণু মডেল (Bohr's Model)</div>
+                    <div class="card-desc">ইলেকট্রনগুলো নির্দিষ্ট শক্তিস্তর বা অরবিটালে থেকে নিউক্লিয়াসকে প্রদক্ষিণ করে।</div>
+                    <div class="formula-box">mvr = nh / 2π</div>
+                </div>
+                <button class="details-btn" onclick="openModal('বোর পরমাণু মডেল (Bohr\'s Model)', '🌀', 'ড্যানিশ পদার্থবিদ নিলস বোর ১৯১৩ সালে ম্যাক্স প্ল্যাঙ্কের কোয়ান্টাম তত্ত্বের ওপর ভিত্তি করে রাদারফোর্ড মডেলের ত্রুটি সংশোধন করে এই মডেল দেন।', '<h4>প্রধান বৈশিষ্ট্যসমূহ:</h4><ul><li>ইলেকট্রনগুলো যেকোনো ব্যাসার্ধের পথে না ঘুরে কেবল নিউক্লিয়াসকে কেন্দ্র করে নির্দিষ্ট কিছু অনুমোদিত বৃত্তাকার কক্ষপথে (Orbit বা Energy Level) ঘোরে।</li><li>এই নির্দিষ্ট শক্তিস্তরে ঘূর্ণনের সময় ইলেকট্রনগুলো কোনো শক্তি শোষণ বা বিকিরণ করে না (স্থায়ী কক্ষপথ বা Stationary Orbit)।</li><li>ইলেকট্রন যখন উচ্চ শক্তিস্তর থেকে নিম্ন শক্তিস্তরে নামে, তখন শক্তি বিকিরণ করে; আর নিম্ন থেকে উচ্চ স্তরে গেলে শক্তি শোষণ করে ($\Delta E = h\nu$)।</li></ul><h4>কোয়ান্টাম শর্ত:</h4><p>কক্ষপথগুলোর কৌণিক ভরবেগ ($mvr$) সবসময় $h / 2\pi$-এর সরল গুণিতক হয় ($\text{mvr} = nh/2\pi$)।</p>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="theory-card" data-name="এসিড ক্ষার arrhenius bronsted lewis acid base">
+                <div>
+                    <div class="card-icon">⚗️</div>
+                    <div class="card-title">এসিড-ক্ষার থিওরি (Acid-Base)</div>
+                    <div class="card-desc">আরহেনিয়াস, ব্রনস্টেড-লাউরি এবং লুইসের এসিড-ক্ষার সম্পর্কিত আধুনিক তত্ত্ব।</div>
+                    <div class="formula-box">H⁺ (Acid) & OH⁻ (Base)</div>
+                </div>
+                <button class="details-btn" onclick="openModal('এসিড-ক্ষার তত্ত্বসমূহ (Acid-Base)', '⚗️', 'রসায়নে এসিড ও ক্ষার শনাক্তকরণ এবং তাদের আচরণ ব্যা의 করার জন্য প্রধানত ৩টি যুগান্তকারী তত্ত্ব রয়েছে:', '<ul><li><b>আরহেনিয়াস তত্ত্ব (১৮৮৪):</b> যে সকল যৌগ জলীয় দ্রবণে হাইড্রোজেন আয়ন ($H^+$) উৎপন্ন করে তারা এসিড, এবং যারা হাইড্রোক্সাইড আয়ন ($OH^-$) উৎপন্ন করে তারা ক্ষার।</li><li><b>ব্রনস্টেড-লাউরি প্রোটনীয় তত্ত্ব (১৯২৩):</b> যে সকল প্রজাতি প্রোটন ($H^+$) দান করতে পারে তারা এসিড এবং যারা প্রোটন গ্রহণ করতে পারে তারা ক্ষারক।</li><li><b>লুইস ইলেকট্রনীয় তত্ত্ব (১৯২৩):</b> যে সকল যৌগ বা আয়ন একজোড়া ইলেকট্রন গ্রহণ করতে পারে তারা লুইস এসিড, এবং যারা একজোড়া ইলেকট্রন দান করতে পারে তারা লুইস ক্ষার।</li></ul>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="theory-card" data-name="অ্যাভোগাদ্রোর সূত্র avogadro law mole">
+                <div>
+                    <div class="card-icon">📦</div>
+                    <div class="card-title">অ্যাভোগাদ্রোর সূত্র (Avogadro's Law)</div>
+                    <div class="card-desc">সমান তাপমাত্রা ও চাপে সম আয়তনের সকল গ্যাসে সমান সংখ্যক অণু থাকে।</div>
+                    <div class="formula-box">V ∝ n  (N_A = 6.023 × 10²³)</div>
+                </div>
+                <button class="details-btn" onclick="openModal('অ্যাভোগাদ্রোর সূত্র (Avogadro\'s Law)', '📦', 'ইতালীয় বিজ্ঞানী আমেদেও অ্যাভোগাড্রো ১৮১১ সালে এই সূত্র প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>সকল গ্যাসীয় পদার্থের ক্ষেত্রে একই তাপমাত্রা ও চাপে সমআয়তনে সমান সংখ্যক অণু বিদ্যমান থাকে। অর্থাৎ গ্যাসের আয়তন সরাসরি তার অণুর সংখ্যার (বা মোলের সংখ্যার) সমানুপাতিক।</p><h4>গাণিতিক রূপ:</h4><p>V ∝ n (যখন তাপমাত্রা T ও চাপ P স্থির থাকে)।</p><h4>অ্যাভোগাড্রো ধ্রুবক ($N_A$):</h4><p>যেকোনো পদার্থের ১ মোলে নির্দিষ্ট সংখ্যক কণা বা অণু থাকে, যার মান $6.023 \times 10^{23}$। রসায়নের যেকোনো পরিমাণগত হিসাব বা স্টয়কিওমেট্রিতে এই সূত্রটি অপরিহার্য।</p>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="theory-card" data-name="হুন্ডের নীতি hunds rule">
+                <div>
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">হুন্ডের নীতি (Hund's Rule)</div>
+                    <div class="card-desc">সমশক্তি সম্পন্ন অরবিটালগুলোতে ইলেকট্রন সর্বাধিক অযুগ্ম অবস্থায় প্রবেশ করে।</div>
+                    <div class="formula-box">সর্বোচ্চ অযুগ্ম ইলেকট্রন বিন্যাস</div>
+                </div>
+                <button class="details-btn" onclick="openModal('হুন্ডের নীতি (Hund\'s Rule)', '⚡', 'জার্মান পদার্থবিদ ও রসায়নবিদ ফ্রিডরিখ হুন্ড ১৯২৫ সালে এই নীতি প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>সমশক্তি সম্পন্ন বিভিন্ন অরবিটালে (যেমন p-অরবিটালের তিনটি সাব-অরবিটাল $p_x, p_y, p_z$) ইলেকট্রনগুলো প্রবেশের সময় প্রথমে প্রতিটি অরবিটালে একটি করে ইলেকট্রন একই স্পিনে (Spin) প্রবেশ করবে। যখন প্রতিটি অরবিটালে একটি করে ইলেকট্রন পূর্ণ হয়ে যাবে, কেবল তখনই জোড় বাঁধা বা paired হওয়া শুরু হবে।</p><h4>গুরুত্ব:</h4><p>এই নীতির কারণে পরমাণুর ইলেকট্রন বিন্যাস সবচেয়ে স্থিতিশীল হয় এবং পরমাণুর চুম্বক ধর্ম (Paramagnetism বা Diamagnetism) নিখুঁতভাবে ব্যাখ্যা করা যায়।</p>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 8 -->
+            <div class="theory-card" data-name="পলির বর্জন নীতি pauli exclusion principle">
+                <div>
+                    <div class="card-icon">🛡️</div>
+                    <div class="card-title">পলির বর্জন নীতি (Pauli Exclusion)</div>
+                    <div class="card-desc">একটি পরমাণুতে দুটি ইলেকট্রনের চারটি কোয়ান্টাম সংখ্যার মান এক হতে পারে না।</div>
+                    <div class="formula-box">n, l, m, s are never all identical</div>
+                </div>
+                <button class="details-btn" onclick="openModal('পলির বর্জন নীতি (Pauli Exclusion Principle)', '🛡️', 'অর্র্র্র্র্র্সীয় পদার্থবিদ ওলফগ্যাং পলি ১৯২৫ সালে এই নীতি আবিষ্কার করেন, যার জন্য তিনি নোবেল পুরস্কার পান।', '<h4>মূল ধারণা:</h4><p>একটি পরমাণুতে অবস্থিত যেকোনো দুটি ইলেকট্রনের জন্য চারটি কোয়ান্টাম সংখ্যা—প্রধান কোয়ান্টাম সংখ্যা ($n$), সহকারী কোয়ান্টাম সংখ্যা ($l$), চুম্বকীয় কোয়ান্টাম সংখ্যা ($m$) এবং স্পিন কোয়ান্টাম সংখ্যা ($s$)-এর মান কখনো সম্পূর্ণ এক হতে পারে না।</p><h4>উপসংহার:</h4><p>এই নীতির ফলে একটি অরবিটালে সর্বোচ্চ দুটি ইলেকট্রন থাকতে পারে এবং তাদের স্পিনের দিক অবশ্যই বিপরীতমুখী ($+1/2$ এবং $-1/2$) হতে হয়।</p>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 9 -->
+            <div class="theory-card" data-name="হেসের সূত্র hess law">
+                <div>
+                    <div class="card-icon">🔥</div>
+                    <div class="card-title">হেসের সূত্র (Hess's Law)</div>
+                    <div class="card-desc">বিক্রিয়া এক বা একাধিক ধাপে হোক, মোট এনথালপি পরিবর্তন সর্বদা সমান থাকে।</div>
+                    <div class="formula-box">ΔH = ΔH₁ + ΔH₂ + ...</div>
+                </div>
+                <button class="details-btn" onclick="openModal('হেসের সূত্র (Hess\'s Law)', '🔥', 'সুইশ বংশোদ্ভূত রুশ রসায়নবিদ জার্মেন হেস ১৮৪০ সালে তাপ রসায়নের ওপর এই সূত্র প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>কোনো রাসায়নিক বিক্রিয়া সরাসরি এক ধাপে সম্পন্ন হোক কিংবা একাধিক ভিন্ন ধাপে সম্পন্ন হোক না কেন, বিক্রিয়াটির মোট এনথালপি পরিবর্তন ($\Delta H$) সর্বদা সমান থাকে। এটি মূলত শক্তির সংরক্ষণশীলতা নীতিরই রূপান্তর।</p><h4>ব্যবহারিক প্রয়োগ:</h4><p>পরীক্ষাগারে সরাসরি যে সমস্ত বিক্রিয়ার তাপ পরিবর্তন বা এনথালপি সহজে মাপা যায় না, হেসের সূত্র ব্যবহার করে গাণিতिकভাবে খুব সহজেই তা নির্ণয় করা সম্ভব।</p>')">বিস্তারিত জানুন</button>
+            </div>
+
+            <!-- Card 10 -->
+            <div class="theory-card" data-name="লি শাতেলিয়ে নীতি le chatelier principle">
+                <div>
+                    <div class="card-icon">⚖️</div>
+                    <div class="card-title">লি শাতেলিয়ে নীতি (Le Chatelier's Principle)</div>
+                    <div class="card-desc">সাম্যাবস্থায় থাকা বিক্রিয়ায় কোনো পরিবর্তন করলে তা প্রশমিত হওয়ার দিকে সরে যায়।</div>
+                    <div class="formula-box">সাম্যাবস্থার শিফট (Shift in Equilibrium)</div>
+                </div>
+                <button class="details-btn" onclick="openModal('লি শাতেলিয়ে নীতি (Le Chatelier\'s Principle)', '⚖️', 'ফরাসি রসায়নবিদ অঁরি ল্য শাতেলিয়ে ১৮৮৪ সালে এই নীতি প্রকাশ করেন।', '<h4>মূল ধারণা:</h4><p>রাসায়নিক সাম্যাবস্থায় থাকা কোনো বিক্রিয়ায় যদি বাহ্যিকভাবে তাপমাত্রা, চাপ বা ঘনমাত্রার কোনো পরিবর্তন ঘটানো হয়, তবে সাম্যাবস্থা এমন দিকে সরে যাবে যাতে এই পরিবর্তনের ফলাফল বা প্রভাব প্রশমিত হতে পারে।</p><h4>শিল্প কারখানায় এর গুরুত্ব:</h4><p>শিল্প উৎপাদনে (যেমন: হেবার পদ্ধতিতে অ্যামোনিয়া উৎপাদন বা কন্টাক্ট পদ্ধতিতে সালফিউরিক এসিড তৈরি) সর্বোচ্চ ফলন বা উৎপাদন পাওয়ার জন্য অনুকূল চাপ ও তাপমাত্রা নির্ধারণে এই নীতি ব্যাপকভাবে ব্যবহৃত হয়।</p>')">বিস্তারিত জানুন</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Popup Structure -->
+    <div class="modal-overlay" id="theoryModal" onclick="closeModalOutside(event)">
+        <div class="modal-box">
+            <div class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></div>
+            <div class="modal-title" id="modalTitle"><span></span></div>
+            <div class="modal-body" id="modalBody">
+                <!-- Details content will load here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(title, icon, summary, detailsHtml) {
+            const modal = document.getElementById('theoryModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.innerHTML = `<span style="font-size: 28px;">${icon}</span> ${title}`;
+            modalBody.innerHTML = `
+                <p style="font-weight: 600; color: var(--text-color); margin-bottom: 15px; font-size: 16px;">${summary}</p>
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+                <div>${detailsHtml}</div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('theoryModal');
+            modal.classList.remove('active');
+        }
+
+        function closeModalOutside(event) {
+            const modal = document.getElementById('theoryModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        function filterTheories() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.theory-card');
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(input)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

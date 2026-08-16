@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রসায়ন ডাটা ভিজ্যুয়ালাইজেশন হাব</title>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow: rgba(15, 23, 42, 0.08);
+            --visual-grad: linear-gradient(135deg, #3498db, #9b59b6);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+            background: var(--visual-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p { opacity: 0.8; font-size: 16px; }
+        
+        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
+        .back-btn {
+            text-decoration: none; color: var(--text-color); font-weight: bold; background: var(--card-bg);
+            padding: 10px 18px; border-radius: 14px; border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px var(--shadow); transition: all 0.2s;
+        }
+        .back-btn:hover { transform: translateX(-3px); }
+
+        /* Visualization Grid Layout */
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 900px) { .visual-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .visual-grid { grid-template-columns: 1fr; } }
+
+        .visual-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 8px 20px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        .visual-card:hover { transform: translateY(-5px); }
+        .visual-icon { font-size: 44px; margin-bottom: 12px; }
+        .visual-title { font-size: 19px; margin: 0 0 10px 0; font-weight: bold; }
+        .visual-desc { font-size: 13.5px; opacity: 0.8; line-height: 1.5; margin-bottom: 20px; }
+        
+        .view-btn {
+            display: block;
+            text-align: center;
+            background: var(--visual-grad);
+            color: white;
+            text-decoration: none;
+            padding: 11px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+        .view-btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-nav">
+            <a href="index.html" class="back-btn">← মূল ড্যাশবোর্ডে ফিরুন</a>
+        </div>
+
+        <header>
+            <h1>📈 ভিজ্যুয়ালাইজেশন হাব (Visualization Hub)</h1>
+            <p>পর্যায়বৃত্ত ধর্ম ও ল্যাব ডাটার চার্ট-গ্রাফ বিশ্লেষণ করতে নিচের যেকোনো একটি পেজ ওপেন করো</p>
+        </header>
+
+        <div class="visual-grid">
+
+            <div class="visual-card">
+                <div>
+                    <div class="visual-icon">📊</div>
+                    <h3 class="visual-title">পারমাণবিক ধর্ম গ্রাফ</h3>
+                    <p class="visual-desc">১ থেকে ৩৬ নম্বর মৌলের পারমাণবিক ব্যাসার্ধ, আয়নিকরণ শক্তি এবং পর্যায়বৃত্ত পরিবর্তনের ইন্টারেক্টিভ চার্ট অ্যানিমেশন।</p>
+                </div>
+                <a href="visual1.html" class="view-btn">গ্রাফ দেখুন ⚡</a>
+            </div>
+
+            <div class="visual-card">
+                <div>
+                    <div class="visual-icon">🌡️</div>
+                    <h3 class="visual-title">গলনাঙ্ক ও স্ফুটনাঙ্ক</h3>
+                    <p class="visual-desc">গ্রুপ ও পর্যায় ভিত্তিক মৌলসমূহের গলনাঙ্ক (Melting Point) এবং স্ফুটনাঙ্কের (Boiling Point) তুলনামূলক গ্রাফিক্যাল ট্রেন্ড বিশ্লেষণ।</p>
+                </div>
+                <a href="visual2.html" class="view-btn">গ্রাফ দেখুন ⚡</a>
+            </div>
+
+            <div class="visual-card">
+                <div>
+                    <div class="visual-icon">🧪</div>
+                    <h3 class="visual-title">মডেল ও ইলেকট্রন বিন্যাস</h3>
+                    <p class="visual-desc">ত্তি। পরমাণুর কেন্দ্রস্থলে থাকে ধনাত্মক নিউক্লিয়াস এবং তার চারপাশে ইলেকট্রন নির্দিষ্ট শক্তিস্তরে বা অরবিটালে অবস্থান করে। ইলেকট্রনগুলো কীভাবে নিউক্লিয়াসের চারপাশে সাজানো থাকে তা বিভিন্ন পরমাণু মডেল এবং ইলেকট্রন বিন্যাসের নিয়মের মাধ্যমে ব্যাখ্যা </p>
+                </div>
+                <a href="visual3.html" class="view-btn">গ্রাফ দেখুন ⚡</a>
+            </div>
+
+            <div class="visual-card">
+                <div>
+                    <div class="visual-icon">🗺️</div>
+                    <h3 class="visual-title">সেগরে চার্ট ও আইসোটোপ ল্যাব</h3>
+                    <p class="visual-desc">নিউক্লিয়ার ফিজিক্সের আদলে প্রোটন-নিউট্রন সংখ্যার ইন্টারঅ্যাক্টিভ গ্রিড ম্যাপ, নিউক্লিয়ার স্থায়িত্ব লাইন এবং আইসোটোপের বাস্তবমুখী প্রয়োগ বিশ্লেষণ।</p>
+                </div>
+                <a href="isotope-lab.html" class="view-btn">চার্ট খুলুন 🧭</a>
+            </div>
+
+           <div class="visual-card">
+                <div>
+                    <div class="visual-icon">📋</div>
+                    <h3 class="visual-title">গ্রুপ ও পর্যায় বৈশিষ্ট্য বিশ্লেষণ</h3>
+                    <p class="visual-desc">পর্যায় সারণির বিভিন্ন গ্রুপ (ক্ষার ধাতু, হ্যালোজেন ইত্যাদি) এবং পর্যায়ের বিশেষ বৈশিষ্ট্য, রাসায়নিক আচরণ এবং বিবিধ ইনফো ট্র্যাকার ড্যাশবোর্ড।</p>
+                </div>
+                <a href="group_identifier.html" class="view-btn">বৈশিষ্ট্য দেখুন 🔍</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    </script>
+</body>
+</html>

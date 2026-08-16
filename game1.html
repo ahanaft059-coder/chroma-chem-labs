@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>যোজনী শিকারী - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg: #05070c; 
+            --text: #f1f5f9; 
+            --card: #0f1422; 
+            --accent: #3b82f6; 
+            --accent-glow: rgba(59, 130, 246, 0.3);
+            --danger: #ef4444; 
+            --border: #1e293b;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            transition: 0.3s; 
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Premium Floating Back Button */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-size: 0.95rem; 
+            font-weight: 600;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        .back-btn:hover {
+            background: #334155;
+            color: #f8fafc;
+            transform: translateX(-3px);
+        }
+        
+        /* Premium Center Game Card */
+        .game-card { 
+            max-width: 480px; 
+            width: 100%;
+            margin: 40px auto; 
+            background-color: var(--card); 
+            padding: 35px 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--border); 
+            text-align: center; 
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            background: linear-gradient(to right, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .game-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin: 0 0 25px 0;
+        }
+        
+        /* Premium Stats Display */
+        .stats { 
+            font-size: 1.05rem; 
+            font-weight: 600; 
+            margin-bottom: 25px; 
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.03);
+            color: #cbd5e1;
+        }
+        .high-score-badge {
+            color: #f59e0b;
+        }
+        
+        /* Neon Glowing Element Box */
+        .element-box { 
+            font-size: 2.5rem; 
+            font-weight: 700;
+            padding: 25px 15px; 
+            background: rgba(59, 130, 246, 0.05); 
+            border-radius: 18px; 
+            color: #60a5fa; 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: inset 0 0 20px var(--accent-glow), 0 10px 20px rgba(0,0,0,0.2);
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+        }
+
+        /* Glassmorphic Options Wrapper */
+        #options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        /* Premium Interactive Buttons */
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 15px; 
+            box-sizing: border-box;
+            font-size: 1.05rem; 
+            font-weight: 600;
+            border-radius: 14px; 
+            border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.02); 
+            color: #cbd5e1; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn:hover { 
+            background: var(--accent); 
+            color: white; 
+            border-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Single Column Layout for Game Over Reload Button */
+        .btn-block {
+            grid-column: span 2;
+        }
+        
+        /* Premium Backdrop Filter Game Over Screen */
+        #gameOverCard { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(8px);
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1000; 
+            transition: 0.3s;
+        }
+        #gameOverContent { 
+            background: #111827; 
+            padding: 40px; 
+            border-radius: 28px; 
+            text-align: center; 
+            max-width: 400px; 
+            width: 85%;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div id="gameContainer" class="game-card">
+    <h1 class="game-title">যোজনী মেলানো চ্যালেঞ্জ 🧪</h1>
+    <p class="game-subtitle">মৌলটির সঠিক যোজনী চিহ্নিত করো!</p>
+    
+    <div class="stats">
+        <div>স্কোর: <span id="score" style="color: #60a5fa;">0</span></div>
+        <div class="high-score-badge">সেরা: <span id="highScore">0</span></div>
+        <div>জীবন: <span id="lives">❤️❤️❤️</span></div>
+    </div>
+    
+    <div class="element-box" id="element">--</div>
+    <div id="options"></div>
+</div>
+
+<div id="gameOverCard">
+    <div id="gameOverContent">
+        <h2 id="endTitle" style="color: var(--danger); font-size: 2rem; margin-top:0;">💥 খেলা শেষ!</h2>
+        <p id="msg" style="font-size: 1.05rem; color: #94a3b8; margin-bottom: 25px;"></p>
+        <div style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">অর্জিত স্কোর</div>
+        <h1 id="finalScore" style="color: #60a5fa; font-size: 3.5rem; margin: 5px 0 30px 0; font-weight: 800;">0</h1>
+        <button onclick="location.reload()" class="btn btn-block" style="background: #1e293b; border-color: #334155;">আবার চেষ্টা করো 🔄</button>
+    </div>
+</div>
+
+<script>
+    // High Score system initialization
+    let highScore = localStorage.getItem('valency_highscore') || 0;
+    document.getElementById('highScore').innerText = highScore;
+
+    let score = 0, lives = 3;
+    const data = [
+        {e: "Cr (ক্রোমিয়াম)", v: 3}, {e: "Li (লিথিয়াম)", v: 1}, {e: "H (হাইড্রোজেন)", v: 1}, {e: "Li (লিথিয়াম)", v: 1}, {e: "Na (সোডিয়াম)", v: 1},
+        {e: "K (পটাশিয়াম)", v: 1}, {e: "Ag (সিলভার)", v: 1}, {e: "Cu (কপার)", v: 1},
+        {e: "Mg (م্যাগনেসিয়াম)", v: 2}, {e: "Ca (ক্যালসিয়াম)", v: 2}, {e: "Zn (জিংক)", v: 2}, {e: "OH (হাইড্রোক্সিল)", v: 1}, {e: "NO3 (নাইট্রেট)", v: 1}, {e: "HCO3 (বাইকার্বনেট)", v: 1},
+        {e: "NH4 (অ্যামোনিয়াম)", v: 1}, {e: "Cl (ক্লোরাইড)", v: 1}, {e: "Br (ব্রোমাইড)", v: 1},
+        {e: "SO4 (সালফেট)", v: 2}, {e: "CO3 (কার্বনেট)", v: 2}, {e: "S (সালফাইড)", v: 2},
+        {e: "O (অক্সাইড)", v: 2}, {e: "PO4 (ফসফেট)", v: 3}, {e: "N (নাইট্রাইড)", v: 3},
+        {e: "Fe (আয়রন)", v: 2}, {e: "Ba (বেরিয়াম)", v: 2}, {e: "Al (অ্যালুমিনিয়াম)", v: 3},
+        {e: "Fe (ফেরিক)", v: 3}, {e: "N (নাইট্রোজেন)", v: 3}, {e: "P (ফসফরাস)", v: 3}, {e: "H2O (পানি)", v: 2}, {e: "HCl (হাইড্রোক্লোরিক অ্যাসিড)", v: 1},
+        {e: "CO2 (কার্বন ডাই অক্সাইড)", v: 4}, {e: "NH3 (অ্যামোনিয়া)", v: 3},
+        {e: "CH4 (মিথেন)", v: 4}, {e: "H2SO4 (সালফিউরিক অ্যাসিড)", v: 2},
+        {e: "NaCl (সোডিয়াম ক্লোরাইড)", v: 1}, {e: "CaO (ক্যালসিয়াম অক্সাইড)", v: 2},
+        {e: "NaOH (সোডিয়াম হাইড্রোক্সাইড)", v: 1}, {e: "CaCO3 (ক্যালসিয়াম কার্বনেট)", v: 2},
+        {e: "MgO (م্যাগনেসিয়াম অক্সাইড)", v: 2}, {e: "Al2O3 (অ্যালুমিনিয়াম অক্সাইড)", v: 3},
+        {e: "SO2 (সালফার ডাই অক্সাইড)", v: 4}, {e: "SO3 (সালফার ট্রাই অক্সাইড)", v: 6},
+        {e: "FeCl2 (ফেরাস ক্লোরাইড)", v: 2}, {e: "FeCl3 (ফেরিক ক্লোরাইড)", v: 3},
+        {e: "CuSO4 (কপার সালফেট)", v: 2}, {e: "MgCl2 (م্যাগনেসিয়াম ক্লোরাইড)", v: 2},
+        {e: "C (কার্বন)", v: 4}, {e: "Pb (লেড)", v: 4}, {e: "S (সালফার)", v: 6},
+        {e: "Cl (ক্লোরিন)", v: 1}, {e: "O (অক্সিজেন)", v: 2},
+        {e: "Co (কোবাল্ট)", v: 2}, {e: "S (সালফার)", v: 2},
+        {e: "He (হিলিয়াম)", v: 0}, {e: "Al (অ্যালুমিনিয়াম)", v: 3},
+        {e: "Na (সোডিয়াম)", v: 1}, {e: "Ca (ক্যালসিয়াম)", v: 2},
+        {e: "N (নাইট্রোজেন)", v: 3}, {e: "O (অক্সিজেন)", v: 2}
+    ];
+
+    function endGame(title, message) {
+        // High score verification and saving
+        if (score > highScore) {
+            localStorage.setItem('valency_highscore', score);
+            title = "🏆 নতুন রেকর্ড!";
+            message = "দুর্দান্ত খেলেছ! তুমি আগের সব রেকর্ড ভেঙে দিয়েছ।";
+        }
+        
+        document.getElementById('endTitle').innerText = title;
+        document.getElementById('msg').innerText = message;
+        document.getElementById('finalScore').innerText = score;
+        document.getElementById('gameOverCard').style.display = 'flex';
+        document.getElementById('gameContainer').style.filter = 'blur(6px)';
+    }
+
+    function play() {
+        let item = data[Math.floor(Math.random() * data.length)];
+        document.getElementById('element').innerText = item.e;
+        let grid = document.getElementById('options');
+        grid.innerHTML = '';
+        [1, 2, 3, 4].forEach(val => {
+            let b = document.createElement('button');
+            b.className = 'btn'; b.innerText = "যোজনী: " + val;
+            b.onclick = () => {
+                if(val === item.v) {
+                    score += 10; document.getElementById('score').innerText = score;
+                    play();
+                } else {
+                    lives--; document.getElementById('lives').innerText = "❤️".repeat(lives);
+                    if(lives === 0) endGame("খেলা শেষ!", score <= 30 ? "আবার চেষ্টা করো, তুমি পারবে! 💪" : "বেশ ভালো খেলেছ!");
+                }
+            };
+            grid.appendChild(b);
+        });
+    }
+    play();
+</script>
+</body>
+</html>

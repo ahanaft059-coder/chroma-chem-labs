@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>সংকেত মেকার প্রো - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg: #000000; 
+            --card: #0b0f17; 
+            --text: #f8fafc; 
+            --accent: #6366f1; /* Premium Neon Indigo Accent */
+            --accent-glow: rgba(99, 102, 241, 0.2);
+            --border: #1e293b;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            padding: 20px; 
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s; 
+        }
+        
+        /* Premium Back Button linked to games.html */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: #f8fafc; 
+            transform: translateX(-3px);
+        }
+        
+        .theme-btn { display: none; }
+        
+        /* Premium Game Card Layout */
+        .game-card { 
+            max-width: 500px; 
+            width: 100%;
+            background: var(--card); 
+            padding: 40px 30px; 
+            border-radius: 24px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
+            text-align: center;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            background: linear-gradient(to right, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Interactive Stats Bar */
+        .stats-bar {
+            display: flex; 
+            justify-content: space-between; 
+            font-weight: 600; 
+            margin: 20px 0;
+            background: rgba(255,255,255,0.02);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.03);
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+        
+        /* Glowing Indigo Formula Box */
+        .formula-display { 
+            background: rgba(99, 102, 241, 0.03); 
+            padding: 25px 15px; 
+            border-radius: 18px; 
+            font-size: 2.2rem; 
+            color: #818cf8; 
+            font-weight: 800; 
+            margin: 25px 0; 
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            box-shadow: inset 0 0 20px var(--accent-glow), 0 10px 20px rgba(0,0,0,0.3);
+            text-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            word-break: break-word;
+        }
+        
+        .btn-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+        }
+        
+        /* Sleek Option Buttons */
+        .btn { 
+            padding: 16px; 
+            border: 1px solid var(--border); 
+            border-radius: 14px; 
+            background: rgba(255,255,255,0.02); 
+            color: #cbd5e1; 
+            cursor: pointer; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .btn:hover:not(:disabled) { 
+            background: var(--accent); 
+            color: white; 
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35);
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            cursor: default;
+        }
+        
+        /* Centered Overlay Game Over Card */
+        #gameOverCard { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            z-index: 1000; 
+            width: 85%; 
+            max-width: 400px; 
+            background: #0f1422; 
+            padding: 40px; 
+            border-radius: 28px; 
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+        
+        .restart-btn {
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .restart-btn:hover {
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+<a href="games.html" class="back-btn">← ফিরে যান</a>
+
+<div id="gameContainer" class="game-card">
+    <h1 class="game-title">🧩 সংকেত মেকার প্রো</h1>
+    <p style="color: #64748b; font-size: 0.95rem; margin: 0;">আয়নগুলো যুক্ত করে সঠিক রাসায়নিক সংকেতটি চিহ্নিত করো!</p>
+    
+    <div class="stats-bar">
+        <span>স্কোর: <span id="score" style="color: #818cf8;">0</span></span>
+        <span style="color: #f59e0b;">সেরা: <span id="highScore">0</span></span>
+        <span>জীবন: <span id="lives">❤️❤️❤️</span></span>
+    </div>
+    
+    <div class="formula-display">
+        <span id="cation" style="color: #f43f5e;">?</span> + <span id="anion" style="color: #3b82f6;">?</span> = <span id="formula" style="color: #10b981;">?</span>
+    </div>
+    
+    <div id="options" class="btn-grid"></div>
+</div>
+
+<div id="gameOverCard">
+    <h2 id="endTitle" style="font-size: 2rem; margin-top: 0;">💥 গেম ওভার!</h2>
+    <p id="msg" style="font-size: 1.05rem; color: #94a3b8; margin-bottom: 25px;">দারুণ চেষ্টা করেছ!</p>
+    <div style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">অর্জিত স্কোর</div>
+    <h1 id="finalScore" style="color: #818cf8; font-size: 3.5rem; margin: 5px 0 30px 0; font-weight: 800;">0</h1>
+    <button onclick="location.reload()" class="restart-btn">আবার চেষ্টা করুন 🔄</button>
+</div>
+
+<script>
+    // Premium High Score Management
+    let highScore = localStorage.getItem('formula_highscore') || 0;
+    document.getElementById('highScore').innerText = highScore;
+
+    let correctSound = new Audio('correct.mp3');
+    let wrongSound = new Audio('wrong.mp3');
+    let score = 0, lives = 3;
+
+    const data = [
+        { c: "Na+", a: "Cl-", f: "NaCl" }, { c: "H+", a: "OH-", f: "H2O" },
+        { c: "Ca2+", a: "CO3 2-", f: "CaCO3" }, { c: "Na+", a: "OH-", f: "NaOH" },
+        { c: "Mg2+", a: "O2-", f: "MgO" }, { c: "NH4+", a: "Cl-", f: "NH4Cl" },
+        { c: "Al3+", a: "Cl-", f: "AlCl3" }, { c: "Fe3+", a: "Cl-", f: "FeCl3" },
+        { c: "Fe2+", a: "SO4 2-", f: "FeSO4" }, { c: "Cu2+", a: "SO4 2-", f: "CuSO4" },
+        { c: "K+", a: "NO3-", f: "KNO3" }, { c: "Ba2+", a: "Cl-", f: "BaCl2" },
+        { c: "Al3+", a: "OH-", f: "Al(OH)3" }, { c: "Ca2+", a: "OH-", f: "Ca(OH)2" },
+        { c: "Pb2+", a: "NO3-", f: "Pb(NO3)2" }, { c: "Ag+", a: "NO3-", f: "AgNO3" },
+        { c: "Zn2+", a: "SO4 2-", f: "ZnSO4" }, { c: "Na+", a: "CO3 2-", f: "Na2CO3" },
+        { c: "K+", a: "SO4 2-", f: "K2SO4" }, { c: "H+", a: "Cl-", f: "HCl" },
+        { c: "NH4+", a: "NO3-", f: "NH4NO3" }, { c: "Ca2+", a: "Cl-", f: "CaCl2" },
+        { c: "Al3+", a: "SO4 2-", f: "Al2(SO4)3" }, { c: "Fe3+", a: "O2-", f: "Fe2O3" },
+        { c: "Cu2+", a: "O2-", f: "CuO" }, { c: "Mg2+", a: "Cl-", f: "MgCl2" },
+        { c: "Na+", a: "SO4 2-", f: "Na2SO4" }, { c: "K+", a: "OH-", f: "KOH" },
+        { c: "Ba2+", a: "SO4 2-", f: "BaSO4" }, { c: "Zn2+", a: "Cl-", f: "ZnCl2" },
+        { c: "H+", a: "SO4 2-", f: "H2SO4" }, { c: "H+", a: "NO3-", f: "HNO3" },
+        { c: "NH4+", a: "SO4 2-", f: "(NH4)2SO4" }, { c: "Ca2+", a: "NO3-", f: "Ca(NO3)2" },
+        { c: "Mg2+", a: "CO3 2-", f: "MgCO3" }, { c: "Al3+", a: "NO3-", f: "Al(NO3)3" },
+        { c: "Ag+", a: "Cl-", f: "AgCl" }, { c: "Pb2+", a: "Cl-", f: "PbCl2" },
+        { c: "Na+", a: "NO3-", f: "NaNO3" }, { c: "Fe2+", a: "Cl-", f: "FeCl2" },
+        { c: "K+", a: "Cl-", f: "KCl" }, { c: "Ba2+", a: "NO3-", f: "Ba(NO3)2" },
+        { c: "Zn2+", a: "OH-", f: "Zn(OH)2" }, { c: "Mg2+", a: "SO4 2-", f: "MgSO4" },
+        { c: "NH4+", a: "OH-", f: "NH4OH" }, { c: "Fe3+", a: "SO4 2-", f: "Fe2(SO4)3" },
+        { c: "Cu2+", a: "Cl-", f: "CuCl2" }, { c: "Na+", a: "PO4 3-", f: "Na3PO4" },
+        { c: "Ca2+", a: "PO4 3-", f: "Ca3(PO4)2" }, { c: "H+", a: "PO4 3-", f: "H3PO4" },
+        { c: "K+", a: "PO4 3-", f: "K3PO4" }, { c: "Mg2+", a: "NO3-", f: "Mg(NO3)2" },
+        { c: "Fe2+", a: "OH-", f: "Fe(OH)2" }, { c: "Fe3+", a: "OH-", f: "Fe(OH)3" },
+        { c: "Al3+", a: "O2-", f: "Al2O3" }, { c: "Pb2+", a: "SO4 2-", f: "PbSO4" },
+        { c: "Zn2+", a: "CO3 2-", f: "ZnCO3" }, { c: "Ba2+", a: "CO3 2-", f: "BaCO3" },
+        { c: "Cu2+", a: "NO3-", f: "Cu(NO3)2" }, { c: "Na+", a: "HCO3-", f: "NaHCO3" },
+        { c: "K+", a: "HCO3-", f: "KHCO3" }, { c: "Ca2+", a: "HCO3-", f: "Ca(HCO3)2" },
+        { c: "NH4+", a: "PO4 3-", f: "(NH4)3PO4" }, { c: "Mg2+", a: "OH-", f: "Mg(OH)2" },
+        { c: "Ag+", a: "OH-", f: "AgOH" }, { c: "Pb2+", a: "OH-", f: "Pb(OH)2" },
+        { c: "Fe2+", a: "CO3 2-", f: "FeCO3" }, { c: "Cu2+", a: "CO3 2-", f: "CuCO3" },
+        { c: "K+", a: "CO3 2-", f: "K2CO3" }, { c: "Ba2+", a: "OH-", f: "Ba(OH)2" },
+        { c: "Al3+", a: "PO4 3-", f: "AlPO4" }, { c: "Fe3+", a: "PO4 3-", f: "FePO4" },
+        { c: "Zn2+", a: "NO3-", f: "Zn(NO3)2" }, { c: "H+", a: "HCO3-", f: "H2CO3" },
+        { c: "Mg2+", a: "PO4 3-", f: "Mg3(PO4)2" }, { c: "Cu2+", a: "PO4 3-", f: "Cu3(PO4)2" },
+        { c: "Ag+", a: "SO4 2-", f: "Ag2SO4" }, { c: "Pb2+", a: "CO3 2-", f: "PbCO3" },
+        { c: "Na+", a: "S2-", f: "Na2S" }, { c: "K+", a: "S2-", f: "K2S" },
+        { c: "Ca2+", a: "S2-", f: "CaS" }, { c: "Mg2+", a: "S2-", f: "MgS" },
+        { c: "Fe2+", a: "S2-", f: "FeS" }, { c: "Zn2+", a: "S2-", f: "ZnS" },
+        { c: "Al3+", a: "S2-", f: "Al2S3" }, { c: "Cu2+", a: "S2-", f: "CuS" },
+        { c: "Ba2+", a: "S2-", f: "BaS" }, { c: "Pb2+", a: "S2-", f: "PbS" },
+        { c: "Na+", a: "Br-", f: "NaBr" }, { c: "K+", a: "Br-", f: "KBr" },
+        { c: "Ca2+", a: "Br-", f: "CaBr2" }, { c: "Mg2+", a: "Br-", f: "MgBr2" },
+        { c: "Fe3+", a: "Br-", f: "FeBr3" }, { c: "Zn2+", a: "Br-", f: "ZnBr2" },
+        { c: "Al3+", a: "Br-", f: "AlBr3" }, { c: "Cu2+", a: "Br-", f: "CuBr2" },
+        { c: "NH4+", a: "Br-", f: "NH4Br" }, { c: "Ag+", a: "Br-", f: "AgBr" },
+        { c: "NaHSO4", a: "HSO4-", f: "NaHSO4" }, { c: "K+", a: "HSO4-", f: "KHSO4" },
+        { c: "Ca2+", a: "H2PO4-", f: "Ca(H2PO4)2" }, { c: "Mg2+", a: "NH4PO4 2-", f: "MgNH4PO4" },
+        { c: "K+", a: "Al(SO4)2-", f: "KAl(SO4)2" }, { c: "Na+", a: "Al(OH)4-", f: "NaAl(OH)4" },
+        { c: "Cu2+", a: "NH4Cl4-", f: "Cu(NH4)Cl4" }, { c: "Fe2+", a: "K3(CN)6 3-", f: "K3Fe(CN)6" },
+        { c: "Fe2+", a: "K4(CN)6 4-", f: "K4Fe(CN)6" }, { c: "Na+", a: "B4O7 2-", f: "Na2B4O7" },
+        { c: "Ca2+", a: "OCl-", f: "CaOCl2" }, { c: "K+", a: "Cr2O7 2-", f: "K2Cr2O7" },
+        { c: "K+", a: "MnO4-", f: "KMnO4" }
+    ];
+
+    function play() {
+        if(score >= 1000) {
+            if (score > highScore) localStorage.setItem('formula_highscore', score);
+            document.getElementById('endTitle').innerText = "🎉 অভিনন্দন!";
+            document.getElementById('finalScore').innerText = "স্কোর: " + score;
+            document.getElementById('msg').innerText = "তুমি সংকেত মেকিং মাস্টার হয়েছ!";
+            document.getElementById('gameOverCard').style.display = 'block';
+            document.getElementById('gameContainer').style.filter = 'blur(6px)';
+            document.getElementById('gameContainer').style.opacity = '0.3';
+            return;
+        }
+
+        let item = data[Math.floor(Math.random() * data.length)];
+        document.getElementById('cation').innerText = item.c;
+        document.getElementById('anion').innerText = item.a;
+        document.getElementById('formula').innerText = "?";
+        
+        // Dynamically get 3 random wrong formulas from data array
+        let wrongFormulas = data.map(d => d.f).filter(f => f !== item.f);
+        let uniqueWrong = [...new Set(wrongFormulas)];
+        let options = [item.f, ...uniqueWrong.sort(() => Math.random() - 0.5).slice(0, 3)];
+
+        let grid = document.getElementById('options');
+        grid.innerHTML = '';
+        
+        options.sort(() => Math.random() - 0.5).forEach(opt => {
+            let b = document.createElement('button');
+            b.className = 'btn'; b.innerText = opt;
+            b.onclick = () => {
+                document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+                if(opt === item.f) {
+                    correctSound.play().catch(()=>{});
+                    document.getElementById('formula').innerText = opt;
+                    b.style.background = "#22c55e"; b.style.color = "white"; b.style.borderColor = "#22c55e";
+                    score += 10;
+                    document.getElementById('score').innerText = score;
+                    setTimeout(play, 800);
+                } else {
+                    wrongSound.play().catch(()=>{});
+                    b.style.background = "#ef4444"; b.style.color = "white"; b.style.borderColor = "#ef4444";
+                    Array.from(grid.children).forEach(btn => { 
+                        if(btn.innerText === item.f) {
+                            btn.style.background = "#22c55e"; 
+                            btn.style.color = "white";
+                            btn.style.borderColor = "#22c55e";
+                        }
+                    });
+                    lives--;
+                    document.getElementById('lives').innerText = "❤️".repeat(lives);
+                    if(lives === 0) {
+                        if (score > highScore) localStorage.setItem('formula_highscore', score);
+                        document.getElementById('finalScore').innerText = score;
+                        document.getElementById('gameOverCard').style.display = 'block';
+                        document.getElementById('gameContainer').style.filter = 'blur(6px)';
+                        document.getElementById('gameContainer').style.opacity = '0.3';
+                    } else { setTimeout(play, 1200); }
+                }
+            };
+            grid.appendChild(b);
+        });
+    }
+    play();
+</script>
+</body>
+</html>

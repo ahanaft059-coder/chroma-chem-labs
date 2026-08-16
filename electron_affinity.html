@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Electron Affinity Explorer - Premium Edition</title>
+    <style>
+        /* Premium AMOLED Black Theme Config */
+        :root { 
+            --bg-color: #000000; 
+            --card-color: #0b0f17;
+            --text-color: #f8fafc; 
+            --accent-color: #10b981; /* Premium Emerald Green Glow */
+            --border-color: #1e293b;
+        }
+        
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 40px 20px; 
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container { 
+            max-width: 750px; 
+            margin: 80px auto auto auto;
+        }
+
+        /* Premium Back Button linked to properties_page.html */
+        .back-btn { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            background: #1e293b; 
+            color: #94a3b8; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: #f8fafc; 
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: 2.2rem; /* স্পষ্ট বড় শিরোনাম */
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .note { 
+            background: var(--card-color); 
+            border-left: 5px solid var(--accent-color); 
+            padding: 20px; 
+            margin-bottom: 35px; 
+            border-radius: 14px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            color: #e2e8f0; 
+            font-size: 1.1rem; /* বড় ফন্ট */
+            line-height: 1.7;
+            text-align: left;
+        }
+        .note strong {
+            color: var(--accent-color);
+            font-size: 1.15rem;
+        }
+        
+        /* ৮ কলামের পারফেক্ট গ্রিড */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(8, 1fr); 
+            gap: 12px; 
+        }
+        
+        .cell { 
+            aspect-ratio: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 14px; 
+            border: 1px solid var(--border-color); 
+            font-weight: 850; 
+            font-size: 1.5rem; /* মৌলের প্রতীক স্পষ্ট এবং বড় */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        
+        .cell:hover { 
+            transform: scale(1.15); 
+            z-index: 10; 
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.5); 
+        }
+        
+        /* ১ম লাইনে H এবং He এর মাঝের গ্যাপ */
+        .empty-cell {
+            grid-column: span 6;
+        }
+        
+        .val { 
+            font-size: 0.75rem; /* মানের সাইজ বড় করা হয়েছে */
+            font-weight: 700; 
+            margin-top: 6px; 
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="properties_page.html" class="back-btn">← ফিরে যান</a>
+
+<div class="container">
+    <h1>ইলেকট্রন আসক্তি (Electron Affinity Chart)</h1>
+    <div class="note">
+        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে সাধারণত বাম থেকে ডানে গেলে ইলেকট্রন আসক্তি বৃদ্ধি পায়, আর ওপর থেকে নিচে গেলে হ্রাস পায়। (একক: kJ/mol)
+    </div>
+
+    <div class="grid">
+        <!-- ১ম লাইন: H, মাঝের ফাকা গ্যাপ এবং He -->
+        <div class="cell" style="background-color: hsl(150, 70%, 15%); color: #f8fafc; border-color: rgba(16, 185, 129, 0.25);">H<div class="val" style="color: #a7f3d0;">73</div></div>
+        <div class="empty-cell"></div>
+        <div class="cell" style="background-color: hsl(150, 70%, 8%); color: #64748b; border-color: rgba(16, 185, 129, 0.1);">He<div class="val" style="color: #475569;">0</div></div>
+        
+        <!-- পরবর্তী লাইনগুলো: ৩২টি মৌল ৮ কলামে সুন্দর বড় অক্ষরে সাজানো -->
+        <script>
+            const elements = [
+                {s: 'Li', v: 60}, {s: 'Be', v: 0}, {s: 'B', v: 27}, {s: 'C', v: 122}, {s: 'N', v: 0}, {s: 'O', v: 141}, {s: 'F', v: 328}, {s: 'Ne', v: 0},
+                {s: 'Na', v: 53}, {s: 'Mg', v: 0}, {s: 'Al', v: 42}, {s: 'Si', v: 134}, {s: 'P', v: 72}, {s: 'S', v: 200}, {s: 'Cl', v: 349}, {s: 'Ar', v: 0},
+                {s: 'K', v: 48}, {s: 'Ca', v: 2}, {s: 'Ga', v: 29}, {s: 'Ge', v: 119}, {s: 'As', v: 78}, {s: 'Se', v: 195}, {s: 'Br', v: 325}, {s: 'Kr', v: 0},
+                {s: 'Rb', v: 47}, {s: 'Sr', v: 5}, {s: 'In', v: 29}, {s: 'Sn', v: 107}, {s: 'Sb', v: 101}, {s: 'Te', v: 190}, {s: 'I', v: 295}, {s: 'Xe', v: 0}
+            ];
+
+            elements.forEach(e => {
+                // ডার্ক মোডের ইন্টেন্সিটি লজিক (মান ০ হলে একদম ডার্ক/ধূসর, বেশি হলে উজ্জ্বল সবুজ)
+                let lightness;
+                let textColor;
+                let subTextColor;
+
+                if (e.v === 0) {
+                    lightness = 8;
+                    textColor = '#64748b';
+                    subTextColor = '#475569';
+                } else {
+                    lightness = 10 + (e.v / 9); // মান অনুযায়ী মানানসই লাইটনেস
+                    textColor = lightness > 55 ? '#000000' : '#f8fafc';
+                    subTextColor = lightness > 55 ? 'rgba(0,0,0,0.8)' : '#34d399';
+                }
+                
+                document.write(`<div class="cell" style="background-color: hsl(150, 70%, ${lightness}%); color: ${textColor}; border-color: rgba(16, 185, 129, 0.2);">
+                    ${e.s}<div class="val" style="color: ${subTextColor}">${e.v}</div>
+                </div>`);
+            });
+        </script>
+    </div>
+</div>
+</body>
+</html>
