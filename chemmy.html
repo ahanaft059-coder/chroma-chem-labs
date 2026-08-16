@@ -131,17 +131,20 @@
         }
 
         /* Chat Input Area */
-        .chat-input-area {
-            flex-shrink: 0;
-            display: flex;
-            padding: 20px;
+        .chat-input-area-wrapper {
             background: var(--card-bg);
             border-top: 2px solid var(--border-color);
+            padding: 15px 20px;
+        }
+
+        .chat-input-area {
+            display: flex;
             gap: 12px;
+            margin-bottom: 10px;
         }
 
         .chat-input {
-            flex-1;
+            flex: 1;
             background: var(--bg-color);
             border: 1px solid var(--border-color);
             color: var(--text-color);
@@ -166,6 +169,14 @@
             transition: 0.2s;
         }
         .send-btn:hover { opacity: 0.9; }
+
+        /* Energy Bar Footer */
+        .energy-status {
+            text-align: center;
+            font-size: 13px;
+            color: #a855f7;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -187,13 +198,18 @@
         <div class="chat-box">
             <div class="chat-messages" id="chatMessages">
                 <div class="message ai">
-হায়! আমি Chemmy! আমি কেবল তোমার কেমিস্ট্রি ও পড়াশোনা বিষয়ক স্টাডি পার্টনার। সাধারণ আড্ডা বা গল্প এখানে করা যাবে না। বলো, আজ রসায়নের কোন বিষয়টি নিয়ে পড়াশোনা করবে? 🧪✨
+                    হায়! আমি **Chemmy**। আমি কেবল তোমার কেমিস্ট্রি ও পড়াশোনা বিষয়ক স্টাডি পার্টনার। সাধারণ আড্ডা বা গল্প এখানে করা যাবে না। বলো, আজ রসায়নের কোন বিষয়টি নিয়ে পড়াশোনা করবে? 🧪✨
                 </div>
             </div>
 
-            <div class="chat-input-area">
-                <input type="text" id="userInput" class="chat-input" placeholder="এখানে তোমার পড়াশোনা সম্পর্কিত প্রশ্ন লিখো..." onkeypress="handleKeyPress(event)">
-                <button class="send-btn" onclick="sendMessage()">পাঠাও <i class="fas fa-paper-plane"></i></button>
+            <div class="chat-input-area-wrapper">
+                <div class="chat-input-area">
+                    <input type="text" id="userInput" class="chat-input" placeholder="তোমার প্রশ্নটা এখানে লিখো..." onkeypress="handleKeyPress(event)">
+                    <button class="send-btn" onclick="sendMessage()">প্যাচ <i class="fas fa-paper-plane"></i></button>
+                </div>
+                <div class="energy-status">
+                    ⚡ TENERGY 20
+                </div>
             </div>
         </div>
     </div>
@@ -202,12 +218,10 @@
         function getSmartChemmyResponse(query) {
             const q = query.toLowerCase();
 
-            // ১. সাধারণ অভিবাদন বা আড্ডা হ্যান্ডেল করার নিয়ম
             if (q.includes('hi') || q.includes('hello') || q.includes('কেমন আছ') || q.includes('kemon')) {
                 return "হ্যালো! আমি কৌতুক বা সাধারণ আড্ডা দেওয়ার জন্য তৈরি নই। আমি তোমার কেমিস্ট্রি স্টাডি পার্টনার। বলো, রসায়নের কোন টপিক বা বিক্রিয়া নিয়ে আলোচনা করব?";
             }
 
-            // ২. যোজনী বা ভ্যালেন্সি সম্পর্কিত প্রশ্ন
             if (q.includes('jojoni') || q.includes('valency') || q.includes('যোজনী')) {
                 if (q.includes('h') || q.includes('হাইড্রোজেন')) {
                     return "হাইড্রোজেন (H)-এর যোজনী হলো **১**। এর পারমাণবিক সংখ্যা ১ এবং এটি ইলেকট্রন শেয়ার বা ত্যাগ করে নিষ্ক্রিয় গ্যাসের কাঠামো অর্জন করতে চায়।";
@@ -221,32 +235,26 @@
                 return "যোজনী হলো কোনো মৌলের একটি পরমাণু অন্য কোনো মৌলের কতটি পরমাণুর সাথে যুক্ত হতে পারে তার সংখ্যা। তুমি কোন নির্দিষ্ট মৌলের যোজনী জানতে চাও তা আমাকে বলতে পারো!";
             }
 
-            // ৩. পানির সংকেত
             if (q.includes('pani') || q.includes('water') || q.includes('পানি')) {
                 return "পানির রাসায়নিক সংকেত হলো **H₂O**। এর একটি অণুতে দুটি হাইড্রোজেন পরমাণু এবং একটি অক্সিজেন পরমাণু সমযোজী বন্ধনে যুক্ত থাকে।";
             }
 
-            // ৪. এসিড বা ক্ষার সম্পর্কিত
             if (q.includes('acid') || q.includes('এসিড') || q.includes('khar') || q.includes('ক্ষার')) {
                 return "এসিড হলো এমন রাসায়নিক যৌগ যা জলীয় দ্রবণে প্রোটন বা হাইড্রোজেন আয়ন ($H^+$) উৎপন্ন করে এবং নীল লিটমাস পেপারকে লাল করে। অন্যদিকে ক্ষার বা ক্ষারক হলো যা হাইড্রোক্সাইড আয়ন ($OH^-$) উৎপন্ন করে। এসিড-ক্ষার নিয়ে কি কোনো নির্দিষ্ট প্রশ্ন আছে?";
             }
 
-            // ৫. পরমাণু বা ইলেকট্রন বিন্যাস
             if (q.includes('poromanu') || q.includes('atom') || q.includes('electron') || q.includes('ইলেকট্রন')) {
                 return "পরমাণু হলো পদার্থের ক্ষুদ্রতম কণা। এর কেন্দ্র বা নিউক্লিয়াসে প্রোটন ও নিউট্রন থাকে এবং বাইরে কক্ষপথে ইলেকট্রনগুলো ঘুরে বেড়ায়। ইলেকট্রন বিন্যাসের সাধারণ নিয়ম হলো $2n^2$ সূত্র।";
             }
 
-            // ৬. পর্যায় সারণি (Periodic Table) সংক্রান্ত যেকোনো প্রশ্ন
             if (q.includes('porjay') || q.includes('saroni') || q.includes('periodic') || q.includes('পর্যায় সারণি')) {
                 return "পর্যায় সারণি (Periodic Table) হলো মৌলগুলোকে তাদের পারমাণবিক সংখ্যা অনুযায়ী সাজানোর একটি তালিকা। এতে মোট ৭টি পর্যায় এবং ১৮টি গ্রুপ বা কলাম রয়েছে। তুমি কি নির্দিষ্ট কোনো গ্রুপ বা মৌল সম্পর্কে জানতে চাও?";
             }
 
-            // ৭. বিক্রিয়া বা রিয়েকশন সম্পর্কিত অসম্ভব বা কঠিন প্রশ্নগুলোর জন্য স্মার্ট ডাইনামিক উত্তর
-            if (q.includes('reaction') || q.includes('bikriya') || q.includes('বিক్రిয়া') || q.includes('ki hobe')) {
+            if (q.includes('reaction') || q.includes('bikriya') || q.includes('বিক্রিয়া') || q.includes('ki hobe')) {
                 return `রাসায়নিক বিক্রিয়ার ক্ষেত্রে বিক্রিয়কগুলো নিজেদের মধ্যে ইলেকট্রন আদান-প্রদান বা শেয়ারের মাধ্যমে নতুন যৌগ উৎপন্ন করে। "${query}" এই প্রশ্নটির ক্ষেত্রে বিক্রিয়ার শর্ত (যেমন: তাপমাত্রা, চাপ বা প্রভাবক) খুবই গুরুত্বপূর্ণ। তোমার পাঠ্যবইয়ের সংশ্লিষ্ট অধ্যায়ের বিক্রিয়াটি এভাবে বিশ্লেষণ করতে পারো। 🧪`;
             }
 
-            // ৮. অন্য যেকোনো অসম্ভব বা জটিল কেমিস্ট্রি প্রশ্নের বুদ্ধিমান উত্তর (Smart Fallback)
             return `তুমি বেশ একটি জটিল ও চমৎকার প্রশ্ন করেছ! "${query}" বিষয়টি রসায়নের গভীর তত্ত্বের সাথে জড়িত। কেমিস্ট্রির নিয়মানুসারে এটি পরমাণুর গঠন, আণবিক ভর কিংবা রাসায়নিক বন্ধনের আওতাভুক্ত। এই বিষয়টি নিয়ে তোমার বিজ্ঞান শিক্ষক বা পাঠ্যবইয়ের সাহায্য নিতে পার, অথবা আরও সুনির্দিষ্ট করে প্রশ্ন করতে পারো! 🔬✨`;
         }
 
