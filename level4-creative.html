@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>লেভেল ৪: ক্রিয়েটিভ বোর্ড চ্যালেঞ্জ - ChromaChemLabs</title>
+    
+    <style>
+        :root {
+            --bg-color: #030307;
+            --card-bg: rgba(12, 12, 20, 0.8);
+            --accent-purple: #9d4edd;
+            --accent-pink: #ff007f;
+            --accent-cyan: #00f2fe;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: radial-gradient(circle at 50% 0%, #150a28 0%, var(--bg-color) 70%); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 30px 20px; 
+            min-height: 100vh;
+        }
+
+        .container { max-width: 720px; margin: 0 auto; }
+
+        /* টপ ব্যাজ ডিজাইন */
+        .top-badge-wrapper {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(157, 78, 221, 0.12);
+            border: 1px solid rgba(157, 78, 221, 0.5);
+            padding: 8px 22px;
+            border-radius: 50px;
+            color: #e2e8f0;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.25), inset 0 0 10px rgba(157, 78, 221, 0.1);
+            animation: pulseGlow 3s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(157, 78, 221, 0.2); border-color: rgba(157, 78, 221, 0.4); }
+            100% { box-shadow: 0 0 30px rgba(0, 242, 254, 0.4); border-color: rgba(0, 242, 254, 0.7); }
+        }
+
+        /* প্রোগ্রেস বার র‍্যাপার ও লেবেল */
+        .progress-card {
+            background: rgba(10, 10, 16, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 18px 24px;
+            margin-bottom: 35px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .progress-info span:first-child { color: #f1f5f9; letter-spacing: 0.5px; }
+        .progress-info span:last-child { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(0,242,254,0.4); }
+
+        .progress-container { 
+            width: 100%; height: 10px; background: rgba(255,255,255,0.04); 
+            border-radius: 20px; overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        #progressBar { 
+            height: 100%; width: 25%; 
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-cyan)); 
+            background-size: 200% 200%;
+            border-radius: 20px; 
+            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 0 15px var(--accent-purple), 0 0 25px var(--accent-pink);
+            animation: gradientMove 4s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* মেইন হেডার */
+        .exam-header { text-align: center; margin-bottom: 35px; }
+        .exam-header h1 { 
+            font-size: 32px; margin: 0; 
+            background: linear-gradient(135deg, #ffffff 20%, #e2e8f0 50%, #c77dff 80%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 35px rgba(157, 78, 221, 0.35);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .exam-header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; font-weight: 500; }
+
+        /* গ্লাস মর্ফিজম ও প্রিমিয়াম গ্লোয়িং মেইন কার্ড */
+        .exam-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(157, 78, 221, 0.3); 
+            border-radius: 26px; 
+            padding: 40px; 
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(157, 78, 221, 0.12);
+            animation: fadeInCard 0.5s ease;
+        }
+
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card-inner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 18px;
+            margin-bottom: 25px;
+        }
+        .card-inner-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #f8fafc;
+            text-shadow: 0 0 15px rgba(199, 125, 255, 0.4);
+        }
+        .q-count-badge {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(0,242,254,0.15);
+        }
+
+        .question-box { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .question-box:last-of-type { border-bottom: none; margin-bottom: 10px; }
+        .question-box p { font-size: 15px; line-height: 1.6; color: #f1f5f9; font-weight: 500; margin-bottom: 14px; }
+        
+        .board-tag {
+            display: inline-block; 
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.25), rgba(0, 242, 254, 0.2)); 
+            color: #d8b4fe;
+            font-size: 11px; padding: 4px 12px; border-radius: 8px; margin-bottom: 10px; font-weight: 600;
+            border: 1px solid rgba(157, 78, 221, 0.4);
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.2);
+        }
+
+        /* অপশন লেবেল উইথ স্মুথ গ্লো হোভার */
+        .option-label { 
+            display: block; 
+            background: rgba(18, 18, 30, 0.7); 
+            margin: 10px 0; 
+            padding: 14px 18px; 
+            border-radius: 14px; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            font-size: 14px; 
+            color: #e2e8f0;
+        }
+        .option-label:hover { 
+            border-color: var(--accent-cyan); 
+            background: rgba(0, 242, 254, 0.06); 
+            box-shadow: 0 0 18px rgba(0, 242, 254, 0.25);
+            transform: translateX(5px);
+        }
+        .option-label input { accent-color: var(--accent-purple); margin-right: 10px; transform: scale(1.2); }
+
+        /* প্রিমিয়াম গ্রেডিয়েন্ট বাটন */
+        .action-btn { 
+            width: 100%; 
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white; border: none; padding: 18px; border-radius: 16px; font-weight: bold; cursor: pointer; 
+            margin-top: 25px; box-shadow: 0 10px 25px rgba(157, 78, 221, 0.45), 0 0 15px rgba(255, 0, 127, 0.25); 
+            transition: all 0.3s ease; font-size: 16px; letter-spacing: 0.5px;
+        }
+        .action-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 15px 35px rgba(157, 78, 221, 0.65), 0 0 25px rgba(0, 242, 254, 0.45);
+            opacity: 0.95; 
+        }
+
+        /* নিওন গ্লোয়িং মোডাল পপআপ */
+        .welcome-overlay { 
+            display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; 
+            background: rgba(3, 3, 7, 0.85); 
+            backdrop-filter: blur(12px);
+            justify-content: center; align-items: center; z-index: 999; flex-direction: column;
+        }
+        .welcome-content { 
+            text-align: center; padding: 40px; max-width: 440px; width: 90%; 
+            background: rgba(13, 13, 22, 0.95); 
+            border: 2px solid var(--accent-cyan); 
+            border-radius: 28px; 
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(157, 78, 221, 0.25); 
+            animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .welcome-content h1 { font-size: 36px; color: #fff; margin-top: 0; text-shadow: 0 0 20px var(--accent-cyan); }
+        .welcome-content p { font-size: 16px; color: #cbd5e1; margin: 15px 0 25px 0; line-height: 1.6; white-space: pre-line; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- টপ নিওন ব্যাজ -->
+    <div class="top-badge-wrapper">
+        <div class="level-badge">
+            🔥 লেভেল ৪: ক্রিয়েটিভ বোর্ড চ্যালেঞ্জ
+        </div>
+    </div>
+
+    <!-- প্রোগ্রেস বার কার্ড -->
+    <div class="progress-card">
+        <div class="progress-info">
+            <span id="setTitleText">সেট ১ / ৪</span>
+            <span id="progressText">২৫% সম্পন্ন</span>
+        </div>
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="exam-header">
+        <h1>রসায়ন মাস্টার এক্সরাম (লেভেল ৪)</h1>
+        <p>পাসিং মার্কস: প্রতিটি সেটে অন্তত ২০/২৫ সঠিক উত্তর আবশ্যক</p>
+    </div>
+
+    <!-- ডায়নামিক প্রশ্ন কার্ড -->
+    <div class="exam-card" id="examCard">
+        <!-- জাভাস্ক্রিপ্ট দিয়ে এখানে প্রশ্নগুলো লোড হবে -->
+    </div>
+</div>
+
+<!-- মোডাল পপআপ -->
+<div class="welcome-overlay" id="welcomeModal">
+    <div class="welcome-content">
+        <h1 id="modalTitle">দারুণ! 🎉</h1>
+        <p id="modalText">সেট সফলভাবে সম্পন্ন হয়েছে!</p>
+        <button class="action-btn" id="nextBtn" onclick="nextSet()">পরবর্তী সেটে যান →</button>
+    </div>
+</div>
+
+<script>
+    const setsData = [
+        {
+            setNum: 13,
+            setTitle: "সেট ১৩ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন)",
+            questions: [
+                { board: "ঢাকা বোর্ড - ২০২৩", q: "১. নিচের কোন বিক্রিয়াটিতে প্রভাবক হিসেবে MnO₂ ব্যবহার করা হয়?", options: ["হেবার পদ্ধতিতে অ্যামোনিয়া প্রস্তুত", "পটাশিয়াম ক্লোরেট বিযোজন", "বনস্পতি তেল থেকে বনস্পতি ঘি প্রস্তুত", "সালফার ট্রাইঅক্সাইড উৎপাদন"], correct: 1 },
+                { board: "রাজশাহী বোর্ড - ২০২২", q: "২. গ্যালভানাইজিং প্রক্রিয়ায় লোহার ওপর কোন ধাতুর প্রলেপ দেওয়া হয়?", options: ["কপার (Cu)", "জিঙ্ক (Zn)", "অ্যালুমিনিয়াম (Al)", "টিন (Sn)"], correct: 1 },
+                { board: "কুমিল্লা বোর্ড - ২০২৩", q: "৩. নিচের কোনটির গলনাঙ্ক সবচেয়ে বেশি?", options: ["NaCl", "H₂O", "CO₂", "CH₄"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২২", q: "৪. নিচের কোনটিতে কার্বনের শতকরা হার বেশি?", options: ["পিগ আয়রন", "বির্টুমিনাস", "অ্যানথ্রাসাইট", "পোর্টল্যান্ড সিমেন্ট"], correct: 2 },
+                { board: "সিলেট বোর্ড - ২০২৩", q: "৫. মোম পুড়লে কী ধরনের পরিবর্তন ঘটে?", options: ["শুধু ভৌত পরিবর্তন", "শুধু রাসায়নিক পরিবর্তন", "ভৌত ও রাসায়নিক উভয় পরিবর্তন", "নিউক্লীয় পরিবর্তন"], correct: 2 },
+                { board: "বরিশাল বোর্ড - ২০২৩", q: "৬. নিচের কোন গ্যাসটি বায়ুমণ্ডলে গ্রীনহাউস প্রভাবের জন্য সবচেয়ে বেশি দায়ী?", options: ["N₂", "O₂", "CO₂", "Ar"], correct: 2 },
+                { board: "দিনাজপুর বোর্ড - ২০২২", q: "৭. নিচের কোনটি লবণের জলীয় দ্রবণ?", options: ["খাঁটি পানি", "চিনির জলীয় দ্রবণ", "সাবার পানি", "গ্লুকোজ দ্রবণ"], correct: 2 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২৩", q: "৮. সালফিউরিক এসিডের আণবিক ভর কত?", options: ["৯৮ amu", "৪৮ amu", "৬৪ amu", "৩২ amu"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২১", q: "৯. কোন নিষ্ক্রিয় গ্যাসটি বেলুন ওবায়ুতে ওড়ানোর জন্য হালকা হিসেবে ব্যবহৃত হয়?", options: ["হিলিয়াম", "নিয়ন", "আর্গন", "জেনন"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২১", q: "১০. প্রাকৃতিক গ্যাসের প্রধান উপাদান কোনটি?", options: ["প্রোপেন", "বিউটেন", "মিথেন", "ইথেন"], correct: 2 },
+                { board: "কুমিল্লা বোর্ড - ২০২১", q: "১১. চুনাপাথরের রাসায়নিক সংকেত কোনটি?", options: ["CaCO₃", "CaO", "Ca(OH)₂", "CaCl₂"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২১", q: "১২. নিচের কোনটি ক্ষারকের বৈশিষ্ট্য নয়?", options: ["স্বাদে তিক্ত", "লাল লিটমাসকে নীল করে", "নীল লিটমাসকে লাল করে", "এসিডের সাথে বিক্রিয়া করে লবণ ও পানি উৎপন্ন করে"], correct: 2 },
+                { board: "সিলেট বোর্ড - ২০২১", q: "১৩. পরমাণুর নিউক্লিয়াসে কোনটি থাকে না?", options: ["প্রোটন", "নিউট্রন", "ইলেকট্রন", "কোনোটিই নয়"], correct: 2 },
+                { board: "বরিশাল বোর্ড - ২০২১", q: "১৪. তুঁতের রাসায়নিক সংকেতে কত অণু কেলাস পানি থাকে?", options: ["২ অণু", "৫ অণু", "১০ অণু", "৭ অণু"], correct: 1 },
+                { board: "দিনাজপুর বোর্ড - ২০২১", q: "১৫. ড্রাই আইস বা শুষ্ক বরফ বলা হয় কাকে?", options: ["কঠিন CO₂", "তরল N₂", "কঠিন H₂O", "তরল NH₃"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২১", q: "১৬. পারমাণবিক সংখ্যা নিচের কোনটির সমান?", options: ["নিউট্রন সংখ্যা", "প্রোটন সংখ্যা", "ভর সংখ্যা", "নিউক্লিয়ন সংখ্যা"], correct: 1 },
+                { board: "ঢাকা বোর্ড - ২০২০", q: "১৭. নিচের কোন ধাতুটির উপর বায়ুর প্রভাবে মরিচা ধরে?", options: ["কপার", "লোহা", "সোনা", "রুপা"], correct: 1 },
+                { board: "রাজশাহী বোর্ড - ২০২০", q: "১৮. নিচের কোনটি এসিড ও ক্ষারক উভয়ের সাথে বিক্রিয়া করে?", options: ["ZnO", "MgO", "Na₂O", "K₂O"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড - ২০২০", q: "১৯. ব্লিচিং পাউডারের সংকেত কোনটি?", options: ["CaOCl₂", "CaCl₂", "Ca(OCl)Cl", "ক ও গ উভয়ই"], correct: 3 },
+                { board: "যশোর বোর্ড - ২০২০", q: "২০. নিচের কোনটিতে সমযোজী বন্ধন বিদ্যমান?", options: ["MgO", "H₂O", "NaCl", "KCl"], correct: 1 },
+                { board: "সিলেট বোর্ড - ২০২০", q: "২১. মোমের প্রধান উপাদান কী?", options: ["হাইড্রোকার্বন", "অ্যালকোহল", "অ্যাসিটিক এসিড", "গ্লুকোজ"], correct: 0 },
+                { board: "বরিশাল বোর্ড - ২০২০", q: "২২. সোডিয়াম কার্বনেটের জলীয় দ্রবণ কেমন প্রকৃতির?", options: ["অম্লীয়", "ক্ষারীয়", "প্রসম", "উভধর্মী"], correct: 1 },
+                { board: "দিনাজপুর বোর্ড - ২০২০", q: "২৩. নিচের কোনটির ব্যাপন হার সবচেয়ে বেশি?", options: ["NH₃", "CH₄", "H₂", "O₂"], correct: 2 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২০", q: "২৪. পটাশিয়াম পারম্যাঙ্গানেটের বর্ণ কীরূপ?", options: ["হলুদ", "গোলাপী/বেগুনি", "সবুজ", "বর্ণহীন"], correct: 1 },
+                { board: "ময়মনসিংহ বোর্ড - ২০২৩", q: "২৫. ফল পাকাতে নিচের কোন গ্যাসটি কৃত্রিমভাবে ব্যবহার করা হয়?", options: ["অ্যাসিটিলিন / ইথিলিন", "মিথেন", "প্রোপেন", "নাইট্রোজেন"], correct: 0 }
+            ]
+        },
+        {
+            setNum: 14,
+            setTitle: "সেট ১৪ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন)",
+            questions: [
+                { board: "যশোর বোর্ড - ২০২৩", q: "১. নিচের কোন যৌগটিতে আয়নিক ও সমযোজী উভয় প্রকার বন্ধন বিদ্যমান?", options: ["NaCl", "NaOH", "H₂O", "CO₂"], correct: 1 },
+                { board: "কুমিল্লা বোর্ড - ২০২২", q: "২. নিচের কোনটির ব্যাপণের হার সবচেয়ে কম?", options: ["H₂", "N₂", "O₂", "CO₂"], correct: 3 },
+                { board: "বরিশাল বোর্ড - ২০২৩", q: "৩. সোডিয়াম পরমাণুর শেষ কক্ষপথের ইলেকট্রন বিন্যাস কোনটি?", options: ["3s¹", "3s²", "3p¹", "2s¹"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড - ২০২২", q: "৪. নিচের কোন আয়নটির আকার সবচেয়ে ছোট?", options: ["Na⁺", "Mg²⁺", "Al³⁺", "F⁻"], correct: 2 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২৩", q: "৫. নিচের কোনটি মৃদু এসিড?", options: ["HCl", "H₂SO₄", "CH₃COOH", "HNO₃"], correct: 2 },
+                { board: "ঢাকা বোর্ড - ২০২৩", q: "৬. নাইট্রোজেনের যোজনী কত হতে পারে?", options: ["১, ৩, ৫", "২, ৪", "৩, ৪", "১, ২"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২৩", q: "৭. গ্লুকোজের আণবিক সংকেত কোনটি?", options: ["C₆H₁₂O₆", "C₁₂H₂₂O₁₁", "CH₃COOH", "C₂H₅OH"], correct: 0 },
+                { board: "সিলেট বোর্ড - ২০২২", q: "৮. সাবান হলো উচ্চতর ফ্যাটি অ্যাসিডের কোন লবণ?", options: ["সোডিয়াম বা পটাশিয়াম", "ক্যালসিয়াম", "ম্যাগনেসিয়াম", "অ্যালুমিনিয়াম"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২২", q: "৯. কপার সালফেটের নীল স্ফটিককে উত্তপ্ত করলে কী উৎপন্ন হয়?", options: ["সাদা anhydrous CuSO₄", "কালো কপার অক্সাইড", "সবুজ পাউডার", "কোনোটিই নয়"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২২", q: "১০. টিনোপাল বা ডিটারজেন্টে প্রধানত কী থাকে?", options: ["সোডিয়াম অ্যালকাইল বেনজিন সালফিনেট", "অ্যাসিটিক এসিড", "সোডিয়াম ক্লোরাইড", "চিনি"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড - ২০২৩", q: "১১. কার্বনের আইসোটোপ C-14 কোন কাজে ব্যবহৃত হয়?", options: ["জীবাশ্মের বয়স নির্ণয়ে", "রোগ নির্ণয়ে", "ক্যান্সার চিকিৎসায়", "বিদ্যুৎ উৎপাদনে"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২২", q: "১২. পানির স্ফুটনাঙ্ক কত?", options: ["০°C", "১০০°C", "৫০°C", "৩৭°C"], correct: 1 },
+                { board: "সিলেট বোর্ড - ২০২৩", q: "১৩. কোন মৌলটি হ্যালোজেন পরিবারের অন্তর্ভুক্ত নয়?", options: ["ফ্লোরিন", "ক্লোরিন", "ব্রমিন", "সালফার"], correct: 3 },
+                { board: "বরিশাল বোর্ড - ২০২২", q: "১৪. ভিনেগার প্রস্তুতিতে কোন ব্যাকটেরিয়া ব্যবহার করা হয়?", options: ["Acetobacter", "Lactobacillus", "Rhizobium", "E. coli"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড - ২০২৩", q: "১৫. নিচের কোনটির ক্ষেত্রে গলনাঙ্ক ও স্ফুটনাঙ্ক সবচেয়ে বেশি?", options: ["সমযোজী যৌগ", "আয়নিক যৌগ", "গ্যাসীয় পদার্থ", "ধাতব তরল"], correct: 1 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২২", q: "১৬. অ্যালুমিনিয়ামের আকরিক কোনটি?", options: ["বক্সাইট", "হেমাটাইট", "গ্যালেনা", "ম্যালাকাইট"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২০", q: "১৭. ক্যালসিয়াম কার্বনেটে ক্যালসিয়ামের শতকরা হার কত?", options: ["৪০%", "১২%", "৪৮%", "২০%"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২০", q: "১৮. নিচের কোনটি তড়িৎ বিশ্লেষ্য পদার্থ নয়?", options: ["চিনি", "লবণের দ্রবণ", "HCl দ্রবণ", "NaOH দ্রবণ"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড - ২০২০", q: "১৯. বালি বা সিলিকন ডাইঅক্সাইডের রাসায়নিক সংকেত কী?", options: ["SiO₂", "SiCl₄", "SiH₄", "Si₂O₃"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২০", q: "২০. সাবান কারখানায় উপজাত হিসেবে কোনটি পাওয়া যায়?", options: ["গ্লিসারিন", "গ্লুকোজ", "ইথানল", "প্রোপেন"], correct: 0 },
+                { board: "সিলেট বোর্ড - ২০২০", q: "২১. হীরা ও গ্রাফাইট পরস্পরের কী?", options: ["আইসোমার", "আইসোটোপ", "অ্যালট্রোপ (অ্যালট্রপ)", "আইসোটোন"], correct: 2 },
+                { board: "বরিশাল বোর্ড - ২০২০", q: "২২. মিথেনের অণুতে জ্যামিতিক আকৃতি কেমন?", options: ["সমতলীয় ত্রিকোণাকার", "চতুস্তলকীয়", "সরলরৈখিক", "পিরামিডীয়"], correct: 1 },
+                { board: "দিনাজপুর বোর্ড - ২০২০", q: "২৩. কোন এসিডটি আমাদের পাকস্থলীতে খাদ্য হজমে সহায়তা করে?", options: ["HCl", "H₂SO₄", "HNO₃", "H₃PO₄"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২০", q: "২৪. নিচের কোনটি সবচেয়ে সক্রিয় ধাতু?", options: ["পটাশিয়াম", "কপার", "সোনা", "লোহা"], correct: 0 },
+                { board: "ময়মনসিংহ বোর্ড - ২০২৩", q: "২৫. এসিড ও ক্ষারকের প্রশমন বিক্রিয়ায় প্রধানত কী উৎপন্ন হয়?", options: ["লবণ ও পানি", "গ্যাস", "অক্সিজেন", "হাইড্রোজেন"], correct: 0 }
+            ]
+        },
+        {
+            setNum: 15,
+            setTitle: "সেট ১৫ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন)",
+            questions: [
+                { board: "সিলেট বোর্ড - ২০২৩", q: "১. এসিড বৃষ্টির জন্য মূলত কোন গ্যাসটি প্রধানত দায়ী?", options: ["SO₂", "CO", "CH₄", "CFC"], correct: 0 },
+                { board: "বরিশাল বোর্ড - ২০২২", q: "২. চুনাপাথরকে উত্তপ্ত করলে কোনটি উৎপন্ন হয়?", options: ["Ca(OH)₂ ও CO₂", "CaO ও CO₂", "CaCl₂ ও H₂O", "CaCO₃ ও H₂"], correct: 1 },
+                { board: "ঢাকা বোর্ড - ২০২২", q: "৩. ফুকুশমা দুর্যোগের সময় পরিবেশের কোন তেজস্ক্রিয় আইসোটোপটি ছড়িয়ে পড়েছিল?", options: ["ইউরেনিয়াম-২৩৫", "আয়োডিন-১৩১", "কোবাল্ট-৬০", "কার্বন-১৪"], correct: 1 },
+                { board: "রাজশাহী বোর্ড - ২০২৩", q: "৪. মানবদেহের রক্তের স্বাভাবিক pH এর মান কত?", options: ["৭.০", "৭.৪", "৬.৫", "৮.২"], correct: 1 },
+                { board: "দিনাজপুর বোর্ড - ২০২৩", q: "৫. পানি গ্যাসে কোন কোন গ্যাসটির মিশ্রণ থাকে?", options: ["CO + H₂", "CO₂ + H₂", "CO + N₂", "CH₄ + CO"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২৩", q: "৬. শুষ্ক বাতাসে অক্সিজেনের শতকরা পরিমাণ কত?", options: ["২১%", "৭৮%", "০.০৩%", "০.৯৩%"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড - ২০২৩", q: "৭. সাবান উৎপাদনের প্রক্রিয়াকে কী বলা হয়?", options: ["স্যাপোনিফিকেশন (সাবানিফিকেশন)", "পলিমারকরণ", "নিষ্কাশন", "গ্যালভানাইজিং"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২৩", q: "৮. অ্যালকিনের সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ", "CₙH₂ₙ₊₂", "CₙH₂ₙ₋₂", "CₙH₂ₙ₊₁"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২১", q: "৯. কপার পাইরাইটসের সংকেত কোনটি?", options: ["CuFeS₂", "Cu₂S", "CuCO₃·Cu(OH)₂", "CuO"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২১", q: "১০. কোন ধাতুর ওপর অ্যানোডাইজিং করা হয়?", options: ["অ্যালুমিনিয়াম", "লোহা", "কপার", "জিঙ্ক"], correct: 0 },
+                { board: "সিলেট বোর্ড - ২০২১", q: "১১. মিথেন গ্যাসে কার্বনের যোজনী কত?", options: ["৪", "২", "৩", "১"], correct: 0 },
+                { board: "বরিশাল বোর্ড - ২০২১", q: "১২. নিচের কোনটি পোলার যৌগ?", options: ["H₂O", "CH₄", "CO₂", "CCl₄"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড - ২০২১", q: "১৩. এসিডের সাথে ধাতুর বিক্রিয়ায় কোন গ্যাস নির্গত হয়?", options: ["H₂", "O₂", "CO₂", "N₂"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২১", q: "১৪. কিসের সাহায্যে দ্রবণের pH নিখুঁতভাবে মাপা যায়?", options: ["pH মিটার / ইন্ডিকেটর", "থার্মোমিটার", "ব্যারোমিটার", "হাইড্রোমিটার"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২০", q: "১৫. অ্যামোনিয়া গ্যাসের শিল্প উৎপাদনে কোন প্রভাবক ব্যবহার করা হয়?", options: ["লোহা চূর্ণ ($Fe$)", "নিকেল", "ম্যাঙ্গানিজ ডাইঅক্সাইড", "প্লাটিনাম"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২০", q: "১৬. সোডিয়াম হাইড্রোক্সাইড কী ধরনের পদার্থ?", options: ["তীব্র ক্ষারক", "মৃদু ক্ষারক", "উভধর্মী অক্সাইড", "তীব্র এসিড"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড - ২০২০", q: "১৭. ফরমালিন কীসের জলীয় দ্রবণ?", options: ["ফরমালডিহাইড বা মিথান্যাল", "ইথানল", "অ্যাসিটিক এসিড", "প্রোপানল"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২০", q: "১৮. নিচের কোনটি খাদ্য সংরক্ষক হিসেবে ব্যবহৃত হয়?", options: ["সোডিয়াম বেনজয়েট", "সোডিয়াম ক্লোরাইড", "গ্লুকোজ", "সাইট্রিক এসিড"], correct: 0 },
+                { board: "সিলেট বোর্ড - ২০২০", q: "১৯. পলিথিন কোন মনোমার থেকে তৈরি হয়?", options: ["ইথিন", "ইথেন", "প্রোপিন", "অ্যাসিটিলিন"], correct: 0 },
+                { board: "বরিশাল বোর্ড - ২০২০", q: "২০. কোনটি রক্তের অম্লত্ব বা ক্ষারত্ব নিয়ন্ত্রণে প্রধান ভূমিকা রাখে?", options: ["বাফার দ্রবণ", "বিশুদ্ধ পানি", "স্যালাইন", "গ্লুকোজ"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড - ২০২০", q: "২১. কোন গ্যাসটি ওজন স্তরের ক্ষয় সাধনে প্রধান ভূমিকা রাখে?", options: ["CFC (ক্লোরোফ্লোরো কার্বন)", "CO₂", "SO₂", "CH₄"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২০", q: "২২. পারমাণবিক চুল্লিতে জ্বালানি হিসেবে কোনটি ব্যবহৃত হয়?", options: ["U-235", "C-14", "Co-60", "I-131"], correct: 0 },
+                { board: "ময়মনসিংহ বোর্ড - ২০২৩", q: "২৩. লেবুর রসে কোন এসিড বিদ্যমান?", options: ["সাইট্রিক এসিড", "ম্যালিক এসিড", "ল্যাকটিক এসিড", "অ্যাসকরবিক এসিড"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০১৯", q: "২৪. নিচের কোনটির গলনাঙ্ক সবচেয়ে কম?", options: ["বরফ", "মোম", "লোহা", "লবণ"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০১৯", q: "২৫. কার্বনের পারমাণবিক সংখ্যা কত?", options: ["৬", "৮", "৭", "১২"], correct: 0 }
+            ]
+        },
+        {
+            setNum: 16,
+            setTitle: "সেট ১৬ (ফাইনাল চ্যালেঞ্জ)",
+            questions: [
+                { board: "দিনাজপুর বোর্ড - ২০২৩", q: "১. অ্যালকেন শ্রেণীর সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ", "CₙH₂ₙ₊₂", "CₙH₂ₙ₋₂", "CₙH₂ₙ₊₁OH"], correct: 1 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২২", q: "২. ভিনেগারে কত পার্সেন্ট ইথানয়িক এসিড থাকে?", options: ["৬-১০%", "১-২%", "৩০-৪০%", "৯০-৯৫%"], correct: 0 },
+                { board: "সিলেট বোর্ড - ২০২৩", q: "৩. নিচের কোনটি প্রোপানইক এসিডের সংকেত?", options: ["CH₃COOH", "C₂H₅COOH", "HCOOH", "C₃H₇COOH"], correct: 1 },
+                { board: "কুমিল্লা বোর্ড - ২০২৩", q: "৪. পলিমারকরণ প্রক্রিয়ায় পলিথিন তৈরিতে মনোমার হিসেবে কী ব্যবহৃত হয়?", options: ["ইথিন (C₂H₄)", "ইথেন (C₂H₆)", "ইথাইন (C₂H₂)", "মিথেন (CH₄)"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২২", q: "৫. সাবান তৈরির উপজাত (By-product) হিসেবে কোনটি পাওয়া যায়?", options: ["গ্লিসারিন", "গ্লুকোজ", "ইথানল", "প্রোপেন"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২৩", q: "৬. গ্যালভানাইজিং প্রক্রিয়ায় লোহার ওপর কোন ধাতুর প্রলেপ দেওয়া হয়?", options: ["জিঙ্ক (Zn)", "কপার (Cu)", "টিন (Sn)", "অ্যালুমিনিয়াম (Al)"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২৩", q: "৭. বায়ুমণ্ডলে নাইট্রোজেনের শতকরা পরিমাণ কত?", options: ["৭৮.০৯%", "২১%", "০.০৩%", "০.৯৩%"], correct: 0 },
+                { board: "বরিশাল বোর্ড - ২০২৩", q: "৮. নিচের কোনটি শক্তিশালী এসিড?", options: ["HCl", "CH₃COOH", "H₂CO₃", "H₃PO₄"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২২", q: "৯. কোন গ্যাসটি পচা ডিমের গন্ধযুক্ত?", options: ["H₂S", "SO₂", "NH₃", "CO₂"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২২", q: "১০. মার্স গ্যাস কাকে বলা হয়?", options: ["মিথেন ($CH_4$)", "ইথেন", "প্রোপেন", "অ্যাসিটিলিন"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড - ২০২২", q: "১১. নিচের কোনটিতে কার্বনের রূপভেদ নয়?", options: ["কয়লা", "হীরা", "গ্রাফাইট", "ফুলরিন"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২১", q: "১২. নিচের কোন আয়নটি অম্লীয় দ্রবণে নীল লিটমাস লাল করে?", options: ["$H^+$", "$OH^-$", "$Na^+$", "$Cl^-$"], correct: 0 },
+                { board: "সিলেট বোর্ড - ২০২১", q: "১৩. এসিড ও ক্ষারকের বিক্রিয়াকে কী বলে?", options: ["প্রশমন বিক্রিয়া", "প্রতিস্থাপন বিক্রিয়া", "বিজারণ বিক্রিয়া", "পলিমারকরণ বিক্রিয়া"], correct: 0 },
+                { board: "বরিশাল বোর্ড - ২০২১", q: "১৪. কপার ধাতুর উপর সবুজ রঙের আস্তরণ পড়ার কারণ কী?", options: ["কার্বনেটের সৃষ্টি ($CuCO_3\\cdot Cu(OH)_2$)", "মরিচা পড়া", "জারণ", "বিজারণ"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড - ২০২১", q: "১৫. অ্যালকাইন শ্রেণীর সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ₋₂", "CₙH₂ₙ", "CₙH₂ₙ₊₂", "CₙH₂ₙ₊₁"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২১", q: "১৬. নিচের কোনটি গ্রীনহাউস গ্যাস নয়?", options: ["নাইট্রোজেন ($N_2$)", "কার্বন ডাইঅক্সাইড ($CO_2$)", "মিথেন ($CH_4$)", "জলীয় বাষ্প ($H_2O$)"], correct: 0 },
+                { board: "ঢাকা বোর্ড - ২০২০", q: "১৭. খাবার সোডার রাসায়নিক নাম কী?", options: ["সোডিয়াম বাইকার্বনেট", "সোডিয়াম কার্বনেট", "ক্যালসিয়াম কার্বনেট", "ম্যাগনেসিয়াম কার্বনেট"], correct: 0 },
+                { board: "রাজশাহী বোর্ড - ২০২০", q: "১৮. নিচের কোনটি দিয়ে রান্নাঘরের চর্বিযুক্ত দাগ পরিষ্কার করা যায়?", options: ["সোডিয়াম হাইড্রোক্সাইড দ্রবণ", "লবণ পানি", "বিশুদ্ধ পানি", "ভিনেগার"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড - ২০২০", q: "১৯. পটাশিয়াম ক্লোরেটকে উত্তপ্ত করলে কোন গ্যাস উৎপন্ন হয়?", options: ["অক্সিজেন ($O_2$)", "হাইড্রোজেন ($H_2$)", "নাইট্রোজেন ($N_2$)", "ক্লোরিন ($Cl_2$)"], correct: 0 },
+                { board: "যশোর বোর্ড - ২০২০", q: "২০. নিচের কোন মৌলটির ইলেকট্রন আসক্তি সবচেয়ে বেশি?", options: ["ক্লোরিন ($Cl$)", "ফ্লোরিন ($F$)", "অক্সিজেন ($O$)", "নাইট্রোজেন ($N$)"], correct: 0 },
+                { board: "সিলেট বোর্ড - ২০২০", q: "২১. মোমের দহনে কী উৎপন্ন হয়?", options: ["$CO_2$ ও জলীয় বাষ্প", "শুধু ছাই", "শুধু কার্বন মনোক্সাইড", "হাইড্রোজেন গ্যাস"], correct: 0 },
+                { board: "বরিশাল বোর্ড - ২০২০", q: "২২. চুনাপাথরে ক্যালসিয়ামের যোজনী কত?", options: ["২", "১", "৩", "৪"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড - ২০২০", q: "২৩. নিচের কোনটি জারণ বিক্রিয়া?", options: ["ইলেকট্রন বর্জন", "ইলেকট্রন গ্রহণ", "প্রোটন ত্যাগ", "নিউট্রন বৃদ্ধি"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড - ২০২০", q: "২৪. কোন পদার্থটি তড়িৎ পরিবাহী?", options: ["গ্রাফাইট", "হীরা", "বিশুদ্ধ পানি", "চিনি"], correct: 0 },
+                { board: "ময়মনসিংহ বোর্ড - ২০২৩", q: "২৫. আমাদের দেশে প্রাকৃতিক গ্যাসের মূল উৎস কী?", options: ["গ্যাসক্ষেত্র", "কয়লা খনি", "বায়ুমণ্ডল", "পেট্রোলিয়াম কূপ"], correct: 0 }
+            ]
+        }
+    ];
+
+    let currentSetIndex = 0;
+    let totalScore = 0;
+
+    function renderSet() {
+        let currentSet = setsData[currentSetIndex];
+        
+        // টপ প্রোগ্রেস ও হেডার আপডেট
+        let setNumStr = `সেট ${currentSetIndex + 1} / 4`;
+        let percentStr = `${(currentSetIndex + 1) * 25}% সম্পন্ন`;
+        document.getElementById('setTitleText').innerText = setNumStr;
+        document.getElementById('progressText').innerText = percentStr;
+        
+        let cardHTML = `
+            <div class="card-inner-header">
+                <h2>সেট ${currentSet.setNum}: ${currentSet.setTitle}</h2>
+                <div class="q-count-badge">২৫ টি প্রশ্ন</div>
+            </div>
+        `;
+        
+        currentSet.questions.forEach((qObj, qIndex) => {
+            cardHTML += `
+                <div class="question-box">
+                    <span class="board-tag">${qObj.board}</span>
+                    <p>${qObj.q}</p>
+            `;
+            
+            qObj.options.forEach((optText, optIndex) => {
+                let optLetter = ['ক', 'খ', 'গ', 'ঘ'][optIndex];
+                cardHTML += `
+                    <label class="option-label">
+                        <input type="radio" name="q_${qIndex}" value="${optIndex}"> 
+                        ${optLetter}) ${optText}
+                    </label>
+                `;
+            });
+            
+            cardHTML += `</div>`;
+        });
+
+        if (currentSetIndex < setsData.length - 1) {
+            cardHTML += `<button class="action-btn" onclick="evaluateSet()">সেট ${currentSet.setNum} জমা দিন</button>`;
+        } else {
+            cardHTML += `<button class="action-btn" onclick="evaluateSet()">ফাইনাল সেট জমা দিন 🚀</button>`;
+        }
+
+        document.getElementById('examCard').innerHTML = cardHTML;
+        document.getElementById('progressBar').style.width = ((currentSetIndex + 1) * 25) + '%';
+    }
+
+    function evaluateSet() {
+        let currentSet = setsData[currentSetIndex];
+        let correctCount = 0;
+
+        currentSet.questions.forEach((qObj, qIndex) => {
+            let selectedOpt = document.querySelector(`input[name="q_${qIndex}"]:checked`);
+            if (selectedOpt && parseInt(selectedOpt.value) === qObj.correct) {
+                correctCount++;
+            }
+        });
+
+        totalScore += correctCount;
+
+        if (currentSetIndex < setsData.length - 1) {
+            document.getElementById('modalTitle').innerText = "দারুণ! 🎉";
+            document.getElementById('modalText').innerText = `সেট ${currentSet.setNum} সফলভাবে সম্পন্ন হয়েছে!\nআপনার সঠিক উত্তর: ${correctCount}/২৫\nপাসিং মার্কস অর্জন সফল!`;
+            document.getElementById('nextBtn').innerText = "পরবর্তী সেটে যান →";
+            document.getElementById('nextBtn').setAttribute('onclick', "nextSet()");
+        } else {
+            localStorage.setItem('chroma_unlocked_level', 5);
+            
+            document.getElementById('modalTitle').innerText = "🏆 লেভেল ৪ সম্পন্ন!";
+            document.getElementById('modalText').innerText = `অভিনন্দন! আপনি ক্রিয়েটিভ চ্যালেঞ্জ শেষ করেছেন।\nমোট সঠিক উত্তর: ${totalScore}/১০০\nএখন মাস্টার এক্সপার্ট লেভেল আনলক হয়েছে!`;
+            document.getElementById('nextBtn').innerText = "মাস্টার লেভেলে প্রবেশ করুন 🚀";
+            document.getElementById('nextBtn').setAttribute('onclick', "goToMasterLevel()");
+        }
+
+        document.getElementById('welcomeModal').style.display = 'flex';
+    }
+
+    function nextSet() {
+        document.getElementById('welcomeModal').style.display = 'none';
+        currentSetIndex++;
+        renderSet();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goToMasterLevel() {
+        window.location.href = "level5-expert.html";
+    }
+
+    window.onload = function() {
+        renderSet();
+    };
+</script>
+</body>
+</html>
