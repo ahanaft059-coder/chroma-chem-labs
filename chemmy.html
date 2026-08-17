@@ -188,7 +188,7 @@
                 <div style="font-size: 32px;">🧪</div>
                 <div>
                     <h2 style="margin: 0; font-size: 20px;">Chemmy AI Assistant</h2>
-                    <span style="font-size: 13px; color: #a855f7; font-weight: 600;">তোমার পার্সোনাল কেমিস্ট্রি স্টাডি পার্টনার</span>
+                    <span style="font-size: 13px; color: #a855f7; font-weight: 600;">তোমার  পার্সোনাল কেমিস্ট্রি স্টাডি পার্টনার</span>
                 </div>
             </div>
             <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> ড্যাশবোর্ডে ফিরুন</a>
@@ -198,7 +198,7 @@
         <div class="chat-box">
             <div class="chat-messages" id="chatMessages">
                 <div class="message ai">
-          হায়! আমি Chemmy! আমি কেবল তোমার কেমিস্ট্রি ও পড়াশোনা বিষয়ক স্টাডি পার্টনার। সাধারণ আড্ডা বা গল্প এখানে করা যাবে না। বলো, আজ রসায়নের কোন বিষয়টি নিয়ে পড়াশোনা করবে? 🧪✨
+  হায়! আমি Chemmy। আমি কেবল তোমার কেমিস্ট্রি ও পড়াশোনা বিষয়ক স্টাডি পার্টনার। সাধারণ আড্ডা বা গল্প এখানে করা যাবে না। বলো, আজ রসায়নের কোন বিষয়টি নিয়ে পড়াশোনা করবে? 🧪✨
                 </div>
             </div>
 
@@ -208,56 +208,13 @@
                     <button class="send-btn" onclick="sendMessage()">পাঠাও <i class="fas fa-paper-plane"></i></button>
                 </div>
                 <div class="energy-status">
-                    ⚡ TENERGY 20
+                    ⚡ CHENERGY 20
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function getSmartChemmyResponse(query) {
-            const q = query.toLowerCase();
-
-            if (q.includes('hi') || q.includes('hello') || q.includes('কেমন আছ') || q.includes('kemon')) {
-                return "হ্যালো! আমি কৌতুক বা সাধারণ আড্ডা দেওয়ার জন্য তৈরি নই। আমি তোমার কেমিস্ট্রি স্টাডি পার্টনার। বলো, রসায়নের কোন টপিক বা বিক্রিয়া নিয়ে আলোচনা করব?";
-            }
-
-            if (q.includes('jojoni') || q.includes('valency') || q.includes('যোজনী')) {
-                if (q.includes('h') || q.includes('হাইড্রোজেন')) {
-                    return "হাইড্রোজেন (H)-এর যোজনী হলো **১**। এর পারমাণবিক সংখ্যা ১ এবং এটি ইলেকট্রন শেয়ার বা ত্যাগ করে নিষ্ক্রিয় গ্যাসের কাঠামো অর্জন করতে চায়।";
-                }
-                if (q.includes('o') || q.includes('অক্সিজেন')) {
-                    return "অক্সিজেন (O)-এর যোজনী হলো **২**। এর পারমাণবিক সংখ্যা ৮।";
-                }
-                if (q.includes('n') || q.includes('নাইট্রোজেন')) {
-                    return "নাইট্রোজেন (N)-এর যোজনী সাধারণত **৩** (তবে এটি ৩ ও ৫ উভয় যোজনীই দেখাতে পারে)।";
-                }
-                return "যোজনী হলো কোনো মৌলের একটি পরমাণু অন্য কোনো মৌলের কতটি পরমাণুর সাথে যুক্ত হতে পারে তার সংখ্যা। তুমি কোন নির্দিষ্ট মৌলের যোজনী জানতে চাও তা আমাকে বলতে পারো!";
-            }
-
-            if (q.includes('pani') || q.includes('water') || q.includes('পানি')) {
-                return "পানির রাসায়নিক সংকেত হলো **H₂O**। এর একটি অণুতে দুটি হাইড্রোজেন পরমাণু এবং একটি অক্সিজেন পরমাণু সমযোজী বন্ধনে যুক্ত থাকে।";
-            }
-
-            if (q.includes('acid') || q.includes('এসিড') || q.includes('khar') || q.includes('ক্ষার')) {
-                return "এসিড হলো এমন রাসায়নিক যৌগ যা জলীয় দ্রবণে প্রোটন বা হাইড্রোজেন আয়ন ($H^+$) উৎপন্ন করে এবং নীল লিটমাস পেপারকে লাল করে। অন্যদিকে ক্ষার বা ক্ষারক হলো যা হাইড্রোক্সাইড আয়ন ($OH^-$) উৎপন্ন করে। এসিড-ক্ষার নিয়ে কি কোনো নির্দিষ্ট প্রশ্ন আছে?";
-            }
-
-            if (q.includes('poromanu') || q.includes('atom') || q.includes('electron') || q.includes('ইলেকট্রন')) {
-                return "পরমাণু হলো পদার্থের ক্ষুদ্রতম কণা। এর কেন্দ্র বা নিউক্লিয়াসে প্রোটন ও নিউট্রন থাকে এবং বাইরে কক্ষপথে ইলেকট্রনগুলো ঘুরে বেড়ায়। ইলেকট্রন বিন্যাসের সাধারণ নিয়ম হলো $2n^2$ সূত্র।";
-            }
-
-            if (q.includes('porjay') || q.includes('saroni') || q.includes('periodic') || q.includes('পর্যায় সারণি')) {
-                return "পর্যায় সারণি (Periodic Table) হলো মৌলগুলোকে তাদের পারমাণবিক সংখ্যা অনুযায়ী সাজানোর একটি তালিকা। এতে মোট ৭টি পর্যায় এবং ১৮টি গ্রুপ বা কলাম রয়েছে। তুমি কি নির্দিষ্ট কোনো গ্রুপ বা মৌল সম্পর্কে জানতে চাও?";
-            }
-
-            if (q.includes('reaction') || q.includes('bikriya') || q.includes('বিক্রিয়া') || q.includes('ki hobe')) {
-                return `রাসায়নিক বিক্রিয়ার ক্ষেত্রে বিক্রিয়কগুলো নিজেদের মধ্যে ইলেকট্রন আদান-প্রদান বা শেয়ারের মাধ্যমে নতুন যৌগ উৎপন্ন করে। "${query}" এই প্রশ্নটির ক্ষেত্রে বিক্রিয়ার শর্ত (যেমন: তাপমাত্রা, চাপ বা প্রভাবক) খুবই গুরুত্বপূর্ণ। তোমার পাঠ্যবইয়ের সংশ্লিষ্ট অধ্যায়ের বিক্রিয়াটি এভাবে বিশ্লেষণ করতে পারো। 🧪`;
-            }
-
-            return `তুমি বেশ একটি জটিল ও চমৎকার প্রশ্ন করেছ! "${query}" বিষয়টি রসায়নের গভীর তত্ত্বের সাথে জড়িত। কেমিস্ট্রির নিয়মানুসারে এটি পরমাণুর গঠন, আণবিক ভর কিংবা রাসায়নিক বন্ধনের আওতাভুক্ত। এই বিষয়টি নিয়ে তোমার বিজ্ঞান শিক্ষক বা পাঠ্যবইয়ের সাহায্য নিতে পার, অথবা আরও সুনির্দিষ্ট করে প্রশ্ন করতে পারো! 🔬✨`;
-        }
-
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const messageText = input.value.trim();
@@ -265,6 +222,7 @@
 
             const chatMessages = document.getElementById('chatMessages');
 
+            // ইউজারের মেসেজ যোগ করা
             const userMsg = document.createElement('div');
             userMsg.className = 'message user';
             userMsg.innerText = messageText;
@@ -273,23 +231,51 @@
             input.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
+            // লোডিং অ্যানিমেশন
             const loadingMsg = document.createElement('div');
             loadingMsg.className = 'message ai loading';
             loadingMsg.innerHTML = 'Chemmy ভাবছে<span>.</span><span>.</span><span>.</span>';
             chatMessages.appendChild(loadingMsg);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            setTimeout(() => {
+            try {
+                // রিয়েল Gemini API কল (আপনার এপিআই কি এখানে বসান)
+                const apiKey = "AQ.Ab8RN6JA_-npgVEDm_aCbleYAEqLdUTSOu7ppFd8L6S5AUXYjw"; 
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: "তুমি একজন কেমিস্ট্রি স্টাডি পার্টনার (Chemmy)। শুধুমাত্র রসায়ন ও বিজ্ঞান পড়াশোনা সংক্রান্ত প্রশ্নের উত্তর দেবে। প্রশ্ন: " + messageText }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
                 chatMessages.removeChild(loadingMsg);
-                
-                const aiReply = getSmartChemmyResponse(messageText);
+
+                let aiReply = "দুঃখিত, এই মুহূর্তে উত্তর দিতে সমস্যা হচ্ছে। আবার চেষ্টা করো!";
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    aiReply = data.candidates[0].content.parts[0].text;
+                }
+
+                // এআই-এর উত্তর চ্যাটবক্সে দেখানো
                 const aiMsg = document.createElement('div');
                 aiMsg.className = 'message ai';
                 aiMsg.innerHTML = aiReply;
                 chatMessages.appendChild(aiMsg);
-                
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 800);
+
+            } catch (error) {
+                chatMessages.removeChild(loadingMsg);
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message ai';
+                errorMsg.innerText = "নেটওয়ার্ক সংযোগে সমস্যা হয়েছে!";
+                chatMessages.appendChild(errorMsg);
+            }
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function handleKeyPress(event) {
