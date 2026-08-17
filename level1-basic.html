@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লেভেল ১: বেসিক ফাউন্ডেশন - ChromaChemLabs</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #0d0e12;
+            --card-border: #1f2430;
+            --accent-cyan: #00e5ff;
+            --accent-green: #00e676;
+            --accent-red: #ff5252;
+            --accent-purple: #7c4dff;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Top Progress Bar */
+        .progress-box {
+            background: #11141c;
+            border: 1px solid var(--card-border);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent-cyan);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background: #1a1f2c;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 25%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        /* Main Header */
+        .exam-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .exam-header h1 {
+            font-size: 26px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .exam-header p {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        /* Question Container */
+        .set-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .set-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .set-title {
+            font-size: 20px;
+            color: var(--accent-cyan);
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent-cyan);
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--accent-cyan);
+        }
+
+        /* Question Item */
+        .question-item {
+            margin-bottom: 22px;
+            background: #12151e;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid #1a1e2b;
+        }
+
+        .question-text {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            background: #181d2a;
+            border: 1px solid #282e3f;
+            padding: 12px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .option-item:hover {
+            border-color: var(--accent-cyan);
+            background: #1e2536;
+        }
+
+        .option-item input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--accent-cyan);
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), #00b4d8);
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 229, 255, 0.5);
+        }
+
+        /* Cheer Up Overlay Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 4, 8, 0.92);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #0f121a;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 24px;
+            padding: 35px 25px;
+            text-align: center;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .modal-title.pass {
+            color: var(--accent-green);
+            text-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+        }
+
+        .modal-title.fail {
+            color: var(--accent-red);
+            text-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
+        }
+
+        .score-box {
+            background: #181c28;
+            border-radius: 14px;
+            padding: 15px;
+            margin: 18px 0;
+            border: 1px solid #262c3e;
+        }
+
+        .score-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .modal-desc {
+            color: var(--text-dim);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.pass-btn {
+            background: linear-gradient(90deg, var(--accent-green), #00c853);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+        }
+
+        .modal-btn.fail-btn {
+            background: linear-gradient(90deg, var(--accent-red), #d50000);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 82, 82, 0.3);
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* Confetti Effect */
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: fall 2s infinite ease-in-out;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .set-card { padding: 18px 14px; }
+            .exam-header h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Progress Bar -->
+    <div class="progress-box">
+        <div class="progress-info">
+            <span id="progressSetText">সেট ১ / ৪</span>
+            <span id="progressPercentText">২৫% সম্পন্ন</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="exam-header">
+        <h1>রসায়ন মাস্টার এক্সাম</h1>
+        <p>পাসিং মার্কস: প্রতিটি সেটে অন্তত ২০/২৫ সঠিক উত্তর আবশ্যক</p>
+    </div>
+
+    <!-- Dynamic Set Container -->
+    <div id="setCardContainer"></div>
+</div>
+
+<!-- Cheer Up / Result Modal -->
+<div class="modal-overlay" id="resultModal">
+    <div class="modal-card">
+        <span class="modal-icon" id="modalIcon">🎉</span>
+        <h2 class="modal-title" id="modalTitle">অসাধারণ পারফরম্যান্স!</h2>
+        
+        <div class="score-box">
+            <div class="score-text" id="scoreText">২০ / ২৫</div>
+        </div>
+        
+        <p class="modal-desc" id="modalDesc">আপনি সফলভাবে এই সেটটি পাস করেছেন!</p>
+        
+        <button class="modal-btn" id="modalActionBtn" onclick="handleModalAction()">পরবর্তী সেটে যান →</button>
+    </div>
+</div>
+
+<script>
+    // 100 Board Standard SSC Chemistry Questions (4 Sets x 25)
+    const examSets = [
+        {
+            setName: "সেট ১: পদার্থের গঠন ও বেসিক ধারণা",
+            questions: [
+                { q: "১. রসায়নের মূল ভিত্তি কোনটি?", options: ["পরীক্ষণ ও পর্যবেক্ষণ", "তত্ত্ব", "গাণিতিক অনুমান", "ধারণা"], correct: 0 },
+                { q: "২. কোনটি রাসায়নিক পরিবর্তন?", options: ["বরফ গলা", "লোহায় মরিচা ধরা", "পানি বাষ্প হওয়া", "মোম গলা"], correct: 1 },
+                { q: "৩. পরমাণুর নিউক্লিয়াসে কোনটি থাকে না?", options: ["প্রোটন", "নিউট্রন", "ইলেকট্রন", "মেসন"], correct: 2 },
+                { q: "৪. সিএনজি (CNG) এর প্রধান উপাদান কোনটি?", options: ["ইথেন", "প্রোপেন", "মিথেন", "বিউটেন"], correct: 2 },
+                { q: "৫. কার্বনের প্রাকৃতিকভাবে প্রাপ্ত আইসোটোপ কয়টি?", options: ["২টি", "৩টি", "৪টি", "৫টি"], correct: 1 },
+                { q: "৬. পদার্থের চতুর্থ অবস্থাকে কী বলা হয়?", options: ["বাষ্প", "প্লাজমা", "তরল", "কঠিন"], correct: 1 },
+                { q: "৭. পিতল কিসের সংকর ধাতু?", options: ["তামা ও দস্তা", "তামা ও টিন", "লোহা ও নিকেল", "সীসা ও টিন"], correct: 0 },
+                { q: "৮. কোনটি ঊর্ধ্বপাতিত পদার্থ নয়?", options: ["কপুর", "নিশাদল", "খাবার লবণ", "নেপথালিন"], correct: 2 },
+                { q: "৯. সোডিয়ামের ল্যাটিন নাম কোনটি?", options: ["Kalium", "Natrium", "Ferrum", "Cuprum"], correct: 1 },
+                { q: "১০. অ্যালুমিনিয়াম আয়নের (Al³⁺) ইলেকট্রন সংখ্যা কত?", options: ["১৩", "১০", "১৪", "১২"], correct: 1 },
+                { q: "১১. নিউট্রন কণিকা আবিষ্কার করেন কে?", options: ["রাদারফোর্ড", "জে জে থমসন", "জেমস চ্যাডউইক", "নীল্‌স বোর"], correct: 2 },
+                { q: "১২. K-শেলে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?", options: ["২টি", "৮টি", "১৮টি", "৩২টি"], correct: 0 },
+                { q: "১৩. ক্যান্সার নিরাময়ে ও চিকিৎসায় কোনটি ব্যবহৃত হয়?", options: ["Co-60", "C-14", "I-131", "Na-24"], correct: 0 },
+                { q: "১৪. পরমাণুর ধনাত্মক আধানযুক্ত কণিকা কোনটি?", options: ["ইলেকট্রন", "প্রোটন", "নিউট্রন", "পজিট্রন"], correct: 1 },
+                { q: "১৫. সবচেয়ে হালকা মৌল কোনটি?", options: ["হিলিয়াম", "হাইড্রোজেন", "লিথিয়াম", "নাইট্রোজেন"], correct: 1 },
+                { q: "১৬. পর্যায় সারণিতে কোনটি ক্ষার ধাতু?", options: ["ক্যালসিয়াম", "ম্যাগনেসিয়াম", "সোডিয়াম", "অ্যালুমিনিয়াম"], correct: 2 },
+                { q: "১৭. সালফারের পারমাণবিক ভর কত?", options: ["১৬", "৩২", "৬৪", "৪০"], correct: 1 },
+                { q: "১৮. শুষ্ক বরফ (Dry Ice) বলা হয় কাকে?", options: ["কঠিন H₂O", "কঠিন CO₂", "কঠিন N₂", "কঠিন NH₃"], correct: 1 },
+                { q: "১৯. বরফ গলনের সুপ্ততাপ কত?", options: ["2260 kJ/kg", "336 kJ/kg", "100 kJ/kg", "4200 J/kg"], correct: 1 },
+                { q: "২০. কক্ষ তাপমাত্রায় তরল ধাতু কোনটি?", options: ["ব্রোমিন", "পারদ", "সোডিয়াম", "পটাশিয়াম"], correct: 1 },
+                { q: "২১. ²³₁₁Na পরমাণুতে নিউট্রন সংখ্যা কতটি?", options: ["১১", "২৩", "১২", "৩৪"], correct: 2 },
+                { q: "২২. ক্লোরিনের আপেক্ষিক পারমাণবিক ভর কত?", options: ["৩৫", "৩৬", "৩৫.৫", "৩৭"], correct: 2 },
+                { q: "২৩. আলফা কণা বিচ্ছুরণ পরীক্ষায় কোনটি ব্যবহৃত হয়েছিল?", options: ["সোনার পাত", "লোহার পাত", "তামার পাত", "রূপার পাত"], correct: 0 },
+                { q: "২৪. প্রত্নতাত্ত্বিক নমুনার বয়স নির্ধারণে ব্যবহৃত হয় কোনটি?", options: ["C-12", "C-14", "Co-60", "P-32"], correct: 1 },
+                { q: "২৫. অধাতু হওয়া সত্ত্বেও কোনটি ঘরের তাপমাত্রায় তরল?", options: ["ক্লোরিন", "আইওডিন", "ব্রোমিন", "ফ্লুরিন"], correct: 2 }
+            ]
+        },
+        {
+            setName: "সেট ২: পর্যায় সারণি ও রাসায়নিক বন্ধন",
+            questions: [
+                { q: "১. পর্যায় সারণির জনক কে?", options: ["ল্যাভয়েসিয়্যে", "ম্যান্ডেলিফ", "মোজলে", "ডাল্টন"], correct: 1 },
+                { q: "২. আধুনিক পর্যায় সারণিতে পর্যায় সংখ্যা কয়টি?", options: ["৭টি", "১৮টি", "৮টি", "১০টি"], correct: 0 },
+                { q: "৩. হ্যালোজেন মৌলগুলো কোন গ্রুপে অবস্থিত?", options: ["গ্রুপ ১", "গ্রুপ ২", "গ্রুপ ১৭", "গ্রুপ ১৮"], correct: 2 },
+                { q: "৪. সবচেয়ে তড়িৎ-ঋণাত্মক মৌল কোনটি?", options: ["ক্লোরিন", "ফ্লুরিন", "অক্সিজেন", "নাইট্রোজেন"], correct: 1 },
+                { q: "৫. নিষ্ক্রিয় গ্যাস নয় কোনটি?", options: ["হিলিয়াম", "আর্গন", "অক্সিজেন", "রেডন"], correct: 2 },
+                { q: "৬. সমযোজী যৌগের সাধারণ বৈশিষ্ট্য কোনটি?", options: ["উচ্চ গলনাঙ্ক", "নিম্ন গলনাঙ্ক", "বিদ্যুৎ পরিবাহী", "পানিতে দ্রবণীয়"], correct: 1 },
+                { q: "৭. আয়নিক যৌগের ক্ষেত্রে কোনটি সত্য?", options: ["গলনাঙ্ক কম", "পানিতে অদ্রবণীয়", "গলিত অবস্থায় বিদ্যুৎ পরিবাহী", "অধাতু-অধাতু বন্ধন"], correct: 2 },
+                { q: "৮. নিষ্ক্রিয় গ্যাসের যোজ্যতা কত?", options: ["১", "২", "৮", "০"], correct: 3 },
+                { q: "৯. বায়ুমণ্ডলে সবচেয়ে বেশি প্রাপ্ত নিষ্ক্রিয় গ্যাস কোনটি?", options: ["হিলিয়াম", "নেয়ন", "আর্গন", "ক্রিপ্টন"], correct: 2 },
+                { q: "১০. পানির (H₂O) অণুতে কোন ধরনের বন্ধন বিদ্যমান?", options: ["আয়নিক", "সমযোজী", "ধাতব", "হাইড্রোজেন বন্ধন ছাড়া অন্য কিছু"], correct: 1 },
+                { q: "১১. কোনটি উপধাতু বা অপধাতু (Metalloid)?", options: ["সোডিয়াম", "সিলিকন", "ক্লোরিন", "সালফার"], correct: 1 },
+                { q: "১২. সর্বোচ্চ আয়নীকরণ শক্তি কোন মৌলটির?", options: ["হিলিয়াম", "ফ্লুরিন", "ফ্রান্সিয়াম", "সেসিয়াম"], correct: 0 },
+                { q: "১৩. ক্যাটায়ন কীভাবে গঠিত হয়?", options: ["ইলেকট্রন গ্রহণ করে", "ইলেকট্রন বর্জন করে", "প্রোটন গ্রহণ করে", "নিউট্রন হারিয়ে"], correct: 1 },
+                { q: "১৪. নিচের কোনটি অ্যানায়ন?", options: ["Na⁺", "Cl⁻", "Mg²⁺", "NH₄⁺"], correct: 1 },
+                { q: "১৫. ধাতব বন্ধন মূলত কাদের মধ্যে ঘটে?", options: ["ধাতু ও অধাতু", "অধাতু ও অধাতু", "ধাতু ও সঞ্চরণশীল ইলেকট্রন", "নিষ্ক্রিয় গ্যাসসমূহ"], correct: 2 },
+                { q: "১৬. NaCl এর স্ফটিক কাঠামো কেমন?", options: ["ঘনকীয়", "পিরামিডীয়", "চতুস্তলকীয়", "রৈখিক"], correct: 0 },
+                { q: "১৭. মিথেন (CH₄) অণুর জ্যামিতিক আকৃতি কেমন?", options: ["রৈখিক", "চতুস্তলকীয়", "ত্রিভুজাকার", "বক্রাকার"], correct: 1 },
+                { q: "১৮. আধুনিক পর্যায় সারণির মূল ভিত্তি কী?", options: ["পারমাণবিক ভর", "পারমাণবিক সংখ্যা", "আপেক্ষিক ভর", "যোজ্যতা"], correct: 1 },
+                { q: "১৯. মৃৎক্ষার ধাতুগুলো পর্যায় সারণির কোন গ্রুপে থাকে?", options: ["গ্রুপ ১", "গ্রুপ ২", "গ্রুপ ৩", "গ্রুপ ১১"], correct: 1 },
+                { q: "২০. কোনটি মুদ্রা ধাতু (Coin Metal)?", options: ["লোহা", "জৈব ধাতু", "কপার (তামা)", "জিংক"], correct: 2 },
+                { q: "২১. পানির অণুতে কয় জোড়া মুক্তজোড় (Lone pair) ইলেকট্রন থাকে?", options: ["১ জোড়া", "২ জোড়া", "৩ জোড়া", "০ জোড়া"], correct: 1 },
+                { q: "২২. অ্যামোনিয়া (NH₃) অণুর আকৃতি কেমন?", options: ["চতুস্তলকীয়", "ত্রিকোণাকার পিরামিডীয়", "রৈখিক", "গোলাকার"], correct: 1 },
+                { q: "২৩. পর্যায় সারণির প্রথম পর্যায়ে কয়টি মৌল বিদ্যমান?", options: ["২টি", "৮টি", "১৮টি", "৩২টি"], correct: 0 },
+                { q: "২৪. সবচেয়ে বেশি ইলেকট্রন আসক্তি (Electron Affinity) কার?", options: ["ফ্লুরিন", "ক্লোরিন", "ব্রোমিন", "আইওডিন"], correct: 1 },
+                { q: "২৫. অধাতু হওয়া সত্ত্বেও কোনটি বিদ্যুৎ পরিবহন করে?", options: ["হীরক", "গ্রাফাইট", "সালফার", "ফসফরাস"], correct: 1 }
+            ]
+        },
+        {
+            setName: "সেট ৩: মোল ও রাসায়নিক গণনা",
+            questions: [
+                { q: "১. ১ মোল সালফিউরিক এসিডের (H₂SO₄) ভর কত গ্রাম?", options: ["৯৮ গ্রাম", "৪৯ গ্রাম", "১০০ গ্রাম", "৩৬.৫ গ্রাম"], correct: 0 },
+                { q: "২. STP-তে ১ মোল যেকোনো গ্যাসের আয়তন কত লিটার?", options: ["২২.৪L", "২৪.৮L", "২০.০L", "২২.০L"], correct: 0 },
+                { q: "৩. অ্যাভোগাড্রোর সংখ্যার সঠিক মান কোনটি?", options: ["6.023 × 10²³", "6.023 × 10²⁴", "1.66 × 10⁻²⁴", "3.00 × 10⁸"], correct: 0 },
+                { q: "৪. মোলারিটি প্রকাশের একক কোনটি?", options: ["mol/L", "g/L", "kg/L", "mol/kg"], correct: 0 },
+                { q: "৫. ১ লিটার দ্রবণে ১ মোল দ্রাব দ্রবীভূত থাকলে তাকে কী বলে?", options: ["ডেসিমোলার", "সেমিমোলার", "মোলার দ্রবণ", "বাইমোলার"], correct: 2 },
+                { q: "৬. জারণ (Oxidation) বিক্রিয়ায় কী ঘটে?", options: ["ইলেকট্রন গ্রহণ", "ইলেকট্রন বর্জন", "প্রোটন বর্জন", "অক্সিজেন অপসারণ"], correct: 1 },
+                { q: "৭. বিজারণ (Reduction) মানে কী?", options: ["ইলেকট্রন গ্রহণ", "ইলেকট্রন বর্জন", "আধান বৃদ্ধি", "হাইড্রোজেন বর্জন"], correct: 0 },
+                { q: "৮. মুক্ত মৌলের জারণ সংখ্যা কত ধরা হয়?", options: ["+১", "-১", "০", "যোজ্যতার সমান"], correct: 2 },
+                { q: "৯. কোনটি রেডক্স (Redox) বিক্রিয়া?", options: ["প্রশমন বিক্রিয়া", "অধঃক্ষেপণ বিক্রিয়া", "সংযোজন বিক্রিয়া", "আদ্রবিশ্লেষণ"], correct: 2 },
+                { q: "১০. মরিচার রাসায়নিক সংকেত কোনটি?", options: ["FeO", "Fe₂O₃·nH₂O", "Fe₃O₄", "Fe(OH)₃"], correct: 1 },
+                { q: "১১. তুঁতের (Blue Vitriol) সংকেতে কত অণু ক্রিস্টাল পানি থাকে?", options: ["২ অণু", "৫ অণু", "৭ অণু", "১০ অণু"], correct: 1 },
+                { q: "১২. প্রাকৃতি গ্যাসের দহন কী ধরনের বিক্রিয়া?", options: ["তাপহারী", "তাপউৎপাদী", "প্রশমন", "সংযোজন"], correct: 1 },
+                { q: "১৩. শুষ্ক কোষে (Dry Cell) অ্যানোড হিসেবে কাজ করে কোনটি?", options: ["কার্বন দণ্ড", "জিংক পাত্র", "MnO₂", "NH₄Cl"], correct: 1 },
+                { q: "১৪. অ্যালুমিনিয়াম নিষ্কাশনের প্রধান আকরিক কোনটি?", options: ["গ্যালেনা", "বক্সাইট", "হেমাটাইট", "ক্যালকোপাইরাইট"], correct: 1 },
+                { q: "১৫. ১ লিটার দ্রবণে ০.৫ মোল দ্রাব থাকলে দ্রবণটির মোলারিটি কত?", options: ["1.0 M", "0.5 M", "0.1 M", "2.0 M"], correct: 1 },
+                { q: "১৬. চুনাপাথরকে (CaCO₃) উত্তপ্ত করলে কোনটি তৈরি হয়?", options: ["CaO ও CO₂", "Ca ও O₂", "Ca(OH)₂", "CaCl₂"], correct: 0 },
+                { q: "১৭. প্রশমন বিক্রিয়া সবসময় কেমন হয়ে থাকে?", options: ["তাপহারী", "তাপউৎপাদী", "উভমুখী", "পরিবর্তনহীন"], correct: 1 },
+                { q: "১৮. তীব্র এসিড ও তীব্র ক্ষারের প্রশমন তাপের মান কত?", options: ["-৫৭.৩৪ kJ", "+৫৭.৩৪ kJ", "-১০০ kJ", "০ kJ"], correct: 0 },
+                { q: "১৯. Na₂CO₃ এর আণবিক ভর কত?", options: ["১০৬", "৮৩", "৪০", "১৪২"], correct: 0 },
+                { q: "২০. মোলার আয়তন পরিমাপের আদর্শ তাপমাত্রা (STP) কত?", options: ["0 °C", "25 °C", "100 °C", "273 °C"], correct: 0 },
+                { q: "২১. অনুঘটক বা ক্যাটালিস্টের মূল কাজ কী?", options: ["বিক্রিয়ার গতি বাড়ান/কমান", "উৎপাদ বৃদ্ধি করা", "তাপমাত্রা কমানো", "বিক্রিয়া বন্ধ করা"], correct: 0 },
+                { q: "২২. কোনটি দুর্বল বা মৃদু এসিড?", options: ["HCl", "H₂SO₄", "HNO₃", "CH₃COOH"], correct: 3 },
+                { q: "২৩. KMnO₄ যৌগে Mn এর জারণ সংখ্যা কত?", options: ["+২", "+৬", "+৭", "+৫"], correct: 2 },
+                { q: "২৪. H₂S এ সালফারের (S) জারণ সংখ্যা কত?", options: ["-২", "+২", "+৬", "০"], correct: 0 },
+                { q: "২৫. কোনটি নন-রেডক্স (Non-Redox) বিক্রিয়া?", options: ["দহন বিক্রিয়া", "প্রশমন বিক্রিয়া", "সংযোজন বিক্রিয়া", "বিয়োজন বিক্রিয়া"], correct: 1 }
+            ]
+        },
+        {
+            setName: "সেট ৪: পরিবেশ, এসিড-ক্ষার ও জীবাশ্ম জ্বালানি",
+            questions: [
+                { q: "১. বিশুদ্ধ পানির pH মান কত?", options: ["০", "৬", "৭", "১৪"], correct: 2 },
+                { q: "২. এসিডিক বা অম্লীয় দ্রবণের pH এর মান কেমন হয়?", options: ["৭ এর সমান", "৭ এর বেশি", "৭ এর কম", "১৪ এর সমান"], correct: 2 },
+                { q: "৩. ক্ষারীয় দ্রবণের pH এর মান কেমন হয়?", options: ["৭ এর নিচে", "৭ এর বেশি", "সবসময় ১৪", "০ থেকে ৫"], correct: 1 },
+                { q: "৪. নীল লিটমাসকে লাল করে কোনটি?", options: ["ক্ষার", "এসিড", "লবণ", "পানি"], correct: 1 },
+                { q: "৫. অ্যালকেনের সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ", "CₙH₂ₙ₊₂", "CₙH₂ₙ₋₂", "CₙH₂ₙ₊₁OH"], correct: 1 },
+                { q: "৬. অ্যালকিনের সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ₊₂", "CₙH₂ₙ", "CₙH₂ₙ₋₂", "CₙH₂ₙ₊₁"], correct: 1 },
+                { q: "৭. অ্যালকাইনের সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ₊₂", "CₙH₂ₙ", "CₙH₂ₙ₋₂", "CₙH₂ₙOH"], correct: 2 },
+                { q: "৮. ভিনেগার বা সিরকায় শতকরা কতভাগ এসিটিক এসিড থাকে?", options: ["২-৫%", "৪-১০%", "১৫-২০%", "৪০%"], correct: 1 },
+                { q: "৯. পেট্রোলিয়ামের আংশিক পাতনে সর্বপ্রথমে কোন অংশটি আলাদা হয়?", options: ["পেট্রোলিয়াম গ্যাস", "পেট্রোল", "কেরোসিন", "ডিজেল"], correct: 0 },
+                { q: "১০. রান্নার কাজে ব্যবহৃত এলপিজি (LPG) এর মূল উপাদান কী?", options: ["মিথেন", "প্রোপেন ও বিউটেন", "ইথেন", "হেক্সেন"], correct: 1 },
+                { q: "১১. সাবান তৈরির মূল প্রক্রিয়াকে কী বলা হয়?", options: ["গ্যালভানাইজিং", "হাইড্রোজেনেশন", "স্যাপোনিফিকেশন", "পলিমারকরণ"], correct: 2 },
+                { q: "১২. গ্লুকোজের সঠিক আণবিক সংকেত কোনটি?", options: ["C₆H₁₂O₆", "C₁₂H₂₂O₁₁", "CH₃COOH", "C₂H₅OH"], correct: 0 },
+                { q: "১৩. এসিড বৃষ্টির জন্য প্রধানত দায়ী গ্যাস কোনটি?", options: ["CO₂", "SO₂", "NH₃", "CFC"], correct: 1 },
+                { q: "১৪. কাকে এসিডের রাজা (King of Acids) বলা হয়?", options: ["HCl", "HNO₃", "H₂SO₄", "CH₃COOH"], correct: 2 },
+                { q: "১৫. বেকিং সোডার সঠিক রাসায়নিক সংকেত কোনটি?", options: ["Na₂CO₃", "NaHCO₃", "NaOH", "CaCl₂"], correct: 1 },
+                { q: "১৬. কাপড় কাচার সোডার সংকেত কোনটি?", options: ["Na₂CO₃·10H₂O", "NaHCO₃", "CaSO₄·2H₂O", "CuSO₄·5H₂O"], correct: 0 },
+                { q: "১৭. ক্ষতিকর মাস্টার্ড গ্যাস তৈরিতে কোনটি ব্যবহৃত হয়?", options: ["ইথিন", "ইথাইন", "মিথেন", "বেনজিন"], correct: 0 },
+                { q: "১৮. ফর্মালিন হলো ফরমালডিহাইডের কত শতাংশ জলীয় দ্রবণ?", options: ["১০%", "২৫%", "৪০%", "১০০%"], correct: 2 },
+                { q: "১৯. পলিথিন কিসের পলিমার যৌগ?", options: ["ইথিন", "প্রোপিন", "স্টাইরিন", "ভাইনাইল ক্লোরাইড"], correct: 0 },
+                { q: "২০. মানবদেহের রক্তের স্বাভাবিক pH কত?", options: ["৬.৫ - ৭.০", "৭.৩৫ - ৭.৪৫", "৮.০ - ৮.৫", "৫.৫ - ৬.০"], correct: 1 },
+                { q: "২১. রেকটিফাইড স্পিরিটে কত শতাংশ ইথানল থাকে?", options: ["৪০%", "৭০%", "৯৫.৬%", "১০০%"], correct: 2 },
+                { q: "২২. ব্রাইন (Brine) কাকে বলে?", options: ["NaCl এর ঘন দ্রবণ", "Sugar এর দ্রবণ", "Pure Water", "HCl এর দ্রবণ"], correct: 0 },
+                { q: "২৩. মেলামাইন বাসনের পলিমার তৈরিতে কোন উপাদান দরকার?", options: ["ইথাইন", "মেলামাইন ও ফরমালডিহাইড", "ইথিলিন গ্লাইকল", "বেনজিন"], correct: 1 },
+                { q: "২৪. দাঁতের এনামেলের প্রধান উপাদান কোনটি?", options: ["ক্যালসিয়াম ফসফেট", "সোডিয়াম ক্লোরাইড", "ক্যালসিয়াম কার্বোনেট", "ফ্লুরিন"], correct: 0 },
+                { q: "২৫. পরিবেশবান্ধব জ্বালানি হিসেবে সিএনজি (CNG) এর চাপ কত রাখা হয়?", options: ["100 bar", "200 bar", "500 bar", "50 bar"], correct: 1 }
+            ]
+        }
+    ];
+
+    let currentSetIndex = 0;
+    const totalSets = examSets.length;
+    const PASS_MARK = 20;
+
+    // Render HTML Sets
+    function initExam() {
+        const container = document.getElementById('setCardContainer');
+        container.innerHTML = '';
+
+        examSets.forEach((set, sIdx) => {
+            const card = document.createElement('div');
+            card.className = `set-card ${sIdx === 0 ? 'active' : ''}`;
+            card.id = `setCard-${sIdx}`;
+
+            let questionsHTML = set.questions.map((q, qIdx) => `
+                <div class="question-item">
+                    <div class="question-text">${q.q}</div>
+                    <div class="options-grid">
+                        ${q.options.map((opt, oIdx) => `
+                            <label class="option-item">
+                                <input type="radio" name="set${sIdx}_q${qIdx}" value="${oIdx}">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="set-title">
+                    <span>${set.setName}</span>
+                    <span class="badge">২৫ টি প্রশ্ন</span>
+                </div>
+                ${questionsHTML}
+                <button class="submit-btn" onclick="submitCurrentSet(${sIdx})">সেট সাবমিট করুন</button>
+            `;
+
+            container.appendChild(card);
+        });
+
+        updateProgressBar();
+    }
+
+    function updateProgressBar() {
+        const progressFill = document.getElementById('progressBar');
+        const setText = document.getElementById('progressSetText');
+        const percentText = document.getElementById('progressPercentText');
+
+        const currentNum = currentSetIndex + 1;
+        const percent = Math.round((currentNum / totalSets) * 100);
+
+        setText.innerText = `সেট ${currentNum} / ${totalSets}`;
+        percentText.innerText = `${percent}% সম্পন্ন`;
+        progressFill.style.width = `${percent}%`;
+    }
+
+    function submitCurrentSet(sIdx) {
+        const setQuestions = examSets[sIdx].questions;
+        let score = 0;
+
+        setQuestions.forEach((q, qIdx) => {
+            const selected = document.querySelector(`input[name="set${sIdx}_q${qIdx}"]:checked`);
+            if (selected && parseInt(selected.value) === q.correct) {
+                score++;
+            }
+        });
+
+        showResultModal(score, setQuestions.length);
+    }
+
+    function showResultModal(score, total) {
+        const modal = document.getElementById('resultModal');
+        const icon = document.getElementById('modalIcon');
+        const title = document.getElementById('modalTitle');
+        const scoreText = document.getElementById('scoreText');
+        const desc = document.getElementById('modalDesc');
+        const actionBtn = document.getElementById('modalActionBtn');
+
+        scoreText.innerText = `${score} / ${total}`;
+
+        if (score >= PASS_MARK) {
+            // PASS
+            icon.innerText = "🎉";
+            title.innerText = "দারুণ! পাস করেছেন!";
+            title.className = "modal-title pass";
+            desc.innerText = `অভিনন্দন! আপনি পাসিং মার্কস (${PASS_MARK}) অতিক্রম করেছেন।`;
+            
+            if (currentSetIndex < totalSets - 1) {
+                actionBtn.innerText = "পরবর্তী সেটে যান →";
+                actionBtn.className = "modal-btn pass-btn";
+                actionBtn.onclick = goToNextSet;
+            } else {
+                actionBtn.innerText = "লেভেল ২ আনলক করুন 🔓";
+                actionBtn.className = "modal-btn pass-btn";
+                actionBtn.onclick = finishLevelOne;
+            }
+        } else {
+            // FAIL
+            icon.innerText = "❌";
+            title.innerText = "আরেকটু চেষ্টা করুন!";
+            title.className = "modal-title fail";
+            desc.innerText = `পরবর্তী সেটে আনলক করতে কমপক্ষে ${PASS_MARK}টি সঠিক উত্তর প্রয়োজন।`;
+            actionBtn.innerText = "আবার চেষ্টা করুন 🔄";
+            actionBtn.className = "modal-btn fail-btn";
+            actionBtn.onclick = retryCurrentSet;
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function goToNextSet() {
+        document.getElementById('resultModal').style.display = 'none';
+        
+        // Hide current
+        document.getElementById(`setCard-${currentSetIndex}`).classList.remove('active');
+        
+        // Increment
+        currentSetIndex++;
+        
+        // Show next
+        document.getElementById(`setCard-${currentSetIndex}`).classList.add('active');
+        
+        updateProgressBar();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function retryCurrentSet() {
+        document.getElementById('resultModal').style.display = 'none';
+        // Reset radio buttons for current set
+        const radios = document.querySelectorAll(`#setCard-${currentSetIndex} input[type="radio"]`);
+        radios.forEach(r => r.checked = false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function finishLevelOne() {
+        // Unlock Level 2 in LocalStorage
+        localStorage.setItem('chroma_unlocked_level', 2);
+        
+        // Redirect to main exam page
+        window.location.href = 'exam.html';
+    }
+
+    // Initialize on load
+    window.onload = initExam;
+</script>
+</body>
+</html>
