@@ -1,98 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>Molarity Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মোলারিটি ও ঘনমাত্রা ক্যালকুলেটর | রসায়ন ল্যাব</title>
     <style>
-        body { 
-            background: radial-gradient(circle at center, #0f172a, #020617); 
-            color: #e6f1ff; font-family: 'Segoe UI', sans-serif; margin: 0; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh;
-        }
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #3b82f6; --success: #10b981; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 40px; margin: 0; display: flex; justify-content: center; }
         
-        .back-btn { 
-            position: absolute; top: 30px; left: 30px; 
-            background: transparent; border: 1px solid #00d4ff; 
-            color: #00d4ff; padding: 10px 20px; font-size: 14px; 
-            cursor: pointer; border-radius: 8px; text-transform: uppercase;
-            font-weight: bold; transition: all 0.3s;
-        }
-        .back-btn:hover { background: #00d4ff; color: #0a192f; box-shadow: 0 0 15px #00d4ff; }
-        
-        .box { 
-            width: 380px; padding: 40px; 
-            background: rgba(17, 34, 64, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 20px; 
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        h3 { margin: 0 0 25px 0; font-size: 26px; color: #00d4ff; letter-spacing: 1px; }
-        
-        input { 
-            width: 100%; padding: 15px; margin-bottom: 20px; 
-            background: rgba(10, 25, 47, 0.5); border: 1px solid #233554; 
-            color: white; border-radius: 10px; box-sizing: border-box; 
-            font-size: 16px; transition: 0.3s;
-        }
-        input:focus { outline: none; border-color: #00d4ff; box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
-        
-        button.calc-btn { 
-            width: 100%; padding: 15px; background: #00d4ff; 
-            border: none; color: #0a192f; font-weight: bold; 
-            border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 16px;
-        }
-        button.calc-btn:hover { background: #0088aa; transform: scale(1.02); }
-        
-        #res { margin-top: 25px; font-size: 20px; font-weight: bold; color: #fff; }
+        .back-btn { position: fixed; top: 20px; left: 20px; background: #334155; color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        .back-btn:hover { background: #475569; }
 
-        /* Manual Calculation Section */
-        .manual-section {
-            margin-top: 40px; color: #a8b2d1; max-width: 400px; 
-            text-align: left; font-size: 14px; line-height: 1.6;
-            padding: 20px; background: rgba(17, 34, 64, 0.4);
-            border-radius: 15px; border: 1px solid #233554;
-        }
+        .card { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 600px; }
+        
+        h2 { text-align: center; color: var(--accent); margin-bottom: 25px; }
+
+        .instruction { background: #1e3a8a; padding: 15px; border-radius: 12px; border-left: 5px solid #3b82f6; color: #dbeafe; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6; }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #94a3b8; font-size: 0.95rem; }
+        
+        select, input { width: 100%; padding: 15px; border: 2px solid #334155; border-radius: 12px; font-size: 1.1rem; background: #0f172a; color: white; box-sizing: border-box; transition: 0.3s; }
+        select:focus, input:focus { outline: none; border-color: var(--accent); }
+
+        button { width: 100%; padding: 16px; background: var(--success); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.2s; margin-top: 10px; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        
+        #result-box { margin-top: 25px; padding: 20px; background: #0f172a; border-radius: 15px; text-align: center; border-left: 5px solid var(--success); display: none; }
+        #result { font-size: 1.3rem; font-weight: bold; color: var(--success); margin: 0; }
+
+        .note { margin-top: 30px; padding: 20px; background: #334155; border-radius: 15px; font-size: 0.95rem; }
+        .formula-box { background: #0f172a; padding: 12px; border-radius: 10px; border-left: 4px solid var(--accent); font-family: monospace; font-size: 0.95rem; margin-bottom: 12px; text-align: center; color: #60a5fa; line-height: 1.5; }
+        
+        ul { padding-left: 20px; margin: 10px 0 0 0; color: #cbd5e1; }
+        li { margin-bottom: 6px; }
     </style>
 </head>
 <body>
 
-<button class="back-btn" onclick="window.location.href='calculators.html'">Back</button>
+<a href="calculators.html" class="back-btn">⬅ ফিরে যান</a>
 
-<div class="box">
-    <h3>Molarity Calculator</h3>
-    <input type="number" id="moles" placeholder="Enter Moles (n)" step="any">
-    <input type="number" id="volume" placeholder="Enter Volume (L)" step="any">
-    <button class="calc-btn" onclick="calc()">Calculate</button>
-    <div id="res">Result will appear here</div>
-</div>
+<div class="card">
+    <h2>🧪 মোলারিটি ও ঘনমাত্রা ক্যালকুলেটর</h2>
+    
+    <div class="instruction">
+        <strong>⚠️ ব্যবহারের নিয়ম:</strong><br>
+        প্রশ্নে মান যেভাবে দেওয়া থাকে (যেমন মোল সংখ্যা বা সরাসরি ভর দিয়ে), সেই অনুযায়ী অপশন সিলেক্ট করে হিসাব করুন।
+    </div>
 
-<div class="manual-section">
-    <h4 style="color: #00d4ff; margin-top: 0;">How to Calculate Manually:</h4>
-    <p>1. <b>Find Moles (n):</b> Mass (g) / Molecular Weight (g/mol)</p>
-    <p>2. <b>Volume (V):</b> Ensure it is in Liters (mL / 1000)</p>
-    <p>3. <b>Molarity (M):</b> M = n / V</p>
+    <div class="input-group">
+        <label>কীভাবে হিসাব করতে চান? (Select Mode):</label>
+        <select id="calcType" onchange="updateForm()">
+            <option value="S_standard">মোলারিটি (S) [ভর (W) ও আণবিক ভর (M) দিয়ে]</option>
+            <option value="S_moles">মোলারিটি (S) [মোল সংখ্যা (n) দিয়ে]</option>
+            <option value="W">দ্রবের ভর (W) নির্ণয়</option>
+            <option value="V">দ্রবণের আয়তন (V) নির্ণয়</option>
+        </select>
+    </div>
+
+    <div id="dynamicInputs"></div>
+
+    <button onclick="calculateData()">হিসাব করুন</button>
+    
+    <div id="result-box">
+        <p style="margin: 0 0 5px 0; color: #94a3b8; font-size: 0.9rem;">ফলাফল:</p>
+        <p id="result">-</p>
+    </div>
+
+    <div class="note">
+        <strong>গুরুত্বপূর্ণ সূত্রাবলী:</strong>
+        <div class="formula-box">
+            1) S = (W × 1000) / (M × V)<br>
+            2) S = (n × 1000) / V [যেহেতু n = W / M]<br>
+            3) W = (S × M × V) / 1000
+        </div>
+        <ul>
+            <li><strong>n:</strong> মোল সংখ্যা (Moles)</li>
+            <li><strong>W:</strong> দ্রবের ভর (গ্রাম)</li>
+            <li><strong>M:</strong> দ্রবের আণবিক ভর</li>
+            <li><strong>V:</strong> দ্রবণের আয়তন (mL)</li>
+        </ul>
+    </div>
 </div>
 
 <script>
-    function calc() {
-        let n = parseFloat(document.getElementById('moles').value);
-        let v = parseFloat(document.getElementById('volume').value);
-        let res = document.getElementById('res');
+    function updateForm() {
+        let type = document.getElementById('calcType').value;
+        let container = document.getElementById('dynamicInputs');
+        let resultBox = document.getElementById('result-box');
+        resultBox.style.display = 'none';
 
-        if (isNaN(n) || isNaN(v)) {
-            res.innerText = "Please enter valid numbers!";
-            res.style.color = "#ff4d4d";
-        } else if (v <= 0) {
-            res.innerText = "Volume must be greater than 0";
-            res.style.color = "#ff4d4d";
-        } else {
-            let molarity = n / v;
-            res.innerText = "Molarity = " + molarity.toFixed(4) + " M";
-            res.style.color = "#00d4ff";
+        if (type === 'S_standard') {
+            container.innerHTML = `
+                <div class="input-group"><label>দ্রবের ভর - W (গ্রাম):</label><input type="number" id="valW" step="any" placeholder="যেমন: 4"></div>
+                <div class="input-group"><label>আণবিক ভর - M (g/mol):</label><input type="number" id="valM" step="any" placeholder="যেমন: 40"></div>
+                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 250"></div>
+            `;
+        } else if (type === 'S_moles') {
+            container.innerHTML = `
+                <div class="input-group"><label>মোল সংখ্যা - n (mol):</label><input type="number" id="valN" step="any" placeholder="যেমন: 0.5"></div>
+                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 500"></div>
+            `;
+        } else if (type === 'W') {
+            container.innerHTML = `
+                <div class="input-group"><label>মোলারিটি - S (M):</label><input type="number" id="valS" step="any" placeholder="যেমন: 0.1"></div>
+                <div class="input-group"><label>আণবিক ভর - M (g/mol):</label><input type="number" id="valM" step="any" placeholder="যেমন: 40"></div>
+                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 500"></div>
+            `;
+        } else if (type === 'V') {
+            container.innerHTML = `
+                <div class="input-group"><label>দ্রবের ভর - W (গ্রাম):</label><input type="number" id="valW" step="any" placeholder="যেমন: 5.85"></div>
+                <div class="input-group"><label>মোলারিটি - S (M):</label><input type="number" id="valS" step="any" placeholder="যেমন: 0.2"></div>
+                <div class="input-group"><label>আণবিক ভর - M (g/mol):</label><input type="number" id="valM" step="any" placeholder="যেমন: 58.5"></div>
+            `;
         }
     }
+
+    window.onload = updateForm;
+
+    function calculateData() {
+        let type = document.getElementById('calcType').value;
+        let resultBox = document.getElementById('result-box');
+        let resultText = document.getElementById('result');
+        let res = 0;
+
+        if (type === 'S_standard') {
+            let W = parseFloat(document.getElementById('valW').value);
+            let M = parseFloat(document.getElementById('valM').value);
+            let V = parseFloat(document.getElementById('valV').value);
+            if (isNaN(W) || isNaN(M) || isNaN(V) || W <= 0 || M <= 0 || V <= 0) {
+                alert("সবগুলো ঘরে সঠিক মান দিন!"); return;
+            }
+            res = (W * 1000) / (M * V);
+            resultText.innerHTML = `মোলারিটি (S) = ${res.toFixed(4)} M`;
+        } 
+        else if (type === 'S_moles') {
+            let n = parseFloat(document.getElementById('valN').value);
+            let V = parseFloat(document.getElementById('valV').value);
+            if (isNaN(n) || isNaN(V) || n <= 0 || V <= 0) {
+                alert("সবগুলো ঘরে সঠিক মান দিন!"); return;
+            }
+            res = (n * 1000) / V;
+            resultText.innerHTML = `মোলারিটি (S) = ${res.toFixed(4)} M`;
+        }
+        else if (type === 'W') {
+            let S = parseFloat(document.getElementById('valS').value);
+            let M = parseFloat(document.getElementById('valM').value);
+            let V = parseFloat(document.getElementById('valV').value);
+            if (isNaN(S) || isNaN(M) || isNaN(V) || S <= 0 || M <= 0 || V <= 0) {
+                alert("সবগুলো ঘরে সঠিক মান দিন!"); return;
+            }
+            res = (S * M * V) / 1000;
+            resultText.innerHTML = `দ্রবের ভর (W) = ${res.toFixed(4)} গ্রাম (g)`;
+        } 
+        else if (type === 'V') {
+            let W = parseFloat(document.getElementById('valW').value);
+            let S = parseFloat(document.getElementById('valS').value);
+            let M = parseFloat(document.getElementById('valM').value);
+            if (isNaN(W) || isNaN(S) || isNaN(M) || W <= 0 || S <= 0 || M <= 0) {
+                alert("সবগুলো ঘরে সঠিক মান দিন!"); return;
+            }
+            res = (W * 1000) / (S * M);
+            resultText.innerHTML = `দ্রবণের আয়তন (V) = ${res.toFixed(2)} mL`;
+        }
+
+        resultBox.style.display = "block";
+    }
 </script>
+
 </body>
 </html>
