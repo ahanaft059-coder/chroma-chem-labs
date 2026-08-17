@@ -1,67 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>Dilution Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লঘু করণ ক্যালকুলেটর (Dilution Calculator) | রসায়ন ল্যাব</title>
     <style>
-        body { background: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #3b82f6; --success: #10b981; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 40px; margin: 0; display: flex; justify-content: center; }
         
-        /* ছোট ব্যাক বাটন - একদম কোণায় */
-        .back-btn { 
-            position: absolute; 
-            top: 10px; 
-            left: 10px; 
-            background: #1e293b; 
-            border: 1px solid #334155; 
-            color: #64748b; 
-            padding: 4px 10px; 
-            font-size: 12px; 
-            cursor: pointer; 
-            border-radius: 4px; 
-            transition: 0.2s;
-        }
-        .back-btn:hover { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .back-btn { position: fixed; top: 20px; left: 20px; background: #334155; color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        .back-btn:hover { background: #475569; }
+
+        .card { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 600px; }
         
-        .box { background: #1e293b; padding: 30px; border-radius: 20px; width: 350px; border: 1px solid #334155; text-align: center; }
-        h3 { margin-bottom: 20px; color: #3b82f6; }
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #3b82f6; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        #res { margin-top: 20px; font-size: 1.2rem; color: #3b82f6; font-weight: bold; }
+        h2 { text-align: center; color: var(--accent); margin-bottom: 25px; }
+
+        /* ব্যবহারের নিয়ম বক্স */
+        .instruction { background: #1e3a8a; padding: 15px; border-radius: 12px; border-left: 5px solid #3b82f6; color: #dbeafe; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6; }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #94a3b8; font-size: 0.9rem; }
+        
+        input { width: 100%; padding: 15px; border: 2px solid #334155; border-radius: 12px; font-size: 1.1rem; background: #0f172a; color: white; box-sizing: border-box; transition: 0.3s; }
+        input:focus { outline: none; border-color: var(--accent); }
+
+        button { width: 100%; padding: 16px; background: var(--success); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.2s; margin-top: 10px; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        
+        #result-box { margin-top: 25px; padding: 20px; background: #0f172a; border-radius: 15px; text-align: center; border-left: 5px solid var(--success); display: none; }
+        #res { font-size: 1.3rem; font-weight: bold; color: var(--success); margin: 0; }
+
+        .note { margin-top: 30px; padding: 20px; background: #334155; border-radius: 15px; font-size: 0.95rem; }
+        .formula-box { background: #0f172a; padding: 12px; border-radius: 10px; border-left: 4px solid var(--accent); font-family: monospace; font-size: 1rem; margin-bottom: 12px; text-align: center; color: #60a5fa; }
+        
+        ul { padding-left: 20px; margin: 10px 0 0 0; color: #cbd5e1; }
+        li { margin-bottom: 6px; }
     </style>
 </head>
 <body>
 
-<button class="back-btn" onclick="window.location.href='calculators.html'">Back</button>
+<a href="calculators.html" class="back-btn">⬅ ফিরে যান</a>
 
-<div class="box">
-    <h3>Dilution Calculator</h3>
-    <input type="number" id="m1" placeholder="M1 (Initial Molarity)">
-    <input type="number" id="v1" placeholder="V1 (Initial Volume)">
-    <input type="number" id="m2" placeholder="M2 (Final Molarity)">
-    <input type="number" id="v2" placeholder="V2 (Final Volume)">
-    <button onclick="calc()">Calculate</button>
-    <div id="res">---</div>
+<div class="card">
+    <h2>🧪 লঘু করণ ক্যালকুলেটর (Dilution Calculator)</h2>
+    
+    <div class="instruction">
+        <strong>⚠️ ব্যবহারের নিয়ম:</strong><br>
+        যেকোনো একটি ঘর খালি রেখে বাকিগুলোর মান দিয়ে হিসাব করুন।
+    </div>
+
+    <div class="input-group">
+        <label>প্রাথমিক মোলারিটি (M1):</label>
+        <input type="number" id="m1" step="any" placeholder="M1 (Initial Molarity)">
+    </div>
+
+    <div class="input-group">
+        <label>প্রাথমিক আয়তন (V1):</label>
+        <input type="number" id="v1" step="any" placeholder="V1 (Initial Volume)">
+    </div>
+
+    <div class="input-group">
+        <label>শেষ মোলারিটি (M2):</label>
+        <input type="number" id="m2" step="any" placeholder="M2 (Final Molarity)">
+    </div>
+
+    <div class="input-group">
+        <label>শেষ আয়তন (V2):</label>
+        <input type="number" id="v2" step="any" placeholder="V2 (Final Volume)">
+    </div>
+
+    <button onclick="calc()">হিসাব করুন (Calculate)</button>
+    
+    <div id="result-box">
+        <p style="margin: 0 0 5px 0; color: #94a3b8; font-size: 0.9rem;">ফলাফল:</p>
+        <p id="res">---</p>
+    </div>
+
+    <div class="note">
+        <strong>গাণিতিক সূত্র:</strong>
+        <div class="formula-box">M₁V₁ = M₂V₂</div>
+        <ul>
+            <li><strong>M₁ / V₁:</strong> প্রাথমিক মোলারিটি ও আয়তন</li>
+            <li><strong>M₂ / V₂:</strong> শেষ মোলারিটি ও আয়তন</li>
+        </ul>
+    </div>
 </div>
 
 <script>
     function calc() {
-        let m1 = parseFloat(document.getElementById('m1').value);
-        let v1 = parseFloat(document.getElementById('v1').value);
-        let m2 = parseFloat(document.getElementById('m2').value);
-        let v2 = parseFloat(document.getElementById('v2').value);
+        let m1Input = document.getElementById('m1').value;
+        let v1Input = document.getElementById('v1').value;
+        let m2Input = document.getElementById('m2').value;
+        let v2Input = document.getElementById('v2').value;
+        
+        let resultBox = document.getElementById('result-box');
         let res = document.getElementById('res');
 
-        if (isNaN(m1)) {
+        let isM1Empty = m1Input.trim() === "";
+        let isV1Empty = v1Input.trim() === "";
+        let isM2Empty = m2Input.trim() === "";
+        let isV2Empty = v2Input.trim() === "";
+
+        let m1 = parseFloat(m1Input);
+        let v1 = parseFloat(v1Input);
+        let m2 = parseFloat(m2Input);
+        let v2 = parseFloat(v2Input);
+
+        resultBox.style.display = "block";
+
+        if (isM1Empty && !isV1Empty && !isM2Empty && !isV2Empty) {
             res.innerText = "M1 = " + ((m2 * v2) / v1).toFixed(4);
-        } else if (isNaN(v1)) {
+        } else if (!isM1Empty && isV1Empty && !isM2Empty && !isV2Empty) {
             res.innerText = "V1 = " + ((m2 * v2) / m1).toFixed(4);
-        } else if (isNaN(m2)) {
+        } else if (!isM1Empty && !isV1Empty && isM2Empty && !isV2Empty) {
             res.innerText = "M2 = " + ((m1 * v1) / v2).toFixed(4);
-        } else if (isNaN(v2)) {
+        } else if (!isM1Empty && !isV1Empty && !isM2Empty && isV2Empty) {
             res.innerText = "V2 = " + ((m1 * v1) / m2).toFixed(4);
         } else {
-            res.innerText = "Leave one field empty!";
+            res.innerText = "⚠️ যেকোনো একটি ঘর খালি রাখুন!";
+            resultBox.style.borderLeftColor = "#ef4444";
+            res.style.color = "#ef4444";
+            return;
         }
+
+        resultBox.style.borderLeftColor = "#10b981";
+        res.style.color = "#10b981";
     }
 </script>
 </body>
