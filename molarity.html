@@ -8,10 +8,10 @@
         :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #3b82f6; --success: #10b981; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 40px; margin: 0; display: flex; justify-content: center; }
         
-        .back-btn { position: fixed; top: 20px; left: 20px; background: #334155; color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+        .back-btn { position: fixed; top: 20px; left: 20px; background: #334155; color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; z-index: 10; }
         .back-btn:hover { background: #475569; }
 
-        .card { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 600px; }
+        .card { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 650px; }
         
         h2 { text-align: center; color: var(--accent); margin-bottom: 25px; }
 
@@ -22,6 +22,8 @@
         
         select, input { width: 100%; padding: 15px; border: 2px solid #334155; border-radius: 12px; font-size: 1.1rem; background: #0f172a; color: white; box-sizing: border-box; transition: 0.3s; }
         select:focus, input:focus { outline: none; border-color: var(--accent); }
+
+        .element-select-box { background: #151c2c; padding: 15px; border-radius: 12px; border: 1px dashed #334155; margin-bottom: 15px; }
 
         button { width: 100%; padding: 16px; background: var(--success); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.2s; margin-top: 10px; }
         button:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -45,16 +47,16 @@
     
     <div class="instruction">
         <strong>⚠️ ব্যবহারের নিয়ম:</strong><br>
-        প্রশ্নে মান যেভাবে দেওয়া থাকে (যেমন মোল সংখ্যা বা সরাসরি ভর দিয়ে), সেই অনুযায়ী অপশন সিলেক্ট করে হিসাব করুন।
+        প্রয়োজনীয় মোড সিলেক্ট করুন এবং আণবিক ভরের ঘরে চাইলে সরাসরি মান লিখতে পারেন অথবা নিচের লিস্ট থেকে মৌল সিলেক্ট করে অটো বসাতে পারেন।
     </div>
 
     <div class="input-group">
         <label>কীভাবে হিসাব করতে চান? (Select Mode):</label>
         <select id="calcType" onchange="updateForm()">
-            <option value="S_standard">মোলারিটি (S) [ভর (W) ও আণবিক ভর (M) দিয়ে]</option>
-            <option value="S_moles">মোলারিটি (S) [মোল সংখ্যা (n) দিয়ে]</option>
-            <option value="W">দ্রবের ভর (W) নির্ণয়</option>
-            <option value="V">দ্রবণের আয়তন (V) নির্ণয়</option>
+            <option value="S_standard">মোলারিটি (S) [ভর (W) ও আণবিক ভর (M) দিয়ে]</option>
+            <option value="S_moles">মোলারিটি (S) [মোল সংখ্যা (n) দিয়ে]</option>
+            <option value="W">দ্রবের ভর (W) নির্ণয়</option>
+            <option value="V">দ্রবণের আয়তন (V) নির্ণয়</option>
         </select>
     </div>
 
@@ -77,13 +79,143 @@
         <ul>
             <li><strong>n:</strong> মোল সংখ্যা (Moles)</li>
             <li><strong>W:</strong> দ্রবের ভর (গ্রাম)</li>
-            <li><strong>M:</strong> দ্রবের আণবিক ভর</li>
-            <li><strong>V:</strong> দ্রবণের আয়তন (mL)</li>
+            <li><strong>M:</strong> দ্রবের আণবিক ভর / পারমাণবিক ভর</li>
+            <li><strong>V:</strong> দ্রবণের আয়তন (mL)</li>
         </ul>
     </div>
 </div>
 
 <script>
+    // ১ থেকে ১১৫৮ টি মৌলের পারমাণবিক ভরের ডেটাবেস
+    const elementsData = [
+        {name: "Hydrogen (হাইড্রোজেন - H)", mass: 1.008},
+        {name: "Helium (হিলিয়াম - He)", mass: 4.0026},
+        {name: "Lithium (লিথিয়াম - Li)", mass: 6.94},
+        {name: "Beryllium (বেরিলিয়াম - Be)", mass: 9.0122},
+        {name: "Boron (বোরন - B)", mass: 10.81},
+        {name: "Carbon (কার্বন - C)", mass: 12.011},
+        {name: "Nitrogen (নাইট্রোজেন - N)", mass: 14.007},
+        {name: "Oxygen (অক্সিজেন - O)", mass: 15.999},
+        {name: "Fluorine (ফ্লোরিন - F)", mass: 18.998},
+        {name: "Neon (নিয়ন - Ne)", mass: 20.180},
+        {name: "Sodium (সোডিয়াম - Na)", mass: 22.990},
+        {name: "Magnesium (ম্যাগনেসিয়াম - Mg)", mass: 24.305},
+        {name: "Aluminium (অ্যালুমিনিয়াম - Al)", mass: 26.982},
+        {name: "Silicon (সিলিকন - Si)", mass: 28.085},
+        {name: "Phosphorus (ফসফরাস - P)", mass: 30.974},
+        {name: "Sulfur (সালফার - S)", mass: 32.06},
+        {name: "Chlorine (ক্লোরিন - Cl)", mass: 35.45},
+        {name: "Argon (আর্গন - Ar)", mass: 39.95},
+        {name: "Potassium (পটাশিয়াম - K)", mass: 39.098},
+        {name: "Calcium (ক্যালসিয়াম - Ca)", mass: 40.078},
+        {name: "Scandium (স্ক্যান্ডিয়াম - Sc)", mass: 44.956},
+        {name: "Titanium (টাইটানিয়াম - Ti)", mass: 47.867},
+        {name: "Vanadium (ভ্যানাডিয়াম - V)", mass: 50.942},
+        {name: "Chromium (ক্রোমিয়াম - Cr)", mass: 51.996},
+        {name: "Manganese (ম্যাঙ্গানিজ - Mn)", mass: 54.938},
+        {name: "Iron (লোহা - Fe)", mass: 55.845},
+        {name: "Cobalt (কোবাল্ট - Co)", mass: 58.933},
+        {name: "Nickel (নিকেল - Ni)", mass: 58.693},
+        {name: "Copper (কপার - Cu)", mass: 63.546},
+        {name: "Zinc (জিংক - Zn)", mass: 65.38},
+        {name: "Gallium (গ্যালিয়াম - Ga)", mass: 69.723},
+        {name: "Germanium (জার্মেনিয়াম - Ge)", mass: 72.630},
+        {name: "Arsenic (আর্সেনিক - As)", mass: 74.922},
+        {name: "Selenium (সেলেনিয়াম - Se)", mass: 78.971},
+        {name: "Bromine (ব্রোমিন - Br)", mass: 79.904},
+        {name: "Krypton (ক্রিপटन - Kr)", mass: 83.798},
+        {name: "Rubidium (রুবিডিয়াম - Rb)", mass: 85.468},
+        {name: "Strontium (স্ট্রনশিয়াম - Sr)", mass: 87.62},
+        {name: "Yttrium (ইট্রিয়াম - Y)", mass: 88.906},
+        {name: "Zirconium (জিরকোনিয়াম - Zr)", mass: 91.224},
+        {name: "Niobium (নিওবিয়াম - Nb)", mass: 92.906},
+        {name: "Molybdenum (মলিবডেনাম - Mo)", mass: 95.95},
+        {name: "Technetium (টেকনেশিয়াম - Tc)", mass: 98},
+        {name: "Ruthenium (রুতেনিয়াম - Ru)", mass: 101.07},
+        {name: "Rhodium (রোডিয়াম - Rh)", mass: 102.91},
+        {name: "Palladium (প্যালেডিয়াম - Pd)", mass: 106.42},
+        {name: "Silver (রুপা - Ag)", mass: 107.87},
+        {name: "Cadmium (ক্যাডমিয়াম - Cd)", mass: 112.41},
+        {name: "Indium (ইন্ডিয়াম - In)", mass: 114.82},
+        {name: "Tin (টিন - Sn)", mass: 118.71},
+        {name: "Antimony (অ্যান্টিমনি - Sb)", mass: 121.76},
+        {name: "Tellurium (টেলুরিয়াম - Te)", mass: 127.60},
+        {name: "Iodine (আয়োডিন - I)", mass: 126.90},
+        {name: "Xenon (জেনন - Xe)", mass: 131.29},
+        {name: "Cesium (সিজিয়াম - Cs)", mass: 132.91},
+        {name: "Barium (বেরিয়াম - Ba)", mass: 137.33},
+        {name: "Lanthanum (ল্যান্থানাম - La)", mass: 138.91},
+        {name: "Cerium (সিরিয়াম - Ce)", mass: 140.12},
+        {name: "Praseodymium (প্রাসিওডিমিয়াম - Pr)", mass: 140.91},
+        {name: "Neodymium (নিওডিমিয়াম - Nd)", mass: 144.24},
+        {name: "Promethium (প্রমিথিয়াম - Pm)", mass: 145},
+        {name: "Samarium (সামারিয়াম - Sm)", mass: 150.36},
+        {name: "Europium (ইউরোপিয়াম - Eu)", mass: 151.96},
+        {name: "Gadolinium (গ্যাডোলিনিয়াম - Gd)", mass: 157.25},
+        {name: "Terbium (টার্বিয়াম - Tb)", mass: 158.93},
+        {name: "Dysprosium (ডিসপ্রোসিয়াম - Dy)", mass: 162.50},
+        {name: "Holmium (হোলমিয়াম - Ho)", mass: 164.93},
+        {name: "Erbium (ইর্বিয়াম - Er)", mass: 167.26},
+        {name: "Thulium (থুলিয়াম - Tm)", mass: 168.93},
+        {name: "Ytterbium (ইটার্বিয়াম - Yb)", mass: 173.05},
+        {name: "Lutetium (লুটেসিয়াম - Lu)", mass: 174.97},
+        {name: "Hafnium (হফনিয়াম - Hf)", mass: 178.49},
+        {name: "Tantalum (ট্যানটালাম - Ta)", mass: 180.95},
+        {name: "Tungsten (টাংস্টেন - W)", mass: 183.84},
+        {name: "Rhenium (রিনিয়াম - Re)", mass: 186.21},
+        {name: "Osmium (অসমিয়াম - Os)", mass: 190.23},
+        {name: "Iridium (ইরিডিয়াম - Ir)", mass: 192.22},
+        {name: "Platinum (প্লাটিনাম - Pt)", mass: 195.08},
+        {name: "Gold (স্বর্ণ - Au)", mass: 196.97},
+        {name: "Mercury (পারদ - Hg)", mass: 200.59},
+        {name: "Thallium (থ্যালিয়াম - Tl)", mass: 204.38},
+        {name: "Lead (সিসা - Pb)", mass: 207.2},
+        {name: "Bismuth (বিস্মাথ - Bi)", mass: 208.98},
+        {name: "Polonium (পোলোনিয়াম - Po)", mass: 209},
+        {name: "Astatine (এস্টাটিন - At)", mass: 210},
+        {name: "Radon (র্যাডন - Rn)", mass: 222},
+        {name: "Francium (ফ্রানশিয়াম - Fr)", mass: 223},
+        {name: "Radium (রেডিয়াম - Ra)", mass: 226},
+        {name: "Actinium (অ্যাক্টিনিয়াম - Ac)", mass: 227},
+        {name: "Thorium (থোরিয়াম - Th)", mass: 232.04},
+        {name: "Protactinium (প্রোট্যাক্টিনিয়াম - Pa)", mass: 231.04},
+        {name: "Uranium (ইউরেনিয়াম - U)", mass: 238.03},
+        {name: "Neptunium (নেপচুনিয়াম - Np)", mass: 237},
+        {name: "Plutonium (প্লুটোনিয়াম - Pu)", mass: 244},
+        {name: "Americium (আমেরিসিয়াম - Am)", mass: 243},
+        {name: "Curium (কুরিয়াম - Cm)", mass: 247},
+        {name: "Berkelium (বার্কেলিয়াম - Bk)", mass: 247},
+        {name: "Californium (ক্যালিফোর্নিয়াম - Cf)", mass: 251},
+        {name: "Einsteinium (আইনস্টাইনিয়াম - Es)", mass: 252},
+        {name: "Fermium (ফার্মিয়াম - Fm)", mass: 257},
+        {name: "Mendelevium (মেন্দেলেভিয়াম - Md)", mass: 258},
+        {name: "Nobelium (নোবেলিয়াম - No)", mass: 259},
+        {name: "Lawrencium (লরেনশিয়াম - Lr)", mass: 266},
+        {name: "Rutherfordium (রাদারফোর্ডিয়াম - Rf)", mass: 267},
+        {name: "Dubnium (ডুবনিয়াম - Db)", mass: 268},
+        {name: "Seaborgium (সিবোর্গিয়াম - Sg)", mass: 269},
+        {name: "Bohrium (বোহরিয়াম - Bh)", mass: 270},
+        {name: "Hassium (হ্যাসিয়াম - Hs)", mass: 277},
+        {name: "Meitnerium (মাইটনেরিয়াম - Mt)", mass: 278},
+        {name: "Darmstadtium (ডার্মস্টাড্টিয়াম - Ds)", mass: 281},
+        {name: "Roentgenium (রন্টজেনিয়াম - Rg)", mass: 282},
+        {name: "Copernicium (কোপার্নিসিয়াম - Cn)", mass: 285},
+        {name: "Nihonium (নিহোনিয়াম - Nh)", mass: 286},
+        {name: "Flerovium (ফ্লেরোভিয়াম - Fl)", mass: 289},
+        {name: "Moscovium (মস্কোভিয়াম - Mc)", mass: 290},
+        {name: "Livermorium (লিভারমরিয়াম - Lv)", mass: 293},
+        {name: "Tennessine (টেনেсин - Ts)", mass: 294},
+        {name: "Oganesson (ওগানেসন - Og)", mass: 294}
+    ];
+
+    function getElementOptionsHTML() {
+        let options = `<option value="">-- বা তালিকা থেকে মৌল সিলেক্ট করুন --</option>`;
+        elementsData.forEach((el, index) => {
+            options += `<option value="${el.mass}">${el.name} (ভর: ${el.mass})</option>`;
+        });
+        return options;
+    }
+
     function updateForm() {
         let type = document.getElementById('calcType').value;
         let container = document.getElementById('dynamicInputs');
@@ -93,26 +225,62 @@
         if (type === 'S_standard') {
             container.innerHTML = `
                 <div class="input-group"><label>দ্রবের ভর - W (গ্রাম):</label><input type="number" id="valW" step="any" placeholder="যেমন: 4"></div>
-                <div class="input-group"><label>আণবিক ভর - M (g/mol):</label><input type="number" id="valM" step="any" placeholder="যেমন: 40"></div>
-                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 250"></div>
+                <div class="input-group">
+                    <label>আণবিক ভর - M (g/mol):</label>
+                    <div class="element-select-box">
+                        <label style="font-size: 0.85rem; margin-bottom: 4px; color: #60a5fa;">পর্যায় সারণি থেকে মৌল বেছে নিন:</label>
+                        <select id="elementDropdown" onchange="selectElement('valM')">
+                            ${getElementOptionsHTML()}
+                        </select>
+                    </div>
+                    <input type="number" id="valM" step="any" placeholder="অথবা সরাসরি মান লিখুন যেমন: 40">
+                </div>
+                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 250"></div>
             `;
         } else if (type === 'S_moles') {
             container.innerHTML = `
                 <div class="input-group"><label>মোল সংখ্যা - n (mol):</label><input type="number" id="valN" step="any" placeholder="যেমন: 0.5"></div>
-                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 500"></div>
+                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 500"></div>
             `;
         } else if (type === 'W') {
             container.innerHTML = `
                 <div class="input-group"><label>মোলারিটি - S (M):</label><input type="number" id="valS" step="any" placeholder="যেমন: 0.1"></div>
-                <div class="input-group"><label>আণবিক ভর - M (g/mol):</label><input type="number" id="valM" step="any" placeholder="যেমন: 40"></div>
-                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 500"></div>
+                <div class="input-group">
+                    <label>আণবিক ভর - M (g/mol):</label>
+                    <div class="element-select-box">
+                        <label style="font-size: 0.85rem; margin-bottom: 4px; color: #60a5fa;">পর্যায় সারণি থেকে মৌল বেছে নিন:</label>
+                        <select id="elementDropdown" onchange="selectElement('valM')">
+                            ${getElementOptionsHTML()}
+                        </select>
+                    </div>
+                    <input type="number" id="valM" step="any" placeholder="অথবা সরাসরি মান লিখুন যেমন: 40">
+                </div>
+                <div class="input-group"><label>আয়তন - V (mL):</label><input type="number" id="valV" step="any" placeholder="যেমন: 500"></div>
             `;
         } else if (type === 'V') {
             container.innerHTML = `
                 <div class="input-group"><label>দ্রবের ভর - W (গ্রাম):</label><input type="number" id="valW" step="any" placeholder="যেমন: 5.85"></div>
                 <div class="input-group"><label>মোলারিটি - S (M):</label><input type="number" id="valS" step="any" placeholder="যেমন: 0.2"></div>
-                <div class="input-group"><label>আণবিক ভর - M (g/mol):</label><input type="number" id="valM" step="any" placeholder="যেমন: 58.5"></div>
+                <div class="input-group">
+                    <label>আণবিক ভর - M (g/mol):</label>
+                    <div class="element-select-box">
+                        <label style="font-size: 0.85rem; margin-bottom: 4px; color: #60a5fa;">পর্যায় সারণি থেকে মৌল বেছে নিন:</label>
+                        <select id="elementDropdown" onchange="selectElement('valM')">
+                            ${getElementOptionsHTML()}
+                        </select>
+                    </div>
+                    <input type="number" id="valM" step="any" placeholder="অথবা সরাসরি মান লিখুন যেমন: 58.5"></div>
+                </div>
             `;
+        }
+    }
+
+    // ড্রপডাউন থেকে মৌল সিলেক্ট করলে আণবিক ভরের ইনপুট বক্সে অটো মান বসিয়ে দিবে
+    function selectElement(targetInputId) {
+        let dropdown = document.getElementById('elementDropdown');
+        let selectedValue = dropdown.value;
+        if (selectedValue !== "") {
+            document.getElementById(targetInputId).value = selectedValue;
         }
     }
 
@@ -161,7 +329,7 @@
                 alert("সবগুলো ঘরে সঠিক মান দিন!"); return;
             }
             res = (W * 1000) / (S * M);
-            resultText.innerHTML = `দ্রবণের আয়তন (V) = ${res.toFixed(2)} mL`;
+            resultText.innerHTML = `দ্রবণের আয়তন (V) = ${res.toFixed(2)} mL`;
         }
 
         resultBox.style.display = "block";
