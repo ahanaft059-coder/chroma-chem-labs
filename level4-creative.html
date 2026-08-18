@@ -7,80 +7,37 @@
     <style>
         :root {
             --bg-color: #030307;
-            --card-bg: rgba(12, 12, 20, 0.8);
+            --card-bg: rgba(13, 13, 22, 0.75);
             --accent-purple: #9d4edd;
             --accent-pink: #ff007f;
             --accent-cyan: #00f2fe;
             --text-main: #ffffff;
             --text-dim: #94a3b8;
+            --border-glow: rgba(157, 78, 221, 0.4);
         }
         
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: radial-gradient(circle at 50% 0%, #150a28 0%, var(--bg-color) 70%); 
+            font-family: 'Segoe UI', sans-serif; 
+            background: radial-gradient(circle at top, #11071f 0%, var(--bg-color) 70%); 
             color: var(--text-main); 
             margin: 0; 
-            padding: 30px 20px; 
+            padding: 20px; 
             min-height: 100vh;
         }
 
-        .container { max-width: 720px; margin: 0 auto; }
+        .container { max-width: 680px; margin: 0 auto; }
 
-        /* টপ ব্যাজ ডিজাইন */
-        .top-badge-wrapper {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .level-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(157, 78, 221, 0.12);
-            border: 1px solid rgba(157, 78, 221, 0.5);
-            padding: 8px 22px;
-            border-radius: 50px;
-            color: #e2e8f0;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 0 20px rgba(157, 78, 221, 0.25), inset 0 0 10px rgba(157, 78, 221, 0.1);
-            animation: pulseGlow 3s infinite alternate;
-        }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(157, 78, 221, 0.2); border-color: rgba(157, 78, 221, 0.4); }
-            100% { box-shadow: 0 0 30px rgba(0, 242, 254, 0.4); border-color: rgba(0, 242, 254, 0.7); }
-        }
-
-        /* প্রোগ্রেস বার র‍্যাপার ও লেবেল */
-        .progress-card {
-            background: rgba(10, 10, 16, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 18px;
-            padding: 18px 24px;
-            margin-bottom: 35px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .progress-info span:first-child { color: #f1f5f9; letter-spacing: 0.5px; }
-        .progress-info span:last-child { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(0,242,254,0.4); }
-
+        /* প্রিমিয়াম প্রোগ্রেস বার উইথ নিওন গ্লো */
         .progress-container { 
-            width: 100%; height: 10px; background: rgba(255,255,255,0.04); 
-            border-radius: 20px; overflow: hidden; 
-            border: 1px solid rgba(255,255,255,0.06);
+            width: 100%; height: 8px; background: rgba(255,255,255,0.05); 
+            border-radius: 10px; margin-bottom: 35px; overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.1);
         }
         #progressBar { 
             height: 100%; width: 25%; 
             background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-cyan)); 
             background-size: 200% 200%;
-            border-radius: 20px; 
+            border-radius: 10px; 
             transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
             box-shadow: 0 0 15px var(--accent-purple), 0 0 25px var(--accent-pink);
             animation: gradientMove 4s ease infinite;
@@ -92,27 +49,24 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* মেইন হেডার */
-        .exam-header { text-align: center; margin-bottom: 35px; }
+        .exam-header { text-align: center; margin-bottom: 40px; }
         .exam-header h1 { 
-            font-size: 32px; margin: 0; 
-            background: linear-gradient(135deg, #ffffff 20%, #e2e8f0 50%, #c77dff 80%, var(--accent-cyan) 100%);
+            font-size: 28px; margin: 0; 
+            background: linear-gradient(135deg, #fff 30%, #c77dff 70%, var(--accent-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 35px rgba(157, 78, 221, 0.35);
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            text-shadow: 0 0 30px rgba(157, 78, 221, 0.3);
         }
-        .exam-header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; font-weight: 500; }
+        .exam-header p { color: var(--text-dim); margin-top: 10px; font-size: 14px; letter-spacing: 0.5px; }
 
-        /* গ্লাস মর্ফিজম ও প্রিমিয়াম গ্লোয়িং মেইন কার্ড */
+        /* গ্লাস মর্ফিজম ও প্রিমিয়াম গ্লোয়িং কার্ড */
         .exam-card { 
             background: var(--card-bg); 
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(157, 78, 221, 0.3); 
-            border-radius: 26px; 
-            padding: 40px; 
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(157, 78, 221, 0.12);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(157, 78, 221, 0.25); 
+            border-radius: 24px; 
+            padding: 35px; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(157, 78, 221, 0.1);
             animation: fadeInCard 0.5s ease;
         }
 
@@ -121,48 +75,23 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .card-inner-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding-bottom: 18px;
-            margin-bottom: 25px;
-        }
-        .card-inner-header h2 {
-            margin: 0;
-            font-size: 22px;
-            color: #f8fafc;
-            text-shadow: 0 0 15px rgba(199, 125, 255, 0.4);
-        }
-        .q-count-badge {
-            background: rgba(0, 242, 254, 0.1);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 0 10px rgba(0,242,254,0.15);
-        }
-
-        .question-box { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .question-box:last-of-type { border-bottom: none; margin-bottom: 10px; }
-        .question-box p { font-size: 15px; line-height: 1.6; color: #f1f5f9; font-weight: 500; margin-bottom: 14px; }
+        .question-box { margin-bottom: 25px; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .question-box:last-of-type { border-bottom: none; }
+        .question-box p { font-size: 15px; line-height: 1.6; color: #f1f5f9; font-weight: 500; margin-bottom: 12px; }
         
         .board-tag {
             display: inline-block; 
-            background: linear-gradient(135deg, rgba(157, 78, 221, 0.25), rgba(0, 242, 254, 0.2)); 
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(0, 242, 254, 0.2)); 
             color: #d8b4fe;
             font-size: 11px; padding: 4px 12px; border-radius: 8px; margin-bottom: 10px; font-weight: 600;
-            border: 1px solid rgba(157, 78, 221, 0.4);
-            box-shadow: 0 0 10px rgba(157, 78, 221, 0.2);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.15);
         }
 
         /* অপশন লেবেল উইথ স্মুথ গ্লো হোভার */
         .option-label { 
             display: block; 
-            background: rgba(18, 18, 30, 0.7); 
+            background: rgba(20, 20, 32, 0.6); 
             margin: 10px 0; 
             padding: 14px 18px; 
             border-radius: 14px; 
@@ -174,9 +103,9 @@
         }
         .option-label:hover { 
             border-color: var(--accent-cyan); 
-            background: rgba(0, 242, 254, 0.06); 
-            box-shadow: 0 0 18px rgba(0, 242, 254, 0.25);
-            transform: translateX(5px);
+            background: rgba(0, 242, 254, 0.05); 
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+            transform: translateX(4px);
         }
         .option-label input { accent-color: var(--accent-purple); margin-right: 10px; transform: scale(1.2); }
 
@@ -185,60 +114,44 @@
             width: 100%; 
             background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
             color: white; border: none; padding: 18px; border-radius: 16px; font-weight: bold; cursor: pointer; 
-            margin-top: 25px; box-shadow: 0 10px 25px rgba(157, 78, 221, 0.45), 0 0 15px rgba(255, 0, 127, 0.25); 
-            transition: all 0.3s ease; font-size: 16px; letter-spacing: 0.5px;
+            margin-top: 20px; box-shadow: 0 10px 25px rgba(157, 78, 221, 0.4), 0 0 15px rgba(255, 0, 127, 0.2); 
+            transition: all 0.3s ease; font-size: 15px; letter-spacing: 0.5px;
         }
         .action-btn:hover { 
             transform: translateY(-2px); 
-            box-shadow: 0 15px 35px rgba(157, 78, 221, 0.65), 0 0 25px rgba(0, 242, 254, 0.45);
+            box-shadow: 0 15px 30px rgba(157, 78, 221, 0.6), 0 0 25px rgba(0, 242, 254, 0.4);
             opacity: 0.95; 
         }
 
-        /* নিওন গ্লোয়িং মোডাল পপআপ */
+        /* নিওন গ্লোয়িং মোডাল */
         .welcome-overlay { 
             display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; 
             background: rgba(3, 3, 7, 0.85); 
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             justify-content: center; align-items: center; z-index: 999; flex-direction: column;
         }
         .welcome-content { 
-            text-align: center; padding: 40px; max-width: 440px; width: 90%; 
-            background: rgba(13, 13, 22, 0.95); 
+            text-align: center; padding: 35px; max-width: 440px; width: 90%; 
+            background: rgba(13, 13, 22, 0.9); 
             border: 2px solid var(--accent-cyan); 
-            border-radius: 28px; 
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(157, 78, 221, 0.25); 
+            border-radius: 24px; 
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.3), inset 0 0 20px rgba(157, 78, 221, 0.2); 
             animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
         .welcome-content h1 { font-size: 36px; color: #fff; margin-top: 0; text-shadow: 0 0 20px var(--accent-cyan); }
-        .welcome-content p { font-size: 16px; color: #cbd5e1; margin: 15px 0 25px 0; line-height: 1.6; white-space: pre-line; }
+        .welcome-content p { font-size: 16px; color: #cbd5e1; margin: 15px 0 25px 0; line-height: 1.6; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- টপ নিওন ব্যাজ -->
-    <div class="top-badge-wrapper">
-        <div class="level-badge">
-            🔥 লেভেল ৪: ক্রিয়েটিভ বোর্ড চ্যালেঞ্জ
-        </div>
-    </div>
-
-    <!-- প্রোগ্রেস বার কার্ড -->
-    <div class="progress-card">
-        <div class="progress-info">
-            <span id="setTitleText">সেট ১ / ৪</span>
-            <span id="progressText">২৫% সম্পন্ন</span>
-        </div>
-        <div class="progress-container">
-            <div id="progressBar"></div>
-        </div>
-    </div>
+    <div class="progress-container"><div id="progressBar"></div></div>
 
     <div class="exam-header">
-        <h1>রসায়ন মাস্টার এক্সরাম (লেভেল ৪)</h1>
-        <p>পাসিং মার্কস: প্রতিটি সেটে অন্তত ২০/২৫ সঠিক উত্তর আবশ্যক</p>
+        <h1>লেভেল ৪: ক্রিয়েটিভ বোর্ড চ্যালেঞ্জ</h1>
+        <p id="setTitle">সেট ১৩ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন)</p>
     </div>
 
     <!-- ডায়নামিক প্রশ্ন কার্ড -->
@@ -260,7 +173,7 @@
     const setsData = [
         {
             setNum: 13,
-            setTitle: "সেট ১৩ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন)",
+            setTitle: "সেট ১৩ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন - ২৫টি প্রশ্ন)",
             questions: [
                 { board: "ঢাকা বোর্ড - ২০২৩", q: "১. নিচের কোন বিক্রিয়াটিতে প্রভাবক হিসেবে MnO₂ ব্যবহার করা হয়?", options: ["হেবার পদ্ধতিতে অ্যামোনিয়া প্রস্তুত", "পটাশিয়াম ক্লোরেট বিযোজন", "বনস্পতি তেল থেকে বনস্পতি ঘি প্রস্তুত", "সালফার ট্রাইঅক্সাইড উৎপাদন"], correct: 1 },
                 { board: "রাজশাহী বোর্ড - ২০২২", q: "২. গ্যালভানাইজিং প্রক্রিয়ায় লোহার ওপর কোন ধাতুর প্রলেপ দেওয়া হয়?", options: ["কপার (Cu)", "জিঙ্ক (Zn)", "অ্যালুমিনিয়াম (Al)", "টিন (Sn)"], correct: 1 },
@@ -291,7 +204,7 @@
         },
         {
             setNum: 14,
-            setTitle: "সেট ১৪ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন)",
+            setTitle: "সেট ১৪ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন - ২৫টি প্রশ্ন)",
             questions: [
                 { board: "যশোর বোর্ড - ২০২৩", q: "১. নিচের কোন যৌগটিতে আয়নিক ও সমযোজী উভয় প্রকার বন্ধন বিদ্যমান?", options: ["NaCl", "NaOH", "H₂O", "CO₂"], correct: 1 },
                 { board: "কুমিল্লা বোর্ড - ২০২২", q: "২. নিচের কোনটির ব্যাপণের হার সবচেয়ে কম?", options: ["H₂", "N₂", "O₂", "CO₂"], correct: 3 },
@@ -322,7 +235,7 @@
         },
         {
             setNum: 15,
-            setTitle: "সেট ১৫ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন)",
+            setTitle: "সেট ১৫ (বোর্ড স্ট্যান্ডার্ড প্রশ্ন ও মূল্যায়ন - ২৫টি প্রশ্ন)",
             questions: [
                 { board: "সিলেট বোর্ড - ২০২৩", q: "১. এসিড বৃষ্টির জন্য মূলত কোন গ্যাসটি প্রধানত দায়ী?", options: ["SO₂", "CO", "CH₄", "CFC"], correct: 0 },
                 { board: "বরিশাল বোর্ড - ২০২২", q: "২. চুনাপাথরকে উত্তপ্ত করলে কোনটি উৎপন্ন হয়?", options: ["Ca(OH)₂ ও CO₂", "CaO ও CO₂", "CaCl₂ ও H₂O", "CaCO₃ ও H₂"], correct: 1 },
@@ -353,7 +266,7 @@
         },
         {
             setNum: 16,
-            setTitle: "সেট ১৬ (ফাইনাল চ্যালেঞ্জ)",
+            setTitle: "সেট ১৬ (ফাইনাল চ্যালেঞ্জ - ২৫টি প্রশ্ন)",
             questions: [
                 { board: "দিনাজপুর বোর্ড - ২০২৩", q: "১. অ্যালকেন শ্রেণীর সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ", "CₙH₂ₙ₊₂", "CₙH₂ₙ₋₂", "CₙH₂ₙ₊₁OH"], correct: 1 },
                 { board: "চট্টগ্রাম বোর্ড - ২০২২", q: "২. ভিনেগারে কত পার্সেন্ট ইথানয়িক এসিড থাকে?", options: ["৬-১০%", "১-২%", "৩০-৪০%", "৯০-৯৫%"], correct: 0 },
@@ -389,19 +302,9 @@
 
     function renderSet() {
         let currentSet = setsData[currentSetIndex];
+        document.getElementById('setTitle').innerText = currentSet.setTitle;
         
-        // টপ প্রোগ্রেস ও হেডার আপডেট
-        let setNumStr = `সেট ${currentSetIndex + 1} / 4`;
-        let percentStr = `${(currentSetIndex + 1) * 25}% সম্পন্ন`;
-        document.getElementById('setTitleText').innerText = setNumStr;
-        document.getElementById('progressText').innerText = percentStr;
-        
-        let cardHTML = `
-            <div class="card-inner-header">
-                <h2>সেট ${currentSet.setNum}: ${currentSet.setTitle}</h2>
-                <div class="q-count-badge">২৫ টি প্রশ্ন</div>
-            </div>
-        `;
+        let cardHTML = `<h2 style="color: #c77dff; margin-top: 0; text-shadow: 0 0 10px rgba(199, 125, 255, 0.4);">সেট ${currentSet.setNum}</h2>`;
         
         currentSet.questions.forEach((qObj, qIndex) => {
             cardHTML += `
@@ -448,7 +351,7 @@
 
         if (currentSetIndex < setsData.length - 1) {
             document.getElementById('modalTitle').innerText = "দারুণ! 🎉";
-            document.getElementById('modalText').innerText = `সেট ${currentSet.setNum} সফলভাবে সম্পন্ন হয়েছে!\nআপনার সঠিক উত্তর: ${correctCount}/২৫\nপাসিং মার্কস অর্জন সফল!`;
+            document.getElementById('modalText').innerText = `সেট ${currentSet.setNum} সফলভাবে সম্পন্ন হয়েছে!\nআপনার সঠিক উত্তর: ${correctCount}/২৫`;
             document.getElementById('nextBtn').innerText = "পরবর্তী সেটে যান →";
             document.getElementById('nextBtn').setAttribute('onclick', "nextSet()");
         } else {
