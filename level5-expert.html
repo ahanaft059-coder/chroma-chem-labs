@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>লেভেল ৫: গ্র্যান্ড মাস্টার চ্যালেঞ্জ - ChromaChemLabs</title>
+    
+    <style>
+        :root {
+            --bg-color: #05050a;
+            --card-bg: rgba(15, 15, 28, 0.85);
+            --neon-purple: #b5179e;
+            --neon-pink: #f72585;
+            --neon-cyan: #4cc9f0;
+            --neon-blue: #3a86ff;
+            --neon-gold: #ffb703;
+            --neon-green: #06d6a0;
+            --neon-red: #ff4d4d;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: radial-gradient(circle at 50% 0%, #240046 0%, #10002b 40%, var(--bg-color) 80%); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 30px 20px; 
+            min-height: 100vh;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+
+        .top-badge-wrapper { text-align: center; margin-bottom: 20px; }
+        .level-badge {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, rgba(255, 183, 3, 0.15), rgba(247, 37, 133, 0.15));
+            border: 1.5px solid var(--neon-gold);
+            padding: 10px 28px; border-radius: 50px;
+            color: #ffe6a7; font-size: 15px; font-weight: 700;
+            box-shadow: 0 0 30px rgba(255, 183, 3, 0.35);
+            animation: pulseGoldGlow 3s infinite alternate;
+        }
+        @keyframes pulseGoldGlow {
+            0% { box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); border-color: var(--neon-gold); }
+            50% { box-shadow: 0 0 35px rgba(247, 37, 133, 0.5); border-color: var(--neon-pink); }
+            100% { box-shadow: 0 0 25px rgba(76, 201, 240, 0.4); border-color: var(--neon-cyan); }
+        }
+
+        .progress-card {
+            background: rgba(20, 20, 35, 0.75);
+            border: 1px solid rgba(76, 201, 240, 0.25);
+            border-radius: 20px; padding: 20px 26px; margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .progress-info {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; font-size: 15px; font-weight: 700;
+        }
+        .progress-info span:first-child { color: var(--neon-cyan); }
+        .progress-info span:last-child { color: var(--neon-gold); }
+
+        .progress-container { 
+            width: 100%; height: 12px; background: rgba(255,255,255,0.05); 
+            border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+        }
+        #progressBar { 
+            height: 100%; width: 25%; 
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink), var(--neon-gold)); 
+            border-radius: 20px; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+
+        .exam-header { text-align: center; margin-bottom: 30px; }
+        .exam-header h1 { 
+            font-size: 34px; margin: 0; 
+            background: linear-gradient(135deg, #ffffff 20%, var(--neon-cyan) 50%, var(--neon-pink) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            text-shadow: 0 0 40px rgba(76, 201, 240, 0.3);
+        }
+        .exam-header p { color: var(--text-dim); margin-top: 8px; font-size: 15px; }
+
+        .exam-card { 
+            background: var(--card-bg); backdrop-filter: blur(25px);
+            border: 1.5px solid rgba(181, 23, 158, 0.35); border-radius: 28px; 
+            padding: 40px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(181, 23, 158, 0.1);
+        }
+        
+        .card-inner-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1.5px solid rgba(255,255,255,0.08); padding-bottom: 18px; margin-bottom: 28px;
+        }
+        .card-inner-header h2 { margin: 0; font-size: 22px; color: #f8fafc; font-weight: 700; }
+        .q-count-badge {
+            background: rgba(6, 214, 160, 0.12); color: var(--neon-green);
+            border: 1px solid rgba(6, 214, 160, 0.4); padding: 6px 16px;
+            border-radius: 50px; font-size: 13px; font-weight: 700;
+            box-shadow: 0 0 15px rgba(6, 214, 160, 0.2);
+        }
+
+        .question-box { 
+            margin-bottom: 30px; padding: 22px; 
+            background: rgba(25, 25, 45, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            border-radius: 18px; 
+        }
+        
+        /* বোর্ড ট্যাগ ডিজাইন (প্রশ্নের ওপরে) */
+        .board-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.15), rgba(58, 134, 255, 0.15));
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.2);
+        }
+
+        .question-box p.q-text { font-size: 16px; line-height: 1.6; color: #f1f5f9; font-weight: 600; margin: 0 0 16px 0; }
+
+        .option-label { 
+            display: block; background: rgba(15, 15, 28, 0.7); 
+            margin: 10px 0; padding: 14px 18px; border-radius: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; 
+            transition: all 0.25s ease; font-size: 15px; color: #e2e8f0;
+        }
+        .option-label:hover { 
+            border-color: var(--neon-pink); background: rgba(247, 37, 133, 0.08); 
+            transform: translateX(6px);
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.2);
+        }
+        .option-label input { accent-color: var(--neon-pink); margin-right: 12px; transform: scale(1.2); }
+
+        .action-btn { 
+            width: 100%; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            color: white; border: none; padding: 18px; border-radius: 16px; font-weight: bold; cursor: pointer; 
+            margin-top: 25px; box-shadow: 0 12px 30px rgba(247, 37, 133, 0.45); 
+            transition: all 0.3s ease; font-size: 17px; letter-spacing: 0.5px;
+        }
+        .action-btn:hover { transform: translateY(-3px); opacity: 0.95; box-shadow: 0 15px 35px rgba(181, 23, 158, 0.6); }
+
+        .welcome-overlay { 
+            display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; 
+            background: rgba(5, 5, 10, 0.9); backdrop-filter: blur(15px);
+            justify-content: center; align-items: center; z-index: 999;
+        }
+        .welcome-content { 
+            text-align: center; padding: 45px; max-width: 460px; width: 90%; 
+            background: rgba(20, 20, 35, 0.95); border: 2px solid var(--neon-gold); 
+            border-radius: 30px; box-shadow: 0 0 60px rgba(255, 183, 3, 0.4); 
+        }
+        .welcome-content h1 { font-size: 34px; color: #fff; margin-top: 0; text-shadow: 0 0 20px var(--neon-gold); }
+        .welcome-content p { font-size: 16px; color: #cbd5e1; margin: 15px 0 25px 0; line-height: 1.6; white-space: pre-line; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-badge-wrapper">
+        <div class="level-badge">👑 লেভেল ৫: বোর্ড স্ট্যান্ডার্ড গ্র্যান্ড মাস্টার চ্যালেঞ্জ</div>
+    </div>
+
+    <div class="progress-card">
+        <div class="progress-info">
+            <span id="setTitleText">সেট ১ / ৪</span>
+            <span id="progressText">২৫% সম্পন্ন</span>
+        </div>
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="exam-header">
+        <h1>রসায়ন মাস্টার এক্সাম (লেভেল ৫)</h1>
+        <p>বোর্ড পরীক্ষার স্ট্যান্ডার্ড ও ঢাকা/রাজশাহী বোর্ড স্টাইল প্রশ্নসমূহ (ন্যূনতম ২০টি সঠিক বাধ্যতামূলক)</p>
+    </div>
+
+    <div class="exam-card" id="examCard">
+        <!-- প্রশ্নসমূহ ডাইনামিকালি লোড হবে -->
+    </div>
+</div>
+
+<!-- মোডাল পপআপ -->
+<div class="welcome-overlay" id="welcomeModal">
+    <div class="welcome-content">
+        <h1 id="modalTitle">চমৎকার! 🎉</h1>
+        <p id="modalText">সেট সফলভাবে সম্পন্ন হয়েছে!</p>
+        <button class="action-btn" id="nextBtn" onclick="nextSet()">পরবর্তী সেটে যান →</button>
+    </div>
+</div>
+
+<script>
+    const setsData = [
+        {
+            setNum: 17,
+            setTitle: "সেট ১৭ (বোর্ড স্ট্যান্ডার্ড - পার্ট ১)",
+            questions: [
+                { board: "ঢাকা বোর্ড", q: "১. নিচের কোনটির ব্যাপন হার সবচেয়ে বেশি?", options: ["NH₃", "HCl", "CO₂", "SO₂"], correct: 0 },
+                { board: "রাজশাহী বোর্ড", q: "২. নিচের কোনটি প্রাইমারি স্ট্যান্ডার্ড পদার্থ?", options: ["Na₂CO₃", "NaOH", "HCl", "KMnO₄"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড", q: "৩. STP-তে ৪.৪ গ্রাম CO₂ গ্যাসের আয়তন কত?", options: ["২.২৪ লিটার", "১.১২ লিটার", "৪.৪৮ লিটার", "২২.৪ লিটার"], correct: 0 },
+                { board: "যশোর বোর্ড", q: "৪. নিচের কোন যৌগটিতে আয়নিক ও সমযোজী উভয় বন্ধন বিদ্যমান?", options: ["NH₄Cl", "H₂O", "NaCl", "CH₄"], correct: 0 },
+                { board: "বরিশাল বোর্ড", q: "৫. অ্যালকাইনের সাধারণ সংকেত কোনটি?", options: ["CₙH₂ₙ₋₂", "CₙH₂ₙ", "CₙH₂ₙ₊₂", "CₙH₂ₙ₊₁OH"], correct: 0 },
+                { board: "সিলেট বোর্ড", q: "৬. মরিচার রাসায়নিক সংকেত কোনটি?", options: ["Fe₂O₃·xH₂O", "FeO", "Fe₃O₄", "FeCO₃"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড", q: "৭. হেবার পদ্ধতিতে অ্যামোনিয়া উৎপাদনে প্রভাবক হিসেবে কী ব্যবহৃত হয়?", options: ["লোহার চূর্ণ (Fe)", "ভ্যানাডিয়াম পেন্টাঅক্সাইড", "নিক্কেল চূর্ণ", "ম্যাঙ্গানিজ ডাইঅক্সাইড"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড", q: "৮. নিচের কোনটি উভধর্মী অক্সাইড?", options: ["ZnO", "Na₂O", "CO₂", "SO₃"], correct: 0 },
+                { board: "ময়মনসিংহ বোর্ড", q: "৯. নিচের কোনটিতে হাইড্রোজেন বন্ধন শক্তিশালী?", options: ["H₂O", "H₂S", "HCl", "PH₃"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১০. পানির ত্রৈধ বিন্দুতে তাপমাত্রা কত?", options: ["২৭৩.১৬ K", "২৭৩ K", "২৯৮ K", "০ K"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১১. পারমাণবিক চুল্লিতে মডারেটর হিসেবে ব্যবহৃত হয়—", options: ["গ্রাফাইট", "ক্যাডমিয়াম", "ইউরেনিয়াম", "সীসা"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১২. কোন এসিডটি কাঁচ দ্রবীভূত করতে পারে?", options: ["HF", "HCl", "H₂SO₄", "HNO₃"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৩. ভিনেগারে এসিটিক এসিডের শতকরা পরিমাণ কত?", options: ["৬-১০%", "১-২%", "৫০-৬০%", "বিশুদ্ধ"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৪. কোন মৌলটির ইলেকট্রন আসক্তি সবচেয়ে বেশি?", options: ["ক্লোরিন (Cl)", "ফ্লোরিন (F)", "ব্রোমিন (Br)", "আয়োডিন (I)"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৫. কঠিন সোডিয়াম ক্লোরাইড তড়িৎ পরিবহন করে না কেন?", options: ["আয়নগুলো মুক্ত বা সচল থাকে না", "এটি সমযোজী যৌগ", "এতে ইলেকট্রন নেই", "এটি পানিতে অদ্রবণীয়"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৬. নিচের কোনটির pH মান সবচেয়ে কম?", options: ["লেবুর রস", "বিশুদ্ধ পানি", "রক্ত", "সাবানের দ্রবণ"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৭. সালফিউরিক এসিডের মোলার ভর কত?", options: ["৯৮ গ্রাম/মোল", "৪০ গ্রাম/মোল", "৩৬.৫ গ্রাম/মোল", "৬০ গ্রাম/মোল"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৮. গ্রিন হাউস গ্যাস নয় কোনটি?", options: ["N₂", "CO₂", "CH₄", "N₂O"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৯. রেক্টিফাইড স্পিরিট হলো—", options: ["৯৫.৬% ইথানল ও ৪.৪% পানি", "১00% বিশুদ্ধ অ্যালকোহল", "মিথানল ও ইথানলের মিশ্রণ", "এসিটিক এসিড ও পানি"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২০. কার্বন রূপভেদে হীরার কাঠামোর আকৃতি কেমন?", options: ["চতুস্তলকীয়", "ষড়ভুজাকার", "সরলরৈখিক", "বর্গাকার"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২১. মোলারিটি কিসের ওপর নির্ভর করে?", options: ["তাপমাত্রা", "চাপ", "ভর", "ঘনত্ব"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২২. ব্যকেলাইট তৈরিতে নিচের কোনটি ব্যবহৃত হয়?", options: ["ফরমালডিহাইড ও ফেনোল", "ইথিন ও পলিথিন", "ইউরিয়া ও ফরমালডিহাইড", "ভিনাইল ক্লোরাইড"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৩. নিচের কোনটিকে 'মাস্টার সলভেন্ট' বলা হয়?", options: ["পানি (H₂O)", "অ্যাসিটোন", "ইথানল", "বেনজিন"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৪. কুইক লাইম (Quick Lime) এর রাসায়নিক সংকেত কী?", options: ["CaO", "CaCO₃", "Ca(OH)₂", "CaCl₂"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৫. সোডার সংকেত কোনটি?", options: ["Na₂CO₃·10H₂O", "NaHCO₃", "NaOH", "NaCl"], correct: 0 }
+            ]
+        },
+        {
+            setNum: 18,
+            setTitle: "সেট ১৮ (বোর্ড স্ট্যান্ডার্ড - পার্ট ২)",
+            questions: [
+                { board: "ঢাকা বোর্ড", q: "১. ড্যানিয়েল কোষে অ্যানোড হিসেবে ব্যবহৃত হয় কোনটি?", options: ["জিংক দণ্ড", "কপার দণ্ড", "কার্বন দণ্ড", "প্লাটিনাম তার"], correct: 0 },
+                { board: "রাজশাহী বোর্ড", q: "২. KMnO₄ এ ম্যাঙ্গানিজের জারণ সংখ্যা কত?", options: ["+৭", "+৬", "+৫", "+৪"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড", q: "৩. ফ্যারাডের প্রথম সূত্র অনুসারে সংগৃহীত পদার্থের পরিমাণ—", options: ["W = ZIt", "W = I/t", "W = E/F", "W = V/R"], correct: 0 },
+                { board: "যশোর বোর্ড", q: "৪. গ্যালভানিক কোষে কোন শক্তি রূপান্তরিত হয়?", options: ["রাসায়নিক শক্তি থেকে তড়িৎ শক্তি", "তড়িৎ শক্তি থেকে রাসায়নিক শক্তি", "তাপ শক্তি থেকে আলো", "যান্ত্রিক শক্তি থেকে শব্দ"], correct: 0 },
+                { board: "সিলেট বোর্ড", q: "৫. হুন্ডের নীতি অনুসারে ইলেকট্রন প্রবেশের সময় কোনটি বজায় থাকে?", options: ["সর্বোচ্চ অযুগ্ম স্পিন", "সর্বনিম্ন শক্তি", "জোড়ায় জোড়ায় স্পিন", "নিউক্লিয়াস আকর্ষণ"], correct: 0 },
+                { board: "বরিশাল বোর্ড", q: "৬. অরবিটালের আকৃতি নির্দেশ করে কোন কোয়ান্টাম সংখ্যা?", options: ["সহকারী কোয়ান্টাম সংখ্যা (l)", "প্রধান কোয়ান্টাম সংখ্যা (n)", "ম্যাগনেটিক কোয়ান্টাম সংখ্যা (m)", "স্পিন কোয়ান্টাম সংখ্যা (s)"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড", q: "৭. 3d অরবিটালের জন্য (n + l) এর মান কত?", options: ["৫", "৩", "৪", "৬"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড", q: "৮. মারকনিকভের সূত্র কিসের সাথে সম্পর্কিত?", options: ["অসম্পৃক্ত হাইড্রোকার্বনে সংযোজন বিক্রিয়া", "প্রতিস্থাপন বিক্রিয়া", "পলিমারকরণ বিক্রিয়া", "জারণ-বিজারণ বিক্রিয়া"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "৯. বেনজিনে কার্বন-কার্বন বন্ধন দূরত্ব কত?", options: ["০.১৩৯ ন্যানোমিটার", "০.১৫৪ ন্যানোমিটার", "০.১৩৪ ন্যানোমিটার", "০.১২০ ন্যানোমিটার"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১০. পলিথিনের মনোমার কোনটি?", options: ["ইথিন (C₂H₄)", "ইথাইন (C₂H₂)", "প্রোপিন", "মিথেন"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১১. অ্যালকোহল ও জৈব এসিডের বিক্রিয়ায় উৎপন্ন হয়—", options: ["এস্টার", "ইথার", "অ্যালডিহাইড", "কিটোন"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১২. ফরমালডিহাইডের জলীয় দ্রবণকে কী বলা হয়?", options: ["ফরমালিন", "রেক্টিফাইড স্পিরিট", "ইথার", "গ্লুকোজ"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৩. টেম্পোরারি হার্ডনেস বা পানির অস্থায়ী ক্ষারত্ব দূর করার সহজ উপায় কোনটি?", options: ["ফোটানো (Boiling)", "সোডা প্রসেস", "আয়ন এক্সচেঞ্জ", "পরিস্রাবণ"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৪. নিচের কোনটিতে আয়নগুলোর মুক্ত সঞ্চালন ঘটে?", options: ["গলিত NaCl", "কঠিন NaCl", "হীরক", "গ্লুকোজ দ্রবণ"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৫. নিচের কোন মৌলটি অবস্থান্তর মৌল নয়?", options: ["স্ক্যান্ডিয়াম (Sc) বা জিংক (Zn)", "লোহা (Fe)", "কপার (Cu)", "নিকেল (Ni)"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৬. পর্যায় সারণির গ্রুপ ১১ এর মৌলগুলোকে কী বলা হয়?", options: ["কয়েন মেটাল (Coinage Metal)", "ক্ষার ধাতু", "মৃৎক্ষার ধাতু", "হ্যালোজেন"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৭. নিষ্ক্রিয় গ্যাসগুলোর যোজনী বা যোজ্যতা কত?", options: ["শূন্য", "এক", "দুই", "তিন"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৮. আইসোটোপে কোন কণার সংখ্যা সমান থাকে?", options: ["প্রোটন সংখ্যা", "ভর সংখ্যা", "নিউট্রন সংখ্যা", "ইলেকট্রন সংখ্যা"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৯. কার্বনের তেজস্ক্রিয় আইসোটোপ কোনটি?", options: ["কার্বন-১৪", "কার্বন-১২", "কার্বন-১৩", "কোবাল্ট-৬০"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২০. রাদারফোর্ডের পরমাণু মডেলের অপর নাম কী?", options: ["সৌর মডেল", "প্লাম পুডিং মডেল", "কোয়ান্টাম মডেল", "অরবিট মডেল"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২১. পরমাণুর ভর সংখ্যা ২৩ এবং প্রোটন সংখ্যা ১১ হলে, নিউট্রন সংখ্যা কত?", options: ["১২", "১১", "৩৪", "২৩"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২২. ফ্লোরিনের পারমাণবিক সংখ্যা কত?", options: ["৯", "৭", "৮", "১০"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৩. নিচের কোনটিতে জারণ বিক্রিয়া ঘটে?", options: ["ইলেকট্রন বর্জন", "ইলেকট্রন গ্রহণ", "প্রোটন বর্জন", "নিউট্রন সংযোজন"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৪. তড়িৎ বিশ্লেষণ প্রক্রিয়ায় ক্যাথোড সংঘটিত বিক্রিয়াটি হলো—", options: ["বিজারণ", "জারণ", "প্রশমিতকরণ", "দ্রবীভূতকরণ"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৫. এসিড ও ক্ষারের প্রশমন তাপের মান সর্বদা কত?", options: ["-৫৭.৩ kJ/mol", "-৫৭৩ kJ/mol", "+৫৭.৩ kJ/mol", "শূন্য"], correct: 0 }
+            ]
+        },
+        {
+            setNum: 19,
+            setTitle: "সেট ১৯ (বোর্ড স্ট্যান্ডার্ড - পার্ট ৩)",
+            questions: [
+                { board: "ঢাকা বোর্ড", q: "১. অ্যালুমিনিয়াম নিষ্কাশনে বক্সাইটের সাথে কী মেশানো হয়?", options: ["ক্রায়োলাইট (Na₃AlF₆)", "চুনাপাথর", "জিপসাম", "সিলিকা"], correct: 0 },
+                { board: "রাজশাহী বোর্ড", q: "২. পিভিসি (PVC) এর পূর্ণরূপ কী?", options: ["পলিভিনাইল ক্লোরাইড", "পলিভিনাইল সায়ানাইড", "পলিমার ভিনাইল কার্বনেট", "পলি ভিনাইল কার্বাইড"], correct: 0 },
+                { board: "কুমিল্লা বোর্ড", q: "৩. সিমেন্ট শিল্পে কাঁচামাল হিসেবে প্রধানত ব্যবহৃত হয়—", options: ["চুনাপাথর ও ক্লে", "বালি ও সিলিকা", "জিপসাম ও সোডা", "ম্যাগনেসাইট"], correct: 0 },
+                { board: "যশোর বোর্ড", q: "৪. গ্লাস তৈরিতে সোডিয়াম কার্বনেট, চুনাপাথর এবং আর কী ব্যবহৃত হয়?", options: ["বালি (SiO₂)", "অ্যালুমিনা", "লোহার গুঁড়ো", "কয়লা"], correct: 0 },
+                { board: "সিলেট বোর্ড", q: "৫. বেকিং সোডার রাসায়নিক নাম কী?", options: ["সোডিয়াম বাইকার্বনেট", "সোডিয়াম কার্বনেট", "সোডিয়াম ক্লোরাইড", "ক্যালসিয়াম কার্বনেট"], correct: 0 },
+                { board: "বরিশাল বোর্ড", q: "৬. সাবান তৈরিতে ফ্যাট বা তেলের সাথে কোনটি ব্যবহার করা হয়?", options: ["কস্টিক সোডা (NaOH)", "কস্টিক পটাশ", "লবণ", "সালফিউরিক এসিড"], correct: 0 },
+                { board: "চট্টগ্রাম বোর্ড", q: "৭. নিচের কোন যৌগটি পানিতে সবচেয়ে কম দ্রবণীয়?", options: ["BaSO₄", "NaCl", "KNO₃", "NaOH"], correct: 0 },
+                { board: "দিনাজপুর বোর্ড", q: "৮. অ্যামোনিয়াম ক্লোরাইড ও সোডিয়াম হাইড্রোক্সাইডের বিক্রিয়ায় উৎপন্ন হয়—", options: ["অ্যামোনিয়া গ্যাস (NH₃)", "নাইট্রোজেন গ্যাস", "হাইড্রোজেন গ্যাস", "ক্লোরিন গ্যাস"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "৯. পর্যায় সারণির অনুভূমিক সারিকে কী বলা হয়?", options: ["পর্যায়", "গ্রুপ বা শ্রেণী", "ব্লক", "সেল"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১০. অবস্থান্তর মৌলগুলোর সাধারণ বৈশিষ্ট্য কোনটি?", options: ["রঙিন যৌগ ও পরিবর্তনশীল যোজ্যতা", "শুধু গ্যাসীয় অবস্থা", "তড়িৎ পরিবাহিতা শূন্য", "কোনোটিই নয়"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১১. পলিবর্জন নীতি প্রদান করেন কোন বিজ্ঞানী?", options: ["ভূলফগ্যাং পাউলি", "হাইজেনবার্গ", "বোর", "রাদারফোর্ড"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১২. বিউটেনের সমাণু (Isomer) সংখ্যা কয়টি?", options: ["দুটি", "তিনটি", "চারটি", "পাঁচটি"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৩. নিচের কোনটি অ্যারোমেটিক যৌগ?", options: ["বেনজিন", "হেক্সেন", "সাইক্লোহেক্সেন", "পেন্টিন"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৪. ফ্রিডেল-ক্রাফ্ট alkylation বিক্রিয়ায় অনুঘটক হিসেবে থাকে—", options: ["অ্যানহাইড্রাস AlCl₃", "নিকেল চূর্ণ", "লঘু HCl", "গাঢ় H₂SO₄"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৫. ফরমিক এসিডে কোন কার্যকরী মূলকটি বিদ্যমান?", options: ["অ্যালডিহাইড ও কার্বক্সিলিক উভয়ই", "শুধু ইথার", "শুধু কিটোন", "অ্যালকোহল মূলক"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৬. কঠিন পদার্থের দ্রাব্যতা তাপমাত্রার সাথে সাধারণত কেমন হয়?", options: ["তাপমাত্রা বাড়লে বাড়ে", "কমে যায়", "একই থাকে", "শূন্য হয়"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৭. সম্পৃক্ত দ্রবণে অতিরিক্ত solute যোগ করলে কী ঘটে?", options: ["দ্রবীভূত হয় না, নিচে জমে থাকে", "সব দ্রবীভূত হয়ে যায়", "দ্রবণ ক্ষারীয় হয়", "ফুঁসে ওঠে"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৮. মোলালিটি (Molality) এর একক কী?", options: ["মোল/কেজি", "মোল/লিটার", "গ্রাম/লিটার", "মোল/মিটার³"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "১৯. গ্রাহামের গ্যাস ব্যাপন সূত্র অনুসারে ব্যাপন হার কিসের ব্যাস্তানুপাতিক?", options: ["আণবিক ভরের বর্গমূলের", "ঘনত্বের বর্গমূলের", "তাপমাত্রার", "চাপের"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২০. আদর্শ গ্যাস সমীকরণ কোনটি?", options: ["PV = nRT", "P = nRT", "V = nRT/P", "ক ও খ উভয়ই"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২১. বয়েলের সূত্রে ধ্রুব থাকে কোনটি?", options: ["তাপমাত্রা ও ভর", "চাপ ও তাপমাত্রা", "আয়তন ও চাপ", "শুধু ঘনত্ব"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২২. চার্লসের সূত্রে ধ্রুবক থাকে কোনটি?", options: ["চাপ ও ভর", "তাপমাত্রা", "আয়তন", "ঘনত্ব"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৩. এসটিপি (STP) এ গ্যাসের মোলার আয়তন কত?", options: ["২২.৪ লিটার", "২২.৪১ লিটার", "২৪.৭৮ লিটার", "সবগুলোই গ্রহণযোগ্য"], correct: 3 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৪. বায়ুমণ্ডলে কোন গ্যাসটি সর্বাধিক পরিমাণে থাকে?", options: ["নাইট্রোজেন (N₂)", "অক্সিজেন (O₂)", "অর্গন (Ar)", "কার্বন ডাইঅক্সাইড (CO₂"], correct: 0 },
+                { board: "বোর্ড স্ট্যান্ডার্ড", q: "২৫. লেভেল ৫ গ্র্যান্ড ফাইনালের মূল উদ্দেশ্য কী?", options: ["রসায়ন বিজ্ঞানে পূর্ণ দক্ষতা অর্জন", "বোর্ড পরীক্ষায় এ+ নিশ্চিত করা", "জটিল কেমিস্ট্রি কনসেপ্ট জয় করা", "সবকটিই সঠিক"], correct: 3 }
+            ]
+        },
+        {
+            setNum: 20,
+            setTitle: "সেট ২০ (আল্টিমেট গ্র্যান্ড ফাইনাল)",
+            questions: [
+                { board: "বোর্ড ফাইনাল", q: "১. তাপ উৎপাদী বিক্রিয়ায় তাপমাত্রা বৃদ্ধি করলে সাম্যাবস্থার কী ঘটে?", options: ["পশ্চাৎমুখী হয়", "অগ্রমুখী হয়", "কোনো পরিবর্তন হয় না", "সাম্যাবস্থা নষ্ট হয় না"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "২. লেশা বতেলিয়ে নীতি কোন বিষয়ের ওপর প্রয়োগ করা হয়?", options: ["রাসায়নিক সাম্যাবস্থা", "দ্রবণের ঘনমাত্রা", "গ্যাসের ব্যাপন", "তড়িৎ বিশ্লেষণ"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "৩. স্পর্শ পদ্ধতিতে সালফিউরিক এসিড উৎপাদনে অনুঘটক কোনটি?", options: ["ভ্যানাডিয়াম পেন্টাঅক্সাইড (V₂O₅)", "লোহার গুঁড়ো", "নিকেল চূর্ণ", "ম্যাগানিজ ডাইঅক্সাইড"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "৪. পানির আয়নিক গুণফল ($K_w$) এর মান ২৫°C এ কত?", options: ["১০⁻¹⁴", "১০⁻⁷", "১০⁻¹⁰", "১০⁻²"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "৫. বাফার দ্রবণ কী প্রতিরোধ করতে পারে?", options: ["pH এর পরিবর্তন", "তাপমাত্রার পরিবর্তন", "ঘনত্বের পরিবর্তন", "চাপের পরিবর্তন"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "৬. রক্ত একটি প্রাকৃতিক—", options: ["বাফার দ্রবণ", "অম্লীয় দ্রবণ", "ক্ষারীয় দ্রবণ", "নন-ইলেক্ট्रोলাইট দ্রবণ"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "৭. এসিড বৃষ্টির জন্য প্রধানত দায়ী গ্যাস কোনগুলো?", options: ["SO₂ ও NO₂", "CO₂ ও CO", "CH₄ ও CFC", "O₃ ও NH₃"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "৮. ওজোন স্তর ক্ষয়কারী প্রধান উপাদান কোনটি?", options: ["CFC (ক্লোরোফ্লোরো কার্বন)", "CO₂", "নাইট্রোজেন গ্যাস", "জলীয় বাষ্প"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "৯. খাবার পানিতে আর্সেনিকের সহনশীল মাত্রা কত?", options: ["০.০৫ মিলিগ্রাম/লিটার", "০.৫ মিলিগ্রাম/লিটার", "১.০ মিলিগ্রাম/লিটার", "০.০০১ মিলিগ্রাম/লিটার"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১০. জৈব যৌগে কার্বনের সাথে সবচেয়ে বেশি যুক্ত থাকে—", options: ["H, O, N, Halogen", "Na, K, Ca", "Fe, Cu, Zn", "Mg, Al, Si"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১১. জ্যামিতিক বা সিস-ট্রান্স সমাণুতার প্রধান শর্ত কী?", options: ["মুক্ত ঘূর্ণন বাধাগ্রস্ত হওয়া", "দ্বিবন্ধন থাকা", "সমান আণবিক সংকেত থাকা", "সবগুলোই"], correct: 3 },
+                { board: "বোর্ড ফাইনাল", q: "১২. নিচের কোন যৌগটি পোলার?", options: ["H₂O", "CH₄", "CO₂", "CCl₄"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১৩. এসটিন বা ইথাইনের আকৃতি কেমন?", options: ["সরলরৈখিক", "কৌণিক", "চতুস্তলকীয়", "ত্রিকোণাকার"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১৪. কোনটি প্রাইমারি স্ট্যান্ডার্ড পদার্থ নয়?", options: ["HCl", "Na₂CO₃", "H₂C₂O₄·2H₂O", "K₂Cr₂O₇"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১৫. নিচের কোনটিতে সমযোজী বন্ধন সবচেয়ে শক্তিশালী?", options: ["H-F", "H-Cl", "H-Br", "H-I"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১৬. Na⁺ আয়নে ইলেকট্রন সংখ্যা কয়টি?", options: ["১০", "১১", "১২", "৯"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১৭. সালফারের পারমাণবিক সংখ্যা কত?", options: ["১৬", "১৪", "১৫", "১৭"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "১৮. ব্লিচিং পাউডারের সঠিক সংকেত কোনটি?", options: ["CaOCl₂", "CaCl₂", "Ca(OCl)Cl", "ক ও গ উভয়ই"], correct: 3 },
+                { board: "বোর্ড ফাইনাল", q: "১৯. পেট্রোলিয়ামের ভগ্নাংশ পাতনে সবচেয়ে কম স্ফুটনাংক বিশিষ্ট অংশ কোনটি?", options: ["প্রাকৃতিক গ্যাস / পেট্রোলিয়াম ইথার", "কেরোসিন", "ডিজেল", "পিচ"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "২০. নিচের কোন গ্যাসটি ডাইঅ্যামিন সিলভার নাইট্রেট দ্রবণকে বিজারিত করে আয়না তৈরি করে?", options: ["অ্যালডিহাইড", "কিটোন", "অ্যালকোহল", "ইথার"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "২১. শিখা পরীক্ষায় কপার (Cu) আয়ন কী রঙের শিখা প্রদর্শন করে?", options: ["নীলাভ সবুজ", "সোনালী হলুদ", "ইটের মতো লাল", "বেগুনি"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "২২. শিখা পরীক্ষায় সোডিয়াম (Na) এর বর্ণ কেমন?", options: ["সোনালী হলুদ", "নীলাভ সবুজ", "ইটের মতো লাল", "গোলাপী"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "২৩. নিচের কোন এসিডটি ফলে প্রাকৃতিকভাবে পাওয়া যায়?", options: ["সাইট্রিক এসিড ও ম্যালিক এসিড", "সালফিউরিক এসিড", "নাইট্রিক এসিড", "হাইড্রোক্লোরিক এসিড"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "২৪. গ্রিন কেমিস্ট্রির মূলনীতি কয়টি?", options: ["১২টি", "১০টি", "৮টি", "১৫টি"], correct: 0 },
+                { board: "বোর্ড ফাইনাল", q: "২৫. ক্রোম কেম ল্যাবস (ChromaChemLabs) এর মাস্টার এক্সাম সম্পন্ন করার অনুভূতি কেমন?", options: ["অসাধারণ ও শিক্ষণীয়", "বিজ্ঞানপ্রেমীদের জন্য দারুণ", "বোর্ড পরীক্ষার সেরা প্রস্তুতি", "সবকটিই সত্য"], correct: 3 }
+            ]
+        }
+    ];
+
+    let currentSetIndex = 0;
+
+    function renderSet() {
+        let currentSet = setsData[currentSetIndex];
+        
+        document.getElementById('setTitleText').innerText = `সেট ${currentSetIndex + 1} / 4`;
+        document.getElementById('progressText').innerText = `${(currentSetIndex + 1) * 25}% সম্পন্ন`;
+        document.getElementById('progressBar').style.width = ((currentSetIndex + 1) * 25) + '%';
+        
+        let cardHTML = `
+            <div class="card-inner-header">
+                <h2>${currentSet.setTitle}</h2>
+                <div class="q-count-badge">২৫ টি প্রশ্ন</div>
+            </div>
+        `;
+        
+        currentSet.questions.forEach((qObj, qIndex) => {
+            cardHTML += `
+                <div class="question-box">
+                    <div class="board-tag">📌 ${qObj.board}</div>
+                    <p class="q-text">${qObj.q}</p>
+            `;
+            
+            qObj.options.forEach((optText, optIndex) => {
+                let optLetter = ['ক', 'খ', 'গ', 'ঘ'][optIndex];
+                cardHTML += `
+                    <label class="option-label">
+                        <input type="radio" name="q_${qIndex}" value="${optIndex}"> 
+                        ${optLetter}) ${optText}
+                    </label>
+                `;
+            });
+            
+            cardHTML += `</div>`;
+        });
+
+        if (currentSetIndex < setsData.length - 1) {
+            cardHTML += `<button class="action-btn" onclick="evaluateSet()">সেট ${currentSet.setNum} জমা দিন</button>`;
+        } else {
+            cardHTML += `<button class="action-btn" onclick="evaluateSet()">মাস্টার ফাইনাল জমা দিন ও সার্টিফিকেট ক্লেইম করুন 🎓</button>`;
+        }
+
+        document.getElementById('examCard').innerHTML = cardHTML;
+    }
+
+    function evaluateSet() {
+        let currentSet = setsData[currentSetIndex];
+        let score = 0;
+
+        currentSet.questions.forEach((qObj, qIndex) => {
+            let selectedOpt = document.querySelector(`input[name="q_${qIndex}"]:checked`);
+            if (selectedOpt && parseInt(selectedOpt.value) === qObj.correct) {
+                score++;
+            }
+        });
+
+        if (score >= 20) {
+            if (currentSetIndex < setsData.length - 1) {
+                document.getElementById('modalTitle').innerText = "চমৎকার! 🎉";
+                document.getElementById('modalText').innerText = `আপনি ২৫টির মধ্যে ${score}টি সঠিক উত্তর দিয়েছেন!\nসেট ${currentSet.setNum} সফলভাবে পাস করেছেন।`;
+                document.getElementById('nextBtn').innerText = "পরবর্তী সেটে যান →";
+                document.getElementById('nextBtn').setAttribute('onclick', "nextSet()");
+                document.getElementById('welcomeModal').style.display = 'flex';
+            } else {
+                // ফাইনাল সেট শেষ হওয়ার পর সার্টিফিকেট পাওয়ার বার্তা ও পরবর্তী পদক্ষেপ
+                document.getElementById('modalTitle').innerText = "অভিনন্দন গ্র্যান্ড মাস্টার! 👑🎓";
+                document.getElementById('modalText').innerText = `আপনি ফাইনাল সেটে ২৫টির মধ্যে ${score}টি সঠিক উত্তর দিয়ে লেভেল ৫ সফলভাবে সম্পন্ন করেছেন!\n\n✨ সার্টিফিকেট পেতে সামনে এগিয়ে যান বা নিচের লিংকে ক্লিক করুন।`;
+                document.getElementById('nextBtn').innerText = "সার্টিফিকেট ক্লেইম পেজে যান 🏆";
+                document.getElementById('nextBtn').setAttribute('onclick', "window.location.href='certificate_claim.html'");
+                document.getElementById('welcomeModal').style.display = 'flex';
+            }
+        } else {
+            document.getElementById('modalTitle').innerText = "সতর্কবার্তা! ⚠️";
+            document.getElementById('modalText').innerText = `আপনার প্রাপ্ত স্কোর ${score}/২৫।\nপরবর্তী সেটে যাওয়ার জন্য কমপক্ষে ২০টি সঠিক উত্তর দিতে হবে!\nদয়া করে আবার চেষ্টা করুন।`;
+            document.getElementById('nextBtn').innerText = "পুনরায় চেষ্টা করুন (Retry) 🔄";
+            document.getElementById('nextBtn').setAttribute('onclick', "closeModal()");
+            document.getElementById('welcomeModal').style.display = 'flex';
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('welcomeModal').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextSet() {
+        document.getElementById('welcomeModal').style.display = 'none';
+        currentSetIndex++;
+        renderSet();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderSet;
+</script>
+</body>
+</html>
