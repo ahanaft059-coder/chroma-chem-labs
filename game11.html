@@ -17,6 +17,27 @@
             overflow: hidden;
             padding: 10px;
         }
+        .back-btn { 
+            position: fixed; 
+            top: 25px; 
+            left: 25px; 
+            padding: 10px 20px; 
+            background: rgba(30, 41, 59, 0.8); 
+            backdrop-filter: blur(10px);
+            color: #94a3b8; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            border: 1px solid rgba(51, 65, 85, 0.8); 
+            transition: 0.3s; 
+            z-index: 1000; 
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .back-btn:hover { 
+            background: #334155; 
+            color: white; 
+            transform: translateX(-3px); 
+        }
         .game-container {
             width: 100%;
             max-width: 420px;
@@ -118,6 +139,8 @@
     </style>
 </head>
 <body>
+
+    <a href="games.html" class="back-btn">← ফিরে যান</a>
 
     <div class="game-container">
         <!-- স্টার্ট স্ক্রিন -->
