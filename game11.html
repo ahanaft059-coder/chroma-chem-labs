@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Orbital Dodge - Pro Edition</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { 
+            background: radial-gradient(circle at 50% 0%, #1e0033 0%, #0a0012 60%, #000000 100%); 
+            color: #ffffff; 
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 10px;
+        }
+        .game-container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(20, 15, 30, 0.92);
+            border: 2px solid rgba(76, 201, 240, 0.4);
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.8), 0 0 25px rgba(76, 201, 240, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        h2 { color: #ffb703; font-size: 19px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .stats { display: flex; justify-content: space-between; font-size: 13px; color: #4cc9f0; margin-bottom: 12px; background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(76,201,240,0.2); }
+        
+        #gameCanvas {
+            background: #05020a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            display: block;
+            margin: 0 auto 12px auto;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+        }
+
+        .question-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,183,3,0.3);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #cbd5e1;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .question-box span { color: #ffb703; font-weight: bold; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        .opt-btn {
+            background: linear-gradient(135deg, #3a86ff, #4361ee);
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+            transition: transform 0.1s, background 0.2s;
+        }
+        .opt-btn:active { transform: scale(0.97); }
+
+        .overlay-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 5, 18, 0.96);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            padding: 20px;
+            border-radius: 24px;
+            text-align: center;
+        }
+        .overlay-screen h1 { color: #ffb703; font-size: 22px; margin-bottom: 10px; }
+        .overlay-screen p { color: #cbd5e1; font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
+        
+        .main-btn {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            color: #000;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 183, 3, 0.4);
+        }
+
+        .dashboard-stats {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,183,3,0.3);
+            border-radius: 14px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 18px;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+        .dashboard-stats span { color: #4cc9f0; float: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- স্টার্ট স্ক্রিন -->
+        <div id="startScreen" class="overlay-screen">
+            <h1>⚛️ কোয়ান্টাম অরবিটাল ডার্গ</h1>
+            <p>কোয়ান্টাম সংখ্যা ও অরবিটালের চ্যালেঞ্জ মোকাবেলা করে সঠিক উত্তর দিয়ে ইলেকট্রন জগত রক্ষা করো!</p>
+            <button class="main-btn" onclick="startGame()">গেম শুরু করুন 🚀</button>
+        </div>
+
+        <!-- ড্যাশবোর্ড ও গেম ওভার স্ক্রিন -->
+        <div id="dashboardScreen" class="overlay-screen" style="display: none;">
+            <h1>🏆 গেম ওভার - পারফরম্যান্স রিপোর্ট</h1>
+            <div class="dashboard-stats" id="dashContent"></div>
+            <button class="main-btn" onclick="startGame()">পুনরায় খেলুন 🔄</button>
+        </div>
+
+        <h2>Quantum Dodge Pro</h2>
+        <div class="stats">
+            <span>স্কোর: <strong id="score">0</strong></span>
+            <span>লেভেল: <strong id="level">1</strong></span>
+            <span>জীবন: <strong id="lives">❤️❤️❤️</strong></span>
+        </div>
+
+        <canvas id="gameCanvas" width="384" height="150"></canvas>
+
+        <div class="question-box" id="qText">চ্যালেঞ্জ লোড হচ্ছে...</div>
+
+        <div class="options-grid" id="optionsGrid"></div>
+    </div>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let score = 0;
+    let level = 1;
+    let lives = 3;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let currentQ = {};
+    let particles = [];
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        if (type === 'correct') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+            gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(110, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+        } else if (type === 'gameover') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        }
+    }
+
+    const challenges = [
+        { q: "প্রধান কোয়ান্টাম সংখ্যা n = 1 হলে উপশক্তিস্তর কয়টি?", ans: "১টি (1s)", opts: ["১টি (1s)", " ২টি (1s, 2s)", " ৩টি", " ৪টি"] },
+        { q: "l = 0 হলে কোন সাবশেল নির্দেশ করে?", ans: "s সাবশেল", opts: ["s সাবশেল", "p সাবশেল", "d সাবশেল", "f সাবশেল"] },
+        { q: "l = 1 হলে কোন সাবশেল নির্দেশ করে?", ans: "p সাবশেল", opts: ["s সাবশেল", "p সাবশেল", "d সাবশেল", "f সাবশেল"] },
+        { q: "l = 2 হলে কোন সাবশেল নির্দেশ করে?", ans: "d সাবশেল", opts: ["p সাবশেল", "d সাবশেল", "f সাবশেল", "s সাবশেল"] },
+        { q: "l = 3 হলে কোন সাবশেল নির্দেশ করে?", ans: "f সাবশেল", opts: ["p সাবশেল", "d সাবশেল", "f সাবশেল", "s সাবশেল"] },
+        { q: "প্রধান কোয়ান্টাম সংখ্যা n = 3 হলে মোট অরবিটাল সংখ্যা কত?", ans: "৯টি", opts: ["৩টি", "৬টি", "৯টি", "১৮টি"] },
+        { q: "প্রধান কোয়ান্টাম সংখ্যা n = 4 হলে সর্বোচ্চ ইলেকট্রন ধারণ ক্ষমতা কত?", ans: "৩২টি", opts: ["৮টি", "১৮টি", "৩২টি", "৫০টি"] },
+        { q: "p-অরবিটালের ইলেকট্রন ধারণ ক্ষমতা কত?", ans: "৬টি", opts: ["২টি", "৬টি", "১০টি", "১৪টি"] },
+        { q: "d-অরবিটালের ইলেকট্রন ধারণ ক্ষমতা কত?", ans: "১০টি", opts: ["২টি", "৬টি", "১০টি", "১৪টি"] },
+        { q: "f-অরবিটালের ইলেকট্রন ধারণ ক্ষমতা কত?", ans: "১৪টি", opts: ["৬টি", "১০টি", "১৪টি", "৩২টি"] },
+        { q: "s-অরবিটালের আকৃতি কেমন?", ans: "গোলীয় (Spherical)", opts: ["গোলীয় (Spherical)", "ডাম্বেল আকৃতির", "ডাবল ডাম্বেল", "জটিল রিং"] },
+        { q: "p-অরবিটালের আকৃতি কেমন?", ans: "ডাম্বেল আকৃতির", opts: ["গোলীয়", "ডাম্বেল আকৃতির", "ডাবল ডাম্বেল", "গোলাকার রিং"] },
+        { q: "d-অরবিটালের আকৃতি কেমন?", ans: "ডাবল ডাম্বেল", opts: ["গোলীয়", "ডাম্বেল আকৃতির", "ডাবল ডাম্বেল", "বৃত্তাকার"] },
+        { q: "কোন অরবিটালের ত্রিমাত্রিক বিন্যাস গোলীয় প্রকৃতির?", ans: "s-অরবিটাল", opts: ["s-অরবিটাল", "p-অরবিটাল", "d-অরবিটাল", "f-অরবিটাল"] },
+        { q: "যদি n = 4 হয়, তবে l এর সম্ভাব্য মান কয়টি ও কী কী?", ans: "৪টি (0, 1, 2, 3)", opts: ["৩টি (0, 1, 2)", "৪টি (0, 1, 2, 3)", "৫টি (0, 1, 2, 3, 4)", "২টি (0, 1)"] },
+        { q: "একটি উপশক্তিস্তরে চুম্বকীয় কোয়ান্টাম সংখ্যার (m) মান কিসের ওপর নির্ভর করে?", ans: "অ্যাজিমুথাল কোয়ান্টাম সংখ্যা (l)", opts: ["প্রধান কোয়ান্টাম সংখ্যা (n)", "স্পিন কোয়ান্টাম সংখ্যা (s)", "অ্যাজিমুথাল কোয়ান্টাম সংখ্যা (l)", "পরমাণুর ভর"] },
+        { q: "n = 3 এবং l = 1 হলে কোন অরবিটালকে নির্দেশ করে?", ans: "3p অরবিটাল", opts: ["3s অরবিটাল", "3p অরবিটাল", "3d অরবিটাল", "4p অরবিটাল"] },
+        { q: "n = 4 এবং l = 2 হলে কোন সাবশেল নির্দেশ করে?", ans: "4d সাবশেল", opts: ["4s সাবশেল", "4p সাবশেল", "4d সাবশেল", "4f সাবশেল"] },
+        { q: "কোন কোয়ান্টাম সংখ্যা ইলেকট্রনের নিজ অক্ষের চারপাশের ঘূর্ণন নির্দেশ করে?", ans: "স্পিন কোয়ান্টাম সংখ্যা (s)", opts: ["প্রধান কোয়ান্টাম সংখ্যা", "অ্যাজিমুথাল কোয়ান্টাম সংখ্যা", "চুম্বকীয় কোয়ান্টাম সংখ্যা", "স্পিন কোয়ান্টাম সংখ্যা (s)"] },
+        { q: "মোট নোড (Total Nodes) বের করার সঠিক সূত্র কোনটি?", ans: "(n - 1)", opts: ["(n - l - 1)", "(n - 1)", "l", "(2l + 1)"] },
+        { q: "রেডিয়াল নোড (Radial Nodes) নির্ণয়ের সঠিক সূত্র কোনটি?", ans: "(n - l - 1)", opts: ["(n - 1)", "(n - l - 1)", "l", "n + l"] },
+        { q: "কৌণিক নোড (Angular Nodes) কার মানের সমান হয়?", ans: "অ্যাজিমুথাল কোয়ান্টাম সংখ্যা (l)", opts: ["প্রধান কোয়ান্টাম সংখ্যা (n)", "অ্যাজিমুথাল কোয়ান্টাম সংখ্যা (l)", "চুম্বকীয় সংখ্যা (m)", "শূন্য"] },
+        { q: "2s অরবিটালে রেডিয়াল নোডের সংখ্যা কয়টি?", ans: "১টি", opts: ["০টি", "১টি", "২টি", "৩টি"] },
+        { q: "3p অরবিটালে রেডিয়াল নোডের সংখ্যা কত?", ans: "১টি", opts: ["০টি", "১টি", "২টি", "৩টি"] },
+        { q: "কোন নীতি অনুযায়ী একই শক্তিসম্পন্ন অরবিটালগুলোতে প্রথমে একটি করে ইলেকট্রন প্রবেশ করে?", ans: "হুন্ডের নীতি", opts: ["আউফবাউ নীতি", "পলির বর্জন নীতি", "হুন্ডের নীতি", "হাইজেনবার্গের নীতি"] },
+        { q: "কোন নীতি লঙ্ঘন করলে একই অরবিটালে একই স্পিনের দুটি ইলেকট্রন থাকতে পারে?", ans: "পলির বর্জন নীতি", opts: ["আউফবাউ নীতি", "পলির বর্জন নীতি", "হুন্ডের নীতি", "অকট্টিট রুল"] },
+        { q: "আউফবাউ (Aufbau) শব্দটির অর্থ কী?", ans: "গঠন করা বা বিল্ডিং আপ", opts: ["ভেঙে ফেলা", "গঠন করা বা বিল্ডিং আপ", "সংরক্ষণ করা", "পরিবর্তন করা"] },
+        { q: "কোন নিয়মের ব্যতিক্রম হিসেবে ক্রোমিয়ামের ইলেকট্রন বিন্যাসে অর্ধপূর্ণ স্থায়িত্ব দেখা যায়?", ans: "আউফবাউ ও হুন্ডের নীতি", opts: ["ডাল্টনের পরমাণু বাদ", "আউফবাউ ও হুন্ডের নীতি", "বোরের পরমাণু মডেল", "রাদারফোর্ডের মডেল"] },
+        { q: "কোন অরবিটালের শক্তি কম তা নির্ধারণে কোনটির মান আগে দেখা হয়?", ans: "(n + l) এর মান", opts: ["শুধু n এর মান", "(n + l) এর মান", "শুধু l এর মান", "ইলেকট্রন সংখ্যা"] },
+        { q: "যেসব পরমাণুর ইলেকট্রন বিন্যাসে d-অরবিটাল সম্পূর্ণ বা অর্ধপূর্ণ থাকে, সেগুলোর স্থায়িত্ব কেমন হয়?", ans: "বেশি হয়", opts: ["কম হয়", "অস্থির হয়", "বেশি হয়", "নিরপেক্ষ থাকে"] },
+        { q: "ম্যাঙ্গানিজ (Mn - 25) এর d-সাবশেলে কয়টি ইলেকট্রন থাকে?", ans: "৫টি", opts: ["৪টি", "৫টি", "৬টি", "১০টি"] },
+        { q: "লোহা (Fe - 26) এর শেষ শক্তিস্তরের ইলেকট্রন বিন্যাস কোনটি?", ans: "...3d⁶ 4s²", opts: ["...3d⁵ 4s³", "...3d⁶ 4s²", "...3d⁴ 4s⁴", "...3d⁸ 4s⁰"] },
+        { q: "জিংক (Zn - 30) এর d-অরবিটালে ইলেকট্রন সংখ্যা কত?", ans: "১০টি", opts: ["৬টি", "৮টি", "১০টি", "১৪টি"] },
+        { q: "স্ক্যান্ডিয়াম (Sc - 21) এর শেষ ইলেকট্রনটি কোন অরবিটালে প্রবেশ করে?", ans: "3d অরবিটালে", opts: ["4s অরবিটালে", "3d অরবিটালে", "4p অরবিটালে", "3p অরবিটালে"] },
+        { q: "কোন বিজ্ঞানী প্রথম ইলেকট্রনের দ্বৈত সত্তা (Wave-Particle Duality) ধারণা দেন?", ans: "ডি ব্রগলি (De Broglie)", opts: ["আইনস্টাইন", "ডি ব্রগলি (De Broglie)", "হাইজেনবার্গ", "পলি"] },
+        { q: "হাইজেনবারগের অনিশ্চয়তা নীতি অনুসারে একসঙ্গে নিখুঁতভাবে মাপা যায় না কোনটি?", ans: "অবস্থান ও ভরবেগ", opts: ["ভর ও চার্জ", "অবস্থান ও ভরবেগ", "শক্তি ও সময়", "তাপ ও চাপ"] },
+        { q: "শ্রোডিঙ্গার তরঙ্গ সমীকরণে 'psi' (ψ) দ্বারা কী বোঝানো হয়?", ans: "তরঙ্গ ফাংশন (Wave Function)", opts: ["শক্তি", "তরঙ্গ ফাংশন (Wave Function)", "কম্পাঙ্ক", "বেগের মান"] },
+        { q: "পরমাণুর নিউক্লিয়াসের বাইরে ইলেকট্রনের পাওয়ার সম্ভাবনা সর্বোচ্চ যেখানে, তাকে কী বলে?", ans: "অরবিটাল", opts: ["অরবিট", "অরবিটাল", "নিউক্লিয়াস", "শক্তিস্তর"] },
+        { q: "বোরের পরমাণু মডেলে শক্তিস্তরগুলোকে কি অক্ষর দ্বারা প্রকাশ করা হয়?", ans: "K, L, M, N...", opts: ["A, B, C, D...", "K, L, M, N...", "s, p, d, f", "1, 2, 3, 4"] },
+        { q: "কোন কোয়ান্টাম সেটটি অসম্ভব বা অবাস্তব?", ans: "n=2, l=2, m=0", opts: ["n=3, l=1, m=0", "n=2, l=2, m=0", "n=4, l=0, m=0", "n=3, l=2, m=-1"] },
+        { q: "একটি পরমাণুর সর্ববহিঃস্থ স্তরে ns² np⁵ বিন্যাস থাকলে মৌলটি কোন গ্রুপের?", ans: "১৭ নং গ্রুপ (হ্যালোজেন)", opts: ["১৫ নং গ্রুপ", "১৬ নং গ্রুপ", "১৭ নং গ্রুপ (হ্যালোজেন)", "১৮ নং গ্রুপ"] },
+        { q: "ডি-ব্লক মৌলের সংখ্যা কয়টি শ্রেণীতে বিভক্ত?", ans: "১০টি শ্রেণীতে (গ্রুপ ৩ থেকে ১২)", opts: ["৮টি", "১০টি", "১৮টি", "১৪টি"] },
+        { q: "কোন অরবিটালের ইলেকট্রন মেঘ ডাবল ডাম্বেল আকৃতির এবং অক্ষ বরাবর অবস্থিত?", ans: "d_{x^2 - y^2}", opts: ["d_{xy}", "d_{z^2}", "d_{x^2 - y^2}", "p_z"] },
+        { q: "ল্যান্থানাইড সিরিজের মৌলগুলোর শেষ ইলেকট্রন কোন উপশক্তিস্তরে প্রবেশ করে?", ans: "4f উপশক্তিস্তরে", opts: ["4f উপশক্তিস্তরে", "5f উপশক্তিস্তরে", "6d উপশক্তিস্তরে", "3d উপশক্তিস্তরে"] },
+        { q: "চৌম্বকীয় কোয়ান্টাম সংখ্যা (m) কিসের ওপর নির্ভর করে?", ans: "অ্যাজিমুথাল কোয়ান্টাম সংখ্যা (l)", opts: ["প্রধান কোয়ান্টাম সংখ্যা (n)", "স্পিন সংখ্যা (s)", "অ্যাজিমুথাল কোয়ান্টাম সংখ্যা (l)", "ভর সংখ্যা"] },
+        { q: "একটি অরবিটালে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?", ans: "২টি (বিপরীত স্পিন)", opts: ["১টি", "২টি (বিপরীত স্পিন)", "৬টি", "নির্দিষ্ট নয়"] },
+        { q: "স্পিন কোয়ান্টাম সংখ্যার (s) মান কয়টি হতে পারে?", ans: "+1/2 এবং -1/2", opts: ["০ এবং ১", "+1 এবং -1", "+1/2 এবং -1/2", "শুধু +1/2"] },
+        { q: "ম্যাগনেটিক কোয়ান্টাম সংখ্যার মান m এর পরিসর কত?", ans: "-l থেকে 0 সহ +l পর্যন্ত", opts: ["0 থেকে n পর্যন্ত", "-l থেকে 0 সহ +l পর্যন্ত", "-n থেকে +n", "সর্বদা ধনাত্মক"] },
+        { q: "3s অরবিটালে গোলীয় নোড বা নিস্তড়িত অঞ্চলের সংখ্যা কত?", ans: "২টি", opts: ["০টি", "১টি", "২টি", "৩টি"] },
+        { q: "2p অরবিটালে নোডাল প্লেনের সংখ্যা কয়টি?", ans: "১টি", opts: ["০টি", "১টি", "২টি", "৩টি"] },
+        { q: "কোন শক্তিস্তরের শক্তি আগে পূর্ণ হয় তা কোন নীতি দ্বারা নির্ধারিত হয়?", ans: "(n + l) নিয়ম", opts: ["হুন্ডের নীতি", "পলির বর্জন নীতি", "(n + l) নিয়ম", "আউফবাউ নীতি"] },
+        { q: "পলির বর্জন নীতি অনুযায়ী একটি পরমাণুর দুটি ইলেকট্রনের কয়টি কোয়ান্টাম সংখ্যার মান এক হতে পারে না?", ans: "চারটির মান একত্রে সমান হতে পারে না", opts: ["একটিরও না", "সবগুলোর", "চারটির মান একত্রে সমান হতে পারে না", "শুধু স্পিনের"] },
+        { q: "কোন নীতি অনুসারে অরবিটালগুলোতে ইলেকট্রন সমান্তরাল স্পিনে প্রবেশ করে?", ans: "হুন্ডের নীতি", opts: ["হুন্ডের নীতি", "পলির বর্জন নীতি", "আউফবাউ নীতি", "ডাল্টনের পরমাণু বাদ"] },
+        { q: "সবনিম্ন শক্তির অরবিটাল আগে পূর্ণ হয়—এটি কোন নীতি?", ans: "আউফবাউ নীতি", opts: ["আউফবাউ নীতি", "হুন্ডের নীতি", "পলির বর্জন নীতি", "লুয়িসের তত্ত্ব"] },
+        { q: "ক্রোমিয়াম (Cr - 24) এর সঠিক ইলেকট্রন বিন্যাস কোনটি?", ans: "...3d⁵ 4s¹", opts: ["...3d⁴ 4s²", "...3d⁵ 4s¹", "...3d⁶ 4s⁰", "...3d³ 4s³"] },
+        { q: "কপার (Cu - 29) এর বহিঃস্থ স্তরের বিন্যাস কোনটি?", ans: "...3d¹⁰ 4s¹", opts: ["...3d⁹ 4s²", "...3d¹⁰ 4s¹", "...3d⁸ 4s³", "...3d⁵ 4s⁴"] },
+        { q: "কোন মৌলের ক্ষেত্রে (n + l) এর মান সমান হলে কম n বিশিষ্ট অরবিটাল আগে পূর্ণ হয়?", ans: "এটি সাধারণ নিয়ম", opts: ["আউফবাউ নীতি", "হুন্ডের নীতি", "পলির নীতি", "হাইজেনবার্গ নীতি"] },
+        { q: "ফিউশন বা নিউক্লিয়ার বিক্রিয়ায় কোয়ান্টাম শক্তি মাপার একক কি?", ans: "MeV (Mega electron Volt)", opts: ["Joule", "MeV (Mega electron Volt)", "Calorie", "Watt"] },
+        { q: "কোন অরবিটালের কোয়ান্টাম সেট n=3, l=2 সম্ভব?", ans: "3d অরবিটাল", opts: ["3p অরবিটাল", "3d অরবিটাল", "3s অরবিটাল", "সম্ভব নয়"] },
+        { q: "একটি সাবশেলে মোট অরবিটাল সংখ্যা বের করার সূত্র কোনটি?", ans: "(2l + 1)", opts: ["2n²", "(2l + 1)", "2(2l + 1)", "n²"] }
+    ];
+
+    function startGame() {
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("dashboardScreen").style.display = "none";
+        score = 0;
+        level = 1;
+        lives = 3;
+        correctCount = 0;
+        wrongCount = 0;
+        initParticles();
+        updateStats();
+        nextQuestion();
+        loop();
+    }
+
+    function initParticles() {
+        particles = [];
+        for(let i=0; i<15; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 3 + 1,
+                speed: Math.random() * 1.5 + 0.5
+            });
+        }
+    }
+
+    function nextQuestion() {
+        currentQ = challenges[Math.floor(Math.random() * challenges.length)];
+        document.getElementById("qText").innerHTML = `<span>${currentQ.q}</span>`;
+        
+        const grid = document.getElementById("optionsGrid");
+        grid.innerHTML = "";
+        
+        let shuffledOpts = [...currentQ.opts].sort(() => Math.random() - 0.5);
+        
+        shuffledOpts.forEach(opt => {
+            let btn = document.createElement("button");
+            btn.className = "opt-btn";
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt);
+            grid.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected) {
+        if (selected === currentQ.ans) {
+            score += 15 * level;
+            correctCount++;
+            playSound('correct');
+            if (correctCount % 3 === 0) {
+                level++;
+            }
+        } else {
+            lives--;
+            wrongCount++;
+            playSound('wrong');
+            if (lives <= 0) {
+                playSound('gameover');
+                showDashboard();
+                return;
+            }
+        }
+        updateStats();
+        nextQuestion();
+    }
+
+    function updateStats() {
+        document.getElementById("score").innerText = score;
+        document.getElementById("level").innerText = level;
+        document.getElementById("lives").innerText = "❤️".repeat(lives);
+    }
+
+    function showDashboard() {
+        const dash = document.getElementById("dashboardScreen");
+        const content = document.getElementById("dashContent");
+        
+        let grade = "C (উন্নতি প্রয়োজন)";
+        if (score >= 150) grade = "A+ (কোয়ান্টাম মাস্টার 🧪)";
+        else if (score >= 80) grade = "B (দারুণ চেষ্টা 👍)";
+
+        content.innerHTML = `
+            মোট স্কোর: <span>${score}</span><br>
+            সঠিক উত্তর: <span>${correctCount} টি</span><br>
+            ভুল উত্তর: <span>${wrongCount} টি</span><br>
+            অর্জিত লেভেল: <span>Level ${level}</span><br>
+            পারফরম্যান্স গ্রেড: <span>${grade}</span>
+        `;
+        dash.style.display = "flex";
+    }
+
+    let waveAngle = 0;
+    function loop() {
+        if (document.getElementById("startScreen").style.display !== "flex" && 
+            document.getElementById("dashboardScreen").style.display !== "flex") {
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "rgba(76, 201, 240, 0.4)";
+            particles.forEach(p => {
+                p.x -= p.speed;
+                if (p.x < 0) p.x = canvas.width;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            waveAngle += 0.05;
+            let centerY = canvas.height / 2 + Math.sin(waveAngle) * 20;
+
+            ctx.strokeStyle = "#ffb703";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, centerY, 18, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = "#ff007f";
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, centerY, 8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        requestAnimationFrame(loop);
+    }
+</script>
+
+</body>
+</html>
