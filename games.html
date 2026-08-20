@@ -24,6 +24,17 @@
         header { text-align: center; margin-bottom: 40px; }
         header h1 { font-size: 36px; margin-bottom: 10px; background: linear-gradient(135deg, #e67e22, #f1c40f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
+        /* সেকশন হেডার স্টাইল */
+        .section-title {
+            font-size: 22px;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
         @media (max-width: 700px) { .games-grid { grid-template-columns: 1fr; } }
 
@@ -33,15 +44,23 @@
         .game-title { font-size: 22px; margin: 0 0 10px 0; }
         .game-desc { font-size: 14px; opacity: 0.8; line-height: 1.5; margin-bottom: 20px; }
         .play-btn { display: block; text-align: center; background: linear-gradient(135deg, #3498db, #2ecc71); color: white; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: bold; }
+        
+        /* অ্যাডভান্সড সেকশনের স্টাইল */
+        .advanced-section {
+            border-color: #ffb703;
+        }
+        .advanced-card {
+            border: 2px solid rgba(255, 183, 3, 0.5);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 183, 3, 0.05) 100%);
+        }
+        .advanced-btn {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            color: #000;
+        }
+
         .locked { opacity: 0.6; }
         .locked .play-btn { background: #7f8c8d; cursor: not-allowed; }
     </style>
-
-<div class="container">
-    <!-- ফিরে যান বাটন -->
-    <div class="top-action-bar">
-        <a href="index.html" class="back-home-btn">← ফিরে যান</a>
-    </div>
 </head>
 <body>
 
@@ -51,6 +70,8 @@
             <p>তোমার পছন্দের গেমটি বেছে নাও এবং খেলা শুরু করো!</p>
         </header>
 
+        <!-- মূল ৯টি গেম এবং ১টি লকড গেম -->
+        <h2 class="section-title">⚡ মূল গেমসমূহ (Core Games)</h2>
         <div class="games-grid">
             <div class="game-card">
                 <div>
@@ -65,7 +86,7 @@
                 <div>
                     <div class="game-icon">🎯</div>
                     <h3 class="game-title">আণবিক ভর শিকারী</h3>
-                    <p class="game-desc">স্ক্রিনে আসা সংকেত দেখে দ্রুত মনে মনে হিসাব করে সঠিক আণবিক ভর অপশন থেকে খুঁজে নাও। জীবন ফুরিয়ে যাওয়ার আগেই সর্বোচ্চ স্কোর করো!</p>
+                    <p class="game-desc">স্ক্রিনে আসা সংকেত দেখে দ্রুত মনে মনে হিসাব করে সঠিক আণবিক ভর অপশন থেকে খুঁজে নাও।</p>
                 </div>
                 <a href="game2.html" class="play-btn">খেলুন ⚡</a>
             </div>
@@ -83,58 +104,55 @@
                 <div>
                     <div class="game-icon">🧪</div>
                     <h3 class="game-title">রাসায়নিক বিক্রিয়া শিকারী</h3>
-                    <p class="game-desc">সঠিক উৎপাদ বেছে নিয়ে বিক্রিয়া সম্পন্ন করো।</p>
+                    <p class="game-desc">সঠিক উৎপাদ বেছে নিয়ে বিক্রিয়া সম্পন্ন করো।</p>
                 </div>
                 <a href="game4.html" class="play-btn">খেলুন ⚡</a>
             </div>
 
-            <!-- গেম ৫: ফাংশনাল গ্রুপ চ্যালেঞ্জ -->
-<div class="game-card">
-    <div>
-        <div class="game-icon">🧪</div>
-        <h3 class="game-title">ফাংশনাল গ্রুপ চ্যালেঞ্জ</h3>
-        <p class="game-desc">সঠিক ফাংশনাল গ্রুপ চিহ্নিত করে মাস্টার হয়ে ওঠো!</p>
-    </div>
-    <a href="game5.html" class="play-btn">খেলুন ⚡</a>
-</div>
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">🧪</div>
+                    <h3 class="game-title">ফাংশনাল গ্রুপ চ্যালেঞ্জ</h3>
+                    <p class="game-desc">সঠিক ফাংশনাল গ্রুপ চিহ্নিত করে মাস্টার হয়ে ওঠো!</p>
+                </div>
+                <a href="game5.html" class="play-btn">খেলুন ⚡</a>
+            </div>
 
-<!-- গেম ৬: IUPAC নামকরণ ব্যাটল -->
-<div class="game-card">
-    <div>
-        <div class="game-icon">📝</div>
-        <h3 class="game-title">IUPAC নামকরণ ব্যাটল</h3>
-        <p class="game-desc">যৌগের সংকেত দেখে সঠিক IUPAC নাম বেছে নাও।</p>
-    </div>
-    <a href="game6.html" class="play-btn">খেলুন ⚡</a>
-</div>
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">📝</div>
+                    <h3 class="game-title">IUPAC নামকরণ ব্যাটল</h3>
+                    <p class="game-desc">যৌগের সংকেত দেখে সঠিক IUPAC নাম বেছে নাও।</p>
+                </div>
+                <a href="game6.html" class="play-btn">খেলুন ⚡</a>
+            </div>
 
-<!-- গেম ৭: রিঅ্যাকশন চেইন রিয়্যাক্টর -->
-<div class="game-card">
-    <div>
-        <div class="game-icon">⚡</div>
-        <h3 class="game-title">রিঅ্যাকশন চেইন রিয়্যাক্টর</h3>
-        <p class="game-desc">বিক্রিয়ার চেইন ধরে রেখে সর্বোচ্চ স্কোর করো!</p>
-    </div>
-    <a href="game7.html" class="play-btn">খেলুন ⚡</a>
-</div>
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">⚡</div>
+                    <h3 class="game-title">রিঅ্যাকশন চেইন রিয়্যাক্টর</h3>
+                    <p class="game-desc">বিক্রিয়ার চেইন ধরে রেখে সর্বোচ্চ স্কোর করো!</p>
+                </div>
+                <a href="game7.html" class="play-btn">খেলুন ⚡</a>
+            </div>
 
-<div class="game-card">
-    <div>
-        <div class="game-icon">📝</div>
-        <h3 class="game-title">Element Hunter 🧪</h3>
-        <p class="game-desc">মৌলের রাজ্যে রহস্যের সমাধান করো—সঠিক গ্রুপ, সঠিক পরিচয়!</p>
-    </div>
-    <a href="game8.html" class="play-btn">খেলুন ⚡</a>
-</div>
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">🔍</div>
+                    <h3 class="game-title">Element Hunter 🧪</h3>
+                    <p class="game-desc">মৌলের রাজ্যে রহস্যের সমাধান করো—সঠিক গ্রুপ, সঠিক পরিচয়!</p>
+                </div>
+                <a href="game8.html" class="play-btn">খেলুন ⚡</a>
+            </div>
 
-<div class="game-card">
-    <div>
-        <div class="game-icon">📝</div>
-        <h3 class="game-title">pH Lab:Expert Mode</h3>
-        <p class="game-desc">ঘড়ির কাঁটা আর লিকুইডের লড়াইয়ে জয়ী হতে প্রয়োজন নিখুঁত ভারসাম্য!</p>
-    </div>
-    <a href="game9.html" class="play-btn">খেলুন ⚡</a>
-</div>
+            <div class="game-card">
+                <div>
+                    <div class="game-icon">💧</div>
+                    <h3 class="game-title">pH Lab: Expert Mode</h3>
+                    <p class="game-desc">ঘড়ির কাঁটা আর লিকুইডের লড়াইয়ে জয়ী হতে প্রয়োজন নিখুঁত ভারসাম্য!</p>
+                </div>
+                <a href="game9.html" class="play-btn">খেলুন ⚡</a>
+            </div>
 
             <div class="game-card locked">
                 <div>
@@ -144,10 +162,105 @@
                 </div>
                 <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
             </div>
+        </div>
 
+        <!-- একদম নিচে অ্যাডভান্সড লেভেল গেমগুলোর সেকশন (প্রথম ৪টি আনলকড) -->
+        <h2 class="section-title advanced-section" style="color: #ffb703;">🚀 Advanced & New Games Collection</h2>
+        <div class="games-grid">
             
 
-            
+            <div class="game-card advanced-card">
+                <div>
+                    <div class="game-icon">⚛️</div>
+                    <h3 class="game-title" style="color: #ffb703;">গেম 11: কোয়ান্টাম অরবিটাল ডার্গ</h3>
+                    <p class="game-desc">কোয়ান্টাম সংখ্যা ও অরবিটালের চ্যালেঞ্জ মোকাবেলা করো।</p>
+                </div>
+                <a href="game11.html" class="play-btn advanced-btn">খেলুন 🚀</a>
+            </div>
+
+            <!-- গেম ১১ (আনলকড) -->
+            <div class="game-card advanced-card">
+                <div>
+                    <div class="game-icon">🧪</div>
+                    <h3 class="game-title" style="color: #ffb703;">গেম 12: আইসোটোপ আইল্যান্ড</h3>
+                    <p class="game-desc">আইসোটোপ ও ভরসংখ্যার হিসাব করে দ্বীপ জয় করো।</p>
+                </div>
+                <a href="game12.html" class="play-btn advanced-btn">খেলুন 🚀</a>
+            </div>
+
+            <div class="game-card advanced-card">
+                <div>
+                    <div class="game-icon">🎈</div>
+                    <h3 class="game-title" style="color: #ffb703;">গেম 13: গ্যাসের ল্যাব</h3>
+                    <p class="game-desc">বয়েল ও চালর্সের সূত্রের নিখুঁত হিসাব মেলাo।</p>
+                </div>
+                <a href="game13.html" class="play-btn advanced-btn">খেলুন 🚀</a>
+            </div>
+
+            <div class="game-card advanced-card">
+                <div>
+                    <div class="game-icon">⚗️</div>
+                    <h3 class="game-title" style="color: #ffb703;">গেম 14: সলিউশন মাস্টার</h3>
+                    <p class="game-desc">মোলারিটি ও দ্রবণ প্রস্তুতির চ্যালেঞ্জ সম্পূর্ণ করো।</p>
+                </div>
+                <a href="game14.html" class="play-btn advanced-btn">খেলুন 🚀</a>
+            </div>
+
+
+            <div class="game-card locked">
+                <div>
+                    <div class="game-icon">🔒</div>
+                    <h3 class="game-title">গেম 15: রেডক্স রিয়্যাকশন রেস</h3>
+                    <p class="game-desc">জারণ-বিজারণ বিক্রিয়ার ইলেকট্রন আদান-প্রদান ঠিক রাখো।</p>
+                </div>
+                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
+            </div>
+
+            <div class="game-card locked">
+                <div>
+                    <div class="game-icon">🔒</div>
+                    <h3 class="game-title">গেম 16: থার্মো কেমিস্ট্রি কোয়েস্ট</h3>
+                    <p class="game-desc">তাপোৎপাদী ও তাপহারী বিক্রিয়ার শক্তির হিসাব করো।</p>
+                </div>
+                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
+            </div>
+
+           <div class="game-card locked">
+                <div>
+                    <div class="game-icon">🔒</div>
+                    <h3 class="game-title">গেম 17: পিরিয়ডিক টেবিল পাজল</h3>
+                    <p class="game-desc">মৌলগুলোর পর্যায়বৃত্ত ধর্ম এবং গ্রুপিংয়ের ধাঁধা সমাধান করো।</p>
+                </div>
+                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
+            </div>
+
+            <div class="game-card locked">
+                <div>
+                    <div class="game-icon">🔒</div>
+                    <h3 class="game-title">গেম 18: পলিমার ওয়ার্ল্ড</h3>
+                    <p class="game-desc">মনোমার থেকে সঠিক পলিমার চেইন তৈরি করো।</p>
+                </div>
+                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
+            </div>
+
+            <div class="game-card locked">
+                <div>
+                    <div class="game-icon">🔒</div>
+                    <h3 class="game-title">গেম 19: মেটাল এক্সট্রাকশন</h3>
+                    <p class="game-desc">খনিজ থেকে ধাতু নিষ্কাশনের সঠিক ধাপগুলো সাজাও।</p>
+                </div>
+                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
+            </div>
+
+             <div class="game-card locked">
+                <div>
+                    <div class="game-icon">🔒</div>
+                    <h3 class="game-title">গেম 20: কেমিক্যাল ইকুইলিব্রিয়াম</h3>
+                    <p class="game-desc">সাম্যাবস্থার নীতি প্রয়োগ করে বিক্রিয়ার দিক নির্ধারণ করো।</p>
+                </div>
+                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
+            </div>
+
         </div>
     </div>
 
