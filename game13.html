@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>গ্যাসের ল্যাব (Gas Lab) - Life Edition</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1e1b4b, #312e81, #0f172a);
+            --card-bg: rgba(30, 41, 59, 0.75);
+            --text-color: #f8fafc;
+            --accent-primary: #06b6d4;
+            --accent-secondary: #3b82f6;
+            --danger: #f43f5e;
+            --success: #10b981;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+        .back-btn { 
+            position: fixed; 
+            top: 25px; 
+            left: 25px; 
+            padding: 10px 20px; 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(12px);
+            color: #38bdf8; 
+            border-radius: 14px; 
+            text-decoration: none; 
+            border: 1px solid rgba(56, 189, 248, 0.3); 
+            transition: 0.3s; 
+            z-index: 1000; 
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .back-btn:hover { 
+            background: #06b6d4; 
+            color: #0f172a; 
+            transform: translateY(-2px); 
+        }
+        .game-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 35px;
+            width: 100%;
+            max-width: 620px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+            position: relative;
+        }
+        .badge {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 26px;
+            text-shadow: 0 2px 10px rgba(6, 182, 212, 0.3);
+        }
+        .subtitle {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .stats-bar span span {
+            color: #38bdf8;
+        }
+        .lives-container {
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+        /* প্রশ্ন বক্স: লাইট এবং উজ্জ্বল */
+        .question-box {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 22px;
+            border-radius: 16px;
+            border: 1px solid #cbd5e1;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        /* অপশন: ডিপ এবং ডার্ক */
+        .option-btn {
+            background: #090d16;
+            color: #e2e8f0;
+            border: 1px solid #1e293b;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .option-btn:hover {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            border-color: transparent;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(6, 182, 212, 0.4);
+        }
+        #message {
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 25px;
+        }
+        .overlay-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            padding: 35px;
+            border-radius: 24px;
+            text-align: center;
+        }
+        .overlay-screen h2 { color: #38bdf8; font-size: 26px; margin-bottom: 15px; }
+        .overlay-screen p { color: #cbd5e1; font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
+        .dashboard-stats {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            margin-bottom: 25px;
+            text-align: left;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #cbd5e1;
+        }
+        .dashboard-stats span { color: #38bdf8; float: right; font-weight: bold; }
+        .main-btn {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: #fff;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+            transition: 0.3s;
+        }
+        .main-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(6, 182, 212, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <a href="games.html" class="back-btn">← ফিরে যান</a>
+
+    <div class="game-container">
+        <!-- গেম ওভার পপ-আপ স্ক্রিন -->
+        <div id="dashboardScreen" class="overlay-screen" style="display: none;">
+            <h2>📊 ল্যাব রিপোর্ট কার্ড</h2>
+            <div class="dashboard-stats" id="dashContent"></div>
+            <button class="main-btn" onclick="startGame()">পুনরায় খেলুন 🔄</button>
+        </div>
+
+        <div class="badge">Gas Law Challenge</div>
+        <h1>⚗️ গ্যাসের ল্যাব</h1>
+        <p class="subtitle">বয়েল ও চালর্সের সূত্রের নিখুঁত হিসাব মেলাও। ৩টি লাইফ আছে!</p>
+
+        <div class="stats-bar">
+            <span>স্কোর: <span id="score">0</span></span>
+            <span>সময়: <span id="timer">30</span>সে</span>
+            <span class="lives-container" id="lives">❤️❤️❤️</span>
+        </div>
+
+        <div id="game-area">
+            <div class="question-box" id="question-text">প্রশ্ন লোড হচ্ছে...</div>
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "বয়েলের সূত্রে কোন রাশি দুটি স্থির বা ধ্রুবক থাকে?", options: ["তাপমাত্রা ও ভর", "চাপ ও আয়তন", "চাপ ও তাপমাত্রা", "ঘনত্ব ও ভর"], answer: "তাপমাত্রা ও ভর" },
+            { q: "বয়েলের সূত্র অনুসারে স্থির তাপমাত্রায় নির্দিষ্ট ভরের গ্যাসের চাপ (P) ও আয়তন (V) এর সম্পর্ক কীরূপ?", options: ["P $\\propto$ 1/V (ব্যস্তানুপাতিক)", "P $\\propto$ V (সমানুপাতিক)", "P $\\propto$ V²", "P ও V স্বাধীন"], answer: "P $\\propto$ 1/V (ব্যস্তানুপাতিক)" },
+            { q: "বয়েলের সূত্রের গাণিতিক রূপ নিচের কোনটি?", options: ["PV = ধ্রুবক", "V/T = ধ্রুবক", "P/T = ধ্রুবক", "PVT = ধ্রুবক"], answer: "PV = ধ্রুবক" },
+            { q: "চালর্সের সূত্রে কোন রাশি দুটি স্থির বা ধ্রুবক থাকে?", options: ["চাপ ও ভর", "তাপমাত্রা ও আয়তন", "চাপ ও তাপমাত্রা", "কোনোটিই নয়"], answer: "চাপ ও ভর" },
+            { q: "চালর্সের সূত্র অনুযায়ী স্থির চাপে নির্দিষ্ট ভরের গ্যাসের আয়তন প্রতি ডিগ্রি সেলসিয়াস তাপমাত্রা বৃদ্ধি বা হ্রাসের জন্য 0 °C তাপমাত্রার আয়তনের কত অংশ পরিবর্তিত হয়?", options: ["1/273 অংশ", "1/100 অংশ", "1/22.4 অংশ", "1/546 অংশ"], answer: "1/273 অংশ" },
+            { q: "চালর্সের সূত্রের গাণিতিক রূপ কোনটি?", options: ["V/T = ধ্রুবক", "PV = ধ্রুবক", "P/T = ধ্রুবক", "V $\\times$ T = ধ্রুবক"], answer: "V/T = ধ্রুবক" },
+            { q: "পরম শূন্য তাপমাত্রা (Absolute Zero Temperature) এর মান সেলসিয়াস স্কেলে কত?", options: ["-273 °C", "0 °C", "-100 °C", "-273.15 K"], answer: "-273 °C" },
+            { q: "কেলভিন স্কেলে বা পরম স্কেলে পরম শূন্য তাপমাত্রার মান কত?", options: ["0 K", "273 K", "-273 K", "100 K"], answer: "0 K" },
+            { q: "যে তাত্ত্বিক তাপমাত্রায় গ্যাসের আয়তন শূন্য হয়ে যায় বলে কল্পনা করা হয়, তাকে কী বলে?", options: ["পরম শূন্য তাপমাত্রা", "সমন্বিত তাপমাত্রা", "ক্রান্তি তাপমাত্রা", "গলনাঙ্ক"], answer: "পরম শূন্য তাপমাত্রা" },
+            { q: "চার্লসের সূত্রানুসারে V বনাম T (কেলভিন স্কেলে) লেখচিত্রের প্রকৃতি কীরূপ হয়?", options: ["মূলবিন্দুগামী সরলরেখা", "পরাবৃত্ত", "অধিবৃত্ত", "বক্ররেখা"], answer: "মূলবিন্দুগামী সরলরেখা" },
+            { q: "বয়েলের সূত্রানুসারে P বনাম 1/V লেখচিত্র কেমন হয়?", options: ["মূলবিন্দুগামী সরলরেখা", "বক্ররেখা", "সমান্তরাল রেখা", "বৃত্তাকার"], answer: "মূলবিন্দুগামী সরলরেখা" },
+            { q: "বয়েলের সূত্রানুসারে P বনাম V লেখচিত্রের আকৃতি কীরূপ?", options: ["সমপরাবৃত্ত (Hyperbola)", "সরলরেখা", "পরাবৃত্ত", "সাঁপের মতো পেঁচানো"], answer: "সমপরাবৃত্ত (Hyperbola)" },
+            { q: "নির্দিষ্ট ভরের কোনো গ্যাসের ক্ষেত্রে T1 তাপমাত্রায় আয়তন V1 এবং T2 তাপমাত্রায় আয়তন V2 হলে চালর্সের সূত্র অনুযায়ী কোনটি সঠিক?", options: ["V1/T1 = V2/T2", "V1V2 = T1T2", "V1T1 = V2T2", "V1/V2 = T2/T1"], answer: "V1/T1 = V2/T2" },
+            { q: "নির্দিষ্ট ভরের কোনো গ্যাসের ক্ষেত্রে P1 চাপে আয়তন V1 এবং P2 চাপে আয়তন V2 হলে বয়েলের সূত্র অনুযায়ী কোনটি সঠিক?", options: ["P1V1 = P2V2", "P1/V1 = P2/V2", "P1P2 = V1V2", "P1/P2 = V1/V2"], answer: "P1V1 = P2V2" },
+            { q: "গ্যাসের গতিীয় তত্ত্ব অনুযায়ী পরম শূন্য তাপমাত্রায় গ্যাসের অণুগুলোর গতিশক্তি কেমন হয়?", options: ["শূন্য (Zero)", "সর্বোচ্চ", "অপরিবর্তিত", "দ্বিগুণ"], answer: "শূন্য (Zero)" },
+            { q: "কোন বিজ্ঞানী প্রথম গ্যাসের আয়তন ও তাপমাত্রার সম্পর্ক আবিষ্কার করেন?", options: ["জ্যাক চার্লস", "রবার্ট বয়েল", "অ্যাভোগাদ্রো", "টরিৎসেলি"], answer: "জ্যাক চার্লস" },
+            { q: "রবার্ট বয়েল কোন দেশের বিজ্ঞানী ছিলেন?", options: ["আয়ারল্যান্ড", "ইংল্যান্ড", "ফ্রান্স", "জার্মানি"], answer: "আয়ারল্যান্ড" },
+            { q: "কোন সূত্রটি ব্যাখ্যা করতে গিয়ে পরম শূন্য তাপমাত্রার ধারণা এসেছে?", options: ["চালর্সের সূত্র", "বয়েলের সূত্র", "গ্রাহামের ব্যাপন সূত্র", "ডাল্টনের সূত্র"], answer: "চালর্সের সূত্র" },
+            { q: "সেলসিয়াস স্কেল থেকে কেলভিন স্কেলে তাপমাত্রা নিতে হলে প্রদত্ত মানের সাথে কত যোগ করতে হয়?", options: ["273", "100", "22.4", "546"], answer: "273" },
+            { q: "স্থির তাপমাত্রায় একটি গ্যাসের চাপ দ্বিগুণ করলে এর আয়তন কত হবে?", options: ["অর্ধেক হবে", "দ্বিগুণ হবে", "চারগুণ হবে", "অপরিবর্তিত থাকবে"], answer: "অর্ধেক হবে" },
+            { q: "স্থির চাপে নির্দিষ্ট ভরের গ্যাসের তাপমাত্রা 0 °C থেকে বাড়িয়ে 273 °C করা হলে এর আয়তন কত হবে?", options: ["দ্বিগুণ হবে", "অর্ধেক হবে", "তিনগুণ হবে", "চারগুণ হবে"], answer: "দ্বিগুণ হবে" },
+            { q: "গে-লুসাকের চাপীয় সূত্র অনুযায়ী স্থির আয়তনে নির্দিষ্ট ভরের গ্যাসের চাপ (P) ও পরম তাপমাত্রা (T) এর সম্পর্ক কেমন?", options: ["P $\\propto$ T (সমানুপাতিক)", "P $\\propto$ 1/T", "P $\\propto$ T²", "P স্বাধীন"], answer: "P $\\propto$ T (সমানুপাতিক)" },
+            { q: "গে-লুসাকের সূত্র অনুযায়ী কোন রাশিটি ধ্রুবক থাকে?", options: ["আয়তন (Volume)", "চাপ", "তাপমাত্রা", "ঘনত্ব"], answer: "আয়তন (Volume)" },
+            { q: "আদর্শ গ্যাস সমীকরণ কোনটি?", options: ["PV = nRT", "PV = RT", "P = nRT", "V = nRT"], answer: "PV = nRT" },
+            { q: "আদর্শ গ্যাস সমীকরণে R কে কী বলা হয়?", options: ["মোলার গ্যাস ধ্রুবক", "বয়েল ধ্রুবক", "চার্লস ধ্রুবক", "আদর্শ ধ্রুবক"], answer: "মোলার গ্যাস ধ্রুবক" },
+            { q: "এসটিপিতে (STP) আদর্শ গ্যাসের মোলার আয়তন কত?", options: ["22.4 লিটার", "24.78 লিটার", "11.2 লিটার", "1 লিটার"], answer: "22.4 লিটার" },
+            { q: "এসটিপিতে চাপ (P) এর প্রমাণ মান কত ধরা হয়?", options: ["1 atm (101.325 kPa)", "2 atm", "0.5 atm", "5 atm"], answer: "1 atm (101.325 kPa)" },
+            { q: "এসটিপিতে তাপমাত্রা (T) এর প্রমাণ মান কত?", options: ["273.15 K (0 °C)", "298 K", "0 K", "100 K"], answer: "273.15 K (0 °C)" },
+            { q: "বাস্তব গ্যাস কোন পরিস্থিতিতে আদর্শ গ্যাসের ন্যায় আচরণ করে?", options: ["উচ্চ তাপমাত্রা ও নিম্ন চাপে", "নিম্ন তাপমাত্রা ও উচ্চ চাপে", "উচ্চ তাপমাত্রা ও উচ্চ চাপে", "সর্বদা"], answer: "উচ্চ তাপমাত্রা ও নিম্ন চাপে" },
+            { q: "গ্রাহামের গ্যাস ব্যাপন সূত্র নিচের কোনটির সাথে সম্পর্কিত?", options: ["গ্যাসের ঘনত্ব ও আণবিক ভর", "চাপ ও আয়তন", "তাপমাত্রা ও সান্দ্রতা", "পৃষ্ঠটান"], answer: "গ্যাসের ঘনত্ব ও আণবিক ভর" },
+            { q: "গ্রাহামের ব্যাপন সূত্রানুসারে গ্যাসের ব্যাপন হার (r) এবং ঘনত্বের (d) সম্পর্ক কীরূপ?", options: ["r $\\propto$ 1/\\sqrt{d}", "r $\\propto$ d", "r $\\propto$ \\sqrt{d}", "r স্বাধীন"], answer: "r $\\propto$ 1/\\sqrt{d}" },
+            { q: "কোন গ্যাসের ব্যাপনের হার বেশি হবে?", options: ["হাইড্রোজেন (H2)", "অক্সিজেন (O2)", "কার্বন ডাই-অক্সাইড (CO2)", "নাইট্রোজেন (N2)"], answer: "হাইড্রোজেন (H2)" },
+            { q: "মোলার গ্যাস ধ্রুবক R এর এসআই (SI) একক কোনটি?", options: ["J K⁻¹ mol⁻¹", "L atm K⁻¹ mol⁻¹", "cal K⁻¹ mol⁻¹", "erg K⁻¹ mol⁻¹"], answer: "J K⁻¹ mol⁻¹" },
+            { q: "SI এককে R এর আদর্শ মান কত?", options: ["8.314 J K⁻¹ mol⁻¹", "0.0821 L atm K⁻¹ mol⁻¹", "1.987 cal K⁻¹ mol⁻¹", "0.083 L bar K⁻¹ mol⁻¹"], answer: "8.314 J K⁻¹ mol⁻¹" },
+            { q: "লিটার-বায়ুমণ্ডল এককে R এর মান কত?", options: ["0.0821 L atm K⁻¹ mol⁻¹", "8.314 L atm K⁻¹ mol⁻¹", "0.00821 L atm K⁻¹ mol⁻¹", "82.1 L atm K⁻¹ mol⁻¹"], answer: "0.0821 L atm K⁻¹ mol⁻¹" },
+            { q: "অ্যাভোগাদ্রোর সূত্র অনুযায়ী নির্দিষ্ট তাপমাত্রা ও চাপে সকল গ্যাসের সমআয়তনে কী সমান থাকে?", options: ["অণুর সংখ্যা", "ভর", "ঘনত্ব", "পরমাণুর সংখ্যা"], answer: "অণুর সংখ্যা" },
+            { q: "অ্যাভোগাদ্রোর সূত্রের গাণিতিক রূপ কোনটি?", options: ["V $\\propto$ n", "V $\\propto$ T", "P $\\propto$ V", "PV = n"], answer: "V $\\propto$ n" },
+            { q: "এক মোল গ্যাসে অণুর সংখ্যা (অ্যাভোগাদ্রোর সংখ্যা N_A) কত?", options: ["6.023 $\\times$ 10²³", "3.14 $\\times$ 10²²", "9.11 $\\times$ 10⁻³¹", "1.66 $\\times$ 10⁻²⁴"], answer: "6.023 $\\times$ 10²³" },
+            { q: "ডাল্টনের গ্যাসীয় চাপ সম্পর্কিত সূত্রটি কোন ক্ষেত্রে প্রযোজ্য?", options: ["পরস্পর বিক্রিয়া করে না এমন গ্যাস মিশ্রণ", "পরস্পর বিক্রিয়া করে এমন গ্যাস", "শুধুমাত্র আদর্শ গ্যাস", "শুধুমাত্র তরল পদার্থ"], answer: "পরস্পর বিক্রিয়া করে না এমন গ্যাস মিশ্রণ" },
+            { q: "ডাল্টনের আংশিক চাপ সূত্রের মূল বক্তব্য কী?", options: ["মিশ্রণের মোট চাপ উপাদান গ্যাসগুলোর আংশিক চাপের সমষ্টির সমান", "মোট চাপ উপাদানগুলোর চাপের গুণফলের সমান", "চাপ সর্বদা ধ্রুবক থাকে", "আংশিক চাপ শূন্য হয়"], answer: "মিশ্রণের মোট চাপ উপাদান গ্যাসগুলোর আংশিক চাপের সমষ্টির সমান" },
+            { q: "গ্যাসের ব্যাপন কাকে বলে?", options: ["স্বতঃস্ফূর্তভাবে কোনো গ্যাসের অন্য গ্যাসে ছড়িয়ে পড়া", "গ্যাসের তরলে পরিণত হওয়া", "গ্যাসের চাপ বৃদ্ধি পাওয়া", "গ্যাসের তাপমাত্রা কমা"], answer: "স্বতঃস্ফূর্তভাবে কোনো গ্যাসের অন্য গ্যাসে ছড়িয়ে পড়া" },
+            { q: "একটি সরু ছিদ্রপথে উচ্চ চাপের অঞ্চল থেকে নিম্ন চাপের অঞ্চলে গ্যাসের সজোরে বেরিয়ে আসার প্রক্রিয়াকে কী বলে?", options: ["নিঃসরণ (Effusion)", "ব্যাপন (Diffusion)", "বাষ্পীভবন", "ঘনীভবন"], answer: "নিঃসরণ (Effusion)" },
+            { q: "বেলুনের ভেতর গ্যাস ভরলে তা ফুলে ওঠে, এটি গ্যাসের কোন ধর্মকে নির্দেশ করে?", options: ["গ্যাসের আয়তন ও চাপ প্রয়োগ", "ব্যাপন", "সান্দ্রতা", "নির্দিষ্ট আকৃতি"], answer: "গ্যাসের আয়তন ও চাপ প্রয়োগ" },
+            { q: "গ্যাসের অণুগুলোর গতিশক্তি কার সমানুপাতিক?", options: ["কেলভিন তাপমাত্রা", "চাপ", "আয়তন", "ঘনত্ব"], answer: "কেলভিন তাপমাত্রা" },
+            { q: "কোন গ্যাসটি আদর্শ গ্যাস থেকে সবচেয়ে বেশি বিচ্যুতি দেখায়?", options: ["NH3 (অ্যামোনিয়া)", "H2", "He", "N2"], answer: "NH3 (অ্যামোনিয়া)" },
+            { q: "বাস্তব গ্যাসের ক্ষেত্রে ভ্যান্ডারওয়ালস সমীকরণে কিসের সংশোধন করা হয়?", options: ["অণুর আয়তন ও আন্তঃআণবিক আকর্ষণ বল", "শুধু তাপমাত্রা", "শুধু চাপ", "কোনোটিই নয়"], answer: "অণুর আয়তন ও আন্তঃআণবিক আকর্ষণ বল" },
+            { q: "ভ্যান্ডারওয়ালস সমীকরণে 'a' কী নির্দেশ করে?", options: ["আন্তঃআণবিক আকর্ষণ বলের পরিমাপ", "অণুর প্রকৃত আয়তন", "গ্যাসের চাপ", "তাপমাত্রা ধ্রুবক"], answer: "আন্তঃআণবিক আকর্ষণ বলের পরিমাপ" },
+            { q: "ভ্যান্ডারওয়ালস সমীকরণে 'b' কী নির্দেশ করে?", options: ["গ্যাসের অণুগুলোর কার্যকর বা বর্জিত আয়তন", "মোট পাত্রের আয়তন", "গ্যাসের ঘনত্ব", "চাপের ত্রুটি"], answer: "গ্যাসের অণুগুলোর কার্যকর বা বর্জিত আয়তন" },
+            { q: "ক্রান্ত তাপমাত্রা (Critical Temperature) কাকে বলে?", options: ["যে তাপমাত্রার উপরে কোনো গ্যাসকে কেবল চাপে তরল করা যায় না", "যে তাপমাত্রায় বরফ গলে", "যে তাপমাত্রায় পানি ফোটে", "পরম শূন্য তাপমাত্রা"], answer: "যে তাপমাত্রার উপরে কোনো গ্যাসকে কেবল চাপে তরল করা যায় না" },
+            { q: "কার্বন ডাই-অক্সাইডের ক্রান্তি তাপমাত্রা কত?", options: ["31.1 °C", "0 °C", "100 °C", "-273 °C"], answer: "31.1 °C" },
+            { q: "বায়ুমণ্ডলীয় চাপ মাপার যন্ত্রের নাম কী?", options: ["ব্যোমিটার বা ব্যারোমিটার", "ম্যানোমিটার", "থার্মোমিটার", "হাইড্রোমিটার"], answer: "ব্যোমিটার বা ব্যারোমিটার" },
+            { q: "টরিৎসেলি পরীক্ষামূলকভাবে কিসের মান নির্ণয় করেছিলেন?", options: ["বায়ুমণ্ডলীয় চাপ", "গ্যাসের ঘনত্ব", "তাপমাত্রা", "ব্যাপন হার"], answer: "বায়ুমণ্ডলীয় চাপ" },
+            { q: "স্বাভাবিক বায়ুমণ্ডলীয় চাপে ব্যারোমিটারে পারদ স্তম্ভের উচ্চতা কত হয়?", options: ["76 সেমি (760 মিমি)", "100 সেমি", "50 সেমি", "10 মিমি"], answer: "76 সেমি (760 মিমি)" },
+            { q: "যদি কোনো গ্যাসের তাপমাত্রা দ্বিগুণ করা হয় এবং চাপ অর্ধেক করা হয়, তবে আদর্শ গ্যাস সমীকরণ অনুযায়ী আয়তন কত হবে?", options: ["চারগুণ হবে", "অর্ধেক হবে", "একই থাকবে", "আটগুণ হবে"], answer: "চারগুণ হবে" },
+            { q: "এসটিপিতে (STP) নির্দিষ্ট ভরের 1 মোল অক্সিজেন গ্যাসের ভর কত?", options: ["32 গ্রাম", "16 গ্রাম", "22.4 গ্রাম", "64 গ্রাম"], answer: "32 গ্রাম" },
+            { q: "এসটিপিতে 2 লিটার নাইট্রোজেন গ্যাসে কত মোল নাইট্রোজেন আছে?", options: ["2 / 22.4 মোল", "22.4 / 2 মোল", "2 মোল", "22.4 মোল"], answer: "2 / 22.4 মোল" },
+            { q: "গ্যাসের গতিীয় তত্ত্বের মূল প্রবক্তা বা অবদানকারী বিজ্ঞানীদের মধ্যে কে অন্যতম?", options: ["ম্যাক্সওয়েল ও বোল্টজম্যান", "রবার্ট বয়েল", "চার্লস", "টরিৎসেলি"], answer: "ম্যাক্সওয়েল ও বোল্টজম্যান" },
+            { q: "গ্যাসের অণুগুলোর বেগ পরিমাপের জন্য কোন বেগটি সবচেয়ে বেশি ব্যবহৃত হয়?", options: ["মূল গড় বর্গবেগ (RMS Velocity)", "সুষম বেগ", "সর্বোচ্চ বেগ", "ধ্রুবক বেগ"], answer: "মূল গড় বর্গবেগ (RMS Velocity)" },
+            { q: "তাপমাত্রা বাড়লে গ্যাসের অণুগুলোর মূল গড় বর্গবেগের কী পরিবর্তন হয়?", options: ["বৃদ্ধি পায়", "হ্রাস পায়", "অপরিবর্তিত থাকে", "শূন্য হয়ে যায়"], answer: "বৃদ্ধি পায়" },
+            { q: "কোনো গ্যাসের ব্যাপনের হার তার আণবিক ভরের সাথে কীভাবে সম্পর্কিত?", options: ["বর্গমূলের ব্যস্তানুপাতিক", "সমানুপাতিক", "বর্গমূলের সমানুপাতিক", "স্বাধীন"], answer: "বর্গমূলের ব্যস্তানুপাতিক" },
+            { q: "সমন্বিত গ্যাস সূত্র (Combined Gas Law) কোনটি?", options: ["P1V1/T1 = P2V2/T2", "P1V1 = P2V2", "V1/T1 = V2/T2", "PV = nRT"], answer: "P1V1/T1 = P2V2/T2" },
+            { q: "গ্যাসের ঘনত্ব পরিমাপের ক্ষেত্রে কোন সূত্রটি সরাসরি ব্যবহার করা যায়?", options: ["PM = dRT", "PV = nRT", "V/T = ধ্রুবক", "P1V1 = P2V2"], answer: "PM = dRT" },
+            { q: "আদর্শ গ্যাস সমীকরণে M কী নির্দেশ করে?", options: ["মোলার ভর (Molar Mass)", "মোল সংখ্যা", "ভর", "ঘনত্ব"], answer: "মোলার ভর (Molar Mass)" },
+            { q: "স্থির তাপমাত্রায় গ্যাসের চাপ বাড়ালে অণুগুলোর মধ্যবর্তী দূরত্ব কেমন হয়?", options: ["কমে যায়", "বেড়ে যায়", "একই থাকে", "অসীম হয়"], answer: "কমে যায়" },
+            { q: "প্রমাণ তাপমাত্রা ও চাপে (STP) যে কোনো গ্যাসের মোলার ঘনত্ব কত?", options: ["1 / 22.4 mol/L", "22.4 mol/L", "1 mol/L", "2 mol/L"], answer: "1 / 22.4 mol/L" },
+            { q: "কোন গ্যাসটি বায়ুমণ্ডলে সবচেয়ে বেশি পরিমাণে থাকে?", options: ["নাইট্রোজেন (N2)", "অক্সিজেন (O2)", "আর্গন (Ar)", "কার্বন ডাই-অক্সাইড (CO2)"], answer: "নাইট্রোজেন (N2)" },
+            { q: "গ্রাহামের ব্যাপন সূত্রের সাহায্যে কী নির্ণয় করা যায় না?", options: ["গ্যাসের তাপমাত্রা", "আণবিক ভর", "আপেক্ষিক ঘনত্ব", "ব্যাপন বেগের তুলনা"], answer: "গ্যাসের তাপমাত্রা" },
+            { q: "হিলিয়াম গ্যাসের আণবিক ভর কত?", options: ["4 গ্রাম/মোল", "2 গ্রাম/মোল", "1 গ্রাম/মোল", "8 গ্রাম/মোল"], answer: "4 গ্রাম/মোল" },
+            { q: "এসটিপিতে 1 গ্রাম হাইড্রোজেন গ্যাসের আয়তন কত?", options: ["11.2 লিটার", "22.4 লিটার", "5.6 লিটার", "1 লিটার"], answer: "11.2 লিটার" },
+            { q: "কোন বিজ্ঞানী বাস্তব গ্যাসের আদর্শ আচরণ থেকে বিচ্যুতির কারণ ব্যাখ্যা করেন?", options: ["ভ্যান্ডারওয়ালস", "বয়েল", "চার্লস", "ডাল্টন"], answer: "ভ্যান্ডারওয়ালস" },
+            { q: "গ্যাসের গতীয় সমীকরণ কোনটি?", options: ["PV = 1/3 mnc²", "PV = nRT", "PM = dRT", "P/T = ধ্রুবক"], answer: "PV = 1/3 mnc²" },
+            { q: "গ্যাসের গতীয় সমীকরণে 'm' কী নির্দেশ করে?", options: ["একটি অণুর ভর", "মোট ভর", "মোল সংখ্যা", "আয়তন"], answer: "একটি অণুর ভর" },
+            { q: "গ্যাসের গতীয় সমীকরণে 'n' কী নির্দেশ করে?", options: ["গ্যাসের মোট অণুর সংখ্যা", "মোল সংখ্যা", "চাপ", "বেগ"], answer: "গ্যাসের মোট অণুর সংখ্যা" },
+            { q: "গ্যাসের অণুগুলোর গতিবেগ কেমন হয়?", options: ["সব অণুর বেগ সমান নয়, বিভিন্ন মানের হয়", "সকল অণুর বেগ সর্বদা সমান", "সব অণু স্থির থাকে", "বেগ শূন্য হয়"], answer: "সব অণুর বেগ সমান নয়, বিভিন্ন মানের হয়" },
+            { q: "গ্যাসের অণুগুলোর সংঘর্ষ কেমন প্রকৃতির?", options: ["সম্পূর্ণ স্থিতিস্থাপক (Perfectly elastic)", "অস্থিতিস্থাপক", "ঘর্ষণযুক্ত", "স্থির"], answer: "সম্পূর্ণ স্থিতিস্থাপক (Perfectly elastic)" },
+            { q: "গ্যাসের অণুগুলোর নিজস্ব আয়তন পাত্রের মোট আয়তনের তুলনায় কেমন?", options: ["নগণ্য বা অত্যন্ত ক্ষুদ্র", "অনেক বেশি", "সমান", "অর্ধেক"], answer: "নগণ্য বা অত্যন্ত ক্ষুদ্র" },
+            { q: "কোন গ্যাসটির ব্যাপন হার সবচেয়ে কম?", options: ["কার্বন ডাই-অক্সাইড (CO2)", "অক্সিজেন (O2)", "নাইট্রোজেন (N2)", "হিলিয়াম (He)"], answer: "কার্বন ডাই-অক্সাইড (CO2)" },
+            { q: "আদর্শ গ্যাসের ক্ষেত্রে অণুগুলোর মধ্যে আন্তঃআণবিক আকর্ষণ বল কেমন ধরা হয়?", options: ["শূন্য (Zero)", "খub বেশি", "মধ্যম", "পরিবর্তনশীল"], answer: "শূন্য (Zero)" },
+            { q: "একটি গ্যাসের বাষ্প ঘনত্ব D এবং আণবিক ভর M হলে এদের মধ্যে সম্পর্ক কোনটি?", options: ["M = 2D", "M = D/2", "M = D", "M = 4D"], answer: "M = 2D" },
+            { q: "কোনো গ্যাসের বাষ্প ঘনত্ব 16 হলে, গ্যাসটির আণবিক ভর কত?", options: ["32", "16", "8", "64"], answer: "32" },
+            { q: "প্রমাণ চাপ ও তাপমাত্রার সংক্ষিপ্ত রূপ কোনটি?", options: ["STP", "NTP", "CST", "ATP"], answer: "STP" },
+            { q: "এসটিপিতে 4.4 গ্রাম CO2 গ্যাসের আয়তন কত?", options: ["2.24 লিটার", "22.4 লিটার", "1.12 লিটার", "4.4 লিটার"], answer: "2.24 লিটার" },
+            { q: "কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেলের মান সমান হয়?", options: ["-40 °", "0 °", "100 °", "-273 °"], answer: "-40 °" },
+            { q: "থার্মোডাইনামিক তাপমাত্রা স্কেল বা পরম তাপমাত্রা স্কেলের প্রবক্তা কে?", options: ["লর্ড কেলভিন", "রবার্ট বয়েল", "সেলসিয়াস", "ফ্যারেনহাইট"], answer: "লর্ড কেলভিন" },
+            { q: "গ্যাস সিলিন্ডারে গ্যাস ভরার সময় কোন সূত্রটি লঙ্ঘিত হতে পারে যদি তাপমাত্রা খুব বেশি হয়?", options: ["আদর্শ গ্যাসের আচরণ", "বয়েলের সূত্র", "চালর্সের সূত্র", "ব্যাপন সূত্র"], answer: "আদর্শ গ্যাসের আচরণ" },
+            { q: "কোন গ্যাসের ব্যাপন হার অপর একটি গ্যাসের ব্যাপনের দ্বিগুণ হলে, তাদের আণবিক ভরের অনুপাত কত হবে?", options: ["1 : 4", "4 : 1", "1 : 2", "2 : 1"], answer: "1 : 4" },
+            { q: "গ্যাসের চাপ সৃষ্টির মূল কারণ কী?", options: ["পাত্রের দেওয়ালে গ্যাসের অণুগুলোর অনবরত সংঘর্ষ", "অণুগুলোর নিজেদের মধ্যে ধাক্কা", "মহাকর্ষ বল", "তাপমাত্রার প্রভাব"], answer: "পাত্রের দেওয়ালে গ্যাসের অণুগুলোর অনবরত সংঘর্ষ" },
+            { q: "স্বাভাবিক অবস্থায় সব গ্যাসের 1 অণুর গতিশক্তি কিসের ওপর নির্ভর করে?", options: ["কেবল তাপমাত্রা", "চাপ", "আয়তন", "ভর"], answer: "কেবল তাপমাত্রা" },
+            { q: "নিচের কোন সমীকরণটি ডাল্টনের আংশিক চাপ সূত্রের সাথে সম্পর্কিত?", options: ["P_total = P1 + P2 + P3...", "PV = nRT", "P1V1 = P2V2", "V/T = ধ্রুবক"], answer: "P_total = P1 + P2 + P3..." },
+            { q: "বায়ুমণ্ডলীয় চাপে পানির স্ফুটনাঙ্ক সেলসিয়াস স্কেলে কত?", options: ["100 °C", "0 °C", "273 °C", "373 °C"], answer: "100 °C" },
+            { q: "কোনো গ্যাসের অণুর সংখ্যা দ্বিগুণ করলে স্থির তাপমাত্রায় ও চাপে আয়তন কত হবে?", options: ["দ্বিগুণ হবে", "অর্ধেক হবে", "অপরিবর্তিত থাকবে", "চারগুণ হবে"], answer: "দ্বিগুণ হবে" },
+            { q: "উচ্চচাপে বাস্তব গ্যাসগুলো আদর্শ আচরণ থেকে কী ধরনের বিচ্যুতি দেখায়?", options: ["ধনাত্মক বিচ্যুতি (Positive deviation)", "ঋণাত্মক বিচ্যুতি", "কোনো বিচ্যুতি নেই", "শূন্য"], answer: "ধনাত্মক বিচ্যুতি (Positive deviation)" },
+            { q: "কোন গ্যাসটি ঘরের তাপমাত্রায় সহজে তরলে পরিণত হয় না?", options: ["নাইট্রোজেন (N2)", "অ্যামোনিয়া (NH3)", "কার্বন ডাই-অক্সাইড (CO2)", "সালফার ডাই-অক্সাইড (SO2)"], answer: "নাইট্রোজেন (N2)" },
+            { q: "গ্যাসের ঘনত্ব কিসের ব্যস্তানুপাতিক?", options: ["তাপমাত্রা (পরম তাপমাত্রার)", "চাপ", "আয়তন", "ভর"], answer: "তাপমাত্রা (পরম তাপমাত্রার)" },
+            { q: "একটি নির্দিষ্ট গ্যাসের ক্ষেত্রে রুট মিন স্কয়ার ভেলোসিটি (c) ও পরম তাপমাত্রা (T) এর সম্পর্ক কেমন?", options: ["c $\\propto$ \\sqrt{T}", "c $\\propto$ T", "c $\\propto$ 1/T", "c স্বাধীন"], answer: "c $\\propto$ \\sqrt{T}" },
+            { q: "কোন বিজ্ঞানী গ্যাসের গতি তত্ত্বের সূত্রগুলোর গাণিতিক ভিত্তি স্থাপন করেন?", options: ["ড্যানিয়েল বার্নৌলি", "রবার্ট বয়েল", "চার্লস", "অ্যাভোগাদ্রো"], answer: "ড্যানিয়েল বার্নৌলি" },
+            { q: "বাস্তব গ্যাসগুলো কখন আদর্শ গ্যাসের মতো আচরণ করে?", options: ["যখন অণুগুলোর মধ্যবর্তী দূরত্ব অনেক বেশি থাকে", "যখন চাপ খুব বেশি থাকে", "যখন তাপমাত্রা খুব কম থাকে", "যখন অণুগুলোর আকার বড় হয়"], answer: "যখন অণুগুলোর মধ্যবর্তী দূরত্ব অনেক বেশি থাকে" },
+            { q: "কোন গ্যাসটি বায়ুর চেয়ে হালকা?", options: ["অ্যামোনিয়া (NH3)", "কার্বন ডাই-অক্সাইড (CO2)", "ক্লোরিন (Cl2)", "অক্সিজেন (O2)"], answer: "অ্যামোনিয়া (NH3)" },
+            { q: "এসটিপিতে কার্বন ডাই-অক্সাইড গ্যাসের ঘনত্ব কত?", options: ["1.96 g/L", "1.25 g/L", "0.089 g/L", "1.43 g/L"], answer: "1.96 g/L" },
+            { q: "গ্যাসের তাপমাত্রা 27 °C থেকে বাড়িয়ে 327 °C করা হলে এর গতিশক্তি কত গুণ হবে?", options: ["দ্বিগুণ হবে", "চারগুণ হবে", "অর্ধেক হবে", "একই থাকবে"], answer: "দ্বিগুণ হবে" },
+            { q: "কোনো আবদ্ধ পাত্রে গ্যাস রাখলে তা পাত্রের দেওয়ালে কী প্রয়োগ করে?", options: ["চাপ (Pressure)", "ঘর্ষণ", "টান", "সান্দ্রতা"], answer: "চাপ (Pressure)" }
+        ];
+
+        let score = 0;
+        let correctCount = 0;
+        let lives = 3;
+        let timeLeft = 30;
+        let timerInterval;
+        let activeQuestions = [];
+        let currentQ = {};
+
+        const scoreDisplay = document.getElementById("score");
+        const timerDisplay = document.getElementById("timer");
+        const livesDisplay = document.getElementById("lives");
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const message = document.getElementById("message");
+        const dashboardScreen = document.getElementById("dashboardScreen");
+
+        function startGame() {
+            dashboardScreen.style.display = "none";
+            score = 0;
+            correctCount = 0;
+            lives = 3;
+            scoreDisplay.textContent = score;
+            livesDisplay.textContent = "❤️❤️❤️";
+            activeQuestions = [...questions].sort(() => Math.random() - 0.5);
+            nextQuestion();
+        }
+
+        function startTimer() {
+            timeLeft = 30;
+            timerDisplay.textContent = timeLeft;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleWrongAnswer("সময় শেষ!");
+                }
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            if (activeQuestions.length === 0) {
+                activeQuestions = [...questions].sort(() => Math.random() - 0.5);
+            }
+            currentQ = activeQuestions.pop();
+            startTimer();
+
+            questionText.innerHTML = currentQ.q;
+            optionsContainer.innerHTML = "";
+            message.textContent = "";
+
+            let shuffledOpts = [...currentQ.options].sort(() => Math.random() - 0.5);
+            shuffledOpts.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.classList.add("option-btn");
+                btn.innerHTML = opt;
+                btn.onclick = () => checkAnswer(opt);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected) {
+            clearInterval(timerInterval);
+            const buttons = document.querySelectorAll(".option-btn");
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerHTML === currentQ.answer) {
+                    btn.style.background = "#10b981";
+                    btn.style.color = "#fff";
+                } else if (btn.innerHTML === selected) {
+                    btn.style.background = "#f43f5e";
+                    btn.style.color = "#fff";
+                }
+            });
+
+            if (selected === currentQ.answer) {
+                score += 10;
+                correctCount++;
+                scoreDisplay.textContent = score;
+                message.textContent = "✅ চমৎকার! সঠিক হিসাব।";
+                message.style.color = "#10b981";
+
+                setTimeout(() => {
+                    nextQuestion();
+                }, 1200);
+            } else {
+                handleWrongAnswer("ভুল হিসাব!");
+            }
+        }
+
+        function handleWrongAnswer(reason) {
+            lives--;
+            updateLivesDisplay();
+
+            if (lives > 0) {
+                message.textContent = `❌ ${reason} একটি লাইফ হারিয়েছে! (${lives}টি বাকি)`;
+                message.style.color = "#f43f5e";
+                setTimeout(() => {
+                    nextQuestion();
+                }, 1500);
+            } else {
+                message.textContent = `❌ ${reason} সব লাইফ শেষ! ল্যাব শাটডাউন।`;
+                message.style.color = "#f43f5e";
+                setTimeout(() => {
+                    showDashboard();
+                }, 1500);
+            }
+        }
+
+        function updateLivesDisplay() {
+            let hearts = "";
+            for (let i = 0; i < lives; i++) hearts += "❤️";
+            for (let i = lives; i < 3; i++) hearts += "🖤";
+            livesDisplay.textContent = hearts;
+        }
+
+        function showDashboard() {
+            clearInterval(timerInterval);
+            let grade = "C (উন্নতি প্রয়োজন)";
+            if (correctCount >= 15) grade = "A+ (গ্যাস ল্যাব মাস্টার ⚗️)";
+            else if (correctCount >= 8) grade = "B (দারুণ চেষ্টা 👍)";
+            else if (correctCount >= 3) grade = "C+ (ভালো)";
+
+            const dashContent = document.getElementById("dashContent");
+            dashContent.innerHTML = `
+                মোট স্কোর: <span>${score}</span><br>
+                সঠিক উত্তর দিয়েছেন: <span>${correctCount} টি</span><br>
+                পারফরম্যান্স গ্রেড: <span>${grade}</span>
+            `;
+            dashboardScreen.style.display = "flex";
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
