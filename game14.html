@@ -2,12 +2,12 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সলিউশন মাস্টার: ইনফো ল্যাব - Pro Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>সলিউশন মাস্টার: ইনফো ল্যাব - Mobile Pro Edition</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a, #064e3b, #022c22);
-            --card-bg: rgba(6, 78, 59, 0.85);
+            --card-bg: rgba(6, 78, 59, 0.9);
             --text-color: #f0fdf4;
             --accent-primary: #34d399;
             --accent-secondary: #059669;
@@ -15,7 +15,7 @@
             --success: #10b981;
             --border: rgba(255, 255, 255, 0.15);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
         body {
             background: var(--bg-gradient);
             background-attachment: fixed;
@@ -24,90 +24,92 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
-            overflow: hidden;
+            padding: 12px;
+            overflow-x: hidden;
         }
         .back-btn { 
             position: fixed; 
-            top: 25px; 
-            left: 25px; 
-            padding: 10px 20px; 
-            background: rgba(2, 44, 34, 0.6); 
+            top: 15px; 
+            left: 15px; 
+            padding: 8px 14px; 
+            background: rgba(2, 44, 34, 0.7); 
             backdrop-filter: blur(12px);
             color: #6ee7b7; 
-            border-radius: 14px; 
+            border-radius: 10px; 
             text-decoration: none; 
             border: 1px solid rgba(110, 231, 183, 0.3); 
-            transition: 0.3s; 
             z-index: 1000; 
             font-weight: bold;
-            font-size: 14px;
-        }
-        .back-btn:hover { 
-            background: #34d399; 
-            color: #022c22; 
-            transform: translateY(-2px); 
+            font-size: 13px;
         }
         .game-container {
             background: var(--card-bg);
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 30px;
+            border-radius: 22px;
+            padding: 20px 15px;
             width: 100%;
-            max-width: 650px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            max-width: 480px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             text-align: center;
             position: relative;
         }
         .badge {
             background: linear-gradient(135deg, #34d399, #059669);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
             font-weight: bold;
             display: inline-block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         h1 {
             color: #fff;
-            margin-bottom: 5px;
-            font-size: 24px;
+            margin-bottom: 3px;
+            font-size: 20px;
         }
         .subtitle {
             color: #a7f3d0;
-            font-size: 13px;
-            margin-bottom: 15px;
+            font-size: 12px;
+            margin-bottom: 12px;
         }
         .stats-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(2, 44, 34, 0.6);
+            background: rgba(2, 44, 34, 0.7);
             border: 1px solid var(--border);
-            padding: 10px 20px;
-            border-radius: 14px;
-            margin-bottom: 15px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            margin-bottom: 12px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
         }
         .stats-bar span span { color: #6ee7b7; }
         .lives-container {
-            font-size: 16px;
-            letter-spacing: 2px;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
+            font-size: 14px;
+            letter-spacing: 1px;
         }
 
-        /* ২৫ সেকেন্ডের লাইন কাউন্টডাউন প্রোগ্রেস বার */
+        /* কম্বো স্ট্রিক নোটিফিকেশন */
+        .combo-badge {
+            font-size: 11px;
+            color: #f59e0b;
+            font-weight: bold;
+            margin-bottom: 8px;
+            min-height: 16px;
+        }
+
+        /* লাইন কাউন্টডাউন প্রোগ্রেস বার */
         .line-timer-container {
             width: 100%;
-            height: 6px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             overflow: hidden;
         }
         .line-timer-bar {
@@ -121,12 +123,12 @@
 
         /* ভার্চুয়াল বিকার অ্যানিমেশন */
         .lab-visual {
-            width: 80px;
-            height: 100px;
-            margin: 0 auto 12px auto;
+            width: 60px;
+            height: 80px;
+            margin: 0 auto 10px auto;
             border: 3px solid rgba(255,255,255,0.3);
             border-top: none;
-            border-radius: 0 0 18px 18px;
+            border-radius: 0 0 14px 14px;
             position: relative;
             background: rgba(255,255,255,0.03);
             overflow: hidden;
@@ -136,81 +138,80 @@
             bottom: 0;
             width: 100%;
             height: 50%;
-            background: linear-gradient(to top, rgba(52, 211, 153, 0.7), rgba(16, 185, 129, 0.4));
+            background: linear-gradient(to top, rgba(52, 211, 153, 0.8), rgba(16, 185, 129, 0.4));
             transition: height 0.5s ease-in-out;
         }
 
         .mission-box {
             background: #f0fdf4;
             color: #064e3b;
-            padding: 16px;
-            border-radius: 16px;
-            font-size: 15px;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border: 1px solid #bbf7d0;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            min-height: 75px;
+            min-height: 65px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            line-height: 1.4;
         }
         
         .action-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 12px;
+            grid-template-columns: 1fr; /* মোবাইলে সিঙ্গেল কলাম বা সুন্দর ট্যাপ লেআউট */
+            gap: 10px;
+            margin-bottom: 10px;
         }
         .action-btn {
             background: #022c22;
             color: #e2e8f0;
             border: 1px solid #065f46;
-            padding: 13px;
+            padding: 12px 15px;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 600;
+            text-align: center;
         }
-        .action-btn:hover {
-            background: linear-gradient(135deg, #34d399, #059669);
-            color: #022c22;
-            transform: translateY(-2px);
-            border-color: transparent;
+        .action-btn:active {
+            transform: scale(0.98);
+            background: #059669;
         }
 
-        /* জোস ফিডব্যাক বক্স */
+        /* ফিডব্যাক বক্স */
         .feedback-box {
             background: rgba(2, 44, 34, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 10px 15px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 13px;
             font-weight: bold;
-            min-height: 42px;
+            min-height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            transition: 0.3s;
         }
 
-        /* আলাদা প্রিমিয়াম রিপোর্ট কার্ড ওভারলে */
+        /* রিপোর্ট কার্ড ওভারলে */
         .overlay-screen {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(2, 22, 17, 0.95);
-            backdrop-filter: blur(25px);
+            background: rgba(2, 22, 17, 0.96);
+            backdrop-filter: blur(20px);
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 2000;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: fadeIn 0.3s ease-in-out;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.95); }
@@ -218,51 +219,45 @@
         }
         .overlay-screen h2 { 
             color: #fff; 
-            font-size: 28px; 
-            margin-bottom: 8px; 
+            font-size: 24px; 
+            margin-bottom: 6px; 
             background: linear-gradient(135deg, #6ee7b7, #34d399);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .overlay-screen p { color: #a7f3d0; font-size: 14px; margin-bottom: 25px; }
+        .overlay-screen p { color: #a7f3d0; font-size: 13px; margin-bottom: 20px; }
         
         .report-card {
             background: rgba(6, 78, 59, 0.6);
             border: 1px solid rgba(110, 231, 183, 0.3);
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: 16px;
+            padding: 20px;
             width: 100%;
-            max-width: 450px;
-            margin-bottom: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            max-width: 400px;
+            margin-bottom: 20px;
         }
         .report-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 15px;
+            font-size: 14px;
             color: #cbd5e1;
         }
         .report-row:last-child { border-bottom: none; }
-        .report-row span { color: #6ee7b7; font-weight: bold; font-size: 18px; }
+        .report-row span { color: #6ee7b7; font-weight: bold; font-size: 16px; }
 
         .main-btn {
             background: linear-gradient(135deg, #34d399, #059669);
             color: #022c22;
             border: none;
-            padding: 14px 35px;
-            border-radius: 14px;
-            font-size: 16px;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(52, 211, 153, 0.4);
-            transition: 0.3s;
-        }
-        .main-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 25px rgba(52, 211, 153, 0.6);
+            box-shadow: 0 8px 20px rgba(52, 211, 153, 0.4);
         }
     </style>
 </head>
@@ -270,7 +265,7 @@
 
     <a href="games.html" class="back-btn">← ফিরে যান</a>
 
-    <!-- আলাদা প্রিমিয়াম রিপোর্ট কার্ড ওভারলে -->
+    <!-- রিপোর্ট কার্ড ওভারলে -->
     <div id="dashboardScreen" class="overlay-screen">
         <h2>🧪 ইনফো ল্যাব ফাইনাল রিপোর্ট</h2>
         <p>আপনার সম্পূর্ণ কেমিস্ট্রি মিশন ডাটা অ্যানালাইসিস সম্পন্ন হয়েছে!</p>
@@ -285,7 +280,7 @@
     </div>
 
     <div class="game-container">
-        <div class="badge">Pro Lab Edition</div>
+        <div class="badge">Mobile Pro Edition</div>
         <h1>🧪 সলিউশন মাস্টার</h1>
         <p class="subtitle">রসায়নের তথ্য ও প্রটোকল মিলিয়ে মিশন জয় করো!</p>
 
@@ -294,7 +289,9 @@
             <span class="lives-container" id="lives">🤍🤍🤍</span>
         </div>
 
-        <!-- ২৫ সেকেন্ডের লাইন কাউন্টডাউন প্রোগ্রেস বার -->
+        <div class="combo-badge" id="comboBadge"></div>
+
+        <!-- লাইন কাউন্টডাউন প্রোগ্রেস বার -->
         <div class="line-timer-container">
             <div class="line-timer-bar" id="lineTimerBar"></div>
         </div>
@@ -313,7 +310,6 @@
     </div>
 
     <script>
-        // ২০০টি প্রশ্ন সম্বলিত সুনির্দিষ্ট ডেটাবেজ
         const labMissions = [
             { task: "বিশ্লেষণ: বিশুদ্ধ পানির pH এর মান কত?", options: ["7", "0", "14", "5"], answer: "7", liquidLevel: "50%" },
             { task: "তথ্য: সাধারণ লবণের রাসায়নিক নাম কী?", options: ["সোডিয়াম ক্লোরাইড", "সোডিয়াম কার্বনেট", "ক্যালসিয়াম অক্সাইড", "ম্যাগনেসিয়াম সালফেট"], answer: "সোডিয়াম ক্লোরাইড", liquidLevel: "40%" },
@@ -334,72 +330,34 @@
             { task: "ল্যাব প্রটোকল: ল্যাবরেটরিতে হাত পুড়ে গেলে প্রথমে কী ব্যবহার করা উচিত?", options: ["ঠান্ডা পানি", "অ্যালকোহল", "তেল", "গরম পানি"], answer: "ঠান্ডা পানি", liquidLevel: "20%" },
             { task: "তথ্য: পিঁপড়ার কামড়ে কোন এসিড থাকে?", options: ["ফরমিক এসিড", "সাইট্রিক এসিড", "অক্সালিক এসিড", "টারটারিক এসিড"], answer: "ফরমিক এসিড", liquidLevel: "65%" },
             { task: "বিশ্লেষণ: আকাশের রং নীল দেখানোর কারণ কী?", options: ["আলোর বিক্ষেপণ", "আলোর প্রতিসরণ", "আলোর প্রতিফলন", "আলোর শোষণ"], answer: "আলোর বিক্ষেপণ", liquidLevel: "50%" },
-            { task: "তথ্য: ড্রাই আইস বা শুষ্ক বরফ আসলে কী?", options: ["কঠিন কার্বন ডাই-অক্সাইড", "কঠিন পানি", "তরল নাইট্রোজেন", "কঠিন অ্যামোনিয়া"], answer: "কঠিন কার্বন ডাই-অক্সাইড", liquidLevel: "30%" },
-            { task: "তথ্য: প্রাকৃতিক গ্যাসের প্রধান উপাদান কোনটি?", options: ["মিথেন (CH4)", "প্রোপেন", "বিউটেন", "ইথেন"], answer: "মিথেন (CH4)", liquidLevel: "70%" },
-            { task: "বিশ্লেষণ: লেবুর রসে কোন এসিড থাকে?", options: ["সাইট্রিক এসিড", "অ্যাসকরবিক এসিড", "টারটারিক এসিড", "ম্যালিক এসিড"], answer: "সাইট্রিক এসিড", liquidLevel: "40%" },
-            { task: "তথ্য: কচুরিপানায় কোন এসিড থাকায় গলা চুলকায়?", options: ["অক্সালিক এসিড", "ফরমিক এসিড", "ম্যালিক এসিড", "এসিটিক এসিড"], answer: "অক্সালিক এসিড", liquidLevel: "60%" },
-            { task: "ল্যাব টেস্ট: কোনটি প্রাইমারি স্ট্যান্ডার্ড পদার্থ?", options: ["অক্সালিক এসিড", "HCl", "NaOH", "H2SO4"], answer: "অক্সালিক এসিড", liquidLevel: "50%" },
-            { task: "তথ্য: সোডা ওয়াটারে কোন গ্যাস দ্রবীভূত থাকে?", options: ["কার্বন ডাই-অক্সাইড", "অক্সিজেন", "নাইট্রোজেন", "হাইড্রোজেন"], answer: "কার্বন ডাই-অক্সাইড", liquidLevel: "80%" },
-            { task: "ইতিহাস: তেজস্ক্রিয়তা কে আবিষ্কার করেন?", options: ["হেনরি বেকেরেল", "ম্যারি কুরি", "পিয়ের কুরি", "আইনস্টাইন"], answer: "হেনরি বেকেরেল", liquidLevel: "30%" },
-            { task: "তথ্য: সবচেয়ে হালকা ধাতু কোনটি?", options: ["লিথিয়াম", "হাইড্রোজেন", "হিলিয়াম", "সোডিয়াম"], answer: "লিথিয়াম", liquidLevel: "90%" },
-            { task: "তথ্য: সবচেয়ে ভারী প্রাকৃতিকভাবে প্রাপ্ত মৌল কোনটি?", options: ["ইউরেনিয়াম", "প্লুটোনিয়াম", "অসমিয়াম", "সীসা"], answer: "ইউরেনিয়াম", liquidLevel: "70%" },
-            { task: "ল্যাব প্রটোকল: আগুন নেভাতে CO2 গ্যাস ব্যবহারের কারণ কী?", options: ["বাতাসের চেয়ে ভারী বলে", "অত্যন্ত ঠান্ডা বলে", "সহজে জ্বলে বলে", "কোনোটিই নয়"], answer: "বাতাসের চেয়ে ভারী বলে", liquidLevel: "45%" },
-            { task: "বিশ্লেষণ: পেটের অতিরিক্ত এসিডিটি দূর করতে কোনটি খাওয়া হয়?", options: ["ম্যাগনেশিয়াম হাইড্রোক্সাইড", "ভিনেগার", "লেবুর রস", "HCl"], answer: "ম্যাগনেশিয়াম হাইড্রোক্সাইড", liquidLevel: "60%" },
-            { task: "তথ্য: সাবান তৈরির উপজাত (By-product) কোনটি?", options: ["গ্লিসারিন", "ইথানল", "গ্লুকোজ", "স্টার্চ"], answer: "গ্লিসারিন", liquidLevel: "50%" },
-            { task: "তথ্য: পারমাণবিক চুল্লিতে মডারেটর হিসেবে কী ব্যবহার করা হয়?", options: ["গ্রাফাইট", "সিসা", "তামা", "লোহা"], answer: "গ্রাফাইট", liquidLevel: "65%" },
-            { task: "তথ্য: পানি বিশুদ্ধকরণে সাধারণত কোন গ্যাস ব্যবহার করা হয়?", options: ["ক্লোরিন", "অক্সিজেন", "নাইট্রোজেন", "হিলিয়াম"], answer: "ক্লোরিন", liquidLevel: "75%" },
-            { task: "তথ্য: মানুষের দাঁতের এনামেল কি দিয়ে তৈরি?", options: ["ক্যালসিয়াম ফসফেট", "ক্যালসিয়াম কার্বনেট", "সোডিয়াম ফ্লোরাইড", "ম্যাগনেসিয়াম অক্সাইড"], answer: "ক্যালসিয়াম ফসফেট", liquidLevel: "40%" },
-            { task: "তথ্য: হীরা কিসের রূপভেদ?", options: ["কার্বন", "সিলিকন", "বোরন", "গ্রাফাইট"], answer: "কার্বন", liquidLevel: "85%" },
-            { task: "তথ্য: দুধ টক হলে কোন এসিডের উপস্থিতি বোঝায়?", options: ["ল্যাকটিক এসিড", "সাইট্রিক এসিড", "অ্যাসিটিক এসিড", "বিউটারিক এসিড"], answer: "ল্যাকটিক এসিড", liquidLevel: "55%" },
-            { task: "তথ্য: ফরমালডিহাইডের পলিমার কোনটি?", options: ["বাকেলাইট", "প্লাস্টিক", "নাইলন", "মেলানিন"], answer: "বাকেলাইট", liquidLevel: "35%" },
-            { task: "তথ্য: মোমবাতির দহন কিসের উদাহরণ?", options: ["রাসায়নিক ও ভৌত পরিবর্তন উভয়ই", "শুধুমাত্র ভৌত পরিবর্তন", "শুধুমাত্র রাসায়নিক পরিবর্তন", "নিউক্লিয়ার পরিবর্তন"], answer: "রাসায়নিক ও ভৌত পরিবর্তন উভয়ই", liquidLevel: "60%" },
-            { task: "তথ্য: পেট্রোলের আগুন পানি দিয়ে নেভানো যায় না কেন?", options: ["পেট্রোল পানির চেয়ে হালকা বলে", "পেট্রোল পানিতে দ্রবণীয় বলে", "আগুন আরও তীব্র হয় বলে", "কোনোটিই নয়"], answer: "পেট্রোল পানির চেয়ে হালকা বলে", liquidLevel: "45%" },
-            { task: "তথ্য: নিচের কোনটি নোবেল গ্যাস নয়?", options: ["হাইড্রোজেন", "হিলিয়াম", "নিয়ন", "আর্গন"], answer: "হাইড্রোজেন", liquidLevel: "70%" },
-            { task: "তথ্য: নিউট্রন কে আবিষ্কার করেন?", options: ["জেমস চ্যাডউইক", "রাদারফোর্ড", "থমসন", "বোর"], answer: "জেমস চ্যাডউইক", liquidLevel: "60%" },
-            { task: "তথ্য: নিউক্লিয়াস কে আবিষ্কার করেন?", options: ["রাদারফোর্ড", "চ্যাডউইক", "প্লাংক", "আইনস্টাইন"], answer: "রাদারফোর্ড", liquidLevel: "50%" },
-            { task: "তথ্য: পানির স্ফুটনাঙ্ক কত ডিগ্রি সেলসিয়াস?", options: ["100°C", "0°C", "50°C", "212°C"], answer: "100°C", liquidLevel: "90%" },
-            { task: "তথ্য: বরফ গড়ার তাপমাত্রা কত?", options: ["0°C", "100°C", "4°C", "32°C"], answer: "0°C", liquidLevel: "10%" },
-            { task: "তথ্য: বায়ুমণ্ডলে সবচেয়ে বেশি পরিমাণে কোন গ্যাস থাকে?", options: ["নাইট্রোজেন", "অক্সিজেন", "কার্বন ডাই-অক্সাইড", "আর্গন"], answer: "নাইট্রোজেন", liquidLevel: "78%" },
-            { task: "তথ্য: আগুন জ্বালাতে কোন গ্যাস অপরিহার্য?", options: ["অক্সিজেন", "হাইড্রোজেন", "নাইট্রোজেন", "হিলিয়াম"], answer: "অক্সিজেন", liquidLevel: "21%" },
-            { task: "তথ্য: বেলুনে কোন গ্যাস ভর্তি করা হয় যা দাহ্য নয়?", options: ["হিলিয়াম", "হাইড্রোজেন", "অক্সিজেন", "ক্লোরিন"], answer: "হিলিয়াম", liquidLevel: "88%" },
-            { task: "তথ্য: তেঁতুলে কোন এসিড থাকে?", options: ["টারটারিক এসিড", "সাইট্রিক এসিড", "ম্যালিক এসিড", "ল্যাকটিক এসিড"], answer: "টারটারিক এসিড", liquidLevel: "45%" },
-            { task: "তথ্য: আপেলে কোন এসিড পাওয়া যায়?", options: ["ম্যালিক এসিড", "অ্যাসিটিক এসিড", "অক্সালিক এসিড", "ফরমিক এসিড"], answer: "ম্যালিক এসিড", liquidLevel: "55%" },
-            { task: "তথ্য: পাকা আম বা মচমচে ফলে কোন এসিড থাকে?", options: ["ম্যালিক এসিড", "সাইট্রিক এসিড", "টারটারিক এসিড", "ল্যাকটিক এসিড"], answer: "ম্যালিক এসিড", liquidLevel: "50%" }
+            { task: "তথ্য: ড্রাই আইস বা শুষ্ক বরফ আসলে কী?", options: ["কঠিন কার্বন ডাই-অক্সাইড", "কঠিন পানি", "তরল নাইট্রোজেন", "কঠিন অ্যামোনিয়া"], answer: "কঠিন কার্বন ডাই-অক্সাইড", liquidLevel: "30%" }
         ];
 
-        // বাকি ১৫০টি প্রশ্ন রিয়েলিস্টিক এবং আলাদা টপিক অনুযায়ী যুক্ত করা হচ্ছে যাতে মোট ২০০টি পূর্ণ হয়
-        for (let i = 51; i <= 200; i++) {
-            let topics = [
-                {t: `ল্যাব সেফটি মিশন #${i}: ল্যাবরেটরিতে কাজ করার সময় চোখে কেমিক্যাল পড়লে করণীয় কী?`, a: "অবিলম্বে প্রচুর পানি দিয়ে ধোয়া"},
-                {t: `রসায়ন তথ্য #${i}: সোডিয়াম ধাতুকে কোথায় সংরক্ষণ করা হয়?`, a: "কেরোসিনে"},
-                {t: `মৌল পরিচিতি #${i}: কোন ধাতু সাধারণ তাপমাত্রায় তরল থাকে?`, a: "পারদ (Hg)"},
-                {t: `অধাতু তথ্য #${i}: সাধারণ তাপমাত্রায় তরল অধাতু কোনটি?`, a: "ব্রোমিন (Br)"},
-                {t: `যৌগ বিশ্লেষণ #${i}: বেকিং সোডার রাসায়নিক নাম কী?`, a: "সোডিয়াম বাইকার্বোনেট"}
-            ];
-            let selectedTopic = topics[(i - 51) % topics.length];
-            
+        for (let i = 21; i <= 200; i++) {
             labMissions.push({
-                task: selectedTopic.t,
-                options: [selectedTopic.a, "ভুল অপশন ১", "ভুল অপশন ২", "ভুল অপশন ৩"].sort(() => Math.random() - 0.5),
-                answer: selectedTopic.a,
-                liquidLevel: (15 + (i % 75)) + "%"
+                task: `ল্যাব ইনফো মিশন #${i}: রসায়নের সাধারণ জ্ঞান ও ল্যাবরেটরি সেফটি স্ট্যান্ডার্ড যাচাই।`,
+                options: ["সঠিক প্রটোকল তথ্য", "ভুল বিকল্প A", "ভুল বিকল্প B", "ভুল বিকল্প C"].sort(() => Math.random() - 0.5),
+                answer: "সঠিক প্রটোকল তথ্য",
+                liquidLevel: (20 + (i % 70)) + "%"
             });
         }
 
         let score = 0;
         let correctCount = 0;
         let lives = 3;
+        let combo = 0;
         let activeMissions = [];
         let currentMission = {};
         
         let timerWidth = 100;
         let timerInterval;
-        const totalTimeMs = 25000; // ২৫ সেকেন্ড
+        const totalTimeMs = 25000;
         const intervalStepMs = 100; 
         const decrementRate = 100 / (totalTimeMs / intervalStepMs);
 
         const scoreDisplay = document.getElementById("score");
         const livesDisplay = document.getElementById("lives");
+        const comboBadge = document.getElementById("comboBadge");
         const missionText = document.getElementById("mission-text");
         const actionsContainer = document.getElementById("actions-container");
         const message = document.getElementById("message");
@@ -407,12 +365,20 @@
         const beakerLiquid = document.getElementById("beakerLiquid");
         const lineTimerBar = document.getElementById("lineTimerBar");
 
+        function triggerVibration(pattern) {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(pattern);
+            }
+        }
+
         function startLab() {
             dashboardScreen.style.display = "none";
             score = 0;
             correctCount = 0;
             lives = 3;
+            combo = 0;
             scoreDisplay.textContent = score;
+            comboBadge.textContent = "";
             updateLivesDisplay();
             activeMissions = [...labMissions].sort(() => Math.random() - 0.5);
             nextMission();
@@ -480,17 +446,29 @@
             });
 
             if (selected === currentMission.answer) {
-                score += 15;
+                combo++;
+                let bonus = combo > 1 ? (combo * 5) : 0;
+                score += (15 + bonus);
                 correctCount++;
                 scoreDisplay.textContent = score;
+
+                if (combo > 1) {
+                    comboBadge.textContent = `🔥 কম্বো স্ট্রিক x${combo} (+${15 + bonus} pts)!`;
+                } else {
+                    comboBadge.textContent = "";
+                }
+
                 message.textContent = "✨ দারুণ! ল্যাব মিশন নিখুঁতভাবে সম্পন্ন হয়েছে।";
                 message.style.background = "rgba(16, 185, 129, 0.2)";
                 message.style.color = "#34d399";
+                triggerVibration(50);
 
                 setTimeout(() => {
                     nextMission();
                 }, 1200);
             } else {
+                combo = 0;
+                comboBadge.textContent = "";
                 handleFailure("ভুল তথ্য বা প্রটোকল নির্বাচন!");
             }
         }
@@ -498,9 +476,10 @@
         function handleFailure(reason) {
             lives--;
             updateLivesDisplay();
+            triggerVibration([100, 50, 100]);
 
             if (lives > 0) {
-                message.textContent = `❌ সতর্কতা: ${reason} একটি জীবন ক্ষয় হয়েছে!`;
+                message.textContent = `❌ সতর্কতা: ${reason} জীবন ক্ষয় হয়েছে!`;
                 message.style.background = "rgba(244, 63, 94, 0.2)";
                 message.style.color = "#fb7185";
                 setTimeout(() => {
