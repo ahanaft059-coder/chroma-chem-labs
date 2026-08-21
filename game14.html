@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>সলিউশন মাস্টার: ইনফো ল্যাব - Mobile Fixed Edition</title>
+    <title>সলিউশন মাস্টার: ইনফো ল্যাব - Final Edition</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a, #064e3b, #022c22);
@@ -20,9 +20,31 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
+            padding: 20px 10px 10px 10px;
             overflow-x: hidden;
+            position: relative;
         }
+        /* ব্যাক বাটনটি একদম উপরে ফিক্সড করে দেওয়া হলো */
+        .back-btn { 
+            position: fixed; 
+            top: 15px; 
+            left: 15px; 
+            padding: 6px 14px; 
+            background: rgba(2, 44, 34, 0.85); 
+            backdrop-filter: blur(10px);
+            color: #6ee7b7; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            border: 1px solid rgba(110, 231, 183, 0.3); 
+            font-weight: bold;
+            font-size: 12px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .back-btn:hover {
+            background: #065f46;
+        }
+
         .game-container {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -34,22 +56,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             text-align: center;
             position: relative;
-        }
-        /* ফিক্সড ব্যাক বাটন যা এখন কার্ডের ভেতরে সুন্দরভাবে থাকবে */
-        .top-nav {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 8px;
-        }
-        .back-btn { 
-            padding: 6px 12px; 
-            background: rgba(2, 44, 34, 0.9); 
-            color: #6ee7b7; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            border: 1px solid rgba(110, 231, 183, 0.3); 
-            font-weight: bold;
-            font-size: 12px;
+            margin-top: 15px;
         }
         .badge {
             background: linear-gradient(135deg, #34d399, #059669);
@@ -150,7 +157,6 @@
             line-height: 1.4;
         }
         
-        /* অপশনগুলোকে এক কলামে সুন্দর বড় বড় বাটন করা হলো যাতে মোবাইলে চাপাচাপি না লাগে */
         .action-grid {
             display: flex;
             flex-direction: column;
@@ -248,6 +254,9 @@
 </head>
 <body>
 
+    <!-- ব্যাক বাটন একদম উপরে ফিক্সড -->
+    <a href="games.html" class="back-btn">← ফিরে যান</a>
+
     <div class="overlay-screen" id="dashboardScreen">
         <h2>🧪 ইনফো ল্যাব ফাইনাল রিপোর্ট</h2>
         <p>আপনার সম্পূর্ণ কেমিস্ট্রি মিশন ডাটা অ্যানালাইসিস সম্পন্ন হয়েছে!</p>
@@ -262,11 +271,6 @@
     </div>
 
     <div class="game-container">
-        <!-- ব্যাক বাটন কার্ডের ভেতরে সুন্দরভাবে প্লেস করা হলো -->
-        <div class="top-nav">
-            <a href="games.html" class="back-btn">← ফিরে যান</a>
-        </div>
-
         <div class="badge">Pro Lab Edition</div>
         <h1>🧪 সলিউশন মাস্টার</h1>
         <p class="subtitle">রসায়নের তথ্য ও প্রটোকল মিলিয়ে মিশন জয় করো!</p>
@@ -291,12 +295,13 @@
             <div class="action-grid" id="actions-container"></div>
         </div>
 
-        <div class="feedback-box" id="message">ল্যাব প্রস্তুত! সঠিক অপশনটি বেছে নিন।</div>
+        <div class="feedback-box" id="message">ল্যাব প্রস্তুত! সঠিক অপشنটি বেছে নিন।</div>
     </div>
 
     <script>
+        // বর্ধিত এবং সমৃদ্ধ রসায়ন ইনফো ডাটাবেজ
         const labMissions = [
-            { task: "রসায়ন তথ্য #57: সোডিয়াম ধাতুকে কোথায় সংরক্ষণ করা হয়?", options: ["কেরোসিনে", "পানিতে", "অ্যালকোহলে", "খোলা বাতাসে"], answer: "কেরোসিনে", liquidLevel: "50%" },
+            { task: "রসায়ন তথ্য: সোডিয়াম ধাতুকে কোথায় সংরক্ষণ করা হয়?", options: ["কেরোসিনে", "পানিতে", "অ্যালকোহলে", "খোলা বাতাসে"], answer: "কেরোসিনে", liquidLevel: "50%" },
             { task: "বিশ্লেষণ: বিশুদ্ধ পানির pH এর মান কত?", options: ["7", "0", "14", "5"], answer: "7", liquidLevel: "50%" },
             { task: "তথ্য: সাধারণ লবণের রাসায়নিক নাম কী?", options: ["সোডিয়াম ক্লোরাইড", "সোডিয়াম কার্বনেট", "ক্যালসিয়াম অক্সাইড", "ম্যাগনেসিয়াম সালফেট"], answer: "সোডিয়াম ক্লোরাইড", liquidLevel: "40%" },
             { task: "ল্যাব প্রটোকল: এসিডের সাথে পানি মেশানোর সঠিক নিয়ম কোনটি?", options: ["পানিতে ফোঁটায় ফোঁটায় এসিড ঢালা", "এসিডে ফোঁটায় ফোঁটায় পানি যোগ করা", "একসাথে দ্রুত মেশানো", "গরম করে মেশানো"], answer: "পানিতে ফোঁটায় ফোঁটায় এসিড ঢালা", liquidLevel: "60%" },
@@ -315,8 +320,17 @@
             { task: "তথ্য: প্রোটন আবিষ্কারক কে?", options: ["গোল্ডস্টাইন", "থমসন", "রাদারফোর্ড", "চ্যাডউইক"], answer: "গোল্ডস্টাইন", liquidLevel: "90%" },
             { task: "ল্যাব প্রটোকল: ল্যাবরেটরিতে হাত পুড়ে গেলে প্রথমে কী ব্যবহার করা উচিত?", options: ["ঠান্ডা পানি", "অ্যালকোহল", "তেল", "গরম পানি"], answer: "ঠান্ডা পানি", liquidLevel: "20%" },
             { task: "তথ্য: পিঁপড়ার কামড়ে কোন এসিড থাকে?", options: ["ফরমিক এসিড", "সাইট্রিক এসিড", "অক্সালিক এসিড", "টারটারিক এসিড"], answer: "ফরমিক এসিড", liquidLevel: "65%" },
-            { task: "বিশ্লেষণ: আকাশের রং নীল দেখানোর কারণ কী?", options: ["আলোর বিক্ষেপণ", "আলোর প্রতিসরণ", "আলোর প্রতিফলন", "আলোর শোষণ"], answer: "আলোর বিক্ষেপণ", liquidLevel: "50%" },
-            { task: "তথ্য: ড্রাই আইস বা শুষ্ক বরফ আসলে কী?", options: ["কঠিন কার্বন ডাই-অক্সাইড", "কঠিন পানি", "তরল নাইট্রোজেন", "কঠিন অ্যামোনিয়া"], answer: "কঠিন কার্বন ডাই-অক্সাইড", liquidLevel: "30%" }
+            { task: "বিশ্লেষণ: ড্রাই আইস বা শুষ্ক বরফ আসলে কী?", options: ["কঠিন কার্বন ডাই-অক্সাইড", "কঠিন পানি", "তরল নাইট্রোজেন", "কঠিন অ্যামোনিয়া"], answer: "কঠিন কার্বন ডাই-অক্সাইড", liquidLevel: "30%" },
+            { task: "তথ্য: মুদ্রার ধাতু হিসেবে পরিচিত কোনগুলো?", options: ["Cu, Ag, Au", "Fe, Co, Ni", "Na, K, Ca", "Zn, Cd, Hg"], answer: "Cu, Ag, Au", liquidLevel: "50%" },
+            { task: "ল্যাব প্রটোকল: গোল তল flask ব্যবহারের সময় নিচে কী দেওয়া হয়?",options: ["অ্যাসবেস্টস নেট বা তারজালি", "সরাসরি আগুন", "প্লাস্টিক প্যাড", "কাঠের গুঁড়ো"], answer: "অ্যাসবেস্টস নেট বা তারজালি", liquidLevel: "45%" },
+            { task: "তথ্য: সবচেয়ে হালকা গ্যাস কোনটি?", options: ["হাইড্রোজেন", "হিলিয়াম", "অক্সিজেন", "নাইট্রোজেন"], answer: "হাইড্রোজেন", liquidLevel: "70%" },
+            { task: "বিশ্লেষণ: বেলুনের মধ্যে কোন গ্যাস ভরা হয় যা দাহ্য নয়?", options: ["হিলিয়াম", "হাইড্রোজেন", "মিথেন", "অ্যামোনিয়া"], answer: "হিলিয়াম", liquidLevel: "60%" },
+            { task: "তথ্য: বেকিং সোডার রাসায়নিক নাম কী?", options: ["সোডিয়াম বাইকার্বনেট", "সোডিয়াম কার্বনেট", "ক্যালসিয়াম কার্বনেট", "পটাশিয়াম নাইট্রেট"], answer: "সোডিয়াম বাইকার্বনেট", liquidLevel: "55%" },
+            { task: "পরিচয়: হেমাটাইট কোন ধাতুর আকরিষ্ক?", options: ["লোহা (Fe)", "অ্যালুমিনিয়াম", "তামা", "জিংক"], answer: "লোহা (Fe)", liquidLevel: "75%" },
+            { task: "তথ্য: অ্যালুমিনিয়ামের প্রধান আকরিষ্ক কোনটি?", options: ["বক্সাইট", "ক্রায়োলাইট", "কার্নালাইট", "মেল্যাকাাইট"], answer: "বক্সাইট", liquidLevel: "65%" },
+            { task: "ল্যাব টেস্ট: লিটমাস পেপার কোন রঙ থেকে লাল হয় যদি দ্রবণটি এসিড হয়?", options: ["নীল থেকে লাল", "লাল থেকে নীল", "হলুদ থেকে সবুজ", "বর্ণহীন থেকে গোলাপী"], answer: "নীল থেকে লাল", liquidLevel: "40%" },
+            { task: "তথ্য: পানির অস্থায়ী ক্ষারত্ব দূর করার উপায় কী?", options: ["ফুটিয়ে", "ব্লিচিং পাউডার যোগ করে", "সোডা যোগ করে", "ফিল্টার করে"], answer: "ফুটিয়ে", liquidLevel: "50%" },
+            { task: "বিশ্লেষণ: মোমের দহন হলো একটি —", options: ["রাসায়নিক ও ভৌত পরিবর্তন উভয়ই", "শুধুমাত্র ভৌত পরিবর্তন", "শুধুমাত্র রাসায়নিক পরিবর্তন", "পারমাণবিক পরিবর্তন"], answer: "রাসায়নিক ও ভৌত পরিবর্তন উভয়ই", liquidLevel: "80%" }
         ];
 
         let score = 0;
