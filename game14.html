@@ -2,434 +2,548 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মোলারিটি মাস্টার - ডাটাবেস এডিশন</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>সলিউশন মাস্টার: ইনফো ল্যাব - Final Edition</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a, #064e3b, #022c22);
+            --card-bg: rgba(6, 78, 59, 0.95);
+            --text-color: #f0fdf4;
+            --border: rgba(255, 255, 255, 0.15);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
         body {
-            background-color: #0f172a; /* গাঢ় কালো/স্ল্যাট ব্যাকগ্রাউন্ড */
-            color: #f8fafc;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
+            padding: 20px 10px 10px 10px;
+            overflow-x: hidden;
             position: relative;
         }
         .back-btn { 
             position: fixed; 
             top: 15px; 
             left: 15px; 
-            padding: 6px 12px; 
-            background: #1e293b; 
-            color: #f8fafc; 
-            border-radius: 5px; 
+            padding: 6px 14px; 
+            background: rgba(2, 44, 34, 0.85); 
+            backdrop-filter: blur(10px);
+            color: #6ee7b7; 
+            border-radius: 8px; 
             text-decoration: none; 
-            border: 1px solid #334155; 
+            border: 1px solid rgba(110, 231, 183, 0.3); 
             font-weight: bold;
             font-size: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .back-btn:hover { background: #334155; }
+        .back-btn:hover {
+            background: #065f46;
+        }
 
         .game-container {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            padding: 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 18px 14px;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            max-width: 440px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             text-align: center;
-            margin-top: 20px;
+            position: relative;
+            margin-top: 15px;
         }
-        h1 { font-size: 20px; color: #38bdf8; margin-bottom: 5px; }
-        .subtitle { font-size: 12px; color: #94a3b8; margin-bottom: 15px; }
-        
-        .score-board {
+        .badge {
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 2px;
+            font-size: 18px;
+        }
+        .subtitle {
+            color: #a7f3d0;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+        .stats-bar {
             display: flex;
             justify-content: space-between;
-            background: #0f172a;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
+            align-items: center;
+            background: rgba(2, 44, 34, 0.7);
+            border: 1px solid var(--border);
+            padding: 7px 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             font-weight: bold;
-            margin-bottom: 15px;
-            border: 1px solid #334155;
+            font-size: 12px;
+        }
+        .stats-bar span span { color: #6ee7b7; }
+        .lives-container { font-size: 13px; }
+
+        .combo-badge {
+            font-size: 11px;
+            color: #f59e0b;
+            font-weight: bold;
+            margin-bottom: 6px;
+            min-height: 15px;
+        }
+
+        .line-timer-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .line-timer-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #34d399, #10b981);
+            border-radius: 10px;
+            transform-origin: left;
+            transition: transform 0.1s linear;
+        }
+
+        .lab-visual {
+            width: 50px;
+            height: 65px;
+            margin: 0 auto 8px auto;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            overflow: hidden;
+        }
+        .beaker-liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(52, 211, 153, 0.8), rgba(16, 185, 129, 0.4));
+            transition: height 0.5s ease-in-out;
+        }
+
+        .mission-box {
+            background: #f0fdf4;
+            color: #064e3b;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            border: 1px solid #bbf7d0;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .action-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .action-btn {
+            background: #022c22;
             color: #e2e8f0;
-        }
-
-        .problem-box {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #f8fafc;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            text-align: left;
-            border: 1px solid #334155;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .input-group label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #cbd5e1;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #334155;
-            background: #0f172a;
-            color: #f8fafc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .submit-btn {
-            background: #0284c7;
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .submit-btn:hover { background: #0369a1; }
-
-        .reset-local-btn {
-            background: #d97706;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-        }
-        .reset-local-btn:hover { background: #b45309; }
-
-        .feedback {
-            margin-top: 12px;
+            border: 1px solid #065f46;
+            padding: 11px 14px;
+            border-radius: 10px;
             font-size: 13px;
-            font-weight: bold;
-            min-height: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+        .action-btn:active {
+            transform: scale(0.98);
+            background: #059669;
         }
 
-        /* মোডাল উইন্ডো স্টাইল */
-        .modal-screen {
+        .feedback-box {
+            background: rgba(2, 44, 34, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .overlay-screen {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(2, 22, 17, 0.96);
+            backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
             z-index: 2000;
-            padding: 10px;
+            padding: 20px;
+            text-align: center;
         }
-        .modal-card {
-            background: #1e293b;
-            color: #f8fafc;
-            padding: 20px 15px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 380px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-            text-align: left;
-            border: 1px solid #334155;
+        .overlay-screen h2 { 
+            color: #fff; 
+            font-size: 22px; 
+            margin-bottom: 6px; 
+            background: linear-gradient(135deg, #6ee7b7, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .modal-card h2 { margin-bottom: 8px; font-size: 18px; color: #38bdf8; text-align: center; }
-        .modal-card p { margin-bottom: 15px; font-size: 12px; color: #94a3b8; line-height: 1.4; text-align: center; }
+        .overlay-screen p { color: #a7f3d0; font-size: 12px; margin-bottom: 15px; line-height: 1.5; }
         
-        .modal-btn {
-            display: block;
+        .report-card {
+            background: rgba(6, 78, 59, 0.6);
+            border: 1px solid rgba(110, 231, 183, 0.3);
+            border-radius: 14px;
+            padding: 15px;
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            max-width: 360px;
+            margin-bottom: 15px;
+        }
+        .report-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+        .report-row:last-child { border-bottom: none; }
+        .report-row span { color: #6ee7b7; font-weight: bold; font-size: 15px; }
+
+        .main-btn {
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: #022c22;
             border: none;
-            border-radius: 6px;
+            padding: 10px 25px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            text-align: center;
+            box-shadow: 0 6px 15px rgba(52, 211, 153, 0.4);
         }
-        .btn-start-fresh { background: #16a34a; color: white; }
-        .btn-start-fresh:hover { background: #15803d; }
-        .btn-resume { background: #0284c7; color: white; }
-        .btn-resume:hover { background: #0369a1; }
-        .btn-rules { background: #7c3aed; color: white; }
-        .btn-rules:hover { background: #6d28d9; }
-
-        .rules-content {
-            font-size: 11px;
-            color: #e2e8f0;
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            border: 1px solid #334155;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-        .rules-content h3 { font-size: 12px; color: #38bdf8; margin-top: 8px; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-btn">← ফিরে যান</a>
+    <a href="games.html" class="back-btn">← ফিরে যান</a>
 
-    <!-- ইন্ট্রো পপআপ স্ক্রিন -->
-    <div class="modal-screen" id="introModal">
-        <div class="modal-card">
-            <h2>🧪 মোলারিটি মাস্টার</h2>
-            <p>মোলারিটি ও ঘনমাত্রা সম্পর্কিত সব ধরনের গাণিতিক সমস্যার প্র্যাকটিস গেম!</p>
-            
-            <div id="introButtons">
-                <button class="modal-btn btn-resume" id="resumeBtn" onclick="resumeGame()">যেখান থেকে থেমেছিল</button>
-                <button class="modal-btn btn-start-fresh" onclick="startFreshGame()">শুরু থেকে খেলুন</button>
-                <button class="modal-btn btn-rules" onclick="showRules()">সব সূত্র ও নিয়মাবলী</button>
-            </div>
-
-            <div id="rulesBox" style="display: none;">
-                <div class="rules-content">
-                    <h3>১. মোলারিটি নির্ণয় ($S$)</h3>
-                    • সূত্র: $S = \frac{1000W}{MV}$<br>
-                    • $W$ = দ্রবের ভর, $M$ = মোলার ভর, $V$ = আয়তন (mL)।
-
-                    <h3>২. দ্রবের ভর নির্ণয় ($W$)</h3>
-                    • সূত্র: $W = \frac{SMV}{1000}$
-
-                    <h3>৩. দ্রবণের আয়তন নির্ণয় ($V$)</h3>
-                    • সূত্র: $V = \frac{1000W}{SM}$
-
-                    <h3>৪. শতকরা মাত্রা থেকে মোলারিটি</h3>
-                    • সূত্র: $S = \frac{10 \times x}{M}$ (যেখানে $x$ হলো শতকরা হার)।
-
-                    <br><br><b>নিয়ম:</b> সঠিক উত্তর না দেওয়া পর্যন্ত পরবর্তী প্রশ্নে যাওয়া যাবে না।
-                </div>
-                <button class="modal-btn btn-start-fresh" onclick="backToIntroMenu()">ফিরে যান</button>
-            </div>
-        </div>
+    <!-- Intro Popup Screen -->
+    <div class="overlay-screen" id="introScreen">
+        <h2>🧪 সলিউশন মাস্টার: ইনফো ল্যাব</h2>
+        <p>রসায়নের মজার তথ্য, ল্যাব প্রটোকল এবং বিভিন্ন যৌগের রাসায়নিক সংকেত নিয়ে তৈরি আমাদের এই চ্যালেঞ্জিং গেমটিতে আপনাকে স্বাগতম!<br><br>সময়সীমার মধ্যে সঠিক উত্তর দিয়ে কম্বো পয়েন্ট অর্জন করুন এবং ল্যাব মাস্টার হয়ে উঠুন।</p>
+        <button class="main-btn" onclick="closeIntro()">ল্যাব মিশন শুরু করুন 🚀</button>
     </div>
 
-    <!-- গেম ওভার স্ক্রিন -->
-    <div class="modal-screen" id="gameOverScreen" style="display: none;">
-        <div class="modal-card" style="text-align: center;">
-            <h2>অভিনন্দন!</h2>
-            <p id="finalScoreText">আপনার মোট স্কোর: ০</p>
-            <button class="modal-btn btn-start-fresh" onclick="startFreshGame()">নতুন করে শুরু করুন 🔄</button>
+    <!-- Dashboard Screen -->
+    <div class="overlay-screen" id="dashboardScreen" style="display: none;">
+        <h2>🧪 ইনফো ল্যাব ফাইনাল রিপোর্ট</h2>
+        <p>আপনার সম্পূর্ণ কেমিস্ট্রি মিশন ডাটা অ্যানালাইসিস সম্পন্ন হয়েছে!</p>
+        
+        <div class="report-card">
+            <div class="report-row">মোট অর্জিত স্কোর: <span id="report-score">0</span></div>
+            <div class="report-row">সঠিক ল্যাব মিশন: <span id="report-correct">0 টি</span></div>
+            <div class="report-row">চূড়ান্ত ল্যাব গ্রেড: <span id="report-grade">C</span></div>
         </div>
+
+        <button class="main-btn" onclick="startLab()">ল্যাব পুনরায় শুরু করুন 🔄</button>
     </div>
 
     <div class="game-container">
-        <h1>🧪 মোলারিটি মাস্টার</h1>
-        <p class="subtitle">ঘনমাত্রা ও মোলারিটি হিসাব চ্যালেঞ্জ</p>
+        <div class="badge">Pro Lab Edition</div>
+        <h1>🧪 সলিউশন মাস্টার</h1>
+        <p class="subtitle">রসায়নের তথ্য ও প্রটোকল মিলিয়ে মিশন জয় করো!</p>
 
-        <div class="score-board">
-            <span>স্কোর: <span id="scoreVal">0</span></span>
-            <span>প্রশ্ন: <span id="qNum">1</span>/200</span>
+        <div class="stats-bar">
+            <span>স্কোর: <span id="score">0</span></span>
+            <span class="lives-container" id="lives">🤍🤍🤍</span>
         </div>
 
-        <div class="problem-box" id="problemText">
-            সমস্যা লোড হচ্ছে...
+        <div class="combo-badge" id="comboBadge"></div>
+
+        <div class="line-timer-container">
+            <div class="line-timer-bar" id="lineTimerBar"></div>
         </div>
 
-        <div class="input-group">
-            <label for="userAnswer">আপনার উত্তর (দুই দশমিক ঘর পর্যন্ত):</label>
-            <input type="number" step="0.01" id="userAnswer" placeholder="যেমন: 0.5">
+        <div class="lab-visual">
+            <div class="beaker-liquid" id="beakerLiquid" style="height: 60%;"></div>
         </div>
 
-        <button class="submit-btn" onclick="checkAnswer()">উত্তর জমা দিন</button>
-        <button class="reset-local-btn" onclick="returnToIntro()">মেনুতে ফিরে যান</button>
-        
-        <div class="feedback" id="feedbackText"></div>
+        <div id="game-area">
+            <div class="mission-box" id="mission-text">ইনফো মিশন লোড হচ্ছে...</div>
+            <div class="action-grid" id="actions-container"></div>
+        </div>
+
+        <div class="feedback-box" id="message">ল্যাব প্রস্তুত! সঠিক অপশনটি বেছে নিন।</div>
     </div>
 
     <script>
-        const substances = [
-            { name: "NaOH", m: 40 },
-            { name: "HCl", m: 36.5 },
-            { name: "H₂SO₄", m: 98 },
-            { name: "Na₂CO₃", m: 106 },
-            { name: "NaCl", m: 58.5 },
-            { name: "KOH", m: 56.1 },
-            { name: "HNO₃", m: 63 },
-            { name: "CH₃COOH", m: 60 }
+        // বর্ধিত এবং সমৃদ্ধ রসায়ন ইনফো ডাটাবেজ (৬০+ প্রশ্ন)
+        const labMissions = [
+            { task: "রসায়ন তথ্য: সোডিয়াম ধাতুকে কোথায় সংরক্ষণ করা হয়?", options: ["কেরোসিনে", "পানিতে", "অ্যালকোহলে", "খোলা বাতাসে"], answer: "কেরোসিনে", liquidLevel: "50%" },
+            { task: "বিশ্লেষণ: বিশুদ্ধ পানির pH এর মান কত?", options: ["7", "0", "14", "5"], answer: "7", liquidLevel: "50%" },
+            { task: "তথ্য: সাধারণ লবণের রাসায়নিক নাম কী?", options: ["সোডিয়াম ক্লোরাইড", "সোডিয়াম কার্বনেট", "ক্যালসিয়াম অক্সাইড", "ম্যাগনেসিয়াম সালফেট"], answer: "সোডিয়াম ক্লোরাইড", liquidLevel: "40%" },
+            { task: "ল্যাব প্রটোকল: এসিডের সাথে পানি মেশানোর সঠিক নিয়ম কোনটি?", options: ["পানিতে ফোঁটায় ফোঁটায় এসিড ঢালা", "এসিডে ফোঁটায় ফোঁটায় পানি যোগ করা", "একসাথে দ্রুত মেশানো", "গরম করে মেশানো"], answer: "পানিতে ফোঁটায় ফোঁটায় এসিড ঢালা", liquidLevel: "60%" },
+            { task: "পরিচয়: মার্বেলের রাসায়নিক সংকেত কোনটি?", options: ["CaCO3", "CaO", "Ca(OH)2", "CaCl2"], answer: "CaCO3", liquidLevel: "30%" },
+            { task: "ইতিহাস: পর্যায় সারণির জনক কাকে বলা হয়?", options: ["মেন্ডেলিফ", "রাদারফোর্ড", "বোর", "ল্যাভোসিয়ে"], answer: "মেন্ডেলিফ", liquidLevel: "70%" },
+            { task: "তথ্য: ফরমালিন আসলে কীসের জলীয় দ্রবণ?", options: ["ফরমালডিহাইড", "মিথানল", "ইথানল", "অ্যাসিটিক এসিড"], answer: "ফরমালডিহাইড", liquidLevel: "80%" },
+            { task: "ল্যাব টেস্ট: ব্লিচিং পাউডারের প্রস্তুতকারক উপাদান কোনটি?", options: ["ক্যালসিয়াম হাইপোক্লোরাইড", "সোডিয়াম হাইপোক্লোরাইড", "বোরিক এসিড", "পটাশিয়াম নাইট্রেট"], answer: "ক্যালসিয়াম হাইপোক্লোরাইড", liquidLevel: "45%" },
+            { task: "বিশ্লেষণ: টক স্বাদে কোনটি থাকে?", options: ["এসিড", "ক্ষার", "লবণ", "পানি"], answer: "এসিড", liquidLevel: "55%" },
+            { task: "তথ্য: কুইকলাইম বা পোড়ামাটি কোনটি?", options: ["CaO", "CaCO3", "Ca(OH)2", "CaSO4"], answer: "CaO", liquidLevel: "65%" },
+            { task: "পরিচয়: লাইম ওয়াটার বা চুনাজলের রাসায়নিক সংকেত কী?", options: ["Ca(OH)2", "CaO", "CaCO3", "CaCl2"], answer: "Ca(OH)2", liquidLevel: "35%" },
+            { task: "তথ্য: ভিনেগারে কোন এসিড থাকে?", options: ["অ্যাসিটিক এসিড", "সাইট্রিক এসিড", "ল্যাকটিক এসিড", "ম্যালিক এসিড"], answer: "অ্যাসিটিক এসিড", liquidLevel: "75%" },
+            { task: "ল্যাব প্রটোকল: এসিড ও ক্ষার বিক্রিয়ায় উৎপন্ন হয় কী?", options: ["লবণ ও পানি", "গ্যাস ও তাপ", "শুধুমাত্র লবণ", "অদ්‍රাব্য তলানি"], answer: "লবণ ও পানি", liquidLevel: "50%" },
+            { task: "বিশ্লেষণ: মানবদেহের রক্তের স্বাভাবিক pH কত?", options: ["7.4", "6.5", "8.0", "7.0"], answer: "7.4", liquidLevel: "60%" },
+            { task: "তথ্য: গ্যালভানাইজিং এ কোন ধাতু ব্যবহার করা হয়?", options: ["জিংক (Zn)", "লোহা (Fe)", "তামা (Cu)", "অ্যালুমিনিয়াম"], answer: "জিংক (Zn)", liquidLevel: "40%" },
+            { task: "ইতিহাস: ইলেকট্রন কে আবিষ্কার করেন?", options: ["জে. জে. থমসন", "চ্যাডউইক", "রাদারফোর্ড", "নিলস বোর"], answer: "জে. জে. থমসন", liquidLevel: "85%" },
+            { task: "তথ্য: প্রোটন আবিষ্কারক কে?", options: ["গোল্ডস্টাইন", "থমসন", "রাদারফোর্ড", "চ্যাডউইক"], answer: "গোল্ডস্টাইন", liquidLevel: "90%" },
+            { task: "ল্যাব প্রটোকল: ল্যাবরেটরিতে হাত পুড়ে গেলে প্রথমে কী ব্যবহার করা উচিত?", options: ["ঠান্ডা পানি", "অ্যালকোহল", "তেল", "গরম পানি"], answer: "ঠান্ডা পানি", liquidLevel: "20%" },
+            { task: "তথ্য: পিঁপড়ার কামড়ে কোন এসিড থাকে?", options: ["ফরমিক এসিড", "সাইট্রিক এসিড", "অক্সালিক এসিড", "টারটারিক এসিড"], answer: "ফরমিক এসিড", liquidLevel: "65%" },
+            { task: "বিশ্লেষণ: ড্রাই আইস বা শুষ্ক বরফ আসলে কী?", options: ["কঠিন কার্বন ডাই-অক্সাইড", "কঠিন পানি", "তরল নাইট্রোজেন", "কঠিন অ্যামোনিয়া"], answer: "কঠিন কার্বন ডাই-অক্সাইড", liquidLevel: "30%" },
+            { task: "তথ্য: মুদ্রার ধাতু হিসেবে পরিচিত কোনগুলো?", options: ["Cu, Ag, Au", "Fe, Co, Ni", "Na, K, Ca", "Zn, Cd, Hg"], answer: "Cu, Ag, Au", liquidLevel: "50%" },
+            { task: "ল্যাব প্রটোকল: গোল তল flask ব্যবহারের সময় নিচে কী দেওয়া হয়?", options: ["অ্যাসবেস্টস নেট বা তারজালি", "সরাসরি আগুন", "প্লাস্টিক প্যাড", "কাঠের গুঁড়ো"], answer: "অ্যাসবেস্টস নেট বা তারজালি", liquidLevel: "45%" },
+            { task: "তথ্য: সবচেয়ে হালকা গ্যাস কোনটি?", options: ["হাইড্রোজেন", "হিলিয়াম", "অক্সিজেন", "নাইট্রোজেন"], answer: "হাইড্রোজেন", liquidLevel: "70%" },
+            { task: "বিশ্লেষণ: বেলুনের মধ্যে কোন গ্যাস ভরা হয় যা দাহ্য নয়?", options: ["হিলিয়াম", "হাইড্রোজেন", "মিথেন", "অ্যামোনিয়া"], answer: "হিলিয়াম", liquidLevel: "60%" },
+            { task: "তথ্য: বেকিং সোডার রাসায়নিক নাম কী?", options: ["সোডিয়াম বাইকার্বনেট", "সোডিয়াম কার্বনেট", "ক্যালসিয়াম কার্বনেট", "পটাশিয়াম নাইট্রেট"], answer: "সোডিয়াম বাইকার্বনেট", liquidLevel: "55%" },
+            { task: "পরিচয়: হেমাটাইট কোন ধাতুর আকরিষ্ক?", options: ["লোহা (Fe)", "অ্যালুমিনিয়াম", "তামা", "জিংক"], answer: "লোহা (Fe)", liquidLevel: "75%" },
+            { task: "তথ্য: অ্যালুমিনিয়ামের প্রধান আকরিষ্ক কোনটি?", options: ["বক্সাইট", "ক্রায়োলাইট", "কার্নালাইট", "মেল্যাকাাইট"], answer: "বক্সাইট", liquidLevel: "65%" },
+            { task: "ল্যাব টেস্ট: লিটমাস পেপার কোন রঙ থেকে লাল হয় যদি দ্রবণটি এসিড হয়?", options: ["নীল থেকে লাল", "লাল থেকে নীল", "হলুদ থেকে সবুজ", "বর্ণহীন থেকে গোলাপী"], answer: "নীল থেকে লাল", liquidLevel: "40%" },
+            { task: "তথ্য: পানির অস্থায়ী ক্ষারত্ব দূর করার উপায় কী?", options: ["ফুটিয়ে", "ব্লিচিং পাউডার যোগ করে", "সোডা যোগ করে", "ফিল্টার করে"], answer: "ফুটিয়ে", liquidLevel: "50%" },
+            { task: "বিশ্লেষণ: মোমের দহন হলো একটি —", options: ["রাসায়নিক ও ভৌত পরিবর্তন উভয়ই", "শুধুমাত্র ভৌত পরিবর্তন", "শুধুমাত্র রাসায়নিক পরিবর্তন", "পারমাণবিক পরিবর্তন"], answer: "রাসায়নিক ও ভৌত পরিবর্তন উভয়ই", liquidLevel: "80%" },
+            // অতিরিক্ত নতুন প্রশ্নসমূহ
+            { task: "তথ্য: দার্শনিকের উল বা হোয়াইট ভিট্রিয়ল কোনটি?", options: ["জিংক অক্সাইড", "জিংক সালফেট", "কপার সালফেট", "ফেরাস সালফেট"], answer: "জিংক অক্সাইড", liquidLevel: "42%" },
+            { task: "তথ্য: ব্লু ভিট্রিয়ল বা তুঁতে এর রাসায়নিক সংকেত কী?", options: ["CuSO4.5H2O", "FeSO4.7H2O", "ZnSO4.7H2O", "MgSO4.7H2O"], answer: "CuSO4.5H2O", liquidLevel: "58%" },
+            { task: "বিশ্লেষণ: গ্রিন ভিট্রিয়ল বা সবুজ তুঁতে কোনটি?", options: ["ফেরাস সালফেট", "কপার সালফেট", "জিংক সালফেট", "ক্যালসিয়াম সালফেট"], answer: "ফেরাস সালফেট", liquidLevel: "62%" },
+            { task: "তথ্য: বায়ুমণ্ডলে কোন গ্যাসের পরিমাণ সবচেয়ে বেশি?", options: ["নাইট্রোজেন", "অক্সিজেন", "আর্গন", "কার্বন ডাই-অক্সাইড"], answer: "নাইট্রোজেন", liquidLevel: "78%" },
+            { task: "ল্যাব টেস্ট: অগ্নি নির্বাপক যন্ত্রে কোন গ্যাস ব্যবহার করা হয়?", options: ["কার্বন ডাই-অক্সাইড", "অক্সিজেন", "নাইট্রোজেন", "হিলিয়াম"], answer: "কার্বন ডাই-অক্সাইড", liquidLevel: "33%" },
+            { task: "তথ্য: লাফিং গ্যাস বা হাসির গ্যাসের রাসায়নিক নাম কী?", options: ["নাইট্রাস অক্সাইড", "নাইট্রিক অক্সাইড", "নাইট্রোজেন ডাই-অক্সাইড", "অ্যামোনিয়া"], answer: "নাইট্রাস অক্সাইড", liquidLevel: "68%" },
+            { task: "পরিচয়: ভারী পানির সংকেত কোনটি?", options: ["D2O", "H2O2", "H2O", "T2O"], answer: "D2O", liquidLevel: "50%" },
+            { task: "তথ্য: সবচেয়ে তড়িৎ ঋণাত্মক মৌল কোনটি?", options: ["ফ্লোরিন", "অক্সিজেন", "ক্লোরিন", "নাইট্রোজেন"], answer: "ফ্লোরিন", liquidLevel: "88%" },
+            { task: "বিশ্লেষণ: সাধারণ তাপমাত্রায় তরল ধাতু কোনটি?", options: ["পারদ (Hg)", "ব্রোমিন (Br)", "গ্যালিয়াম", "সোডিয়াম"], answer: "পারদ (Hg)", liquidLevel: "48%" },
+            { task: "তথ্য: সাধারণ তাপমাত্রায় তরল অধাতু কোনটি?", options: ["ব্রোমিন", "পারদ", "আয়োডিন", "কার্বন"], answer: "ব্রোমিন", liquidLevel: "52%" },
+            { task: "ল্যাব প্রটোকল: কোন এসিডকে 'রংয়ের রাজা' বা 'এসিডের রাজা' বলা হয়?", options: ["সালফিউরিক এসিড", "নাইট্রিক এসিড", "হাইড্রোক্লোরিক এসিড", "ফসফরিক এসিড"], answer: "সালফিউরিক এসিড", liquidLevel: "95%" },
+            { task: "তথ্য: সোনা গলানোর জন্য কোন মিশ্রণ ব্যবহার করা হয়?", options: ["অ্যাকোয়া রেজিমিয়া (রাজঅম্ল)", "নাইট্রিক এসিড", "সালফিউরিক এসিড", "হাইড্রোক্লোরিক এসিড"], answer: "অ্যাকোয়া রেজিমিয়া (রাজঅম্ল)", liquidLevel: "70%" },
+            { task: "বিশ্লেষণ: পাটের আঁশ ছড়াতে কোন রাসায়নিক যৌগ ব্যবহৃত হয়?", options: ["ইউরিয়া", "সোডিয়াম হাইড্রোক্সাইড", "ব্লিচিং পাউডার", "অ্যামোনিয়াম সালফেট"], answer: "ইউরিয়া", liquidLevel: "45%" },
+            { task: "তথ্য: কাঁচ কাটার জন্য কোনটি ব্যবহৃত হয়?", options: ["হীরা", "গ্রাফাইট", "সিলিকন কার্বাইড", "কোয়ার্টজ"], answer: "হীরা", liquidLevel: "85%" },
+            { task: "তথ্য: পেন্সিলের শীষ তৈরিতে কোনটি ব্যবহার করা হয়?", options: ["গ্রাফাইট", "হীরা", "চারকোল", "সিলিকন"], answer: "গ্রাফাইট", liquidLevel: "55%" },
+            { task: "ল্যাব টেস্ট: মিথেন গ্যাসের অপর নাম কী?", options: ["মার্শ গ্যাস", "প্রডিউসার গ্যাস", "ওয়াটার গ্যাস", "কোভ্যালেন্ট গ্যাস"], answer: "মার্শ গ্যাস", liquidLevel: "38%" },
+            { task: "তথ্য: দার্শনিকের উনুন বা বিশেষ চুল্লিতে কোন গ্যাস উৎপন্ন হয়?", options: ["কার্বন মনোক্সাইড", "কার্বন ডাই-অক্সাইড", "মিথেন", "সালফার ডাই-অক্সাইড"], answer: "কার্বন মনোক্সাইড", liquidLevel: "60%" },
+            { task: "বিশ্লেষণ: মানুষের হাড় ও দাঁতের প্রধান উপাদান কোনটি?", options: ["ক্যালসিয়াম ফসফেট", "ক্যালসিয়াম কার্বনেট", "ম্যাগনেসিয়াম সালফেট", "সোডিয়াম ক্লোরাইড"], answer: "ক্যালসিয়াম ফসফেট", liquidLevel: "72%" },
+            { task: "তথ্য: সাবান তৈরির উপজাত (By-product) হিসেবে কী পাওয়া যায়?", options: ["গ্লিসারিন", "গ্লুকোজ", "ফ্যাট", "ইথানল"], answer: "গ্লিসারিন", liquidLevel: "50%" },
+            { task: "পরিচয়: ফিটকিরির রাসায়নিক সংকেত কোনটি?", options: ["K2SO4.Al2(SO4)3.24H2O", "CaSO4.2H2O", "MgSO4.7H2O", "Na2CO3.10H2O"], answer: "K2SO4.Al2(SO4)3.24H2O", liquidLevel: "40%" },
+            { task: "তথ্য: পারমাণবিক বোমা তৈরিতে কোন মৌল ব্যবহার করা হয়?", options: ["ইউরেনিয়াম ও প্লুটোনিয়াম", "সোডিয়াম ও পটাশিয়াম", "লোহা ও তামা", "হাইড্রোজেন ও হিলিয়াম"], answer: "ইউরেনিয়াম ও প্লুটোনিয়াম", liquidLevel: "90%" },
+            { task: "বিশ্লেষণ: সূর্য ও নক্ষত্রসমূহের শক্তির মূল উৎস কী?", options: ["নিউক্লীয় সংযোজন", "নিউক্লীয় ফিশন", "রাসায়নিক দহন", "তড়িৎ চুম্বকীয় বিকিরণ"], answer: "নিউক্লীয় সংযোজন", liquidLevel: "98%" },
+            { task: "তথ্য: ফরমালডিহাইডের কত পারเซন্ট জলীয় দ্রবণকে ফরমালিন বলা হয়?", options: ["৪০%", "১০%", "৭০%", "১০০%"], answer: "৪০%", liquidLevel: "40%" },
+            { task: "তথ্য: বায়োগ্যাসের প্রধান উপাদান কোনটি?", options: ["মিথেন", "প্রোপেন", "বিউটেন", "ইথেন"], answer: "মিথেন", liquidLevel: "65%" },
+            { task: "ল্যাব প্রটোকল: পরীক্ষাগারে হাইড্রোজেন গ্যাস প্রস্তুত করতে সাধারণত কী ব্যবহার করা হয়?", options: ["জিংক ও লঘু হাইড্রোক্লোরিক এসিড", "তামা ও নাইট্রিক এসিড", "সোডিয়াম ও পানি", "ম্যাগনেসিয়াম ও সালফিউরিক এসিড"], answer: "জিংক ও লঘু হাইড্রোক্লোরিক এসিড", liquidLevel: "50%" }
         ];
 
-        function generateDatabase(totalProblems = 200) {
-            let database = [];
-            
-            for (let i = 0; i < totalProblems; i++) {
-                let sub = substances[Math.floor(Math.random() * substances.length)];
-                let type = Math.floor(Math.random() * 4);
+        let score = 0;
+        let correctCount = 0;
+        let lives = 3;
+        let combo = 0;
+        let activeMissions = [];
+        let currentMission = {};
+        
+        let timerWidth = 100;
+        let timerInterval;
+        const totalTimeMs = 25000;
+        const intervalStepMs = 100; 
+        const decrementRate = 100 / (totalTimeMs / intervalStepMs);
 
-                if (type === 0) {
-                    let v = [100, 250, 500, 1000][Math.floor(Math.random() * 4)];
-                    let s = parseFloat((Math.random() * 2 + 0.1).toFixed(2));
-                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
-                    
-                    database.push({
-                        text: `${w} গ্রাম ${sub.name} কে পানিতে দ্রবীভূত করে ${v} mL দ্রবণ তৈরি করা হলো। দ্রবণটির মোলারিটি ($S$) কত?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: s
-                    });
-                } 
-                else if (type === 1) {
-                    let v = [100, 200, 250, 500][Math.floor(Math.random() * 4)];
-                    let s = parseFloat((Math.random() * 1.5 + 0.1).toFixed(2));
-                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
-                    
-                    database.push({
-                        text: `${v} mL দ্রবণে ${s} M ঘনমাত্রার ${sub.name} তৈরি করতে কত গ্রাম ($W$) দ্রবণ প্রয়োজন?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: w
-                    });
-                } 
-                else if (type === 2) {
-                    let v = [100, 250, 500][Math.floor(Math.random() * 3)];
-                    let s = parseFloat((Math.random() * 1.0 + 0.2).toFixed(2));
-                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
-                    
-                    database.push({
-                        text: `${w} গ্রাম ${sub.name} ব্যবহার করে ${s} M ঘনমাত্রার দ্রবণ প্রস্তুত করতে কত mL ($V$) আয়তনের প্রয়োজন হবে?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: v
-                    });
-                } 
-                else if (type === 3) {
-                    let percent = [2, 4, 5, 10][Math.floor(Math.random() * 4)];
-                    let s = parseFloat(((10 * percent) / sub.m).toFixed(2));
-                    
-                    database.push({
-                        text: `${percent}% (w/v) ${sub.name} দ্রবণের মোলারিটি ($S$) কত হবে?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: s
-                    });
-                }
-            }
-            return database;
-        }
+        const scoreDisplay = document.getElementById("score");
+        const livesDisplay = document.getElementById("lives");
+        const comboBadge = document.getElementById("comboBadge");
+        const missionText = document.getElementById("mission-text");
+        const actionsContainer = document.getElementById("actions-container");
+        const message = document.getElementById("message");
+        const introScreen = document.getElementById("introScreen");
+        const dashboardScreen = document.getElementById("dashboardScreen");
+        const beakerLiquid = document.getElementById("beakerLiquid");
+        const lineTimerBar = document.getElementById("lineTimerBar");
 
-        let gameProblems = generateDatabase(200);
-        let currentIdx = parseInt(localStorage.getItem("molarity_idx")) || 0;
-        let score = parseInt(localStorage.getItem("molarity_score")) || 0;
-
-        const problemText = document.getElementById("problemText");
-        const userAnswer = document.getElementById("userAnswer");
-        const feedbackText = document.getElementById("feedbackText");
-        const scoreVal = document.getElementById("scoreVal");
-        const qNum = document.getElementById("qNum");
-        const introModal = document.getElementById("introModal");
-        const gameOverScreen = document.getElementById("gameOverScreen");
-        const finalScoreText = document.getElementById("finalScoreText");
-        const resumeBtn = document.getElementById("resumeBtn");
-        const rulesBox = document.getElementById("rulesBox");
-        const introButtons = document.getElementById("introButtons");
-
-        function checkSavedProgress() {
-            if (!localStorage.getItem("molarity_idx") || parseInt(localStorage.getItem("molarity_idx")) === 0) {
-                resumeBtn.style.display = "none";
-            } else {
-                resumeBtn.style.display = "block";
+        function triggerVibration(pattern) {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(pattern);
             }
         }
 
-        function showRules() {
-            introButtons.style.display = "none";
-            rulesBox.style.display = "block";
+        function closeIntro() {
+            introScreen.style.display = "none";
+            startLab();
         }
 
-        function backToIntroMenu() {
-            rulesBox.style.display = "none";
-            introButtons.style.display = "block";
-        }
-
-        function startFreshGame() {
-            localStorage.removeItem("molarity_idx");
-            localStorage.removeItem("molarity_score");
-            
-            gameProblems = generateDatabase(200);
-            
-            currentIdx = 0;
+        function startLab() {
+            dashboardScreen.style.display = "none";
             score = 0;
-            introModal.style.display = "none";
-            gameOverScreen.style.display = "none";
-            initGame();
+            correctCount = 0;
+            lives = 3;
+            combo = 0;
+            scoreDisplay.textContent = score;
+            comboBadge.textContent = "";
+            updateLivesDisplay();
+            activeMissions = [...labMissions].sort(() => Math.random() - 0.5);
+            nextMission();
         }
 
-        function resumeGame() {
-            currentIdx = parseInt(localStorage.getItem("molarity_idx")) || 0;
-            score = parseInt(localStorage.getItem("molarity_score")) || 0;
-            introModal.style.display = "none";
-            initGame();
-        }
-
-        function returnToIntro() {
-            checkSavedProgress();
-            introModal.style.display = "flex";
-        }
-
-        function initGame() {
-            if (currentIdx >= gameProblems.length) {
-                endGame();
-                return;
+        function nextMission() {
+            if (activeMissions.length === 0) {
+                activeMissions = [...labMissions].sort(() => Math.random() - 0.5);
             }
-            scoreVal.textContent = score;
-            qNum.textContent = currentIdx + 1;
-            problemText.innerHTML = gameProblems[currentIdx].text;
-            userAnswer.value = "";
-            feedbackText.textContent = "";
+            currentMission = activeMissions.pop();
+
+            missionText.innerHTML = currentMission.task;
+            beakerLiquid.style.height = currentMission.liquidLevel;
+            actionsContainer.innerHTML = "";
+            message.textContent = "ল্যাব মিশন চলছে... সঠিক অপশন বেছে নিন।";
+            message.style.background = "rgba(2, 44, 34, 0.7)";
+            message.style.color = "#f0fdf4";
+
+            let shuffledOpts = [...currentMission.options].sort(() => Math.random() - 0.5);
+            shuffledOpts.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.classList.add("action-btn");
+                btn.innerHTML = opt;
+                btn.onclick = () => verifyAction(opt);
+                actionsContainer.appendChild(btn);
+            });
+
+            startLineTimer();
         }
 
-        function checkAnswer() {
-            let val = parseFloat(userAnswer.value);
-            if (isNaN(val)) {
-                feedbackText.style.color = "#f87171";
-                feedbackText.textContent = "দয়া করে একটি সঠিক সংখ্যা লিখুন!";
-                return;
-            }
+        function startLineTimer() {
+            clearInterval(timerInterval);
+            timerWidth = 100;
+            lineTimerBar.style.width = "100%";
+            lineTimerBar.style.background = "linear-gradient(90deg, #34d399, #10b981)";
 
-            let correctAns = gameProblems[currentIdx].answer;
+            timerInterval = setInterval(() => {
+                timerWidth -= decrementRate;
+                lineTimerBar.style.width = timerWidth + "%";
+
+                if (timerWidth <= 30) {
+                    lineTimerBar.style.background = "linear-gradient(90deg, #f43f5e, #fb7185)";
+                }
+
+                if (timerWidth <= 0) {
+                    clearInterval(timerInterval);
+                    handleFailure("সময় শেষ! মিশন ড্রপ.");
+                }
+            }, intervalStepMs);
+        }
+
+        function verifyAction(selected) {
+            clearInterval(timerInterval);
+            const buttons = document.querySelectorAll(".action-btn");
             
-            if (Math.abs(val - correctAns) <= 0.1) {
-                score += 5;
-                scoreVal.textContent = score;
-                feedbackText.style.color = "#4ade80";
-                feedbackText.textContent = "সঠিক উত্তর! পরবর্তী প্রশ্নে যাচ্ছি...";
-                
-                currentIdx++;
-                localStorage.setItem("molarity_idx", currentIdx);
-                localStorage.setItem("molarity_score", score);
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerHTML === currentMission.answer) {
+                    btn.style.background = "#10b981";
+                    btn.style.color = "#fff";
+                } else if (btn.innerHTML === selected) {
+                    btn.style.background = "#f43f5e";
+                    btn.style.color = "#fff";
+                }
+            });
+
+            if (selected === currentMission.answer) {
+                combo++;
+                let bonus = combo > 1 ? (combo * 5) : 0;
+                score += (15 + bonus);
+                correctCount++;
+                scoreDisplay.textContent = score;
+
+                if (combo > 1) {
+                    comboBadge.textContent = `🔥 কম্বো স্ট্রিক x${combo} (+${15 + bonus} pts)!`;
+                } else {
+                    comboBadge.textContent = "";
+                }
+
+                message.textContent = "✨ দারুণ! ল্যাব মিশন নিখুঁতভাবে সম্পন্ন হয়েছে।";
+                message.style.background = "rgba(16, 185, 129, 0.2)";
+                message.style.color = "#34d399";
+                triggerVibration(50);
 
                 setTimeout(() => {
-                    initGame();
-                }, 1000);
+                    nextMission();
+                }, 1200);
             } else {
-                feedbackText.style.color = "#f87171";
-                feedbackText.textContent = "ভুল উত্তর! সঠিক উত্তর না দেওয়া পর্যন্ত পরবর্তী প্রশ্নে যাওয়া যাবে না।";
+                combo = 0;
+                comboBadge.textContent = "";
+                handleFailure("ভুল তথ্য বা প্রটোকল নির্বাচন!");
             }
         }
 
-        function endGame() {
-            finalScoreText.textContent = `আপনার মোট স্কোর: ${score} (২০০টি প্রশ্নের মধ্যে)`;
-            gameOverScreen.style.display = "flex";
+        function handleFailure(reason) {
+            lives--;
+            updateLivesDisplay();
+            triggerVibration([100, 50, 100]);
+
+            if (lives > 0) {
+                message.textContent = `❌ সতর্কতা: ${reason} জীবন ক্ষয় হয়েছে!`;
+                message.style.background = "rgba(244, 63, 94, 0.2)";
+                message.style.color = "#fb7185";
+                setTimeout(() => {
+                    nextMission();
+                }, 1500);
+            } else {
+                message.textContent = `🚨 ল্যাব ইমার্জেন্সি শাটডাউন! সমস্ত জীবন শেষ।`;
+                message.style.background = "rgba(244, 63, 94, 0.3)";
+                message.style.color = "#f43f5e";
+                setTimeout(() => {
+                    showDashboard();
+                }, 1500);
+            }
         }
 
-        checkSavedProgress();
+        function updateLivesDisplay() {
+            let hearts = "";
+            for (let i = 0; i < lives; i++) hearts += "🤍";
+            for (let i = lives; i < 3; i++) hearts += "🖤";
+            livesDisplay.textContent = hearts;
+        }
+
+        function showDashboard() {
+            clearInterval(timerInterval);
+            let grade = "C (উন্নতি প্রয়োজন)";
+            if (correctCount >= 15) grade = "A+ (সলিউশন মাস্টার 🧪)";
+            else if (correctCount >= 10) grade = "B (দারুণ কেমিস্ট 👍)";
+            else if (correctCount >= 5) grade = "C+ (ভালো)";
+
+            document.getElementById("report-score").textContent = score;
+            document.getElementById("report-correct").textContent = correctCount + " টি";
+            document.getElementById("report-grade").textContent = grade;
+
+            dashboardScreen.style.display = "flex";
+        }
     </script>
 </body>
 </html>
