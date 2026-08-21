@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>সলিউশন মাস্টার: ইনফো ল্যাব - Mobile Pro Edition</title>
+    <title>সলিউশন মাস্টার: ইনফো ল্যাব - Mobile Fixed Edition</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a, #064e3b, #022c22);
-            --card-bg: rgba(6, 78, 59, 0.9);
+            --card-bg: rgba(6, 78, 59, 0.95);
             --text-color: #f0fdf4;
-            --accent-primary: #34d399;
-            --accent-secondary: #059669;
-            --danger: #f43f5e;
-            --success: #10b981;
             --border: rgba(255, 255, 255, 0.15);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -24,57 +20,58 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 12px;
+            padding: 10px;
             overflow-x: hidden;
-        }
-        .back-btn { 
-            position: fixed; 
-            top: 15px; 
-            left: 15px; 
-            padding: 8px 14px; 
-            background: rgba(2, 44, 34, 0.7); 
-            backdrop-filter: blur(12px);
-            color: #6ee7b7; 
-            border-radius: 10px; 
-            text-decoration: none; 
-            border: 1px solid rgba(110, 231, 183, 0.3); 
-            z-index: 1000; 
-            font-weight: bold;
-            font-size: 13px;
         }
         .game-container {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 22px;
-            padding: 20px 15px;
+            padding: 18px 14px;
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             text-align: center;
             position: relative;
         }
+        /* ফিক্সড ব্যাক বাটন যা এখন কার্ডের ভেতরে সুন্দরভাবে থাকবে */
+        .top-nav {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 8px;
+        }
+        .back-btn { 
+            padding: 6px 12px; 
+            background: rgba(2, 44, 34, 0.9); 
+            color: #6ee7b7; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            border: 1px solid rgba(110, 231, 183, 0.3); 
+            font-weight: bold;
+            font-size: 12px;
+        }
         .badge {
             background: linear-gradient(135deg, #34d399, #059669);
             color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: bold;
             display: inline-block;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         h1 {
             color: #fff;
-            margin-bottom: 3px;
-            font-size: 20px;
+            margin-bottom: 2px;
+            font-size: 18px;
         }
         .subtitle {
             color: #a7f3d0;
-            font-size: 12px;
-            margin-bottom: 12px;
+            font-size: 11px;
+            margin-bottom: 10px;
         }
         .stats-bar {
             display: flex;
@@ -82,34 +79,29 @@
             align-items: center;
             background: rgba(2, 44, 34, 0.7);
             border: 1px solid var(--border);
-            padding: 8px 14px;
-            border-radius: 12px;
-            margin-bottom: 12px;
+            padding: 7px 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
         }
         .stats-bar span span { color: #6ee7b7; }
-        .lives-container {
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
+        .lives-container { font-size: 13px; }
 
-        /* কম্বো স্ট্রিক নোটিফিকেশন */
         .combo-badge {
             font-size: 11px;
             color: #f59e0b;
             font-weight: bold;
-            margin-bottom: 8px;
-            min-height: 16px;
+            margin-bottom: 6px;
+            min-height: 15px;
         }
 
-        /* লাইন কাউন্টডাউন প্রোগ্রেস বার */
         .line-timer-container {
             width: 100%;
-            height: 5px;
+            height: 4px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             overflow: hidden;
         }
         .line-timer-bar {
@@ -121,14 +113,13 @@
             transition: transform 0.1s linear;
         }
 
-        /* ভার্চুয়াল বিকার অ্যানিমেশন */
         .lab-visual {
-            width: 60px;
-            height: 80px;
-            margin: 0 auto 10px auto;
+            width: 50px;
+            height: 65px;
+            margin: 0 auto 8px auto;
             border: 3px solid rgba(255,255,255,0.3);
             border-top: none;
-            border-radius: 0 0 14px 14px;
+            border-radius: 0 0 12px 12px;
             position: relative;
             background: rgba(255,255,255,0.03);
             overflow: hidden;
@@ -145,14 +136,13 @@
         .mission-box {
             background: #f0fdf4;
             color: #064e3b;
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border: 1px solid #bbf7d0;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            min-height: 65px;
+            min-height: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -160,45 +150,45 @@
             line-height: 1.4;
         }
         
+        /* অপশনগুলোকে এক কলামে সুন্দর বড় বড় বাটন করা হলো যাতে মোবাইলে চাপাচাপি না লাগে */
         .action-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* মোবাইলে সিঙ্গেল কলাম বা সুন্দর ট্যাপ লেআউট */
-            gap: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             margin-bottom: 10px;
         }
         .action-btn {
             background: #022c22;
             color: #e2e8f0;
             border: 1px solid #065f46;
-            padding: 12px 15px;
-            border-radius: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
             font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 600;
             text-align: center;
+            width: 100%;
         }
         .action-btn:active {
             transform: scale(0.98);
             background: #059669;
         }
 
-        /* ফিডব্যাক বক্স */
         .feedback-box {
             background: rgba(2, 44, 34, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 8px 12px;
-            font-size: 13px;
+            padding: 7px 10px;
+            font-size: 12px;
             font-weight: bold;
-            min-height: 38px;
+            min-height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
         }
 
-        /* রিপোর্ট কার্ড ওভারলে */
         .overlay-screen {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -211,62 +201,54 @@
             z-index: 2000;
             padding: 20px;
             text-align: center;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
         }
         .overlay-screen h2 { 
             color: #fff; 
-            font-size: 24px; 
+            font-size: 22px; 
             margin-bottom: 6px; 
             background: linear-gradient(135deg, #6ee7b7, #34d399);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .overlay-screen p { color: #a7f3d0; font-size: 13px; margin-bottom: 20px; }
+        .overlay-screen p { color: #a7f3d0; font-size: 12px; margin-bottom: 15px; }
         
         .report-card {
             background: rgba(6, 78, 59, 0.6);
             border: 1px solid rgba(110, 231, 183, 0.3);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 15px;
             width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px;
+            max-width: 360px;
+            margin-bottom: 15px;
         }
         .report-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 14px;
+            font-size: 13px;
             color: #cbd5e1;
         }
         .report-row:last-child { border-bottom: none; }
-        .report-row span { color: #6ee7b7; font-weight: bold; font-size: 16px; }
+        .report-row span { color: #6ee7b7; font-weight: bold; font-size: 15px; }
 
         .main-btn {
             background: linear-gradient(135deg, #34d399, #059669);
             color: #022c22;
             border: none;
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-size: 15px;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(52, 211, 153, 0.4);
+            box-shadow: 0 6px 15px rgba(52, 211, 153, 0.4);
         }
     </style>
 </head>
 <body>
 
-    <a href="games.html" class="back-btn">← ফিরে যান</a>
-
-    <!-- রিপোর্ট কার্ড ওভারলে -->
-    <div id="dashboardScreen" class="overlay-screen">
+    <div class="overlay-screen" id="dashboardScreen">
         <h2>🧪 ইনফো ল্যাব ফাইনাল রিপোর্ট</h2>
         <p>আপনার সম্পূর্ণ কেমিস্ট্রি মিশন ডাটা অ্যানালাইসিস সম্পন্ন হয়েছে!</p>
         
@@ -280,7 +262,12 @@
     </div>
 
     <div class="game-container">
-        <div class="badge">Mobile Pro Edition</div>
+        <!-- ব্যাক বাটন কার্ডের ভেতরে সুন্দরভাবে প্লেস করা হলো -->
+        <div class="top-nav">
+            <a href="games.html" class="back-btn">← ফিরে যান</a>
+        </div>
+
+        <div class="badge">Pro Lab Edition</div>
         <h1>🧪 সলিউশন মাস্টার</h1>
         <p class="subtitle">রসায়নের তথ্য ও প্রটোকল মিলিয়ে মিশন জয় করো!</p>
 
@@ -291,12 +278,10 @@
 
         <div class="combo-badge" id="comboBadge"></div>
 
-        <!-- লাইন কাউন্টডাউন প্রোগ্রেস বার -->
         <div class="line-timer-container">
             <div class="line-timer-bar" id="lineTimerBar"></div>
         </div>
 
-        <!-- ভার্চুয়াল বিকার অ্যানিমেশন -->
         <div class="lab-visual">
             <div class="beaker-liquid" id="beakerLiquid" style="height: 60%;"></div>
         </div>
@@ -311,6 +296,7 @@
 
     <script>
         const labMissions = [
+            { task: "রসায়ন তথ্য #57: সোডিয়াম ধাতুকে কোথায় সংরক্ষণ করা হয়?", options: ["কেরোসিনে", "পানিতে", "অ্যালকোহলে", "খোলা বাতাসে"], answer: "কেরোসিনে", liquidLevel: "50%" },
             { task: "বিশ্লেষণ: বিশুদ্ধ পানির pH এর মান কত?", options: ["7", "0", "14", "5"], answer: "7", liquidLevel: "50%" },
             { task: "তথ্য: সাধারণ লবণের রাসায়নিক নাম কী?", options: ["সোডিয়াম ক্লোরাইড", "সোডিয়াম কার্বনেট", "ক্যালসিয়াম অক্সাইড", "ম্যাগনেসিয়াম সালফেট"], answer: "সোডিয়াম ক্লোরাইড", liquidLevel: "40%" },
             { task: "ল্যাব প্রটোকল: এসিডের সাথে পানি মেশানোর সঠিক নিয়ম কোনটি?", options: ["পানিতে ফোঁটায় ফোঁটায় এসিড ঢালা", "এসিডে ফোঁটায় ফোঁটায় পানি যোগ করা", "একসাথে দ্রুত মেশানো", "গরম করে মেশানো"], answer: "পানিতে ফোঁটায় ফোঁটায় এসিড ঢালা", liquidLevel: "60%" },
@@ -332,15 +318,6 @@
             { task: "বিশ্লেষণ: আকাশের রং নীল দেখানোর কারণ কী?", options: ["আলোর বিক্ষেপণ", "আলোর প্রতিসরণ", "আলোর প্রতিফলন", "আলোর শোষণ"], answer: "আলোর বিক্ষেপণ", liquidLevel: "50%" },
             { task: "তথ্য: ড্রাই আইস বা শুষ্ক বরফ আসলে কী?", options: ["কঠিন কার্বন ডাই-অক্সাইড", "কঠিন পানি", "তরল নাইট্রোজেন", "কঠিন অ্যামোনিয়া"], answer: "কঠিন কার্বন ডাই-অক্সাইড", liquidLevel: "30%" }
         ];
-
-        for (let i = 21; i <= 200; i++) {
-            labMissions.push({
-                task: `ল্যাব ইনফো মিশন #${i}: রসায়নের সাধারণ জ্ঞান ও ল্যাবরেটরি সেফটি স্ট্যান্ডার্ড যাচাই।`,
-                options: ["সঠিক প্রটোকল তথ্য", "ভুল বিকল্প A", "ভুল বিকল্প B", "ভুল বিকল্প C"].sort(() => Math.random() - 0.5),
-                answer: "সঠিক প্রটোকল তথ্য",
-                liquidLevel: (20 + (i % 70)) + "%"
-            });
-        }
 
         let score = 0;
         let correctCount = 0;
