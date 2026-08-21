@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মোলারিটি ক্যালকুলেটর গেম - Extended Edition</title>
+    <title>মোলারিটি মাস্টার - ডাটাবেস এডিশন</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body {
@@ -29,6 +29,7 @@
             font-weight: bold;
             font-size: 12px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
         .back-btn:hover { background: #eee; }
 
@@ -102,6 +103,20 @@
         }
         .submit-btn:hover { background: #2980b9; }
 
+        .reset-local-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .reset-local-btn:hover { background: #d35400; }
+
         .feedback {
             margin-top: 12px;
             font-size: 13px;
@@ -109,46 +124,118 @@
             min-height: 20px;
         }
 
-        .game-over-screen {
+        /* মোডাল উইন্ডো স্টাইল */
+        .modal-screen {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
             z-index: 2000;
-            padding: 20px;
-            text-align: center;
+            padding: 10px;
         }
-        .game-over-screen h2 { margin-bottom: 10px; font-size: 22px; }
-        .game-over-screen p { margin-bottom: 15px; font-size: 14px; color: #ddd; }
-        .restart-btn {
-            background: #2ecc71;
-            color: white;
+        .modal-card {
+            background: #fff;
+            color: #333;
+            padding: 20px 15px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: left;
+        }
+        .modal-card h2 { margin-bottom: 8px; font-size: 18px; color: #2c3e50; text-align: center; }
+        .modal-card p { margin-bottom: 15px; font-size: 12px; color: #666; line-height: 1.4; text-align: center; }
+        
+        .modal-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
             border: none;
-            padding: 10px 20px;
             border-radius: 6px;
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
+            text-align: center;
         }
+        .btn-start-fresh { background: #2ecc71; color: white; }
+        .btn-start-fresh:hover { background: #27ae60; }
+        .btn-resume { background: #3498db; color: white; }
+        .btn-resume:hover { background: #2980b9; }
+        .btn-rules { background: #9b59b6; color: white; }
+        .btn-rules:hover { background: #8e44ad; }
+
+        .rules-content {
+            font-size: 11px;
+            color: #333;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            border: 1px solid #ddd;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .rules-content h3 { font-size: 12px; color: #2c3e50; margin-top: 8px; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 
     <a href="games.html" class="back-btn">← ফিরে যান</a>
 
-    <div class="game-over-screen" id="gameOverScreen">
-        <h2>অভিনন্দন! মিশন সম্পন্ন</h2>
-        <p id="finalScoreText">আপনার মোট স্কোর: ০</p>
-        <button class="restart-btn" onclick="startGame()">আবার খেলুন 🔄</button>
+    <!-- ইন্ট্রো পপআপ স্ক্রিন -->
+    <div class="modal-screen" id="introModal">
+        <div class="modal-card">
+            <h2>🧪 মোলারিটি মাস্টার</h2>
+            <p>মোলারিটি ও ঘনমাত্রা সম্পর্কিত সব ধরনের গাণিতিক সমস্যার প্র্যাকটিস গেম!</p>
+            
+            <div id="introButtons">
+                <button class="modal-btn btn-resume" id="resumeBtn" onclick="resumeGame()">যেখান থেকে থেমেছিল</button>
+                <button class="modal-btn btn-start-fresh" onclick="startFreshGame()">শুরু থেকে খেলুন</button>
+                <button class="modal-btn btn-rules" onclick="showRules()">সব সূত্র ও নিয়মাবলী</button>
+            </div>
+
+            <div id="rulesBox" style="display: none;">
+                <div class="rules-content">
+                    <h3>১. মোলারিটি নির্ণয় ($S$)</h3>
+                    • সূত্র: $S = \frac{1000W}{MV}$<br>
+                    • $W$ = দ্রবের ভর, $M$ = মোলার ভর, $V$ = আয়তন (mL)।
+
+                    <h3>২. দ্রবের ভর নির্ণয় ($W$)</h3>
+                    • সূত্র: $W = \frac{SMV}{1000}$
+
+                    <h3>৩. দ্রবণের আয়তন নির্ণয় ($V$)</h3>
+                    • সূত্র: $V = \frac{1000W}{SM}$
+
+                    <h3>৪. শতকরা মাত্রা থেকে মোলারিটি</h3>
+                    • সূত্র: $S = \frac{10 \times x}{M}$ (যেখানে $x$ হলো শতকরা হার)।
+
+                    <br><br><b>নিয়ম:</b> সঠিক উত্তর না দেওয়া পর্যন্ত পরবর্তী প্রশ্নে যাওয়া যাবে না।
+                </div>
+                <button class="modal-btn btn-start-fresh" onclick="backToIntroMenu()">ফিরে যান</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- গেম ওভার স্ক্রিন -->
+    <div class="modal-screen" id="gameOverScreen" style="display: none;">
+        <div class="modal-card" style="text-align: center;">
+            <h2>অভিনন্দন!</h2>
+            <p id="finalScoreText">আপনার মোট স্কোর: ০</p>
+            <button class="modal-btn btn-start-fresh" onclick="startFreshGame()">নতুন করে শুরু করুন 🔄</button>
+        </div>
     </div>
 
     <div class="game-container">
         <h1>🧪 মোলারিটি মাস্টার</h1>
-        <p class="subtitle">মোলারিটি ($S = \frac{1000W}{MV}$) হিসাব করো</p>
+        <p class="subtitle">ঘনমাত্রা ও মোলারিটি হিসাব চ্যালেঞ্জ</p>
 
         <div class="score-board">
             <span>স্কোর: <span id="scoreVal">0</span></span>
@@ -165,95 +252,150 @@
         </div>
 
         <button class="submit-btn" onclick="checkAnswer()">উত্তর জমা দিন</button>
+        <button class="reset-local-btn" onclick="returnToIntro()">মেনুতে ফিরে যান</button>
+        
         <div class="feedback" id="feedbackText"></div>
     </div>
 
     <script>
-        // বেসিক প্রশ্ন ডাটাবেজ এবং স্বয়ংক্রয় রূপান্তর মিলিয়ে ২০০+ প্রশ্ন তৈরির লজিক
-        const baseProblems = [
-            { w: 4, m: 40, v: 250, name: "NaOH", molM: 40 },
-            { w: 5.3, m: 106, v: 500, name: "Na₂CO₃", molM: 106 },
-            { w: 9.8, m: 98, v: 2000, name: "H₂SO₄", molM: 98 },
-            { w: 10, m: 126, v: 200, name: "H₂C₂O₄·2H₂O", molM: 126 },
-            { w: 58.5, m: 58.5, v: 1000, name: "NaCl", molM: 58.5 },
-            { w: 2, m: 40, v: 500, name: "NaOH", molM: 40 },
-            { w: 49, m: 98, v: 500, name: "H₂SO₄", molM: 98 },
-            { w: 36.5, m: 36.5, v: 2000, name: "HCl", molM: 36.5 },
-            { w: 20, m: 40, v: 250, name: "NaOH", molM: 40 },
-            { w: 3.645, m: 36.5, v: 100, name: "HCl", molM: 36.5 },
-            { w: 10.6, m: 106, v: 250, name: "Na₂CO₃", molM: 106 },
-            { w: 8, m: 40, v: 500, name: "NaOH", molM: 40 },
-            { w: 14.2, m: 142, v: 500, name: "Na₂SO₄", molM: 142 },
-            { w: 6.0, m: 60, v: 250, name: "CH₃COOH", molM: 60 },
-            { w: 4.9, m: 98, v: 250, name: "H₂SO₄", molM: 98 }
+        // রাসায়নিক পদার্থের ডাটাবেস (নাম এবং মোলার ভর)
+        const substances = [
+            { name: "NaOH", m: 40 },
+            { name: "HCl", m: 36.5 },
+            { name: "H₂SO₄", m: 98 },
+            { name: "Na₂CO₃", m: 106 },
+            { name: "NaCl", m: 58.5 },
+            { name: "KOH", m: 56.1 },
+            { name: "HNO₃", m: 63 },
+            { name: "CH₃COOH", m: 60 }
         ];
 
-        let problems = [];
-
-        // ২০০টি প্রশ্ন ডাইনামিক্যালি জেনারেট করার লজিক যাতে কোড ভারী না হয় এবং ইউনিক প্রশ্ন পাওয়া যায়
-        function generate200Problems() {
-            let list = [];
-            let id = 1;
+        // বিভিন্ন টাইপের প্রশ্ন জেনারেট করার লজিক (S, W, V এবং % থেকে S)
+        function generateDatabase(totalProblems = 200) {
+            let database = [];
             
-            // বেসিক গুলো আগে যুক্ত করা হলো
-            baseProblems.forEach(item => {
-                let ans = Number(((item.w * 1000) / (item.molM * item.v)).toFixed(2));
-                list.index = id++;
-                list.push({
-                    text: `${item.w} গ্রাম ${item.name} কে পানিতে দ্রবীভূত করে মোট ${item.v} mL দ্রবণ তৈরি করা হলো। দ্রবণটির মোলারিটি ($S$) কত?<br><small style='color:#555;'>(মোলার ভর = ${item.molM} g/mol)</small>`,
-                    answer: ans
-                });
-            });
+            for (let i = 0; i < totalProblems; i++) {
+                let sub = substances[Math.floor(Math.random() * substances.length)];
+                let type = Math.floor(Math.random() * 4); // 0, 1, 2, 3
 
-            // বাকি প্রশ্নগুলো সংখ্যা পরিবর্তন করে ডাইনামিক্যালি ২০০ পর্যন্ত পূরণ করা হলো
-            while (list.length < 200) {
-                let randBase = baseProblems[Math.floor(Math.random() * baseProblems.length)];
-                let multiplier = (Math.floor(Math.random() * 4) + 1) * 0.5; // 0.5, 1, 1.5, 2
-                let newW = Number((randBase.w * multiplier).toFixed(1));
-                let newV = randBase.v;
-                let ans = Number(((newW * 1000) / (randBase.molM * newV)).toFixed(2));
-
-                // যেন ডুপ্লিকেট বা অবাস্তব না হয়
-                if (ans > 0) {
-                    list.push({
-                        text: `${newW} গ্রাম ${randBase.name} কে দ্রবীভূত করে ${newV} mL দ্রবণ প্রস্তুত করা হলো। এর মোলার ঘনমাত্রা কত?<br><small style='color:#555;'>(মোলার ভর = ${randBase.molM} g/mol)</small>`,
-                        answer: ans
+                if (type === 0) {
+                    // Type 0: Find S
+                    let v = [100, 250, 500, 1000][Math.floor(Math.random() * 4)];
+                    let s = parseFloat((Math.random() * 2 + 0.1).toFixed(2)); // 0.1 to 2.1 M
+                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
+                    
+                    database.push({
+                        text: `${w} গ্রাম ${sub.name} কে পানিতে দ্রবীভূত করে ${v} mL দ্রবণ তৈরি করা হলো। দ্রবণটির মোলারিটি ($S$) কত?<br><small style='color:#555;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
+                        answer: s
+                    });
+                } 
+                else if (type === 1) {
+                    // Type 1: Find W
+                    let v = [100, 200, 250, 500][Math.floor(Math.random() * 4)];
+                    let s = parseFloat((Math.random() * 1.5 + 0.1).toFixed(2));
+                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
+                    
+                    database.push({
+                        text: `${v} mL দ্রবণে ${s} M ঘনমাত্রার ${sub.name} তৈরি করতে কত গ্রাম ($W$) দ্রবণ প্রয়োজন?<br><small style='color:#555;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
+                        answer: w
+                    });
+                } 
+                else if (type === 2) {
+                    // Type 2: Find V
+                    let v = [100, 250, 500][Math.floor(Math.random() * 3)];
+                    let s = parseFloat((Math.random() * 1.0 + 0.2).toFixed(2));
+                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
+                    
+                    database.push({
+                        text: `${w} গ্রাম ${sub.name} ব্যবহার করে ${s} M ঘনমাত্রার দ্রবণ প্রস্তুত করতে কত mL ($V$) আয়তনের প্রয়োজন হবে?<br><small style='color:#555;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
+                        answer: v
+                    });
+                } 
+                else if (type === 3) {
+                    // Type 3: Find S from % (w/v)
+                    let percent = [2, 4, 5, 10][Math.floor(Math.random() * 4)];
+                    let s = parseFloat(((10 * percent) / sub.m).toFixed(2));
+                    
+                    database.push({
+                        text: `${percent}% (w/v) ${sub.name} দ্রবণের মোলারিটি ($S$) কত হবে?<br><small style='color:#555;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
+                        answer: s
                     });
                 }
             }
-            return list;
+            return database;
         }
 
-        let currentIdx = 0;
-        let score = 0;
-        let gameProblems = [];
+        // গেমের লজিক এবং স্টেট ম্যানেজমেন্ট
+        let gameProblems = generateDatabase(200);
+        let currentIdx = parseInt(localStorage.getItem("molarity_idx")) || 0;
+        let score = parseInt(localStorage.getItem("molarity_score")) || 0;
 
         const problemText = document.getElementById("problemText");
         const userAnswer = document.getElementById("userAnswer");
         const feedbackText = document.getElementById("feedbackText");
         const scoreVal = document.getElementById("scoreVal");
         const qNum = document.getElementById("qNum");
+        const introModal = document.getElementById("introModal");
         const gameOverScreen = document.getElementById("gameOverScreen");
         const finalScoreText = document.getElementById("finalScoreText");
+        const resumeBtn = document.getElementById("resumeBtn");
+        const rulesBox = document.getElementById("rulesBox");
+        const introButtons = document.getElementById("introButtons");
 
-        function startGame() {
-            gameOverScreen.style.display = "none";
-            currentIdx = 0;
-            score = 0;
-            scoreVal.textContent = score;
-            gameProblems = generate200Problems().sort(() => Math.random() - 0.5);
-            loadQuestion();
+        function checkSavedProgress() {
+            if (!localStorage.getItem("molarity_idx") || parseInt(localStorage.getItem("molarity_idx")) === 0) {
+                resumeBtn.style.display = "none";
+            } else {
+                resumeBtn.style.display = "block";
+            }
         }
 
-        function loadQuestion() {
+        function showRules() {
+            introButtons.style.display = "none";
+            rulesBox.style.display = "block";
+        }
+
+        function backToIntroMenu() {
+            rulesBox.style.display = "none";
+            introButtons.style.display = "block";
+        }
+
+        function startFreshGame() {
+            localStorage.removeItem("molarity_idx");
+            localStorage.removeItem("molarity_score");
+            
+            // নতুন গেম শুরু করার সময় ডাটাবেস রিশাফল করা
+            gameProblems = generateDatabase(200);
+            
+            currentIdx = 0;
+            score = 0;
+            introModal.style.display = "none";
+            gameOverScreen.style.display = "none";
+            initGame();
+        }
+
+        function resumeGame() {
+            currentIdx = parseInt(localStorage.getItem("molarity_idx")) || 0;
+            score = parseInt(localStorage.getItem("molarity_score")) || 0;
+            introModal.style.display = "none";
+            initGame();
+        }
+
+        function returnToIntro() {
+            checkSavedProgress();
+            introModal.style.display = "flex";
+        }
+
+        function initGame() {
             if (currentIdx >= gameProblems.length) {
                 endGame();
                 return;
             }
-            userAnswer.value = "";
-            feedbackText.textContent = "";
+            scoreVal.textContent = score;
             qNum.textContent = currentIdx + 1;
             problemText.innerHTML = gameProblems[currentIdx].text;
+            userAnswer.value = "";
+            feedbackText.textContent = "";
         }
 
         function checkAnswer() {
@@ -266,20 +408,24 @@
 
             let correctAns = gameProblems[currentIdx].answer;
             
-            if (Math.abs(val - correctAns) <= 0.02) {
-                score += 5; // মোট ২০০টি প্রশ্ন তাই প্রতিটিতে ৫ পয়েন্ট
+            // দশমিকের হিসাবের জন্য সহনশীলতা (Tolerance)
+            if (Math.abs(val - correctAns) <= 0.1) {
+                score += 5;
                 scoreVal.textContent = score;
                 feedbackText.style.color = "#27ae60";
-                feedbackText.textContent = "সঠিক উত্তর! চমৎকার হয়েছে।";
+                feedbackText.textContent = "সঠিক উত্তর! পরবর্তী প্রশ্নে যাচ্ছি...";
+                
+                currentIdx++;
+                localStorage.setItem("molarity_idx", currentIdx);
+                localStorage.setItem("molarity_score", score);
+
+                setTimeout(() => {
+                    initGame();
+                }, 1000);
             } else {
                 feedbackText.style.color = "#e74c3c";
-                feedbackText.textContent = `ভুল হয়েছে! সঠিক উত্তর হবে: ${correctAns}`;
+                feedbackText.textContent = "ভুল উত্তর! সঠিক উত্তর না দেওয়া পর্যন্ত পরবর্তী প্রশ্নে যাওয়া যাবে না।";
             }
-
-            currentIdx++;
-            setTimeout(() => {
-                loadQuestion();
-            }, 1200);
         }
 
         function endGame() {
@@ -287,7 +433,8 @@
             gameOverScreen.style.display = "flex";
         }
 
-        startGame();
+        // পেজ লোড হওয়ার পর চেক করা
+        checkSavedProgress();
     </script>
 </body>
 </html>
