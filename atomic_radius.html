@@ -2,9 +2,9 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>Atomic Radius Explorer - Premium Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomic Radius Explorer - Pro Edition</title>
     <style>
-        /* Premium AMOLED Black Theme Config */
         :root { 
             --bg-color: #000000; 
             --card-color: #0b0f17;
@@ -13,108 +13,144 @@
             --border-color: #1e293b;
         }
         
+        * { box-sizing: border-box; }
+
         body { 
             background: var(--bg-color); 
             color: var(--text-color); 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding: 40px 20px; 
+            padding: 30px 15px; 
             margin: 0;
             min-height: 100vh;
         }
         
         .container { 
-            max-width: 750px; /* লেখা বড় করার কারণে গ্রিড উইডথ সামান্য বাড়ানো হয়েছে */
-            margin: 80px auto auto auto;
+            max-width: 650px; 
+            margin: 40px auto;
+            width: 100%;
         }
 
-        /* Premium Back Button linked to properties_page.html */
         .back-btn { 
-            position: fixed; 
-            top: 20px; 
-            left: 20px; 
-            background: #1e293b; 
-            color: #94a3b8; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            text-decoration: none; 
-            font-weight: 600; 
+            position: fixed; top: 15px; left: 15px; 
+            background: #1e293b; color: #94a3b8; 
+            padding: 8px 16px; border-radius: 10px; 
+            text-decoration: none; font-weight: 600; font-size: 0.9rem;
             border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
-            z-index: 50;
+            transition: all 0.2s ease; z-index: 50;
         }
-        .back-btn:hover { 
-            background: #334155; 
-            color: #f8fafc; 
-            transform: translateX(-3px);
-        }
+        .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
 
         h1 {
-            font-size: 2.2rem; /* বড় শিরোনাম */
-            font-weight: 800;
-            margin-bottom: 20px;
+            font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;
             background: linear-gradient(to right, #38bdf8, #0369a1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-align: center;
         }
         
-        .note { 
-            background: var(--card-color); 
-            border-left: 5px solid var(--accent-color); 
-            padding: 20px; 
-            margin-bottom: 35px; 
-            border-radius: 14px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            border-top: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            color: #e2e8f0; /* নোটের লেখা আরও উজ্জ্বল করা হয়েছে */
-            font-size: 1.1rem; /* নোটের ফন্ট সাইজ বড় করা হয়েছে */
-            line-height: 1.7;
-            text-align: left;
+        /* Premium Info Banner without Title */
+        .info-banner { 
+            background: linear-gradient(135deg, rgba(11, 15, 23, 0.9), rgba(14, 165, 233, 0.05));
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 16px 20px; 
+            margin-bottom: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(56, 189, 248, 0.1);
+            position: relative;
+            overflow: hidden;
         }
-        .note strong {
-            color: var(--accent-color);
-            font-size: 1.15rem;
+        .info-banner::before {
+            content: '';
+            position: absolute; left: 0; top: 0; height: 100%; width: 4px;
+            background: linear-gradient(to bottom, #38bdf8, #0369a1);
         }
-        
-        /* ৮ কলামের গ্রিড */
+        .info-desc {
+            color: #94a3b8; font-size: 0.88rem; line-height: 1.6; margin: 0;
+        }
+        .info-desc strong { color: #f8fafc; font-weight: 600; }
+
         .grid { 
-            display: grid; 
-            grid-template-columns: repeat(8, 1fr); 
-            gap: 12px; /* সেলগুলোর মাঝে গ্যাপ সামান্য বাড়ানো হয়েছে */
+            display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; 
+            margin-bottom: 25px;
         }
         
         .cell { 
-            aspect-ratio: 1; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 14px; 
-            border: 1px solid var(--border-color); 
-            font-weight: 850; 
-            font-size: 1.5rem; /* মৌলের প্রতীকের সাইজ বড় করা হয়েছে (যেমন: Li, Be) */
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            aspect-ratio: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; border-radius: 10px; 
+            border: 1px solid var(--border-color); font-weight: 800; font-size: 1.05rem; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4); position: relative;
         }
         
-        .cell:hover { 
-            transform: scale(1.15); 
-            z-index: 10; 
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.5); 
+        .cell:hover, .cell.highlight { 
+            transform: scale(1.15); z-index: 10; 
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.7); 
+            border-color: var(--accent-color) !important;
         }
         
-        /* ফাঁকা গ্যাপের জন্য স্প্যান */
-        .empty-cell {
-            grid-column: span 6;
-        }
+        .empty-cell { grid-column: span 6; }
         
-        .val { 
-            font-size: 0.75rem; /* ব্যাসার্ধের মান বা সংখ্যাগুলোর সাইজ বড় করা হয়েছে (যেমন: 152 pm) */
-            font-weight: 700; 
-            margin-top: 6px; 
-            letter-spacing: 0.3px;
+        .val { font-size: 0.58rem; font-weight: 600; margin-top: 2px; }
+
+        /* Search Box Placed at Bottom */
+        .search-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .search-box {
+            width: 100%; max-width: 350px; padding: 12px 18px;
+            background: var(--card-color); border: 1px solid var(--border-color);
+            color: #f8fafc; border-radius: 12px; font-size: 0.95rem; outline: none;
+            transition: all 0.3s ease; text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .search-box:focus { border-color: var(--accent-color); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+
+        /* Popup Modal / Slide Card Overlay */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal-card {
+            background: var(--card-color); border: 1px solid var(--accent-color);
+            padding: 25px; border-radius: 20px; width: 90%; max-width: 320px;
+            text-align: center; box-shadow: 0 20px 40px rgba(56, 189, 248, 0.2);
+            transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+        .modal-symbol {
+            font-size: 2.5rem; font-weight: 800; color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        .modal-name {
+            font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;
+        }
+        .modal-radius {
+            background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 10px; border-radius: 10px; font-size: 1rem; color: #38bdf8;
+            font-weight: 600; margin-bottom: 20px;
+        }
+        .close-btn {
+            background: linear-gradient(135deg, #0ea5e9, #0369a1); color: #fff;
+            border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .close-btn:hover { opacity: 0.9; }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 10px; }
+            h1 { font-size: 1.3rem; }
+            .grid { gap: 5px; }
+            .cell { font-size: 0.85rem; border-radius: 8px; }
+            .val { font-size: 0.5rem; }
         }
     </style>
 </head>
@@ -124,36 +160,97 @@
 
 <div class="container">
     <h1>পারমাণবিক ব্যাসার্ধ (Atomic Radius Explorer)</h1>
-    <div class="note">
-        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে বাম থেকে ডানে গেলে নিউক্লীয় আকর্ষণ বল বাড়ার কারণে পারমাণবিক ব্যাসার্ধ হ্রাস পায়। আবার ওপর থেকে নিচে গেলে নতুন কক্ষপথ যুক্ত হওয়ায় ব্যাসার্ধ বৃদ্ধি পায়।
+    
+    <!-- Info Banner without Title -->
+    <div class="info-banner">
+        <p class="info-desc">
+            পর্যায় সারণীতে <strong>বাম থেকে ডানে</strong> গেলে নিউক্লীয় চার্জ বৃদ্ধির কারণে পারমাণবিক ব্যাসার্ধ ক্রমান্বয়ে হ্রাস পায়। পক্ষান্তরে, ওপর থেকে নিচে নতুন শক্তিস্তর যুক্ত হওয়ায় আকার ও ব্যাসার্ধ বৃদ্ধি পায়। যেকোনো মৌলে ক্লিক করে বিস্তারিত জানুন।
+        </p>
     </div>
 
-    <div class="grid">
-        <div class="cell" style="background-color: hsl(190, 85%, 15%); color: #e0f2fe; border-color: rgba(56, 189, 248, 0.25);">H<div class="val" style="color: #7dd3fc;">37 pm</div></div>
+    <div class="grid" id="gridContainer">
+        <div class="cell" onclick="showModal('হাইড্রোজেন', 'H', '37 pm')" style="background-color: hsl(190, 85%, 15%); color: #e0f2fe; border-color: rgba(56, 189, 248, 0.2);">H<div class="val" style="color: #7dd3fc;">37 pm</div></div>
         <div class="empty-cell"></div>
-        <div class="cell" style="background-color: hsl(190, 85%, 12%); color: #e0f2fe; border-color: rgba(56, 189, 248, 0.25);">He<div class="val" style="color: #7dd3fc;">31 pm</div></div>
+        <div class="cell" onclick="showModal('হিলিয়াম', 'He', '31 pm')" style="background-color: hsl(190, 85%, 12%); color: #e0f2fe; border-color: rgba(56, 189, 248, 0.2);">He<div class="val" style="color: #7dd3fc;">31 pm</div></div>
         
         <script>
             const elements = [
-                {s: 'Li', v: 152}, {s: 'Be', v: 112}, {s: 'B', v: 85}, {s: 'C', v: 77}, {s: 'N', v: 75}, {s: 'O', v: 73},
-                {s: 'F', v: 72}, {s: 'Ne', v: 70}, {s: 'Na', v: 186}, {s: 'Mg', v: 160}, {s: 'Al', v: 143}, {s: 'Si', v: 118},
-                {s: 'P', v: 110}, {s: 'S', v: 103}, {s: 'Cl', v: 99}, {s: 'Ar', v: 98}, {s: 'K', v: 227}, {s: 'Ca', v: 197},
-                {s: 'Ga', v: 135}, {s: 'Ge', v: 123}, {s: 'As', v: 120}, {s: 'Se', v: 117}, {s: 'Br', v: 114}, {s: 'Kr', v: 112},
-                {s: 'Rb', v: 248}, {s: 'Sr', v: 215}, {s: 'In', v: 166}, {s: 'Sn', v: 140}, {s: 'Sb', v: 141}, {s: 'Te', v: 143},
-                {s: 'I', v: 133}, {s: 'Xe', v: 131}
+                {s: 'Li', n: 'লিথিয়াম', v: 152}, {s: 'Be', n: 'বেরিলিয়াম', v: 112}, {s: 'B', n: 'বোরন', v: 85}, {s: 'C', n: 'কার্বন', v: 77}, {s: 'N', n: 'নাইট্রোজেন', v: 75}, {s: 'O', n: 'অক্সিজেন', v: 73},
+                {s: 'F', n: 'ফ্লোরিন', v: 72}, {s: 'Ne', n: 'নিয়ন', v: 70}, {s: 'Na', n: 'সোডিয়াম', v: 186}, {s: 'Mg', n: 'ম্যাগনেসিয়াম', v: 160}, {s: 'Al', n: 'অ্যালুমিনিয়াম', v: 143}, {s: 'Si', n: 'সিলিকন', v: 118},
+                {s: 'P', n: 'ফসফরাস', v: 110}, {s: 'S', n: 'সালফার', v: 103}, {s: 'Cl', n: 'ক্লোরিন', v: 99}, {s: 'Ar', n: 'আর্গন', v: 98}, {s: 'K', n: 'পটাশিয়াম', v: 227}, {s: 'Ca', n: 'ক্যালসিয়াম', v: 197},
+                {s: 'Ga', n: 'গ্যালিয়াম', v: 135}, {s: 'Ge', n: 'জার্মানিয়াম', v: 123}, {s: 'As', n: 'আর্সেনিক', v: 120}, {s: 'Se', n: 'সেলেনিয়াম', v: 117}, {s: 'Br', n: 'ব্রোমিন', v: 114}, {s: 'Kr', n: 'ক্রিপ্টন', v: 112},
+                {s: 'Rb', n: 'রুবিডিয়াম', v: 248}, {s: 'Sr', n: 'স্ট্রনশিয়াম', v: 215}, {s: 'In', n: 'ইন্ডিয়াম', v: 166}, {s: 'Sn', n: 'টিন', v: 140}, {s: 'Sb', n: 'অ্যান্টিমনি', v: 141}, {s: 'Te', n: 'টেলুরিয়াম', v: 143},
+                {s: 'I', n: 'আয়োডিন', v: 133}, {s: 'Xe', n: 'জেনন', v: 131}
             ];
 
             elements.forEach(e => {
                 let lightness = 10 + (e.v / 6); 
-                let textColor = lightness > 45 ? '#000000' : '#f8fafc';
-                let subTextColor = lightness > 45 ? 'rgba(0,0,0,0.8)' : '#38bdf8';
+                let textColor = lightness > 45 ? '#000000' : '#e0f2fe';
+                let subTextColor = lightness > 45 ? 'rgba(0,0,0,0.7)' : '#7dd3fc';
                 
-                document.write(`<div class="cell" style="background-color: hsl(190, 85%, ${lightness}%); color: ${textColor}; border-color: rgba(56, 189, 248, 0.2);">
+                document.write(`<div class="cell" data-symbol="${e.s.toLowerCase()}" onclick="showModal('${e.n}', '${e.s}', '${e.v} pm')" style="background-color: hsl(190, 85%, ${lightness}%); color: ${textColor}; border-color: rgba(56, 189, 248, 0.15);">
                     ${e.s}<div class="val" style="color: ${subTextColor}">${e.v} pm</div>
                 </div>`);
             });
         </script>
     </div>
+
+    <!-- Search Box Placed at Bottom -->
+    <div class="search-container">
+        <input type="text" id="elementSearch" class="search-box" placeholder="🔍 মৌল খুঁজুন (যেমন: Na, Li, C)..." onkeyup="filterElement()">
+    </div>
 </div>
+
+<!-- Popup Modal Structure -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-symbol" id="modalSymbol">Na</div>
+        <div class="modal-name" id="modalName">সোডিয়াম</div>
+        <div class="modal-radius" id="modalRadius">পারমাণবিক ব্যাসার্ধ: 186 pm</div>
+        <button class="close-btn" onclick="closeModalDirect()">বন্ধ করুন</button>
+    </div>
+</div>
+
+<script>
+    function showModal(name, symbol, radius) {
+        document.getElementById('modalSymbol').innerText = symbol;
+        document.getElementById('modalName').innerText = name;
+        document.getElementById('modalRadius').innerText = `পারমাণবিক ব্যাসার্ধ: ${radius}`;
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal(event) {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function closeModalDirect() {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function filterElement() {
+        let query = document.getElementById('elementSearch').value.toLowerCase().trim();
+        let cells = document.querySelectorAll('.grid .cell');
+
+        cells.forEach(cell => {
+            let symbol = cell.getAttribute('data-symbol');
+            if (!symbol) {
+                symbol = cell.childNodes[0].nodeValue.toLowerCase();
+            }
+
+            if (query === "" || symbol.includes(query)) {
+                cell.style.opacity = "1";
+                if(query !== "" && symbol === query) {
+                    cell.classList.add('highlight');
+                } else {
+                    cell.classList.remove('highlight');
+                }
+            } else {
+                cell.style.opacity = "0.2";
+                cell.classList.remove('highlight');
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
