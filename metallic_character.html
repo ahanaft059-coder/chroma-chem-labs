@@ -2,6 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metallic Character Explorer</title>
     <style>
         :root { 
@@ -11,27 +12,151 @@
             --accent-color: #fbbf24; /* ধাতব স্বর্ণালী রঙ */
             --border-color: #1e293b;
         }
-        body { background: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px 20px; margin: 0; min-height: 100vh; }
-        .container { max-width: 750px; margin: 80px auto auto auto; }
+
+        * { box-sizing: border-box; }
+
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 30px 15px; 
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container { 
+            max-width: 650px; 
+            margin: 40px auto; 
+            width: 100%;
+        }
 
         /* ব্যাক বাটন স্টাইল */
-        .back-btn { position: fixed; top: 20px; left: 20px; background: #1e293b; color: #94a3b8; padding: 10px 20px; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid var(--border-color); transition: all 0.2s ease; z-index: 50; }
+        .back-btn { 
+            position: fixed; top: 15px; left: 15px; 
+            background: #1e293b; color: #94a3b8; 
+            padding: 8px 16px; border-radius: 10px; 
+            text-decoration: none; font-weight: 600; font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease; z-index: 50; 
+        }
         .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
 
-        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(to right, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { 
+            font-size: 1.6rem; font-weight: 800; margin-bottom: 15px; 
+            background: linear-gradient(to right, #f59e0b, #fbbf24); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            text-align: center;
+        }
         
-        .note { background: var(--card-color); border-left: 5px solid var(--accent-color); padding: 20px; margin-bottom: 35px; border-radius: 14px; border: 1px solid var(--border-color); color: #e2e8f0; line-height: 1.7; }
+        /* প্রিমিয়াম নোট বা ব্যানার */
+        .info-banner { 
+            background: linear-gradient(135deg, rgba(11, 15, 23, 0.9), rgba(251, 191, 36, 0.05));
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            padding: 16px 20px; 
+            margin-bottom: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .info-banner::before {
+            content: '';
+            position: absolute; left: 0; top: 0; height: 100%; width: 4px;
+            background: linear-gradient(to bottom, #f59e0b, #fbbf24);
+        }
+        .info-desc {
+            color: #94a3b8; font-size: 0.88rem; line-height: 1.6; margin: 0;
+        }
+        .info-desc strong { color: #f8fafc; font-weight: 600; }
         
-        .grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
+        .grid { 
+            display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; 
+            margin-bottom: 25px;
+        }
         
-        .cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border-color); font-weight: 850; font-size: 1.5rem; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-        .cell:hover { transform: scale(1.15); z-index: 10; box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3); border-color: var(--accent-color); }
+        .cell { 
+            aspect-ratio: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; border-radius: 10px; 
+            border: 1px solid var(--border-color); font-weight: 850; font-size: 1.05rem; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4); position: relative;
+        }
         
-        .val { font-size: 0.75rem; font-weight: 700; margin-top: 6px; color: #fbbf24; }
+        .cell:hover, .cell.highlight { 
+            transform: scale(1.15); z-index: 10; 
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.7); 
+            border-color: var(--accent-color) !important; 
+        }
+
+        .empty-cell { grid-column: span 6; }
+        
+        .val { font-size: 0.58rem; font-weight: 700; margin-top: 2px; color: #fbbf24; }
+
+        /* Search Box Placed at Bottom */
+        .search-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .search-box {
+            width: 100%; max-width: 350px; padding: 12px 18px;
+            background: var(--card-color); border: 1px solid var(--border-color);
+            color: #f8fafc; border-radius: 12px; font-size: 0.95rem; outline: none;
+            transition: all 0.3s ease; text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .search-box:focus { border-color: var(--accent-color); box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+
+        /* Popup Modal / Slide Card Overlay */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal-card {
+            background: var(--card-color); border: 1px solid var(--accent-color);
+            padding: 25px; border-radius: 20px; width: 90%; max-width: 320px;
+            text-align: center; box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2);
+            transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+        .modal-symbol {
+            font-size: 2.5rem; font-weight: 800; color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        .modal-name {
+            font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;
+        }
+        .modal-radius {
+            background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 10px; border-radius: 10px; font-size: 1rem; color: #fbbf24;
+            font-weight: 600; margin-bottom: 20px;
+        }
+        .close-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff;
+            border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .close-btn:hover { opacity: 0.9; }
         
         /* ব্যাখ্যার বক্স */
-        .explanation-box { margin-top: 40px; background: #0b0f17; padding: 25px; border-radius: 14px; border: 1px solid var(--border-color); color: #cbd5e1; line-height: 1.8; }
-        .explanation-box h3 { color: var(--accent-color); margin-top: 0; }
+        .explanation-box { margin-top: 30px; background: var(--card-color); padding: 22px; border-radius: 16px; border: 1px solid var(--border-color); color: #cbd5e1; line-height: 1.7; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .explanation-box h3 { color: var(--accent-color); margin-top: 0; font-size: 1.1rem; }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 10px; }
+            h1 { font-size: 1.3rem; }
+            .grid { gap: 5px; }
+            .cell { font-size: 0.85rem; border-radius: 8px; }
+            .val { font-size: 0.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -41,27 +166,29 @@
 <div class="container">
     <h1>মৌলের ধাতব ধর্ম (Metallic Character)</h1>
     
-    <div class="note">
-        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে বাম থেকে ডানে ধাতব ধর্ম হ্রাস পায় এবং ওপর থেকে নিচে ধাতব ধর্ম বৃদ্ধি পায়। (মান: ১-১০ স্কেল)
+    <div class="info-banner">
+        <p class="info-desc">
+            পর্যায় সারণীতে <strong>বাম থেকে ডানে</strong> ধাতব ধর্ম হ্রাস পায় এবং ওপর থেকে নিচে ধাতব ধর্ম বৃদ্ধি পায়। যেকোনো মৌলে ক্লিক করে বিস্তারিত মান ও পপ-আপ কার্ড দেখুন। (মান স্কেল: ১-১০)
+        </p>
     </div>
 
     <div class="grid" id="grid">
         <script>
             const elements = [
-                {s: 'H', v: 1}, {e: 6}, {s: 'He', v: 0},
-                {s: 'Li', v: 9}, {s: 'Be', v: 7}, {s: 'B', v: 4}, {s: 'C', v: 2}, {s: 'N', v: 1}, {s: 'O', v: 0.5}, {s: 'F', v: 0}, {s: 'Ne', v: 0},
-                {s: 'Na', v: 10}, {s: 'Mg', v: 9}, {s: 'Al', v: 7}, {s: 'Si', v: 4}, {s: 'P', v: 2}, {s: 'S', v: 1}, {s: 'Cl', v: 0.2}, {s: 'Ar', v: 0},
-                {s: 'K', v: 10}, {s: 'Ca', v: 9.5}, {s: 'Ga', v: 8}, {s: 'Ge', v: 5}, {s: 'As', v: 3}, {s: 'Se', v: 2}, {s: 'Br', v: 0.5}, {s: 'Kr', v: 0}
+                {s: 'H', n: 'হাইড্রোজেন', v: 1}, {e: 6}, {s: 'He', n: 'হিলিয়াম', v: 0},
+                {s: 'Li', n: 'লিথিয়াম', v: 9}, {s: 'Be', n: 'বেরিলিয়াম', v: 7}, {s: 'B', n: 'বোরন', v: 4}, {s: 'C', n: 'কার্বন', v: 2}, {s: 'N', n: 'নাইট্রোজেন', v: 1}, {s: 'O', n: 'অক্সিজেন', v: 0.5}, {s: 'F', n: 'ফ্লোরিন', v: 0}, {s: 'Ne', n: 'নিয়ন', v: 0},
+                {s: 'Na', n: 'সোডিয়াম', v: 10}, {s: 'Mg', n: 'ম্যাগনেসিয়াম', v: 9}, {s: 'Al', n: 'অ্যালুমিনিয়াম', v: 7}, {s: 'Si', n: 'সিলিকন', v: 4}, {s: 'P', n: 'ফসফরাস', v: 2}, {s: 'S', n: 'সালফার', v: 1}, {s: 'Cl', n: 'ক্লোরিন', v: 0.2}, {s: 'Ar', n: 'আর্গন', v: 0},
+                {s: 'K', n: 'পটাশিয়াম', v: 10}, {s: 'Ca', n: 'ক্যালসিয়াম', v: 9.5}, {s: 'Ga', n: 'গ্যালিয়াম', v: 8}, {s: 'Ge', n: 'জার্মানিয়াম', v: 5}, {s: 'As', n: 'আর্সেনিক', v: 3}, {s: 'Se', n: 'সেলেনিয়াম', v: 2}, {s: 'Br', n: 'ব্রোমিন', v: 0.5}, {s: 'Kr', n: 'ক্রিপ্টন', v: 0}
             ];
 
             const grid = document.getElementById('grid');
             elements.forEach(el => {
                 if (el.e) {
-                    grid.innerHTML += `<div style="grid-column: span ${el.e}"></div>`;
+                    grid.innerHTML += `<div class="empty-cell"></div>`;
                 } else {
                     let brightness = 15 + (el.v * 6);
                     grid.innerHTML += `
-                        <div class="cell" style="background-color: hsl(40, 70%, ${brightness}%);">
+                        <div class="cell" data-symbol="${el.s.toLowerCase()}" onclick="showModal('${el.n}', '${el.s}', '${el.v}')" style="background-color: hsl(40, 70%, ${brightness}%);">
                             ${el.s}<div class="val">${el.v}</div>
                         </div>`;
                 }
@@ -69,16 +196,68 @@
         </script>
     </div>
 
+    <!-- Search Box Placed at Bottom -->
+    <div class="search-container">
+        <input type="text" id="elementSearch" class="search-box" placeholder="🔍 মৌল খুঁজুন (যেমন: Na, Li, C)..." onkeyup="filterElement()">
+    </div>
+
     <div class="explanation-box">
         <h3>কেন এমনটি ঘটে?</h3>
         <p>ধাতব ধর্ম হলো ইলেকট্রন ত্যাগের প্রবণতা।</p>
-        <ul style="padding-left: 20px;">
+        <ul style="padding-left: 20px; margin-bottom: 0;">
             <li><strong>একই পর্যায়ে বাম থেকে ডানে:</strong> আকর্ষণ বল বাড়ে এবং আকার ছোট হয়, তাই ইলেকট্রন ত্যাগ করা কঠিন হয়ে পড়ে (ধাতব ধর্ম কমে)।</li>
             <li><strong>গ্রুপে ওপর থেকে নিচে:</strong> আকার বাড়ে, বাইরের ইলেকট্রন নিউক্লিয়াস থেকে দূরে সরে যায়, ফলে সহজেই ইলেকট্রন ত্যাগ করতে পারে (ধাতব ধর্ম বাড়ে)।</li>
         </ul>
-        <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px;">* d-ব্লক (অবান্তর ধাতু) মৌলসমূহকে সরলতার জন্য এই ভিজ্যুয়ালাইজেশন থেকে বাদ দেওয়া হয়েছে।</p>
+        <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px; margin-bottom: 0;">* d-ব্লক (অবান্তর ধাতু) মৌলসমূহকে সরলতার জন্য এই ভিজ্যুয়ালাইজেশন থেকে বাদ দেওয়া হয়েছে।</p>
     </div>
 </div>
+
+<!-- Popup Modal Structure -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-symbol" id="modalSymbol">Na</div>
+        <div class="modal-name" id="modalName">সোডিয়াম</div>
+        <div class="modal-radius" id="modalRadius">ধাতব ধর্মের মান: 10</div>
+        <button class="close-btn" onclick="closeModalDirect()">বন্ধ করুন</button>
+    </div>
+</div>
+
+<script>
+    function showModal(name, symbol, value) {
+        document.getElementById('modalSymbol').innerText = symbol;
+        document.getElementById('modalName').innerText = name;
+        document.getElementById('modalRadius').innerText = `ধাতব ধর্মের মান: ${value}`;
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal(event) {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function closeModalDirect() {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function filterElement() {
+        let query = document.getElementById('elementSearch').value.toLowerCase().trim();
+        let cells = document.querySelectorAll('.grid .cell');
+
+        cells.forEach(cell => {
+            let symbol = cell.getAttribute('data-symbol');
+            if (query === "" || symbol.includes(query)) {
+                cell.style.opacity = "1";
+                if(query !== "" && symbol === query) {
+                    cell.classList.add('highlight');
+                } else {
+                    cell.classList.remove('highlight');
+                }
+            } else {
+                cell.style.opacity = "0.2";
+                cell.classList.remove('highlight');
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
