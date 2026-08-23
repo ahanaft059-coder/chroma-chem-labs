@@ -2,9 +2,9 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electron Affinity Explorer - Premium Edition</title>
     <style>
-        /* Premium AMOLED Black Theme Config */
         :root { 
             --bg-color: #000000; 
             --card-color: #0b0f17;
@@ -12,76 +12,69 @@
             --accent-color: #10b981; /* Premium Emerald Green Glow */
             --border-color: #1e293b;
         }
+
+        * { box-sizing: border-box; }
         
         body { 
             background: var(--bg-color); 
             color: var(--text-color); 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding: 40px 20px; 
+            padding: 30px 15px; 
             margin: 0;
             min-height: 100vh;
         }
         
         .container { 
-            max-width: 750px; 
-            margin: 80px auto auto auto;
+            max-width: 650px; 
+            margin: 40px auto; 
+            width: 100%;
         }
 
-        /* Premium Back Button linked to properties_page.html */
         .back-btn { 
-            position: fixed; 
-            top: 20px; 
-            left: 20px; 
-            background: #1e293b; 
-            color: #94a3b8; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            text-decoration: none; 
-            font-weight: 600; 
+            position: fixed; top: 15px; left: 15px; 
+            background: #1e293b; color: #94a3b8; 
+            padding: 8px 16px; border-radius: 10px; 
+            text-decoration: none; font-weight: 600; font-size: 0.9rem;
             border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
-            z-index: 50;
+            transition: all 0.2s ease; z-index: 50; 
         }
-        .back-btn:hover { 
-            background: #334155; 
-            color: #f8fafc; 
-            transform: translateX(-3px);
-        }
+        .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
 
         h1 {
-            font-size: 2.2rem; /* স্পষ্ট বড় শিরোনাম */
+            font-size: 1.6rem; 
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: linear-gradient(to right, #10b981, #059669);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-align: center;
         }
         
-        .note { 
-            background: var(--card-color); 
-            border-left: 5px solid var(--accent-color); 
-            padding: 20px; 
-            margin-bottom: 35px; 
-            border-radius: 14px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            border-top: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            color: #e2e8f0; 
-            font-size: 1.1rem; /* বড় ফন্ট */
-            line-height: 1.7;
-            text-align: left;
+        .info-banner { 
+            background: linear-gradient(135deg, rgba(11, 15, 23, 0.9), rgba(16, 185, 129, 0.05));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 16px 20px; 
+            margin-bottom: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(16, 185, 129, 0.1);
+            position: relative;
+            overflow: hidden;
         }
-        .note strong {
-            color: var(--accent-color);
-            font-size: 1.15rem;
+        .info-banner::before {
+            content: '';
+            position: absolute; left: 0; top: 0; height: 100%; width: 4px;
+            background: linear-gradient(to bottom, #10b981, #059669);
         }
+        .info-desc {
+            color: #94a3b8; font-size: 0.88rem; line-height: 1.6; margin: 0;
+        }
+        .info-desc strong { color: #f8fafc; font-weight: 600; }
         
-        /* ৮ কলামের পারফেক্ট গ্রিড */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(8, 1fr); 
-            gap: 12px; 
+            gap: 8px; 
+            margin-bottom: 25px;
         }
         
         .cell { 
@@ -90,31 +83,94 @@
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            border-radius: 14px; 
+            border-radius: 10px; 
             border: 1px solid var(--border-color); 
             font-weight: 850; 
-            font-size: 1.5rem; /* মৌলের প্রতীক স্পষ্ট এবং বড় */
+            font-size: 1.05rem; 
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            position: relative;
         }
         
-        .cell:hover { 
+        .cell:hover, .cell.highlight { 
             transform: scale(1.15); 
             z-index: 10; 
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.5); 
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.7); 
+            border-color: var(--accent-color) !important;
         }
         
-        /* ১ম লাইনে H এবং He এর মাঝের গ্যাপ */
         .empty-cell {
             grid-column: span 6;
         }
         
         .val { 
-            font-size: 0.75rem; /* মানের সাইজ বড় করা হয়েছে */
+            font-size: 0.58rem; 
             font-weight: 700; 
-            margin-top: 6px; 
+            margin-top: 2px; 
             letter-spacing: 0.3px;
+        }
+
+        /* Search Box Placed at Bottom */
+        .search-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .search-box {
+            width: 100%; max-width: 350px; padding: 12px 18px;
+            background: var(--card-color); border: 1px solid var(--border-color);
+            color: #f8fafc; border-radius: 12px; font-size: 0.95rem; outline: none;
+            transition: all 0.3s ease; text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .search-box:focus { border-color: var(--accent-color); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+
+        /* Popup Modal Style */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal-card {
+            background: var(--card-color); border: 1px solid var(--accent-color);
+            padding: 25px; border-radius: 20px; width: 90%; max-width: 320px;
+            text-align: center; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
+            transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+        .modal-symbol {
+            font-size: 2.5rem; font-weight: 800; color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        .modal-name {
+            font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;
+        }
+        .modal-radius {
+            background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 10px; border-radius: 10px; font-size: 1rem; color: #34d399;
+            font-weight: 600; margin-bottom: 20px;
+        }
+        .close-btn {
+            background: linear-gradient(135deg, #10b981, #059669); color: #fff;
+            border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .close-btn:hover { opacity: 0.9; }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 10px; }
+            h1 { font-size: 1.3rem; }
+            .grid { gap: 5px; }
+            .cell { font-size: 0.85rem; border-radius: 8px; }
+            .val { font-size: 0.5rem; }
         }
     </style>
 </head>
@@ -123,28 +179,34 @@
 <a href="properties_page.html" class="back-btn">← ফিরে যান</a>
 
 <div class="container">
-    <h1>ইলেকট্রন আসক্তি (Electron Affinity Chart)</h1>
-    <div class="note">
-        <strong>পদ্ধতি:</strong> পর্যায় সারণীতে সাধারণত বাম থেকে ডানে গেলে ইলেকট্রন আসক্তি বৃদ্ধি পায়, আর ওপর থেকে নিচে গেলে হ্রাস পায়। (একক: kJ/mol)
+    <h1>ইলেকট্রন আসক্তি (Electron Affinity)</h1>
+    
+    <div class="info-banner">
+        <p class="info-desc">
+            পর্যায় সারণীতে সাধারণত <strong>বাম থেকে ডানে</strong> গেলে ইলেকট্রন আসক্তি বৃদ্ধি পায়, আর ওপর থেকে নিচে গেলে হ্রাস পায়। যেকোনো মৌলে ক্লিক করে মান ও পপ-আপ কার্ড দেখুন। (একক: kJ/mol)
+        </p>
     </div>
 
-    <div class="grid">
-        <!-- ১ম লাইন: H, মাঝের ফাকা গ্যাপ এবং He -->
-        <div class="cell" style="background-color: hsl(150, 70%, 15%); color: #f8fafc; border-color: rgba(16, 185, 129, 0.25);">H<div class="val" style="color: #a7f3d0;">73</div></div>
+    <div class="grid" id="grid">
+        <!-- H & He statically rendered -->
+        <div class="cell" data-symbol="h" onclick="showModal('হাইড্রোজেন', 'H', '73 kJ/mol')" style="background-color: hsl(150, 70%, 15%); color: #f8fafc; border-color: rgba(16, 185, 129, 0.25);">
+            H<div class="val" style="color: #a7f3d0;">73</div>
+        </div>
         <div class="empty-cell"></div>
-        <div class="cell" style="background-color: hsl(150, 70%, 8%); color: #64748b; border-color: rgba(16, 185, 129, 0.1);">He<div class="val" style="color: #475569;">0</div></div>
+        <div class="cell" data-symbol="he" onclick="showModal('হিলিয়াম', 'He', '0 kJ/mol')" style="background-color: hsl(150, 70%, 8%); color: #64748b; border-color: rgba(16, 185, 129, 0.1);">
+            He<div class="val" style="color: #475569;">0</div>
+        </div>
         
-        <!-- পরবর্তী লাইনগুলো: ৩২টি মৌল ৮ কলামে সুন্দর বড় অক্ষরে সাজানো -->
         <script>
             const elements = [
-                {s: 'Li', v: 60}, {s: 'Be', v: 0}, {s: 'B', v: 27}, {s: 'C', v: 122}, {s: 'N', v: 0}, {s: 'O', v: 141}, {s: 'F', v: 328}, {s: 'Ne', v: 0},
-                {s: 'Na', v: 53}, {s: 'Mg', v: 0}, {s: 'Al', v: 42}, {s: 'Si', v: 134}, {s: 'P', v: 72}, {s: 'S', v: 200}, {s: 'Cl', v: 349}, {s: 'Ar', v: 0},
-                {s: 'K', v: 48}, {s: 'Ca', v: 2}, {s: 'Ga', v: 29}, {s: 'Ge', v: 119}, {s: 'As', v: 78}, {s: 'Se', v: 195}, {s: 'Br', v: 325}, {s: 'Kr', v: 0},
-                {s: 'Rb', v: 47}, {s: 'Sr', v: 5}, {s: 'In', v: 29}, {s: 'Sn', v: 107}, {s: 'Sb', v: 101}, {s: 'Te', v: 190}, {s: 'I', v: 295}, {s: 'Xe', v: 0}
+                {s: 'Li', n: 'লিথিয়াম', v: 60}, {s: 'Be', n: 'বেরিলিয়াম', v: 0}, {s: 'B', n: 'বোরন', v: 27}, {s: 'C', n: 'কার্বন', v: 122}, {s: 'N', n: 'নাইট্রোজেন', v: 0}, {s: 'O', n: 'অক্সিজেন', v: 141}, {s: 'F', n: 'ফ্লোরিন', v: 328}, {s: 'Ne', n: 'নিয়ন', v: 0},
+                {s: 'Na', n: 'সোডিয়াম', v: 53}, {s: 'Mg', n: 'ম্যাগনেসিয়াম', v: 0}, {s: 'Al', n: 'অ্যালুমিনিয়াম', v: 42}, {s: 'Si', n: 'সিলিকন', v: 134}, {s: 'P', n: 'ফসফরাস', v: 72}, {s: 'S', n: 'সালফার', v: 200}, {s: 'Cl', n: 'ক্লোরিন', v: 349}, {s: 'Ar', n: 'আর্গন', v: 0},
+                {s: 'K', n: 'পটাশিয়াম', v: 48}, {s: 'Ca', n: 'ক্যালসিয়াম', v: 2}, {s: 'Ga', n: 'গ্যালিয়াম', v: 29}, {s: 'Ge', n: 'জার্মানিয়াম', v: 119}, {s: 'As', n: 'আর্সেনিক', v: 78}, {s: 'Se', n: 'সেলেনিয়াম', v: 195}, {s: 'Br', n: 'ব্রোমিন', v: 325}, {s: 'Kr', n: 'ক্রিপ্টন', v: 0},
+                {s: 'Rb', n: 'রুবিডিয়াম', v: 47}, {s: 'Sr', n: 'স্ট্রনশিয়াম', v: 5}, {s: 'In', n: 'ইনডিয়াম', v: 29}, {s: 'Sn', n: 'টিন', v: 107}, {s: 'Sb', n: 'অ্যান্টিমনি', v: 101}, {s: 'Te', n: 'টেলুরিয়াম', v: 190}, {s: 'I', n: 'আয়োডিন', v: 295}, {s: 'Xe', n: 'জেনন', v: 0}
             ];
 
+            const grid = document.getElementById('grid');
             elements.forEach(e => {
-                // ডার্ক মোডের ইন্টেন্সিটি লজিক (মান ০ হলে একদম ডার্ক/ধূসর, বেশি হলে উজ্জ্বল সবুজ)
                 let lightness;
                 let textColor;
                 let subTextColor;
@@ -154,17 +216,71 @@
                     textColor = '#64748b';
                     subTextColor = '#475569';
                 } else {
-                    lightness = 10 + (e.v / 9); // মান অনুযায়ী মানানসই লাইটনেস
+                    lightness = 10 + (e.v / 9); 
                     textColor = lightness > 55 ? '#000000' : '#f8fafc';
                     subTextColor = lightness > 55 ? 'rgba(0,0,0,0.8)' : '#34d399';
                 }
                 
-                document.write(`<div class="cell" style="background-color: hsl(150, 70%, ${lightness}%); color: ${textColor}; border-color: rgba(16, 185, 129, 0.2);">
-                    ${e.s}<div class="val" style="color: ${subTextColor}">${e.v}</div>
-                </div>`);
+                grid.innerHTML += `
+                    <div class="cell" data-symbol="${e.s.toLowerCase()}" onclick="showModal('${e.n}', '${e.s}', '${e.v} kJ/mol')" style="background-color: hsl(150, 70%, ${lightness}%); color: ${textColor}; border-color: rgba(16, 185, 129, 0.2);">
+                        ${e.s}<div class="val" style="color: ${subTextColor}">${e.v}</div>
+                    </div>`;
             });
         </script>
     </div>
+
+    <!-- Search Box Placed at Bottom -->
+    <div class="search-container">
+        <input type="text" id="elementSearch" class="search-box" placeholder="🔍 মৌল খুঁজুন (যেমন: Cl, F, Na)..." onkeyup="filterElement()">
+    </div>
 </div>
+
+<!-- Popup Modal Structure -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-symbol" id="modalSymbol">H</div>
+        <div class="modal-name" id="modalName">হাইড্রোজেন</div>
+        <div class="modal-radius" id="modalRadius">ইলেকট্রন আসক্তি: 73 kJ/mol</div>
+        <button class="close-btn" onclick="closeModalDirect()">বন্ধ করুন</button>
+    </div>
+</div>
+
+<script>
+    function showModal(name, symbol, value) {
+        document.getElementById('modalSymbol').innerText = symbol;
+        document.getElementById('modalName').innerText = name;
+        document.getElementById('modalRadius').innerText = `ইলেকট্রন আসক্তি: ${value}`;
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal(event) {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function closeModalDirect() {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function filterElement() {
+        let query = document.getElementById('elementSearch').value.toLowerCase().trim();
+        let cells = document.querySelectorAll('.grid .cell');
+
+        cells.forEach(cell => {
+            let symbol = cell.getAttribute('data-symbol');
+            if (query === "" || symbol.includes(query)) {
+                cell.style.opacity = "1";
+                if(query !== "" && symbol === query) {
+                    cell.classList.add('highlight');
+                } else {
+                    cell.classList.remove('highlight');
+                }
+            } else {
+                cell.style.opacity = "0.2";
+                cell.classList.remove('highlight');
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
