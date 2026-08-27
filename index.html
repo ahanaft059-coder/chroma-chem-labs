@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রসায়ন ড্যাশবোর্ড (Chemistry Dashboard)</title>
+    <title>Lab Alchemy - রসায়ন ড্যাশবোর্ড</title>
     
-    <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -55,7 +54,6 @@
             text-decoration: none;
         }
 
-        /* চ্যাট মেসেজ পপআপ ববল */
         .chemmy-chat-bubble {
             background: var(--card-bg);
             border: 2px solid var(--section-border);
@@ -89,7 +87,6 @@
             100% { transform: translateY(-5px); }
         }
 
-        /* ফ্লাস্ক আইকন মাসকট ও ব্লিঙ্কিং অ্যানিমেশন */
         .chemmy-flask {
             width: 65px;
             height: 75px;
@@ -105,7 +102,6 @@
             overflow: hidden;
             transition: transform 0.3s ease;
         }
-        /* ফ্লাস্কের গলা */
         .chemmy-flask::before {
             content: '';
             position: absolute;
@@ -120,7 +116,6 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        /* ফ্লাস্কের ভেতরের তরল ও বুদবুদ */
         .flask-liquid {
             position: absolute;
             bottom: 0;
@@ -143,7 +138,6 @@
             100% { transform: translateY(-25px); opacity: 0; }
         }
 
-        /* মাসকটের চোখ (Blink অ্যানিমেশনসহ) */
         .flask-face {
             position: absolute;
             top: 32px;
@@ -166,7 +160,6 @@
             98% { transform: scaleY(0.1); }
         }
 
-        /* Background Chemistry Floating Elements */
         .chem-bg-elements {
             position: fixed;
             top: 0;
@@ -201,7 +194,6 @@
             z-index: 1;
         }
 
-        /* Header Layout */
         header {
             display: flex;
             justify-content: space-between;
@@ -304,7 +296,6 @@
         }
         .theme-btn:hover { transform: scale(1.05); }
 
-        /* Banner Slider Section with Swipe Support */
         .slider-wrapper {
             margin-bottom: 40px;
             position: relative;
@@ -382,7 +373,6 @@
         }
         .dot.active { background: #a855f7; width: 25px; border-radius: 5px; }
 
-        /* Main Dashboard Grid Layout */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -458,7 +448,6 @@
         }
         .btn-link:hover { opacity: 0.9; transform: scale(1.02); }
 
-        /* Footer Section Styling */
         .site-footer {
             background-color: #0d233a;
             color: #ffffff;
@@ -566,7 +555,6 @@
             font-weight: bold;
         }
 
-        /* Popup Modal */
         .modal {
             display: none;
             position: fixed;
@@ -604,11 +592,10 @@
 </head>
 <body>
 
-    <!-- Chemmy মাসকট ও পপআপ বক্স (যাতে ক্লিক করলে chemmy.html এ যাবে) -->
     <a href="chemmy.html" class="chemmy-container">
         <div class="chemmy-chat-bubble">
             <span class="chemmy-title">CHEMMY • AI</span>
-            <span class="chemmy-text">হাই!কেমিস্ট্রি শিখতে সাহায্য লাগবে?</span>
+            <span class="chemmy-text">হাই! কেমিস্ট্রি শিখতে সাহায্য লাগবে?</span>
         </div>
         <div class="chemmy-flask">
             <div class="flask-liquid">
@@ -622,28 +609,23 @@
         </div>
     </a>
 
-    <!-- Background Chemistry Elements -->
     <div class="chem-bg-elements">
         <div class="chem-item">🧪 H₂SO₄</div>
         <div class="chem-item">⚗️</div>
-        <div class="chem-item">  💧H₂O  </div>
         <div class="chem-item">🔬 CO₂</div>
-        <div class="chem-item">✴️NaCl</div>
         <div class="chem-item">⚡ Na</div>
     </div>
 
     <div class="container">
-        <!-- Header Section -->
         <header>
             <div class="logo-area" onclick="location.href='index.html'">
-                <div class="logo-badge">Ch</div>
+                <div class="logo-badge">LA</div>
                 <div class="logo-text">
-                    <h1>CHEMISTRY LAB</h1>
+                    <h1>LAB ALCHEMY</h1>
                     <span>Interactive Learning</span>
                 </div>
             </div>
 
-            <!-- Header Menu Links -->
             <ul class="nav-links">
                 <li><a href="index.html" class="active-nav">হোম</a></li>
                 <li><a href="exam.html">পরীক্ষা</a></li>
@@ -659,7 +641,6 @@
             </div>
         </header>
 
-        <!-- Banner Slider Section -->
         <div class="slider-wrapper" id="sliderWrapper">
             <div class="slider-arrow slider-prev" onclick="prevSlide()">❮</div>
             <div class="slider-arrow slider-next" onclick="nextSlide()">❯</div>
@@ -681,17 +662,17 @@
             <div class="banner-container">
                 <span class="banner-tag">সূত্র ও থিওরি</span>
                 <h2>রসায়ন সূত্র ও থিওরি</h2>
-                <p>রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত নিয়ে সাজানো তথ্যভাণ্ডার</p>
+                <p>রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত নিয়ে সাজানো তথ্যভাণ্ডার</p>
                 <a href="theoryhub.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
             </div>
 
             <div class="slider-dots">
                 <span class="dot active" onclick="currentSlide(0)"></span>
                 <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
             </div>
         </div>
 
-        <!-- Dashboard Cards Grid -->
         <div class="dashboard-grid">
             <div class="card">
                 <div>
@@ -731,9 +712,9 @@
 
             <div class="card">
                 <div>
-                    <h2 class="card-title">💥পর্যায়বৃত্ত ধর্ম (Organic Chemistry)</h2>
+                    <h2 class="card-title">💥 পর্যায়বৃত্ত ধর্ম</h2>
                     <div class="card-image-box">💥</div>
-                    <p class="card-desc">মৌলসমূহের ভৌত ও রাসায়নিক ধর্মের পর্যায়বৃত্ত পরিবর্তনের বিস্তারিত হাব</p>
+                    <p class="card-desc">মৌলসমূহের ভৌত ও রাসায়নিক ধর্মের পর্যায়বৃত্ত পরিবর্তনের বিস্তারিত হাব</p>
                 </div>
                 <a href="properties_page.html" class="btn-link">পর্যায়বৃত্ত জোনে প্রবেশ করো →</a>
             </div>
@@ -757,11 +738,10 @@
             </div>
         </div>
 
-        <!-- Footer Section -->
         <footer class="site-footer">
             <div class="footer-content">
                 <div class="footer-col">
-                    <h3 class="footer-logo">ChromaChemLabs</h3>
+                    <h3 class="footer-logo">Lab Alchemy</h3>
                     <p>ট্রেড লাইসেন্স: ***</p>
                     <h4>আমাদের সাথে যুক্ত হোন</h4>
                     <div class="social-icons">
@@ -773,7 +753,7 @@
 
                 <div class="footer-col">
                     <h3>যোগাযোগ</h3>
-                    <p><i class="fas fa-phone-alt"></i> 017240354**</p>
+                    <p><i class="fas fa-phone-alt"></i> 01724****</p>
                     <p><i class="fas fa-envelope"></i> ahanaft059@gmail.com</p>
                     <p><i class="fas fa-map-marker-alt"></i> kayetpara, Panchagarh Sadar, Panchagarh - 5000</p>
                 </div>
@@ -791,13 +771,12 @@
 
             <div class="footer-credit-bar">
                 <div class="footer-credit-text">
-                    © 2026 <span>Chomachamlab</span>. Develop by @AhanaAbidOmlan  | Designed for Students | SSC & HSC Chemistry
+                    © 2026 <span>Lab Alchemy</span>. Designed for Students | SSC & HSC Chemistry
                 </div>
             </div>
         </footer>
     </div>
 
-    <!-- Popup Modal -->
     <div id="chemModal" class="modal">
         <div class="modal-content">
             <h3 style="margin-top: 0; color: #a855f7;">🧪 আজকের রসায়ন ইতিহাস</h3>
@@ -876,7 +855,6 @@
             slideTimer = setInterval(autoSlide, 5000);
         }
 
-        // Touch & Mouse Drag (Swipe) Support for Slider
         const sliderWrapper = document.getElementById('sliderWrapper');
         let startX = 0;
         let isDragging = false;
