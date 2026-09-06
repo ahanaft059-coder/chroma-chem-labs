@@ -111,12 +111,136 @@
             100% { transform: translateY(-6px); }
         }
 
+        /* আল্ট্রা জোস ডিজিটাল ল্যাব ব্যানার (নিউ প্রিমিয়াম ডিজাইন) */
+        .special-digital-lab-banner {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15)), var(--card-bg);
+            border: 2.5px solid transparent;
+            background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(135deg, #a855f7, #00f2fe, #3b82f6);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            border-radius: 30px;
+            padding: 40px 50px;
+            margin: 45px 0;
+            box-shadow: 0 20px 50px rgba(168, 85, 247, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 35px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .special-digital-lab-banner:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(168, 85, 247, 0.35);
+        }
+        /* ব্যাকগ্রাউন্ড গ্লো ইফেক্ট */
+        .special-digital-lab-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .special-lab-content {
+            position: relative;
+            z-index: 1;
+        }
+        .special-lab-content h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 12px 0 14px 0;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+        .special-lab-content p {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin: 0 0 25px 0;
+            line-height: 1.7;
+            font-weight: 500;
+            max-width: 680px;
+        }
+        .special-lab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 18px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.35);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .special-lab-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        .special-lab-btn:hover::after {
+            left: 100%;
+        }
+        .special-lab-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.5);
+        }
+        .special-lab-badge {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px 16px;
+            border-radius: 30px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+        .special-lab-graphic {
+            font-size: 75px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 242, 254, 0.1));
+            width: 120px;
+            height: 120px;
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.25);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            animation: floatVial 4s ease-in-out infinite alternate;
+        }
+        @keyframes floatVial {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-10px) rotate(5deg); }
+        }
+
         @media (max-width: 768px) {
-            .unique-welcome-banner {
+            .special-digital-lab-banner {
                 flex-direction: column-reverse;
                 text-align: center;
-                padding: 25px 20px;
+                padding: 30px 20px;
             }
+            .special-lab-content h2 { justify-content: center; font-size: 22px; }
+            .unique-welcome-banner { flex-direction: column-reverse; text-align: center; padding: 25px 20px; }
             .welcome-content h2 { font-size: 20px; }
         }
 
@@ -198,7 +322,6 @@
         }
         .logo-area { display: flex; align-items: center; gap: 14px; cursor: pointer; }
         
-        /* নতুন গ্লোয়িং লোগো স্টাইল */
         .logo-icon-box {
             display: flex;
             align-items: center;
@@ -231,7 +354,7 @@
         }
 
         /* ব্যানার স্লাইডার */
-        .slider-wrapper { margin-bottom: 45px; position: relative; cursor: grab; user-select: none; }
+        .slider-wrapper { margin-bottom: 40px; position: relative; cursor: grab; user-select: none; }
         .banner-container {
             background: var(--card-bg); border: 2px solid var(--section-border); border-radius: 28px;
             box-shadow: var(--shadow); text-align: center; padding: 45px 35px; display: none; backdrop-filter: blur(10px);
@@ -261,7 +384,7 @@
         .dot.active { background: #a855f7; width: 28px; border-radius: 6px; }
 
         /* ড্যাশবোর্ড গ্রিড ও কার্ড */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 50px; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 30px; }
         @media (max-width: 850px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .card {
@@ -405,6 +528,7 @@
             </div>
         </div>
 
+        <!-- ড্যাশবোর্ড গ্রিড (অন্যান্য সেকশনগুলো যথারীতি এখানে রয়েছে) -->
         <div class="dashboard-grid">
             <div class="card">
                 <div>
@@ -467,6 +591,22 @@
                     <p class="card-desc">বিভিন্ন প্রকার রাসায়নিক বিক্রিয়ার কৌশল, সমীকরণ ও গাণিতিক রূপ বিশ্লেষণ।</p>
                 </div>
                 <a href="reaction_page.html" class="btn-link">জোনে প্রবেশ করো →</a>
+            </div>
+        </div>
+
+        <!-- আল্ট্রা প্রিমিয়াম ডিজিটাল ল্যাব ব্যানার (একদম শেষের দিকে জোস লুক সহ) -->
+        <div class="special-digital-lab-banner">
+            <div class="special-lab-content">
+                <span class="special-lab-badge"><i class="fas fa-sparkles"></i> Featured Special Tool</span>
+                <h2><i class="fas fa-flask" style="color: #a855f7;"></i> ডিজিটাল ল্যাব সিমুলেটর</h2>
+                <p>সিলেবাসের রিয়েল ল্যাব প্র্যাকটিক্যালগুলো এখন ঘরে বসেই সম্পূর্ণ নিরাপদ ও ইন্টারেক্টিভ উপায়ে সিমুলেট করো এবং লাইভ পরীক্ষা সম্পন্ন করো।</p>
+                <a href="digitallab.html" class="special-lab-btn">
+                    <span>ডিজিটাল ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="special-lab-graphic">
+                🔬
             </div>
         </div>
 
