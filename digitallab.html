@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডিজিটাল ল্যাব হাব - Lab Alchemy</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
+            --section-border: rgba(168, 85, 247, 0.25);
+            --gradient-primary: linear-gradient(135deg, #9333ea, #3b82f6);
+            --gradient-glow: rgba(147, 51, 234, 0.15);
+        }
+        [data-theme="dark"] {
+            --bg-color: #030712;
+            --card-bg: #0b0f19;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            --section-border: rgba(168, 85, 247, 0.35);
+            --gradient-primary: linear-gradient(135deg, #a855f7, #60a5fa);
+            --gradient-glow: rgba(168, 85, 247, 0.25);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; border-bottom: 1px solid var(--border-color);
+            padding-bottom: 22px; flex-wrap: wrap; gap: 20px;
+        }
+        .logo-area { display: flex; align-items: center; gap: 14px; cursor: pointer; text-decoration: none; color: var(--text-color); }
+        .logo-icon-box { display: flex; align-items: center; gap: 4px; }
+        .logo-text h1 { margin: 0; font-size: 24px; font-weight: 800; }
+        .logo-text span { font-size: 12px; color: #a855f7; font-weight: 700; display: block; }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .theme-btn {
+            background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
+            width: 42px; height: 42px; border-radius: 16px; cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow);
+        }
+
+        /* ল্যাব হিরো */
+        .lab-hero {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)), var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 28px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .lab-hero h2 { font-size: 30px; font-weight: 800; margin: 0 0 10px 0; }
+        .lab-hero h2 span { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .lab-hero p { font-size: 15px; color: var(--text-muted); max-width: 650px; margin: 0 auto; line-height: 1.6; }
+
+        /* এক্সপেরিমেন্ট গ্রিড */
+        .experiments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .exp-card {
+            background: var(--card-bg);
+            border: 2px solid var(--section-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .exp-card:hover {
+            transform: translateY(-6px);
+            border-color: #a855f7;
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.2);
+        }
+
+        .exp-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .exp-icon {
+            width: 55px; height: 55px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid var(--section-border);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #a855f7;
+            flex-shrink: 0;
+        }
+        .exp-title-area h3 { font-size: 20px; font-weight: 800; margin: 0 0 4px 0; }
+        .exp-tag { font-size: 12px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 3px 10px; border-radius: 20px; display: inline-block; }
+
+        .exp-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .exp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 8px 20px var(--gradient-glow);
+            transition: 0.3s;
+        }
+        .exp-btn:hover { opacity: 0.95; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo-area">
+                <div class="logo-icon-box">
+                    <i class="fas fa-vial" style="font-size: 24px; color: #00f2fe;"></i>
+                    <i class="fas fa-flask" style="font-size: 30px; color: #00f2fe;"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Lab Alchemy</h1>
+                    <span>Digital Lab Hub</span>
+                </div>
+            </a>
+
+            <div class="header-right">
+                <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+            </div>
+        </header>
+
+        <div class="lab-hero">
+            <h2>ডিজিটাল ল্যাব <span>এক্সপেরিমেন্ট হাব</span></h2>
+            <p>সিলেবাসের বিভিন্ন গুরুত্বপূর্ণ প্র্যাকটিক্যাল ও ল্যাব পরীক্ষাগুলোর বিস্তারিত তালিকা। তোমার প্রয়োজনীয় এক্সপেরিমেন্টে প্রবেশ করো।</p>
+        </div>
+
+        <div class="experiments-grid">
+            <!-- এক্সপেরিমেন্ট ১ -->
+            <div class="exp-card">
+                <div>
+                    <div class="exp-header">
+                        <div class="exp-icon"><i class="fas fa-flask"></i></div>
+                        <div class="exp-title-area">
+                            <h3>এসিড-ক্ষার টাইট্রেশন</h3>
+                            <span class="exp-tag">পরিমাণগত রসায়ন</span>
+                        </div>
+                    </div>
+                    <p class="exp-desc">নির্দিষ্ট ঘনমাত্রার এসিড দ্রবণ ব্যবহার করে ক্ষার দ্রবণের অজানা ঘনমাত্রা নির্ণয় এবং নির্দেশকের সাহায্যে প্রশমন বিন্দু নির্ধারণের সম্পূর্ণ পদ্ধতি।</p>
+                </div>
+                <a href="experiment-titration.html" class="exp-btn">
+                    <span>ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- এক্সপেরিমেন্ট ২ -->
+            <div class="exp-card">
+                <div>
+                    <div class="exp-header">
+                        <div class="exp-icon"><i class="fas fa-vial"></i></div>
+                        <div class="exp-title-area">
+                            <h3>লবণ শনাক্তকরণ পরীক্ষা</h3>
+                            <span class="exp-tag">মৌলিক বিশ্লেষণ</span>
+                        </div>
+                    </div>
+                    <p class="exp-desc">শুষ্ক ও আর্দ্র পরীক্ষার মাধ্যমে অজৈব লবণের ক্যাটায়ন ($\text{Cu}^{2+}, \text{Fe}^{2+}, \text{Al}^{3+}$ ইত্যাদি) এবং অ্যানায়ন শনাক্তকরণের প্রক্রিয়া।</p>
+                </div>
+                <a href="experiment-salt.html" class="exp-btn">
+                    <span>ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- এক্সপেরিমেন্ট ৩ -->
+            <div class="exp-card">
+                <div>
+                    <div class="exp-header">
+                        <div class="exp-icon"><i class="fas fa-fire"></i></div>
+                        <div class="exp-title-area">
+                            <h3>গ্যাস প্রস্তুতি ও ধর্ম</h3>
+                            <span class="exp-tag">অজৈব রসায়ন</span>
+                        </div>
+                    </div>
+                    <p class="exp-desc">পরীক্ষাগারে অক্সিজেন ($\text{O}_2$), কার্বন ডাই-অক্সাইড ($\text{CO}_2$) বা হাইড্রোজেন ($\text{H}_2$) গ্যাস প্রস্তুতকরণ, সংগ্রহ এবং তাদের মূল বৈশিষ্ট্য যাচাই।</p>
+                </div>
+                <a href="experiment-gas.html" class="exp-btn">
+                    <span>ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- এক্সপেরিমেন্ট ৪ -->
+            <div class="exp-card">
+                <div>
+                    <div class="exp-header">
+                        <div class="exp-icon"><i class="fas fa-atom"></i></div>
+                        <div class="exp-title-area">
+                            <h3>দ্রবণ প্রস্তুতি ও মোলারিটি</h3>
+                            <span class="exp-tag">স্টয়কিওমেট্রি</span>
+                        </div>
+                    </div>
+                    <p class="exp-desc">নির্দিষ্ট আয়তনের প্রমাণ দ্রবণ ($\text{Na}_2\text{CO}_3$ বা অক্সালিক এসিড) প্রস্তুত করার গাণিতিক হিসাব এবং ল্যাবরেটরি টেকনিক।</p>
+                </div>
+                <a href="experiment-solution.html" class="exp-btn">
+                    <span>ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- এক্সপেরিমেন্ট ৫ -->
+            <div class="exp-card">
+                <div>
+                    <div class="exp-header">
+                        <div class="exp-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="exp-title-area">
+                            <h3>তড়িৎ বিশ্লেষ্য ও পরিবাহিতা</h3>
+                            <span class="exp-tag">তড়িৎ রসায়ন</span>
+                        </div>
+                    </div>
+                    <p class="exp-desc">বিভিন্ন দ্রবণের মধ্য দিয়ে বিদ্যুৎ পরিবাহিতা পরীক্ষা এবং কপার সালফেট ($\text{CuSO}_4$) দ্রবণের তড়িৎ বিশ্লেষণ প্রক্রিয়া পর্যবেক্ষণ।</p>
+                </div>
+                <a href="experiment-electrochem.html" class="exp-btn">
+                    <span>ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- এক্সপেরিমেন্ট ৬ -->
+            <div class="exp-card">
+                <div>
+                    <div class="exp-header">
+                        <div class="exp-icon"><i class="fas fa-seedling"></i></div>
+                        <div class="exp-title-area">
+                            <h3>জৈব যৌগের কার্যকরী মূলক</h3>
+                            <span class="exp-tag">জৈব রসায়ন</span>
+                        </div>
+                    </div>
+                    <p class="exp-desc">অজানা জৈব যৌগে সম্পৃক্ততা/অসম্পৃক্ততা পরীক্ষা, এবং অ্যালকোহল, কার্বোজিলিক এসিড বা অ্যালডিহাইড মূলক শনাক্তকরণ।</p>
+                </div>
+                <a href="experiment-organic.html" class="exp-btn">
+                    <span>ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            document.documentElement.setAttribute('data-theme', next);
+        }
+    </script>
+</body>
+</html>
