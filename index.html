@@ -3,745 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab Alchemy - রসায়ন ড্যাশবোর্ড</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-
+    <title>Welcome to Lab Alchemy</title>
     <style>
         :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
-            --section-border: rgba(168, 85, 247, 0.25);
-            --gradient-primary: linear-gradient(135deg, #9333ea, #3b82f6);
-            --gradient-glow: rgba(147, 51, 234, 0.15);
-        }
-        [data-theme="dark"] {
-            --bg-color: #030712;
-            --card-bg: #0b0f19;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #1e293b;
-            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-            --section-border: rgba(168, 85, 247, 0.35);
-            --gradient-primary: linear-gradient(135deg, #a855f7, #60a5fa);
-            --gradient-glow: rgba(168, 85, 247, 0.25);
+            --bg-black: #000000;
+            --neon-cyan: #06b6d4;
+            --neon-purple: #a855f7;
+            --text-white: #f8fafc;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
             margin: 0;
-            padding: 30px 20px;
-            transition: background 0.4s ease, color 0.4s ease;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* ইউনিক ওয়েলকাম ব্যানার স্টাইল */
-        .unique-welcome-banner {
-            background: var(--card-bg);
-            border: 2px solid var(--section-border);
-            border-radius: 24px;
-            padding: 35px 45px;
-            margin-bottom: 35px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 25px;
-            position: relative;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-black);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            animation: slideDown 0.6s ease;
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-15px); }
-            to { opacity: 1; transform: translateY(0); }
+            color: var(--text-white);
         }
 
-        .welcome-content h2 {
-            font-size: 26px;
-            font-weight: 800;
-            margin: 0 0 10px 0;
-            color: var(--text-color);
-            letter-spacing: -0.5px;
-        }
-        .welcome-content h2 span {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .welcome-content p {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin: 0;
-            font-weight: 500;
-        }
-
-        .welcome-icon-box {
-            width: 85px;
-            height: 85px;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1));
-            border: 2px dashed rgba(168, 85, 247, 0.4);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 38px;
-            color: #38bdf8;
-            flex-shrink: 0;
-            box-shadow: 0 0 20px var(--gradient-glow);
-            animation: floatRobot 3s ease-in-out infinite alternate;
-        }
-        @keyframes floatRobot {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-6px); }
-        }
-
-        /* আল্ট্রা জোস ডিজিটাল ল্যাব ব্যানার (নিউ প্রিমিয়াম ডিজাইন) */
-        .special-digital-lab-banner {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15)), var(--card-bg);
-            border: 2.5px solid transparent;
-            background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(135deg, #a855f7, #00f2fe, #3b82f6);
-            background-origin: border-box;
-            background-clip: padding-box, border-box;
-            border-radius: 30px;
-            padding: 40px 50px;
-            margin: 45px 0;
-            box-shadow: 0 20px 50px rgba(168, 85, 247, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 35px;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(15px);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        .special-digital-lab-banner:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 60px rgba(168, 85, 247, 0.35);
-        }
-        /* ব্যাকগ্রাউন্ড গ্লো ইফেক্ট */
-        .special-digital-lab-banner::before {
-            content: '';
+        #particle-canvas {
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
-            z-index: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
             pointer-events: none;
         }
 
-        .special-lab-content {
-            position: relative;
-            z-index: 1;
-        }
-        .special-lab-content h2 {
-            font-size: 28px;
-            font-weight: 800;
-            margin: 12px 0 14px 0;
-            color: var(--text-color);
+        .welcome-wrapper {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            letter-spacing: -0.5px;
+            width: 100%;
+            height: calc(100% - 30px);
+            position: relative;
+            z-index: 2;
         }
-        .special-lab-content p {
-            font-size: 16px;
-            color: var(--text-muted);
-            margin: 0 0 25px 0;
-            line-height: 1.7;
+
+        .left-panel {
+            width: 45%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            padding-left: 80px; 
+            padding-right: 20px;
+        }
+
+        .left-panel h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            margin: 0 0 15px 0;
+            line-height: 1.1;
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .typewriter-container {
+            margin-bottom: 40px;
+        }
+
+        .typewriter {
+            color: #94a3b8;
+            font-size: 1.25rem;
+            margin: 0;
             font-weight: 500;
-            max-width: 680px;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--neon-cyan);
+            width: 0;
+            animation: typing 3.5s steps(40) forwards, blink 0.75s step-end infinite;
+            display: inline-block;
         }
-        .special-lab-btn {
+
+        .enter-btn {
+            width: fit-content;
+            padding: 18px 45px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15));
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            padding: 16px 32px;
-            border-radius: 18px;
-            font-weight: 700;
-            font-size: 16px;
-            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.35);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+        }
+
+        .enter-btn:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.7);
+            transform: translateY(-4px) scale(1.02);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(168, 85, 247, 0.3));
+        }
+
+        .enter-btn span {
+            transition: transform 0.3s ease;
+        }
+
+        .enter-btn:hover span {
+            transform: translateX(8px);
+        }
+
+        .right-panel {
+            width: 55%;
+            height: 100%;
             position: relative;
-            overflow: hidden;
-        }
-        .special-lab-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: 0.5s;
-        }
-        .special-lab-btn:hover::after {
-            left: 100%;
-        }
-        .special-lab-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.5);
-        }
-        .special-lab-badge {
-            background: linear-gradient(135deg, #a855f7, #3b82f6);
-            color: white;
-            font-size: 12px;
-            font-weight: 800;
-            padding: 6px 16px;
-            border-radius: 30px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
-        }
-        .special-lab-graphic {
-            font-size: 75px;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 242, 254, 0.1));
-            width: 120px;
-            height: 120px;
-            border-radius: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid rgba(168, 85, 247, 0.4);
-            box-shadow: 0 0 35px rgba(168, 85, 247, 0.25);
-            flex-shrink: 0;
+        }
+
+        .chemistry-art {
             position: relative;
-            z-index: 1;
-            animation: floatVial 4s ease-in-out infinite alternate;
-        }
-        @keyframes floatVial {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-10px) rotate(5deg); }
+            width: 420px;
+            height: 420px;
         }
 
-        @media (max-width: 768px) {
-            .special-digital-lab-banner {
-                flex-direction: column-reverse;
-                text-align: center;
-                padding: 30px 20px;
-            }
-            .special-lab-content h2 { justify-content: center; font-size: 22px; }
-            .unique-welcome-banner { flex-direction: column-reverse; text-align: center; padding: 25px 20px; }
-            .welcome-content h2 { font-size: 20px; }
+        .nucleus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle, #ffffff, var(--neon-cyan));
+            border-radius: 50%;
+            box-shadow: 0 0 35px var(--neon-cyan), 0 0 70px var(--neon-purple);
+            animation: pulse 3s infinite alternate;
         }
 
-        /* ফিক্সড মাসকট ও পপআপ চ্যাট বক্স */
-        .chemmy-container {
+        .orbit-one {
+            position: absolute;
+            top: 5%; left: 5%; right: 5%; bottom: 5%;
+            border: 2px dashed rgba(6, 182, 212, 0.35);
+            border-radius: 50%;
+            animation: rotateOrbit 15s linear infinite;
+        }
+        .orbit-one::after {
+            content: '';
+            position: absolute;
+            top: -6px; left: 50%;
+            width: 14px; height: 14px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .orbit-two {
+            position: absolute;
+            top: -10%; left: 15%; right: 15%; bottom: -10%;
+            border: 1.5px solid rgba(168, 85, 247, 0.25);
+            border-radius: 50%;
+            transform: rotate(45deg);
+            animation: rotateOrbitTwo 25s linear infinite;
+        }
+        .orbit-two::after {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: 30%;
+            width: 14px; height: 14px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--neon-purple);
+        }
+
+        .molecule-dot {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 50%;
+            backdrop-filter: blur(4px);
+        }
+        .m1 { width: 70px; height: 70px; top: 10%; right: 10%; animation: float 6s infinite ease-in-out; }
+        .m2 { width: 50px; height: 50px; bottom: 10%; left: 5%; animation: float 8s infinite ease-in-out 1s; }
+        .m3 { width: 90px; height: 90px; bottom: 20%; right: 15%; border-color: rgba(168, 85, 247, 0.2); animation: float 7s infinite ease-in-out 2s; }
+
+        /* --- Small Fixed Bottom Credit Bar --- */
+        .credit-bar {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 10;
             display: flex;
             align-items: center;
-            gap: 15px;
-            z-index: 3000;
-            text-decoration: none;
-        }
-        .chemmy-chat-bubble {
-            background: var(--card-bg);
-            border: 2px solid var(--section-border);
-            padding: 14px 20px;
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            animation: floatBubble 3s ease-in-out infinite alternate;
-            backdrop-filter: blur(10px);
-        }
-        .chemmy-title { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: #a855f7; }
-        .chemmy-text { font-size: 14px; font-weight: 600; color: var(--text-color); white-space: nowrap; }
-        @keyframes floatBubble {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-6px); }
-        }
-        .chemmy-flask {
-            width: 65px; height: 75px;
-            background: linear-gradient(135deg, #1e1b4b, #312e81);
-            border: 2px solid #a855f7;
-            border-radius: 12px 12px 20px 20px;
-            position: relative;
-            display: flex; align-items: flex-end; justify-content: center;
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
-            cursor: pointer; overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-        .chemmy-flask::before {
-            content: ''; position: absolute; top: -10px; width: 24px; height: 12px;
-            background: #312e81; border: 2px solid #a855f7; border-radius: 4px;
-        }
-        .chemmy-flask:hover { transform: scale(1.12) rotate(6deg); }
-        .flask-liquid { position: absolute; bottom: 0; width: 100%; height: 55%; background: linear-gradient(180deg, #c084fc, #7c3aed); opacity: 0.9; }
-        .bubble-dot { position: absolute; background: white; border-radius: 50%; animation: riseBubble 2s infinite linear; }
-        .bubble-dot:nth-child(1) { width: 6px; height: 6px; left: 20px; bottom: 5px; animation-delay: 0s; }
-        .bubble-dot:nth-child(2) { width: 4px; height: 4px; left: 40px; bottom: 10px; animation-delay: 0.8s; }
-        @keyframes riseBubble {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-28px); opacity: 0; }
-        }
-        .flask-face { position: absolute; top: 32px; width: 100%; display: flex; justify-content: center; gap: 14px; z-index: 5; }
-        .eye { width: 6px; height: 6px; background: #ffffff; border-radius: 50%; box-shadow: 0 0 8px #ffffff; }
-
-        /* ব্যাকগ্রাউন্ড ডেকোরেটিভ ইলিমেন্টস */
-        .chem-bg-elements { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.08; }
-        [data-theme="dark"] .chem-bg-elements { opacity: 0.12; }
-        .chem-item { position: absolute; color: #00f2fe; font-size: 28px; user-select: none; animation: floatSlow 12s ease-in-out infinite alternate; }
-        @keyframes floatSlow {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-20px) rotate(15deg); }
-        }
-        .chem-item:nth-child(1) { top: 12%; left: 6%; font-size: 45px; }
-        .chem-item:nth-child(2) { top: 45%; left: 3%; font-size: 35px; color: #38bdf8; }
-        .chem-item:nth-child(3) { top: 18%; right: 6%; font-size: 50px; color: #a855f7; }
-        .chem-item:nth-child(4) { top: 78%; right: 10%; font-size: 40px; color: #34d399; }
-
-        .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
-
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; border-bottom: 1px solid var(--border-color);
-            padding-bottom: 22px; flex-wrap: wrap; gap: 20px;
-        }
-        .logo-area { display: flex; align-items: center; gap: 14px; cursor: pointer; }
-        
-        .logo-icon-box {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.6));
-        }
-        .logo-text h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-color); }
-        .logo-text span { font-size: 12px; color: #a855f7; font-weight: 700; letter-spacing: 0.5px; display: block; margin-top: 2px; }
-
-        .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
-        .nav-links li a {
-            text-decoration: none; color: var(--text-muted); font-size: 15px; font-weight: 600; cursor: pointer; position: relative;
-        }
-        .nav-links li a::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: #a855f7; transition: width 0.3s;
-        }
-        .nav-links li a:hover, .nav-links li a.active-nav { color: #a855f7; }
-        .nav-links li a.active-nav::after { width: 100%; }
-
-        .header-right { display: flex; align-items: center; gap: 12px; }
-        .nav-calendar {
-            background: var(--card-bg); border: 1px solid var(--border-color); padding: 9px 16px;
-            border-radius: 16px; display: flex; align-items: center; gap: 8px; font-size: 13px;
-            font-weight: 700; color: #34d399; cursor: pointer; box-shadow: var(--shadow);
-        }
-        .theme-btn {
-            background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
-            width: 42px; height: 42px; border-radius: 16px; cursor: pointer; font-size: 16px;
-            display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow);
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            letter-spacing: 0.5px;
         }
 
-        /* ব্যানার স্লাইডার */
-        .slider-wrapper { margin-bottom: 40px; position: relative; cursor: grab; user-select: none; }
-        .banner-container {
-            background: var(--card-bg); border: 2px solid var(--section-border); border-radius: 28px;
-            box-shadow: var(--shadow); text-align: center; padding: 45px 35px; display: none; backdrop-filter: blur(10px);
+        .credit-bar span {
+            color: var(--neon-cyan);
+            font-weight: 600;
+            margin-left: 4px;
         }
-        .banner-container.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .banner-tag {
-            background: var(--gradient-primary); color: white; padding: 6px 18px; border-radius: 20px;
-            font-size: 13px; font-weight: 700; display: inline-block; margin-bottom: 16px;
-        }
-        .banner-container h2 { font-size: 28px; margin: 0 0 12px 0; font-weight: 800; }
-        .banner-container p { font-size: 16px; color: var(--text-muted); max-width: 600px; margin: 0 auto 25px auto; line-height: 1.6; }
-        
-        .slider-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%); background: var(--card-bg);
-            border: 2px solid var(--section-border); color: var(--text-color); width: 45px; height: 45px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: var(--shadow); z-index: 10; transition: 0.3s;
-        }
-        .slider-arrow:hover { background: #a855f7; color: white; border-color: #a855f7; }
-        .slider-prev { left: -22px; }
-        .slider-next { right: -22px; }
 
-        .slider-dots { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }
-        .dot { width: 10px; height: 10px; background: var(--border-color); border-radius: 50%; cursor: pointer; transition: 0.3s; }
-        .dot.active { background: #a855f7; width: 28px; border-radius: 6px; }
+        @keyframes rotateOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rotateOrbitTwo { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; box-shadow: 0 0 45px var(--neon-cyan), 0 0 90px var(--neon-purple); } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(15deg); } }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        @keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--neon-cyan); } }
 
-        /* ড্যাশবোর্ড গ্রিড ও কার্ড */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 30px; }
-        @media (max-width: 850px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
-        .card {
-            background: var(--card-bg); border: 2px solid var(--section-border); border-radius: 28px;
-            padding: 35px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;
-            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+        @media (max-width: 900px) {
+            .welcome-wrapper { 
+                flex-direction: column; 
+                justify-content: center; 
+                align-items: center;
+            }
+            .left-panel { 
+                width: 100%; 
+                height: 50%; 
+                padding: 40px 20px 0 20px; 
+                align-items: center;
+                text-align: center;
+            }
+            .right-panel { 
+                width: 100%; 
+                height: 50%; 
+            }
+            .left-panel h1 { font-size: 2.8rem; }
+            .typewriter { 
+                font-size: 1rem; 
+                white-space: normal; 
+                border: none; 
+                animation: none; 
+                width: auto; 
+            }
+            .chemistry-art { width: 280px; height: 280px; }
+            .credit-bar { font-size: 0.7rem; }
         }
-        .card:hover { transform: translateY(-8px); border-color: #a855f7; box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.25); }
-        .card-title { font-size: 22px; font-weight: 800; margin-top: 0; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
-        .card-image-box {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(59, 130, 246, 0.05));
-            border-radius: 20px; height: 150px; margin-bottom: 22px; display: flex; align-items: center;
-            justify-content: center; font-size: 56px; border: 1px dashed var(--section-border);
-        }
-        .card-desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 25px; font-weight: 500; }
-        .btn-link {
-            display: block; text-align: center; background: var(--gradient-primary); color: white;
-            text-decoration: none; padding: 15px; border-radius: 16px; font-weight: 700; font-size: 15px;
-            cursor: pointer; box-shadow: 0 8px 20px var(--gradient-glow); border: none; width: 100%; transition: 0.2s;
-        }
-        .btn-link:hover { opacity: 0.95; transform: translateY(-2px); }
-
-        /* ফুটার */
-        .site-footer { background-color: #050b14; color: #ffffff; padding-top: 60px; border-radius: 32px 32px 0 0; margin-top: 50px; }
-        .footer-content { max-width: 1120px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; padding: 0 20px 45px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); gap: 30px; }
-        .footer-col { flex: 1; min-width: 250px; padding: 0 10px; }
-        .footer-logo { font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 15px; }
-        .footer-col p, .footer-col li a { color: #94a3b8; font-size: 14px; line-height: 1.8; text-decoration: none; font-weight: 500; }
-        .footer-col h3 { font-size: 17px; margin-bottom: 20px; color: #ffffff; border-bottom: 2px solid #38bdf8; display: inline-block; padding-bottom: 6px; }
-        .footer-col ul { list-style: none; padding: 0; margin: 0; }
-        .footer-col ul li { margin-bottom: 10px; }
-        .social-icons a {
-            display: inline-flex; justify-content: center; align-items: center; width: 38px; height: 38px;
-            background: rgba(255, 255, 255, 0.06); color: #ffffff; border-radius: 12px; margin-right: 10px; text-decoration: none; border: 1px solid rgba(255,255,255,0.08);
-        }
-        .footer-credit-bar { background-color: #030712; padding: 22px; border-radius: 0 0 32px 32px; text-align: center; }
-        .footer-credit-text { font-size: 14px; color: #94a3b8; font-weight: 600; }
-        .footer-credit-text span { color: #38bdf8; font-weight: 800; }
-
-        /* মডাল */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.65); backdrop-filter: blur(8px); justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); border: 2px solid var(--section-border); padding: 35px; border-radius: 28px; text-align: center; max-width: 420px; width: 90%; box-shadow: var(--shadow); }
-        .close-btn { background: var(--gradient-primary); color: white; border: none; padding: 12px 28px; margin-top: 25px; border-radius: 16px; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <a href="chemmy.html" class="chemmy-container">
-        <div class="chemmy-chat-bubble">
-            <span class="chemmy-title">CHEMMY • AI</span>
-            <span class="chemmy-text">হাই! কেমিস্ট্রি শিখতে সাহায্য লাগবে?</span>
-        </div>
-        <div class="chemmy-flask">
-            <div class="flask-liquid">
-                <div class="bubble-dot"></div>
-                <div class="bubble-dot"></div>
+    <canvas id="particle-canvas"></canvas>
+    
+    <div class="welcome-wrapper">
+        <div class="left-panel">
+            <h1>Lab<br>Alchemy</h1>
+            <div class="typewriter-container">
+                <p class="typewriter">রসায়নের এক ইন্টারেক্টিভ ও আধুনিক ডিজিটাল ল্যাব</p>
             </div>
-            <div class="flask-face">
-                <div class="eye"></div>
-                <div class="eye"></div>
-            </div>
+            
+            <a href="login.html" class="enter-btn">
+                ল্যাবে প্রবেশ করুন <span>&rarr;</span>
+            </a>
         </div>
-    </a>
 
-    <div class="chem-bg-elements">
-        <div class="chem-item">🧪 H₂SO₄</div>
-        <div class="chem-item">⚗️</div>
-        <div class="chem-item">🔬 CO₂</div>
-        <div class="chem-item">⚡ Na</div>
+        <div class="right-panel">
+            <div class="chemistry-art">
+                <div class="molecule-dot m1"></div>
+                <div class="molecule-dot m2"></div>
+                <div class="molecule-dot m3"></div>
+                <div class="orbit-one"></div>
+                <div class="orbit-two"></div>
+                <div class="nucleus"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <header>
-            <div class="logo-area" onclick="location.href='index.html'">
-                <div class="logo-icon-box">
-                    <i class="fas fa-vial" style="font-size: 24px; color: #00f2fe;"></i>
-                    <i class="fas fa-flask" style="font-size: 30px; color: #00f2fe;"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>Lab Alchemy</h1>
-                    <span>Interactive Learning</span>
-                </div>
-            </div>
-
-            <ul class="nav-links">
-                <li><a href="index.html" class="active-nav">হোম</a></li>
-                <li><a href="exam.html">পরীক্ষা</a></li>
-                <li><a href="about.html">আমাদের সম্পর্কে</a></li>
-            </ul>
-
-            <div class="header-right">
-                <div class="nav-calendar" onclick="showChemistryFact()" title="আজকের রসায়ন ইতিহাস দেখতে ক্লিক করুন">
-                    <span>📅</span>
-                    <span id="current-date">Loading...</span>
-                </div>
-                <button class="theme-btn" onclick="toggleTheme()">🌓</button>
-            </div>
-        </header>
-
-        <!-- ইউনিক ওয়েলকাম ব্যানার -->
-        <div class="unique-welcome-banner">
-            <div class="welcome-content">
-                <h2>হ্যালো কেমিস্ট্রি এক্সপ্লোরার! <span>Lab Alchemy</span>-তে স্বাগতম।</h2>
-                <p>রসায়নের রহস্যময় ও রোমাঞ্চকর দুনিয়াকে এখন ঘরে বসেই ইন্টারেক্টিভ ল্যাব সিমুলেশনের মাধ্যমে সহজভাবে আবিষ্কার করো।</p>
-            </div>
-            <div class="welcome-icon-box">
-                <i class="fas fa-robot"></i>
-            </div>
-        </div>
-
-        <!-- ব্যানার স্লাইডার -->
-        <div class="slider-wrapper" id="sliderWrapper">
-            <div class="slider-arrow slider-prev" onclick="prevSlide()">❮</div>
-            <div class="slider-arrow slider-next" onclick="nextSlide()">❯</div>
-
-            <div class="banner-container active">
-                <span class="banner-tag">ইতিহাস ও ঐতিহ্য</span>
-                <h2>রসায়ন বিজ্ঞানের ইতিহাস</h2>
-                <p>প্রাচীন আলকেমি থেকে শুরু করে আধুনিক রসায়নের যাত্রার এবং বিভিন্ন মৌলিক আবিষ্কারের গল্প।</p>
-                <a href="history.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
-            </div>
-
-            <div class="banner-container">
-                <span class="banner-tag">রসায়ন ফান ফ্যাক্টস</span>
-                <h2>জানা অজানার রসায়ন</h2>
-                <p>মৌল, বিভিন্ন দেশের অবদান এবং বিজ্ঞানীদের আবিষ্কার নিয়ে সাজানো তথ্যভাণ্ডার</p>
-                <a href="fact.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
-            </div>
-
-            <div class="banner-container">
-                <span class="banner-tag">সূত্র ও থিওরি</span>
-                <h2>রসায়ন সূত্র ও থিওরি</h2>
-                <p>রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত নিয়ে সাজানো তথ্যভাণ্ডার</p>
-                <a href="theoryhub.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
-            </div>
-
-            <div class="slider-dots">
-                <span class="dot active" onclick="currentSlide(0)"></span>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-            </div>
-        </div>
-
-        <!-- ড্যাশবোর্ড গ্রিড (অন্যান্য সেকশনগুলো যথারীতি এখানে রয়েছে) -->
-        <div class="dashboard-grid">
-            <div class="card">
-                <div>
-                    <h2 class="card-title">📊 আধুনিক পর্যায় সারণী</h2>
-                    <div class="card-image-box">📊</div>
-                    <p class="card-desc">সবকটি মৌলের সম্পূর্ণ ইন্টারেক্টিভ গ্রিড লেআউট। যেকোনো মৌলের উপর ক্লিক করলেই স্ক্রিনের ওপরে তার যোজনী, ইলেকট্রন বিন্যাস ও বাস্তব ব্যবহার ভেসে উঠবে।</p>
-                </div>
-                <a href="ptable.html" class="btn-link">পর্যায় সারণী দেখুন →</a>
-            </div>
-
-            <div class="card">
-                <div>
-                    <h2 class="card-title">🕹️ রসায়ন গেম জোন</h2>
-                    <div class="card-image-box">🕹️</div>
-                    <p class="card-desc">মৌল, যোজনী এবং সংকেত চেনার মজার সব চ্যালেঞ্জিং গেম। এখানে তোমার রসায়নের দক্ষতা পরীক্ষা করার জন্য বিভিন্ন গেম রয়েছে।</p>
-                </div>
-                <a href="games.html" class="btn-link">গেম জোনে প্রবেশ করো →</a>
-            </div>
-
-            <div class="card">
-                <div>
-                    <h2 class="card-title">🔢 ক্যালকুলেটর হাব</h2>
-                    <div class="card-image-box">🔢</div>
-                    <p class="card-desc">রসায়নের জটিল হিসাব-নিকাশ, পিএইচ (pH), মোলারিটি এবং আণবিক ভর সহজে সমাধান করার জন্য কাস্টম সায়েন্টিফিক ও ডেডিকেটেড ক্যালকুলেটর প্যানেল।</p>
-                </div>
-                <a href="calculators.html" class="btn-link">ক্যালকুলেটর জোনে প্রবেশ করো →</a>
-            </div>
-
-            <div class="card">
-                <div>
-                    <h2 class="card-title">📈 ভিজ্যুয়ালাইজেশন</h2>
-                    <div class="card-image-box">📈</div>
-                    <p class="card-desc">রসায়নের বিভিন্ন ল্যাব ডাটা, পর্যায়বৃত্ত ধর্ম, পারমাণবিক ব্যাসার্ধ এবং গলনাঙ্ক-স্ফুটনাঙ্কের ট্রেন্ড গ্রাফ ও চার্টের মাধ্যমে সুন্দর উপায়ে বিশ্লেষণ করার মূল জোন।</p>
-                </div>
-                <a href="visualizations.html" class="btn-link">ভিজ্যুয়ালাইজেশন জোনে প্রবেশ করো →</a>
-            </div>
-
-            <div class="card">
-                <div>
-                    <h2 class="card-title">💥 পর্যায়বৃত্ত ধর্ম</h2>
-                    <div class="card-image-box">💥</div>
-                    <p class="card-desc">মৌলসমূহের ভৌত ও রাসায়নিক ধর্মের পর্যায়বৃত্ত পরিবর্তনের বিস্তারিত হাব</p>
-                </div>
-                <a href="properties_page.html" class="btn-link">পর্যায়বৃত্ত জোনে প্রবেশ করো →</a>
-            </div>
-
-            <div class="card">
-                <div>
-                    <h2 class="card-title">🥽 জৈব যৌগ (Organic Chemistry)</h2>
-                    <div class="card-image-box">🥽</div>
-                    <p class="card-desc">জৈব যৌগের শ্রেণীবিভাগ, প্রস্তুতি এবং IUPAC নামকরণের সহজ ও বিস্তারিত ব্যাখ্যা।</p>
-                </div>
-                <a href="organic.html" class="btn-link">জোনে প্রবেশ করো →</a>
-            </div>
-
-            <div class="card">
-                <div>
-                    <h2 class="card-title">⚛️ রাসায়নিক বিক্রিয়া ল্যাব</h2>
-                    <div class="card-image-box">⚛️</div>
-                    <p class="card-desc">বিভিন্ন প্রকার রাসায়নিক বিক্রিয়ার কৌশল, সমীকরণ ও গাণিতিক রূপ বিশ্লেষণ।</p>
-                </div>
-                <a href="reaction_page.html" class="btn-link">জোনে প্রবেশ করো →</a>
-            </div>
-        </div>
-
-        <!-- আল্ট্রা প্রিমিয়াম ডিজিটাল ল্যাব ব্যানার (একদম শেষের দিকে জোস লুক সহ) -->
-        <div class="special-digital-lab-banner">
-            <div class="special-lab-content">
-                <span class="special-lab-badge"><i class="fas fa-sparkles"></i> Featured Special Tool</span>
-                <h2><i class="fas fa-flask" style="color: #a855f7;"></i> ডিজিটাল ল্যাব সিমুলেটর</h2>
-                <p>সিলেবাসের রিয়েল ল্যাব প্র্যাকটিক্যালগুলো এখন ঘরে বসেই সম্পূর্ণ নিরাপদ ও ইন্টারেক্টিভ উপায়ে সিমুলেট করো এবং লাইভ পরীক্ষা সম্পন্ন করো।</p>
-                <a href="digitallab.html" class="special-lab-btn">
-                    <span>ডিজিটাল ল্যাবে প্রবেশ করো</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            <div class="special-lab-graphic">
-                🔬
-            </div>
-        </div>
-
-        <footer class="site-footer">
-            <div class="footer-content">
-                <div class="footer-col">
-                    <h3 class="footer-logo">Lab Alchemy</h3>
-                    <p>ট্রেড লাইসেন্স: ***</p>
-                    <h4>আমাদের সাথে যুক্ত হোন</h4>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-col">
-                    <h3>যোগাযোগ</h3>
-                    <p><i class="fas fa-phone-alt"></i> 01724****</p>
-                    <p><i class="fas fa-envelope"></i> ahanaft059@gmail.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> kayetpara, Panchagarh Sadar, Panchagarh - 5000</p>
-                </div>
-
-                <div class="footer-col">
-                    <h3>কোম্পানি</h3>
-                    <ul>
-                        <li><a href="about.html">আমাদের সম্পর্কে</a></li>
-                        <li><a href="terms.html">টার্মস এবং শর্তাবলী</a></li>
-                        <li><a href="privacy.html">প্রাইভেসি পলিসি</a></li>
-                        <li><a href="refund.html">রিফান্ড পলিসি</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-credit-bar">
-                <div class="footer-credit-text">
-                    © 2026 <span>Lab Alchemy</span>. Designed for Students | SSC & HSC Chemistry
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <div id="chemModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-top: 0; color: #a855f7;">🧪 আজকের রসায়ন ইতিহাস</h3>
-            <p id="fact-text" style="font-size: 15px; opacity: 0.9; line-height: 1.6;"></p>
-            <button class="close-btn" onclick="closeModal()">ঠিক আছে</button>
-        </div>
+    <!-- Bottom Credit Bar -->
+    <div class="credit-bar">
+        Developed & Designed by <span>Ahanaf Abid Omlan</span>
     </div>
 
     <script>
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', next);
-            document.documentElement.setAttribute('data-theme', next);
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 40;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
 
-        const options = { day: 'numeric', month: 'short', year: 'numeric' };
-        const todayDate = new Date();
-        document.getElementById('current-date').innerText = todayDate.toLocaleDateString('en-GB', options);
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        function showChemistryFact() {
-            const facts = [
-                "আজকের দিনে রসায়ন গবেষণায় বিভিন্ন গুরুত্বপূর্ণ যৌগ ও মৌলের আচরণ নিয়ে বিশেষ পরীক্ষা চালানো হয়েছিল।",
-                "রসায়নের ইতিহাসে আজকের দিনটি পরীক্ষাগারে নতুন আবিষ্কার ও রাসায়নিক সূত্র প্রমাণের জন্য স্মরণীয়।",
-                "বিজ্ঞানী ল্যাভোসিয়ের এবং আধুনিক রসায়নের অগ্রগামীরা এই ধরনের দিনে তাদের গবেষণাপত্র প্রস্তুত করতেন।"
-            ];
-            const randomFact = facts[Math.floor(Math.random() * facts.length)];
-            document.getElementById('fact-text').innerText = randomFact;
-            document.getElementById('chemModal').style.display = 'flex';
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 10;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * -0.4 - 0.1;
+                this.alpha = Math.random() * 0.5 + 0.2;
+                this.color = Math.random() > 0.5 ? '#06b6d4' : '#a855f7';
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.y < -10 || this.x < 0 || this.x > canvas.width) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
         }
 
-        function closeModal() {
-            document.getElementById('chemModal').style.display = 'none';
+        function init() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
         }
 
-        let slideIndex = 0;
-        const slides = document.querySelectorAll('.banner-container');
-        const dots = document.querySelectorAll('.dot');
-
-        function showSlide(n) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            if (n >= slides.length) { slideIndex = 0; }
-            if (n < 0) { slideIndex = slides.length - 1; }
-            slides[slideIndex].classList.add('active');
-            dots[slideIndex].classList.add('active');
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
         }
 
-        function nextSlide() {
-            clearInterval(slideTimer);
-            slideIndex++;
-            showSlide(slideIndex);
-            slideTimer = setInterval(autoSlide, 5000);
-        }
-
-        function prevSlide() {
-            clearInterval(slideTimer);
-            slideIndex--;
-            showSlide(slideIndex);
-            slideTimer = setInterval(autoSlide, 5000);
-        }
-
-        function autoSlide() {
-            slideIndex++;
-            showSlide(slideIndex);
-        }
-
-        let slideTimer = setInterval(autoSlide, 5000);
-
-        function currentSlide(n) {
-            clearInterval(slideTimer);
-            slideIndex = n;
-            showSlide(slideIndex);
-            slideTimer = setInterval(autoSlide, 5000);
-        }
-
-        const sliderWrapper = document.getElementById('sliderWrapper');
-        let startX = 0;
-        let isDragging = false;
-
-        if(sliderWrapper) {
-            sliderWrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
-            sliderWrapper.addEventListener('touchend', (e) => { let endX = e.changedTouches[0].clientX; handleSwipe(startX, endX); });
-            sliderWrapper.addEventListener('mousedown', (e) => { startX = e.clientX; isDragging = true; });
-            sliderWrapper.addEventListener('mouseup', (e) => { if (!isDragging) return; let endX = e.clientX; isDragging = false; handleSwipe(startX, endX); });
-            sliderWrapper.addEventListener('mouseleave', () => { isDragging = false; });
-        }
-
-        function handleSwipe(start, end) {
-            let threshold = 50;
-            if (start - end > threshold) { nextSlide(); } 
-            else if (end - start > threshold) { prevSlide(); }
-        }
+        init();
+        animate();
     </script>
 </body>
 </html>
