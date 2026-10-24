@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05060f">
+    <title>Register | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #05060f;
+            --cyan: #22d3ee;
+            --purple: #a855f7;
+            --pink: #f472b6;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --error: #fb7185;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hind Siliguri', 'Segoe UI', Tahoma, sans-serif;
+            overflow: hidden;
+        }
+
+        body { animation: pageIn .7s ease both; transition: opacity .45s ease, transform .45s ease, filter .45s ease; }
+        body.leaving { opacity: 0; transform: scale(1.04); filter: blur(8px); }
+        @keyframes pageIn { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: blur(0); } }
+
+        /* ---------- Background ---------- */
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .45; animation: drift 22s ease-in-out infinite alternate; }
+        .b1 { width: 520px; height: 520px; background: #0891b2; top: -140px; left: -120px; }
+        .b2 { width: 600px; height: 600px; background: #7e22ce; bottom: -200px; right: -160px; animation-duration: 28s; }
+        .b3 { width: 360px; height: 360px; background: #be185d; top: 40%; left: 45%; opacity: .22; animation-duration: 32s; }
+        @keyframes drift { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(70px,50px) scale(1.15); } }
+
+        .grid-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+            background-size: 52px 52px;
+            -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+                    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+        }
+
+        #particle-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+        .cursor-glow {
+            position: fixed; z-index: 1; pointer-events: none;
+            width: 420px; height: 420px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(34,211,238,.13), transparent 65%);
+            transform: translate(-50%, -50%);
+            left: 50%; top: 50%;
+        }
+
+        /* ---------- Layout ---------- */
+        .wrapper {
+            position: relative; z-index: 2;
+            display: flex;
+            width: 100%;
+            height: calc(100% - 34px);
+        }
+
+        .brand-panel {
+            width: 42%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            perspective: 1000px;
+            padding: 20px;
+        }
+
+        .scene {
+            position: relative;
+            width: min(320px, 70%);
+            aspect-ratio: 1;
+            transform-style: preserve-3d;
+            transition: transform .15s ease-out;
+        }
+        .atom { position: absolute; inset: 0; transform-style: preserve-3d; }
+        .nucleus {
+            position: absolute; top: 50%; left: 50%;
+            width: 50px; height: 50px; margin: -25px 0 0 -25px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #fff, var(--cyan) 55%, var(--purple));
+            box-shadow: 0 0 40px var(--cyan), 0 0 90px var(--purple);
+            animation: pulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes pulse { from { transform: scale(.88); } to { transform: scale(1.12); } }
+        .orbit {
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            border: 1.5px solid rgba(34,211,238,.28);
+            transform-style: preserve-3d;
+            animation: spin var(--dur, 8s) linear infinite;
+        }
+        .orbit::after {
+            content: ''; position: absolute; top: -8px; left: 50%; margin-left: -8px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--c, var(--cyan));
+            box-shadow: 0 0 22px var(--c, var(--cyan)), 0 0 6px #fff;
+        }
+        .o1 { --ry: 0deg;   --dur: 7s;  --c: var(--cyan); }
+        .o2 { --ry: 60deg;  --dur: 10s; --c: var(--purple); border-color: rgba(168,85,247,.3); }
+        .o3 { --ry: 120deg; --dur: 13s; --c: var(--pink);   border-color: rgba(244,114,182,.28); }
+        @keyframes spin {
+            from { transform: rotateX(72deg) rotateY(var(--ry)) rotateZ(0deg); }
+            to   { transform: rotateX(72deg) rotateY(var(--ry)) rotateZ(360deg); }
+        }
+
+        .brand-text { text-align: center; margin-top: 34px; }
+        .brand-text h1 {
+            font-family: 'Space Grotesk', 'Hind Siliguri', sans-serif;
+            font-size: clamp(2.2rem, 4vw, 3.3rem);
+            margin: 0 0 8px;
+            letter-spacing: -1.5px;
+            background: linear-gradient(110deg, var(--cyan), var(--purple), var(--pink), var(--cyan));
+            background-size: 250% auto;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 6s linear infinite;
+        }
+        @keyframes shimmer { to { background-position: 250% center; } }
+        .brand-text p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+
+        .form-panel {
+            width: 58%;
+            display: flex;
+            overflow-y: auto;
+            padding: 20px clamp(20px, 5vw, 80px) 20px 20px;
+        }
+
+        /* ---------- Glass card ---------- */
+        .card {
+            position: relative;
+            width: 100%; max-width: 520px;
+            margin: auto;
+            padding: 34px 32px 28px;
+            border-radius: 28px;
+            background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow: 0 30px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12);
+            animation: cardIn .9s cubic-bezier(.2,.8,.2,1) both .2s;
+        }
+        .card::before {
+            content: ''; position: absolute; inset: -1px; z-index: -1;
+            border-radius: 29px; padding: 1px;
+            background: linear-gradient(135deg, rgba(34,211,238,.6), transparent 40%, transparent 60%, rgba(168,85,247,.6));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            opacity: .6;
+        }
+        @keyframes cardIn { from { opacity: 0; transform: translateY(40px) scale(.96); } to { opacity: 1; transform: none; } }
+
+        .card h2 { margin: 0 0 6px; font-size: 1.8rem; font-weight: 700; }
+        .card .sub { margin: 0 0 22px; color: var(--muted); font-size: .96rem; }
+
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .field { position: relative; margin-bottom: 14px; }
+        .field label { display: block; margin-bottom: 7px; font-size: .86rem; font-weight: 500; color: #cbd5e1; }
+        .input-wrap { position: relative; }
+        .input-wrap .icon {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            width: 19px; height: 19px; color: var(--muted);
+            transition: color .3s; pointer-events: none;
+        }
+        .input-wrap input[type="text"],
+        .input-wrap input[type="email"],
+        .input-wrap input[type="password"] {
+            width: 100%;
+            padding: 13px 44px 13px 42px;
+            font-family: inherit; font-size: .98rem; color: var(--text);
+            background: rgba(255,255,255,.04);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 14px;
+            outline: none;
+            transition: border-color .3s, box-shadow .3s, background .3s;
+        }
+        .input-wrap input::placeholder { color: #64748b; }
+        .input-wrap input:focus {
+            border-color: var(--cyan);
+            background: rgba(34,211,238,.05);
+            box-shadow: 0 0 0 4px rgba(34,211,238,.12), 0 0 24px rgba(34,211,238,.15);
+        }
+        .input-wrap:focus-within .icon { color: var(--cyan); }
+
+        .field.invalid input { border-color: var(--error); box-shadow: 0 0 0 4px rgba(251,113,133,.12); }
+        .field .err { display: none; margin-top: 5px; font-size: .8rem; color: var(--error); }
+        .field.invalid .err { display: block; }
+        .field.invalid { animation: shake .4s; }
+        @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+        .toggle-pass {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; padding: 6px;
+            color: var(--muted); display: flex; transition: color .3s;
+        }
+        .toggle-pass:hover { color: var(--cyan); }
+        .toggle-pass svg { width: 19px; height: 19px; }
+
+        /* strength meter */
+        .meter { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+        .meter .seg { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.1); transition: background .3s; }
+        .meter .label { min-width: 64px; text-align: right; font-size: .76rem; color: var(--muted); }
+        .meter[data-level="1"] .seg:nth-child(-n+1) { background: #fb7185; }
+        .meter[data-level="2"] .seg:nth-child(-n+2) { background: #fbbf24; }
+        .meter[data-level="3"] .seg:nth-child(-n+3) { background: #22d3ee; }
+        .meter[data-level="4"] .seg:nth-child(-n+4) { background: #4ade80; }
+
+        .terms { margin: 4px 0 20px; }
+        .remember { display: flex; align-items: center; gap: 9px; cursor: pointer; color: #cbd5e1; user-select: none; font-size: .9rem; }
+        .remember input { position: absolute; opacity: 0; pointer-events: none; }
+        .check {
+            flex-shrink: 0;
+            width: 20px; height: 20px; border-radius: 6px;
+            border: 1.5px solid var(--glass-border);
+            background: rgba(255,255,255,.04);
+            display: flex; align-items: center; justify-content: center;
+            transition: all .25s;
+        }
+        .check svg { width: 12px; height: 12px; opacity: 0; transform: scale(.4); transition: all .25s; stroke: #fff; }
+        .remember input:checked + .check { background: linear-gradient(135deg, #0891b2, #7e22ce); border-color: transparent; }
+        .remember input:checked + .check svg { opacity: 1; transform: scale(1); }
+        .remember input:focus-visible + .check { outline: 2px solid var(--cyan); outline-offset: 2px; }
+        .terms.invalid .check { border-color: var(--error); }
+        .terms .err { display: none; margin: 6px 0 0 29px; font-size: .8rem; color: var(--error); }
+        .terms.invalid .err { display: block; }
+
+        .submit-btn {
+            position: relative; overflow: hidden;
+            width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 15px;
+            font-family: inherit; font-size: 1.08rem; font-weight: 700; color: #fff;
+            border: none; border-radius: 16px; cursor: pointer;
+            background: linear-gradient(135deg, #0891b2, #7e22ce);
+            box-shadow: 0 10px 35px rgba(126,34,206,.4), inset 0 1px 0 rgba(255,255,255,.25);
+            transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s;
+        }
+        .submit-btn::before {
+            content: ''; position: absolute; top: 0; left: -80%;
+            width: 50%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,.4), transparent);
+            transform: skewX(-20deg); transition: left .7s ease;
+        }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 45px rgba(34,211,238,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+        .submit-btn:hover::before { left: 140%; }
+        .submit-btn:active { transform: scale(.98); }
+        .submit-btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+        .submit-btn:disabled { cursor: wait; opacity: .85; }
+
+        .spinner {
+            display: none; width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,.35); border-top-color: #fff;
+            border-radius: 50%; animation: rot .7s linear infinite;
+        }
+        .submit-btn.loading .spinner { display: block; }
+        @keyframes rot { to { transform: rotate(360deg); } }
+
+        .ripple {
+            position: absolute; border-radius: 50%;
+            background: rgba(255,255,255,.45);
+            transform: scale(0); animation: rippleAnim .6s ease-out; pointer-events: none;
+        }
+        @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+        .form-msg {
+            display: none; margin-bottom: 16px; padding: 12px 14px;
+            border-radius: 12px; font-size: .9rem;
+            background: rgba(251,113,133,.1);
+            border: 1px solid rgba(251,113,133,.35);
+            color: #fda4af;
+        }
+        .form-msg.show { display: block; }
+        .form-msg.ok { background: rgba(74,222,128,.1); border-color: rgba(74,222,128,.35); color: #86efac; }
+
+        .bottom-text { text-align: center; margin: 20px 0 0; font-size: .95rem; color: var(--muted); }
+        .bottom-text a { color: var(--cyan); font-weight: 600; text-decoration: none; transition: color .3s; }
+        .bottom-text a:hover { color: var(--pink); }
+
+        .back-link {
+            position: fixed; top: 22px; left: 26px; z-index: 5;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 18px; border-radius: 50px;
+            font-size: .9rem; color: #cbd5e1; text-decoration: none;
+            background: var(--glass); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: all .3s;
+        }
+        .back-link:hover { transform: translateX(-4px); border-color: rgba(34,211,238,.5); color: #fff; }
+
+        .credit-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .78rem; color: #64748b; letter-spacing: .6px;
+            background: rgba(5,6,15,.75);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,255,255,.06);
+        }
+        .credit-bar span {
+            margin-left: 5px; font-weight: 700;
+            background: linear-gradient(90deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) {
+            html, body { overflow-y: auto; }
+            .wrapper { flex-direction: column; height: auto; min-height: calc(100% - 34px); padding: 80px 0 60px; }
+            .brand-panel { width: 100%; padding: 0 20px; }
+            .scene { width: min(150px, 45%); }
+            .brand-text { margin-top: 16px; }
+            .brand-text p { display: none; }
+            .form-panel { width: 100%; padding: 24px 18px 0; overflow: visible; }
+            .card { padding: 28px 20px 24px; }
+            .two-col { grid-template-columns: 1fr; gap: 0; }
+            .cursor-glow { display: none; }
+            .back-link { top: 16px; left: 16px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aurora">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+    </div>
+    <div class="grid-bg"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <a href="login.html" class="back-link" id="backLink">&larr; লগইন</a>
+
+    <div class="wrapper">
+        <div class="brand-panel">
+            <div class="scene" id="scene">
+                <div class="atom">
+                    <div class="orbit o1"></div>
+                    <div class="orbit o2"></div>
+                    <div class="orbit o3"></div>
+                    <div class="nucleus"></div>
+                </div>
+            </div>
+            <div class="brand-text">
+                <h1>Lab Alchemy</h1>
+                <p>নতুন অ্যাকাউন্ট খুলে তোমার ডিজিটাল ল্যাবে যোগ দাও</p>
+            </div>
+        </div>
+
+        <div class="form-panel">
+            <div class="card">
+                <h2>অ্যাকাউন্ট খোলো 🧪</h2>
+                <p class="sub">কয়েকটা তথ্য দিলেই ল্যাব তোমার জন্য তৈরি</p>
+
+                <div class="form-msg" id="formMsg"></div>
+
+                <form id="regForm" novalidate>
+                    <div class="two-col">
+                        <div class="field" id="fieldName">
+                            <label for="name">পুরো নাম</label>
+                            <div class="input-wrap">
+                                <input type="text" id="name" placeholder="তোমার নাম" autocomplete="name">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <div class="err">নাম কমপক্ষে ২ অক্ষরের দাও</div>
+                        </div>
+
+                        <div class="field" id="fieldUsername">
+                            <label for="username">ইউজারনেম</label>
+                            <div class="input-wrap">
+                                <input type="text" id="username" placeholder="alchemist_01" autocomplete="username">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>
+                            </div>
+                            <div class="err">৩–২০ অক্ষর, শুধু ইংরেজি অক্ষর, সংখ্যা ও _ ব্যবহার করো</div>
+                        </div>
+                    </div>
+
+                    <div class="field" id="fieldEmail">
+                        <label for="email">ইমেইল</label>
+                        <div class="input-wrap">
+                            <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+                        </div>
+                        <div class="err">সঠিক ইমেইল দাও</div>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="field" id="fieldPass">
+                            <label for="password">পাসওয়ার্ড</label>
+                            <div class="input-wrap">
+                                <input type="password" id="password" placeholder="••••••••" autocomplete="new-password">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <button type="button" class="toggle-pass" id="togglePass" aria-label="পাসওয়ার্ড দেখাও">
+                                    <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div class="err">পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে</div>
+                        </div>
+
+                        <div class="field" id="fieldConfirm">
+                            <label for="confirm">পাসওয়ার্ড আবার দাও</label>
+                            <div class="input-wrap">
+                                <input type="password" id="confirm" placeholder="••••••••" autocomplete="new-password">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            </div>
+                            <div class="err">দুটো পাসওয়ার্ড মিলছে না</div>
+                        </div>
+                    </div>
+
+                    <div class="meter" id="meter" data-level="0">
+                        <span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span>
+                        <span class="label" id="meterLabel"></span>
+                    </div>
+
+                    <div class="terms" id="fieldTerms" style="margin-top:16px;">
+                        <label class="remember">
+                            <input type="checkbox" id="terms">
+                            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                            আমি ল্যাবের নিয়ম ও শর্তাবলীতে রাজি
+                        </label>
+                        <div class="err">চালিয়ে যেতে শর্তে সম্মতি দিতে হবে</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="spinner"></span>
+                        <span class="btn-label">অ্যাকাউন্ট তৈরি করো</span>
+                    </button>
+                </form>
+
+                <p class="bottom-text">আগে থেকেই অ্যাকাউন্ট আছে? <a href="login.html" id="loginLink">লগইন করো</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="credit-bar">
+        Developed &amp; Designed by <span>Ahanaf Abid Omlan</span>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Already logged in? Go straight to the dashboard.
+        if (Auth.currentUser()) window.location.replace('dashboard.html');
+
+        /* ---------- Particles ---------- */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const mouse = { x: null, y: null };
+        const colors = ['#22d3ee', '#a855f7', '#f472b6'];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const count = Math.min(90, Math.floor((canvas.width * canvas.height) / 16000));
+            particles = Array.from({ length: count }, () => new Particle());
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.8;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4 - 0.08;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                if (mouse.x !== null) {
+                    const dx = this.x - mouse.x, dy = this.y - mouse.y;
+                    const d = Math.hypot(dx, dy);
+                    if (d < 130 && d > 0) {
+                        const f = (130 - d) / 130;
+                        this.x += (dx / d) * f * 2.2;
+                        this.y += (dy / d) * f * 2.2;
+                    }
+                }
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < -10) this.x = canvas.width + 10;
+                if (this.x > canvas.width + 10) this.x = -10;
+                if (this.y < -10) this.y = canvas.height + 10;
+                if (this.y > canvas.height + 10) this.y = -10;
+            }
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 12; ctx.shadowColor = this.color;
+                ctx.fill();
+            }
+        }
+
+        function connect() {
+            ctx.shadowBlur = 0;
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    const d = Math.hypot(particles[a].x - particles[b].x, particles[a].y - particles[b].y);
+                    if (d < 120) {
+                        ctx.globalAlpha = (1 - d / 120) * 0.22;
+                        ctx.strokeStyle = '#22d3ee';
+                        ctx.lineWidth = 0.8;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            connect();
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animate();
+
+        /* ---------- Mouse glow + atom tilt ---------- */
+        const glow = document.getElementById('cursorGlow');
+        const scene = document.getElementById('scene');
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+            const rx = (e.clientY / window.innerHeight - 0.5) * -16;
+            const ry = (e.clientX / window.innerWidth - 0.5) * 20;
+            scene.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        });
+        window.addEventListener('mouseleave', () => {
+            mouse.x = mouse.y = null;
+            scene.style.transform = 'rotateX(0) rotateY(0)';
+        });
+
+        /* ---------- Page transitions ---------- */
+        function goTo(url) {
+            document.body.classList.add('leaving');
+            setTimeout(() => { window.location.href = url; }, 450);
+        }
+        ['backLink', 'loginLink'].forEach(id => {
+            document.getElementById(id).addEventListener('click', e => {
+                e.preventDefault();
+                goTo(e.currentTarget.getAttribute('href'));
+            });
+        });
+
+        /* ---------- Password show/hide (both fields) ---------- */
+        const passInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const eyeOpen = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        const eyeOff = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+        document.getElementById('togglePass').addEventListener('click', () => {
+            const show = passInput.type === 'password';
+            passInput.type = confirmInput.type = show ? 'text' : 'password';
+            eyeIcon.innerHTML = show ? eyeOff : eyeOpen;
+        });
+
+        /* ---------- Password strength meter ---------- */
+        const meter = document.getElementById('meter');
+        const meterLabel = document.getElementById('meterLabel');
+        const levelNames = ['', 'দুর্বল', 'মোটামুটি', 'ভালো', 'শক্তিশালী'];
+
+        function strength(p) {
+            if (!p) return 0;
+            let s = 0;
+            if (p.length >= 6) s++;
+            if (p.length >= 10) s++;
+            if (/[a-z]/.test(p) && /[A-Z]/.test(p)) s++;
+            if (/\d/.test(p)) s++;
+            if (/[^A-Za-z0-9]/.test(p)) s++;
+            return Math.max(1, Math.min(4, s - 1));
+        }
+        passInput.addEventListener('input', () => {
+            const lvl = strength(passInput.value);
+            meter.dataset.level = lvl;
+            meterLabel.textContent = levelNames[lvl];
+        });
+
+        /* ---------- Validation + register ---------- */
+        const form = document.getElementById('regForm');
+        const msg = document.getElementById('formMsg');
+        const submitBtn = document.getElementById('submitBtn');
+
+        const nameInput = document.getElementById('name');
+        const userInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const termsInput = document.getElementById('terms');
+
+        function setInvalid(fieldId, bad, text) {
+            const f = document.getElementById(fieldId);
+            f.classList.remove('invalid');
+            if (bad) {
+                if (text) f.querySelector('.err').textContent = text;
+                void f.offsetWidth;
+                f.classList.add('invalid');
+            }
+        }
+
+        const clearers = [
+            [nameInput, 'fieldName'], [userInput, 'fieldUsername'], [emailInput, 'fieldEmail'],
+            [passInput, 'fieldPass'], [confirmInput, 'fieldConfirm'], [termsInput, 'fieldTerms']
+        ];
+        clearers.forEach(([el, id]) => el.addEventListener('input', () => setInvalid(id, false)));
+        termsInput.addEventListener('change', () => setInvalid('fieldTerms', false));
+
+        submitBtn.addEventListener('click', function (e) {
+            const rect = submitBtn.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const r = document.createElement('span');
+            r.className = 'ripple';
+            r.style.width = r.style.height = size + 'px';
+            r.style.left = (e.clientX - rect.left - size / 2) + 'px';
+            r.style.top = (e.clientY - rect.top - size / 2) + 'px';
+            submitBtn.appendChild(r);
+            setTimeout(() => r.remove(), 600);
+        });
+
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            msg.className = 'form-msg';
+
+            const badName = nameInput.value.trim().length < 2;
+            const badUser = !/^[A-Za-z0-9_]{3,20}$/.test(userInput.value.trim());
+            const badEmail = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+            const badPass = passInput.value.length < 6;
+            const badConfirm = confirmInput.value !== passInput.value || !confirmInput.value;
+            const badTerms = !termsInput.checked;
+
+            setInvalid('fieldName', badName);
+            setInvalid('fieldUsername', badUser);
+            setInvalid('fieldEmail', badEmail);
+            setInvalid('fieldPass', badPass);
+            setInvalid('fieldConfirm', badConfirm);
+            setInvalid('fieldTerms', badTerms);
+            if (badName || badUser || badEmail || badPass || badConfirm || badTerms) return;
+
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            const label = submitBtn.querySelector('.btn-label');
+            label.textContent = 'অ্যাকাউন্ট তৈরি হচ্ছে...';
+
+            const res = await Auth.register({
+                name: nameInput.value,
+                username: userInput.value,
+                email: emailInput.value,
+                password: passInput.value
+            });
+
+            if (res.ok) {
+                msg.textContent = 'অ্যাকাউন্ট তৈরি হয়েছে! এবার লগইন করো...';
+                msg.className = 'form-msg show ok';
+                setTimeout(() => goTo('login.html?registered=1&u=' + encodeURIComponent(userInput.value.trim())), 900);
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                label.textContent = 'অ্যাকাউন্ট তৈরি করো';
+                if (res.field === 'username') setInvalid('fieldUsername', true, res.error);
+                else if (res.field === 'email') setInvalid('fieldEmail', true, res.error);
+                else { msg.textContent = res.error; msg.className = 'form-msg show'; }
+            }
+        });
+    </script>
+</body>
+</html>
