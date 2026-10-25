@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05060f">
+    <title>স্টাডি টাইমার | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- থিম: dashboard এর সাথে একই সেটিং ব্যবহার করে -->
+    <script>
+        (function () {
+            let t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #eef2f9;
+            --card-bg: rgba(255, 255, 255, 0.74);
+            --card-solid: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #5b6b82;
+            --border-color: rgba(15, 23, 42, 0.12);
+            --shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+            --section-border: rgba(168, 85, 247, 0.28);
+            --gradient-primary: linear-gradient(135deg, #9333ea, #3b82f6);
+            --gradient-glow: rgba(147, 51, 234, 0.18);
+            --grid-line: rgba(15, 23, 42, 0.05);
+            --blob-opacity: 0.22;
+            --bar: #7c3aed;
+            --bar-dim: rgba(124, 58, 237, .38);
+            --ring-a: #06b6d4; --ring-b: #7c3aed;
+        }
+        [data-theme="dark"] {
+            --bg-color: #05060f;
+            --card-bg: rgba(16, 20, 36, 0.62);
+            --card-solid: #0b0f1c;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            --section-border: rgba(168, 85, 247, 0.35);
+            --gradient-primary: linear-gradient(135deg, #a855f7, #60a5fa);
+            --gradient-glow: rgba(168, 85, 247, 0.28);
+            --grid-line: rgba(255, 255, 255, 0.035);
+            --blob-opacity: 0.42;
+            --bar: #a78bfa;
+            --bar-dim: rgba(167, 139, 250, .38);
+            --ring-a: #22d3ee; --ring-b: #a855f7;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; min-height: 100vh; padding: 18px 18px 56px;
+            font-family: 'Plus Jakarta Sans', 'Hind Siliguri', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-color); color: var(--text-color);
+            transition: background .4s ease, color .4s ease, opacity .45s ease;
+            animation: pageIn .6s ease both;
+        }
+        body.leaving { opacity: 0; }
+        /* body তে filter/transform ব্যবহার করা যাবে না, নইলে fixed জিনিস স্ক্রিনে ভাসে না */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 26s ease-in-out infinite alternate; }
+        .b1 { width: 520px; height: 520px; background: #0891b2; top: -150px; left: -120px; }
+        .b2 { width: 620px; height: 620px; background: #7e22ce; bottom: -230px; right: -170px; animation-duration: 32s; }
+        @keyframes drift { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(70px,50px) scale(1.15); } }
+        .grid-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 52px 52px;
+            -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+                    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+        }
+
+        .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
+
+        /* ---------- Header ---------- */
+        .top {
+            position: sticky; top: 10px; z-index: 50;
+            display: flex; align-items: center; justify-content: space-between; gap: 14px;
+            padding: 12px 20px; margin-bottom: 30px; border-radius: 24px;
+            background: var(--card-bg); border: 1.5px solid var(--border-color); box-shadow: var(--shadow);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-color); }
+        .orb {
+            width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+            background: radial-gradient(circle at 35% 30%, #fff, #22d3ee 55%, #a855f7);
+            box-shadow: 0 0 18px #22d3ee, 0 0 34px rgba(168, 85, 247, .7);
+        }
+        .brand b { display: block; font-size: 18px; font-weight: 800; letter-spacing: .3px; line-height: 1.2; }
+        .brand small { display: block; font-size: 12px; font-weight: 700; color: #a855f7; }
+        .top-right { display: flex; align-items: center; gap: 10px; }
+        .icon-btn {
+            width: 42px; height: 42px; border-radius: 14px; cursor: pointer; font-size: 16px;
+            color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color);
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: transform .3s, box-shadow .3s;
+        }
+        .icon-btn:hover { transform: rotate(180deg); box-shadow: 0 8px 22px var(--gradient-glow); }
+        .back-btn {
+            display: inline-flex; align-items: center; padding: 11px 18px; border-radius: 14px;
+            font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text-color);
+            background: var(--card-solid); border: 1px solid var(--border-color);
+            transition: transform .25s, border-color .25s;
+        }
+        .back-btn:hover { transform: translateX(-3px); border-color: rgba(168, 85, 247, .6); }
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, .bar-col:focus-visible {
+            outline: 3px solid #22d3ee; outline-offset: 2px;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero { text-align: center; margin-bottom: 30px; }
+        .pill { display: inline-block; padding: 6px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; color: #a855f7; background: rgba(168, 85, 247, .1); border: 1px solid rgba(168, 85, 247, .3); }
+        .hero h1 {
+            margin: 14px 0 10px; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -.5px; line-height: 1.2;
+            background: var(--gradient-primary); background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 6s linear infinite;
+        }
+        @keyframes shimmer { to { background-position: 200% center; } }
+        .hero p { margin: 0 auto; max-width: 620px; font-size: 16px; line-height: 1.75; font-weight: 500; color: var(--text-muted); }
+
+        /* ---------- Layout & cards ---------- */
+        .layout { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; margin-bottom: 24px; align-items: start; }
+        .card {
+            position: relative; overflow: hidden; padding: 28px; border-radius: 28px;
+            background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        }
+        .card::before {
+            content: ''; position: absolute; top: -90px; right: -70px; width: 240px; height: 240px; pointer-events: none;
+            background: radial-gradient(circle, var(--gradient-glow), transparent 70%);
+        }
+        .card > * { position: relative; }
+        .step { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 16px; font-weight: 800; }
+        .step .n {
+            width: 26px; height: 26px; border-radius: 9px; font-size: 13px; color: #fff;
+            display: inline-flex; align-items: center; justify-content: center; background: var(--gradient-primary);
+        }
+        .block { margin-bottom: 24px; }
+        .block:last-child { margin-bottom: 0; }
+        .hint { margin: -4px 0 12px; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--text-muted); }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip {
+            font-family: inherit; font-size: 14px; font-weight: 700; padding: 9px 16px; border-radius: 30px; cursor: pointer;
+            color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color);
+            transition: transform .2s, color .2s, border-color .2s, background .2s, box-shadow .2s;
+        }
+        .chip:hover { color: var(--text-color); border-color: rgba(168, 85, 247, .55); transform: translateY(-2px); }
+        .chip.on { color: #fff; border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .chip-wrap { display: inline-flex; align-items: stretch; }
+        .chip-wrap .chip { border-radius: 30px 0 0 30px; }
+        .chip-wrap .x {
+            font-family: inherit; font-size: 13px; padding: 0 12px; border-radius: 0 30px 30px 0; cursor: pointer;
+            color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color); border-left: none;
+        }
+        .chip-wrap .x:hover { color: #fb7185; border-color: #fb7185; }
+        .chip-wrap .chip.on + .x { background: rgba(168, 85, 247, .18); }
+
+        .add-row { display: flex; gap: 8px; margin-top: 12px; }
+        .field {
+            flex: 1; min-width: 0; font-family: inherit; font-size: 14.5px; font-weight: 600; padding: 11px 14px; border-radius: 14px;
+            color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); outline: none;
+            transition: border-color .25s, box-shadow .25s;
+        }
+        .field:focus { border-color: #a855f7; box-shadow: 0 0 0 4px var(--gradient-glow); }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            font-family: inherit; font-size: 14.5px; font-weight: 700; padding: 11px 20px; border-radius: 14px;
+            border: none; cursor: pointer; color: #fff; background: var(--gradient-primary);
+            transition: transform .25s, box-shadow .25s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px var(--gradient-glow); }
+        .btn.ghost { color: var(--text-color); background: transparent; border: 1.5px solid var(--section-border); }
+        .btn.danger { color: #fb7185; background: rgba(251, 113, 133, .08); border: 1px solid rgba(251, 113, 133, .4); }
+        .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .dur-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+        .dur-row > label { min-width: 92px; font-size: 14px; font-weight: 700; }
+        .seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 14px; background: var(--bg-color); border: 1px solid var(--border-color); }
+        .seg button {
+            font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 12px; border: none; border-radius: 10px; cursor: pointer;
+            color: var(--text-muted); background: transparent; transition: background .25s, color .25s;
+        }
+        .seg button.on { color: #fff; background: var(--gradient-primary); }
+        .num { width: 76px; text-align: center; flex: none; }
+        .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 6px 0; font-size: 14px; font-weight: 600; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { position: absolute; inset: 0; z-index: 2; margin: 0; opacity: 0; cursor: pointer; }
+        .switch .track { position: absolute; inset: 0; border-radius: 20px; background: var(--border-color); transition: background .25s; }
+        .switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s; }
+        .switch input:checked ~ .track { background: var(--gradient-primary); }
+        .switch input:checked ~ .track::after { transform: translateX(20px); }
+        .switch input:focus-visible ~ .track { outline: 3px solid #22d3ee; outline-offset: 2px; }
+
+        /* ---------- Timer ---------- */
+        .timer-card[data-mode="short"] { --ring-a: #34d399; --ring-b: #06b6d4; }
+        .timer-card[data-mode="long"] { --ring-a: #fbbf24; --ring-b: #f472b6; }
+        .mode-tabs { display: flex; gap: 6px; padding: 5px; margin-bottom: 22px; border-radius: 16px; background: var(--bg-color); border: 1px solid var(--border-color); }
+        .mode-tabs button {
+            flex: 1; font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 10px 6px; border: none; border-radius: 12px; cursor: pointer;
+            color: var(--text-muted); background: transparent; transition: background .25s, color .25s, box-shadow .25s;
+        }
+        .mode-tabs button.on { color: #fff; background: var(--gradient-primary); box-shadow: 0 6px 16px var(--gradient-glow); }
+        .ring { position: relative; width: min(100%, 270px); aspect-ratio: 1; margin: 0 auto 18px; }
+        .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .ring circle { fill: none; stroke-width: 11; }
+        .ring .bg { stroke: var(--border-color); }
+        .ring .fg { transition: stroke-dashoffset .4s linear; }
+        .ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+        .ring-time { font-size: clamp(2.6rem, 9vw, 3.6rem); font-weight: 800; letter-spacing: 1px; font-variant-numeric: tabular-nums; line-height: 1; }
+        .ring-mode { font-size: 14px; font-weight: 700; color: var(--text-muted); }
+        .subject-badge {
+            max-width: 100%; margin: 0 auto 18px; padding: 9px 16px; border-radius: 14px; text-align: center; font-size: 14px; font-weight: 700; line-height: 1.5;
+            background: var(--card-solid); border: 1px solid var(--border-color);
+        }
+        .subject-badge.empty { color: var(--text-muted); border-style: dashed; }
+        .controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .controls .main { min-width: 150px; font-size: 16px; padding: 14px 26px; }
+        .dots { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 18px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+        .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--border-color); transition: background .3s, transform .3s; }
+        .dots i.on { background: var(--bar); transform: scale(1.15); }
+        .msg { min-height: 22px; margin-top: 14px; text-align: center; font-size: 14px; font-weight: 600; line-height: 1.6; color: var(--text-muted); }
+        .kbd { padding: 1px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; background: var(--card-solid); border: 1px solid var(--border-color); }
+
+        /* ---------- Stats ---------- */
+        .card-title { margin: 0 0 18px; font-size: 20px; font-weight: 800; }
+        .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+        .tile { padding: 16px; border-radius: 18px; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .tile small { display: block; margin-bottom: 6px; font-size: 12.5px; font-weight: 700; color: var(--text-muted); }
+        .tile b { font-size: 21px; font-weight: 800; line-height: 1.3; }
+        .goal { margin-bottom: 26px; }
+        .goal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; font-size: 14px; font-weight: 700; }
+        .goal-head select { flex: none; width: auto; padding: 8px 12px; font-size: 13.5px; cursor: pointer; }
+        .progress { height: 12px; border-radius: 12px; overflow: hidden; background: var(--border-color); }
+        .progress span { display: block; height: 100%; width: 0; border-radius: 12px; background: var(--gradient-primary); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+        .goal-note { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+        .stats-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 26px; }
+        .sub-title { margin: 0 0 4px; font-size: 15px; font-weight: 800; }
+        .sub-note { margin: 0 0 14px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); }
+
+        .chart { position: relative; padding-top: 22px; }
+        .chart-area { position: relative; height: 170px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1.5px solid var(--border-color); }
+        .goal-line { position: absolute; left: 0; right: 0; height: 0; border-top: 1.5px dashed var(--text-muted); opacity: .6; pointer-events: none; }
+        .goal-line span { position: absolute; right: 0; bottom: 3px; padding: 0 4px; font-size: 11.5px; font-weight: 700; color: var(--text-muted); background: var(--card-bg); }
+        .bar-col { position: relative; flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; cursor: default; border-radius: 8px; }
+        .bar-col:hover { background: rgba(168, 85, 247, .07); }
+        .bar { width: 62%; max-width: 46px; min-height: 3px; border-radius: 4px 4px 0 0; background: var(--bar-dim); transition: height .6s cubic-bezier(.2,.8,.2,1); }
+        .bar-col.today .bar { background: var(--bar); }
+        .bar-val { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 800; pointer-events: none; }
+        .x-labels { display: flex; gap: 8px; margin-top: 8px; }
+        .x-labels span { flex: 1; text-align: center; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .x-labels span.today { color: var(--text-color); font-weight: 800; }
+        .tip {
+            position: absolute; z-index: 5; padding: 8px 12px; border-radius: 10px; font-size: 12.5px; font-weight: 700; white-space: nowrap; pointer-events: none;
+            color: var(--text-color); background: var(--card-solid); border: 1px solid var(--section-border); box-shadow: 0 10px 24px rgba(0,0,0,.3);
+            opacity: 0; transform: translate(-50%, -100%); transition: opacity .15s;
+        }
+        .tip.show { opacity: 1; }
+
+        .rows { display: flex; flex-direction: column; gap: 12px; }
+        .row .top-line { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px; font-size: 13.5px; font-weight: 700; }
+        .row .top-line span:last-child { color: var(--text-muted); white-space: nowrap; }
+        .row .rail { height: 9px; border-radius: 9px; overflow: hidden; background: var(--border-color); }
+        .row .rail i { display: block; height: 100%; border-radius: 9px; background: var(--bar); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+        .empty-note { padding: 18px; border-radius: 16px; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-muted); background: var(--card-solid); border: 1px dashed var(--border-color); }
+
+        details.table-view { margin-top: 18px; }
+        details.table-view summary { cursor: pointer; font-size: 13.5px; font-weight: 700; color: #a855f7; }
+        table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 13.5px; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { font-weight: 800; color: var(--text-muted); }
+        .stats-foot { display: flex; justify-content: flex-end; margin-top: 22px; }
+
+        .credit-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500;
+            display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #64748b;
+            background: rgba(5, 6, 15, .8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, .06);
+        }
+        [data-theme="light"] .credit-bar { background: rgba(255, 255, 255, .88); color: #475569; border-top-color: rgba(15, 23, 42, .1); }
+        .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg, #22d3ee, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+        @media (max-width: 980px) {
+            .layout { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            body { padding: 12px 12px 54px; }
+            .card { padding: 22px 18px; border-radius: 24px; }
+            .tiles { grid-template-columns: 1fr 1fr; }
+            .back-btn span.long { display: none; }
+            .dur-row > label { min-width: 100%; }
+            .credit-bar { font-size: .7rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+    <div class="grid-bg"></div>
+
+    <div class="wrap">
+        <header class="top">
+            <a class="brand" href="index.html" id="brandLink">
+                <span class="orb"></span>
+                <span><b>Lab Alchemy</b><small>Study Timer</small></span>
+            </a>
+            <div class="top-right">
+                <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+                <a class="back-btn" id="backBtn" href="index.html">← <span class="long" id="backText">হোম</span></a>
+            </div>
+        </header>
+
+        <section class="hero">
+            <span class="pill">⏱ ফোকাস • বিরতি • হিসাব</span>
+            <h1>স্টাডি টাইমার</h1>
+            <p>তোমার শ্রেণি ও বিষয় বেছে নাও, টাইমার চালিয়ে মনোযোগ দিয়ে পড়ো। প্রতিদিন কত সময় পড়লে, তার হিসাব এখানেই থাকবে। যেকোনো শ্রেণির শিক্ষার্থী এটি ব্যবহার করতে পারবে।</p>
+        </section>
+
+        <div class="layout">
+            <!-- সেটআপ -->
+            <section class="card" aria-label="সেটআপ">
+                <div class="block">
+                    <h2 class="step"><span class="n">১</span> তোমার শ্রেণি</h2>
+                    <div class="chips" id="classRow" role="group" aria-label="শ্রেণি"></div>
+                </div>
+
+                <div class="block" id="groupBlock" hidden>
+                    <h2 class="step"><span class="n">২</span> বিভাগ</h2>
+                    <div class="chips" id="groupRow" role="group" aria-label="বিভাগ"></div>
+                </div>
+
+                <div class="block">
+                    <h2 class="step"><span class="n" id="subjN">২</span> এখন কোন বিষয় পড়বে?</h2>
+                    <p class="hint" id="subjHint">বিষয়ের উপর চাপ দিয়ে বেছে নাও। আবার চাপলে বাছাই উঠে যাবে।</p>
+                    <div class="chips" id="subjectRow" role="group" aria-label="বিষয়"></div>
+                    <div class="add-row">
+                        <input class="field" id="customInput" maxlength="30" placeholder="তালিকায় নেই? নিজের বিষয় লেখো" aria-label="নিজের বিষয়ের নাম">
+                        <button type="button" class="btn ghost" id="customAdd">+ যোগ করো</button>
+                    </div>
+                </div>
+
+                <div class="block">
+                    <h2 class="step"><span class="n" id="timeN">৩</span> সময় ঠিক করো</h2>
+                    <div class="dur-row">
+                        <label for="focusNum">ফোকাস (মিনিট)</label>
+                        <div class="seg" id="focusSeg">
+                            <button type="button" data-min="15">১৫</button>
+                            <button type="button" data-min="25">২৫</button>
+                            <button type="button" data-min="45">৪৫</button>
+                            <button type="button" data-min="60">৬০</button>
+                        </div>
+                        <input class="field num" id="focusNum" type="number" min="1" max="180" inputmode="numeric" aria-label="ফোকাস সময় মিনিটে">
+                    </div>
+                    <div class="dur-row">
+                        <label>ছোট বিরতি</label>
+                        <div class="seg" id="shortSeg">
+                            <button type="button" data-min="5">৫</button>
+                            <button type="button" data-min="10">১০</button>
+                        </div>
+                    </div>
+                    <div class="dur-row">
+                        <label>লম্বা বিরতি</label>
+                        <div class="seg" id="longSeg">
+                            <button type="button" data-min="15">১৫</button>
+                            <button type="button" data-min="20">২০</button>
+                            <button type="button" data-min="30">৩০</button>
+                        </div>
+                    </div>
+                    <p class="hint" style="margin:6px 0 0;">প্রতি ৪টি ফোকাস সেশনের পর লম্বা বিরতি নেওয়া ভালো।</p>
+                </div>
+
+                <div class="block">
+                    <div class="switch-row"><span>সেশন শেষে শব্দ বাজাও 🔔</span><label class="switch"><input type="checkbox" id="soundSw" aria-label="শব্দ বাজাও"><span class="track"></span></label></div>
+                </div>
+            </section>
+
+            <!-- টাইমার -->
+            <section class="card timer-card" id="timerCard" data-mode="focus" aria-label="টাইমার">
+                <div class="mode-tabs" id="modeTabs" role="group" aria-label="মোড">
+                    <button type="button" data-mode="focus" class="on">ফোকাস</button>
+                    <button type="button" data-mode="short">ছোট বিরতি</button>
+                    <button type="button" data-mode="long">লম্বা বিরতি</button>
+                </div>
+
+                <div class="ring">
+                    <svg viewBox="0 0 220 220" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" style="stop-color: var(--ring-a)"/>
+                                <stop offset="1" style="stop-color: var(--ring-b)"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="bg" cx="110" cy="110" r="100"/>
+                        <circle class="fg" id="ringFg" cx="110" cy="110" r="100" stroke="url(#ringGrad)" stroke-linecap="round" stroke-dasharray="628.319" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="ring-text">
+                        <span class="ring-time" id="ringTime" role="timer">২৫:০০</span>
+                        <span class="ring-mode" id="ringMode">ফোকাস</span>
+                    </div>
+                </div>
+
+                <div class="subject-badge empty" id="subjectBadge">📚 বিষয় বাছাই করা হয়নি</div>
+
+                <div class="controls">
+                    <button type="button" class="btn main" id="startBtn">▶ শুরু</button>
+                    <button type="button" class="btn ghost" id="resetBtn" title="এই সেশন আবার শুরু থেকে">↺ রিসেট</button>
+                    <button type="button" class="btn ghost" id="finishBtn" title="এতক্ষণ যা পড়েছো তা জমা দাও" disabled>✔ শেষ করে জমা দাও</button>
+                </div>
+
+                <div class="dots" id="dots" aria-label="সম্পন্ন ফোকাস সেশন"><i></i><i></i><i></i><i></i><span id="dotsText"></span></div>
+                <div class="msg" id="msg" aria-live="polite"></div>
+                <div class="msg" style="margin-top:0; font-size:12.5px;">কিবোর্ডে <span class="kbd">Space</span> চাপলে শুরু/থামাও হবে</div>
+            </section>
+        </div>
+
+        <!-- হিসাব -->
+        <section class="card" aria-label="পড়ার হিসাব">
+            <h2 class="card-title">📊 আমার পড়ার হিসাব</h2>
+
+            <div class="tiles">
+                <div class="tile"><small>আজ মোট</small><b id="tToday">০ মি</b></div>
+                <div class="tile"><small>আজকের সেশন</small><b id="tSessions">০টি</b></div>
+                <div class="tile"><small>টানা পড়ার দিন</small><b id="tStreak">০ দিন</b></div>
+                <div class="tile"><small>গত ৭ দিনে</small><b id="tWeek">০ মি</b></div>
+            </div>
+
+            <div class="goal">
+                <div class="goal-head">
+                    <span id="goalText">আজকের লক্ষ্য</span>
+                    <select class="field" id="goalSel" aria-label="দৈনিক লক্ষ্য">
+                        <option value="30">লক্ষ্য: ৩০ মি</option>
+                        <option value="60">লক্ষ্য: ১ ঘণ্টা</option>
+                        <option value="90">লক্ষ্য: ১ ঘণ্টা ৩০ মি</option>
+                        <option value="120">লক্ষ্য: ২ ঘণ্টা</option>
+                        <option value="180">লক্ষ্য: ৩ ঘণ্টা</option>
+                        <option value="240">লক্ষ্য: ৪ ঘণ্টা</option>
+                        <option value="360">লক্ষ্য: ৬ ঘণ্টা</option>
+                    </select>
+                </div>
+                <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="goalBar"><span id="goalFill"></span></div>
+                <div class="goal-note" id="goalNote"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div>
+                    <h3 class="sub-title">গত ৭ দিনের পড়া (মিনিট)</h3>
+                    <p class="sub-note">বারের উপর মাউস রাখলে বা ট্যাব করলে সময় দেখা যাবে। ড্যাশ দেওয়া রেখাটি তোমার দৈনিক লক্ষ্য।</p>
+                    <div class="chart" id="chart">
+                        <div class="chart-area" id="chartArea"></div>
+                        <div class="x-labels" id="xLabels"></div>
+                        <div class="tip" id="tip"></div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="sub-title">আজ কোন বিষয়ে কত সময়</h3>
+                    <p class="sub-note">আজকের জমা হওয়া সময়ের ভাগ।</p>
+                    <div class="rows" id="rows"></div>
+                </div>
+            </div>
+
+            <details class="table-view">
+                <summary>টেবিল হিসেবে দেখো</summary>
+                <table>
+                    <thead><tr><th>দিন</th><th>মোট সময়</th><th>সেশন</th></tr></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </details>
+
+            <div class="stats-foot"><button type="button" class="btn danger" id="clearLog">সব হিসাব মুছে ফেলো</button></div>
+        </section>
+    </div>
+
+    <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+    <script src="auth.js"></script>
+    <script>
+        /* ---------- Helpers ---------- */
+        const $ = id => document.getElementById(id);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const pad2 = n => (n < 10 ? '০' : '') + bn(n);
+        const sget = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+        const sset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+        /* লগইন থাকলে ড্যাশবোর্ডে ফেরার লিংক; না থাকলেও পেজটি সবার জন্য খোলা */
+        let UKEY = 'guest', loggedIn = false;
+        try {
+            if (typeof Auth !== 'undefined') {
+                const u = Auth.currentUser();
+                if (u) { UKEY = u.username; loggedIn = true; }
+            }
+        } catch (e) {}
+        if (loggedIn) {
+            $('brandLink').href = 'dashboard.html';
+            $('backBtn').href = 'dashboard.html';
+            $('backText').textContent = 'ড্যাশবোর্ড';
+        }
+        const SET_KEY = 'labAlchemyStudySettings:' + UKEY;
+        const LOG_KEY = 'labAlchemyStudyLog:' + UKEY;
+
+        /* ---------- থিম ---------- */
+        $('themeBtn').addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        /* ---------- শ্রেণি ও বিষয়ের তালিকা ---------- */
+        const CLASSES = [['6', 'ষষ্ঠ'], ['7', 'সপ্তম'], ['8', 'অষ্টম'], ['9', 'নবম'], ['10', 'দশম'], ['11', 'একাদশ'], ['12', 'দ্বাদশ'], ['admission', 'ভর্তি প্রস্তুতি'], ['other', 'অন্যান্য']];
+        const GROUPS = [['sci', 'বিজ্ঞান'], ['hum', 'মানবিক'], ['bus', 'ব্যবসায় শিক্ষা']];
+        const HAS_GROUP = ['9', '10', '11', '12'];
+        const JUNIOR = ['বাংলা', 'ইংরেজি', 'গণিত', 'বিজ্ঞান', 'বাংলাদেশ ও বিশ্বপরিচয়', 'ধর্ম ও নৈতিক শিক্ষা', 'তথ্য ও যোগাযোগ প্রযুক্তি', 'জীবন ও জীবিকা'];
+        const SSC = {
+            sci: ['বাংলা', 'ইংরেজি', 'গণিত', 'পদার্থবিজ্ঞান', 'রসায়ন', 'জীববিজ্ঞান', 'উচ্চতর গণিত', 'তথ্য ও যোগাযোগ প্রযুক্তি', 'ধর্ম ও নৈতিক শিক্ষা', 'বাংলাদেশ ও বিশ্বপরিচয়'],
+            hum: ['বাংলা', 'ইংরেজি', 'গণিত', 'ইতিহাস ও বিশ্বসভ্যতা', 'ভূগোল ও পরিবেশ', 'পৌরনীতি ও নাগরিকতা', 'অর্থনীতি', 'সাধারণ বিজ্ঞান', 'তথ্য ও যোগাযোগ প্রযুক্তি', 'ধর্ম ও নৈতিক শিক্ষা'],
+            bus: ['বাংলা', 'ইংরেজি', 'গণিত', 'হিসাববিজ্ঞান', 'ব্যবসায় উদ্যোগ', 'ফিন্যান্স ও ব্যাংকিং', 'সাধারণ বিজ্ঞান', 'তথ্য ও যোগাযোগ প্রযুক্তি', 'ধর্ম ও নৈতিক শিক্ষা']
+        };
+        const HSC = {
+            sci: ['বাংলা', 'ইংরেজি', 'তথ্য ও যোগাযোগ প্রযুক্তি', 'পদার্থবিজ্ঞান', 'রসায়ন', 'জীববিজ্ঞান', 'উচ্চতর গণিত'],
+            hum: ['বাংলা', 'ইংরেজি', 'তথ্য ও যোগাযোগ প্রযুক্তি', 'অর্থনীতি', 'পৌরনীতি ও সুশাসন', 'যুক্তিবিদ্যা', 'সমাজবিজ্ঞান', 'ইতিহাস', 'ভূগোল', 'ইসলামের ইতিহাস ও সংস্কৃতি'],
+            bus: ['বাংলা', 'ইংরেজি', 'তথ্য ও যোগাযোগ প্রযুক্তি', 'হিসাববিজ্ঞান', 'ব্যবসায় সংগঠন ও ব্যবস্থাপনা', 'ফিন্যান্স, ব্যাংকিং ও বিমা', 'উৎপাদন ব্যবস্থাপনা ও বিপণন']
+        };
+        const ADMISSION = ['বাংলা', 'ইংরেজি', 'গণিত', 'পদার্থবিজ্ঞান', 'রসায়ন', 'জীববিজ্ঞান', 'সাধারণ জ্ঞান', 'বিশ্লেষণী দক্ষতা'];
+
+        function baseSubjects() {
+            const c = st.cls;
+            if (c === '6' || c === '7' || c === '8') return JUNIOR;
+            if (c === '9' || c === '10') return SSC[st.group] || [];
+            if (c === '11' || c === '12') return HSC[st.group] || [];
+            if (c === 'admission') return ADMISSION;
+            return [];
+        }
+
+        /* ---------- সেটিংস ---------- */
+        let st = Object.assign({ cls: '10', group: 'sci', subject: '', custom: [], focus: 25, short: 5, long: 15, goal: 120, sound: true }, sget(SET_KEY, {}));
+        const save = () => sset(SET_KEY, st);
+
+        function chip(label, on, onClick) {
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'chip' + (on ? ' on' : ''); b.textContent = label;
+            b.setAttribute('aria-pressed', String(on));
+            b.addEventListener('click', onClick);
+            return b;
+        }
+
+        function renderClasses() {
+            const row = $('classRow'); row.replaceChildren();
+            CLASSES.forEach(([id, label]) => row.appendChild(chip(label + (/^\d+$/.test(id) ? ' শ্রেণি' : ''), st.cls === id, () => {
+                st.cls = id; keepSubjectValid(); save(); renderAll();
+            })));
+        }
+        function renderGroups() {
+            const need = HAS_GROUP.includes(st.cls);
+            $('groupBlock').hidden = !need;
+            $('subjN').textContent = need ? '৩' : '২';
+            $('timeN').textContent = need ? '৪' : '৩';
+            const row = $('groupRow'); row.replaceChildren();
+            GROUPS.forEach(([id, label]) => row.appendChild(chip(label, st.group === id, () => {
+                st.group = id; keepSubjectValid(); save(); renderAll();
+            })));
+        }
+        function keepSubjectValid() {
+            if (st.subject && !baseSubjects().includes(st.subject) && !st.custom.includes(st.subject)) st.subject = '';
+        }
+        function renderSubjects() {
+            const row = $('subjectRow'); row.replaceChildren();
+            const base = baseSubjects();
+            base.forEach(name => row.appendChild(chip(name, st.subject === name, () => {
+                st.subject = (st.subject === name) ? '' : name; save(); renderSubjects(); renderBadge();
+            })));
+            st.custom.forEach(name => {
+                const wrap = document.createElement('span'); wrap.className = 'chip-wrap';
+                wrap.appendChild(chip('★ ' + name, st.subject === name, () => {
+                    st.subject = (st.subject === name) ? '' : name; save(); renderSubjects(); renderBadge();
+                }));
+                const x = document.createElement('button');
+                x.type = 'button'; x.className = 'x'; x.textContent = '✕';
+                x.setAttribute('aria-label', name + ' বিষয়টি তালিকা থেকে সরাও'); x.title = 'তালিকা থেকে সরাও';
+                x.addEventListener('click', () => {
+                    st.custom = st.custom.filter(c => c !== name);
+                    if (st.subject === name) st.subject = '';
+                    save(); renderSubjects(); renderBadge();
+                });
+                wrap.appendChild(x); row.appendChild(wrap);
+            });
+            if (!base.length && !st.custom.length) {
+                const p = document.createElement('p'); p.className = 'hint'; p.style.margin = '0';
+                p.textContent = 'নিচের ঘরে নিজের বিষয়ের নাম লিখে যোগ করো।';
+                row.appendChild(p);
+            }
+        }
+        function classLabel() {
+            const c = CLASSES.find(x => x[0] === st.cls); if (!c) return '';
+            let t = c[1] + (/^\d+$/.test(c[0]) ? ' শ্রেণি' : '');
+            if (HAS_GROUP.includes(st.cls)) t += ' (' + GROUPS.find(g => g[0] === st.group)[1] + ')';
+            return t;
+        }
+        function renderBadge() {
+            const el = $('subjectBadge');
+            if (st.subject) { el.className = 'subject-badge'; el.textContent = '📚 ' + st.subject + ' · ' + classLabel(); }
+            else { el.className = 'subject-badge empty'; el.textContent = '📚 বিষয় বাছাই করা হয়নি'; }
+        }
+
+        $('customAdd').addEventListener('click', addCustom);
+        $('customInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addCustom(); } });
+        function addCustom() {
+            const v = $('customInput').value.trim().replace(/\s+/g, ' ');
+            if (v.length < 2) { $('customInput').focus(); return; }
+            if (!st.custom.includes(v) && !baseSubjects().includes(v)) {
+                if (st.custom.length >= 12) { setMsg('সর্বোচ্চ ১২টি নিজের বিষয় রাখা যায়। আগে একটি সরাও।'); return; }
+                st.custom.push(v);
+            }
+            st.subject = v; $('customInput').value = '';
+            save(); renderSubjects(); renderBadge();
+        }
+
+        /* ---------- সময়ের অপশন ---------- */
+        function syncDur() {
+            [['focusSeg', 'focus'], ['shortSeg', 'short'], ['longSeg', 'long']].forEach(([id, key]) => {
+                $(id).querySelectorAll('button').forEach(b => b.classList.toggle('on', parseInt(b.dataset.min, 10) === st[key]));
+            });
+            $('focusNum').value = st.focus;
+            $('soundSw').checked = !!st.sound;
+            $('goalSel').value = String(st.goal);
+            if (![...$('goalSel').options].some(o => o.value === String(st.goal))) $('goalSel').value = '120';
+        }
+        function setDur(key, min) {
+            min = Math.max(1, Math.min(180, parseInt(min, 10) || st[key]));
+            st[key] = min; save(); syncDur();
+            const affects = (key === 'focus' && tMode === 'focus') || (key === 'short' && tMode === 'short') || (key === 'long' && tMode === 'long');
+            if (affects) {
+                if (tRun) setMsg('নতুন সময় এই সেশন শেষ হওয়ার পর থেকে কার্যকর হবে।');
+                else setMode(tMode);
+            }
+        }
+        [['focusSeg', 'focus'], ['shortSeg', 'short'], ['longSeg', 'long']].forEach(([id, key]) => {
+            $(id).querySelectorAll('button').forEach(b => b.addEventListener('click', () => setDur(key, b.dataset.min)));
+        });
+        $('focusNum').addEventListener('change', e => setDur('focus', e.target.value));
+        $('soundSw').addEventListener('change', e => { st.sound = e.target.checked; save(); });
+        $('goalSel').addEventListener('change', e => { st.goal = parseInt(e.target.value, 10); save(); renderStats(); });
+
+        /* ---------- হিসাবের ডেটা ---------- */
+        const dkey = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        const readLog = () => sget(LOG_KEY, {});
+        function dayTotal(day) { return day ? Object.values(day.subjects || {}).reduce((a, b) => a + b, 0) : 0; }
+        function addStudy(seconds, countSession) {
+            const log = readLog(), k = dkey(new Date());
+            const day = log[k] || { subjects: {}, sessions: 0 };
+            const name = st.subject || 'সাধারণ পড়া';
+            day.subjects[name] = (day.subjects[name] || 0) + seconds;
+            if (countSession) day.sessions += 1;
+            log[k] = day; sset(LOG_KEY, log);
+        }
+        function fmtDur(sec) {
+            const m = Math.floor(sec / 60), h = Math.floor(m / 60);
+            if (h) return bn(h) + ' ঘ' + (m % 60 ? ' ' + bn(m % 60) + ' মি' : '');
+            if (m) return bn(m) + ' মি';
+            return sec > 0 ? bn(sec) + ' সে' : '০ মি';
+        }
+        const WEEKDAYS = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহ', 'শুক্র', 'শনি'];
+
+        function renderStats() {
+            const log = readLog(), now = new Date();
+            const today = log[dkey(now)];
+            const todaySec = dayTotal(today);
+            const days = [];
+            for (let i = 6; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i); days.push({ d, k: dkey(d), sec: dayTotal(log[dkey(d)]), n: (log[dkey(d)] || {}).sessions || 0 }); }
+            const weekSec = days.reduce((a, b) => a + b.sec, 0);
+
+            let streak = 0;
+            for (let i = 0; i < 400; i++) {
+                const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+                if (dayTotal(log[dkey(d)]) > 0) streak++;
+                else if (i === 0) continue;
+                else break;
+            }
+
+            $('tToday').textContent = fmtDur(todaySec);
+            $('tSessions').textContent = bn(today ? today.sessions : 0) + 'টি';
+            $('tStreak').textContent = bn(streak) + ' দিন';
+            $('tWeek').textContent = fmtDur(weekSec);
+
+            /* লক্ষ্য */
+            const pct = Math.min(100, Math.round(todaySec / (st.goal * 60) * 100));
+            $('goalText').textContent = 'আজকের লক্ষ্য: ' + fmtDur(st.goal * 60);
+            $('goalFill').style.width = pct + '%';
+            $('goalBar').setAttribute('aria-valuenow', String(pct));
+            $('goalNote').textContent = pct >= 100 ? '🎉 অভিনন্দন! আজকের লক্ষ্য পূরণ হয়েছে।' : 'এখন পর্যন্ত ' + fmtDur(todaySec) + ' পড়েছো (' + bn(pct) + '% হয়েছে)।';
+
+            /* সাপ্তাহিক বার চার্ট: এক রঙ, আজকের বার গাঢ়, শুধু আজ ও সেরা দিনে মান লেখা */
+            const maxMin = Math.max(...days.map(x => x.sec / 60));
+            const scale = Math.max(st.goal, maxMin, 30) * 1.12;
+            const area = $('chartArea'); area.replaceChildren();
+            $('xLabels').replaceChildren();
+            const bestIdx = maxMin > 0 ? days.findIndex(x => x.sec / 60 === maxMin) : -1;
+            const gl = document.createElement('div'); gl.className = 'goal-line'; gl.style.bottom = (st.goal / scale * 100) + '%';
+            const gs = document.createElement('span'); gs.textContent = 'লক্ষ্য'; gl.appendChild(gs); area.appendChild(gl);
+            days.forEach((x, i) => {
+                const min = Math.round(x.sec / 60);
+                const col = document.createElement('div');
+                col.className = 'bar-col' + (i === 6 ? ' today' : '');
+                col.tabIndex = 0; col.setAttribute('role', 'img');
+                const dayName = (i === 6 ? 'আজ' : WEEKDAYS[x.d.getDay()]);
+                const text = dayName + ': ' + (x.sec ? fmtDur(x.sec) : 'পড়া হয়নি');
+                col.setAttribute('aria-label', text);
+                const bar = document.createElement('div'); bar.className = 'bar';
+                bar.style.height = reduceMotion ? (min / scale * 100) + '%' : '0%';
+                col.appendChild(bar);
+                if (x.sec > 0 && (i === 6 || i === bestIdx)) {
+                    const v = document.createElement('span'); v.className = 'bar-val'; v.textContent = bn(min);
+                    v.style.bottom = 'calc(' + (min / scale * 100) + '% + 4px)'; col.appendChild(v);
+                }
+                const show = () => showTip(col, text), hide = () => $('tip').classList.remove('show');
+                col.addEventListener('mouseenter', show); col.addEventListener('focus', show);
+                col.addEventListener('mouseleave', hide); col.addEventListener('blur', hide);
+                area.appendChild(col);
+                const lab = document.createElement('span'); lab.textContent = dayName; if (i === 6) lab.className = 'today';
+                $('xLabels').appendChild(lab);
+                if (!reduceMotion) requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.height = (min / scale * 100) + '%'; }));
+            });
+
+            /* আজকের বিষয়ভিত্তিক ভাগ */
+            const rows = $('rows'); rows.replaceChildren();
+            const subj = today ? Object.entries(today.subjects).sort((a, b) => b[1] - a[1]) : [];
+            if (!subj.length) {
+                const p = document.createElement('div'); p.className = 'empty-note';
+                p.textContent = 'আজ এখনো কোনো সময় জমা হয়নি। একটি ফোকাস সেশন শেষ করলেই এখানে দেখা যাবে।';
+                rows.appendChild(p);
+            }
+            subj.forEach(([name, sec]) => {
+                const r = document.createElement('div'); r.className = 'row';
+                const t = document.createElement('div'); t.className = 'top-line';
+                const a = document.createElement('span'); a.textContent = name;
+                const b = document.createElement('span'); b.textContent = fmtDur(sec) + ' · ' + bn(Math.round(sec / todaySec * 100)) + '%';
+                t.append(a, b);
+                const rail = document.createElement('div'); rail.className = 'rail';
+                const i = document.createElement('i'); i.style.width = Math.max(3, sec / todaySec * 100) + '%'; rail.appendChild(i);
+                r.append(t, rail); rows.appendChild(r);
+            });
+
+            /* টেবিল ভিউ */
+            const tb = $('tableBody'); tb.replaceChildren();
+            days.slice().reverse().forEach((x, i) => {
+                const tr = document.createElement('tr');
+                [(i === 0 ? 'আজ' : WEEKDAYS[x.d.getDay()] + ', ' + bn(x.d.getDate()) + '/' + bn(x.d.getMonth() + 1)), x.sec ? fmtDur(x.sec) : '—', bn(x.n)].forEach(c => { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+                tb.appendChild(tr);
+            });
+        }
+        function showTip(col, text) {
+            const tip = $('tip'), chart = $('chart');
+            tip.textContent = text;
+            const c = col.getBoundingClientRect(), p = chart.getBoundingClientRect();
+            tip.style.left = Math.max(60, Math.min(p.width - 60, c.left - p.left + c.width / 2)) + 'px';
+            tip.style.top = '14px';
+            tip.classList.add('show');
+        }
+        $('clearLog').addEventListener('click', () => {
+            if (!confirm('পড়ার সব হিসাব মুছে যাবে। তোমার বাছাই করা শ্রেণি ও বিষয় থাকবে। চালিয়ে যাবে?')) return;
+            try { localStorage.removeItem(LOG_KEY); } catch (e) {}
+            renderStats(); setMsg('হিসাব মুছে ফেলা হয়েছে।');
+        });
+
+        /* ---------- টাইমার ---------- */
+        const RING_C = 2 * Math.PI * 100;
+        const baseTitle = document.title;
+        const MODE_NAME = { focus: 'ফোকাস', short: 'ছোট বিরতি', long: 'লম্বা বিরতি' };
+        let tMode = 'focus', tTotal = st.focus * 60, tLeft = tTotal, tRun = false, tEnd = 0, tInt = null, cycle = 0;
+        const modeSec = m => (m === 'focus' ? st.focus : m === 'short' ? st.short : st.long) * 60;
+
+        function setMsg(t) { $('msg').textContent = t || ''; }
+        function paintTimer() {
+            const txt = pad2(Math.floor(tLeft / 60)) + ':' + pad2(tLeft % 60);
+            $('ringTime').textContent = txt;
+            $('ringMode').textContent = MODE_NAME[tMode];
+            $('ringFg').style.strokeDashoffset = String(RING_C * (1 - tLeft / tTotal));
+            $('timerCard').dataset.mode = tMode;
+            document.querySelectorAll('#modeTabs button').forEach(b => b.classList.toggle('on', b.dataset.mode === tMode));
+            $('startBtn').textContent = tRun ? '⏸ থামাও' : (tLeft < tTotal ? '▶ চালিয়ে যাও' : '▶ শুরু');
+            const elapsed = tTotal - tLeft;
+            $('finishBtn').disabled = !(tMode === 'focus' && elapsed >= 60);
+            document.querySelectorAll('#dots i').forEach((d, i) => d.classList.toggle('on', i < (cycle % 4 === 0 && cycle > 0 ? 4 : cycle % 4)));
+            $('dotsText').textContent = cycle ? bn(cycle) + 'টি সেশন সম্পন্ন' : 'এখনো কোনো সেশন সম্পন্ন হয়নি';
+            document.title = tRun ? '⏱ ' + txt + ' · ' + MODE_NAME[tMode] + ' | স্টাডি টাইমার' : baseTitle;
+        }
+        function stopTimer() { tRun = false; clearInterval(tInt); tInt = null; }
+        function setMode(m) { stopTimer(); tMode = m; tTotal = modeSec(m); tLeft = tTotal; paintTimer(); }
+        function startTimer() {
+            if (tLeft <= 0) tLeft = tTotal;
+            tRun = true; tEnd = Date.now() + tLeft * 1000;
+            tInt = setInterval(tick, 250);
+            setMsg(tMode === 'focus' ? (st.subject ? st.subject + ' পড়ার সময়। ফোনটা একটু দূরে রাখো! 📵' : 'মনোযোগ দাও! ফোনটা একটু দূরে রাখো। 📵') : 'একটু বিশ্রাম নাও, পানি খাও। 💧');
+            paintTimer();
+        }
+        function pauseTimer() { tLeft = Math.max(0, Math.ceil((tEnd - Date.now()) / 1000)); stopTimer(); setMsg('থামানো আছে।'); paintTimer(); }
+        function beep() {
+            if (!st.sound) return;
+            try {
+                const C = window.AudioContext || window.webkitAudioContext; const ac = new C();
+                [0, .28, .56].forEach(t => {
+                    const o = ac.createOscillator(), g = ac.createGain();
+                    o.frequency.value = 880; o.connect(g); g.connect(ac.destination);
+                    g.gain.setValueAtTime(.0001, ac.currentTime + t);
+                    g.gain.exponentialRampToValueAtTime(.25, ac.currentTime + t + .02);
+                    g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + t + .22);
+                    o.start(ac.currentTime + t); o.stop(ac.currentTime + t + .25);
+                });
+            } catch (e) {}
+        }
+        function afterFocusNextMode() { return (cycle > 0 && cycle % 4 === 0) ? 'long' : 'short'; }
+        function finishTimer() {
+            const was = tMode;
+            beep();
+            if (was === 'focus') {
+                addStudy(tTotal, true); cycle++;
+                const next = afterFocusNextMode();
+                setMode(next);
+                setMsg('🎉 সেশন শেষ! ' + fmtDur(modeSec('focus')) + ' জমা হয়েছে। এবার ' + MODE_NAME[next] + ' নাও।');
+                renderStats();
+            } else {
+                setMode('focus');
+                setMsg('⏰ বিরতি শেষ! আবার পড়ায় ফেরো।');
+            }
+        }
+        function tick() {
+            tLeft = Math.max(0, Math.ceil((tEnd - Date.now()) / 1000));
+            if (tLeft <= 0) { finishTimer(); return; }
+            paintTimer();
+        }
+        function finishEarly() {
+            if (tRun) { tLeft = Math.max(0, Math.ceil((tEnd - Date.now()) / 1000)); }
+            const elapsed = tTotal - tLeft;
+            if (tMode !== 'focus' || elapsed < 60) { setMsg('কমপক্ষে ১ মিনিট পড়লে তবেই জমা হয়।'); return; }
+            stopTimer();
+            addStudy(elapsed, false);
+            setMode('short');
+            setMsg('✅ ' + fmtDur(elapsed) + ' জমা হয়েছে। এবার একটু বিরতি নাও।');
+            renderStats();
+        }
+        $('startBtn').addEventListener('click', () => { tRun ? pauseTimer() : startTimer(); });
+        $('resetBtn').addEventListener('click', () => { setMode(tMode); setMsg(''); });
+        $('finishBtn').addEventListener('click', finishEarly);
+        document.querySelectorAll('#modeTabs button').forEach(b => b.addEventListener('click', () => {
+            if (tRun && !confirm('টাইমার চলছে। মোড বদলালে এই সেশন বাতিল হবে। বদলাবে?')) return;
+            setMode(b.dataset.mode); setMsg('');
+        }));
+        document.addEventListener('keydown', e => {
+            if (e.code === 'Space' && document.activeElement === document.body) { e.preventDefault(); tRun ? pauseTimer() : startTimer(); }
+        });
+        window.addEventListener('beforeunload', e => { if (tRun) { e.preventDefault(); e.returnValue = ''; } });
+
+        /* ---------- শুরু ---------- */
+        function renderAll() { renderClasses(); renderGroups(); renderSubjects(); renderBadge(); }
+        keepSubjectValid(); renderAll(); syncDur(); setMode('focus'); renderStats();
+        window.addEventListener('resize', () => $('tip').classList.remove('show'));
+    </script>
+</body>
+</html>

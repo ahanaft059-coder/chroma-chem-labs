@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05060f">
+    <title>Lab Alchemy - রসায়ন ড্যাশবোর্ড</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Theme: saved theme na thakle dark (login/welcome page er sathe mile) -->
+    <script>
+        (function () {
+            let savedTheme = 'dark';
+            try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (savedTheme === 'auto') {
+                savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            }
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <!-- Login guard: logged-in na thakle login page e pathiye dey -->
+    <script src="auth.js"></script>
+    <script>
+        const AUTH_OK = (typeof Auth !== 'undefined');
+        const ME = AUTH_OK ? Auth.currentUser() : null;
+        if (AUTH_OK && !ME) {
+            document.documentElement.style.display = 'none';
+            window.location.replace('login.html');
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #eef2f9;
+            --card-bg: rgba(255, 255, 255, 0.72);
+            --card-solid: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: rgba(15, 23, 42, 0.1);
+            --shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+            --section-border: rgba(168, 85, 247, 0.28);
+            --gradient-primary: linear-gradient(135deg, #9333ea, #3b82f6);
+            --gradient-glow: rgba(147, 51, 234, 0.18);
+            --grid-line: rgba(15, 23, 42, 0.05);
+            --blob-opacity: 0.22;
+            --cyan: #06b6d4;
+            --purple: #a855f7;
+            --pink: #f472b6;
+        }
+        [data-theme="dark"] {
+            --bg-color: #05060f;
+            --card-bg: rgba(16, 20, 36, 0.62);
+            --card-solid: #0b0f1c;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            --section-border: rgba(168, 85, 247, 0.35);
+            --gradient-primary: linear-gradient(135deg, #a855f7, #60a5fa);
+            --gradient-glow: rgba(168, 85, 247, 0.28);
+            --grid-line: rgba(255, 255, 255, 0.035);
+            --blob-opacity: 0.42;
+            --cyan: #22d3ee;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Hind Siliguri', 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 20px 34px;
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease, opacity .45s ease, transform .45s ease, filter .45s ease;
+            position: relative;
+            overflow-x: hidden;
+            animation: pageIn .7s ease both;
+        }
+        body.leaving { opacity: 0; transform: scale(1.03); filter: blur(8px); }
+        /* filter ব্যবহার করা যাবে না: body তে filter থাকলে position:fixed জিনিস স্ক্রিনে না ভেসে পেজের নিচে চলে যায় */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ---------- Background layers ---------- */
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 24s ease-in-out infinite alternate; transition: opacity .4s; }
+        .b1 { width: 520px; height: 520px; background: #0891b2; top: -140px; left: -120px; }
+        .b2 { width: 620px; height: 620px; background: #7e22ce; bottom: -220px; right: -170px; animation-duration: 30s; }
+        .b3 { width: 380px; height: 380px; background: #be185d; top: 45%; left: 42%; opacity: calc(var(--blob-opacity) * .5); animation-duration: 34s; }
+        @keyframes drift { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(70px,50px) scale(1.15); } }
+
+        .grid-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 52px 52px;
+            -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+                    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+        }
+
+        #particle-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+        .cursor-glow {
+            position: fixed; z-index: 0; pointer-events: none;
+            width: 460px; height: 460px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(34,211,238,.13), transparent 65%);
+            transform: translate(-50%, -50%);
+            left: 50%; top: 50%;
+        }
+
+        /* ব্যাকগ্রাউন্ড ডেকোরেটিভ ইলিমেন্টস */
+        .chem-bg-elements { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.1; }
+        [data-theme="dark"] .chem-bg-elements { opacity: 0.14; }
+        .chem-item { position: absolute; color: #00f2fe; font-size: 28px; user-select: none; animation: floatSlow 12s ease-in-out infinite alternate; }
+        @keyframes floatSlow {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(15deg); }
+        }
+        .chem-item:nth-child(1) { top: 12%; left: 6%; font-size: 45px; }
+        .chem-item:nth-child(2) { top: 45%; left: 3%; font-size: 35px; color: #38bdf8; }
+        .chem-item:nth-child(3) { top: 18%; right: 6%; font-size: 50px; color: #a855f7; }
+        .chem-item:nth-child(4) { top: 78%; right: 10%; font-size: 40px; color: #34d399; }
+
+        .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* ---------- Scroll reveal ---------- */
+        .reveal { opacity: 0; translate: 0 30px; transition: opacity .7s ease, translate .7s ease; }
+        .reveal.in { opacity: 1; translate: 0 0; }
+
+        /* ---------- Header ---------- */
+        header {
+            position: sticky; top: 12px; z-index: 60;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px;
+            padding: 14px 24px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            flex-wrap: wrap; gap: 16px;
+        }
+        .logo-area { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+        .logo-icon-box { display: flex; align-items: center; gap: 4px; filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.6)); }
+        .logo-text h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-color); }
+        .logo-text span { font-size: 12px; color: #a855f7; font-weight: 700; letter-spacing: 0.5px; display: block; margin-top: 2px; }
+
+        .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        .nav-links li a {
+            text-decoration: none; color: var(--text-muted); font-size: 15px; font-weight: 600; cursor: pointer; position: relative;
+            transition: color .3s;
+        }
+        .nav-links li a::after {
+            content: ''; position: absolute; bottom: -6px; left: 0; width: 0; height: 2px; background: var(--gradient-primary); border-radius: 2px; transition: width 0.3s;
+        }
+        .nav-links li a:hover, .nav-links li a.active-nav { color: #a855f7; }
+        .nav-links li a:hover::after, .nav-links li a.active-nav::after { width: 100%; }
+
+        .header-right { display: flex; align-items: center; gap: 10px; }
+        .nav-calendar {
+            background: var(--card-solid); border: 1px solid var(--border-color); padding: 9px 16px;
+            border-radius: 16px; display: flex; align-items: center; gap: 8px; font-size: 13px;
+            font-weight: 700; color: #34d399; cursor: pointer; transition: transform .25s, box-shadow .25s;
+        }
+        .nav-calendar:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(52, 211, 153, .2); }
+        .theme-btn {
+            background: var(--card-solid); color: var(--text-color); border: 1px solid var(--border-color);
+            width: 42px; height: 42px; border-radius: 16px; cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center; transition: transform .4s, box-shadow .3s;
+        }
+        .theme-btn:hover { transform: rotate(180deg); box-shadow: 0 8px 22px var(--gradient-glow); }
+
+        .user-chip {
+            display: flex; align-items: center; gap: 10px;
+            padding: 4px 14px 4px 4px;
+            border-radius: 50px;
+            background: var(--card-solid); border: 1px solid var(--border-color);
+            font-size: 14px; font-weight: 600;
+        }
+        .avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 15px; color: #fff;
+            background: linear-gradient(135deg, #0891b2, #7e22ce);
+        }
+        .logout-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: inherit; font-size: 14px; font-weight: 700; color: #fb7185;
+            padding: 10px 16px; border-radius: 16px; cursor: pointer;
+            background: rgba(251,113,133,.08);
+            border: 1px solid rgba(251,113,133,.35);
+            transition: all .3s;
+        }
+        .logout-btn:hover { background: rgba(251,113,133,.2); transform: translateY(-2px); }
+
+        /* ---------- Welcome banner ---------- */
+        .unique-welcome-banner {
+            background: var(--card-bg);
+            border: 1.5px solid var(--section-border);
+            border-radius: 28px;
+            padding: 38px 46px;
+            margin-bottom: 35px;
+            box-shadow: var(--shadow);
+            display: flex; align-items: center; justify-content: space-between; gap: 25px;
+            position: relative; overflow: hidden;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            animation: slideDown 0.7s ease both .15s;
+        }
+        .unique-welcome-banner::before {
+            content: ''; position: absolute; top: -90px; left: -60px; width: 300px; height: 300px;
+            background: radial-gradient(circle, var(--gradient-glow), transparent 70%); pointer-events: none;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: translateY(0); } }
+
+        .welcome-content { position: relative; z-index: 1; }
+        .greet-pill {
+            display: inline-block; margin-bottom: 14px;
+            padding: 6px 16px; border-radius: 30px;
+            font-size: 13px; font-weight: 700; color: #a855f7;
+            background: rgba(168, 85, 247, .1); border: 1px solid rgba(168, 85, 247, .3);
+        }
+        .welcome-content h2 { font-size: 28px; font-weight: 800; margin: 0 0 12px 0; color: var(--text-color); letter-spacing: -0.5px; line-height: 1.3; }
+        .welcome-content h2 span {
+            background: var(--gradient-primary); background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 6s linear infinite;
+        }
+        @keyframes shimmer { to { background-position: 200% center; } }
+        .welcome-content p { font-size: 15px; color: var(--text-muted); margin: 0 0 20px; font-weight: 500; line-height: 1.7; max-width: 640px; }
+
+        .stat-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .stat-chip {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px; border-radius: 14px;
+            font-size: 13.5px; font-weight: 600; color: var(--text-color);
+            background: var(--card-solid); border: 1px solid var(--border-color);
+            transition: transform .25s, border-color .25s, box-shadow .25s;
+        }
+        .stat-chip:hover { transform: translateY(-3px); border-color: rgba(168,85,247,.5); box-shadow: 0 8px 22px var(--gradient-glow); }
+        .stat-chip i { color: #a855f7; }
+        .stat-chip .fa-fire { color: #fb923c; }
+        .stat-chip b { font-weight: 800; }
+
+        .welcome-icon-box {
+            position: relative;
+            width: 95px; height: 95px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(59, 130, 246, 0.12));
+            border: 2px dashed rgba(168, 85, 247, 0.4);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; color: #38bdf8; flex-shrink: 0;
+            box-shadow: 0 0 28px var(--gradient-glow);
+            animation: floatRobot 3s ease-in-out infinite alternate;
+        }
+        .welcome-icon-box::before, .welcome-icon-box::after {
+            content: ''; position: absolute; border-radius: 50%; pointer-events: none;
+        }
+        .welcome-icon-box::before { inset: -16px; border: 1.5px solid rgba(34, 211, 238, .3); animation: ringSpin 10s linear infinite; }
+        .welcome-icon-box::after { inset: -16px; animation: ringSpin 10s linear infinite; background: radial-gradient(circle at 50% 0, #22d3ee 0 5px, transparent 6px); }
+        @keyframes ringSpin { to { transform: rotate(360deg); } }
+        @keyframes floatRobot { 0% { transform: translateY(0); } 100% { transform: translateY(-7px); } }
+
+        /* ---------- Banner slider ---------- */
+        .slider-wrapper { margin-bottom: 45px; position: relative; cursor: grab; user-select: none; }
+        .banner-container {
+            background: var(--card-bg); border: 1.5px solid var(--section-border); border-radius: 28px;
+            box-shadow: var(--shadow); text-align: center; padding: 48px 35px; display: none;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            position: relative; overflow: hidden;
+        }
+        .banner-container::before {
+            content: ''; position: absolute; top: -80px; right: -60px; width: 260px; height: 260px;
+            background: radial-gradient(circle, var(--gradient-glow), transparent 70%); pointer-events: none;
+        }
+        .banner-container.active { display: block; animation: fadeIn 0.55s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        .banner-tag {
+            background: var(--gradient-primary); color: white; padding: 6px 18px; border-radius: 20px;
+            font-size: 13px; font-weight: 700; display: inline-block; margin-bottom: 16px;
+            box-shadow: 0 6px 18px var(--gradient-glow);
+        }
+        .banner-container h2 { font-size: 30px; margin: 0 0 12px 0; font-weight: 800; position: relative; }
+        .banner-container p { font-size: 16px; color: var(--text-muted); max-width: 600px; margin: 0 auto 25px auto; line-height: 1.7; position: relative; }
+
+        .slider-arrow {
+            position: absolute; top: 46%; transform: translateY(-50%); background: var(--card-solid);
+            border: 1.5px solid var(--section-border); color: var(--text-color); width: 46px; height: 46px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: var(--shadow); z-index: 10; transition: 0.3s;
+        }
+        .slider-arrow:hover { background: #a855f7; color: white; border-color: #a855f7; transform: translateY(-50%) scale(1.1); }
+        .slider-prev { left: -22px; }
+        .slider-next { right: -22px; }
+
+        .slider-progress { height: 3px; margin: 18px auto 0; max-width: 220px; background: var(--border-color); border-radius: 3px; overflow: hidden; }
+        .slider-progress span { display: block; height: 100%; width: 0; background: var(--gradient-primary); border-radius: 3px; animation: progress 5s linear forwards; }
+        @keyframes progress { to { width: 100%; } }
+
+        /* তিনটি স্লাইডের নামসহ ট্যাব: সবগুলো সবসময় দেখা যায় */
+        .slider-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+        .slider-tab {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 14px 16px; border-radius: 18px; cursor: pointer;
+            font-family: inherit; font-size: 14.5px; font-weight: 700; color: var(--text-muted);
+            background: var(--card-bg); border: 1.5px solid var(--border-color);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            transition: transform .25s, border-color .25s, color .25s, background .25s, box-shadow .25s;
+        }
+        .slider-tab i { font-size: 16px; color: #a855f7; transition: color .25s; }
+        .slider-tab:hover { transform: translateY(-3px); border-color: rgba(168,85,247,.55); color: var(--text-color); }
+        .slider-tab.active {
+            color: #fff; border-color: transparent;
+            background: var(--gradient-primary); box-shadow: 0 10px 26px var(--gradient-glow);
+        }
+        .slider-tab.active i { color: #fff; }
+        .slider-tab:focus-visible { outline: 3px solid #22d3ee; outline-offset: 3px; }
+
+        /* ---------- Section head + search ---------- */
+        .section-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+        .section-title { margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+        .section-title i {
+            width: 40px; height: 40px; border-radius: 14px; font-size: 17px;
+            display: inline-flex; align-items: center; justify-content: center; color: #fff;
+            background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow);
+        }
+        .search-box {
+            position: relative; display: flex; align-items: center;
+            width: min(100%, 320px);
+        }
+        .search-box i { position: absolute; left: 16px; color: var(--text-muted); transition: color .3s; pointer-events: none; }
+        .search-box input {
+            width: 100%; padding: 13px 18px 13px 44px;
+            font-family: inherit; font-size: 14.5px; font-weight: 500; color: var(--text-color);
+            background: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 16px; outline: none;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .search-box input::placeholder { color: var(--text-muted); }
+        .search-box input:focus { border-color: #a855f7; box-shadow: 0 0 0 4px var(--gradient-glow); }
+        .search-box:focus-within i { color: #a855f7; }
+
+        /* ---------- Dashboard grid & cards ---------- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 30px; }
+        @media (max-width: 850px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+        .card {
+            --accent: #a855f7; --accent-rgb: 168, 85, 247;
+            position: relative; overflow: hidden;
+            background: var(--card-bg); border: 1.5px solid var(--section-border); border-radius: 28px;
+            padding: 35px; box-shadow: var(--shadow);
+            display: flex; flex-direction: column; justify-content: space-between;
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0px));
+            transition: transform .25s ease-out, box-shadow .35s ease, border-color .35s ease;
+        }
+        .card.reveal { transition: opacity .7s ease, translate .7s ease, transform .25s ease-out, box-shadow .35s ease, border-color .35s ease; }
+        .card::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+            background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--accent-rgb), .2), transparent 45%);
+        }
+        .card > * { position: relative; z-index: 1; }
+        .card:hover { --ty: -8px; border-color: var(--accent); box-shadow: 0 25px 50px -12px rgba(var(--accent-rgb), .4); }
+        .card:hover::before { opacity: 1; }
+        .card.hide { display: none; }
+
+        .card:nth-child(1) { --accent: #22d3ee; --accent-rgb: 34, 211, 238; }
+        .card:nth-child(2) { --accent: #a855f7; --accent-rgb: 168, 85, 247; }
+        .card:nth-child(3) { --accent: #34d399; --accent-rgb: 52, 211, 153; }
+        .card:nth-child(4) { --accent: #60a5fa; --accent-rgb: 96, 165, 250; }
+        .card:nth-child(5) { --accent: #f472b6; --accent-rgb: 244, 114, 182; }
+        .card:nth-child(6) { --accent: #fbbf24; --accent-rgb: 251, 191, 36; }
+        .card:nth-child(7) { --accent: #fb923c; --accent-rgb: 251, 146, 60; }
+
+        .card-title { font-size: 21px; font-weight: 800; margin-top: 0; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+        .card-image-box {
+            background: radial-gradient(circle at 50% 120%, rgba(var(--accent-rgb), .22), transparent 65%), linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(59, 130, 246, 0.05));
+            border-radius: 20px; height: 150px; margin-bottom: 22px; display: flex; align-items: center;
+            justify-content: center; font-size: 58px; border: 1px dashed rgba(var(--accent-rgb), .45);
+            transition: transform .4s ease;
+        }
+        .card:hover .card-image-box { transform: scale(1.03); }
+        .card-image-box > span, .card-image-box { text-shadow: 0 0 30px rgba(var(--accent-rgb), .5); }
+        .card-desc { font-size: 15px; color: var(--text-muted); line-height: 1.75; margin-bottom: 25px; font-weight: 500; }
+
+        .btn-link {
+            position: relative; overflow: hidden;
+            display: block; text-align: center; background: var(--gradient-primary); color: white;
+            text-decoration: none; padding: 15px; border-radius: 16px; font-weight: 700; font-size: 15px;
+            cursor: pointer; box-shadow: 0 8px 20px var(--gradient-glow); border: none; width: 100%;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .btn-link::after {
+            content: ''; position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
+            transform: skewX(-20deg); transition: left .6s ease;
+        }
+        .btn-link:hover { transform: translateY(-2px); box-shadow: 0 14px 30px var(--gradient-glow); }
+        .btn-link:hover::after { left: 140%; }
+
+        .empty-note { display: none; text-align: center; padding: 40px 20px; color: var(--text-muted); font-weight: 600; }
+        .empty-note.show { display: block; }
+
+        /* ---------- Special digital lab banner ---------- */
+        @property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+        .special-digital-lab-banner {
+            --angle: 0deg;
+            border: 2.5px solid transparent;
+            background:
+                linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(59, 130, 246, 0.12)) padding-box,
+                linear-gradient(var(--card-solid), var(--card-solid)) padding-box,
+                conic-gradient(from var(--angle), #a855f7, #00f2fe, #3b82f6, #f472b6, #a855f7) border-box;
+            border-radius: 30px;
+            padding: 42px 50px;
+            margin: 45px 0;
+            box-shadow: 0 20px 50px rgba(168, 85, 247, 0.22);
+            display: flex; align-items: center; justify-content: space-between; gap: 35px;
+            position: relative; overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            animation: spinAngle 7s linear infinite;
+        }
+        @keyframes spinAngle { to { --angle: 360deg; } }
+        .special-digital-lab-banner:hover { transform: translateY(-5px); box-shadow: 0 25px 60px rgba(168, 85, 247, 0.38); }
+        .special-digital-lab-banner::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
+            z-index: 0; pointer-events: none;
+        }
+        .special-lab-content { position: relative; z-index: 1; }
+        .special-lab-content h2 { font-size: 28px; font-weight: 800; margin: 14px 0 14px 0; color: var(--text-color); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px; }
+        .special-lab-content p { font-size: 16px; color: var(--text-muted); margin: 0 0 25px 0; line-height: 1.75; font-weight: 500; max-width: 680px; }
+        .special-lab-btn {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: var(--gradient-primary); color: white; text-decoration: none;
+            padding: 16px 32px; border-radius: 18px; font-weight: 700; font-size: 16px;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.35);
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .special-lab-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: 0.5s;
+        }
+        .special-lab-btn:hover::after { left: 100%; }
+        .special-lab-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(168, 85, 247, 0.5); }
+        .special-lab-btn i { transition: transform .3s; }
+        .special-lab-btn:hover i { transform: translateX(6px); }
+        .special-lab-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #a855f7, #3b82f6); color: white;
+            font-size: 12px; font-weight: 800; padding: 6px 16px; border-radius: 30px;
+            letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+        .special-lab-graphic {
+            font-size: 75px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 242, 254, 0.1));
+            width: 125px; height: 125px; border-radius: 36px;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.25);
+            flex-shrink: 0; position: relative; z-index: 1;
+            animation: floatVial 4s ease-in-out infinite alternate;
+        }
+        @keyframes floatVial { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-10px) rotate(5deg); } }
+
+        /* ---------- Chemmy mascot ---------- */
+        .chemmy-container {
+            position: fixed; bottom: 54px; right: 30px;
+            display: flex; align-items: center; gap: 15px;
+            z-index: 3000; text-decoration: none;
+        }
+        .chemmy-chat-bubble {
+            background: var(--card-bg); border: 1.5px solid var(--section-border);
+            padding: 14px 20px; border-radius: 24px; box-shadow: var(--shadow);
+            display: flex; flex-direction: column; gap: 4px;
+            animation: floatBubble 3s ease-in-out infinite alternate;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .chemmy-title { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: #a855f7; }
+        .chemmy-text { font-size: 14px; font-weight: 600; color: var(--text-color); white-space: nowrap; transition: opacity .3s; }
+        @keyframes floatBubble { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
+        .chemmy-flask {
+            width: 65px; height: 75px;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 2px solid #a855f7; border-radius: 12px 12px 20px 20px;
+            position: relative; display: flex; align-items: flex-end; justify-content: center;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+            cursor: pointer; overflow: hidden; transition: transform 0.3s ease;
+        }
+        .chemmy-flask::before {
+            content: ''; position: absolute; top: -10px; width: 24px; height: 12px;
+            background: #312e81; border: 2px solid #a855f7; border-radius: 4px;
+        }
+        .chemmy-flask:hover { transform: scale(1.12) rotate(6deg); }
+        .flask-liquid { position: absolute; bottom: 0; width: 100%; height: 55%; background: linear-gradient(180deg, #c084fc, #7c3aed); opacity: 0.9; }
+        .bubble-dot { position: absolute; background: white; border-radius: 50%; animation: riseBubble 2s infinite linear; }
+        .bubble-dot:nth-child(1) { width: 6px; height: 6px; left: 20px; bottom: 5px; animation-delay: 0s; }
+        .bubble-dot:nth-child(2) { width: 4px; height: 4px; left: 40px; bottom: 10px; animation-delay: 0.8s; }
+        @keyframes riseBubble { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-28px); opacity: 0; } }
+        .flask-face { position: absolute; top: 32px; width: 100%; display: flex; justify-content: center; gap: 14px; z-index: 5; }
+        .eye { width: 6px; height: 6px; background: #ffffff; border-radius: 50%; box-shadow: 0 0 8px #ffffff; animation: blink 4.5s infinite; }
+        @keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+
+        /* ---------- Footer ---------- */
+        .site-footer {
+            position: relative; overflow: hidden;
+            background-color: #050b14; color: #ffffff; padding-top: 60px;
+            border-radius: 32px 32px 0 0; margin-top: 50px;
+            border: 1px solid rgba(255,255,255,.06); border-bottom: none;
+        }
+        .site-footer::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #22d3ee, #a855f7, #f472b6, transparent);
+        }
+        .footer-content {
+            max-width: 1120px; margin: 0 auto; padding: 0 28px 45px;
+            display: grid; grid-template-columns: 1.4fr 1.3fr 1fr; gap: 36px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .footer-col { min-width: 0; }
+        .footer-logo { font-size: 22px; font-weight: 800; color: #ffffff; margin: 0 0 14px; border: none !important; padding: 0 !important; }
+        .footer-col h3 { font-size: 16px; font-weight: 800; margin: 0 0 18px; color: #ffffff; border-bottom: 2px solid #38bdf8; display: inline-block; padding-bottom: 6px; }
+        .footer-col h4 { font-size: 14px; font-weight: 700; margin: 20px 0 12px; color: #e2e8f0; }
+        .footer-col p { color: #94a3b8; font-size: 14px; line-height: 1.8; margin: 0 0 8px; font-weight: 500; }
+        .footer-col ul { list-style: none; padding: 0; margin: 0; }
+        .footer-col li { margin: 0; }
+        .footer-col li a, .footer-contact a, .footer-contact .row {
+            display: flex; align-items: flex-start; gap: 10px;
+            color: #94a3b8; font-size: 14px; line-height: 1.6; font-weight: 500; text-decoration: none;
+            padding: 7px 0; transition: color .25s, transform .25s;
+        }
+        .footer-col li a i { margin-top: 5px; font-size: 11px; color: #38bdf8; transition: transform .25s; }
+        .footer-col li a:hover { color: #38bdf8; transform: translateX(4px); }
+        .footer-col li a:hover i { transform: translateX(3px); }
+        .footer-contact i { margin-top: 4px; width: 16px; text-align: center; color: #38bdf8; flex-shrink: 0; }
+        .footer-contact a:hover { color: #38bdf8; }
+        .footer-col a:focus-visible, .social-icons a:focus-visible { outline: 2px solid #22d3ee; outline-offset: 3px; border-radius: 6px; }
+        .social-icons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .social-icons a {
+            display: inline-flex; justify-content: center; align-items: center; width: 42px; height: 42px;
+            background: rgba(255, 255, 255, 0.06); color: #ffffff; border-radius: 13px; text-decoration: none; border: 1px solid rgba(255,255,255,0.1);
+            transition: transform .3s, background .3s, border-color .3s;
+        }
+        .social-icons a:hover { transform: translateY(-4px); background: rgba(56, 189, 248, .18); border-color: #38bdf8; }
+        .footer-credit-bar { background-color: #030712; padding: 20px; text-align: center; }
+        .footer-credit-text { font-size: 14px; color: #94a3b8; font-weight: 600; }
+        .footer-credit-text span { color: #38bdf8; font-weight: 800; }
+
+        /* ---------- Fixed bottom credit bar (সবসময় স্ক্রিনে ভেসে থাকে) ---------- */
+        .credit-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .78rem; color: #64748b; letter-spacing: .6px;
+            background: rgba(5, 6, 15, .8);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, .06);
+        }
+        [data-theme="light"] .credit-bar { background: rgba(255, 255, 255, .85); color: #475569; border-top-color: rgba(15, 23, 42, .1); }
+        .credit-bar span {
+            margin-left: 5px; font-weight: 700;
+            background: linear-gradient(90deg, #22d3ee, #a855f7);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .warn-toast {
+            position: fixed; top: 84px; left: 50%; transform: translateX(-50%); z-index: 5000;
+            max-width: 92%; padding: 12px 20px; border-radius: 14px; text-align: center;
+            font-size: 14px; font-weight: 600; color: #fde68a;
+            background: rgba(120, 53, 15, .92); border: 1px solid rgba(251, 191, 36, .5);
+            box-shadow: 0 12px 30px rgba(0,0,0,.4);
+        }
+
+        /* ---------- Modal ---------- */
+        .modal { display: none; position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); justify-content: center; align-items: center; }
+        .modal.open { display: flex; animation: fadeInOnly .3s ease; }
+        @keyframes fadeInOnly { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content {
+            background: var(--card-solid); border: 1.5px solid var(--section-border); padding: 35px; border-radius: 28px;
+            text-align: center; max-width: 440px; width: 90%; box-shadow: 0 30px 80px rgba(0,0,0,.5);
+            animation: popIn .4s cubic-bezier(.2,.8,.2,1);
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(.9) translateY(20px); } to { opacity: 1; transform: none; } }
+        .modal-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 25px; }
+        .close-btn, .more-btn { font-family: inherit; border: none; padding: 12px 26px; border-radius: 16px; font-weight: 700; cursor: pointer; font-size: 14.5px; transition: transform .25s, box-shadow .25s; }
+        .close-btn { background: var(--gradient-primary); color: white; }
+        .more-btn { background: transparent; color: var(--text-color); border: 1.5px solid var(--section-border); }
+        .close-btn:hover, .more-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px var(--gradient-glow); }
+
+        /* =====================================================
+           NEW: আজকের ল্যাব উইজেট, প্রিয়/সাম্প্রতিক, ফিল্টার, সেটিংস
+           ===================================================== */
+        .widgets-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 30px; }
+        .widget {
+            --w: #22d3ee; --w-rgb: 34, 211, 238;
+            position: relative; overflow: hidden; min-height: 300px;
+            display: flex; flex-direction: column;
+            padding: 26px; border-radius: 26px;
+            background: var(--card-bg); border: 1.5px solid var(--section-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        }
+        .widget:nth-child(2) { --w: #a855f7; --w-rgb: 168, 85, 247; }
+        .widget:nth-child(3) { --w: #34d399; --w-rgb: 52, 211, 153; }
+        .widget:nth-child(4) { --w: #fbbf24; --w-rgb: 251, 191, 36; }
+        .widget::before {
+            content: ''; position: absolute; top: -80px; right: -60px; width: 230px; height: 230px;
+            background: radial-gradient(circle, rgba(var(--w-rgb), .22), transparent 70%); pointer-events: none;
+        }
+        .widget > * { position: relative; }
+        .widget-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
+        .widget-title { margin: 0; font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .widget-title i {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 12px; font-size: 14px; color: #fff;
+            background: linear-gradient(135deg, var(--w), #7e22ce);
+        }
+        .widget-actions { display: flex; gap: 6px; align-items: center; }
+        .mini-btn {
+            width: 34px; height: 34px; border-radius: 12px; cursor: pointer; font-size: 13px;
+            display: inline-flex; align-items: center; justify-content: center;
+            color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color);
+            transition: transform .25s, border-color .25s, box-shadow .25s;
+        }
+        .mini-btn:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.6); box-shadow: 0 8px 18px var(--gradient-glow); }
+        .mini-btn:focus-visible, .pill-btn:focus-visible, .cat-chip:focus-visible, .seg button:focus-visible, .fav-btn:focus-visible, .q-chip:focus-visible, .to-top:focus-visible {
+            outline: 3px solid #22d3ee; outline-offset: 2px;
+        }
+
+        /* আজকের মৌল */
+        .el-body { display: flex; align-items: center; gap: 22px; flex: 1; }
+        .el-tile {
+            flex-shrink: 0; width: 120px; height: 120px; border-radius: 22px; padding: 9px 13px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border: 2px solid rgba(var(--w-rgb), .55);
+            background: linear-gradient(145deg, rgba(var(--w-rgb), .18), rgba(168, 85, 247, .12));
+            box-shadow: 0 0 30px rgba(var(--w-rgb), .25);
+            animation: tilePop .5s cubic-bezier(.2,.8,.2,1);
+        }
+        @keyframes tilePop { from { opacity: 0; transform: scale(.85) rotate(-4deg); } to { opacity: 1; transform: none; } }
+        .el-z { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .el-sym {
+            font-size: 46px; font-weight: 800; line-height: 1;
+            background: linear-gradient(135deg, var(--w), #a855f7);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .el-mass { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .el-info h4 { margin: 0 0 6px; font-size: 22px; font-weight: 800; }
+        .el-tag {
+            display: inline-block; margin-bottom: 10px; padding: 3px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 700; color: var(--w);
+            background: rgba(var(--w-rgb), .1); border: 1px solid rgba(var(--w-rgb), .45);
+        }
+        .el-info p { margin: 0 0 12px; font-size: 14px; line-height: 1.75; color: var(--text-muted); font-weight: 500; }
+        .text-link { color: #a855f7; font-weight: 700; font-size: 14px; text-decoration: none; transition: color .25s; }
+        .text-link:hover { color: #22d3ee; }
+
+        .pill-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 10px 18px; border-radius: 14px;
+            border: none; cursor: pointer; color: #fff; background: var(--gradient-primary);
+            transition: transform .25s, box-shadow .25s;
+        }
+        .pill-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px var(--gradient-glow); }
+        .pill-btn.ghost { color: var(--text-color); background: transparent; border: 1.5px solid var(--section-border); }
+
+        /* স্টাডি টাইমার প্রোমো (আলাদা পেজ) */
+        .widget.promo { grid-column: 1 / -1; min-height: 0; flex-direction: row; align-items: center; justify-content: space-between; gap: 26px; }
+        .promo-text h3 { margin: 0 0 8px; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .promo-text p { margin: 0; max-width: 560px; font-size: 14.5px; line-height: 1.75; font-weight: 500; color: var(--text-muted); }
+        .promo-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .promo-tags span { padding: 5px 13px; border-radius: 20px; font-size: 12.5px; font-weight: 700; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); }
+        .promo .promo-btn { text-decoration: none; padding: 14px 26px; font-size: 15px; white-space: nowrap; }
+
+        /* নোট */
+        .notes-area {
+            flex: 1; min-height: 160px; width: 100%; resize: vertical;
+            font-family: inherit; font-size: 14.5px; line-height: 1.75; padding: 14px 16px; border-radius: 16px;
+            color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); outline: none;
+            transition: border-color .25s, box-shadow .25s;
+        }
+        .notes-area:focus { border-color: #fbbf24; box-shadow: 0 0 0 4px rgba(251, 191, 36, .15); }
+        .notes-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; font-size: 12.5px; font-weight: 600; color: var(--text-muted); }
+
+        /* প্রিয় ও সাম্প্রতিক */
+        .quick-panel {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 18px 32px; margin-bottom: 38px;
+            padding: 20px 24px; border-radius: 24px;
+            background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .quick-group h4 { margin: 0 0 12px; font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .quick-group .fa-star { color: #fbbf24; }
+        .quick-group .fa-clock-rotate-left { color: #22d3ee; }
+        .q-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .q-chip {
+            text-decoration: none; padding: 8px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600;
+            color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color);
+            transition: transform .2s, border-color .2s;
+        }
+        .q-chip:hover { transform: translateY(-2px); border-color: #a855f7; }
+        .q-empty { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+
+        /* ফিল্টার টুলবার */
+        .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+        .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+        .cat-chip {
+            font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 9px 16px; border-radius: 30px; cursor: pointer;
+            color: var(--text-muted); background: var(--card-bg); border: 1.5px solid var(--border-color);
+            transition: transform .2s, color .2s, border-color .2s, background .2s, box-shadow .2s;
+        }
+        .cat-chip:hover { color: var(--text-color); border-color: rgba(168, 85, 247, .55); transform: translateY(-2px); }
+        .cat-chip.on { color: #fff; background: var(--gradient-primary); border-color: transparent; box-shadow: 0 8px 20px var(--gradient-glow); }
+        .cat-chip small { margin-left: 5px; font-size: 12px; font-weight: 700; opacity: .75; }
+        .sort-select {
+            font-family: inherit; font-size: 13.5px; font-weight: 600; padding: 10px 14px; border-radius: 14px; cursor: pointer;
+            color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); outline: none;
+        }
+        .sort-select:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
+        .result-count { margin-bottom: 18px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+        /* কার্ডে প্রিয় বাটন */
+        .card .card-title { padding-right: 50px; }
+        .card > .fav-btn {
+            position: absolute; top: 18px; right: 18px; z-index: 3; width: 40px; height: 40px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;
+            color: var(--text-muted); background: var(--card-solid); border: 1px solid var(--border-color);
+            transition: transform .25s, color .25s, border-color .25s, box-shadow .25s;
+        }
+        .card > .fav-btn:hover { transform: scale(1.12) rotate(-8deg); color: #fbbf24; border-color: #fbbf24; }
+        .card > .fav-btn.on { color: #fbbf24; border-color: #fbbf24; box-shadow: 0 0 18px rgba(251, 191, 36, .4); }
+
+        /* কার্ড লেআউট অপশন */
+        .dashboard-grid.layout-one { grid-template-columns: 1fr; }
+        .dashboard-grid.layout-list { grid-template-columns: 1fr; gap: 16px; }
+        .layout-list .card { flex-direction: row; align-items: center; gap: 24px; padding: 22px 28px; }
+        .layout-list .card > div:first-child { flex: 1; }
+        .layout-list .card-image-box { display: none; }
+        .layout-list .card-title { margin-bottom: 8px; }
+        .layout-list .card-desc { margin-bottom: 0; }
+        .layout-list .btn-link { width: auto; white-space: nowrap; padding: 14px 26px; }
+
+        /* সেটিংস ড্রয়ার */
+        .drawer-overlay {
+            position: fixed; inset: 0; z-index: 4400; background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;
+        }
+        .drawer-overlay.open { opacity: 1; visibility: visible; }
+        .drawer {
+            position: fixed; top: 0; right: 0; height: 100%; width: 390px; max-width: 92vw; z-index: 4500;
+            display: flex; flex-direction: column;
+            background: var(--card-solid); border-left: 1.5px solid var(--section-border);
+            box-shadow: -20px 0 60px rgba(0, 0, 0, .4);
+            transform: translateX(105%); visibility: hidden;
+            transition: transform .4s cubic-bezier(.2,.8,.2,1), visibility .4s;
+        }
+        .drawer.open { transform: none; visibility: visible; }
+        .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--border-color); }
+        .drawer-head h3 { margin: 0; font-size: 19px; font-weight: 800; }
+        .drawer-body { flex: 1; overflow-y: auto; padding: 6px 24px 28px; }
+        .set-group { padding: 18px 0; border-bottom: 1px solid var(--border-color); }
+        .set-group:last-child { border-bottom: none; }
+        .set-label { margin-bottom: 4px; font-size: 14.5px; font-weight: 800; }
+        .set-hint { margin-bottom: 12px; font-size: 12.5px; line-height: 1.55; font-weight: 500; color: var(--text-muted); }
+        .seg { display: flex; gap: 6px; padding: 5px; border-radius: 16px; background: var(--bg-color); border: 1px solid var(--border-color); }
+        .seg button {
+            flex: 1; font-family: inherit; font-size: 13px; font-weight: 700; padding: 10px 6px; border: none; border-radius: 12px; cursor: pointer;
+            color: var(--text-muted); background: transparent; transition: background .25s, color .25s, box-shadow .25s;
+        }
+        .seg button.on { color: #fff; background: var(--gradient-primary); box-shadow: 0 6px 16px var(--gradient-glow); }
+        .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0; font-size: 14px; font-weight: 600; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { position: absolute; inset: 0; z-index: 2; margin: 0; opacity: 0; cursor: pointer; }
+        .switch .track { position: absolute; inset: 0; border-radius: 20px; background: var(--border-color); transition: background .25s; }
+        .switch .track::after {
+            content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+            background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s;
+        }
+        .switch input:checked ~ .track { background: var(--gradient-primary); }
+        .switch input:checked ~ .track::after { transform: translateX(20px); }
+        .switch input:focus-visible ~ .track { outline: 3px solid #22d3ee; outline-offset: 2px; }
+        .acct-line { margin-bottom: 14px; font-size: 13.5px; font-weight: 600; color: var(--text-muted); word-break: break-all; }
+        .acct-line b { color: var(--text-color); }
+        .drawer-actions { display: flex; flex-direction: column; gap: 10px; }
+        .danger-btn {
+            font-family: inherit; font-size: 14px; font-weight: 700; padding: 12px; border-radius: 14px; cursor: pointer;
+            color: #fb7185; background: rgba(251, 113, 133, .08); border: 1px solid rgba(251, 113, 133, .4);
+            transition: background .25s, transform .25s;
+        }
+        .danger-btn:hover { background: rgba(251, 113, 133, .2); transform: translateY(-2px); }
+
+        /* উপরে ফেরার বাটন */
+        .to-top {
+            position: fixed; left: 24px; bottom: 54px; z-index: 2600; width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 16px;
+            color: var(--text-color); background: var(--card-bg); border: 1.5px solid var(--section-border);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--shadow);
+            opacity: 0; visibility: hidden; transform: translateY(12px);
+            transition: opacity .3s, visibility .3s, transform .3s, background .25s;
+        }
+        .to-top.show { opacity: 1; visibility: visible; transform: none; }
+        .to-top:hover { background: #a855f7; color: #fff; }
+
+        /* অপশন অনুযায়ী ইফেক্ট বন্ধ */
+        body.no-bg #particle-canvas, body.no-bg .cursor-glow, body.no-bg .chem-bg-elements { display: none; }
+        body.no-bg .blob { animation: none; }
+        body.no-chemmy .chemmy-container { display: none; }
+
+        @media (max-width: 900px) {
+            .widgets-grid { grid-template-columns: 1fr; }
+            .quick-panel { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .el-body { flex-direction: column; text-align: center; }
+            .widget.promo { flex-direction: column; align-items: flex-start; }
+            .promo .promo-btn { width: 100%; }
+            .layout-list .card { flex-direction: column; align-items: stretch; gap: 0; }
+            .layout-list .btn-link { width: 100%; margin-top: 18px; }
+            .toolbar { justify-content: center; }
+            .chip-row { justify-content: center; }
+            .to-top { left: 14px; bottom: 46px; width: 42px; height: 42px; }
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 1000px) {
+            .nav-links { order: 3; width: 100%; justify-content: center; gap: 24px; }
+            .footer-content { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            body { padding: 14px 14px 34px; }
+            .slider-tabs { gap: 8px; }
+            .slider-tab { flex-direction: column; gap: 6px; padding: 12px 6px; font-size: 12.5px; text-align: center; line-height: 1.3; }
+            .footer-content { padding: 0 20px 36px; gap: 28px; }
+            header { padding: 12px 16px; border-radius: 22px; }
+            .slider-prev { left: -10px; }
+            .slider-next { right: -10px; }
+            .special-digital-lab-banner { flex-direction: column-reverse; text-align: center; padding: 30px 20px; }
+            .special-lab-content h2 { justify-content: center; font-size: 22px; }
+            .unique-welcome-banner { flex-direction: column-reverse; text-align: center; padding: 28px 20px; }
+            .welcome-content h2 { font-size: 21px; }
+            .stat-row { justify-content: center; }
+            .banner-container { padding: 38px 22px; }
+            .banner-container h2 { font-size: 23px; }
+            .card { padding: 26px 22px; }
+            .section-head { justify-content: center; }
+        }
+        @media (max-width: 600px) {
+            .user-chip .uname, .logout-btn span { display: none; }
+            .user-chip { padding: 4px; }
+            .logout-btn { padding: 11px 13px; }
+            .chemmy-container { bottom: 46px; right: 16px; }
+            .footer-content { grid-template-columns: 1fr; }
+            .footer-credit-bar { padding-bottom: 104px; }
+            .credit-bar { font-size: .7rem; }
+            .chemmy-chat-bubble { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+            .reveal { opacity: 1; translate: 0 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background -->
+    <div class="aurora">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+    </div>
+    <div class="grid-bg"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <a href="chemmy.html" class="chemmy-container">
+        <div class="chemmy-chat-bubble">
+            <span class="chemmy-title">CHEMMY • AI</span>
+            <span class="chemmy-text" id="chemmyText">হাই! কেমিস্ট্রি শিখতে সাহায্য লাগবে?</span>
+        </div>
+        <div class="chemmy-flask">
+            <div class="flask-liquid">
+                <div class="bubble-dot"></div>
+                <div class="bubble-dot"></div>
+            </div>
+            <div class="flask-face">
+                <div class="eye"></div>
+                <div class="eye"></div>
+            </div>
+        </div>
+    </a>
+
+    <div class="chem-bg-elements">
+        <div class="chem-item">🧪 H₂SO₄</div>
+        <div class="chem-item">⚗️</div>
+        <div class="chem-item">🔬 CO₂</div>
+        <div class="chem-item">⚡ Na</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo-area" onclick="location.href='dashboard.html'">
+                <div class="logo-icon-box">
+                    <i class="fas fa-vial" style="font-size: 24px; color: #00f2fe;"></i>
+                    <i class="fas fa-flask" style="font-size: 30px; color: #00f2fe;"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Lab Alchemy</h1>
+                    <span>Interactive Learning</span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="dashboard.html" class="active-nav">হোম</a></li>
+                <li><a href="exam.html">পরীক্ষা</a></li>
+                <li><a href="studytimer.html">স্টাডি টাইমার</a></li>
+                <li><a href="about.html">আমাদের সম্পর্কে</a></li>
+            </ul>
+
+            <div class="header-right">
+                <div class="nav-calendar" onclick="showChemistryFact()" title="রসায়নের একটি মজার তথ্য দেখতে ক্লিক করুন">
+                    <span>📅</span>
+                    <span id="current-date">Loading...</span>
+                </div>
+                <button class="theme-btn" onclick="toggleTheme()" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+                <button class="theme-btn" id="openSettings" title="সেটিংস" aria-label="সেটিংস খোলো">⚙️</button>
+                <div class="user-chip" title="লগইন করা অ্যাকাউন্ট">
+                    <div class="avatar" id="avatar">?</div>
+                    <span class="uname" id="uname"></span>
+                </div>
+                <button class="logout-btn" id="logoutBtn" title="লগআউট">
+                    <i class="fas fa-right-from-bracket"></i><span>লগআউট</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ইউনিক ওয়েলকাম ব্যানার -->
+        <div class="unique-welcome-banner">
+            <div class="welcome-content">
+                <span class="greet-pill" id="greetPill">👋 শুভেচ্ছা, কেমিস্ট্রি এক্সপ্লোরার</span>
+                <h2>হ্যালো <span id="helloName">কেমিস্ট্রি এক্সপ্লোরার</span>! <span>Lab Alchemy</span>-তে স্বাগতম।</h2>
+                <p>রসায়নের রহস্যময় ও রোমাঞ্চকর দুনিয়াকে এখন ঘরে বসেই ইন্টারেক্টিভ ল্যাব সিমুলেশনের মাধ্যমে সহজভাবে আবিষ্কার করো।</p>
+                <div class="stat-row">
+                    <span class="stat-chip" title="টানা কত দিন ল্যাবে এসেছো"><i class="fas fa-fire"></i> <b id="streakNum">১</b> দিনের স্ট্রিক</span>
+                    <span class="stat-chip"><i class="fas fa-layer-group"></i> <b id="zoneCount">৭</b> টি জোন</span>
+                    <span class="stat-chip"><i class="fas fa-graduation-cap"></i> SSC &amp; HSC</span>
+                </div>
+            </div>
+            <div class="welcome-icon-box">
+                <i class="fas fa-robot"></i>
+            </div>
+        </div>
+
+        <!-- ব্যানার স্লাইডার -->
+        <div class="slider-wrapper" id="sliderWrapper">
+            <div class="slider-arrow slider-prev" onclick="prevSlide()">❮</div>
+            <div class="slider-arrow slider-next" onclick="nextSlide()">❯</div>
+
+            <div class="banner-container active">
+                <span class="banner-tag">ইতিহাস ও ঐতিহ্য</span>
+                <h2>রসায়ন বিজ্ঞানের ইতিহাস</h2>
+                <p>প্রাচীন আলকেমি থেকে শুরু করে আধুনিক রসায়নের যাত্রার এবং বিভিন্ন মৌলিক আবিষ্কারের গল্প।</p>
+                <a href="history.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
+            </div>
+
+            <div class="banner-container">
+                <span class="banner-tag">রসায়ন ফান ফ্যাক্টস</span>
+                <h2>জানা অজানার রসায়ন</h2>
+                <p>মৌল, বিভিন্ন দেশের অবদান এবং বিজ্ঞানীদের আবিষ্কার নিয়ে সাজানো তথ্যভাণ্ডার</p>
+                <a href="fact.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
+            </div>
+
+            <div class="banner-container">
+                <span class="banner-tag">সূত্র ও থিওরি</span>
+                <h2>রসায়ন সূত্র ও থিওরি</h2>
+                <p>রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত নিয়ে সাজানো তথ্যভাণ্ডার</p>
+                <a href="theoryhub.html" class="btn-link" style="max-width: 200px; margin: 0 auto; display: block;">আরও জানুন →</a>
+            </div>
+
+            <div class="slider-progress"><span id="sliderBar"></span></div>
+
+            <div class="slider-tabs">
+                <button type="button" class="slider-tab active" onclick="currentSlide(0)"><i class="fas fa-landmark"></i><span>ইতিহাস ও ঐতিহ্য</span></button>
+                <button type="button" class="slider-tab" onclick="currentSlide(1)"><i class="fas fa-lightbulb"></i><span>ফান ফ্যাক্টস</span></button>
+                <button type="button" class="slider-tab" onclick="currentSlide(2)"><i class="fas fa-book-open"></i><span>সূত্র ও থিওরি</span></button>
+            </div>
+        </div>
+
+        <!-- আজকের ল্যাব: মৌল, কুইজ, টাইমার, নোট -->
+        <div class="section-head">
+            <h2 class="section-title"><i class="fas fa-calendar-day"></i> আজকের ল্যাব</h2>
+        </div>
+
+        <div class="widgets-grid">
+            <section class="widget" aria-labelledby="wElTitle">
+                <div class="widget-head">
+                    <h3 class="widget-title" id="wElTitle"><i class="fas fa-atom"></i> আজকের মৌল</h3>
+                    <div class="widget-actions">
+                        <button type="button" class="mini-btn" id="elPrev" aria-label="আগের মৌল">❮</button>
+                        <button type="button" class="mini-btn" id="elNext" aria-label="পরের মৌল">❯</button>
+                    </div>
+                </div>
+                <div class="el-body">
+                    <div class="el-tile">
+                        <span class="el-z" id="elZ"></span>
+                        <span class="el-sym" id="elSym"></span>
+                        <span class="el-mass" id="elMass"></span>
+                    </div>
+                    <div class="el-info">
+                        <h4 id="elName"></h4>
+                        <span class="el-tag" id="elTag"></span>
+                        <p id="elFact"></p>
+                        <a class="text-link" href="ptable.html">পর্যায় সারণীতে দেখো →</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="widget" aria-labelledby="wNotesTitle">
+                <div class="widget-head">
+                    <h3 class="widget-title" id="wNotesTitle"><i class="fas fa-note-sticky"></i> আমার নোট</h3>
+                    <button type="button" class="mini-btn" id="notesClear" aria-label="নোট মুছো" title="নোট মুছো">🗑</button>
+                </div>
+                <textarea class="notes-area" id="notesBox" maxlength="3000" placeholder="সূত্র, মনে রাখার বিষয়, বা কোনো প্রশ্ন... এখানে লিখে রাখো। এটি শুধু তোমার ব্রাউজারে সেভ হয়।"></textarea>
+                <div class="notes-foot"><span id="notesStatus">সংরক্ষিত ✓</span><span id="notesCount">০/৩০০০</span></div>
+            </section>
+
+            <section class="widget promo" aria-labelledby="wPromoTitle">
+                <div class="promo-text">
+                    <h3 id="wPromoTitle">⏱ স্টাডি টাইমার</h3>
+                    <p>নিজের শ্রেণি ও বিষয় বেছে নাও, মনোযোগ দিয়ে পড়ো, আর প্রতিদিন কত সময় পড়লে তার হিসাব রাখো। এটি যেকোনো শ্রেণির যেকোনো বিষয়ের জন্য।</p>
+                    <div class="promo-tags"><span>🎯 ফোকাস ও বিরতি</span><span>📚 শ্রেণি অনুযায়ী বিষয়</span><span>📊 সাপ্তাহিক হিসাব</span></div>
+                </div>
+                <a class="pill-btn promo-btn" href="studytimer.html">স্টাডি টাইমার খোলো →</a>
+            </section>
+        </div>
+
+        <!-- প্রিয় ও সাম্প্রতিক -->
+        <div class="quick-panel">
+            <div class="quick-group">
+                <h4><i class="fas fa-star"></i> প্রিয় জোন</h4>
+                <div class="q-list" id="favList"></div>
+            </div>
+            <div class="quick-group">
+                <h4><i class="fas fa-clock-rotate-left"></i> সর্বশেষ দেখেছো</h4>
+                <div class="q-list" id="recentList"></div>
+            </div>
+        </div>
+
+        <!-- সেকশন হেডার + সার্চ -->
+        <div class="section-head">
+            <h2 class="section-title"><i class="fas fa-layer-group"></i> ল্যাব জোনসমূহ</h2>
+            <label class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="search" id="zoneSearch" placeholder="জোন খুঁজো... ( / চাপলেই সার্চ )" autocomplete="off">
+            </label>
+        </div>
+
+        <div class="toolbar">
+            <div class="chip-row" id="catRow" role="group" aria-label="জোন ফিল্টার"></div>
+            <select class="sort-select" id="sortSel" aria-label="জোন সাজাও">
+                <option value="default">সাজাও: ডিফল্ট</option>
+                <option value="fav">প্রিয় আগে</option>
+                <option value="name">নাম অনুযায়ী</option>
+            </select>
+        </div>
+        <div class="result-count" id="resultCount" aria-live="polite"></div>
+
+        <!-- ড্যাশবোর্ড গ্রিড -->
+        <div class="dashboard-grid" id="dashboardGrid">
+            <div class="card">
+                <div>
+                    <h2 class="card-title">📊 আধুনিক পর্যায় সারণী</h2>
+                    <div class="card-image-box">📊</div>
+                    <p class="card-desc">সবকটি মৌলের সম্পূর্ণ ইন্টারেক্টিভ গ্রিড লেআউট। যেকোনো মৌলের উপর ক্লিক করলেই স্ক্রিনের ওপরে তার যোজনী, ইলেকট্রন বিন্যাস ও বাস্তব ব্যবহার ভেসে উঠবে।</p>
+                </div>
+                <a href="ptable.html" class="btn-link">পর্যায় সারণী দেখুন →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">🕹️ রসায়ন গেম জোন</h2>
+                    <div class="card-image-box">🕹️</div>
+                    <p class="card-desc">মৌল, যোজনী এবং সংকেত চেনার মজার সব চ্যালেঞ্জিং গেম। এখানে তোমার রসায়নের দক্ষতা পরীক্ষা করার জন্য বিভিন্ন গেম রয়েছে।</p>
+                </div>
+                <a href="games.html" class="btn-link">গেম জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">🔢 ক্যালকুলেটর হাব</h2>
+                    <div class="card-image-box">🔢</div>
+                    <p class="card-desc">রসায়নের জটিল হিসাব-নিকাশ, পিএইচ (pH), মোলারিটি এবং আণবিক ভর সহজে সমাধান করার জন্য কাস্টম সায়েন্টিফিক ও ডেডিকেটেড ক্যালকুলেটর প্যানেল।</p>
+                </div>
+                <a href="calculators.html" class="btn-link">ক্যালকুলেটর জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">📈 ভিজ্যুয়ালাইজেশন</h2>
+                    <div class="card-image-box">📈</div>
+                    <p class="card-desc">রসায়নের বিভিন্ন ল্যাব ডাটা, পর্যায়বৃত্ত ধর্ম, পারমাণবিক ব্যাসার্ধ এবং গলনাঙ্ক-স্ফুটনাঙ্কের ট্রেন্ড গ্রাফ ও চার্টের মাধ্যমে সুন্দর উপায়ে বিশ্লেষণ করার মূল জোন।</p>
+                </div>
+                <a href="visualizations.html" class="btn-link">ভিজ্যুয়ালাইজেশন জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">💥 পর্যায়বৃত্ত ধর্ম</h2>
+                    <div class="card-image-box">💥</div>
+                    <p class="card-desc">মৌলসমূহের ভৌত ও রাসায়নিক ধর্মের পর্যায়বৃত্ত পরিবর্তনের বিস্তারিত হাব</p>
+                </div>
+                <a href="properties_page.html" class="btn-link">পর্যায়বৃত্ত জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">🥽 জৈব যৌগ (Organic Chemistry)</h2>
+                    <div class="card-image-box">🥽</div>
+                    <p class="card-desc">জৈব যৌগের শ্রেণীবিভাগ, প্রস্তুতি এবং IUPAC নামকরণের সহজ ও বিস্তারিত ব্যাখ্যা।</p>
+                </div>
+                <a href="organic.html" class="btn-link">জোনে প্রবেশ করো →</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h2 class="card-title">⚛️ রাসায়নিক বিক্রিয়া ল্যাব</h2>
+                    <div class="card-image-box">⚛️</div>
+                    <p class="card-desc">বিভিন্ন প্রকার রাসায়নিক বিক্রিয়ার কৌশল, সমীকরণ ও গাণিতিক রূপ বিশ্লেষণ।</p>
+                </div>
+                <a href="reaction_page.html" class="btn-link">জোনে প্রবেশ করো →</a>
+            </div>
+        </div>
+        <div class="empty-note" id="emptyNote">😕 এই নামে কোনো জোন পাওয়া যায়নি। অন্য কিছু লিখে দেখো।</div>
+
+        <!-- আল্ট্রা প্রিমিয়াম ডিজিটাল ল্যাব ব্যানার -->
+        <div class="special-digital-lab-banner">
+            <div class="special-lab-content">
+                <span class="special-lab-badge"><i class="fas fa-wand-magic-sparkles"></i> Featured Special Tool</span>
+                <h2><i class="fas fa-flask" style="color: #a855f7;"></i> ডিজিটাল ল্যাব সিমুলেটর</h2>
+                <p>সিলেবাসের রিয়েল ল্যাব প্র্যাকটিক্যালগুলো এখন ঘরে বসেই সম্পূর্ণ নিরাপদ ও ইন্টারেক্টিভ উপায়ে সিমুলেট করো এবং লাইভ পরীক্ষা সম্পন্ন করো।</p>
+                <a href="digitallab.html" class="special-lab-btn">
+                    <span>ডিজিটাল ল্যাবে প্রবেশ করো</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="special-lab-graphic">
+                🔬
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3 class="footer-logo">Lab Alchemy</h3>
+                    <p>SSC ও HSC শিক্ষার্থীদের জন্য ইন্টারেক্টিভ রসায়ন ল্যাব।</p>
+                    <p>ট্রেড লাইসেন্স: ***</p>
+                    <h4>আমাদের সাথে যুক্ত হোন</h4>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col footer-contact">
+                    <h3>যোগাযোগ</h3>
+                    <div class="row"><i class="fas fa-phone-alt"></i><span>01724****</span></div>
+                    <a href="mailto:ahanaft059@gmail.com"><i class="fas fa-envelope"></i><span>ahanaft059@gmail.com</span></a>
+                    <div class="row"><i class="fas fa-map-marker-alt"></i><span>kayetpara, Panchagarh Sadar, Panchagarh - 5000</span></div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>কোম্পানি</h3>
+                    <ul>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i>আমাদের সম্পর্কে</a></li>
+                        <li><a href="terms.html"><i class="fas fa-chevron-right"></i>টার্মস এবং শর্তাবলী</a></li>
+                        <li><a href="privacy.html"><i class="fas fa-chevron-right"></i>প্রাইভেসি পলিসি</a></li>
+                        <li><a href="refund.html"><i class="fas fa-chevron-right"></i>রিফান্ড পলিসি</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-credit-bar">
+                <div class="footer-credit-text">
+                    © 2026 <span>Lab Alchemy</span>. Designed for Students | SSC &amp; HSC Chemistry
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <button type="button" class="to-top" id="toTop" aria-label="উপরে যাও" title="উপরে যাও">↑</button>
+
+    <!-- সেটিংস ড্রয়ার -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <aside class="drawer" id="settingsDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+        <div class="drawer-head">
+            <h3 id="drawerTitle">⚙️ সেটিংস</h3>
+            <button type="button" class="mini-btn" id="drawerClose" aria-label="সেটিংস বন্ধ করো">✕</button>
+        </div>
+        <div class="drawer-body">
+            <div class="set-group">
+                <div class="set-label">থিম</div>
+                <div class="set-hint">আলো, অন্ধকার, অথবা তোমার ডিভাইসের সেটিং অনুযায়ী নিজে নিজে বদলাবে।</div>
+                <div class="seg">
+                    <button type="button" data-pref="theme" data-val="light">☀️ আলো</button>
+                    <button type="button" data-pref="theme" data-val="dark">🌙 অন্ধকার</button>
+                    <button type="button" data-pref="theme" data-val="auto">🖥️ অটো</button>
+                </div>
+            </div>
+
+            <div class="set-group">
+                <div class="set-label">লেখার আকার</div>
+                <div class="set-hint">পড়তে অসুবিধা হলে বড় করে নাও।</div>
+                <div class="seg">
+                    <button type="button" data-pref="size" data-val="0.92">ছোট</button>
+                    <button type="button" data-pref="size" data-val="1">মাঝারি</button>
+                    <button type="button" data-pref="size" data-val="1.1">বড়</button>
+                    <button type="button" data-pref="size" data-val="1.2">অনেক বড়</button>
+                </div>
+            </div>
+
+            <div class="set-group">
+                <div class="set-label">জোন কার্ডের লেআউট</div>
+                <div class="set-hint">কার্ডগুলো কীভাবে সাজানো থাকবে।</div>
+                <div class="seg">
+                    <button type="button" data-pref="layout" data-val="two">২ কলাম</button>
+                    <button type="button" data-pref="layout" data-val="one">১ কলাম</button>
+                    <button type="button" data-pref="layout" data-val="list">তালিকা</button>
+                </div>
+            </div>
+
+            <div class="set-group">
+                <div class="set-label">ইফেক্ট ও সহকারী</div>
+                <div class="set-hint">ফোন ধীর চললে ইফেক্ট বন্ধ করে দেখো।</div>
+                <div class="switch-row"><span>ব্যাকগ্রাউন্ড অ্যানিমেশন</span><label class="switch"><input type="checkbox" data-pref="bg" aria-label="ব্যাকগ্রাউন্ড অ্যানিমেশন"><span class="track"></span></label></div>
+                <div class="switch-row"><span>কার্ডে ৩ডি টিল্ট</span><label class="switch"><input type="checkbox" data-pref="tilt" aria-label="কার্ডে ৩ডি টিল্ট"><span class="track"></span></label></div>
+                <div class="switch-row"><span>Chemmy AI সহকারী দেখাও</span><label class="switch"><input type="checkbox" data-pref="chemmy" aria-label="Chemmy সহকারী দেখাও"><span class="track"></span></label></div>
+            </div>
+
+            <div class="set-group">
+                <div class="set-label">অ্যাকাউন্ট ও ডেটা</div>
+                <div class="acct-line" id="acctLine"></div>
+                <div class="drawer-actions">
+                    <button type="button" class="danger-btn" id="drawerLogout">লগআউট করো</button>
+                    <button type="button" class="danger-btn" id="resetData">আমার ডেটা রিসেট করো</button>
+                </div>
+                <div class="set-hint" style="margin-top:10px;">রিসেট করলে প্রিয় জোন, নোট, কুইজ স্কোর, স্ট্রিক ও সেটিং মুছে যাবে। তোমার অ্যাকাউন্ট মুছবে না।</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- সবসময় স্ক্রিনের নিচে ভেসে থাকা ক্রেডিট বার -->
+    <div class="credit-bar">
+        Developed &amp; Designed by <span>Ahanaf Abid Omlan</span>
+    </div>
+
+    <div id="chemModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0; color: #a855f7;">🧪 রসায়নের এক টুকরো ইতিহাস</h3>
+            <p id="fact-text" style="font-size: 15px; opacity: 0.9; line-height: 1.7;"></p>
+            <div class="modal-actions">
+                <button class="more-btn" onclick="showChemistryFact(true)">আরেকটি দেখো</button>
+                <button class="close-btn" onclick="closeModal()">ঠিক আছে</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------- Helpers ---------- */
+        const bn = n => Number(n).toLocaleString('bn-BD');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /* =====================================================
+           Storage helpers + সেটিংস (থিম, আকার, লেআউট, ইফেক্ট)
+           ===================================================== */
+        const UKEY = ME ? ME.username : 'guest';
+        const uk = n => 'labAlchemy' + n + ':' + UKEY;
+        const sget = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+        const sset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+        const todayKey = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
+        const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+        const $ = id => document.getElementById(id);
+
+        let prefs = Object.assign({ size: 1, layout: 'two', bg: true, tilt: true, chemmy: true }, sget('labAlchemyPrefs', {}));
+        const gridEl = $('dashboardGrid');
+        const cards = document.querySelectorAll('.card');
+        const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function currentThemeMode() { try { return localStorage.getItem('theme') || 'dark'; } catch (e) { return 'dark'; } }
+        function applyTheme(mode) {
+            const eff = mode === 'auto' ? (darkQuery.matches ? 'dark' : 'light') : mode;
+            document.documentElement.setAttribute('data-theme', eff);
+        }
+        function setTheme(mode) {
+            try { localStorage.setItem('theme', mode); } catch (e) {}
+            applyTheme(mode);
+            syncSettingsUI();
+        }
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        }
+        darkQuery.addEventListener && darkQuery.addEventListener('change', () => { if (currentThemeMode() === 'auto') applyTheme('auto'); });
+
+        function applyPrefs() {
+            document.querySelector('.container').style.zoom = prefs.size === 1 ? '' : prefs.size;
+            gridEl.classList.toggle('layout-one', prefs.layout === 'one');
+            gridEl.classList.toggle('layout-list', prefs.layout === 'list');
+            document.body.classList.toggle('no-bg', !prefs.bg);
+            document.body.classList.toggle('no-chemmy', !prefs.chemmy);
+            syncSettingsUI();
+        }
+        function syncSettingsUI() {
+            document.querySelectorAll('#settingsDrawer .seg button').forEach(b => {
+                const p = b.dataset.pref, v = b.dataset.val;
+                const cur = p === 'theme' ? currentThemeMode() : String(prefs[p]);
+                b.classList.toggle('on', cur === v);
+            });
+            document.querySelectorAll('#settingsDrawer .switch input').forEach(i => { i.checked = !!prefs[i.dataset.pref]; });
+        }
+        function savePrefs() { sset('labAlchemyPrefs', prefs); }
+
+        document.querySelectorAll('#settingsDrawer .seg button').forEach(b => {
+            b.addEventListener('click', () => {
+                const p = b.dataset.pref, v = b.dataset.val;
+                if (p === 'theme') { setTheme(v); return; }
+                prefs[p] = (p === 'size') ? parseFloat(v) : v;
+                savePrefs(); applyPrefs();
+            });
+        });
+        document.querySelectorAll('#settingsDrawer .switch input').forEach(i => {
+            i.addEventListener('change', () => { prefs[i.dataset.pref] = i.checked; savePrefs(); applyPrefs(); });
+        });
+
+        /* ---------- সেটিংস ড্রয়ার ---------- */
+        const drawer = $('settingsDrawer'), overlay = $('drawerOverlay');
+        function openSettings() {
+            drawer.classList.add('open'); overlay.classList.add('open');
+            drawer.setAttribute('aria-hidden', 'false');
+            setTimeout(() => $('drawerClose').focus(), 60);
+        }
+        function closeSettings() {
+            if (!drawer.classList.contains('open')) return;
+            drawer.classList.remove('open'); overlay.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
+            $('openSettings').focus();
+        }
+        $('openSettings').addEventListener('click', openSettings);
+        $('drawerClose').addEventListener('click', closeSettings);
+        overlay.addEventListener('click', closeSettings);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
+
+        $('acctLine').innerHTML = '';
+        if (ME) {
+            const b = document.createElement('b'); b.textContent = ME.name || ME.username;
+            $('acctLine').append('লগইন করা আছে: ', b, ' (' + (ME.email || ME.username) + ')');
+        } else {
+            $('acctLine').textContent = 'লগইন তথ্য পাওয়া যায়নি।';
+        }
+        $('drawerLogout').addEventListener('click', () => $('logoutBtn').click());
+        $('resetData').addEventListener('click', () => {
+            if (!confirm('প্রিয় জোন, নোট, কুইজ স্কোর, স্ট্রিক ও সেটিং মুছে যাবে। তোমার অ্যাকাউন্ট মুছবে না। চালিয়ে যাবে?')) return;
+            ['Favs', 'Recent', 'Visited', 'Notes', 'Quiz', 'Streak', 'Timer'].forEach(n => { try { localStorage.removeItem(uk(n)); } catch (e) {} });
+            try { localStorage.removeItem('labAlchemyPrefs'); localStorage.removeItem('theme'); } catch (e) {}
+            location.reload();
+        });
+
+        /* =====================================================
+           জোন কার্ড: প্রিয়, সাম্প্রতিক, ফিল্টার, সাজানো
+           ===================================================== */
+        const ZONE_META = {
+            'ptable.html': ['ptable', 'table'], 'properties_page.html': ['properties', 'table'],
+            'games.html': ['games', 'game'],
+            'calculators.html': ['calculators', 'calc'], 'visualizations.html': ['visualizations', 'calc'],
+            'organic.html': ['organic', 'react'], 'reaction_page.html': ['reaction', 'react']
+        };
+        const CATS = [['all', 'সব'], ['table', 'মৌল ও সারণী'], ['game', 'গেম'], ['calc', 'ক্যালকুলেটর ও গ্রাফ'], ['react', 'বিক্রিয়া ও জৈব']];
+
+        const zones = [...cards].map((el, idx) => {
+            const href = el.querySelector('.btn-link').getAttribute('href');
+            const meta = ZONE_META[href] || [href, 'other'];
+            return { el, idx, id: meta[0], cat: meta[1], href, title: el.querySelector('.card-title').textContent.trim() };
+        });
+        const allZones = zones.concat([{ id: 'digitallab', href: 'digitallab.html', title: '🔬 ডিজিটাল ল্যাব সিমুলেটর' }]);
+        const zoneById = id => allZones.find(z => z.id === id);
+        const zoneByHref = h => allZones.find(z => z.href === h);
+
+        let favs = sget(uk('Favs'), []);
+        let recent = sget(uk('Recent'), []);
+
+        zones.forEach(z => {
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'fav-btn';
+            b.innerHTML = '<i class="far fa-star"></i>';
+            b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); toggleFav(z.id); });
+            z.el.appendChild(b); z.fav = b;
+        });
+        function paintFavs() {
+            zones.forEach(z => {
+                const on = favs.includes(z.id);
+                z.fav.classList.toggle('on', on);
+                z.fav.setAttribute('aria-pressed', String(on));
+                z.fav.setAttribute('aria-label', (on ? 'প্রিয় থেকে সরাও: ' : 'প্রিয় করো: ') + z.title);
+                z.fav.title = on ? 'প্রিয় থেকে সরাও' : 'প্রিয় জোনে যোগ করো';
+                z.fav.firstChild.className = on ? 'fas fa-star' : 'far fa-star';
+            });
+        }
+        function toggleFav(id) {
+            favs = favs.includes(id) ? favs.filter(x => x !== id) : favs.concat(id);
+            sset(uk('Favs'), favs);
+            paintFavs(); renderQuick(); applyFilter();
+        }
+
+        function recordVisit(z) {
+            recent = [z.id].concat(recent.filter(x => x !== z.id)).slice(0, 4);
+            sset(uk('Recent'), recent);
+        }
+        document.addEventListener('click', e => {
+            const a = e.target.closest('.card .btn-link, .special-lab-btn, .q-chip');
+            if (!a) return;
+            const z = zoneByHref(a.getAttribute('href'));
+            if (z) recordVisit(z);
+        });
+
+        function fillList(el, ids, emptyText) {
+            el.replaceChildren();
+            const items = ids.map(zoneById).filter(Boolean);
+            if (!items.length) {
+                const s = document.createElement('span'); s.className = 'q-empty'; s.textContent = emptyText;
+                el.appendChild(s); return;
+            }
+            items.forEach(z => {
+                const a = document.createElement('a'); a.className = 'q-chip'; a.href = z.href; a.textContent = z.title;
+                el.appendChild(a);
+            });
+        }
+        function renderQuick() {
+            fillList($('favList'), favs, 'কার্ডের ⭐ চাপলে জোন এখানে জমা হবে।');
+            fillList($('recentList'), recent, 'কোনো জোনে ঢুকলে এখানে দেখা যাবে।');
+        }
+
+        /* ফিল্টার + সাজানো + সার্চ */
+        let activeCat = 'all', sortMode = 'default', query = '';
+        const stripLead = t => t.replace(/^[^\p{L}\p{N}]+/u, '');
+        const nameRank = {};
+        zones.slice().sort((a, b) => stripLead(a.title).localeCompare(stripLead(b.title), 'bn')).forEach((z, i) => { nameRank[z.id] = i; });
+
+        const catRow = $('catRow');
+        CATS.forEach(([key, label]) => {
+            const count = key === 'all' ? zones.length : zones.filter(z => z.cat === key).length;
+            if (key !== 'all' && !count) return;
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'cat-chip' + (key === 'all' ? ' on' : ''); b.dataset.cat = key;
+            b.append(label);
+            const sm = document.createElement('small'); sm.textContent = bn(count); b.appendChild(sm);
+            b.addEventListener('click', () => {
+                activeCat = key;
+                catRow.querySelectorAll('.cat-chip').forEach(c => c.classList.toggle('on', c === b));
+                applyFilter();
+            });
+            catRow.appendChild(b);
+        });
+
+        function applyFilter() {
+            let shown = 0;
+            zones.forEach(z => {
+                const match = (activeCat === 'all' || z.cat === activeCat) && (!query || z.el.textContent.toLowerCase().includes(query));
+                z.el.classList.toggle('hide', !match);
+                if (match) shown++;
+                let order = z.idx;
+                if (sortMode === 'fav') order = (favs.includes(z.id) ? 0 : 100) + z.idx;
+                else if (sortMode === 'name') order = nameRank[z.id];
+                z.el.style.order = order;
+            });
+            $('emptyNote').classList.toggle('show', shown === 0);
+            $('resultCount').textContent = bn(shown) + 'টি জোন দেখানো হচ্ছে';
+        }
+        $('zoneSearch').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); applyFilter(); });
+        $('sortSel').addEventListener('change', e => { sortMode = e.target.value; applyFilter(); });
+        document.addEventListener('keydown', e => {
+            const tag = (e.target.tagName || '').toLowerCase();
+            if (e.key === '/' && tag !== 'input' && tag !== 'textarea' && tag !== 'select') {
+                e.preventDefault(); $('zoneSearch').focus();
+            }
+        });
+
+        /* =====================================================
+           আজকের মৌল
+           ===================================================== */
+        const ELEMENTS = [
+            { z: 1, s: 'H', n: 'হাইড্রোজেন', m: '1.008', g: 'অধাতু', f: 'মহাবিশ্বের সবচেয়ে হালকা ও সবচেয়ে প্রচুর মৌল।' },
+            { z: 2, s: 'He', n: 'হিলিয়াম', m: '4.003', g: 'নিষ্ক্রিয় গ্যাস', f: 'সূর্যের বর্ণালিতে প্রথম ধরা পড়ে; বেলুনে ব্যবহৃত হয়।' },
+            { z: 6, s: 'C', n: 'কার্বন', m: '12.011', g: 'অধাতু', f: 'জৈব যৌগের ভিত্তি; হীরা ও গ্রাফাইট দুটোই কার্বনের রূপ।' },
+            { z: 7, s: 'N', n: 'নাইট্রোজেন', m: '14.007', g: 'অধাতু', f: 'বায়ুর প্রায় ৭৮% নাইট্রোজেন; সার তৈরিতে অপরিহার্য।' },
+            { z: 8, s: 'O', n: 'অক্সিজেন', m: '15.999', g: 'অধাতু', f: 'বায়ুর প্রায় ২১% অক্সিজেন; দহন ও শ্বসনে অপরিহার্য।' },
+            { z: 11, s: 'Na', n: 'সোডিয়াম', m: '22.990', g: 'ধাতু', f: 'নরম ধাতু, পানির সাথে তীব্র বিক্রিয়া করে; খাবার লবণ NaCl এর উপাদান।' },
+            { z: 12, s: 'Mg', n: 'ম্যাগনেসিয়াম', m: '24.305', g: 'ধাতু', f: 'জ্বালালে উজ্জ্বল সাদা আলো দেয়; ক্লোরোফিলের কেন্দ্রে থাকে।' },
+            { z: 13, s: 'Al', n: 'অ্যালুমিনিয়াম', m: '26.982', g: 'ধাতু', f: 'হালকা ও মরিচারোধী ধাতু; বক্সাইট আকরিক থেকে নিষ্কাশন করা হয়।' },
+            { z: 14, s: 'Si', n: 'সিলিকন', m: '28.085', g: 'উপধাতু', f: 'ভূত্বকে অক্সিজেনের পরে সবচেয়ে বেশি; বালু, কাচ ও কম্পিউটার চিপে ব্যবহৃত।' },
+            { z: 17, s: 'Cl', n: 'ক্লোরিন', m: '35.45', g: 'অধাতু', f: 'সবুজাভ-হলুদ বিষাক্ত গ্যাস; পানি জীবাণুমুক্ত করতে ব্যবহৃত হয়।' },
+            { z: 20, s: 'Ca', n: 'ক্যালসিয়াম', m: '40.078', g: 'ধাতু', f: 'হাড় ও দাঁতের প্রধান উপাদান; চুনাপাথর ও ঝিনুকের খোলসে থাকে।' },
+            { z: 26, s: 'Fe', n: 'আয়রন', m: '55.845', g: 'ধাতু', f: 'রক্তের হিমোগ্লোবিনে থাকে; ইস্পাতের প্রধান উপাদান।' },
+            { z: 29, s: 'Cu', n: 'কপার', m: '63.546', g: 'ধাতু', f: 'বিদ্যুৎ ও তাপের ভালো পরিবাহী; বৈদ্যুতিক তারে ব্যবহৃত হয়।' },
+            { z: 79, s: 'Au', n: 'সোনা', m: '196.97', g: 'ধাতু', f: 'খুব কম সক্রিয় ধাতু, তাই সহজে মরিচা ধরে না; গহনা ও ইলেকট্রনিক্সে ব্যবহৃত।' }
+        ];
+        let elIdx = dayOfYear % ELEMENTS.length;
+        function renderElement() {
+            const e = ELEMENTS[elIdx];
+            $('elZ').textContent = bn(e.z);
+            $('elSym').textContent = e.s;
+            $('elMass').textContent = e.m;
+            $('elName').textContent = e.n + ' (' + e.s + ')';
+            $('elTag').textContent = e.g;
+            $('elFact').textContent = e.f;
+            const tile = document.querySelector('.el-tile');
+            tile.style.animation = 'none'; void tile.offsetWidth; tile.style.animation = '';
+        }
+        $('elNext').addEventListener('click', () => { elIdx = (elIdx + 1) % ELEMENTS.length; renderElement(); });
+        $('elPrev').addEventListener('click', () => { elIdx = (elIdx - 1 + ELEMENTS.length) % ELEMENTS.length; renderElement(); });
+
+        /* =====================================================
+           নোট
+           ===================================================== */
+        const notesBox = $('notesBox');
+        let notesTimer = null;
+        notesBox.value = sget(uk('Notes'), '');
+        const paintNotesCount = () => { $('notesCount').textContent = bn(notesBox.value.length) + '/' + bn(3000); };
+        paintNotesCount();
+        notesBox.addEventListener('input', () => {
+            $('notesStatus').textContent = 'লেখা হচ্ছে…'; paintNotesCount();
+            clearTimeout(notesTimer);
+            notesTimer = setTimeout(() => { sset(uk('Notes'), notesBox.value); $('notesStatus').textContent = 'সংরক্ষিত ✓'; }, 400);
+        });
+        $('notesClear').addEventListener('click', () => {
+            if (!notesBox.value || !confirm('নোটের সব লেখা মুছে ফেলবে?')) return;
+            notesBox.value = ''; sset(uk('Notes'), ''); paintNotesCount(); $('notesStatus').textContent = 'মুছে ফেলা হয়েছে';
+        });
+
+        /* ---------- উপরে ফেরার বাটন ---------- */
+        window.addEventListener('scroll', () => { $('toTop').classList.toggle('show', window.scrollY > 600); }, { passive: true });
+        $('toTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
+
+        /* ---------- শুরুর অবস্থা ---------- */
+        applyPrefs(); paintFavs(); renderQuick(); applyFilter(); renderElement();
+
+        /* ---------- Date chip ---------- */
+        const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-GB', dateOptions);
+
+        /* ---------- User info, greeting, streak ---------- */
+        function greetingNow() {
+            const h = new Date().getHours();
+            if (h >= 5 && h < 12) return 'সুপ্রভাত';
+            if (h >= 12 && h < 16) return 'শুভ দুপুর';
+            if (h >= 16 && h < 18) return 'শুভ বিকেল';
+            if (h >= 18 && h < 20) return 'শুভ সন্ধ্যা';
+            return 'শুভ রাত্রি';
+        }
+
+        function updateStreak(username) {
+            const key = 'labAlchemyStreak:' + username;
+            const fmt = d => d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+            const now = new Date();
+            const today = fmt(now);
+            const yesterday = fmt(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1));
+            let data = { last: '', count: 0 };
+            try { data = JSON.parse(localStorage.getItem(key)) || data; } catch (e) {}
+
+            if (data.last !== today) {
+                data.count = (data.last === yesterday) ? data.count + 1 : 1;
+                data.last = today;
+                try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
+            }
+            return Math.max(1, data.count);
+        }
+
+        if (ME) {
+            const fullName = (ME.name || ME.username).trim();
+            const first = fullName.split(/\s+/)[0];
+            document.getElementById('helloName').textContent = first;
+            document.getElementById('uname').textContent = fullName;
+            document.getElementById('avatar').textContent = Array.from(first)[0].toUpperCase();
+            document.getElementById('greetPill').textContent = '👋 ' + greetingNow() + ', কেমিস্ট্রি এক্সপ্লোরার';
+            document.getElementById('streakNum').textContent = bn(updateStreak(ME.username));
+        }
+        document.getElementById('zoneCount').textContent = bn(document.querySelectorAll('.card').length);
+
+        /* ---------- Logout ---------- */
+        if (!AUTH_OK) {
+            const warn = document.createElement('div');
+            warn.className = 'warn-toast';
+            warn.textContent = '⚠️ auth.js ফাইলটি পাওয়া যায়নি। এটি dashboard.html এর পাশেই আপলোড করো।';
+            document.body.appendChild(warn);
+        }
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if (AUTH_OK) Auth.logout();
+            document.body.classList.add('leaving');
+            setTimeout(() => { window.location.href = 'login.html'; }, 450);
+        });
+
+        /* ---------- Chemistry fact modal ---------- */
+        const facts = [
+            "১৮৬৯ সালে রুশ রসায়নবিদ দিমিত্রি মেন্ডেলিভ প্রথম পর্যায় সারণি প্রকাশ করেন। তখনো অনাবিষ্কৃত কয়েকটি মৌলের জন্য তিনি ফাঁকা ঘর রেখে গিয়েছিলেন।",
+            "ফরাসি বিজ্ঞানী আঁতোয়ান ল্যাভোসিয়ে দেখিয়েছিলেন, রাসায়নিক বিক্রিয়ায় পদার্থের মোট ভর অপরিবর্তিত থাকে। এটিই ভরের সংরক্ষণ সূত্র।",
+            "১৮৯৮ সালে মেরি কুরি ও পিয়ের কুরি পোলোনিয়াম এবং রেডিয়াম নামে দুটি নতুন তেজস্ক্রিয় মৌল আবিষ্কার করেন।",
+            "হিলিয়াম প্রথম ধরা পড়েছিল পৃথিবীতে নয়, সূর্যের আলোর বর্ণালিতে, ১৮৬৮ সালে। তাই এর নাম সূর্যের গ্রিক নাম 'হেলিওস' থেকে এসেছে।",
+            "হীরা আর গ্রাফাইট দুটোই শুধু কার্বন দিয়ে তৈরি। পরমাণু সাজানোর ধরন আলাদা বলেই তাদের ধর্ম এত ভিন্ন।",
+            "আলকেমিস্টরা সীসাকে সোনায় রূপান্তরের চেষ্টা করতেন। সেই চেষ্টা থেকেই আধুনিক রসায়নের অনেক পরীক্ষা-পদ্ধতির জন্ম।"
+        ];
+        let lastFact = -1;
+
+        function showChemistryFact() {
+            let i;
+            do { i = Math.floor(Math.random() * facts.length); } while (i === lastFact && facts.length > 1);
+            lastFact = i;
+            document.getElementById('fact-text').innerText = facts[i];
+            document.getElementById('chemModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('chemModal').classList.remove('open');
+        }
+        document.getElementById('chemModal').addEventListener('click', e => { if (e.target.id === 'chemModal') closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        /* ---------- Chemmy bubble messages ---------- */
+        (function () {
+            const el = document.getElementById('chemmyText');
+            const msgs = [
+                'হাই! কেমিস্ট্রি শিখতে সাহায্য লাগবে?',
+                'কোনো সূত্র বুঝতে সমস্যা? আমাকে জিজ্ঞেস করো!',
+                'চলো, একসাথে একটা বিক্রিয়া বুঝে নিই!'
+            ];
+            let i = 0;
+            setInterval(() => {
+                el.style.opacity = 0;
+                setTimeout(() => { i = (i + 1) % msgs.length; el.textContent = msgs[i]; el.style.opacity = 1; }, 300);
+            }, 6000);
+        })();
+
+        /* ---------- Banner slider ---------- */
+        let slideIndex = 0;
+        let slideTimer = null;
+        const slides = document.querySelectorAll('.banner-container');
+        const dots = document.querySelectorAll('.slider-tab');
+        const sliderBar = document.getElementById('sliderBar');
+
+        function restartBar() {
+            sliderBar.style.animation = 'none';
+            void sliderBar.offsetWidth;
+            sliderBar.style.animation = '';
+        }
+
+        function showSlide(n) {
+            if (n >= slides.length) slideIndex = 0;
+            else if (n < 0) slideIndex = slides.length - 1;
+            else slideIndex = n;
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slides[slideIndex].classList.add('active');
+            dots[slideIndex].classList.add('active');
+            restartBar();
+        }
+
+        function restartTimer() {
+            clearInterval(slideTimer);
+            slideTimer = setInterval(() => showSlide(slideIndex + 1), 5000);
+        }
+
+        function nextSlide() { showSlide(slideIndex + 1); restartTimer(); }
+        function prevSlide() { showSlide(slideIndex - 1); restartTimer(); }
+        function currentSlide(n) { showSlide(n); restartTimer(); }
+        restartTimer();
+
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        let startX = 0;
+        let isDragging = false;
+
+        sliderWrapper.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+        sliderWrapper.addEventListener('touchend', e => { handleSwipe(startX, e.changedTouches[0].clientX); });
+        sliderWrapper.addEventListener('mousedown', e => { startX = e.clientX; isDragging = true; });
+        sliderWrapper.addEventListener('mouseup', e => { if (!isDragging) return; isDragging = false; handleSwipe(startX, e.clientX); });
+        sliderWrapper.addEventListener('mouseleave', () => { isDragging = false; });
+
+        function handleSwipe(start, end) {
+            const threshold = 50;
+            if (start - end > threshold) nextSlide();
+            else if (end - start > threshold) prevSlide();
+        }
+
+        /* (জোন সার্চ ও ফিল্টার উপরের "জোন কার্ড" অংশে আছে) */
+
+        /* ---------- Card spotlight + 3D tilt ---------- */
+        const canTilt = window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduceMotion;
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                const x = e.clientX - r.left, y = e.clientY - r.top;
+                card.style.setProperty('--mx', x + 'px');
+                card.style.setProperty('--my', y + 'px');
+                if (canTilt && prefs.tilt) {
+                    card.style.setProperty('--ry', ((x / r.width - 0.5) * 8) + 'deg');
+                    card.style.setProperty('--rx', ((0.5 - y / r.height) * 8) + 'deg');
+                }
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--rx', '0deg');
+                card.style.setProperty('--ry', '0deg');
+            });
+        });
+
+        /* ---------- Scroll reveal ---------- */
+        (function () {
+            const targets = document.querySelectorAll('.section-head, .widget, .quick-panel, .card, .special-digital-lab-banner');
+            if (!('IntersectionObserver' in window) || reduceMotion) return;
+            const io = new IntersectionObserver(entries => {
+                entries.forEach(en => {
+                    if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+                });
+            }, { threshold: 0.08 });
+            targets.forEach((el, i) => {
+                el.classList.add('reveal');
+                if (el.classList.contains('card')) el.style.transitionDelay = ((i % 2) * 90) + 'ms';
+                io.observe(el);
+            });
+        })();
+
+        /* ---------- Particles ---------- */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const mouse = { x: null, y: null };
+        const colors = ['#22d3ee', '#a855f7', '#f472b6'];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 18000));
+            particles = Array.from({ length: count }, () => new Particle());
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.8;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4 - 0.08;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                if (mouse.x !== null) {
+                    const dx = this.x - mouse.x, dy = this.y - mouse.y;
+                    const d = Math.hypot(dx, dy);
+                    if (d < 130 && d > 0) {
+                        const f = (130 - d) / 130;
+                        this.x += (dx / d) * f * 2.2;
+                        this.y += (dy / d) * f * 2.2;
+                    }
+                }
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < -10) this.x = canvas.width + 10;
+                if (this.x > canvas.width + 10) this.x = -10;
+                if (this.y < -10) this.y = canvas.height + 10;
+                if (this.y > canvas.height + 10) this.y = -10;
+            }
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 12; ctx.shadowColor = this.color;
+                ctx.fill();
+            }
+        }
+
+        function connect() {
+            ctx.shadowBlur = 0;
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    const d = Math.hypot(particles[a].x - particles[b].x, particles[a].y - particles[b].y);
+                    if (d < 120) {
+                        ctx.globalAlpha = (1 - d / 120) * 0.22;
+                        ctx.strokeStyle = '#22d3ee';
+                        ctx.lineWidth = 0.8;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!prefs.bg) { requestAnimationFrame(animate); return; }
+            particles.forEach(p => { p.update(); p.draw(); });
+            connect();
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
+
+        const glow = document.getElementById('cursorGlow');
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+        window.addEventListener('mouseleave', () => { mouse.x = mouse.y = null; });
+        resizeCanvas();
+        animate();
+    </script>
+</body>
+</html>
