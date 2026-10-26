@@ -34,7 +34,7 @@
 
         body { animation: pageIn .7s ease both; transition: opacity .45s ease, transform .45s ease, filter .45s ease; }
         body.leaving { opacity: 0; transform: scale(1.04); filter: blur(8px); }
-        @keyframes pageIn { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: blur(0); } }
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* ---------- Background ---------- */
         .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
@@ -426,10 +426,14 @@
         Developed &amp; Designed by <span>Ahanaf Abid Omlan</span>
     </div>
 
+    <script src="auth.js?v=3"></script>
     <script>
         /* ---------- Settings ---------- */
-        // Login-er por je page-e jabe (apnar dashboard page-er naam din)
+        // Login-er por je page-e jabe
         const REDIRECT_AFTER_LOGIN = 'dashboard.html';
+
+        // Already logged in? Go straight to the dashboard.
+        if (Auth.currentUser()) window.location.replace(REDIRECT_AFTER_LOGIN);
 
         /* ---------- Particles ---------- */
         const canvas = document.getElementById('particle-canvas');
@@ -560,6 +564,37 @@
         const msg = document.getElementById('formMsg');
         const submitBtn = document.getElementById('submitBtn');
 
+        // Register theke ashle: success message dekhao + username bhore dao
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('registered') === '1') {
+            msg.textContent = 'অ্যাকাউন্ট তৈরি হয়েছে! এবার লগইন করো।';
+            msg.className = 'form-msg show ok';
+            if (params.get('u')) userInput.value = params.get('u');
+        }
+        // Dashboard theke fire ashle karon dekhao
+        const WHY = {
+            storage: 'ব্রাউজার স্টোরেজ বন্ধ আছে (Private mode বা in-app browser)। Chrome/Safari-র সাধারণ ট্যাবে খোলো।',
+            nouser: 'এই ব্রাউজারে ওই অ্যাকাউন্টটি পাওয়া যায়নি। অ্যাকাউন্ট ব্রাউজারেই সেভ থাকে, তাই আগে যেখানে রেজিস্টার করেছিলে সেখানেই লগইন করো, নয়তো নতুন করে রেজিস্টার করো।',
+            nosession: 'লগইন সেশন পাওয়া যায়নি। আবার লগইন করো।'
+        };
+        if (params.get('why') && WHY[params.get('why')]) {
+            msg.textContent = WHY[params.get('why')];
+            msg.className = 'form-msg show';
+        }
+
+        // Register link-e smooth transition
+        document.querySelector('.bottom-text a').addEventListener('click', e => {
+            e.preventDefault();
+            goTo(e.currentTarget.getAttribute('href'));
+        });
+
+        // Password bhule gele
+        document.querySelector('.row a.link').addEventListener('click', e => {
+            e.preventDefault();
+            msg.textContent = 'এখনো পাসওয়ার্ড রিসেট নেই। নতুন ইউজারনেম/ইমেইল দিয়ে আবার রেজিস্টার করতে পারো।';
+            msg.className = 'form-msg show';
+        });
+
         function setInvalid(fieldId, bad) {
             const f = document.getElementById(fieldId);
             f.classList.remove('invalid');
@@ -602,15 +637,20 @@
             submitBtn.classList.add('loading');
             submitBtn.querySelector('.btn-label').textContent = 'যাচাই করা হচ্ছে...';
 
-            /*
-              TODO: Ekhane apnar ashol login logic boshan (server / Firebase / Supabase ityadi).
-              Ekhon shudhu ekta demo delay ache, kono ashol password check hocche na.
-            */
-            setTimeout(() => {
-                msg.textContent = 'লগইন সফল! ল্যাবে নিয়ে যাওয়া হচ্ছে...';
-                msg.className = 'form-msg show ok';
-                setTimeout(() => goTo(REDIRECT_AFTER_LOGIN), 700);
-            }, 1200);
+            Auth.login(userInput.value, passInput.value, document.getElementById('remember').checked)
+                .then(res => {
+                    if (res.ok) {
+                        msg.textContent = 'লগইন সফল! ল্যাবে নিয়ে যাওয়া হচ্ছে...';
+                        msg.className = 'form-msg show ok';
+                        setTimeout(() => goTo(REDIRECT_AFTER_LOGIN), 700);
+                    } else {
+                        msg.textContent = res.error;
+                        msg.className = 'form-msg show';
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('loading');
+                        submitBtn.querySelector('.btn-label').textContent = 'লগইন করো';
+                    }
+                });
         });
     </script>
 </body>
