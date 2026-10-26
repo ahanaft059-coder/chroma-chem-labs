@@ -3,291 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রসায়ন গেম জোন (Chemistry Game Hub)</title>
+    <meta name="theme-color" content="#05060f">
+    <title>রসায়ন গেম জোন | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            let t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <style>
         :root {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --border-color: #e2e8f0;
-            --shadow: rgba(15, 23, 42, 0.08);
+            --bg-color: #eef2f9; --card-bg: rgba(255,255,255,.74); --card-solid: #fff;
+            --text-color: #0f172a; --text-muted: #5b6b82; --border-color: rgba(15,23,42,.12);
+            --shadow: 0 10px 30px -5px rgba(15,23,42,.08); --section-border: rgba(168,85,247,.28);
+            --gradient-primary: linear-gradient(135deg,#9333ea,#3b82f6); --gradient-glow: rgba(147,51,234,.18);
+            --grid-line: rgba(15,23,42,.05); --blob-opacity: .22; --gold: #d97706;
         }
         [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --border-color: #334155;
-            --shadow: rgba(0, 0, 0, 0.4);
+            --bg-color: #05060f; --card-bg: rgba(16,20,36,.62); --card-solid: #0b0f1c;
+            --text-color: #f8fafc; --text-muted: #94a3b8; --border-color: rgba(255,255,255,.1);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,.7); --section-border: rgba(168,85,247,.35);
+            --gradient-primary: linear-gradient(135deg,#a855f7,#60a5fa); --gradient-glow: rgba(168,85,247,.28);
+            --grid-line: rgba(255,255,255,.035); --blob-opacity: .42; --gold: #fbbf24;
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 40px 20px; transition: background 0.3s, color 0.3s; position: relative; }
-        
-        /* ব্যাক বাটন স্টাইল */
-        .back-btn { 
-            position: fixed; 
-            top: 15px; 
-            left: 15px; 
-            padding: 6px 14px; 
-            background: var(--card-bg); 
-            backdrop-filter: blur(10px);
-            color: var(--text-color); 
-            border-radius: 8px; 
-            text-decoration: none; 
-            border: 1px solid var(--border-color); 
-            font-weight: bold;
-            font-size: 13px;
-            z-index: 1000;
-            box-shadow: 0 4px 10px var(--shadow);
-            transition: all 0.2s;
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; min-height: 100vh; padding: 18px 18px 64px;
+            font-family: 'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;
+            background: var(--bg-color); color: var(--text-color);
+            transition: background .4s, color .4s, opacity .45s; animation: pageIn .6s ease both;
         }
-        .back-btn:hover {
-            opacity: 0.85;
-            transform: translateY(-2px);
-        }
+        body.leaving { opacity: 0; }
+        /* body তে filter/transform নয়, নইলে fixed জিনিস ভাসে না */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .container { max-width: 1000px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 40px; margin-top: 10px; }
-        header h1 { font-size: 36px; margin-bottom: 10px; background: linear-gradient(135deg, #e67e22, #f1c40f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* সেকশন হেডার স্টাইল */
-        .section-title {
-            font-size: 22px;
-            margin: 40px 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px dashed #3498db;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 26s ease-in-out infinite alternate; }
+        .b1 { width: 520px; height: 520px; background: #0891b2; top: -150px; left: -120px; }
+        .b2 { width: 620px; height: 620px; background: #7e22ce; bottom: -230px; right: -170px; animation-duration: 32s; }
+        @keyframes drift { to { transform: translate(70px,50px) scale(1.15); } }
+        .grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+            background-size: 52px 52px; -webkit-mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); }
 
-        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
-        @media (max-width: 700px) { .games-grid { grid-template-columns: 1fr; } }
+        .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+        .top { position: sticky; top: 10px; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+            padding: 12px 20px; margin-bottom: 30px; border-radius: 24px; background: var(--card-bg); border: 1.5px solid var(--border-color);
+            box-shadow: var(--shadow); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-color); }
+        .orb { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7); box-shadow: 0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7); }
+        .brand b { display: block; font-size: 18px; font-weight: 800; line-height: 1.2; }
+        .brand small { display: block; font-size: 12px; font-weight: 700; color: #a855f7; }
+        .top-right { display: flex; align-items: center; gap: 10px; }
+        .icon-btn { width: 42px; height: 42px; border-radius: 14px; cursor: pointer; font-size: 16px; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); display: inline-flex; align-items: center; justify-content: center; transition: transform .3s, box-shadow .3s; }
+        .icon-btn:hover { transform: rotate(180deg); box-shadow: 0 8px 22px var(--gradient-glow); }
+        .back-btn { display: inline-flex; align-items: center; padding: 11px 18px; border-radius: 14px; font-size: 14px; font-weight: 700; text-decoration: none; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); transition: transform .25s, border-color .25s; }
+        .back-btn:hover { transform: translateX(-3px); border-color: rgba(168,85,247,.6); }
+        a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
 
-        .game-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; padding: 25px; box-shadow: 0 8px 20px var(--shadow); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
-        .game-card:hover { transform: translateY(-5px); }
-        .game-icon { font-size: 48px; margin-bottom: 15px; }
-        .game-title { font-size: 22px; margin: 0 0 10px 0; }
-        .game-desc { font-size: 14px; opacity: 0.8; line-height: 1.5; margin-bottom: 20px; }
-        .play-btn { display: block; text-align: center; background: linear-gradient(135deg, #3498db, #2ecc71); color: white; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: bold; }
-        
-        /* অ্যাডভান্সড সেকশনের স্টাইল */
-        .advanced-section {
-            border-color: #ffb703;
-        }
-        .advanced-card {
-            border: 2px solid rgba(255, 183, 3, 0.5);
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 183, 3, 0.05) 100%);
-        }
-        .advanced-btn {
-            background: linear-gradient(135deg, #ffb703, #fb8500);
-            color: #000;
-        }
+        .hero { text-align: center; margin-bottom: 26px; }
+        .pill { display: inline-block; padding: 6px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; color: #a855f7; background: rgba(168,85,247,.1); border: 1px solid rgba(168,85,247,.3); }
+        .hero h1 { margin: 14px 0 10px; font-size: clamp(2rem,5vw,3.1rem); font-weight: 800; letter-spacing: -.5px; line-height: 1.25;
+            background: var(--gradient-primary); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 6s linear infinite; }
+        @keyframes shimmer { to { background-position: 200% center; } }
+        .hero p { margin: 0 auto; max-width: 560px; font-size: 16px; line-height: 1.7; font-weight: 500; color: var(--text-muted); }
 
-        .locked { opacity: 0.6; }
-        .locked .play-btn { background: #7f8c8d; cursor: not-allowed; }
+        .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .search { flex: 1 1 260px; font-family: inherit; font-size: 15px; font-weight: 600; padding: 13px 18px; border-radius: 16px; color: var(--text-color); background: var(--card-bg); border: 1.5px solid var(--border-color); outline: none; backdrop-filter: blur(12px); transition: border-color .25s, box-shadow .25s; }
+        .search:focus { border-color: #a855f7; box-shadow: 0 0 0 4px var(--gradient-glow); }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 10px 16px; border-radius: 30px; cursor: pointer; color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, color .2s, border-color .2s; }
+        .chip:hover { color: var(--text-color); border-color: rgba(168,85,247,.55); transform: translateY(-2px); }
+        .chip.on { color: #fff; border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .count { margin: 10px 4px 0; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+        .section-title { display: flex; align-items: center; gap: 10px; margin: 34px 0 18px; padding-bottom: 12px; font-size: 22px; font-weight: 800; border-bottom: 2px dashed var(--section-border); }
+        .section-title.adv { border-bottom-color: rgba(251,191,36,.55); color: var(--gold); }
+        .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; }
+        @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } .back-btn .long { display: none; } }
+
+        .game { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 24px; border-radius: 24px;
+            background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: transform .3s, border-color .3s, box-shadow .3s; }
+        .game::before { content: ''; position: absolute; top: -80px; right: -60px; width: 200px; height: 200px; pointer-events: none; background: radial-gradient(circle,var(--gradient-glow),transparent 70%); }
+        .game > * { position: relative; }
+        .game:hover { transform: translateY(-6px); border-color: rgba(168,85,247,.7); box-shadow: 0 24px 44px -16px var(--gradient-glow); }
+        .game.adv { border-color: rgba(251,191,36,.45); }
+        .game.adv:hover { border-color: rgba(251,191,36,.9); }
+        .game.locked { opacity: .62; }
+        .game.locked:hover { transform: none; box-shadow: var(--shadow); border-color: var(--section-border); }
+        .game .no { position: absolute; top: 16px; right: 18px; font-size: 12px; font-weight: 800; color: var(--text-muted); }
+        .icon { width: 56px; height: 56px; margin-bottom: 14px; border-radius: 18px; font-size: 28px; display: flex; align-items: center; justify-content: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .game h3 { margin: 0 0 8px; font-size: 20px; font-weight: 800; line-height: 1.35; }
+        .game.adv h3 { color: var(--gold); }
+        .game p { margin: 0; font-size: 14.5px; line-height: 1.7; font-weight: 500; color: var(--text-muted); }
+        .play { display: block; text-align: center; padding: 13px; border-radius: 14px; font-size: 15px; font-weight: 800; text-decoration: none; color: #fff; background: var(--gradient-primary); transition: transform .25s, box-shadow .25s; }
+        .play:hover { transform: translateY(-2px); box-shadow: 0 10px 22px var(--gradient-glow); }
+        .game.adv .play { color: #1a1204; background: linear-gradient(135deg,#fbbf24,#fb923c); }
+        .game.locked .play { color: var(--text-muted); background: var(--card-solid); border: 1px dashed var(--border-color); cursor: not-allowed; }
+        .game.locked .play:hover { transform: none; box-shadow: none; }
+        .empty { display: none; margin: 40px 0; padding: 30px; text-align: center; border-radius: 20px; font-weight: 600; color: var(--text-muted); background: var(--card-bg); border: 1px dashed var(--border-color); }
+        .empty.show { display: block; }
+
+        .credit-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500; display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #64748b; background: rgba(5,6,15,.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.06); }
+        [data-theme="light"] .credit-bar { background: rgba(255,255,255,.88); color: #475569; border-top-color: rgba(15,23,42,.1); }
+        .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#22d3ee,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
     </style>
 </head>
 <body>
+    <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+    <div class="grid-bg"></div>
 
-    <!-- ওপরের বাম পাশে যুক্ত ব্যাক বাটন -->
-    <a href="index.html" class="back-btn">← মূল পৃষ্ঠায় ফিরে যান</a>
-
-    <div class="container">
-        <header>
-            <h1>🎮 রসায়ন গেম হাব (Chemistry Game Hub)</h1>
-            <p>তোমার পছন্দের গেমটি বেছে নাও এবং খেলা শুরু করো!</p>
+    <div class="wrap">
+        <header class="top">
+            <a class="brand" href="index.html" id="brandLink"><span class="orb"></span><span><b>Lab Alchemy</b><small>Game Zone</small></span></a>
+            <div class="top-right">
+                <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+                <a class="back-btn" id="backBtn" href="index.html">← <span class="long" id="backText">মূল পৃষ্ঠায় ফিরে যান</span></a>
+            </div>
         </header>
 
-        <!-- মূল গেমসমূহ -->
-        <h2 class="section-title">⚡ মূল গেমসমূহ (Core Games)</h2>
-        <div class="games-grid">
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">🕹️</div>
-                    <h3 class="game-title">যোজনী মেলানো চ্যালেঞ্জ</h3>
-                    <p class="game-desc">মৌলের প্রতীক দেখে সঠিক যোজনী মেলাও।</p>
-                </div>
-                <a href="game1.html" class="play-btn">খেলুন ⚡</a>
-            </div>
+        <section class="hero">
+            <span class="pill">🎮 খেলতে খেলতে শেখো</span>
+            <h1>রসায়ন গেম হাব</h1>
+            <p>তোমার পছন্দের গেমটি বেছে নাও এবং খেলা শুরু করো!</p>
+        </section>
 
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">🎯</div>
-                    <h3 class="game-title">আণবিক ভর শিকারী</h3>
-                    <p class="game-desc">স্ক্রিনে আসা সংকেত দেখে দ্রুত মনে মনে হিসাব করে সঠিক আণবিক ভর অপশন থেকে খুঁজে নাও।</p>
-                </div>
-                <a href="game2.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">🧩</div>
-                    <h3 class="game-title">সংকেত মেকার</h3>
-                    <p class="game-desc">ক্যাটায়ন আর অ্যানায়ন জোড়া দিয়ে সঠিক সংকেত তৈরি করো।</p>
-                </div>
-                <a href="game3.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">🧪</div>
-                    <h3 class="game-title">রাসায়নিক বিক্রিয়া শিকারী</h3>
-                    <p class="game-desc">সঠিক উৎপাদ বেছে নিয়ে বিক্রিয়া সম্পন্ন করো।</p>
-                </div>
-                <a href="game4.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">🧪</div>
-                    <h3 class="game-title">ফাংশনাল গ্রুপ চ্যালেঞ্জ</h3>
-                    <p class="game-desc">সঠিক ফাংশনাল গ্রুপ চিহ্নিত করে মাস্টার হয়ে ওঠো!</p>
-                </div>
-                <a href="game5.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">📝</div>
-                    <h3 class="game-title">IUPAC নামকরণ ব্যাটল</h3>
-                    <p class="game-desc">যৌগের সংকেত দেখে সঠিক IUPAC নাম বেছে নাও।</p>
-                </div>
-                <a href="game6.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">⚡</div>
-                    <h3 class="game-title">রিঅ্যাকশন চেইন রিয়্যাক্টর</h3>
-                    <p class="game-desc">বিক্রিয়ার চেইন ধরে রেখে সর্বোচ্চ স্কোর করো!</p>
-                </div>
-                <a href="game7.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">🔍</div>
-                    <h3 class="game-title">Element Hunter 🧪</h3>
-                    <p class="game-desc">মৌলের রাজ্যে রহস্যের সমাধান করো—সঠিক গ্রুপ, সঠিক পরিচয়!</p>
-                </div>
-                <a href="game8.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">💧</div>
-                    <h3 class="game-title">pH Lab: Expert Mode</h3>
-                    <p class="game-desc">ঘড়ির কাঁটা আর লিকুইডের লড়াইয়ে জয়ী হতে প্রয়োজন নিখুঁত ভারসাম্য!</p>
-                </div>
-                <a href="game9.html" class="play-btn">খেলুন ⚡</a>
-            </div>
-
-            <div class="game-card">
-                <div>
-                    <div class="game-icon">🧪</div>
-                    <h3 class="game-title">মোলারিটি মাস্টার</h3>
-                    <p class="game-desc">মোলারিটি ও ঘনমাত্রা সম্পর্কিত সব ধরনের গাণিতিক সমস্যার ডাটাবেস চ্যালেঞ্জ।</p>
-                </div>
-                <a href="game10.html" class="play-btn">খেলুন ⚡</a>
+        <div class="tools">
+            <input class="search" id="q" type="search" placeholder="গেম খোঁজো… (যেমন: মোল, IUPAC, গ্যাস)" aria-label="গেম খোঁজো" autocomplete="off">
+            <div class="chips" id="chips" role="group" aria-label="ফিল্টার">
+                <button type="button" class="chip on" data-f="all">সব</button>
+                <button type="button" class="chip" data-f="core">মূল গেম</button>
+                <button type="button" class="chip" data-f="adv">অ্যাডভান্সড</button>
+                <button type="button" class="chip" data-f="open">খেলার উপযোগী</button>
             </div>
         </div>
+        <div class="count" id="count" aria-live="polite"></div>
 
-        <!-- অ্যাডভান্সড লেভেল গেমগুলোর সেকশন -->
-        <h2 class="section-title advanced-section" style="color: #ffb703;">🚀 Advanced & New Games Collection</h2>
-        <div class="games-grid">
-            <div class="game-card advanced-card">
-                <div>
-                    <div class="game-icon">⚛️</div>
-                    <h3 class="game-title" style="color: #ffb703;">কোয়ান্টাম অরবিটাল ডার্গ</h3>
-                    <p class="game-desc">কোয়ান্টাম সংখ্যা ও অরবিটালের চ্যালেঞ্জ মোকাবেলা করো।</p>
-                </div>
-                <a href="game11.html" class="play-btn advanced-btn">খেলুন 🚀</a>
-            </div>
-
-            <div class="game-card advanced-card">
-                <div>
-                    <div class="game-icon">🧪</div>
-                    <h3 class="game-title" style="color: #ffb703;">আইসোটোপ আইল্যান্ড</h3>
-                    <p class="game-desc">আইসোটোপ ও ভরসংখ্যার হিসাব করে দ্বীপ জয় করো।</p>
-                </div>
-                <a href="game12.html" class="play-btn advanced-btn">খেলুন 🚀</a>
-            </div>
-
-            <div class="game-card advanced-card">
-                <div>
-                    <div class="game-icon">🎈</div>
-                    <h3 class="game-title" style="color: #ffb703;">গ্যাসের ল্যাব</h3>
-                    <p class="game-desc">বয়েল ও চালর্সের সূত্রের নিখুঁত হিসাব মেলাও।</p>
-                </div>
-                <a href="game13.html" class="play-dev advanced-btn" style="display:block; text-align:center; text-decoration:none; padding:12px; border-radius:12px; font-weight:bold;">খেলুন 🚀</a>
-            </div>
-
-            <div class="game-card advanced-card">
-                <div>
-                    <div class="game-icon">⚗️</div>
-                    <h3 class="game-title" style="color: #ffb703;">সলিউশন মাস্টার</h3>
-                    <p class="game-desc">মোলারিটি ও দ্রবণ প্রস্তুতির চ্যালেঞ্জ সম্পূর্ণ করো।</p>
-                </div>
-                <a href="game14.html" class="play-btn advanced-btn">খেলুন 🚀</a>
-            </div>
-
-            <div class="game-card locked">
-                <div>
-                    <div class="game-icon">🔒</div>
-                    <h3 class="game-title">গেম 15: রেডক্স রিয়্যাকশন রেস</h3>
-                    <p class="game-desc">জারণ-বিজারণ বিক্রিয়ার ইলেকট্রন আদান-প্রদান ঠিক রাখো।</p>
-                </div>
-                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
-            </div>
-
-            <div class="game-card locked">
-                <div>
-                    <div class="game-icon">🔒</div>
-                    <h3 class="game-title">গেম 16: থার্মো কেমিস্ট্রি কোয়েস্ট</h3>
-                    <p class="game-desc">তাপোৎপাদী ও তাপহারী বিক্রিয়ার শক্তির হিসাব করো।</p>
-                </div>
-                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
-            </div>
-
-            <div class="game-card locked">
-                <div>
-                    <div class="game-icon">🔒</div>
-                    <h3 class="game-title">গেম 17: পিরিয়ডিক টেবিল পাজল</h3>
-                    <p class="game-desc">মৌলগুলোর পর্যায়বৃত্ত ধর্ম এবং গ্রুপিংয়ের ধাঁধা সমাধান করো।</p>
-                </div>
-                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
-            </div>
-
-            <div class="game-card locked">
-                <div>
-                    <div class="game-icon">🔒</div>
-                    <h3 class="game-title">গেম 18: পলিমার ওয়ার্ল্ড</h3>
-                    <p class="game-desc">মনোমার থেকে সঠিক পলিমার চেইন তৈরি করো।</p>
-                </div>
-                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
-            </div>
-
-            <div class="game-card locked">
-                <div>
-                    <div class="game-icon">🔒</div>
-                    <h3 class="game-title">গেম 19: মেটাল এক্সট্রাকশন</h3>
-                    <p class="game-desc">খনিজ থেকে ধাতু নিষ্কাশনের সঠিক ধাপগুলো সাজাও।</p>
-                </div>
-                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
-            </div>
-
-            <div class="game-card locked">
-                <div>
-                    <div class="game-icon">🔒</div>
-                    <h3 class="game-title">গেম 20: কেমিক্যাল ইকুইলিব্রিয়াম</h3>
-                    <p class="game-desc">সাম্যাবস্থার নীতি প্রয়োগ করে বিক্রিয়ার দিক নির্ধারণ করো।</p>
-                </div>
-                <a href="#" class="play-btn" onclick="return false;">লকড 🔒</a>
-            </div>
-        </div>
+        <div id="sections"></div>
+        <div class="empty" id="empty">কোনো গেম পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজে দেখো।</div>
     </div>
 
+    <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+    <script src="auth.js?v=3"></script>
     <script>
-        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+        /* গেম তালিকা: নতুন গেম যোগ করতে শুধু এখানে একটি লাইন যোগ করো */
+        const CORE = [
+            ['🕹️', 'যোজনী মেলানো চ্যালেঞ্জ', 'মৌলের প্রতীক দেখে সঠিক যোজনী মেলাও।', 'game1.html'],
+            ['🎯', 'আণবিক ভর শিকারী', 'স্ক্রিনে আসা সংকেত দেখে দ্রুত মনে মনে হিসাব করে সঠিক আণবিক ভর অপশন থেকে খুঁজে নাও।', 'game2.html'],
+            ['🧩', 'সংকেত মেকার', 'ক্যাটায়ন আর অ্যানায়ন জোড়া দিয়ে সঠিক সংকেত তৈরি করো।', 'game3.html'],
+            ['🧪', 'রাসায়নিক বিক্রিয়া শিকারী', 'সঠিক উৎপাদ বেছে নিয়ে বিক্রিয়া সম্পন্ন করো।', 'game4.html'],
+            ['🔬', 'ফাংশনাল গ্রুপ চ্যালেঞ্জ', 'সঠিক ফাংশনাল গ্রুপ চিহ্নিত করে মাস্টার হয়ে ওঠো!', 'game5.html'],
+            ['📝', 'IUPAC নামকরণ ব্যাটল', 'যৌগের সংকেত দেখে সঠিক IUPAC নাম বেছে নাও।', 'game6.html'],
+            ['⚡', 'রিঅ্যাকশন চেইন রিয়্যাক্টর', 'বিক্রিয়ার চেইন ধরে রেখে সর্বোচ্চ স্কোর করো!', 'game7.html'],
+            ['🔍', 'Element Hunter', 'মৌলের রাজ্যে রহস্যের সমাধান করো—সঠিক গ্রুপ, সঠিক পরিচয়!', 'game8.html'],
+            ['💧', 'pH Lab: Expert Mode', 'ঘড়ির কাঁটা আর লিকুইডের লড়াইয়ে জয়ী হতে প্রয়োজন নিখুঁত ভারসাম্য!', 'game9.html'],
+            ['⚖️', 'মোলারিটি মাস্টার', 'মোলারিটি ও ঘনমাত্রা সম্পর্কিত সব ধরনের গাণিতিক সমস্যার ডাটাবেস চ্যালেঞ্জ।', 'game10.html']
+        ];
+        const ADV = [
+            ['⚛️', 'কোয়ান্টাম অরবিটাল ডার্ট', 'কোয়ান্টাম সংখ্যা ও অরবিটালের চ্যালেঞ্জ মোকাবেলা করো।', 'game11.html'],
+            ['🏝️', 'আইসোটোপ আইল্যান্ড', 'আইসোটোপ ও ভরসংখ্যার হিসাব করে দ্বীপ জয় করো।', 'game12.html'],
+            ['🎈', 'গ্যাসের ল্যাব', 'বয়েল ও চার্লসের সূত্রের নিখুঁত হিসাব মেলাও।', 'game13.html'],
+            ['⚗️', 'সলিউশন মাস্টার', 'মোলারিটি ও দ্রবণ প্রস্তুতির চ্যালেঞ্জ সম্পূর্ণ করো।', 'game14.html'],
+            ['🔒', 'রেডক্স রিয়্যাকশন রেস', 'জারণ-বিজারণ বিক্রিয়ার ইলেকট্রন আদান-প্রদান ঠিক রাখো।', null],
+            ['🔒', 'থার্মো কেমিস্ট্রি কোয়েস্ট', 'তাপোৎপাদী ও তাপহারী বিক্রিয়ার শক্তির হিসাব করো।', null],
+            ['🔒', 'পিরিয়ডিক টেবিল পাজল', 'মৌলগুলোর পর্যায়বৃত্ত ধর্ম এবং গ্রুপিংয়ের ধাঁধা সমাধান করো।', null],
+            ['🔒', 'পলিমার ওয়ার্ল্ড', 'মনোমার থেকে সঠিক পলিমার চেইন তৈরি করো।', null],
+            ['🔒', 'মেটাল এক্সট্রাকশন', 'খনিজ থেকে ধাতু নিষ্কাশনের সঠিক ধাপগুলো সাজাও।', null],
+            ['🔒', 'কেমিক্যাল ইকুইলিব্রিয়াম', 'সাম্যাবস্থার নীতি প্রয়োগ করে বিক্রিয়ার দিক নির্ধারণ করো।', null]
+        ];
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const $ = id => document.getElementById(id);
+        const GAMES = [];
+        CORE.forEach((g, i) => GAMES.push({ n: i + 1, icon: g[0], t: g[1], d: g[2], href: g[3], kind: 'core' }));
+        ADV.forEach((g, i) => GAMES.push({ n: CORE.length + i + 1, icon: g[0], t: g[1], d: g[2], href: g[3], kind: 'adv' }));
+
+        /* লগইন থাকলে ড্যাশবোর্ডে ফেরার লিংক; পেজটি সবার জন্য খোলা */
+        try {
+            if (typeof Auth !== 'undefined' && Auth.currentUser()) {
+                $('brandLink').href = 'dashboard.html'; $('backBtn').href = 'dashboard.html'; $('backText').textContent = 'ড্যাশবোর্ড';
+            }
+        } catch (e) {}
+
+        $('themeBtn').addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        let filter = 'all', query = '';
+        const norm = s => s.toLowerCase();
+
+        function card(g) {
+            const locked = !g.href;
+            const el = document.createElement('article');
+            el.className = 'game' + (g.kind === 'adv' ? ' adv' : '') + (locked ? ' locked' : '');
+            const no = document.createElement('span'); no.className = 'no'; no.textContent = 'গেম ' + bn(g.n);
+            const top = document.createElement('div');
+            const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = g.icon; ic.setAttribute('aria-hidden', 'true');
+            const h = document.createElement('h3'); h.textContent = g.t;
+            const p = document.createElement('p'); p.textContent = g.d;
+            top.append(ic, h, p);
+            const a = document.createElement('a'); a.className = 'play';
+            if (locked) { a.textContent = 'শীঘ্রই আসছে 🔒'; a.setAttribute('aria-disabled', 'true'); a.tabIndex = -1; a.href = '#'; a.addEventListener('click', e => e.preventDefault()); }
+            else { a.href = g.href; a.textContent = g.kind === 'adv' ? 'খেলুন 🚀' : 'খেলুন ⚡'; a.setAttribute('aria-label', g.t + ' খেলুন'); }
+            el.append(no, top, a);
+            return el;
+        }
+        function section(title, cls, list) {
+            const wrap = document.createElement('div');
+            const h = document.createElement('h2'); h.className = 'section-title ' + cls; h.textContent = title;
+            const grid = document.createElement('div'); grid.className = 'grid';
+            list.forEach(g => grid.appendChild(card(g)));
+            wrap.append(h, grid); return wrap;
+        }
+        function render() {
+            const q = norm(query.trim());
+            const list = GAMES.filter(g =>
+                (filter === 'all' || filter === g.kind || (filter === 'open' && g.href)) &&
+                (!q || norm(g.t + ' ' + g.d).includes(q)));
+            const root = $('sections'); root.replaceChildren();
+            const core = list.filter(g => g.kind === 'core'), adv = list.filter(g => g.kind === 'adv');
+            if (core.length) root.appendChild(section('⚡ মূল গেমসমূহ (Core Games)', '', core));
+            if (adv.length) root.appendChild(section('🚀 Advanced & New Games', 'adv', adv));
+            $('empty').classList.toggle('show', !list.length);
+            const open = list.filter(g => g.href).length;
+            $('count').textContent = bn(list.length) + 'টি গেম দেখানো হচ্ছে · ' + bn(open) + 'টি খেলার উপযোগী';
+        }
+        $('q').addEventListener('input', e => { query = e.target.value; render(); });
+        document.querySelectorAll('#chips .chip').forEach(b => b.addEventListener('click', () => {
+            filter = b.dataset.f;
+            document.querySelectorAll('#chips .chip').forEach(x => x.classList.toggle('on', x === b));
+            render();
+        }));
+        render();
     </script>
 </body>
 </html>
