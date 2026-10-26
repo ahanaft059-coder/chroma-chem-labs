@@ -3,121 +3,584 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ফাংশনাল গ্রুপ চ্যালেঞ্জ</title>
+    <meta name="theme-color" content="#05060f">
+    <title>ফাংশনাল গ্রুপ চ্যালেঞ্জ | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            let t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #f59e0b; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; text-align: center; }
-        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #334155; color: white; border-radius: 10px; text-decoration: none; font-weight: bold; }
-        
-        .game-card { max-width: 600px; margin: 80px auto; background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid #334155; }
-        .game-title { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; font-weight: 800; text-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
-        
-        .score-box { font-size: 1.5rem; margin-bottom: 20px; }
-        #combo-badge { color: #22c55e; font-weight: bold; margin-left: 10px; }
-        
-        #timer-bar { width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-bottom: 30px; }
-        #timer-progress { width: 100%; height: 100%; background: var(--accent); }
-        
-        .btn { display: block; width: 100%; padding: 18px; margin: 12px 0; background: #334155; border: 2px solid transparent; color: white; border-radius: 15px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
-        .btn:hover { border-color: var(--accent); background: #475569; }
+        :root {
+            --bg-color: #eef2f9; --card-bg: rgba(255,255,255,.78); --card-solid: #fff;
+            --text-color: #0f172a; --text-muted: #5b6b82; --border-color: rgba(15,23,42,.12);
+            --shadow: 0 10px 30px -5px rgba(15,23,42,.1); --section-border: rgba(168,85,247,.3);
+            --gradient-primary: linear-gradient(135deg,#9333ea,#3b82f6); --gradient-glow: rgba(147,51,234,.2);
+            --grid-line: rgba(15,23,42,.05); --blob-opacity: .22; --good: #059669; --bad: #e11d48; --gold: #d97706; --accent: #7c3aed;
+        }
+        [data-theme="dark"] {
+            --bg-color: #05060f; --card-bg: rgba(16,20,36,.66); --card-solid: #0b0f1c;
+            --text-color: #f8fafc; --text-muted: #94a3b8; --border-color: rgba(255,255,255,.1);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,.7); --section-border: rgba(168,85,247,.38);
+            --gradient-primary: linear-gradient(135deg,#a855f7,#60a5fa); --gradient-glow: rgba(168,85,247,.3);
+            --grid-line: rgba(255,255,255,.035); --blob-opacity: .42; --good: #34d399; --bad: #fb7185; --gold: #fbbf24; --accent: #a78bfa;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: 18px 16px 64px; font-family: 'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;
+            background: var(--bg-color); color: var(--text-color); transition: background .4s, color .4s; animation: pageIn .6s ease both; }
+        /* body তে filter/transform নয়, নইলে fixed জিনিস ভাসে না */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 26s ease-in-out infinite alternate; }
+        .b1 { width: 480px; height: 480px; background: #0891b2; top: -150px; left: -120px; }
+        .b2 { width: 560px; height: 560px; background: #7e22ce; bottom: -220px; right: -160px; animation-duration: 32s; }
+        @keyframes drift { to { transform: translate(60px,50px) scale(1.15); } }
+        .grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px); background-size: 52px 52px; -webkit-mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); }
+        .wrap { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
+
+        .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; padding: 10px 14px; border-radius: 20px; background: var(--card-bg); border: 1.5px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .btn-s { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 13px; font-family: inherit; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); transition: transform .25s, border-color .25s; }
+        .btn-s:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.6); }
+        .top-r { display: flex; gap: 8px; }
+        .icon-btn { width: 40px; height: 40px; padding: 0; justify-content: center; font-size: 16px; }
+        a:focus-visible, button:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
+
+        .card { position: relative; overflow: hidden; padding: 28px 26px; border-radius: 28px; background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .card::before { content: ''; position: absolute; top: -90px; right: -70px; width: 240px; height: 240px; pointer-events: none; background: radial-gradient(circle,var(--gradient-glow),transparent 70%); }
+        .card > * { position: relative; }
+        h1 { margin: 0 0 6px; text-align: center; font-size: clamp(1.6rem,5vw,2.1rem); font-weight: 800; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { margin: 0 0 22px; text-align: center; font-size: 15px; font-weight: 500; color: var(--text-muted); }
+        [hidden] { display: none !important; }
+
+        /* শুরুর স্ক্রিন */
+        .label { margin: 18px 0 8px; font-size: 14px; font-weight: 800; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { flex: 1 1 0; min-width: 96px; font-family: inherit; padding: 11px 12px; border-radius: 16px; cursor: pointer; text-align: center; color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s; }
+        .chip b { display: block; font-size: 15px; font-weight: 800; color: var(--text-color); }
+        .chip small { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; }
+        .chip:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.55); }
+        .chip.on { border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .chip.on b, .chip.on small { color: #fff; }
+        .sw-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 14.5px; font-weight: 600; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { position: absolute; inset: 0; z-index: 2; margin: 0; opacity: 0; cursor: pointer; }
+        .switch .track { position: absolute; inset: 0; border-radius: 20px; background: var(--border-color); transition: background .25s; }
+        .switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s; }
+        .switch input:checked ~ .track { background: var(--gradient-primary); }
+        .switch input:checked ~ .track::after { transform: translateX(20px); }
+        .switch input:focus-visible ~ .track { outline: 3px solid #22d3ee; outline-offset: 2px; }
+        .big { display: block; width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 16px; font-family: inherit; font-size: 17px; font-weight: 800; color: #fff; cursor: pointer; background: var(--gradient-primary); transition: transform .25s, box-shadow .25s; }
+        .big:hover { transform: translateY(-2px); box-shadow: 0 12px 26px var(--gradient-glow); }
+        .big.ghost { color: var(--text-color); background: transparent; border: 1.5px solid var(--section-border); }
+        .rules { margin: 18px 0 0; padding: 14px 16px; border-radius: 16px; font-size: 13.5px; line-height: 1.8; font-weight: 500; color: var(--text-muted); background: var(--card-solid); border: 1px dashed var(--border-color); }
+        .best-line { margin-top: 14px; text-align: center; font-size: 14px; font-weight: 700; color: var(--gold); }
+
+        /* খেলার স্ক্রিন */
+        .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+        .stat { padding: 9px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .stat small { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .stat b { display: block; margin-top: 2px; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .stat.best b { color: var(--gold); }
+        .timer { height: 8px; margin-bottom: 18px; border-radius: 8px; overflow: hidden; background: var(--border-color); }
+        .timer span { display: block; height: 100%; width: 100%; border-radius: 8px; background: var(--gradient-primary); transition: background .3s; }
+        .timer.low span { background: linear-gradient(90deg,#fb7185,#f59e0b); }
+        .qmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .tag { padding: 3px 12px; border-radius: 20px; color: var(--accent); background: rgba(168,85,247,.12); border: 1px solid rgba(168,85,247,.3); }
+        .q { margin-bottom: 20px; padding: 24px 14px; border-radius: 20px; text-align: center; font-size: clamp(1.5rem,6vw,2.2rem); font-weight: 800; line-height: 1.4; color: var(--accent); word-break: break-word;
+            background: rgba(168,85,247,.07); border: 1.5px solid rgba(168,85,247,.28); box-shadow: inset 0 0 28px var(--gradient-glow); }
+        .q small { display: block; margin-top: 4px; font-size: .5em; font-weight: 700; color: var(--text-muted); }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .opt { position: relative; padding: 16px 10px; border-radius: 16px; font-family: inherit; font-size: 16.5px; font-weight: 800; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s, box-shadow .2s; }
+        .opt kbd { position: absolute; top: 6px; left: 9px; font-family: inherit; font-size: 11px; font-weight: 700; color: var(--text-muted); }
+        .opt:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .opt:disabled { cursor: default; }
+        .opt.right { color: #fff; border-color: transparent; background: linear-gradient(135deg,#059669,#10b981); box-shadow: 0 8px 22px rgba(16,185,129,.35); }
+        .opt.wrong { color: #fff; border-color: transparent; background: linear-gradient(135deg,#e11d48,#f43f5e); animation: shake .35s; }
+        @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .fb { min-height: 24px; margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: 14px; font-weight: 600; line-height: 1.7; display: none; }
+        .fb.show { display: block; }
+        .fb.ok { color: var(--good); background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.35); }
+        .fb.no { color: var(--bad); background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.35); }
+        .fb .note { display: block; margin-top: 4px; color: var(--text-color); font-weight: 500; }
+        .pop { position: absolute; left: 50%; top: 16%; z-index: 5; font-size: 1.4rem; font-weight: 800; color: var(--good); pointer-events: none; opacity: 0; transform: translate(-50%,0); }
+        .pop.go { animation: pop .8s ease-out; }
+        @keyframes pop { 0% { opacity: 0; transform: translate(-50%,10px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%,-40px); } }
+
+        /* শেষ স্ক্রিন */
+        .end-score { margin: 4px 0 2px; text-align: center; font-size: 3.6rem; font-weight: 800; line-height: 1.1; color: var(--accent); }
+        .end-label { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); }
+        .end-title { margin: 0 0 6px; text-align: center; font-size: 1.9rem; font-weight: 800; }
+        .end-msg { margin: 0 0 14px; text-align: center; font-size: 15px; font-weight: 500; line-height: 1.7; color: var(--text-muted); }
+        .tiles { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0; }
+        .tile { padding: 12px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .tile small { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .tile b { font-size: 19px; font-weight: 800; }
+        .miss h3 { margin: 18px 0 8px; font-size: 15px; font-weight: 800; }
+        .miss ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 190px; overflow-y: auto; }
+        .miss li { padding: 9px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.6; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .miss li b { color: var(--good); }
+        .credit-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500; display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #64748b; background: rgba(5,6,15,.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.06); }
+        [data-theme="light"] .credit-bar { background: rgba(255,255,255,.88); color: #475569; border-top-color: rgba(15,23,42,.1); }
+        .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#22d3ee,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        @media (max-width: 480px) { .card { padding: 22px 16px; } .stats { gap: 6px; } .back-long { display: none; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+    
+        .eq { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 20px 10px; border-radius: 20px; font-size: clamp(1.2rem,5vw,1.8rem); font-weight: 800; background: rgba(168,85,247,.07); border: 1.5px solid rgba(168,85,247,.28); box-shadow: inset 0 0 28px var(--gradient-glow); }
+        .ion { padding: 8px 14px; border-radius: 14px; background: var(--card-solid); border: 1.5px solid var(--border-color); }
+        .ion.c { color: var(--bad); border-color: rgba(244,63,94,.4); }
+        .ion.a { color: #3b82f6; border-color: rgba(59,130,246,.4); }
+        .ion small { display: block; margin-top: 2px; text-align: center; font-size: .42em; font-weight: 700; color: var(--text-muted); }
+        .eq .op { color: var(--text-muted); }
+        .eq .res { min-width: 70px; padding: 8px 14px; border-radius: 14px; text-align: center; color: var(--good); border: 1.5px dashed rgba(16,185,129,.45); }
+        sub, sup { font-size: .6em; line-height: 0; }
+        .opt .fm { font-size: 1.15em; }
+        .builder { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .bcol { padding: 12px; border-radius: 16px; text-align: center; background: var(--card-solid); border: 1.5px solid var(--border-color); }
+        .bcol .nm { font-size: 14px; font-weight: 800; }
+        .bcol.c .nm { color: var(--bad); } .bcol.a .nm { color: #3b82f6; }
+        .step { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; }
+        .step button { width: 40px; height: 40px; border-radius: 12px; border: 1.5px solid var(--border-color); background: transparent; font-family: inherit; font-size: 20px; font-weight: 800; cursor: pointer; color: var(--text-color); transition: transform .2s, border-color .2s; }
+        .step button:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); }
+        .step button:disabled { opacity: .4; cursor: default; }
+        .step output { min-width: 30px; font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .bprev { margin-top: 12px; padding: 14px; border-radius: 16px; text-align: center; font-size: 1.9rem; font-weight: 800; color: var(--good); background: var(--card-solid); border: 1.5px dashed rgba(16,185,129,.45); }
+        .bprev small { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .bprev.bal small { color: var(--good); }
+        .brow { display: flex; gap: 10px; margin-top: 12px; }
+        .brow .big { margin-top: 0; }
+        .hintbtn { flex: 0 0 auto; padding: 0 18px; border-radius: 16px; font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer; color: var(--gold); background: transparent; border: 1.5px solid var(--gold); }
+        .hintbtn:disabled { opacity: .45; cursor: default; }
+        .hintbox { margin-top: 10px; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.7; color: var(--gold); background: rgba(251,191,36,.08); border: 1px dashed rgba(251,191,36,.5); }
+        .calc { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 10px; font-size: 13.5px; font-weight: 600; line-height: 1.8; color: var(--text-color); background: var(--card-solid); border: 1px dashed var(--border-color); word-break: break-word; }
+    
+        .cf { font-size: clamp(1.7rem,7vw,2.5rem); font-weight: 800; letter-spacing: .5px; color: var(--accent); }
+        .cf sub { font-size: .55em; }
+        .cname { display: block; margin-top: 6px; font-size: .38em; font-weight: 700; color: var(--text-muted); letter-spacing: 0; }
+        .toks { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 4px; }
+        .tok { padding: 12px 14px; border-radius: 14px; font-family: inherit; font-size: clamp(1.3rem,6vw,2rem); font-weight: 800; cursor: pointer; color: var(--accent); background: var(--card-solid); border: 2px solid var(--border-color); transition: transform .2s, border-color .2s, box-shadow .2s; }
+        .tok sub { font-size: .55em; }
+        .tok:hover:not(:disabled) { transform: translateY(-3px); border-color: rgba(168,85,247,.8); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .tok:disabled { cursor: default; }
+        .tok.right { color: #fff; border-color: transparent; background: linear-gradient(135deg,#059669,#10b981); }
+        .tok.wrong { color: #fff; border-color: transparent; background: linear-gradient(135deg,#e11d48,#f43f5e); animation: shake .35s; }
+        .mcols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .mcol { display: flex; flex-direction: column; gap: 10px; }
+        .mbtn { min-height: 62px; padding: 10px 8px; border-radius: 16px; font-family: inherit; font-size: 15px; font-weight: 800; line-height: 1.4; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 2px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s; }
+        .mbtn.f { font-size: 1.1rem; color: var(--accent); }
+        .mbtn.f small { display: block; margin-top: 2px; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .mbtn.f sub { font-size: .6em; }
+        .mbtn:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); }
+        .mbtn.sel { border-color: #a855f7; background: rgba(168,85,247,.16); box-shadow: 0 0 0 3px var(--gradient-glow); }
+        .mbtn.done { color: #fff; border-color: transparent; background: linear-gradient(135deg,#059669,#10b981); }
+        .mbtn.done small { color: rgba(255,255,255,.85); }
+        .mbtn.bad { animation: shake .35s; border-color: var(--bad); }
+        .mbtn:disabled { cursor: default; }
+        .sheet { margin-top: 16px; font-size: 13.5px; font-weight: 600; }
+        .sheet summary { cursor: pointer; font-weight: 800; color: var(--accent); }
+        .sheet table { width: 100%; margin-top: 10px; border-collapse: collapse; text-align: left; }
+        .sheet th, .sheet td { padding: 7px 8px; border-bottom: 1px solid var(--border-color); vertical-align: top; }
+        .sheet th { color: var(--text-muted); font-weight: 800; }
+        .sheet td:nth-child(2) { color: var(--accent); font-weight: 800; white-space: nowrap; }
+        .typ { display: block; margin-top: 4px; font-weight: 500; color: var(--text-color); }
+        .calc { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 10px; font-size: 13.5px; font-weight: 600; line-height: 1.8; color: var(--text-color); background: var(--card-solid); border: 1px dashed var(--border-color); word-break: break-word; }
     </style>
 </head>
 <body>
+    <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+    <div class="grid-bg"></div>
 
-<a href="games.html" class="back-btn">← ফিরে যান</a>
+    <div class="wrap">
+        <header class="top">
+            <a class="btn-s" href="games.html">← <span class="back-long">গেম হাব</span></a>
+            <div class="top-r">
+                <button type="button" class="btn-s icon-btn" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+                <button type="button" class="btn-s icon-btn" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+            </div>
+        </header>
 
-<div class="game-card">
-    <h1 class="game-title">ফাংশনাল গ্রুপ চ্যালেঞ্জ</h1>
-    <div class="score-box">স্কোর: <span id="score">0</span> <span id="combo-badge"></span></div>
-    <div id="timer-bar"><div id="timer-progress"></div></div>
-    <h1 id="question" style="font-size: 4rem; margin: 20px 0;">?</h1>
-    <div id="options"></div>
-</div>
+        <main class="card">
+            <section id="startView">
+                <h1>ফাংশনাল গ্রুপ চ্যালেঞ্জ 🔬</h1>
+                <p class="sub">জৈব যৌগের ফাংশনাল গ্রুপ চেনো, খুঁজে বের করো, মেলাও!</p>
+                <div class="label">মোড বেছে নাও</div>
+                <div class="chips" id="modeRow" role="group" aria-label="মোড"></div>
+                <div class="label">লেভেল বেছে নাও</div>
+                <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+                <div class="sw-row" id="timerRowSw" style="margin-top:12px;"><span>⏱ সময়ের সীমা</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="track"></span></label></div>
+                <div class="rules" id="rules"></div>
+                <details class="sheet"><summary>📖 ফাংশনাল গ্রুপের তালিকা (পড়ে নাও)</summary><table id="sheetTbl"></table></details>
+                <button type="button" class="big" id="startBtn">খেলা শুরু করো ⚡</button>
+                <div class="best-line" id="bestLine"></div>
+            </section>
 
-<script>
-    let score = 0, combo = 0, timeLeft = 10, timer, currentAnswer = "";
-    
-    function startTimer() {
-        timeLeft = 10;
-        clearInterval(timer);
-        timer = setInterval(() => {
-            timeLeft -= 0.1;
-            document.getElementById('timer-progress').style.width = (timeLeft/10)*100 + "%";
-            if(timeLeft <= 0) endGame("⏰ সময় শেষ! আপনার স্কোর: " + score);
-        }, 100);
-    }
+            <section id="playView" hidden>
+                <div class="stats">
+                    <div class="stat"><small>স্কোর</small><b id="score">০</b></div>
+                    <div class="stat best"><small>সেরা</small><b id="best">০</b></div>
+                    <div class="stat"><small id="progLbl">প্রশ্ন</small><b id="prog">০</b></div>
+                    <div class="stat"><small>জীবন</small><b id="lives" aria-label="জীবন">❤️❤️❤️</b></div>
+                </div>
+                <div class="timer" id="timerBar" role="progressbar" aria-label="বাকি সময়" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="timerFill"></span></div>
+                <div class="qmeta"><span class="tag" id="qTag"></span><span id="qNo"></span></div>
+                <div class="q" id="q" aria-live="polite">--</div>
+                <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
+                <div class="toks" id="toks" hidden></div>
+                <div class="mcols" id="mcols" hidden><div class="mcol" id="mL"></div><div class="mcol" id="mR"></div></div>
+                <div class="fb" id="fb" aria-live="polite"></div>
+                <button type="button" class="big" id="nextBtn" hidden>পরের প্রশ্ন →</button>
+                <div class="pop" id="pop"></div>
+            </section>
 
-    function endGame(msg) {
-        clearInterval(timer);
-        const parts = msg.split("!");
-        document.getElementById('question').innerHTML = `
-            <div style="font-size: 1rem; color: #94a3b8;">গেমের ফলাফল</div>
-            <div style="font-size: 2.5rem; color: #ef4444; font-weight: 800;">${parts[0]}!</div>
-            <div style="font-size: 1.2rem;">${parts[1] || ""}</div>
-        `;
-        document.getElementById('options').innerHTML = `<button class="btn" style="background:var(--accent)" onclick="location.reload()">পুনরায় শুরু করুন 🔄</button>`;
-    }
+            <section id="endView" hidden>
+                <h2 class="end-title" id="endTitle">💥 খেলা শেষ!</h2>
+                <p class="end-msg" id="endMsg"></p>
+                <div class="end-label">অর্জিত স্কোর</div>
+                <div class="end-score" id="finalScore">০</div>
+                <div class="tiles">
+                    <div class="tile"><small>সঠিক</small><b id="eRight">০</b></div>
+                    <div class="tile"><small>নির্ভুলতা</small><b id="eAcc">০%</b></div>
+                    <div class="tile"><small>সেরা স্ট্রিক</small><b id="eStreak">০</b></div>
+                </div>
+                <div class="miss" id="missBox" hidden><h3>📖 যেগুলো ভুল হয়েছিল</h3><ul id="missList"></ul></div>
+                <button type="button" class="big" id="againBtn">আবার খেলো 🔄</button>
+                <button type="button" class="big ghost" id="menuBtn">মোড/লেভেল বদলাও</button>
+            </section>
+        </main>
+    </div>
 
-    function play() {
-        const questions = [
-    // ১. অ্যালকেন
-    { q: "CH4", a: "অ্যালকেন" }, { q: "C2H6", a: "অ্যালকেন" }, { q: "C3H8", a: "অ্যালকেন" }, { q: "C4H10", a: "অ্যালকেন" }, { q: "C5H12", a: "অ্যালকেন" }, { q: "C6H14", a: "অ্যালকেন" }, { q: "C7H16", a: "অ্যালকেন" }, { q: "C8H18", a: "অ্যালকেন" }, { q: "C9H20", a: "অ্যালকেন" }, { q: "C10H22", a: "অ্যালকেন" },
-    
-    // ২. অ্যালকিন
-    { q: "C2H4", a: "অ্যালকিন" }, { q: "C3H6", a: "অ্যালকিন" }, { q: "C4H8", a: "অ্যালকিন" }, { q: "C5H10", a: "অ্যালকিন" }, { q: "C6H12", a: "অ্যালকিন" }, { q: "C7H14", a: "অ্যালকিন" }, { q: "C8H16", a: "অ্যালকিন" }, { q: "C9H18", a: "অ্যালকিন" }, { q: "C10H20", a: "অ্যালকিন" }, { q: "CH2=CH-CH2-CH3", a: "অ্যালকিন" },
-    
-    // ৩. অ্যালকোহল
-    { q: "CH3OH", a: "অ্যালকোহল" }, { q: "C2H5OH", a: "অ্যালকোহল" }, { q: "C3H7OH", a: "অ্যালকোহল" }, { q: "C4H9OH", a: "অ্যালকোহল" }, { q: "C5H11OH", a: "অ্যালকোহল" }, { q: "C6H13OH", a: "অ্যালকোহল" }, { q: "CH3-CH(OH)-CH3", a: "অ্যালকোহল" }, { q: "CH3-CH2-CH(OH)-CH3", a: "অ্যালকোহল" }, { q: "HO-CH2-CH2-OH", a: "অ্যালকোহল" }, { q: "C3H5(OH)3", a: "অ্যালকোহল" },
-    
-    // ৪. অ্যালডিহাইড
-    { q: "HCHO", a: "অ্যালডিহাইড" }, { q: "CH3CHO", a: "অ্যালডিহাইড" }, { q: "C2H5CHO", a: "অ্যালডিহাইড" }, { q: "C3H7CHO", a: "অ্যালডিহাইড" }, { q: "C4H9CHO", a: "অ্যালডিহাইড" }, { q: "C6H5CHO", a: "অ্যালডিহাইড" }, { q: "C5H11CHO", a: "অ্যালডিহাইড" }, { q: "C6H13CHO", a: "অ্যালডিহাইড" }, { q: "C7H15CHO", a: "অ্যালডিহাইড" }, { q: "C8H17CHO", a: "অ্যালডিহাইড" },
-    
-    // ৫. কিটোন
-    { q: "CH3COCH3", a: "কিটোন" }, { q: "CH3COCH2CH3", a: "কিটোন" }, { q: "CH3CO(CH2)2CH3", a: "কিটোন" }, { q: "CH3CO(CH2)3CH3", a: "কিটোন" }, { q: "CH3CH2COCH2CH3", a: "কিটোন" }, { q: "C6H5COCH3", a: "কিটোন" }, { q: "CH3CO(CH2)4CH3", a: "কিটোন" }, { q: "CH3CO(CH2)5CH3", a: "কিটোন" }, { q: "CH3CO(CH2)6CH3", a: "কিটোন" }, { q: "CH3CO(CH2)7CH3", a: "কিটোন" },
-    
-    // ৬. কার্বক্সিলিক অ্যাসিড
-    { q: "HCOOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "CH3COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C2H5COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C3H7COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C4H9COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C5H11COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C6H13COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "C6H5COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "HOOC-COOH", a: "কার্বক্সিলিক অ্যাসিড" }, { q: "HOOC-CH2-COOH", a: "কার্বক্সিলিক অ্যাসিড" },
-    
-    // ৭. অ্যামিন
-    { q: "CH3NH2", a: "অ্যামিন" }, { q: "C2H5NH2", a: "অ্যামিন" }, { q: "(CH3)2NH", a: "অ্যামিন" }, { q: "(CH3)3N", a: "অ্যামিন" }, { q: "C3H7NH2", a: "অ্যামিন" }, { q: "C4H9NH2", a: "অ্যামিন" }, { q: "C6H5NH2", a: "অ্যামিন" }, { q: "C5H11NH2", a: "অ্যামিন" }, { q: "CH3CH2CH2CH2NH2", a: "অ্যামিন" }, { q: "NH2-CH2-CH2-NH2", a: "অ্যামিন" },
-    
-    // ৮. হ্যালোজেন ডেরিভেটিভস
-    { q: "CH3Cl", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "C2H5Br", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH3CH2CH2Cl", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH3CHClCH3", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "C4H9Cl", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH3I", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CH2Cl2", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CHCl3", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "CCl4", a: "হ্যালোজেন ডেরিভেটিভস" }, { q: "C6H5Cl", a: "হ্যালোজেন ডেরিভেটিভস" },
-    
-    // ৯. এস্টার
-    { q: "HCOOCH3", a: "এস্টার" }, { q: "CH3COOCH3", a: "এস্টার" }, { q: "CH3COOC2H5", a: "এস্টার" }, { q: "HCOOC2H5", a: "এস্টার" }, { q: "C2H5COOCH3", a: "এস্টার" }, { q: "CH3COOC3H7", a: "এস্টার" }, { q: "CH3COOC4H9", a: "এস্টার" }, { q: "CH3COOC6H13", a: "এস্টার" }, { q: "C6H5COOCH3", a: "এস্টার" }, { q: "C2H5COOC2H5", a: "এস্টার" },
-    
-    // ১০. অ্যারোমেটিক ও অন্যান্য
-    { q: "C6H6", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C6H5CH3", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C6H5OH", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C6H5NO2", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-O-CH3", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-O-C2H5", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "C2H5-O-C2H5", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-C≡N", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH3-CONH2", a: "অ্যারোমেটিক ও অন্যান্য" }, { q: "CH2=CH-Cl", a: "অ্যারোমেটিক ও অন্যান্য" }
-];
-        let item = questions[Math.floor(Math.random() * questions.length)];
-        currentAnswer = item.a;
-        document.getElementById('question').innerText = item.q;
-        let grid = document.getElementById('options');
-        grid.innerHTML = '';
-        
-        ["অ্যালকোহল", "অ্যালডিহাইড", "কিটোন", "কার্বক্সিলিক অ্যাসিড", "অ্যামিন"].sort(() => Math.random() - 0.5).forEach(opt => {
-            let b = document.createElement('button');
-            b.className = 'btn'; b.innerText = opt;
-            b.onclick = () => {
-                if(opt === currentAnswer) {
-                    combo++;
-                    let points = (combo >= 3) ? 20 : 10;
-                    score += points;
-                    document.getElementById('score').innerText = score;
-                    document.getElementById('combo-badge').innerText = (combo >= 3) ? "🔥 কম্বো মোড!" : "";
-                    if(score >= 200) endGame("🏆 অভিনন্দন! তুমি বিজয়ী! স্কোর: " + score);
-                    else play();
-                } else {
-                    combo = 0;
-                    endGame("❌ ভুল উত্তর! সঠিকটি ছিল: " + currentAnswer + ". স্কোর: " + score);
-                }
-            };
-            grid.appendChild(b);
+    <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+        const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+
+        /* গ্রুপ: id → [নাম, গ্রুপের চিহ্ন, সাধারণ সূত্র, লেভেল, সহজে গুলিয়ে ফেলা গ্রুপ, টিপস] */
+        const G = {
+            alc: ['অ্যালকোহল', '–OH', 'R–OH', 1, ['eth', 'phe'], 'কার্বন শৃঙ্খলের সাথে –OH যুক্ত। নামের শেষে "অল" (ইথানল)।'],
+            ald: ['অ্যালডিহাইড', '–CHO', 'R–CHO', 1, ['ket', 'acid'], '–CHO শৃঙ্খলের একেবারে শেষে থাকে (H যুক্ত C=O)। নামের শেষে "আল"।'],
+            ket: ['কিটোন', '>C=O', 'R–CO–R′', 1, ['ald', 'acid'], 'C=O শৃঙ্খলের মাঝখানে থাকে, দুই পাশেই কার্বন। নামের শেষে "ওন"।'],
+            acid: ['কার্বক্সিলিক অ্যাসিড', '–COOH', 'R–COOH', 1, ['est', 'ald'], '–COOH এ অ্যাসিডিক H থাকে। নামের শেষে "ওয়িক অ্যাসিড"।'],
+            ami: ['অ্যামিন', '–NH₂', 'R–NH₂', 1, ['amd', 'alc'], 'অ্যামোনিয়ার H কে অ্যালকাইল দিয়ে প্রতিস্থাপন। নামের শেষে "অ্যামিন"।'],
+            eth: ['ইথার', '–O–', 'R–O–R′', 2, ['alc', 'est'], 'দুই কার্বনের মাঝে একটি অক্সিজেন সেতু (–O–)।'],
+            est: ['এস্টার', '–COO–', 'R–COO–R′', 2, ['acid', 'eth'], '–COOH এর H এর জায়গায় অ্যালকাইল বসলে এস্টার, নামের শেষে "ওয়েট"।'],
+            hal: ['অ্যালকাইল হ্যালাইড', '–X (Cl, Br, I)', 'R–X', 2, ['alc', 'ami'], 'হ্যালোজেন পরমাণু (F, Cl, Br, I) কার্বনের সাথে যুক্ত।'],
+            ene: ['অ্যালকিন', 'C=C', 'CₙH₂ₙ', 2, ['yne'], 'দ্বিবন্ধন (C=C) থাকলে অ্যালকিন, নামের শেষে "ইন"।'],
+            yne: ['অ্যালকাইন', 'C≡C', 'CₙH₂ₙ₋₂', 2, ['ene'], 'ত্রিবন্ধন (C≡C) থাকলে অ্যালকাইন, নামের শেষে "আইন"।'],
+            amd: ['অ্যামাইড', '–CONH₂', 'R–CONH₂', 3, ['ami', 'acid'], '–COOH এর OH এর জায়গায় NH₂ বসলে অ্যামাইড।'],
+            phe: ['ফেনল', '–OH (বেনজিন বলয়ে)', 'C₆H₅–OH', 3, ['alc', 'eth'], 'বেনজিন বলয়ের সাথে সরাসরি –OH যুক্ত, অ্যালকোহল থেকে আলাদা।'],
+            nit: ['নাইট্রাইল', '–C≡N', 'R–CN', 3, ['ami', 'amd'], 'কার্বন ও নাইট্রোজেনের ত্রিবন্ধন (–C≡N)।'],
+            nto: ['নাইট্রো যৌগ', '–NO₂', 'R–NO₂', 3, ['ami', 'nit'], 'কার্বনের সাথে –NO₂ গ্রুপ সরাসরি যুক্ত।']
+        };
+        /* যৌগ: [গ্রুপ, IUPAC নাম, প্রচলিত নাম, টোকেন, গ্রুপের টোকেনের সূচক]। নতুন যৌগ যোগ করতে এখানে একটি লাইন দাও */
+        const C = [
+            ['alc', 'ইথানল', 'ইথাইল অ্যালকোহল', ['CH3', 'CH2', 'OH'], [2]], ['alc', 'মিথানল', 'মিথাইল অ্যালকোহল', ['CH3', 'OH'], [1]], ['alc', 'প্রোপান-১-অল', '', ['CH3', 'CH2', 'CH2', 'OH'], [3]],
+            ['ald', 'ইথান্যাল', 'অ্যাসিটালডিহাইড', ['CH3', 'CHO'], [1]], ['ald', 'মিথান্যাল', 'ফর্মালডিহাইড', ['H', 'CHO'], [1]], ['ald', 'প্রোপান্যাল', '', ['CH3', 'CH2', 'CHO'], [2]],
+            ['ket', 'প্রোপানোন', 'অ্যাসিটোন', ['CH3', 'CO', 'CH3'], [1]], ['ket', 'বিউটানোন', '', ['CH3', 'CO', 'CH2', 'CH3'], [1]],
+            ['acid', 'ইথানোয়িক অ্যাসিড', 'অ্যাসিটিক অ্যাসিড', ['CH3', 'COOH'], [1]], ['acid', 'মিথানোয়িক অ্যাসিড', 'ফর্মিক অ্যাসিড', ['H', 'COOH'], [1]], ['acid', 'প্রোপানোয়িক অ্যাসিড', '', ['CH3', 'CH2', 'COOH'], [2]],
+            ['ami', 'মিথানামিন', 'মিথাইল অ্যামিন', ['CH3', 'NH2'], [1]], ['ami', 'ইথানামিন', 'ইথাইল অ্যামিন', ['CH3', 'CH2', 'NH2'], [2]],
+            ['eth', 'মিথক্সিমিথেন', 'ডাইমিথাইল ইথার', ['CH3', 'O', 'CH3'], [1]], ['eth', 'ইথক্সিইথেন', 'ডাইইথাইল ইথার', ['CH3', 'CH2', 'O', 'CH2', 'CH3'], [2]],
+            ['est', 'মিথাইল ইথানোয়েট', '', ['CH3', 'COO', 'CH3'], [1]], ['est', 'ইথাইল ইথানোয়েট', 'ইথাইল অ্যাসিটেট', ['CH3', 'COO', 'CH2', 'CH3'], [1]],
+            ['hal', 'ক্লোরোমিথেন', 'মিথাইল ক্লোরাইড', ['CH3', 'Cl'], [1]], ['hal', 'ব্রোমোইথেন', 'ইথাইল ব্রোমাইড', ['CH3', 'CH2', 'Br'], [2]],
+            ['ene', 'ইথিন', 'ইথিলিন', ['CH2', '=', 'CH2'], [1]], ['ene', 'প্রোপিন', '', ['CH2', '=', 'CH', 'CH3'], [1]],
+            ['yne', 'ইথাইন', 'অ্যাসিটিলিন', ['CH', '≡', 'CH'], [1]], ['yne', 'প্রোপাইন', '', ['CH', '≡', 'C', 'CH3'], [1]],
+            ['amd', 'ইথানামাইড', 'অ্যাসিটামাইড', ['CH3', 'CONH2'], [1]], ['amd', 'মিথানামাইড', 'ফরমামাইড', ['H', 'CONH2'], [1]],
+            ['phe', 'ফেনল', 'কার্বলিক অ্যাসিড', ['C6H5', 'OH'], [1]],
+            ['nit', 'ইথেননাইট্রাইল', 'অ্যাসিটোনাইট্রাইল', ['CH3', 'CN'], [1]],
+            ['nto', 'নাইট্রোমিথেন', '', ['CH3', 'NO2'], [1]]
+        ].map(x => ({ g: x[0], n: x[1], cm: x[2], t: x[3], fg: x[4] }));
+
+        const DIFFS = {
+            easy: { name: 'সহজ', sub: '৫টি মূল গ্রুপ • ১৫ সে', max: 1, time: 15 },
+            mid: { name: 'মাঝারি', sub: '+ ইথার, এস্টার, C=C… • ১২ সে', max: 2, time: 12 },
+            hard: { name: 'কঠিন', sub: '+ অ্যামাইড, ফেনল… • ১০ সে', max: 3, time: 10 }
+        };
+        const MODES = {
+            id: { name: 'গ্রুপ চেনো', sub: 'সংকেত দেখে গ্রুপের নাম', rules: '📋 ১৫টি প্রশ্ন, ৩টি জীবন। সংকেত দেখে ফাংশনাল গ্রুপের নাম বেছে নাও।' },
+            tap: { name: 'গ্রুপ খুঁজো', sub: 'সংকেতের অংশে ট্যাপ করো', rules: '📋 ১৫টি প্রশ্ন, ৩টি জীবন। যৌগের সংকেতে যে অংশটি ফাংশনাল গ্রুপ, সেটিতে ট্যাপ করো। (C=C বা C≡C হলে বন্ধন চিহ্নে ট্যাপ করো)' },
+            match: { name: 'জোড়া মেলাও', sub: 'সংকেত ↔ গ্রুপ', rules: '📋 ৩টি বোর্ড, প্রতিটিতে ৪টি জোড়া। বাম থেকে একটি যৌগ, ডান থেকে তার গ্রুপ ট্যাপ করে জোড়া মেলাও। ভুল জোড়ায় একটি জীবন যায়।' },
+            blitz: { name: '৬০ সেকেন্ড ব্লিৎজ', sub: 'যত পারো তত দ্রুত', rules: '⚡ ৬০ সেকেন্ডে যত বেশি সম্ভব সঠিক উত্তর দাও। ভুল উত্তরে ৩ সেকেন্ড কাটা যায়। জীবন নেই, শুধু গতি আর নির্ভুলতা!' }
+        };
+        const ROUND = 15, BOARDS = 3, BLITZ_SEC = 60;
+        const SUB = { 0:'₀',1:'₁',2:'₂',3:'₃',4:'₄',5:'₅',6:'₆',7:'₇',8:'₈',9:'₉' };
+        const plain = s => s.replace(/(?<=[A-Za-z)])(\d)/g, (_, d) => SUB[d]);
+        function fmtInto(el, f) {
+            for (let k = 0; k < f.length; k++) {
+                const ch = f[k], prev = f[k - 1];
+                if (/\d/.test(ch) && prev && /[A-Za-z)]/.test(prev)) { const s = document.createElement('sub'); s.textContent = ch; el.appendChild(s); }
+                else el.appendChild(document.createTextNode(ch));
+            }
+        }
+        const formulaOf = c => c.t.join('');
+        const nm = c => c.n + (c.cm ? ' (' + c.cm + ')' : '');
+        const explain = c => plain(formulaOf(c)) + ' (' + nm(c) + ') → ' + G[c.g][1] + ' → ' + G[c.g][0] + '  ·  সাধারণ সূত্র: ' + G[c.g][2] + '  ·  ' + G[c.g][5];
+
+        let mode = sget('fgroup_mode', 'id'); if (!MODES[mode]) mode = 'id';
+        let diff = sget('fgroup_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+        let timerOn = sget('fgroup_timer', '1') === '1';
+        let soundOn = sget('fgroup_sound', '1') === '1';
+        const bestKey = () => 'fgroup_best_' + mode + '_' + diff;
+        const getBest = () => parseInt(sget(bestKey(), '0'), 10) || 0;
+
+        let ac = null;
+        function tone(f, t0, dur, type, vol) {
+            if (!soundOn) return;
+            try {
+                ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+                const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f;
+                o.connect(g); g.connect(ac.destination);
+                const t = ac.currentTime + t0;
+                g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+                o.start(t); o.stop(t + dur + .02);
+            } catch (e) {}
+        }
+        const sfx = {
+            right() { tone(660, 0, .12); tone(880, .1, .16); },
+            wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); },
+            life() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .18); },
+            end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+            win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+            pick() { tone(520, 0, .05, 'sine', .08); }
+        };
+        $('themeBtn').addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            document.documentElement.setAttribute('data-theme', next);
         });
-        startTimer();
-    }
-    play();
-</script>
+        function paintSound() { $('soundBtn').textContent = soundOn ? '🔔' : '🔕'; }
+        $('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('fgroup_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+        paintSound();
+
+        function chipRow(rowId, obj, current, onPick) {
+            const row = $(rowId); row.replaceChildren();
+            Object.entries(obj).forEach(([k, d]) => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === current ? ' on' : '');
+                b.setAttribute('aria-pressed', String(k === current));
+                const t = document.createElement('b'); t.textContent = d.name; const s = document.createElement('small'); s.textContent = d.sub;
+                b.append(t, s); b.addEventListener('click', () => onPick(k)); row.appendChild(b);
+            });
+        }
+        function renderSetup() {
+            chipRow('modeRow', MODES, mode, k => { mode = k; sset('fgroup_mode', k); renderSetup(); });
+            chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('fgroup_diff', k); renderSetup(); });
+            $('rules').textContent = MODES[mode].rules + (mode === 'blitz' ? '' : '  🔥 টানা সঠিক উত্তরে বোনাস স্কোর, প্রতি ৫টি টানা সঠিক উত্তরে একটি জীবন ফেরত।');
+            $('timerRowSw').hidden = mode === 'blitz';
+            const b = getBest(); $('bestLine').textContent = b ? '🏆 এই মোড ও লেভেলে তোমার সেরা স্কোর: ' + bn(b) : '';
+        }
+        $('timerSw').checked = timerOn;
+        $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('fgroup_timer', timerOn ? '1' : '0'); });
+        const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
+
+        /* গ্রুপের তালিকা (cheat sheet) */
+        (function () {
+            const t = $('sheetTbl'); const hr = document.createElement('tr');
+            ['গ্রুপ', 'চিহ্ন', 'সাধারণ সূত্র ও উদাহরণ'].forEach(x => { const th = document.createElement('th'); th.textContent = x; hr.appendChild(th); }); t.appendChild(hr);
+            Object.entries(G).forEach(([id, g]) => {
+                const tr = document.createElement('tr'), ex = C.find(c => c.g === id);
+                [g[0], g[1], g[2] + ' · ' + plain(formulaOf(ex)) + ' (' + ex.n + ')'].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); });
+                t.appendChild(tr);
+            });
+        })();
+
+        let score, lives, streak, bestStreak, asked, right, deck, cur, locked, deadline, tick, wrongs, limit, advTimer, board, boardNo, selL, selR, solved, blitzEnd;
+        function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        const allowedG = () => Object.keys(G).filter(k => G[k][3] <= DIFFS[diff].max);
+        const newDeck = () => shuffle(C.filter(c => G[c.g][3] <= DIFFS[diff].max));
+        function paintLives() { $('lives').textContent = mode === 'blitz' ? '⚡' : (lives > 0 ? '❤️'.repeat(lives) : '💔'); $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); }
+        function groupOptions(g) {
+            const al = allowedG(), near = shuffle(G[g][4].filter(x => al.includes(x))).slice(0, 2);
+            const rest = shuffle(al.filter(x => x !== g && !near.includes(x)));
+            return shuffle([g, ...near, ...rest].slice(0, 4 - (4 - Math.min(4, 1 + near.length + rest.length))).slice(0, 4));
+        }
+
+        function startGame() {
+            score = 0; lives = 3; streak = 0; bestStreak = 0; asked = 0; right = 0; wrongs = []; deck = newDeck(); locked = false; boardNo = 0;
+            limit = (timerOn && mode !== 'blitz') ? DIFFS[diff].time * (mode === 'match' ? 3 : (mode === 'tap' ? 1.2 : 1)) : 0;
+            $('score').textContent = bn(0); $('best').textContent = bn(getBest()); $('progLbl').textContent = mode === 'match' ? 'বোর্ড' : (mode === 'blitz' ? 'সঠিক' : 'প্রশ্ন'); paintLives();
+            show('playView');
+            if (mode === 'blitz') { blitzEnd = Date.now() + BLITZ_SEC * 1000; limit = 0; startBlitzTimer(); }
+            next();
+        }
+        function resetViews() { $('opts').hidden = true; $('toks').hidden = true; $('mcols').hidden = true; $('fb').className = 'fb'; $('fb').replaceChildren(); $('nextBtn').hidden = true; $('q').hidden = false; }
+        function next() {
+            clearTimeout(advTimer); $('pop').classList.remove('go'); resetViews();
+            if (mode === 'match') { if (boardNo >= BOARDS) return endGame(true); return newBoard(); }
+            if (mode !== 'blitz' && asked >= ROUND) return endGame(true);
+            if (!deck.length) deck = newDeck();
+            cur = deck.pop(); asked++; locked = false;
+            $('prog').textContent = mode === 'blitz' ? bn(right) : bn(asked) + '/' + bn(ROUND);
+            $('qNo').textContent = mode === 'blitz' ? '' : 'প্রশ্ন ' + bn(asked) + '/' + bn(ROUND);
+            const q = $('q'); q.replaceChildren();
+            if (mode === 'tap') {
+                $('qTag').textContent = 'ফাংশনাল গ্রুপটিতে ট্যাপ করো';
+                const nmEl = document.createElement('div'); nmEl.className = 'cname'; nmEl.style.cssText = 'font-size:1rem;margin:0;'; nmEl.textContent = nm(cur); q.appendChild(nmEl);
+                const box = $('toks'); box.hidden = false; box.replaceChildren();
+                cur.t.forEach((tk, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tok'; b.dataset.i = i; fmtInto(b, tk); b.addEventListener('click', () => answerTap(i, b)); box.appendChild(b); });
+            } else {
+                $('qTag').textContent = 'এই যৌগের ফাংশনাল গ্রুপ কী?';
+                const f = document.createElement('span'); f.className = 'cf'; fmtInto(f, formulaOf(cur)); q.appendChild(f);
+                const n = document.createElement('span'); n.className = 'cname'; n.textContent = nm(cur); q.appendChild(n);
+                $('opts').hidden = false; const box = $('opts'); box.replaceChildren();
+                groupOptions(cur.g).forEach((g, i) => {
+                    const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.g = g;
+                    const k = document.createElement('kbd'); k.textContent = bn(i + 1); const sp = document.createElement('span'); sp.className = 'fm'; sp.textContent = G[g][0]; b.append(k, sp);
+                    b.addEventListener('click', () => answerId(g, b)); box.appendChild(b);
+                });
+            }
+            if (mode !== 'blitz') startTimer();
+        }
+        /* জোড়া মেলাও */
+        function newBoard() {
+            boardNo++; locked = false; selL = selR = null; solved = 0; asked++;
+            $('prog').textContent = bn(boardNo) + '/' + bn(BOARDS); $('qNo').textContent = 'বোর্ড ' + bn(boardNo) + '/' + bn(BOARDS);
+            $('qTag').textContent = 'যৌগ ও গ্রুপ জোড়া মেলাও';
+            $('q').hidden = true; $('mcols').hidden = false;
+            const gs = shuffle(allowedG()).slice(0, 4);
+            board = gs.map(g => { const pool = C.filter(c => c.g === g); return pool[Math.floor(Math.random() * pool.length)]; });
+            const L = $('mL'), R = $('mR'); L.replaceChildren(); R.replaceChildren();
+            shuffle(board.slice()).forEach(c => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'mbtn f'; b.dataset.g = c.g;
+                fmtInto(b, formulaOf(c)); const sm = document.createElement('small'); sm.textContent = c.n; b.appendChild(sm);
+                b.addEventListener('click', () => pickSide('L', b)); L.appendChild(b);
+            });
+            shuffle(gs.slice()).forEach(g => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'mbtn'; b.dataset.g = g; b.textContent = G[g][0];
+                b.addEventListener('click', () => pickSide('R', b)); R.appendChild(b);
+            });
+            startTimer();
+        }
+        function pickSide(side, btn) {
+            if (locked || btn.classList.contains('done')) return; sfx.pick();
+            const col = side === 'L' ? $('mL') : $('mR'); col.querySelectorAll('.mbtn').forEach(x => x.classList.remove('sel'));
+            btn.classList.add('sel'); if (side === 'L') selL = btn; else selR = btn;
+            if (selL && selR) judgePair();
+        }
+        function judgePair() {
+            const l = selL, r = selR; selL = selR = null; const c = board.find(x => x.g === l.dataset.g);
+            l.classList.remove('sel'); r.classList.remove('sel'); asked++;
+            const fb = $('fb'); fb.replaceChildren(); const head = document.createElement('b'), calc = document.createElement('span'); calc.className = 'calc'; calc.textContent = explain(c);
+            if (l.dataset.g === r.dataset.g) {
+                l.classList.add('done'); r.classList.add('done'); l.disabled = r.disabled = true; solved++; right++; streak++; bestStreak = Math.max(bestStreak, streak);
+                const bonus = Math.min(streak - 1, 5) * 2; score += 10 + bonus; sfx.right();
+                head.textContent = '✅ সঠিক জোড়া! +' + bn(10 + bonus) + (streak >= 3 ? ' 🔥 ' + bn(streak) + ' টানা' : '');
+                popText('+' + bn(10 + bonus)); fb.className = 'fb show ok'; fb.append(head, calc);
+                if (streak % 5 === 0 && lives < 3) { lives++; setTimeout(sfx.life, 250); head.textContent += ' · ❤️ একটি জীবন ফেরত!'; }
+                $('score').textContent = bn(score); paintLives();
+                if (solved >= board.length) { clearInterval(tick); locked = true; score += 10; $('score').textContent = bn(score); advTimer = setTimeout(next, 1800); }
+            } else {
+                streak = 0; lives--; wrongs.push(c); sfx.wrong(); l.classList.add('bad'); r.classList.add('bad');
+                setTimeout(() => { l.classList.remove('bad'); r.classList.remove('bad'); }, 400);
+                head.textContent = '❌ ভুল জোড়া! ' + plain(formulaOf(c)) + ' এর গ্রুপ: ' + G[c.g][0]; fb.className = 'fb show no'; fb.append(head, calc); paintLives();
+                if (lives <= 0) { clearInterval(tick); locked = true; advTimer = setTimeout(() => endGame(false), 2000); }
+            }
+        }
+
+        function startTimer() {
+            clearInterval(tick);
+            const bar = $('timerBar'); bar.hidden = !limit; bar.classList.remove('low'); $('timerFill').style.width = '100%';
+            if (!limit) return;
+            deadline = Date.now() + limit * 1000;
+            tick = setInterval(() => {
+                const left = Math.max(0, deadline - Date.now()), pct = left / (limit * 1000) * 100;
+                $('timerFill').style.width = pct + '%'; bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+                bar.classList.toggle('low', pct < 30);
+                if (left <= 0) { clearInterval(tick); timeUp(); }
+            }, 80);
+        }
+        function startBlitzTimer() {
+            clearInterval(tick); const bar = $('timerBar'); bar.hidden = false;
+            tick = setInterval(() => {
+                const left = Math.max(0, blitzEnd - Date.now()), pct = left / (BLITZ_SEC * 1000) * 100;
+                $('timerFill').style.width = pct + '%'; bar.setAttribute('aria-valuenow', String(Math.round(pct))); bar.classList.toggle('low', pct < 25);
+                $('qNo').textContent = '⏱ ' + bn(Math.ceil(left / 1000)) + ' সে';
+                if (left <= 0) { clearInterval(tick); clearTimeout(advTimer); locked = true; endGame(true); }
+            }, 100);
+        }
+        function timeUp() {
+            if (mode === 'match') { lives--; paintLives(); streak = 0; sfx.wrong(); locked = true;
+                $('fb').className = 'fb show no'; $('fb').textContent = '⏰ বোর্ডের সময় শেষ!'; board.forEach(c => wrongs.push(c));
+                advTimer = setTimeout(lives <= 0 ? () => endGame(false) : next, 1600); }
+            else if (mode === 'tap') answerTap(null, null); else answerId(null, null);
+        }
+        function popText(t) { const p = $('pop'); p.textContent = t; p.classList.remove('go'); void p.offsetWidth; p.classList.add('go'); }
+        function settle(isRight, timedOut) {
+            if (locked) return; locked = true; clearInterval(mode === 'blitz' ? 0 : tick);
+            const timeLeft = limit ? Math.max(0, deadline - Date.now()) / (limit * 1000) : 0;
+            const fb = $('fb'); fb.replaceChildren();
+            const head = document.createElement('b'), calc = document.createElement('span'); calc.className = 'calc'; calc.textContent = explain(cur);
+            if (isRight) {
+                streak++; bestStreak = Math.max(bestStreak, streak); right++;
+                const bonus = Math.min(streak - 1, 5) * 2 + (limit && timeLeft > .66 ? 5 : 0);
+                score += 10 + bonus; sfx.right();
+                head.textContent = '✅ সঠিক! +' + bn(10 + bonus) + (streak >= 3 ? ' 🔥 ' + bn(streak) + ' টানা' : '');
+                popText('+' + bn(10 + bonus));
+                if (mode !== 'blitz' && streak % 5 === 0 && lives < 3) { lives++; setTimeout(sfx.life, 250); head.textContent += ' · ❤️ একটি জীবন ফেরত!'; }
+                fb.className = 'fb show ok';
+            } else {
+                streak = 0; wrongs.push(cur); sfx.wrong();
+                if (mode === 'blitz') blitzEnd -= 3000; else lives--;
+                head.textContent = (timedOut ? '⏰ সময় শেষ! ' : '❌ ভুল! ') + 'সঠিক গ্রুপ: ' + G[cur.g][0] + (mode === 'blitz' ? ' (−৩ সে)' : '');
+                fb.className = 'fb show no';
+            }
+            fb.append(head, calc);
+            $('score').textContent = bn(score); paintLives(); $('prog').textContent = mode === 'blitz' ? bn(right) : bn(asked) + '/' + bn(ROUND);
+            if (mode === 'blitz') { advTimer = setTimeout(next, isRight ? 600 : 1300); return; }
+            if (lives <= 0) { advTimer = setTimeout(() => endGame(false), 2000); return; }
+            $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true });
+            if (isRight) advTimer = setTimeout(next, 3000);
+        }
+        function answerId(g, btn) {
+            if (locked) return;
+            document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.g === cur.g) b.classList.add('right'); });
+            const ok = g === cur.g; if (!ok && btn) btn.classList.add('wrong');
+            settle(ok, g === null);
+        }
+        function answerTap(i, btn) {
+            if (locked) return;
+            document.querySelectorAll('#toks .tok').forEach(b => { b.disabled = true; if (cur.fg.includes(+b.dataset.i)) b.classList.add('right'); });
+            const ok = i !== null && cur.fg.includes(i); if (!ok && btn) btn.classList.add('wrong');
+            settle(ok, i === null);
+        }
+        function endGame(won) {
+            clearInterval(tick); clearTimeout(advTimer); (won ? sfx.win : sfx.end)();
+            const prev = getBest(), record = score > prev;
+            if (record) sset(bestKey(), score);
+            $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? (mode === 'blitz' ? '⏱ সময় শেষ!' : '🎉 অভিনন্দন!') : '💥 খেলা শেষ!');
+            $('endMsg').textContent = mode === 'blitz' ? (bn(right) + 'টি সঠিক উত্তর দিয়েছো ৬০ সেকেন্ডে! ⚡') : won ? (!wrongs.length ? 'নিখুঁত! তুমি ফাংশনাল গ্রুপ মাস্টার! 🌟' : 'রাউন্ড শেষ করেছো, দারুণ খেলেছো! 👏') : 'গ্রুপের তালিকা একবার পড়ে আবার চেষ্টা করো! 💪';
+            $('finalScore').textContent = bn(score);
+            const tot = mode === 'blitz' ? right + wrongs.length : asked;
+            $('eRight').textContent = bn(right) + '/' + bn(mode === 'match' ? asked - boardNo : tot);
+            const denom = mode === 'match' ? Math.max(1, right + wrongs.length) : Math.max(1, tot);
+            $('eAcc').textContent = bn(Math.round(right / denom * 100)) + '%';
+            $('eStreak').textContent = bn(bestStreak);
+            const ul = $('missList'); ul.replaceChildren(); const seen = new Set();
+            wrongs.forEach(w => { if (seen.has(w.n)) return; seen.add(w.n); const li = document.createElement('li'); li.textContent = explain(w); ul.appendChild(li); });
+            $('missBox').hidden = !wrongs.length;
+            show('endView'); $('againBtn').focus({ preventScroll: true });
+        }
+
+        $('startBtn').addEventListener('click', startGame);
+        $('againBtn').addEventListener('click', startGame);
+        $('menuBtn').addEventListener('click', () => { clearInterval(tick); renderSetup(); show('startView'); });
+        $('nextBtn').addEventListener('click', next);
+        document.addEventListener('keydown', e => {
+            if ($('playView').hidden) return;
+            if ((mode === 'id' || mode === 'blitz') && e.key >= '1' && e.key <= '4' && !locked) { const b = document.querySelectorAll('#opts .opt')[+e.key - 1]; if (b) b.click(); }
+            else if (e.key === 'Enter' && locked && !$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); next(); }
+        });
+        let hiddenAt = 0;
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) hiddenAt = Date.now();
+            else if (hiddenAt && !$('playView').hidden) { const d = Date.now() - hiddenAt; hiddenAt = 0; if (mode === 'blitz') blitzEnd += d; else if (limit && !locked) deadline += d; }
+        });
+        renderSetup(); show('startView');
+    </script>
 </body>
 </html>
