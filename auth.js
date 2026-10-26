@@ -91,25 +91,30 @@ const Auth = (function () {
         try {
             sessionStorage.removeItem(SESSION_KEY);
             localStorage.removeItem(SESSION_KEY);
-            const store = remember ? localStorage : sessionStorage;
-            store.setItem(SESSION_KEY, JSON.stringify({ username: user.username, at: Date.now() }));
+            // Always keep a copy in localStorage so the session survives page changes
+            // in every browser; "remember" only decides whether it expires with the tab.
+            const payload = JSON.stringify({ username: user.username, at: Date.now(), remember: !!remember });
+            localStorage.setItem(SESSION_KEY, payload);
+            if (!remember) sessionStorage.setItem(SESSION_KEY, payload);
         } catch (e) {
             return { ok: false, error: 'লগইন সেশন সেভ করা যায়নি। ব্রাউজারের স্টোরেজ চালু আছে কিনা দেখো।' };
         }
         return { ok: true, user: publicUser(user) };
     }
 
-    function currentUser() {
+    // Returns { user, why } - why: 'storage' | 'nosession' | 'nouser' | null
+    function check() {
         let raw = null;
         try { raw = sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY); }
-        catch (e) { return null; }
-        if (!raw) return null;
+        catch (e) { return { user: null, why: 'storage' }; }
+        if (!raw) return { user: null, why: 'nosession' };
         try {
             const session = JSON.parse(raw);
             const user = readUsers().find(function (u) { return u.username === session.username; });
-            return user ? publicUser(user) : null;
-        } catch (e) { return null; }
+            return user ? { user: publicUser(user), why: null } : { user: null, why: 'nouser' };
+        } catch (e) { return { user: null, why: 'nosession' }; }
     }
+    function currentUser() { return check().user; }
 
     function logout() {
         try {
@@ -118,5 +123,5 @@ const Auth = (function () {
         } catch (e) {}
     }
 
-    return { register: register, login: login, currentUser: currentUser, logout: logout };
+    return { register: register, login: login, currentUser: currentUser, check: check, logout: logout };
 })();
