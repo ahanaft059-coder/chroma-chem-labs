@@ -2,279 +2,460 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>আণবিক ভর শিকারী - Premium Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05060f">
+    <title>আণবিক ভর শিকারী | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            let t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <style>
-        /* Premium AMOLED Black Theme Config */
-        :root { 
-            --bg: #000000; 
-            --card: #0b0f17; 
-            --text: #f8fafc; 
-            --accent: #f97316; /* Premium Neon Orange Accent */
-            --accent-glow: rgba(249, 115, 22, 0.2);
-            --border: #1e293b;
+        :root {
+            --bg-color: #eef2f9; --card-bg: rgba(255,255,255,.78); --card-solid: #fff;
+            --text-color: #0f172a; --text-muted: #5b6b82; --border-color: rgba(15,23,42,.12);
+            --shadow: 0 10px 30px -5px rgba(15,23,42,.1); --section-border: rgba(168,85,247,.3);
+            --gradient-primary: linear-gradient(135deg,#9333ea,#3b82f6); --gradient-glow: rgba(147,51,234,.2);
+            --grid-line: rgba(15,23,42,.05); --blob-opacity: .22; --good: #059669; --bad: #e11d48; --gold: #d97706; --accent: #7c3aed;
         }
-        
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            padding: 20px; 
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: 0.3s; 
+        [data-theme="dark"] {
+            --bg-color: #05060f; --card-bg: rgba(16,20,36,.66); --card-solid: #0b0f1c;
+            --text-color: #f8fafc; --text-muted: #94a3b8; --border-color: rgba(255,255,255,.1);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,.7); --section-border: rgba(168,85,247,.38);
+            --gradient-primary: linear-gradient(135deg,#a855f7,#60a5fa); --gradient-glow: rgba(168,85,247,.3);
+            --grid-line: rgba(255,255,255,.035); --blob-opacity: .42; --good: #34d399; --bad: #fb7185; --gold: #fbbf24; --accent: #a78bfa;
         }
-        
-        /* Premium Back Button */
-        .back-btn { 
-            position: fixed; 
-            top: 20px; 
-            left: 20px; 
-            background: #1e293b; 
-            color: #94a3b8; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            text-decoration: none; 
-            font-weight: 600; 
-            border: 1px solid var(--border);
-            transition: all 0.2s ease;
-        }
-        .back-btn:hover { 
-            background: #334155; 
-            color: #f8fafc; 
-            transform: translateX(-3px);
-        }
-        
-        /* Theme indicator icon hidden or made minimal since it's pure black mode now */
-        .theme-btn { display: none; }
-        
-        /* Premium Game Card */
-        .game-card { 
-            max-width: 500px; 
-            width: 100%;
-            background: var(--card); 
-            padding: 40px 30px; 
-            border-radius: 24px; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
-            text-align: center;
-            box-sizing: border-box;
-            transition: opacity 0.3s ease, filter 0.3s ease;
-        }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: 18px 16px 64px; font-family: 'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;
+            background: var(--bg-color); color: var(--text-color); transition: background .4s, color .4s; animation: pageIn .6s ease both; }
+        /* body তে filter/transform নয়, নইলে fixed জিনিস ভাসে না */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 26s ease-in-out infinite alternate; }
+        .b1 { width: 480px; height: 480px; background: #0891b2; top: -150px; left: -120px; }
+        .b2 { width: 560px; height: 560px; background: #7e22ce; bottom: -220px; right: -160px; animation-duration: 32s; }
+        @keyframes drift { to { transform: translate(60px,50px) scale(1.15); } }
+        .grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px); background-size: 52px 52px; -webkit-mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); }
+        .wrap { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
 
-        .game-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin: 0 0 5px 0;
-            background: linear-gradient(to right, #fb923c, #f97316);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Stats dashboard */
-        .stats-bar {
-            display: flex; 
-            justify-content: space-between; 
-            font-weight: 600; 
-            margin: 20px 0;
-            background: rgba(255,255,255,0.02);
-            padding: 12px 20px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.03);
-            color: #cbd5e1;
-            font-size: 0.95rem;
-        }
-        
-        /* Neon Formula Glowing Box */
-        .formula-box { 
-            background: rgba(249, 115, 22, 0.03); 
-            padding: 25px 15px; 
-            border-radius: 18px; 
-            font-size: 3rem; 
-            color: #fb923c; 
-            font-weight: 800; 
-            margin: 20px 0 10px 0; 
-            border: 1px solid rgba(249, 115, 22, 0.2);
-            box-shadow: inset 0 0 20px var(--accent-glow), 0 10px 20px rgba(0,0,0,0.3);
-            text-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
-        }
-        
-        /* Premium Game Options Grid */
-        .btn { 
-            padding: 16px; 
-            border: 1px solid var(--border); 
-            border-radius: 14px; 
-            background: rgba(255,255,255,0.02); 
-            color: #cbd5e1; 
-            cursor: pointer; 
-            font-size: 1.1rem; 
-            font-weight: 600;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        .btn:hover:not(:disabled) { 
-            background: var(--accent); 
-            color: white; 
-            border-color: var(--accent);
-            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.35);
-            transform: translateY(-2px);
-        }
-        .btn:disabled {
-            cursor: default;
-        }
-        
-        /* Dynamic Game Over Screen */
-        #gameOverCard { 
-            display: none; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            z-index: 1000; 
-            width: 85%; 
-            max-width: 400px; 
-            background: #0f1422; 
-            padding: 40px; 
-            border-radius: 28px; 
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            text-align: center;
-        }
-        
-        .restart-btn {
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            padding: 15px 30px; 
-            border-radius: 14px; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.2s ease;
-        }
-        .restart-btn:hover {
-            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
-            transform: translateY(-2px);
-        }
+        .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; padding: 10px 14px; border-radius: 20px; background: var(--card-bg); border: 1.5px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .btn-s { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 13px; font-family: inherit; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); transition: transform .25s, border-color .25s; }
+        .btn-s:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.6); }
+        .top-r { display: flex; gap: 8px; }
+        .icon-btn { width: 40px; height: 40px; padding: 0; justify-content: center; font-size: 16px; }
+        a:focus-visible, button:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
+
+        .card { position: relative; overflow: hidden; padding: 28px 26px; border-radius: 28px; background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .card::before { content: ''; position: absolute; top: -90px; right: -70px; width: 240px; height: 240px; pointer-events: none; background: radial-gradient(circle,var(--gradient-glow),transparent 70%); }
+        .card > * { position: relative; }
+        h1 { margin: 0 0 6px; text-align: center; font-size: clamp(1.6rem,5vw,2.1rem); font-weight: 800; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { margin: 0 0 22px; text-align: center; font-size: 15px; font-weight: 500; color: var(--text-muted); }
+        [hidden] { display: none !important; }
+
+        /* শুরুর স্ক্রিন */
+        .label { margin: 18px 0 8px; font-size: 14px; font-weight: 800; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { flex: 1 1 0; min-width: 96px; font-family: inherit; padding: 11px 12px; border-radius: 16px; cursor: pointer; text-align: center; color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s; }
+        .chip b { display: block; font-size: 15px; font-weight: 800; color: var(--text-color); }
+        .chip small { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; }
+        .chip:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.55); }
+        .chip.on { border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .chip.on b, .chip.on small { color: #fff; }
+        .sw-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 14.5px; font-weight: 600; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { position: absolute; inset: 0; z-index: 2; margin: 0; opacity: 0; cursor: pointer; }
+        .switch .track { position: absolute; inset: 0; border-radius: 20px; background: var(--border-color); transition: background .25s; }
+        .switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s; }
+        .switch input:checked ~ .track { background: var(--gradient-primary); }
+        .switch input:checked ~ .track::after { transform: translateX(20px); }
+        .switch input:focus-visible ~ .track { outline: 3px solid #22d3ee; outline-offset: 2px; }
+        .big { display: block; width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 16px; font-family: inherit; font-size: 17px; font-weight: 800; color: #fff; cursor: pointer; background: var(--gradient-primary); transition: transform .25s, box-shadow .25s; }
+        .big:hover { transform: translateY(-2px); box-shadow: 0 12px 26px var(--gradient-glow); }
+        .big.ghost { color: var(--text-color); background: transparent; border: 1.5px solid var(--section-border); }
+        .rules { margin: 18px 0 0; padding: 14px 16px; border-radius: 16px; font-size: 13.5px; line-height: 1.8; font-weight: 500; color: var(--text-muted); background: var(--card-solid); border: 1px dashed var(--border-color); }
+        .best-line { margin-top: 14px; text-align: center; font-size: 14px; font-weight: 700; color: var(--gold); }
+
+        /* খেলার স্ক্রিন */
+        .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+        .stat { padding: 9px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .stat small { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .stat b { display: block; margin-top: 2px; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .stat.best b { color: var(--gold); }
+        .timer { height: 8px; margin-bottom: 18px; border-radius: 8px; overflow: hidden; background: var(--border-color); }
+        .timer span { display: block; height: 100%; width: 100%; border-radius: 8px; background: var(--gradient-primary); transition: background .3s; }
+        .timer.low span { background: linear-gradient(90deg,#fb7185,#f59e0b); }
+        .qmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .tag { padding: 3px 12px; border-radius: 20px; color: var(--accent); background: rgba(168,85,247,.12); border: 1px solid rgba(168,85,247,.3); }
+        .q { margin-bottom: 20px; padding: 24px 14px; border-radius: 20px; text-align: center; font-size: clamp(1.5rem,6vw,2.2rem); font-weight: 800; line-height: 1.4; color: var(--accent); word-break: break-word;
+            background: rgba(168,85,247,.07); border: 1.5px solid rgba(168,85,247,.28); box-shadow: inset 0 0 28px var(--gradient-glow); }
+        .q small { display: block; margin-top: 4px; font-size: .5em; font-weight: 700; color: var(--text-muted); }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .opt { position: relative; padding: 16px 10px; border-radius: 16px; font-family: inherit; font-size: 16.5px; font-weight: 800; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s, box-shadow .2s; }
+        .opt kbd { position: absolute; top: 6px; left: 9px; font-family: inherit; font-size: 11px; font-weight: 700; color: var(--text-muted); }
+        .opt:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .opt:disabled { cursor: default; }
+        .opt.right { color: #fff; border-color: transparent; background: linear-gradient(135deg,#059669,#10b981); box-shadow: 0 8px 22px rgba(16,185,129,.35); }
+        .opt.wrong { color: #fff; border-color: transparent; background: linear-gradient(135deg,#e11d48,#f43f5e); animation: shake .35s; }
+        @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .fb { min-height: 24px; margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: 14px; font-weight: 600; line-height: 1.7; display: none; }
+        .fb.show { display: block; }
+        .fb.ok { color: var(--good); background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.35); }
+        .fb.no { color: var(--bad); background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.35); }
+        .fb .note { display: block; margin-top: 4px; color: var(--text-color); font-weight: 500; }
+        .pop { position: absolute; left: 50%; top: 16%; z-index: 5; font-size: 1.4rem; font-weight: 800; color: var(--good); pointer-events: none; opacity: 0; transform: translate(-50%,0); }
+        .pop.go { animation: pop .8s ease-out; }
+        @keyframes pop { 0% { opacity: 0; transform: translate(-50%,10px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%,-40px); } }
+
+        /* শেষ স্ক্রিন */
+        .end-score { margin: 4px 0 2px; text-align: center; font-size: 3.6rem; font-weight: 800; line-height: 1.1; color: var(--accent); }
+        .end-label { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); }
+        .end-title { margin: 0 0 6px; text-align: center; font-size: 1.9rem; font-weight: 800; }
+        .end-msg { margin: 0 0 14px; text-align: center; font-size: 15px; font-weight: 500; line-height: 1.7; color: var(--text-muted); }
+        .tiles { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0; }
+        .tile { padding: 12px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .tile small { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .tile b { font-size: 19px; font-weight: 800; }
+        .miss h3 { margin: 18px 0 8px; font-size: 15px; font-weight: 800; }
+        .miss ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 190px; overflow-y: auto; }
+        .miss li { padding: 9px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.6; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .miss li b { color: var(--good); }
+        .credit-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500; display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #64748b; background: rgba(5,6,15,.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.06); }
+        [data-theme="light"] .credit-bar { background: rgba(255,255,255,.88); color: #475569; border-top-color: rgba(15,23,42,.1); }
+        .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#22d3ee,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        @media (max-width: 480px) { .card { padding: 22px 16px; } .stats { gap: 6px; } .back-long { display: none; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+    
+        .q .f { display: block; font-size: 1em; letter-spacing: .5px; }
+        .q .f sub { font-size: .55em; }
+        .q .nm { display: block; margin-top: 6px; font-size: .45em; font-weight: 700; color: var(--text-muted); }
+        .calc { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 10px; font-size: 13.5px; font-weight: 600; line-height: 1.8; color: var(--text-color); background: var(--card-solid); border: 1px dashed var(--border-color); word-break: break-word; }
+        details.ref { margin-top: 16px; font-size: 13.5px; font-weight: 600; }
+        details.ref summary { cursor: pointer; font-weight: 800; color: var(--accent); }
+        .ref-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(88px,1fr)); gap: 6px; margin-top: 10px; }
+        .ref-grid span { padding: 6px 8px; border-radius: 10px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .ref-grid b { color: var(--accent); }
+        .opt { font-size: 18px; font-variant-numeric: tabular-nums; }
     </style>
 </head>
 <body>
+    <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+    <div class="grid-bg"></div>
 
-<a href="games.html" class="back-btn">← ফিরে যান</a>
+    <div class="wrap">
+        <header class="top">
+            <a class="btn-s" href="games.html">← <span class="back-long">গেম হাব</span></a>
+            <div class="top-r">
+                <button type="button" class="btn-s icon-btn" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+                <button type="button" class="btn-s icon-btn" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+            </div>
+        </header>
 
-<div id="gameContainer" class="game-card">
-    <h1 class="game-title">🟠 আণবিক ভর শিকারী</h1>
-    <p style="color: #64748b; font-size: 0.95rem; margin: 0;">সঠিক আণবিক ভর (Molecular Mass) বেছে নাও!</p>
-    
-    <div class="stats-bar">
-        <span>স্কোর: <span id="score" style="color: #fb923c;">0</span></span>
-        <span style="color: #f59e0b;">সেরা: <span id="highScore">0</span></span>
-        <span>জীবন: <span id="lives">❤️❤️❤️</span></span>
+        <main class="card">
+            <section id="startView">
+                <h1>আণবিক ভর শিকারী 🎯</h1>
+                <p class="sub">সংকেত দেখে সঠিক আণবিক ভর (Molecular Mass) বেছে নাও!</p>
+                <div class="label">লেভেল বেছে নাও</div>
+                <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+                <div class="sw-row" style="margin-top:12px;"><span>⏱ প্রতি প্রশ্নে সময়ের সীমা</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="track"></span></label></div>
+                <div class="rules">
+                    📋 প্রতি রাউন্ডে ১৫টি প্রশ্ন, ৩টি জীবন। ভুল উত্তর বা সময় শেষ হলে একটি জীবন যায়।<br>
+                    🧮 উত্তরের পর পুরো হিসাবটি দেখানো হবে, ভুল থেকে শেখার জন্য।<br>
+                    🔥 টানা সঠিক উত্তরে বোনাস স্কোর। ⌨️ কিবোর্ডে <b>১ ২ ৩ ৪</b> চেপে উত্তর দেওয়া যায়।
+                </div>
+                <details class="ref"><summary>📖 পারমাণবিক ভরের তালিকা (দেখে নাও)</summary><div class="ref-grid" id="refGrid"></div></details>
+                <button type="button" class="big" id="startBtn">খেলা শুরু করো ⚡</button>
+                <div class="best-line" id="bestLine"></div>
+            </section>
+
+            <section id="playView" hidden>
+                <div class="stats">
+                    <div class="stat"><small>স্কোর</small><b id="score">০</b></div>
+                    <div class="stat best"><small>সেরা</small><b id="best">০</b></div>
+                    <div class="stat"><small>প্রশ্ন</small><b id="prog">০/১৫</b></div>
+                    <div class="stat"><small>জীবন</small><b id="lives" aria-label="জীবন">❤️❤️❤️</b></div>
+                </div>
+                <div class="timer" id="timerBar" role="progressbar" aria-label="বাকি সময়" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="timerFill"></span></div>
+                <div class="qmeta"><span class="tag" id="qTag"></span><span id="qNo"></span></div>
+                <div class="q" id="q" aria-live="polite">--</div>
+                <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
+                <div class="fb" id="fb" aria-live="polite"></div>
+                <button type="button" class="big" id="nextBtn" hidden>পরের প্রশ্ন →</button>
+                <details class="ref"><summary>📖 পারমাণবিক ভরের তালিকা</summary><div class="ref-grid" id="refGrid2"></div></details>
+                <div class="pop" id="pop"></div>
+            </section>
+
+            <section id="endView" hidden>
+                <h2 class="end-title" id="endTitle">💥 খেলা শেষ!</h2>
+                <p class="end-msg" id="endMsg"></p>
+                <div class="end-label">অর্জিত স্কোর</div>
+                <div class="end-score" id="finalScore">০</div>
+                <div class="tiles">
+                    <div class="tile"><small>সঠিক</small><b id="eRight">০</b></div>
+                    <div class="tile"><small>নির্ভুলতা</small><b id="eAcc">০%</b></div>
+                    <div class="tile"><small>সেরা স্ট্রিক</small><b id="eStreak">০</b></div>
+                </div>
+                <div class="miss" id="missBox" hidden><h3>📖 যেগুলো ভুল হয়েছিল</h3><ul id="missList"></ul></div>
+                <button type="button" class="big" id="againBtn">আবার খেলো 🔄</button>
+                <button type="button" class="big ghost" id="menuBtn">লেভেল বদলাও</button>
+            </section>
+        </main>
     </div>
-    
-    <div id="formula" class="formula-box">--</div>
-    <div id="name" style="margin-bottom: 25px; color: #94a3b8; font-weight: 600; font-size: 1.1rem;">--</div>
-    <div id="options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
-</div>
 
-<div id="gameOverCard">
-    <h2 id="endTitle" style="font-size: 2rem; margin-top: 0;">💥 গেম ওভার!</h2>
-    <p id="msg" style="font-size: 1.05rem; color: #94a3b8; margin-bottom: 25px;"></p>
-    <div style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">অর্জিত স্কোর</div>
-    <h1 id="finalScore" style="color: #fb923c; font-size: 3.5rem; margin: 5px 0 30px 0; font-weight: 800;">0</h1>
-    <button onclick="location.reload()" class="restart-btn">আবার চেষ্টা করুন 🔄</button>
-</div>
+    <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 
-<script>
-    let highScore = localStorage.getItem('molecular_highscore') || 0;
-    document.getElementById('highScore').innerText = highScore;
+    <script>
+        const $ = id => document.getElementById(id);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false, maximumFractionDigits: 2 });
+        const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+        const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
 
-    const data = [
-        {f: "H", n: "হাইড্রোজেন", m: 1}, {f: "He", n: "হিলিয়াম", m: 4}, {f: "Li", n: "লিথিয়াম", m: 7},
-        {f: "C", n: "কার্বন", m: 12}, {f: "N", n: "নাইট্রোজেন", m: 14}, {f: "O", n: "অক্সিজেন", m: 16}, {f: "H", n: "হাইড্রোজেন", m: 1}, {f: "He", n: "হিলিয়াম", m: 4}, {f: "C", n: "কার্বন", m: 12},
-        {f: "N", n: "নাইট্রোজেন", m: 14}, {f: "O", n: "অক্সিজেন", m: 16}, {f: "Na", n: "সোডিয়াম", m: 23},
-        {f: "Mg", n: "ম্যাগনেসিয়াম", m: 24}, {f: "Al", n: "অ্যালুমিনিয়াম", m: 27}, {f: "Cl", n: "ক্লোরিন", m: 35.5},
-        {f: "K", n: "পটাশিয়াম", m: 39}, {f: "Ca", n: "ক্যালসিয়াম", m: 40}, {f: "Fe", n: "আয়রন", m: 56},
-        {f: "Cu", n: "কপার", m: 63.5}, {f: "Ag", n: "সিলভার", m: 108}, {f: "Au", n: "গোল্ড", m: 197}, {f: "H2O", n: "পানি", m: 18}, {f: "CO2", n: "কার্বন ডাই অক্সাইড", m: 44},
-        {f: "NH3", n: "অ্যামোনিয়া", m: 17}, {f: "CH4", n: "মিথেন", m: 16},
-        {f: "HCl", n: "হাইড্রোক্লোরিক অ্যাসিড", m: 36.5}, {f: "NaCl", n: "সোডিয়াম ক্লোরাইড", m: 58.5},
-        {f: "NaOH", n: "সোডিয়াম হাইড্রোক্সাইড", m: 40}, {f: "CaO", n: "ক্যালসিয়াম অক্সাইড", m: 56},
-        {f: "Na", n: "সোডিয়াম", m: 23}, {f: "Mg", n: "ম্যাগনেসিয়াম", m: 24}, {f: "Cl", n: "ক্লোরিন", m: 35.5},
-        {f: "H2O", n: "পানি", m: 18}, {f: "CO2", n: "কার্বন ডাই অক্সাইড", m: 44}, {f: "NaCl", n: "সোডিয়াম ক্লোরাইড", m: 58.5},
-        {f: "H2SO4", n: "সালফিউরিক অ্যাসিড", m: 98}, {f: "C6H12O6", n: "গ্লুকোজ", m: 180}, {f: "H2SO4", n: "সালফিউরিক অ্যাসিড", m: 98}, {f: "HNO3", n: "নাইট্রিক অ্যাসিড", m: 63},
-        {f: "C6H12O6", n: "গ্লুকোজ", m: 180}, {f: "CaCO3", n: "ক্যালসিয়াম কার্বনেট", m: 100},
-        {f: "CH3COOH", n: "অ্যাসিটিক অ্যাসিড", m: 60}, {f: "KMnO4", n: "পটাশিয়াম পারম্যাঙ্গানেট", m: 158},
-        {f: "FeSO4", n: "ফেরাস সালফেট", m: 152}, {f: "C2H5OH", n: "ইথানল", m: 46}, {f: "CuSO4·5H2O", n: "কপার সালফেট পেন্টাহাইড্রেট", m: 249.5},
-        {f: "Al2(SO4)3", n: "অ্যালুমিনিয়াম সালফেট", m: 342},
-        {f: "KAl(SO4)2·12H2O", n: "পটাশ অ্যালাম (ফিটকিরি)", m: 474},
-        {f: "C12H22O11", n: "সুক্রোজ (চিনি)", m: 342},
-        {f: "Fe2(SO4)3", n: "ফেরিক সালফেট", m: 400},
-        {f: "K2Cr2O7", n: "পটাশিয়াম ডাইক্রোমেট", m: 294},
-        {f: "Na2CO3·10H2O", n: "ওয়াশিং সোডা", m: 286},
-        {f: "Ca3(PO4)2", n: "ক্যালসিয়াম ফসফেট", m: 310},
-        {f: "C8H10N4O2", n: "ক্যাফেইন", m: 194},
-        {f: "Mg(OH)2", n: "ম্যাগনেসিয়াম হাইড্রোক্সাইড", m: 58},
-        {f: "CuSO4·5H2O", n: "কপার সালফেট পেন্টাহাইড্রেট", m: 249.5}, {f: "Al2(SO4)3", n: "অ্যালুমিনিয়াম সালফেট", m: 342}
-    ];
+        /* পারমাণবিক ভর (পাঠ্যবইয়ের মান) */
+        const AM = { H:1, He:4, Li:7, C:12, N:14, O:16, Na:23, Mg:24, Al:27, P:31, S:32, Cl:35.5, K:39, Ca:40, Mn:55, Cr:52, Fe:56, Cu:63.5, Zn:65, Ag:108, Au:197 };
 
-    let score = 0, lives = 3;
+        /* প্রশ্ন: [সংকেত, নাম, টিয়ার(১ সহজ / ২ মাঝারি / ৩ কঠিন)] — ভর সংকেত থেকেই হিসাব হয়। নতুন প্রশ্ন যোগ করতে এখানে একটি লাইন দাও */
+        const D = [
+            ['H','হাইড্রোজেন',1], ['He','হিলিয়াম',1], ['Li','লিথিয়াম',1], ['C','কার্বন',1], ['N','নাইট্রোজেন',1], ['O','অক্সিজেন',1],
+            ['Na','সোডিয়াম',1], ['Mg','ম্যাগনেসিয়াম',1], ['Al','অ্যালুমিনিয়াম',1], ['Cl','ক্লোরিন',1], ['K','পটাশিয়াম',1], ['Ca','ক্যালসিয়াম',1],
+            ['Fe','আয়রন',1], ['Cu','কপার',1], ['Ag','সিলভার',1], ['Au','গোল্ড',1],
+            ['H2O','পানি',1], ['CO2','কার্বন ডাই অক্সাইড',1], ['NH3','অ্যামোনিয়া',1], ['CH4','মিথেন',1], ['HCl','হাইড্রোক্লোরিক অ্যাসিড',1],
+            ['NaCl','সোডিয়াম ক্লোরাইড',1], ['NaOH','সোডিয়াম হাইড্রোক্সাইড',1], ['CaO','ক্যালসিয়াম অক্সাইড',1],
+            ['H2SO4','সালফিউরিক অ্যাসিড',2], ['HNO3','নাইট্রিক অ্যাসিড',2], ['CaCO3','ক্যালসিয়াম কার্বনেট',2], ['CH3COOH','অ্যাসিটিক অ্যাসিড',2],
+            ['KMnO4','পটাশিয়াম পারম্যাঙ্গানেট',2], ['FeSO4','ফেরাস সালফেট',2], ['C2H5OH','ইথানল',2], ['Mg(OH)2','ম্যাগনেসিয়াম হাইড্রোক্সাইড',2],
+            ['C6H12O6','গ্লুকোজ',2], ['Na2CO3','সোডিয়াম কার্বনেট',2],
+            ['CuSO4·5H2O','কপার সালফেট পেন্টাহাইড্রেট',3], ['Al2(SO4)3','অ্যালুমিনিয়াম সালফেট',3], ['KAl(SO4)2·12H2O','পটাশ অ্যালাম (ফিটকিরি)',3],
+            ['C12H22O11','সুক্রোজ (চিনি)',3], ['Fe2(SO4)3','ফেরিক সালফেট',3], ['K2Cr2O7','পটাশিয়াম ডাইক্রোমেট',3], ['Na2CO3·10H2O','ওয়াশিং সোডা',3],
+            ['Ca3(PO4)2','ক্যালসিয়াম ফসফেট',3], ['C8H10N4O2','ক্যাফেইন',3]
+        ];
+        const DIFFS = {
+            easy: { name: 'সহজ', sub: 'মৌল ও সহজ যৌগ • ২৫ সে', max: 1, time: 25 },
+            mid: { name: 'মাঝারি', sub: '+ অ্যাসিড, লবণ • ২০ সে', max: 2, time: 20 },
+            hard: { name: 'কঠিন', sub: '+ জটিল যৌগ • ১৮ সে', max: 3, time: 18 }
+        };
+        const ROUND = 15;
 
-    function play() {
-        if(score >= 500) {
-            if (score > highScore) localStorage.setItem('molecular_highscore', score);
-            document.getElementById('endTitle').innerText = "🎉 অভিনন্দন!";
-            document.getElementById('finalScore').innerText = score;
-            document.getElementById('msg').innerText = "তুমি আণবিক ভর মাস্টার!";
-            document.getElementById('gameOverCard').style.display = 'block';
-            document.getElementById('gameContainer').style.filter = 'blur(6px)';
-            document.getElementById('gameContainer').style.opacity = '0.3';
-            return;
+        /* সংকেত পার্সার: বন্ধনী, সংখ্যা ও ক্রিস্টাল পানি (·) বোঝে */
+        function parse(f) {
+            const total = {};
+            f.split('·').forEach(part => {
+                let m = part.match(/^(\d+)(.*)$/), mult = 1; if (m) { mult = +m[1]; part = m[2]; }
+                let i = 0;
+                function group() {
+                    const c = {};
+                    while (i < part.length && part[i] !== ')') {
+                        if (part[i] === '(') {
+                            i++; const inner = group(); i++; let n = '';
+                            while (/\d/.test(part[i] || '')) n += part[i++];
+                            const k = n ? +n : 1; for (const e in inner) c[e] = (c[e] || 0) + inner[e] * k;
+                        } else {
+                            let sym = part[i++]; while (/[a-z]/.test(part[i] || '')) sym += part[i++];
+                            let n = ''; while (/\d/.test(part[i] || '')) n += part[i++];
+                            c[sym] = (c[sym] || 0) + (n ? +n : 1);
+                        }
+                    }
+                    return c;
+                }
+                const c = group(); for (const e in c) total[e] = (total[e] || 0) + c[e] * mult;
+            });
+            return total;
+        }
+        function massOf(f) { const c = parse(f); return Object.entries(c).reduce((a, [e, n]) => a + n * AM[e], 0); }
+        function calcText(f) {
+            const c = parse(f), es = Object.entries(c);
+            if (es.length === 1 && es[0][1] === 1) return 'পারমাণবিক ভর = ' + bn(AM[es[0][0]]);
+            const l1 = es.map(([e, n]) => e + '×' + bn(n)).join(' + ');
+            const l2 = es.map(([e, n]) => bn(n) + '×' + bn(AM[e])).join(' + ');
+            const l3 = es.map(([e, n]) => bn(n * AM[e])).join(' + ');
+            return l1 + ' = ' + l2 + ' = ' + l3 + ' = ' + bn(massOf(f));
+        }
+        function fmtInto(el, f) {          // সংখ্যা সাবস্ক্রিপ্টে দেখায়
+            for (let i = 0; i < f.length; i++) {
+                const ch = f[i], prev = f[i - 1];
+                if (/\d/.test(ch) && prev && /[A-Za-z)]/.test(prev)) { const s = document.createElement('sub'); s.textContent = ch; el.appendChild(s); }
+                else el.appendChild(document.createTextNode(ch));
+            }
+        }
+        const SUB = { 0:'₀',1:'₁',2:'₂',3:'₃',4:'₄',5:'₅',6:'₆',7:'₇',8:'₈',9:'₉' };
+        const plain = f => f.replace(/(?<=[A-Za-z)])(\d)/g, (_, d) => SUB[d]);
+
+        let diff = sget('molmass_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+        let timerOn = sget('molmass_timer', '1') === '1';
+        let soundOn = sget('molmass_sound', '1') === '1';
+        const oldBest = parseInt(sget('molecular_highscore', '0'), 10) || 0;
+        const bestKey = d => 'molmass_best_' + d;
+        const getBest = d => Math.max(parseInt(sget(bestKey(d), '0'), 10) || 0, d === 'mid' ? oldBest : 0);
+
+        let ac = null;
+        function tone(f, t0, dur, type, vol) {
+            if (!soundOn) return;
+            try {
+                ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+                const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f;
+                o.connect(g); g.connect(ac.destination);
+                const t = ac.currentTime + t0;
+                g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+                o.start(t); o.stop(t + dur + .02);
+            } catch (e) {}
+        }
+        const sfx = {
+            right() { tone(660, 0, .12); tone(880, .1, .16); },
+            wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); },
+            life() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .18); },
+            end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+            win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); }
+        };
+        $('themeBtn').addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            document.documentElement.setAttribute('data-theme', next);
+        });
+        function paintSound() { $('soundBtn').textContent = soundOn ? '🔔' : '🔕'; }
+        $('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('molmass_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+        paintSound();
+
+        ['refGrid', 'refGrid2'].forEach(id => Object.entries(AM).forEach(([e, m]) => {
+            const s = document.createElement('span'); const b = document.createElement('b'); b.textContent = e;
+            s.append(b, document.createTextNode(' = ' + bn(m))); $(id).appendChild(s);
+        }));
+
+        function renderDiff() {
+            const row = $('diffRow'); row.replaceChildren();
+            Object.entries(DIFFS).forEach(([k, d]) => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === diff ? ' on' : '');
+                b.setAttribute('aria-pressed', String(k === diff));
+                const t = document.createElement('b'); t.textContent = d.name; const s = document.createElement('small'); s.textContent = d.sub;
+                b.append(t, s);
+                b.addEventListener('click', () => { diff = k; sset('molmass_diff', k); renderDiff(); paintBest(); });
+                row.appendChild(b);
+            });
+        }
+        function paintBest() { const b = getBest(diff); $('bestLine').textContent = b ? '🏆 ' + DIFFS[diff].name + ' লেভেলে তোমার সেরা স্কোর: ' + bn(b) : ''; }
+        $('timerSw').checked = timerOn;
+        $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('molmass_timer', timerOn ? '1' : '0'); });
+        const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
+
+        let score, lives, streak, bestStreak, asked, right, deck, cur, curM, locked, deadline, tick, wrongs, limit, advTimer;
+        function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function newDeck() { return shuffle(D.filter(x => x[2] <= DIFFS[diff].max)); }
+        function paintLives() { $('lives').textContent = lives > 0 ? '❤️'.repeat(lives) : '💔'; $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); }
+
+        /* সম্ভাব্য ভুল উত্তর: ছাত্ররা যেসব ভুল করে (একটি পরমাণু বাদ/বেশি, সাবস্ক্রিপ্ট ভুল) */
+        function options(f) {
+            const m = massOf(f), c = parse(f), set = new Set();
+            const add = v => { v = Math.round(v * 10) / 10; if (v > 0 && v !== m) set.add(v); };
+            Object.keys(c).forEach(e => { add(m - AM[e]); add(m + AM[e]); if (c[e] > 1) add(m - AM[e] * (c[e] - 1)); });
+            [1, 2, 4, 8, 10, 16, 18].forEach(d => { if (Math.random() < .35) { add(m + d); add(m - d); } });
+            let pool = shuffle([...set]);
+            pool.sort((a, b) => Math.abs(a - m) - Math.abs(b - m) + (Math.random() - .5) * m * .35);
+            const picks = pool.slice(0, 3);
+            for (let k = 1; picks.length < 3; k++) { const v = m + k * 2; if (!picks.includes(v)) picks.push(v); }
+            return shuffle([m, ...picks]);
         }
 
-        let item = data[Math.floor(Math.random() * data.length)];
-        document.getElementById('formula').innerText = item.f;
-        document.getElementById('name').innerText = item.n;
+        function startGame() {
+            score = 0; lives = 3; streak = 0; bestStreak = 0; asked = 0; right = 0; wrongs = []; deck = newDeck(); locked = false;
+            limit = timerOn ? DIFFS[diff].time : 0;
+            $('score').textContent = bn(0); $('best').textContent = bn(getBest(diff)); paintLives();
+            show('playView'); next();
+        }
+        function next() {
+            clearTimeout(advTimer);
+            if (asked >= ROUND) return endGame(true);
+            if (!deck.length) deck = newDeck();
+            cur = deck.pop(); curM = massOf(cur[0]); asked++; locked = false;
+            const q = $('q'); q.replaceChildren();
+            const fo = document.createElement('span'); fo.className = 'f'; fmtInto(fo, cur[0]);
+            const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = cur[1];
+            q.append(fo, nm);
+            $('qTag').textContent = cur[0].replace(/[^A-Za-z]/g, '').length <= 2 && !/\d/.test(cur[0]) ? 'মৌল (পারমাণবিক ভর)' : 'যৌগ (আণবিক ভর)';
+            $('qNo').textContent = 'প্রশ্ন ' + bn(asked) + '/' + bn(ROUND); $('prog').textContent = bn(asked) + '/' + bn(ROUND);
+            const box = $('opts'); box.replaceChildren();
+            options(cur[0]).forEach((v, i) => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.v = v;
+                const k = document.createElement('kbd'); k.textContent = bn(i + 1);
+                b.append(k, document.createTextNode(bn(v)));
+                b.addEventListener('click', () => answer(v, b));
+                box.appendChild(b);
+            });
+            $('fb').className = 'fb'; $('fb').replaceChildren(); $('nextBtn').hidden = true;
+            startTimer();
+        }
+        function startTimer() {
+            clearInterval(tick);
+            const bar = $('timerBar'); bar.hidden = !limit; bar.classList.remove('low'); $('timerFill').style.width = '100%';
+            if (!limit) return;
+            deadline = Date.now() + limit * 1000;
+            tick = setInterval(() => {
+                const left = Math.max(0, deadline - Date.now()), pct = left / (limit * 1000) * 100;
+                $('timerFill').style.width = pct + '%'; bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+                bar.classList.toggle('low', pct < 30);
+                if (left <= 0) { clearInterval(tick); answer(null, null); }
+            }, 80);
+        }
+        function popText(t) { const p = $('pop'); p.textContent = t; p.classList.remove('go'); void p.offsetWidth; p.classList.add('go'); }
+        function answer(v, btn) {
+            if (locked) return; locked = true; clearInterval(tick);
+            const timeLeft = limit ? Math.max(0, deadline - Date.now()) / (limit * 1000) : 0;
+            document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (+b.dataset.v === curM) b.classList.add('right'); });
+            const fb = $('fb'); fb.replaceChildren();
+            const head = document.createElement('b'), calc = document.createElement('span'); calc.className = 'calc';
+            calc.textContent = plain(cur[0]) + ' → ' + calcText(cur[0]);
+            if (v === curM) {
+                streak++; bestStreak = Math.max(bestStreak, streak); right++;
+                const bonus = Math.min(streak - 1, 5) * 2 + (limit && timeLeft > .66 ? 5 : 0);
+                score += 10 + bonus; sfx.right();
+                head.textContent = '✅ সঠিক! +' + bn(10 + bonus) + (streak >= 3 ? ' 🔥 ' + bn(streak) + ' টানা' : '');
+                popText('+' + bn(10 + bonus));
+                if (streak % 5 === 0 && lives < 3) { lives++; setTimeout(sfx.life, 250); head.textContent += ' · ❤️ একটি জীবন ফেরত!'; }
+                fb.className = 'fb show ok';
+            } else {
+                if (btn) btn.classList.add('wrong');
+                streak = 0; lives--; wrongs.push(cur); sfx.wrong();
+                head.textContent = (v === null ? '⏰ সময় শেষ! ' : '❌ ভুল! ') + 'সঠিক উত্তর: ' + bn(curM);
+                fb.className = 'fb show no';
+            }
+            fb.append(head, calc);
+            $('score').textContent = bn(score); paintLives();
+            if (lives <= 0) { advTimer = setTimeout(() => endGame(false), 1800); return; }
+            $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true });
+            if (v === curM) advTimer = setTimeout(next, 2200);
+        }
+        function endGame(won) {
+            clearInterval(tick); won ? sfx.win() : sfx.end();
+            const prev = getBest(diff), record = score > prev;
+            if (record) sset(bestKey(diff), score);
+            $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? '🎉 অভিনন্দন!' : '💥 খেলা শেষ!');
+            $('endMsg').textContent = won ? (lives === 3 && !wrongs.length ? 'নিখুঁত! তুমি আণবিক ভর মাস্টার! 🌟' : 'রাউন্ড শেষ করেছো, দারুণ খেলেছো! 👏') : (right < 5 ? 'আরেকটু ভালো করে পড়ো, ভরের তালিকা দেখে নাও! 💪' : 'বেশ ভালো চেষ্টা! আবার খেলে দেখো।');
+            $('finalScore').textContent = bn(score);
+            $('eRight').textContent = bn(right) + '/' + bn(asked);
+            $('eAcc').textContent = bn(asked ? Math.round(right / asked * 100) : 0) + '%';
+            $('eStreak').textContent = bn(bestStreak);
+            const ul = $('missList'); ul.replaceChildren(); const seen = new Set();
+            wrongs.forEach(w => { if (seen.has(w[0])) return; seen.add(w[0]); const li = document.createElement('li'); li.textContent = plain(w[0]) + ' (' + w[1] + ') = ' + bn(massOf(w[0])) + '  ·  ' + calcText(w[0]); ul.appendChild(li); });
+            $('missBox').hidden = !wrongs.length;
+            show('endView'); $('againBtn').focus({ preventScroll: true });
+        }
 
-        let opts = [item.m, item.m+5, item.m+10, item.m-2].sort(() => Math.random() - 0.5);
-        let grid = document.getElementById('options');
-        grid.innerHTML = '';
-        
-        opts.forEach(val => {
-            let b = document.createElement('button');
-            b.className = 'btn'; b.innerText = val;
-            b.onclick = () => {
-                document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
-                if(val === item.m) {
-                    b.style.background = "#22c55e"; b.style.color = "white"; b.style.borderColor = "#22c55e";
-                    score += 10; document.getElementById('score').innerText = score;
-                    setTimeout(play, 800);
-                } else {
-                    b.style.background = "#ef4444"; b.style.color = "white"; b.style.borderColor = "#ef4444";
-                    Array.from(grid.children).forEach(btn => {
-                        if(parseFloat(btn.innerText) === item.m) {
-                            btn.style.background = "#22c55e";
-                            btn.style.color = "white";
-                            btn.style.borderColor = "#22c55e";
-                        }
-                    });
-                    lives--; document.getElementById('lives').innerText = "❤️".repeat(lives);
-                    if(lives === 0) {
-                        if (score > highScore) localStorage.setItem('molecular_highscore', score);
-                        document.getElementById('finalScore').innerText = score;
-                        document.getElementById('msg').innerText = (score < 50) ? "আরেকটু ভালো করে পড়ো!" : "দারুণ খেলেছো!";
-                        document.getElementById('gameOverCard').style.display = 'block';
-                        document.getElementById('gameContainer').style.filter = 'blur(6px)';
-                        document.getElementById('gameContainer').style.opacity = '0.3';
-                    } else { setTimeout(play, 1200); }
-                }
-            };
-            grid.appendChild(b);
+        $('startBtn').addEventListener('click', startGame);
+        $('againBtn').addEventListener('click', startGame);
+        $('menuBtn').addEventListener('click', () => { paintBest(); show('startView'); });
+        $('nextBtn').addEventListener('click', next);
+        document.addEventListener('keydown', e => {
+            if ($('playView').hidden) return;
+            if (e.key >= '1' && e.key <= '4' && !locked) { const b = document.querySelectorAll('#opts .opt')[+e.key - 1]; if (b) b.click(); }
+            else if ((e.key === 'Enter' || e.key === ' ') && locked && !$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); next(); }
         });
-    }
-    play();
-</script>
+        let hiddenAt = 0;
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) hiddenAt = Date.now();
+            else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; }
+        });
+        renderDiff(); paintBest(); show('startView');
+    </script>
 </body>
 </html>
