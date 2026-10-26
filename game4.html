@@ -2,292 +2,606 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>রাসায়নিক বিক্রিয়া শিকারী - Premium Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05060f">
+    <title>রাসায়নিক বিক্রিয়া শিকারী | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            let t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <style>
-        /* Premium AMOLED Black Theme Config */
-        :root { 
-            --bg: #000000; 
-            --card: #0b0f17; 
-            --text: #f8fafc; 
-            --accent: #06b6d4; /* Premium Cyber Cyan Accent */
-            --accent-glow: rgba(6, 182, 212, 0.2);
-            --border: #1e293b;
+        :root {
+            --bg-color: #eef2f9; --card-bg: rgba(255,255,255,.78); --card-solid: #fff;
+            --text-color: #0f172a; --text-muted: #5b6b82; --border-color: rgba(15,23,42,.12);
+            --shadow: 0 10px 30px -5px rgba(15,23,42,.1); --section-border: rgba(168,85,247,.3);
+            --gradient-primary: linear-gradient(135deg,#9333ea,#3b82f6); --gradient-glow: rgba(147,51,234,.2);
+            --grid-line: rgba(15,23,42,.05); --blob-opacity: .22; --good: #059669; --bad: #e11d48; --gold: #d97706; --accent: #7c3aed;
         }
-        
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            padding: 20px; 
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: 0.3s; 
+        [data-theme="dark"] {
+            --bg-color: #05060f; --card-bg: rgba(16,20,36,.66); --card-solid: #0b0f1c;
+            --text-color: #f8fafc; --text-muted: #94a3b8; --border-color: rgba(255,255,255,.1);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,.7); --section-border: rgba(168,85,247,.38);
+            --gradient-primary: linear-gradient(135deg,#a855f7,#60a5fa); --gradient-glow: rgba(168,85,247,.3);
+            --grid-line: rgba(255,255,255,.035); --blob-opacity: .42; --good: #34d399; --bad: #fb7185; --gold: #fbbf24; --accent: #a78bfa;
         }
-        
-        /* Premium Back Button linked to games.html */
-        .back-btn { 
-            position: fixed; 
-            top: 20px; 
-            left: 20px; 
-            background: #1e293b; 
-            color: #94a3b8; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            text-decoration: none; 
-            font-weight: 600; 
-            border: 1px solid var(--border);
-            transition: all 0.2s ease;
-            z-index: 50;
-        }
-        .back-btn:hover { 
-            background: #334155; 
-            color: #f8fafc; 
-            transform: translateX(-3px);
-        }
-        
-        .theme-btn { display: none; }
-        
-        /* Premium Game Card Layout */
-        .game-card { 
-            max-width: 500px; 
-            width: 100%;
-            background: var(--card); 
-            padding: 40px 30px; 
-            border-radius: 24px; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
-            text-align: center;
-            box-sizing: border-box;
-            transition: opacity 0.3s ease, filter 0.3s ease;
-        }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: 18px 16px 64px; font-family: 'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;
+            background: var(--bg-color); color: var(--text-color); transition: background .4s, color .4s; animation: pageIn .6s ease both; }
+        /* body তে filter/transform নয়, নইলে fixed জিনিস ভাসে না */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 26s ease-in-out infinite alternate; }
+        .b1 { width: 480px; height: 480px; background: #0891b2; top: -150px; left: -120px; }
+        .b2 { width: 560px; height: 560px; background: #7e22ce; bottom: -220px; right: -160px; animation-duration: 32s; }
+        @keyframes drift { to { transform: translate(60px,50px) scale(1.15); } }
+        .grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px); background-size: 52px 52px; -webkit-mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); }
+        .wrap { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
 
-        .game-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin: 0 0 5px 0;
-            background: linear-gradient(to right, #22d3ee, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Interactive Stats Bar */
-        .stats-bar {
-            display: flex; 
-            justify-content: space-between; 
-            font-weight: 600; 
-            margin: 20px 0;
-            background: rgba(255,255,255,0.02);
-            padding: 12px 20px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.03);
-            color: #cbd5e1;
-            font-size: 0.95rem;
-        }
-        
-        /* Glowing Cyan Reaction Formula Box */
-        .reaction-box { 
-            background: rgba(6, 182, 212, 0.03); 
-            padding: 25px 15px; 
-            border-radius: 18px; 
-            font-size: 2.2rem; 
-            color: #22d3ee; 
-            font-weight: 800; 
-            margin: 20px 0; 
-            border: 1px solid rgba(6, 182, 212, 0.25);
-            box-shadow: inset 0 0 20px var(--accent-glow), 0 10px 20px rgba(0,0,0,0.3);
-            text-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
-            word-break: break-word;
-        }
-        
-        .options-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 12px; 
-        }
-        
-        /* Sleek Button Mechanics */
-        .btn { 
-            padding: 16px; 
-            border: 1px solid var(--border); 
-            border-radius: 14px; 
-            background: rgba(255,255,255,0.02); 
-            color: #cbd5e1; 
-            cursor: pointer; 
-            font-size: 1.05rem; 
-            font-weight: 600;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        .btn:hover:not(:disabled) { 
-            background: var(--accent); 
-            color: white; 
-            border-color: var(--accent);
-            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.35);
-            transform: translateY(-2px);
-        }
-        .btn:disabled {
-            cursor: default;
-        }
-        
-        /* Centered Overlay Game Over Card */
-        #gameOverCard { 
-            display: none; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            z-index: 1000; 
-            width: 85%; 
-            max-width: 400px; 
-            background: #0f1422; 
-            padding: 40px; 
-            border-radius: 28px; 
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            text-align: center;
-        }
-        
-        .restart-btn {
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            padding: 15px 30px; 
-            border-radius: 14px; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.2s ease;
-        }
-        .restart-btn:hover {
-            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
-            transform: translateY(-2px);
-        }
+        .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; padding: 10px 14px; border-radius: 20px; background: var(--card-bg); border: 1.5px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .btn-s { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 13px; font-family: inherit; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); transition: transform .25s, border-color .25s; }
+        .btn-s:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.6); }
+        .top-r { display: flex; gap: 8px; }
+        .icon-btn { width: 40px; height: 40px; padding: 0; justify-content: center; font-size: 16px; }
+        a:focus-visible, button:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
+
+        .card { position: relative; overflow: hidden; padding: 28px 26px; border-radius: 28px; background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .card::before { content: ''; position: absolute; top: -90px; right: -70px; width: 240px; height: 240px; pointer-events: none; background: radial-gradient(circle,var(--gradient-glow),transparent 70%); }
+        .card > * { position: relative; }
+        h1 { margin: 0 0 6px; text-align: center; font-size: clamp(1.6rem,5vw,2.1rem); font-weight: 800; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { margin: 0 0 22px; text-align: center; font-size: 15px; font-weight: 500; color: var(--text-muted); }
+        [hidden] { display: none !important; }
+
+        /* শুরুর স্ক্রিন */
+        .label { margin: 18px 0 8px; font-size: 14px; font-weight: 800; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { flex: 1 1 0; min-width: 96px; font-family: inherit; padding: 11px 12px; border-radius: 16px; cursor: pointer; text-align: center; color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s; }
+        .chip b { display: block; font-size: 15px; font-weight: 800; color: var(--text-color); }
+        .chip small { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; }
+        .chip:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.55); }
+        .chip.on { border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .chip.on b, .chip.on small { color: #fff; }
+        .sw-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 14.5px; font-weight: 600; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { position: absolute; inset: 0; z-index: 2; margin: 0; opacity: 0; cursor: pointer; }
+        .switch .track { position: absolute; inset: 0; border-radius: 20px; background: var(--border-color); transition: background .25s; }
+        .switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s; }
+        .switch input:checked ~ .track { background: var(--gradient-primary); }
+        .switch input:checked ~ .track::after { transform: translateX(20px); }
+        .switch input:focus-visible ~ .track { outline: 3px solid #22d3ee; outline-offset: 2px; }
+        .big { display: block; width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 16px; font-family: inherit; font-size: 17px; font-weight: 800; color: #fff; cursor: pointer; background: var(--gradient-primary); transition: transform .25s, box-shadow .25s; }
+        .big:hover { transform: translateY(-2px); box-shadow: 0 12px 26px var(--gradient-glow); }
+        .big.ghost { color: var(--text-color); background: transparent; border: 1.5px solid var(--section-border); }
+        .rules { margin: 18px 0 0; padding: 14px 16px; border-radius: 16px; font-size: 13.5px; line-height: 1.8; font-weight: 500; color: var(--text-muted); background: var(--card-solid); border: 1px dashed var(--border-color); }
+        .best-line { margin-top: 14px; text-align: center; font-size: 14px; font-weight: 700; color: var(--gold); }
+
+        /* খেলার স্ক্রিন */
+        .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+        .stat { padding: 9px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .stat small { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .stat b { display: block; margin-top: 2px; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .stat.best b { color: var(--gold); }
+        .timer { height: 8px; margin-bottom: 18px; border-radius: 8px; overflow: hidden; background: var(--border-color); }
+        .timer span { display: block; height: 100%; width: 100%; border-radius: 8px; background: var(--gradient-primary); transition: background .3s; }
+        .timer.low span { background: linear-gradient(90deg,#fb7185,#f59e0b); }
+        .qmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .tag { padding: 3px 12px; border-radius: 20px; color: var(--accent); background: rgba(168,85,247,.12); border: 1px solid rgba(168,85,247,.3); }
+        .q { margin-bottom: 20px; padding: 24px 14px; border-radius: 20px; text-align: center; font-size: clamp(1.5rem,6vw,2.2rem); font-weight: 800; line-height: 1.4; color: var(--accent); word-break: break-word;
+            background: rgba(168,85,247,.07); border: 1.5px solid rgba(168,85,247,.28); box-shadow: inset 0 0 28px var(--gradient-glow); }
+        .q small { display: block; margin-top: 4px; font-size: .5em; font-weight: 700; color: var(--text-muted); }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .opt { position: relative; padding: 16px 10px; border-radius: 16px; font-family: inherit; font-size: 16.5px; font-weight: 800; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s, box-shadow .2s; }
+        .opt kbd { position: absolute; top: 6px; left: 9px; font-family: inherit; font-size: 11px; font-weight: 700; color: var(--text-muted); }
+        .opt:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .opt:disabled { cursor: default; }
+        .opt.right { color: #fff; border-color: transparent; background: linear-gradient(135deg,#059669,#10b981); box-shadow: 0 8px 22px rgba(16,185,129,.35); }
+        .opt.wrong { color: #fff; border-color: transparent; background: linear-gradient(135deg,#e11d48,#f43f5e); animation: shake .35s; }
+        @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .fb { min-height: 24px; margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: 14px; font-weight: 600; line-height: 1.7; display: none; }
+        .fb.show { display: block; }
+        .fb.ok { color: var(--good); background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.35); }
+        .fb.no { color: var(--bad); background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.35); }
+        .fb .note { display: block; margin-top: 4px; color: var(--text-color); font-weight: 500; }
+        .pop { position: absolute; left: 50%; top: 16%; z-index: 5; font-size: 1.4rem; font-weight: 800; color: var(--good); pointer-events: none; opacity: 0; transform: translate(-50%,0); }
+        .pop.go { animation: pop .8s ease-out; }
+        @keyframes pop { 0% { opacity: 0; transform: translate(-50%,10px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%,-40px); } }
+
+        /* শেষ স্ক্রিন */
+        .end-score { margin: 4px 0 2px; text-align: center; font-size: 3.6rem; font-weight: 800; line-height: 1.1; color: var(--accent); }
+        .end-label { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); }
+        .end-title { margin: 0 0 6px; text-align: center; font-size: 1.9rem; font-weight: 800; }
+        .end-msg { margin: 0 0 14px; text-align: center; font-size: 15px; font-weight: 500; line-height: 1.7; color: var(--text-muted); }
+        .tiles { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0; }
+        .tile { padding: 12px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .tile small { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .tile b { font-size: 19px; font-weight: 800; }
+        .miss h3 { margin: 18px 0 8px; font-size: 15px; font-weight: 800; }
+        .miss ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 190px; overflow-y: auto; }
+        .miss li { padding: 9px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.6; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .miss li b { color: var(--good); }
+        .credit-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500; display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #64748b; background: rgba(5,6,15,.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.06); }
+        [data-theme="light"] .credit-bar { background: rgba(255,255,255,.88); color: #475569; border-top-color: rgba(15,23,42,.1); }
+        .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#22d3ee,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        @media (max-width: 480px) { .card { padding: 22px 16px; } .stats { gap: 6px; } .back-long { display: none; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+    
+        .eq { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 20px 10px; border-radius: 20px; font-size: clamp(1.2rem,5vw,1.8rem); font-weight: 800; background: rgba(168,85,247,.07); border: 1.5px solid rgba(168,85,247,.28); box-shadow: inset 0 0 28px var(--gradient-glow); }
+        .ion { padding: 8px 14px; border-radius: 14px; background: var(--card-solid); border: 1.5px solid var(--border-color); }
+        .ion.c { color: var(--bad); border-color: rgba(244,63,94,.4); }
+        .ion.a { color: #3b82f6; border-color: rgba(59,130,246,.4); }
+        .ion small { display: block; margin-top: 2px; text-align: center; font-size: .42em; font-weight: 700; color: var(--text-muted); }
+        .eq .op { color: var(--text-muted); }
+        .eq .res { min-width: 70px; padding: 8px 14px; border-radius: 14px; text-align: center; color: var(--good); border: 1.5px dashed rgba(16,185,129,.45); }
+        sub, sup { font-size: .6em; line-height: 0; }
+        .opt .fm { font-size: 1.15em; }
+        .builder { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .bcol { padding: 12px; border-radius: 16px; text-align: center; background: var(--card-solid); border: 1.5px solid var(--border-color); }
+        .bcol .nm { font-size: 14px; font-weight: 800; }
+        .bcol.c .nm { color: var(--bad); } .bcol.a .nm { color: #3b82f6; }
+        .step { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; }
+        .step button { width: 40px; height: 40px; border-radius: 12px; border: 1.5px solid var(--border-color); background: transparent; font-family: inherit; font-size: 20px; font-weight: 800; cursor: pointer; color: var(--text-color); transition: transform .2s, border-color .2s; }
+        .step button:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); }
+        .step button:disabled { opacity: .4; cursor: default; }
+        .step output { min-width: 30px; font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .bprev { margin-top: 12px; padding: 14px; border-radius: 16px; text-align: center; font-size: 1.9rem; font-weight: 800; color: var(--good); background: var(--card-solid); border: 1.5px dashed rgba(16,185,129,.45); }
+        .bprev small { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .bprev.bal small { color: var(--good); }
+        .brow { display: flex; gap: 10px; margin-top: 12px; }
+        .brow .big { margin-top: 0; }
+        .hintbtn { flex: 0 0 auto; padding: 0 18px; border-radius: 16px; font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer; color: var(--gold); background: transparent; border: 1.5px solid var(--gold); }
+        .hintbtn:disabled { opacity: .45; cursor: default; }
+        .hintbox { margin-top: 10px; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.7; color: var(--gold); background: rgba(251,191,36,.08); border: 1px dashed rgba(251,191,36,.5); }
+        .calc { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 10px; font-size: 13.5px; font-weight: 600; line-height: 1.8; color: var(--text-color); background: var(--card-solid); border: 1px dashed var(--border-color); word-break: break-word; }
+    
+        .rx { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px 8px; font-size: clamp(1.05rem,4.4vw,1.5rem); }
+        .sp { padding: 6px 10px; border-radius: 12px; background: var(--card-solid); border: 1.5px solid var(--border-color); white-space: nowrap; }
+        .sp .co { color: var(--gold); margin-right: 2px; }
+        .arrow { display: inline-flex; flex-direction: column; align-items: center; min-width: 44px; color: var(--text-muted); }
+        .arrow small { font-size: 11.5px; font-weight: 700; color: var(--gold); max-width: 130px; text-align: center; line-height: 1.3; }
+        .rx .res { min-width: 90px; }
+        .opt .fm { font-size: 1.02em; line-height: 1.6; }
+        .bgrid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .bcell { padding: 10px 12px; border-radius: 16px; text-align: center; background: var(--card-solid); border: 1.5px solid var(--border-color); }
+        .bcell .fm { font-size: 1.15rem; font-weight: 800; }
+        .bcell .step { margin-top: 6px; }
+        .bcell .step button { width: 34px; height: 34px; font-size: 18px; }
+        .bcell .step output { min-width: 22px; font-size: 19px; }
+        .tally { width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 13.5px; font-weight: 700; text-align: center; }
+        .tally th, .tally td { padding: 5px 8px; border-bottom: 1px solid var(--border-color); }
+        .tally th { color: var(--text-muted); }
+        .tally .ok { color: var(--good); } .tally .no { color: var(--bad); }
+        .typ { display: block; margin-top: 4px; font-weight: 500; color: var(--text-color); }
     </style>
 </head>
 <body>
+    <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+    <div class="grid-bg"></div>
 
-<a href="games.html" class="back-btn">← ফিরে যান</a>
+    <div class="wrap">
+        <header class="top">
+            <a class="btn-s" href="games.html">← <span class="back-long">গেম হাব</span></a>
+            <div class="top-r">
+                <button type="button" class="btn-s icon-btn" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+                <button type="button" class="btn-s icon-btn" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+            </div>
+        </header>
 
-<div id="gameContainer" class="game-card">
-    <h1 class="game-title">🧪  রাসায়নিক বিক্রিয়া শিকারী</h1>
-    <p style="color: #64748b; font-size: 0.95rem; margin: 0;">সঠিক উৎপাদ (Product) বেছে নাও!</p>
-    
-    <div class="stats-bar">
-        <span>স্কোর: <span id="score" style="color: #22d3ee;">0</span></span>
-        <span style="color: #f59e0b;">সেরা: <span id="highScore">0</span></span>
-        <span>জীবন: <span id="lives">❤️❤️❤️</span></span>
+        <main class="card">
+            <section id="startView">
+                <h1>রাসায়নিক বিক্রিয়া শিকারী 🧪</h1>
+                <p class="sub">বিক্রিয়া চেনো, সমতা করো, উৎপাদ বেছে নাও!</p>
+                <div class="label">মোড বেছে নাও</div>
+                <div class="chips" id="modeRow" role="group" aria-label="মোড"></div>
+                <div class="label">লেভেল বেছে নাও</div>
+                <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+                <div class="sw-row" style="margin-top:12px;"><span>⏱ প্রতি প্রশ্নে সময়ের সীমা</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="track"></span></label></div>
+                <div class="rules">
+                    📋 প্রতি রাউন্ডে ১৫টি প্রশ্ন, ৩টি জীবন। ভুল উত্তর বা সময় শেষ হলে একটি জীবন যায়।<br>
+                    ⚖️ মনে রাখো: বিক্রিয়ার দুই পাশে প্রতিটি মৌলের পরমাণুর সংখ্যা সমান হতে হবে।<br>
+                    🔥 টানা সঠিক উত্তরে বোনাস। উত্তরের পর পরমাণু গণনাসহ পুরো ব্যাখ্যা দেখানো হবে।
+                </div>
+                <button type="button" class="big" id="startBtn">খেলা শুরু করো ⚡</button>
+                <div class="best-line" id="bestLine"></div>
+            </section>
+
+            <section id="playView" hidden>
+                <div class="stats">
+                    <div class="stat"><small>স্কোর</small><b id="score">০</b></div>
+                    <div class="stat best"><small>সেরা</small><b id="best">০</b></div>
+                    <div class="stat"><small>প্রশ্ন</small><b id="prog">০/১৫</b></div>
+                    <div class="stat"><small>জীবন</small><b id="lives" aria-label="জীবন">❤️❤️❤️</b></div>
+                </div>
+                <div class="timer" id="timerBar" role="progressbar" aria-label="বাকি সময়" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="timerFill"></span></div>
+                <div class="qmeta"><span class="tag" id="qTag"></span><span id="qNo"></span></div>
+                <div class="q" id="q" style="padding:18px 10px; font-size:1rem;" aria-live="polite"><div class="rx" id="rx"></div></div>
+                <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
+                <div id="builder" hidden>
+                    <div class="bgrid" id="bgrid"></div>
+                    <table class="tally" id="tally" aria-label="পরমাণু গণনা"></table>
+                    <div class="brow"><button type="button" class="hintbtn" id="hintBtn">💡 ইঙ্গিত (−৫)</button><button type="button" class="big" id="checkBtn">যাচাই করো ✔</button></div>
+                    <div class="hintbox" id="hintBox" hidden></div>
+                </div>
+                <div class="fb" id="fb" aria-live="polite"></div>
+                <button type="button" class="big" id="nextBtn" hidden>পরের প্রশ্ন →</button>
+                <div class="pop" id="pop"></div>
+            </section>
+
+            <section id="endView" hidden>
+                <h2 class="end-title" id="endTitle">💥 খেলা শেষ!</h2>
+                <p class="end-msg" id="endMsg"></p>
+                <div class="end-label">অর্জিত স্কোর</div>
+                <div class="end-score" id="finalScore">০</div>
+                <div class="tiles">
+                    <div class="tile"><small>সঠিক</small><b id="eRight">০</b></div>
+                    <div class="tile"><small>নির্ভুলতা</small><b id="eAcc">০%</b></div>
+                    <div class="tile"><small>সেরা স্ট্রিক</small><b id="eStreak">০</b></div>
+                </div>
+                <div class="miss" id="missBox" hidden><h3>📖 যেগুলো ভুল হয়েছিল</h3><ul id="missList"></ul></div>
+                <button type="button" class="big" id="againBtn">আবার খেলো 🔄</button>
+                <button type="button" class="big ghost" id="menuBtn">মোড/লেভেল বদলাও</button>
+            </section>
+        </main>
     </div>
-    
-    <div id="reaction" class="reaction-box">--</div>
-    <div id="options" class="options-grid"></div>
-</div>
 
-<div id="gameOverCard">
-    <h2 id="endTitle" style="font-size: 2rem; margin-top: 0;">💥 গেম ওভার!</h2>
-    <p id="msg" style="font-size: 1.05rem; color: #94a3b8; margin-bottom: 25px;"></p>
-    <div style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">অর্জিত স্কোর</div>
-    <h1 id="finalScore" style="color: #22d3ee; font-size: 3.5rem; margin: 5px 0 30px 0; font-weight: 800;">0</h1>
-    <button onclick="location.reload()" class="restart-btn">আবার চেষ্টা করুন 🔄</button>
-</div>
+    <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 
-<script>
-    // Force direct Black Mode activation instantly
-    document.body.classList.add('dark-mode');
-    localStorage.setItem('darkMode', 'true');
+    <script>
+        const $ = id => document.getElementById(id);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+        const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
 
-    // Premium High Score Management
-    let highScore = localStorage.getItem('reaction_highscore') || 0;
-    document.getElementById('highScore').innerText = highScore;
+        const TYPES = {
+            comb: ['সংযোজন', 'দুই বা বেশি পদার্থ যুক্ত হয়ে একটিমাত্র নতুন পদার্থ তৈরি হয় (A + B → AB)।'],
+            decomp: ['বিয়োজন', 'একটি যৌগ ভেঙে দুই বা বেশি সরল পদার্থ তৈরি হয় (AB → A + B)।'],
+            single: ['একক প্রতিস্থাপন', 'একটি সক্রিয় মৌল যৌগ থেকে কম সক্রিয় মৌলকে সরিয়ে তার স্থান নেয় (A + BC → AC + B)।'],
+            double: ['দ্বি-প্রতিস্থাপন', 'দুটি যৌগ পরস্পরের আয়ন বিনিময় করে (AB + CD → AD + CB)। প্রশমন ও অধঃক্ষেপণ এই ধরনের।'],
+            burn: ['দহন', 'পদার্থ অক্সিজেনের সাথে বিক্রিয়া করে জ্বলে, তাপ ও আলো উৎপন্ন হয়।']
+        };
+        /* বিক্রিয়া: [বামপক্ষ, ডানপক্ষ, শর্ত, ধরন, লেভেল(১/২/৩), নোট]  — গুণক সংখ্যা সংকেতের সামনেই লেখা। সমতা প্রোগ্রাম নিজে যাচাই করে */
+        const RX = [
+            ['2H2 + O2', '2H2O', 'জ্বালানো', 'comb', 1, 'হাইড্রোজেন জ্বলে পানি তৈরি করে।'],
+            ['C + O2', 'CO2', 'দহন', 'burn', 1, 'কার্বন জ্বলে কার্বন ডাই অক্সাইড দেয়।'],
+            ['2Mg + O2', '2MgO', 'তাপ', 'comb', 1, 'ম্যাগনেসিয়াম উজ্জ্বল সাদা আলোসহ জ্বলে MgO তৈরি করে।'],
+            ['2Na + Cl2', '2NaCl', '', 'comb', 1, 'সোডিয়াম ও ক্লোরিন থেকে খাদ্য লবণ।'],
+            ['CaO + H2O', 'Ca(OH)2', '', 'comb', 1, 'কুইক লাইম পানির সাথে মিশে স্ল্যাকড লাইম হয়, প্রচুর তাপ উৎপন্ন হয়।'],
+            ['CaO + CO2', 'CaCO3', '', 'comb', 1, 'চুনের পানি ঘোলা হওয়ার কারণ: CaCO₃ তৈরি।'],
+            ['NH3 + HCl', 'NH4Cl', '', 'comb', 1, 'সাদা ধোঁয়ার মতো অ্যামোনিয়াম ক্লোরাইড তৈরি হয়।'],
+            ['NaOH + HCl', 'NaCl + H2O', '', 'double', 1, 'অম্ল + ক্ষার → লবণ + পানি (প্রশমন বিক্রিয়া)।'],
+            ['KOH + HNO3', 'KNO3 + H2O', '', 'double', 1, 'প্রশমন বিক্রিয়া: লবণ ও পানি তৈরি হয়।'],
+            ['CaCO3', 'CaO + CO2', 'তাপ', 'decomp', 1, 'চুনাপাথর তাপে ভেঙে কুইক লাইম ও CO₂ দেয়।'],
+            ['2H2O', '2H2 + O2', 'তড়িৎ বিশ্লেষণ', 'decomp', 1, 'পানির তড়িৎ বিশ্লেষণে H₂ : O₂ = ২ : ১ আয়তনে পাওয়া যায়।'],
+            ['Mg + 2HCl', 'MgCl2 + H2', '', 'single', 1, 'সক্রিয় ধাতু অম্ল থেকে হাইড্রোজেন সরায়।'],
+            ['Zn + H2SO4', 'ZnSO4 + H2', '', 'single', 1, 'জিংক লঘু অম্ল থেকে হাইড্রোজেন গ্যাস মুক্ত করে।'],
+            ['Fe + CuSO4', 'FeSO4 + Cu', '', 'single', 1, 'আয়রন কপারের চেয়ে সক্রিয়, তাই তুঁতের নীল রং ফিকে হয়।'],
 
-    let correctSound, wrongSound;
-    try {
-        correctSound = new Audio('correct.mp3');
-        wrongSound = new Audio('wrong.mp3');
-    } catch(e) { console.log("সাউন্ড ফাইল লোড করা যায়নি"); }
+            ['Ca(OH)2 + 2HCl', 'CaCl2 + 2H2O', '', 'double', 2, 'প্রশমন: দুটি HCl লাগে কারণ Ca(OH)₂ এ দুটি OH আছে।'],
+            ['2NaOH + H2SO4', 'Na2SO4 + 2H2O', '', 'double', 2, 'দ্বিক্ষারীয় অম্ল H₂SO₄ এর জন্য দুটি NaOH লাগে।'],
+            ['N2 + 3H2', '2NH3', 'Fe অনুঘটক, উচ্চ চাপ ও তাপ', 'comb', 2, 'হেবার প্রক্রিয়ায় অ্যামোনিয়া তৈরি হয়।'],
+            ['2SO2 + O2', '2SO3', 'V2O5 অনুঘটক, তাপ', 'comb', 2, 'সালফিউরিক অ্যাসিড তৈরির সংস্পর্শ প্রক্রিয়ার ধাপ।'],
+            ['2KClO3', '2KCl + 3O2', 'MnO2, তাপ', 'decomp', 2, 'পরীক্ষাগারে অক্সিজেন তৈরির পদ্ধতি।'],
+            ['2H2O2', '2H2O + O2', 'MnO2 অনুঘটক', 'decomp', 2, 'হাইড্রোজেন পারক্সাইড ভেঙে অক্সিজেন দেয়।'],
+            ['2HgO', '2Hg + O2', 'তাপ', 'decomp', 2, 'লাভোয়াজিয়ের বিখ্যাত পরীক্ষা, লাল HgO থেকে পারদ ও অক্সিজেন।'],
+            ['Cu + 2AgNO3', 'Cu(NO3)2 + 2Ag', '', 'single', 2, 'কপার সিলভারের চেয়ে সক্রিয়, তাই সিলভার জমা হয়।'],
+            ['2Na + 2H2O', '2NaOH + H2', '', 'single', 2, 'সোডিয়াম পানির সাথে তীব্র বিক্রিয়া করে হাইড্রোজেন দেয়।'],
+            ['AgNO3 + NaCl', 'AgCl + NaNO3', '', 'double', 2, 'সাদা অধঃক্ষেপ AgCl পড়ে।'],
+            ['BaCl2 + Na2SO4', 'BaSO4 + 2NaCl', '', 'double', 2, 'সাদা অধঃক্ষেপ BaSO₄ পড়ে, সালফেট শনাক্তকরণ পরীক্ষা।'],
+            ['CH4 + 2O2', 'CO2 + 2H2O', 'দহন', 'burn', 2, 'মিথেনের পূর্ণ দহন।'],
+            ['4Fe + 3O2', '2Fe2O3', '', 'comb', 2, 'আর্দ্র বাতাসে লোহায় মরিচা পড়া।'],
 
-    const reactions = [
-        { r: "NaOH + HCl → ?", a: "NaCl + H2O" },
-        { r: "KOH + HNO3 → ?", a: "KNO3 + H2O" },
-        { r: "Ca(OH)2 + 2HCl → ?", a: "CaCl2 + 2H2O" },
-        { r: "2H2 + O2 → ?", a: "2H2O" },
-        { r: "C + O2 → ?", a: "CO2" },
-        { r: "2Mg + O2 → ?", a: "2MgO" },
-        { r: "2Na + Cl2 → ?", a: "2NaCl" },
-        { r: "CaO + CO2 → ?", a: "CaCO3" },
-        { r: "NH3 + HCl → ?", a: "NH4Cl" },
-        { r: "SO2 + O2 → ?", a: "2SO3" },
-        { r: "N2 + 3H2 → ?", a: "2NH3" },
-        { r: "CaCO3 (তাপ) → ?", a: "CaO + CO2" },
-        { r: "2H2O (তড়িৎ বিশ্লেষণ) → ?", a: "2H2 + O2" },
-        { r: "2KClO3 (তাপ) → ?", a: "2KCl + 3O2" },
-        { r: "Zn + H2SO4 → ?", a: "ZnSO4 + H2" },
-        { r: "Fe + CuSO4 → ?", a: "FeSO4 + Cu" },
-        { r: "Mg + 2HCl → ?", a: "MgCl2 + H2" }
-    ];
+            ['CaCO3 + 2HCl', 'CaCl2 + H2O + CO2', '', 'double', 3, 'কার্বনেট + অম্ল → লবণ + পানি + CO₂ (বুদবুদ ওঠে)।'],
+            ['Na2CO3 + 2HCl', '2NaCl + H2O + CO2', '', 'double', 3, 'কার্বনেট অম্লের সাথে CO₂ গ্যাস ছাড়ে।'],
+            ['C2H5OH + 3O2', '2CO2 + 3H2O', 'দহন', 'burn', 3, 'ইথানলের পূর্ণ দহন।'],
+            ['C3H8 + 5O2', '3CO2 + 4H2O', 'দহন', 'burn', 3, 'প্রোপেন (LPG) এর পূর্ণ দহন।'],
+            ['2C2H2 + 5O2', '4CO2 + 2H2O', 'দহন', 'burn', 3, 'অ্যাসিটিলিন জ্বলে খুব উচ্চ তাপ দেয় (ঝালাইয়ে ব্যবহৃত)।'],
+            ['C6H12O6 + 6O2', '6CO2 + 6H2O', 'এনজাইম', 'burn', 3, 'শ্বসন: গ্লুকোজ জারিত হয়ে শক্তি দেয়।'],
+            ['2Al + 3H2SO4', 'Al2(SO4)3 + 3H2', '', 'single', 3, 'অ্যালুমিনিয়াম অম্ল থেকে হাইড্রোজেন সরায়।'],
+            ['2Al + 6HCl', '2AlCl3 + 3H2', '', 'single', 3, 'অ্যালুমিনিয়াম ও HCl এর বিক্রিয়ায় H₂ গ্যাস মুক্ত হয়।'],
+            ['Fe2O3 + 6HCl', '2FeCl3 + 3H2O', '', 'double', 3, 'ধাতব অক্সাইড + অম্ল → লবণ + পানি।'],
+            ['Ca(OH)2 + CO2', 'CaCO3 + H2O', '', 'double', 3, 'চুনের পানি CO₂ শনাক্তকরণ, ঘোলা হয়।'],
+            ['2Mg + CO2', '2MgO + C', 'তাপ', 'single', 3, 'ম্যাগনেসিয়াম CO₂ এর মধ্যেও জ্বলে কার্বন সরায়।'],
+            ['Cl2 + 2KBr', '2KCl + Br2', '', 'single', 3, 'ক্লোরিন ব্রোমিনের চেয়ে সক্রিয়, তাই Br₂ মুক্ত হয়।']
+        ];
+        const DIFFS = {
+            easy: { name: 'সহজ', sub: 'সহজ বিক্রিয়া • ২৫ সে', max: 1, time: 25 },
+            mid: { name: 'মাঝারি', sub: '+ অনুঘটক, অধঃক্ষেপ • ২০ সে', max: 2, time: 20 },
+            hard: { name: 'কঠিন', sub: '+ জটিল বিক্রিয়া • ১৮ সে', max: 3, time: 18 }
+        };
+        const MODES = {
+            prod: { name: 'উৎপাদ বেছে নাও', sub: 'সঠিক উৎপাদ কী?', k: 1 },
+            bal: { name: 'সমতা করো', sub: 'গুণক ঠিক করো', k: 1.7 },
+            type: { name: 'ধরন চেনো', sub: 'কোন ধরনের বিক্রিয়া?', k: .8 }
+        };
+        const ROUND = 15;
 
-    let score = 0, lives = 3;
+        /* সংকেত পার্সার (বন্ধনী সহ) ও গুণক পার্সার */
+        function parseF(f) {
+            let i = 0;
+            function group() {
+                const c = {};
+                while (i < f.length && f[i] !== ')') {
+                    if (f[i] === '(') { i++; const inner = group(); i++; let n = ''; while (/\d/.test(f[i] || '')) n += f[i++]; const k = n ? +n : 1; for (const e in inner) c[e] = (c[e] || 0) + inner[e] * k; }
+                    else { let sym = f[i++]; while (/[a-z]/.test(f[i] || '')) sym += f[i++]; let n = ''; while (/\d/.test(f[i] || '')) n += f[i++]; c[sym] = (c[sym] || 0) + (n ? +n : 1); }
+                }
+                return c;
+            }
+            return group();
+        }
+        const side = str => str.split(' + ').map(t => { const m = t.match(/^(\d+)?(.+)$/); return { c: m[1] ? +m[1] : 1, f: m[2] }; });
+        function tallyOf(list) { const t = {}; list.forEach(s => { const c = parseF(s.f); for (const e in c) t[e] = (t[e] || 0) + c[e] * s.c; }); return t; }
+        function balanced(L, R) { const a = tallyOf(L), b = tallyOf(R), ks = new Set([...Object.keys(a), ...Object.keys(b)]); return [...ks].every(k => (a[k] || 0) === (b[k] || 0)); }
+        const SUB = { 0:'₀',1:'₁',2:'₂',3:'₃',4:'₄',5:'₅',6:'₆',7:'₇',8:'₈',9:'₉' };
+        const plain = s => s.replace(/(?<=[A-Za-z)])(\d)/g, (_, d) => SUB[d]);
+        function fmtInto(el, f) {
+            for (let k = 0; k < f.length; k++) {
+                const ch = f[k], prev = f[k - 1];
+                if (/\d/.test(ch) && prev && /[A-Za-z)]/.test(prev)) { const s = document.createElement('sub'); s.textContent = ch; el.appendChild(s); }
+                else el.appendChild(document.createTextNode(ch));
+            }
+        }
+        const R = RX.map(r => ({ Ls: r[0], Rs: r[1], L: side(r[0]), R: side(r[1]), cond: r[2], type: r[3], tier: r[4], note: r[5] }));
+        const eqText = (L, Rr) => L.map(s => (s.c > 1 ? s.c : '') + s.f).join(' + ') + ' → ' + Rr.map(s => (s.c > 1 ? s.c : '') + s.f).join(' + ');
+        const tallyText = list => Object.entries(tallyOf(list)).map(([e, n]) => e + bn(n)).join(' ');
 
-    function play() {
-        if(score >= 500) {
-            if (score > highScore) localStorage.setItem('reaction_highscore', score);
-            document.getElementById('endTitle').innerText = "🎉 অভিনন্দন!";
-            document.getElementById('finalScore').innerText = score;
-            document.getElementById('msg').innerText = "তুমি বিক্রিয়া মাস্টার!";
-            document.getElementById('gameOverCard').style.display = 'block';
-            document.getElementById('gameContainer').style.filter = 'blur(6px)';
-            document.getElementById('gameContainer').style.opacity = '0.3';
-            return;
+        let mode = sget('reactor_mode', 'prod'); if (!MODES[mode]) mode = 'prod';
+        let diff = sget('reactor_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+        let timerOn = sget('reactor_timer', '1') === '1';
+        let soundOn = sget('reactor_sound', '1') === '1';
+        const oldBest = parseInt(sget('reaction_highscore', '0'), 10) || 0;
+        const bestKey = () => 'reactor_best_' + mode + '_' + diff;
+        const getBest = () => Math.max(parseInt(sget(bestKey(), '0'), 10) || 0, (mode === 'prod' && diff === 'mid') ? oldBest : 0);
+
+        let ac = null;
+        function tone(f, t0, dur, type, vol) {
+            if (!soundOn) return;
+            try {
+                ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+                const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f;
+                o.connect(g); g.connect(ac.destination);
+                const t = ac.currentTime + t0;
+                g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+                o.start(t); o.stop(t + dur + .02);
+            } catch (e) {}
+        }
+        const sfx = {
+            right() { tone(660, 0, .12); tone(880, .1, .16); },
+            wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); },
+            life() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .18); },
+            end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+            win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+            tick() { tone(520, 0, .05, 'sine', .08); }
+        };
+        $('themeBtn').addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            document.documentElement.setAttribute('data-theme', next);
+        });
+        function paintSound() { $('soundBtn').textContent = soundOn ? '🔔' : '🔕'; }
+        $('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('reactor_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+        paintSound();
+
+        function chipRow(rowId, obj, current, onPick) {
+            const row = $(rowId); row.replaceChildren();
+            Object.entries(obj).forEach(([k, d]) => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === current ? ' on' : '');
+                b.setAttribute('aria-pressed', String(k === current));
+                const t = document.createElement('b'); t.textContent = d.name; const s = document.createElement('small'); s.textContent = d.sub;
+                b.append(t, s); b.addEventListener('click', () => onPick(k)); row.appendChild(b);
+            });
+        }
+        function renderSetup() {
+            chipRow('modeRow', MODES, mode, k => { mode = k; sset('reactor_mode', k); renderSetup(); });
+            chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('reactor_diff', k); renderSetup(); });
+            const b = getBest(); $('bestLine').textContent = b ? '🏆 এই মোড ও লেভেলে তোমার সেরা স্কোর: ' + bn(b) : '';
+        }
+        $('timerSw').checked = timerOn;
+        $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('reactor_timer', timerOn ? '1' : '0'); });
+        const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
+
+        let score, lives, streak, bestStreak, asked, right, deck, cur, locked, deadline, tick, wrongs, limit, advTimer, coefs, hinted;
+        function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function newDeck() { return shuffle(R.filter(r => r.tier <= DIFFS[diff].max)); }
+        function paintLives() { $('lives').textContent = lives > 0 ? '❤️'.repeat(lives) : '💔'; $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); }
+
+        /* বিক্রিয়ার সমীকরণ আঁকা */
+        function species(s, coefOverride) {
+            const sp = document.createElement('span'); sp.className = 'sp';
+            const c = coefOverride === undefined ? s.c : coefOverride;
+            if (c > 1) { const co = document.createElement('span'); co.className = 'co'; co.textContent = bn(c); sp.appendChild(co); }
+            fmtInto(sp, s.f); return sp;
+        }
+        function arrow(cond) {
+            const a = document.createElement('span'); a.className = 'arrow';
+            if (cond) { const sm = document.createElement('small'); sm.textContent = plain(cond); a.appendChild(sm); }
+            a.appendChild(document.createTextNode('→')); return a;
+        }
+        const plus = () => { const p = document.createElement('span'); p.textContent = '+'; p.style.color = 'var(--text-muted)'; return p; };
+        function drawEq(L, Rr, opt) {
+            const rx = $('rx'); rx.replaceChildren();
+            L.forEach((s, i) => { if (i) rx.appendChild(plus()); rx.appendChild(species(s, opt.lc ? opt.lc[i] : undefined)); });
+            rx.appendChild(arrow(opt.cond));
+            if (opt.qmark) { const r = document.createElement('div'); r.className = 'res sp'; r.id = 'res'; r.style.cssText = 'color:var(--good);border-style:dashed;text-align:center;'; r.textContent = '?'; rx.appendChild(r); }
+            else Rr.forEach((s, i) => { if (i) rx.appendChild(plus()); rx.appendChild(species(s, opt.rc ? opt.rc[i] : undefined)); });
         }
 
-        let item = reactions[Math.floor(Math.random() * reactions.length)];
-        document.getElementById('reaction').innerText = item.r;
+        /* ভুল অপশন: একই ধরনের অন্য বিক্রিয়ার উৎপাদ, ভুল গুণক, একটি উৎপাদ বদল। পরমাণু মিলে গেলে বাদ */
+        function prodOptions(r) {
+            const ok = r.Rs, set = new Set(), valid = s => !balanced(r.L, side(s)) && s !== ok;
+            const add = s => { if (valid(s)) set.add(s); };
+            const same = shuffle(R.filter(x => x !== r && x.type === r.type)); same.slice(0, 3).forEach(x => add(x.Rs));
+            add(r.R.map(s => s.f).join(' + '));                                              // সব গুণক ১
+            r.R.forEach((s, i) => { const t = r.R.map((q, j) => (j === i ? { c: q.c + 1, f: q.f } : q)); add(t.map(q => (q.c > 1 ? q.c : '') + q.f).join(' + ')); });
+            const pool = shuffle([...new Set(R.flatMap(x => x.R.map(s => s.f)))].filter(f => !r.R.some(s => s.f === f) && f !== r.L.map(s => s.f)[0]));
+            r.R.forEach((s, i) => { const f = pool[i % pool.length]; const t = r.R.map((q, j) => (j === i ? { c: q.c, f } : q)); add(t.map(q => (q.c > 1 ? q.c : '') + q.f).join(' + ')); });
+            const arr = shuffle([...set]);
+            let guard = 0; while (arr.length < 3 && guard++ < 40) { const x = R[Math.floor(Math.random() * R.length)]; if (x !== r && valid(x.Rs) && !arr.includes(x.Rs)) arr.push(x.Rs); }
+            return shuffle([ok, ...arr.slice(0, 3)]);
+        }
+        function typeOptions(r) { return shuffle([r.type, ...shuffle(Object.keys(TYPES).filter(k => k !== r.type)).slice(0, 3)]); }
+        const explain = r => plain(eqText(r.L, r.R)) + '   |   বাম: ' + plain(tallyText(r.L)) + ' = ডান: ' + plain(tallyText(r.R)) + ' (সমান)  ·  ' + r.note + '  [' + TYPES[r.type][0] + ']';
 
-        let allAnswers = ["NaCl + H2O", "2H2O", "Ca(OH)2", "CaO + CO2", "2NaCl", "NH4Cl", "CO2", "2MgO", "CaCl2 + 2H2O", "KNO3 + H2O", "2SO3", "2NH3", "2KCl + 3O2", "ZnSO4 + H2", "FeSO4 + Cu", "MgCl2 + H2"];
-        let wrongAnswers = allAnswers.filter(ans => ans !== item.a);
-        let options = [item.a, ...wrongAnswers.sort(() => Math.random() - 0.5).slice(0, 3)].sort(() => Math.random() - 0.5);
-        
-        let grid = document.getElementById('options');
-        grid.innerHTML = '';
-        
-        options.forEach(opt => {
-            let b = document.createElement('button');
-            b.className = 'btn'; b.innerText = opt;
-            b.onclick = () => {
-                document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
-                if(opt === item.a) {
-                    if(correctSound) correctSound.play().catch(()=>{});
-                    b.style.background = "#22c55e"; b.style.color = "white"; b.style.borderColor = "#22c55e";
-                    score += 10; document.getElementById('score').innerText = score;
-                    setTimeout(play, 800);
-                } else {
-                    if(wrongSound) wrongSound.play().catch(()=>{});
-                    b.style.background = "#ef4444"; b.style.color = "white"; b.style.borderColor = "#ef4444";
-                    Array.from(grid.children).forEach(btn => {
-                        if(btn.innerText === item.a) {
-                            btn.style.background = "#22c55e";
-                            btn.style.color = "white";
-                            btn.style.borderColor = "#22c55e";
-                        }
-                    });
-                    lives--; document.getElementById('lives').innerText = "❤️".repeat(lives);
-                    if(lives === 0) {
-                        if (score > highScore) localStorage.setItem('reaction_highscore', score);
-                        document.getElementById('finalScore').innerText = score;
-                        document.getElementById('msg').innerText = "গেম ওভার! আবার চেষ্টা করো।";
-                        document.getElementById('gameOverCard').style.display = 'block';
-                        document.getElementById('gameContainer').style.filter = 'blur(6px)';
-                        document.getElementById('gameContainer').style.opacity = '0.3';
-                    } else { setTimeout(play, 1200); }
-                }
-            };
-            grid.appendChild(b);
+        function startGame() {
+            score = 0; lives = 3; streak = 0; bestStreak = 0; asked = 0; right = 0; wrongs = []; deck = newDeck(); locked = false;
+            limit = timerOn ? Math.round(DIFFS[diff].time * MODES[mode].k) : 0;
+            $('score').textContent = bn(0); $('best').textContent = bn(getBest()); paintLives();
+            show('playView'); next();
+        }
+        function next() {
+            clearTimeout(advTimer); $('pop').classList.remove('go');
+            if (asked >= ROUND) return endGame(true);
+            if (!deck.length) deck = newDeck();
+            cur = deck.pop(); asked++; locked = false; hinted = false;
+            $('qNo').textContent = 'প্রশ্ন ' + bn(asked) + '/' + bn(ROUND); $('prog').textContent = bn(asked) + '/' + bn(ROUND);
+            $('fb').className = 'fb'; $('fb').replaceChildren(); $('nextBtn').hidden = true; $('hintBox').hidden = true;
+            $('opts').hidden = mode === 'bal'; $('builder').hidden = mode !== 'bal';
+            if (mode === 'prod') {
+                $('qTag').textContent = 'সঠিক উৎপাদ কোনটি?'; drawEq(cur.L, cur.R, { cond: cur.cond, qmark: true });
+                fillOpts(prodOptions(cur), s => { const sp = document.createElement('span'); sp.className = 'fm'; const parts = s.split(' + '); parts.forEach((t, i) => { if (i) sp.appendChild(document.createTextNode(' + ')); const m = t.match(/^(\d+)?(.+)$/); if (m[1]) sp.appendChild(document.createTextNode(m[1])); fmtInto(sp, m[2]); }); return sp; }, s => s === cur.Rs, s => answerPick(s));
+            } else if (mode === 'type') {
+                $('qTag').textContent = 'এটি কোন ধরনের বিক্রিয়া?'; drawEq(cur.L, cur.R, { cond: cur.cond });
+                fillOpts(typeOptions(cur), k => { const sp = document.createElement('span'); sp.className = 'fm'; sp.textContent = TYPES[k][0]; return sp; }, k => k === cur.type, k => answerPick(k));
+            } else {
+                $('qTag').textContent = 'গুণক বসিয়ে সমতা করো';
+                coefs = cur.L.concat(cur.R).map(() => 1); buildBalance();
+            }
+            startTimer();
+        }
+        function fillOpts(list, mk, isRight, onPick) {
+            const box = $('opts'); box.replaceChildren();
+            list.forEach((v, i) => {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.ok = isRight(v) ? '1' : '';
+                const k = document.createElement('kbd'); k.textContent = bn(i + 1); b.append(k, mk(v));
+                b.addEventListener('click', () => onPick(v, b)); box.appendChild(b);
+            });
+        }
+        /* সমতা মোড */
+        function buildBalance() {
+            const g = $('bgrid'); g.replaceChildren();
+            const all = cur.L.concat(cur.R);
+            all.forEach((s, i) => {
+                const cell = document.createElement('div'); cell.className = 'bcell';
+                const f = document.createElement('div'); f.className = 'fm'; fmtInto(f, s.f);
+                const st = document.createElement('div'); st.className = 'step';
+                const m = document.createElement('button'); m.type = 'button'; m.textContent = '−'; m.setAttribute('aria-label', plain(s.f) + ' এর গুণক কমাও');
+                const o = document.createElement('output'); o.id = 'co' + i;
+                const p = document.createElement('button'); p.type = 'button'; p.textContent = '+'; p.setAttribute('aria-label', plain(s.f) + ' এর গুণক বাড়াও');
+                m.addEventListener('click', () => { if (!locked && coefs[i] > 1) { coefs[i]--; paintBalance(); sfx.tick(); } });
+                p.addEventListener('click', () => { if (!locked && coefs[i] < 9) { coefs[i]++; paintBalance(); sfx.tick(); } });
+                st.append(m, o, p); cell.append(f, st); g.appendChild(cell);
+            });
+            $('hintBtn').disabled = false; $('checkBtn').disabled = false; paintBalance();
+        }
+        function paintBalance() {
+            const nl = cur.L.length;
+            coefs.forEach((c, i) => { $('co' + i).textContent = bn(c); });
+            drawEq(cur.L, cur.R, { cond: cur.cond, lc: coefs.slice(0, nl), rc: coefs.slice(nl) });
+            const a = tallyOf(cur.L.map((s, i) => ({ c: coefs[i], f: s.f }))), b = tallyOf(cur.R.map((s, i) => ({ c: coefs[nl + i], f: s.f })));
+            const els = [...new Set([...Object.keys(a), ...Object.keys(b)])];
+            const t = $('tally'); t.replaceChildren();
+            const hr = document.createElement('tr'); ['মৌল', 'বাম', 'ডান', ''].forEach(x => { const th = document.createElement('th'); th.textContent = x; hr.appendChild(th); }); t.appendChild(hr);
+            els.forEach(e => { const tr = document.createElement('tr'), same = (a[e] || 0) === (b[e] || 0); [e, bn(a[e] || 0), bn(b[e] || 0), same ? '✅' : '⚠️'].forEach((x, k) => { const td = document.createElement('td'); td.textContent = x; if (k === 3) td.className = same ? 'ok' : 'no'; tr.appendChild(td); }); t.appendChild(tr); });
+        }
+        $('hintBtn').addEventListener('click', () => {
+            if (locked || hinted) return; hinted = true; $('hintBtn').disabled = true;
+            const all = cur.L.concat(cur.R); const idx = all.findIndex((s, i) => coefs[i] !== s.c);
+            const i = idx < 0 ? 0 : idx;
+            $('hintBox').textContent = '💡 ' + plain(all[i].f) + ' এর গুণক হবে ' + bn(all[i].c) + '। এখন বাকিগুলো পরমাণু গুনে মেলাও।';
+            $('hintBox').hidden = false; score = Math.max(0, score - 5); $('score').textContent = bn(score);
         });
-    }
-    play();
-</script>
+        $('checkBtn').addEventListener('click', () => { if (!locked) answerBal(false); });
+
+        function startTimer() {
+            clearInterval(tick);
+            const bar = $('timerBar'); bar.hidden = !limit; bar.classList.remove('low'); $('timerFill').style.width = '100%';
+            if (!limit) return;
+            deadline = Date.now() + limit * 1000;
+            tick = setInterval(() => {
+                const left = Math.max(0, deadline - Date.now()), pct = left / (limit * 1000) * 100;
+                $('timerFill').style.width = pct + '%'; bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+                bar.classList.toggle('low', pct < 30);
+                if (left <= 0) { clearInterval(tick); mode === 'bal' ? answerBal(true) : answerPick(null, null); }
+            }, 80);
+        }
+        function popText(t) { const p = $('pop'); p.textContent = t; p.classList.remove('go'); void p.offsetWidth; p.classList.add('go'); }
+        function settle(isRight, timedOut) {
+            locked = true; clearInterval(tick);
+            const timeLeft = limit ? Math.max(0, deadline - Date.now()) / (limit * 1000) : 0;
+            if (mode !== 'bal') drawEq(cur.L, cur.R, { cond: cur.cond });
+            else drawEq(cur.L, cur.R, { cond: cur.cond });
+            const fb = $('fb'); fb.replaceChildren();
+            const head = document.createElement('b'), calc = document.createElement('span'); calc.className = 'calc'; calc.textContent = explain(cur);
+            if (isRight) {
+                streak++; bestStreak = Math.max(bestStreak, streak); right++;
+                const base = mode === 'bal' ? 15 : 10, bonus = Math.min(streak - 1, 5) * 2 + (limit && timeLeft > .66 ? 5 : 0);
+                score += base + bonus; sfx.right();
+                head.textContent = '✅ সঠিক! +' + bn(base + bonus) + (streak >= 3 ? ' 🔥 ' + bn(streak) + ' টানা' : '');
+                popText('+' + bn(base + bonus));
+                if (streak % 5 === 0 && lives < 3) { lives++; setTimeout(sfx.life, 250); head.textContent += ' · ❤️ একটি জীবন ফেরত!'; }
+                fb.className = 'fb show ok';
+            } else {
+                streak = 0; lives--; wrongs.push(cur); sfx.wrong();
+                head.textContent = (timedOut ? '⏰ সময় শেষ! ' : '❌ ভুল! ') + (mode === 'prod' ? 'সঠিক উৎপাদ: ' + plain(cur.Rs) : mode === 'type' ? 'সঠিক উত্তর: ' + TYPES[cur.type][0] : 'সঠিক সমীকরণ: ' + plain(eqText(cur.L, cur.R)));
+                fb.className = 'fb show no';
+            }
+            fb.append(head, calc);
+            if (mode === 'type') { const t = document.createElement('span'); t.className = 'typ'; t.textContent = TYPES[cur.type][0] + ': ' + TYPES[cur.type][1]; fb.appendChild(t); }
+            $('score').textContent = bn(score); paintLives();
+            if (lives <= 0) { advTimer = setTimeout(() => endGame(false), 2200); return; }
+            $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true });
+            if (isRight) advTimer = setTimeout(next, 3000);
+        }
+        function answerPick(v, btn) {
+            if (locked) return;
+            document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('right'); });
+            const ok = v !== null && (mode === 'prod' ? v === cur.Rs : v === cur.type);
+            if (!ok && btn) btn.classList.add('wrong');
+            settle(ok, v === null);
+        }
+        function answerBal(timedOut) {
+            if (locked) return;
+            const all = cur.L.concat(cur.R), ok = !timedOut && all.every((s, i) => coefs[i] === s.c);
+            ['hintBtn', 'checkBtn'].forEach(id => $(id).disabled = true);
+            document.querySelectorAll('#bgrid button').forEach(b => b.disabled = true);
+            settle(ok, !!timedOut);
+        }
+        function endGame(won) {
+            clearInterval(tick); won ? sfx.win() : sfx.end();
+            const prev = getBest(), record = score > prev;
+            if (record) sset(bestKey(), score);
+            $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? '🎉 অভিনন্দন!' : '💥 খেলা শেষ!');
+            $('endMsg').textContent = won ? (!wrongs.length ? 'নিখুঁত! তুমি বিক্রিয়া মাস্টার! 🌟' : 'রাউন্ড শেষ করেছো, দারুণ খেলেছো! 👏') : (right < 5 ? 'পরমাণু গুনে মিলিয়ে দেখো, ভুল কমবে! 💪' : 'বেশ ভালো চেষ্টা! আবার খেলে দেখো।');
+            $('finalScore').textContent = bn(score);
+            $('eRight').textContent = bn(right) + '/' + bn(asked);
+            $('eAcc').textContent = bn(asked ? Math.round(right / asked * 100) : 0) + '%';
+            $('eStreak').textContent = bn(bestStreak);
+            const ul = $('missList'); ul.replaceChildren(); const seen = new Set();
+            wrongs.forEach(w => { if (seen.has(w.Ls)) return; seen.add(w.Ls); const li = document.createElement('li'); li.textContent = plain(eqText(w.L, w.R)) + ' · ' + w.note; ul.appendChild(li); });
+            $('missBox').hidden = !wrongs.length;
+            show('endView'); $('againBtn').focus({ preventScroll: true });
+        }
+
+        $('startBtn').addEventListener('click', startGame);
+        $('againBtn').addEventListener('click', startGame);
+        $('menuBtn').addEventListener('click', () => { renderSetup(); show('startView'); });
+        $('nextBtn').addEventListener('click', next);
+        document.addEventListener('keydown', e => {
+            if ($('playView').hidden) return;
+            if (mode !== 'bal' && e.key >= '1' && e.key <= '4' && !locked) { const b = document.querySelectorAll('#opts .opt')[+e.key - 1]; if (b) b.click(); }
+            else if (e.key === 'Enter' && locked && !$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); next(); }
+            else if (e.key === 'Enter' && mode === 'bal' && !locked && document.activeElement.tagName !== 'BUTTON') answerBal(false);
+        });
+        let hiddenAt = 0;
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) hiddenAt = Date.now();
+            else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; }
+        });
+        renderSetup(); show('startView');
+    </script>
 </body>
 </html>
