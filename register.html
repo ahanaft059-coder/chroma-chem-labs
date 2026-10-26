@@ -34,7 +34,7 @@
 
         body { animation: pageIn .7s ease both; transition: opacity .45s ease, transform .45s ease, filter .45s ease; }
         body.leaving { opacity: 0; transform: scale(1.04); filter: blur(8px); }
-        @keyframes pageIn { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: blur(0); } }
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* ---------- Background ---------- */
         .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
@@ -459,7 +459,7 @@
         Developed &amp; Designed by <span>Ahanaf Abid Omlan</span>
     </div>
 
-    <script src="auth.js"></script>
+    <script src="auth.js?v=3"></script>
     <script>
         // Already logged in? Go straight to the dashboard.
         if (Auth.currentUser()) window.location.replace('dashboard.html');
