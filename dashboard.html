@@ -24,13 +24,14 @@
     </script>
 
     <!-- Login guard: logged-in na thakle login page e pathiye dey -->
-    <script src="auth.js"></script>
+    <script src="auth.js?v=3"></script>
     <script>
         const AUTH_OK = (typeof Auth !== 'undefined');
         const ME = AUTH_OK ? Auth.currentUser() : null;
         if (AUTH_OK && !ME) {
             document.documentElement.style.display = 'none';
-            window.location.replace('login.html');
+            const why = (Auth.check && Auth.check().why) || 'nosession';
+            window.location.replace('login.html?why=' + why);
         }
     </script>
 
