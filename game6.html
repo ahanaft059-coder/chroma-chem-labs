@@ -2,92 +2,612 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>IUPAC নামকরণ ব্যাটল</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05060f">
+    <title>IUPAC নামকরণ ব্যাটল | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            let t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #8b5cf6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; text-align: center; }
-        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #334155; color: white; border-radius: 10px; text-decoration: none; font-weight: bold; }
-        .game-card { max-width: 600px; margin: 80px auto; background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #334155; border: 2px solid transparent; color: white; border-radius: 12px; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
-        .btn:hover { border-color: var(--accent); background: #475569; }
-        .hint-btn { background: #6366f1; margin-top: 20px; }
-        /* নতুন স্টাইল: গেম ওভার কার্ড */
-        .game-over-box { animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        :root {
+            --bg-color: #eef2f9; --card-bg: rgba(255,255,255,.78); --card-solid: #fff;
+            --text-color: #0f172a; --text-muted: #5b6b82; --border-color: rgba(15,23,42,.12);
+            --shadow: 0 10px 30px -5px rgba(15,23,42,.1); --section-border: rgba(168,85,247,.3);
+            --gradient-primary: linear-gradient(135deg,#9333ea,#3b82f6); --gradient-glow: rgba(147,51,234,.2);
+            --grid-line: rgba(15,23,42,.05); --blob-opacity: .22; --good: #059669; --bad: #e11d48; --gold: #d97706; --accent: #7c3aed;
+        }
+        [data-theme="dark"] {
+            --bg-color: #05060f; --card-bg: rgba(16,20,36,.66); --card-solid: #0b0f1c;
+            --text-color: #f8fafc; --text-muted: #94a3b8; --border-color: rgba(255,255,255,.1);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,.7); --section-border: rgba(168,85,247,.38);
+            --gradient-primary: linear-gradient(135deg,#a855f7,#60a5fa); --gradient-glow: rgba(168,85,247,.3);
+            --grid-line: rgba(255,255,255,.035); --blob-opacity: .42; --good: #34d399; --bad: #fb7185; --gold: #fbbf24; --accent: #a78bfa;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: 18px 16px 64px; font-family: 'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;
+            background: var(--bg-color); color: var(--text-color); transition: background .4s, color .4s; animation: pageIn .6s ease both; }
+        /* body তে filter/transform নয়, নইলে fixed জিনিস ভাসে না */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 26s ease-in-out infinite alternate; }
+        .b1 { width: 480px; height: 480px; background: #0891b2; top: -150px; left: -120px; }
+        .b2 { width: 560px; height: 560px; background: #7e22ce; bottom: -220px; right: -160px; animation-duration: 32s; }
+        @keyframes drift { to { transform: translate(60px,50px) scale(1.15); } }
+        .grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px); background-size: 52px 52px; -webkit-mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); }
+        .wrap { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
+
+        .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; padding: 10px 14px; border-radius: 20px; background: var(--card-bg); border: 1.5px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .btn-s { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 13px; font-family: inherit; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); transition: transform .25s, border-color .25s; }
+        .btn-s:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.6); }
+        .top-r { display: flex; gap: 8px; }
+        .icon-btn { width: 40px; height: 40px; padding: 0; justify-content: center; font-size: 16px; }
+        a:focus-visible, button:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
+
+        .card { position: relative; overflow: hidden; padding: 28px 26px; border-radius: 28px; background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .card::before { content: ''; position: absolute; top: -90px; right: -70px; width: 240px; height: 240px; pointer-events: none; background: radial-gradient(circle,var(--gradient-glow),transparent 70%); }
+        .card > * { position: relative; }
+        h1 { margin: 0 0 6px; text-align: center; font-size: clamp(1.6rem,5vw,2.1rem); font-weight: 800; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { margin: 0 0 22px; text-align: center; font-size: 15px; font-weight: 500; color: var(--text-muted); }
+        [hidden] { display: none !important; }
+
+        /* শুরুর স্ক্রিন */
+        .label { margin: 18px 0 8px; font-size: 14px; font-weight: 800; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { flex: 1 1 0; min-width: 96px; font-family: inherit; padding: 11px 12px; border-radius: 16px; cursor: pointer; text-align: center; color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s; }
+        .chip b { display: block; font-size: 15px; font-weight: 800; color: var(--text-color); }
+        .chip small { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; }
+        .chip:hover { transform: translateY(-2px); border-color: rgba(168,85,247,.55); }
+        .chip.on { border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .chip.on b, .chip.on small { color: #fff; }
+        .sw-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 14.5px; font-weight: 600; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { position: absolute; inset: 0; z-index: 2; margin: 0; opacity: 0; cursor: pointer; }
+        .switch .track { position: absolute; inset: 0; border-radius: 20px; background: var(--border-color); transition: background .25s; }
+        .switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s; }
+        .switch input:checked ~ .track { background: var(--gradient-primary); }
+        .switch input:checked ~ .track::after { transform: translateX(20px); }
+        .switch input:focus-visible ~ .track { outline: 3px solid #22d3ee; outline-offset: 2px; }
+        .big { display: block; width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 16px; font-family: inherit; font-size: 17px; font-weight: 800; color: #fff; cursor: pointer; background: var(--gradient-primary); transition: transform .25s, box-shadow .25s; }
+        .big:hover { transform: translateY(-2px); box-shadow: 0 12px 26px var(--gradient-glow); }
+        .big.ghost { color: var(--text-color); background: transparent; border: 1.5px solid var(--section-border); }
+        .rules { margin: 18px 0 0; padding: 14px 16px; border-radius: 16px; font-size: 13.5px; line-height: 1.8; font-weight: 500; color: var(--text-muted); background: var(--card-solid); border: 1px dashed var(--border-color); }
+        .best-line { margin-top: 14px; text-align: center; font-size: 14px; font-weight: 700; color: var(--gold); }
+
+        /* খেলার স্ক্রিন */
+        .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+        .stat { padding: 9px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .stat small { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .stat b { display: block; margin-top: 2px; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .stat.best b { color: var(--gold); }
+        .timer { height: 8px; margin-bottom: 18px; border-radius: 8px; overflow: hidden; background: var(--border-color); }
+        .timer span { display: block; height: 100%; width: 100%; border-radius: 8px; background: var(--gradient-primary); transition: background .3s; }
+        .timer.low span { background: linear-gradient(90deg,#fb7185,#f59e0b); }
+        .qmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .tag { padding: 3px 12px; border-radius: 20px; color: var(--accent); background: rgba(168,85,247,.12); border: 1px solid rgba(168,85,247,.3); }
+        .q { margin-bottom: 20px; padding: 24px 14px; border-radius: 20px; text-align: center; font-size: clamp(1.5rem,6vw,2.2rem); font-weight: 800; line-height: 1.4; color: var(--accent); word-break: break-word;
+            background: rgba(168,85,247,.07); border: 1.5px solid rgba(168,85,247,.28); box-shadow: inset 0 0 28px var(--gradient-glow); }
+        .q small { display: block; margin-top: 4px; font-size: .5em; font-weight: 700; color: var(--text-muted); }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .opt { position: relative; padding: 16px 10px; border-radius: 16px; font-family: inherit; font-size: 16.5px; font-weight: 800; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s, box-shadow .2s; }
+        .opt kbd { position: absolute; top: 6px; left: 9px; font-family: inherit; font-size: 11px; font-weight: 700; color: var(--text-muted); }
+        .opt:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .opt:disabled { cursor: default; }
+        .opt.right { color: #fff; border-color: transparent; background: linear-gradient(135deg,#059669,#10b981); box-shadow: 0 8px 22px rgba(16,185,129,.35); }
+        .opt.wrong { color: #fff; border-color: transparent; background: linear-gradient(135deg,#e11d48,#f43f5e); animation: shake .35s; }
+        @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .fb { min-height: 24px; margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: 14px; font-weight: 600; line-height: 1.7; display: none; }
+        .fb.show { display: block; }
+        .fb.ok { color: var(--good); background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.35); }
+        .fb.no { color: var(--bad); background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.35); }
+        .fb .note { display: block; margin-top: 4px; color: var(--text-color); font-weight: 500; }
+        .pop { position: absolute; left: 50%; top: 16%; z-index: 5; font-size: 1.4rem; font-weight: 800; color: var(--good); pointer-events: none; opacity: 0; transform: translate(-50%,0); }
+        .pop.go { animation: pop .8s ease-out; }
+        @keyframes pop { 0% { opacity: 0; transform: translate(-50%,10px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%,-40px); } }
+
+        /* শেষ স্ক্রিন */
+        .end-score { margin: 4px 0 2px; text-align: center; font-size: 3.6rem; font-weight: 800; line-height: 1.1; color: var(--accent); }
+        .end-label { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); }
+        .end-title { margin: 0 0 6px; text-align: center; font-size: 1.9rem; font-weight: 800; }
+        .end-msg { margin: 0 0 14px; text-align: center; font-size: 15px; font-weight: 500; line-height: 1.7; color: var(--text-muted); }
+        .tiles { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0; }
+        .tile { padding: 12px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .tile small { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .tile b { font-size: 19px; font-weight: 800; }
+        .miss h3 { margin: 18px 0 8px; font-size: 15px; font-weight: 800; }
+        .miss ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 190px; overflow-y: auto; }
+        .miss li { padding: 9px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.6; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .miss li b { color: var(--good); }
+        .credit-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500; display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #64748b; background: rgba(5,6,15,.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.06); }
+        [data-theme="light"] .credit-bar { background: rgba(255,255,255,.88); color: #475569; border-top-color: rgba(15,23,42,.1); }
+        .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#22d3ee,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        @media (max-width: 480px) { .card { padding: 22px 16px; } .stats { gap: 6px; } .back-long { display: none; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+    
+        .eq { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 20px 10px; border-radius: 20px; font-size: clamp(1.2rem,5vw,1.8rem); font-weight: 800; background: rgba(168,85,247,.07); border: 1.5px solid rgba(168,85,247,.28); box-shadow: inset 0 0 28px var(--gradient-glow); }
+        .ion { padding: 8px 14px; border-radius: 14px; background: var(--card-solid); border: 1.5px solid var(--border-color); }
+        .ion.c { color: var(--bad); border-color: rgba(244,63,94,.4); }
+        .ion.a { color: #3b82f6; border-color: rgba(59,130,246,.4); }
+        .ion small { display: block; margin-top: 2px; text-align: center; font-size: .42em; font-weight: 700; color: var(--text-muted); }
+        .eq .op { color: var(--text-muted); }
+        .eq .res { min-width: 70px; padding: 8px 14px; border-radius: 14px; text-align: center; color: var(--good); border: 1.5px dashed rgba(16,185,129,.45); }
+        sub, sup { font-size: .6em; line-height: 0; }
+        .opt .fm { font-size: 1.15em; }
+        .builder { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .bcol { padding: 12px; border-radius: 16px; text-align: center; background: var(--card-solid); border: 1.5px solid var(--border-color); }
+        .bcol .nm { font-size: 14px; font-weight: 800; }
+        .bcol.c .nm { color: var(--bad); } .bcol.a .nm { color: #3b82f6; }
+        .step { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; }
+        .step button { width: 40px; height: 40px; border-radius: 12px; border: 1.5px solid var(--border-color); background: transparent; font-family: inherit; font-size: 20px; font-weight: 800; cursor: pointer; color: var(--text-color); transition: transform .2s, border-color .2s; }
+        .step button:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(168,85,247,.7); }
+        .step button:disabled { opacity: .4; cursor: default; }
+        .step output { min-width: 30px; font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .bprev { margin-top: 12px; padding: 14px; border-radius: 16px; text-align: center; font-size: 1.9rem; font-weight: 800; color: var(--good); background: var(--card-solid); border: 1.5px dashed rgba(16,185,129,.45); }
+        .bprev small { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .bprev.bal small { color: var(--good); }
+        .brow { display: flex; gap: 10px; margin-top: 12px; }
+        .brow .big { margin-top: 0; }
+        .hintbtn { flex: 0 0 auto; padding: 0 18px; border-radius: 16px; font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer; color: var(--gold); background: transparent; border: 1.5px solid var(--gold); }
+        .hintbtn:disabled { opacity: .45; cursor: default; }
+        .hintbox { margin-top: 10px; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.7; color: var(--gold); background: rgba(251,191,36,.08); border: 1px dashed rgba(251,191,36,.5); }
+        .calc { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 10px; font-size: 13.5px; font-weight: 600; line-height: 1.8; color: var(--text-color); background: var(--card-solid); border: 1px dashed var(--border-color); word-break: break-word; }
+    
+        .cf { font-size: clamp(1.5rem,6.4vw,2.3rem); font-weight: 800; letter-spacing: .5px; color: var(--accent); word-break: break-all; }
+        .cf sub { font-size: .55em; }
+        .cname { display: block; margin-top: 6px; font-size: .42em; font-weight: 700; color: var(--text-muted); letter-spacing: 0; }
+        .nmq { font-size: clamp(1.25rem,5.2vw,1.9rem); font-weight: 800; color: var(--accent); line-height: 1.5; }
+        .opt .fm { font-size: 1.02em; line-height: 1.5; word-break: break-word; }
+        .opt .fm.frm { font-size: 1.12em; letter-spacing: .3px; }
+        .opt .fm sub { font-size: .6em; }
+        .built { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 30px; margin-bottom: 14px; }
+        .built span { padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; color: var(--accent); background: rgba(168,85,247,.12); border: 1px solid rgba(168,85,247,.35); }
+        .built span.bad { color: var(--bad); background: rgba(244,63,94,.1); border-color: rgba(244,63,94,.4); }
+        .built span.full { color: var(--good); background: rgba(16,185,129,.1); border-color: rgba(16,185,129,.4); font-size: 15px; }
+        .hintrow { display: flex; gap: 10px; margin-top: 14px; }
+        .hintrow .big { margin-top: 0; }
+        .hintbtn { flex: 1; padding: 0 18px; border-radius: 16px; font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer; color: var(--gold); background: transparent; border: 1.5px solid var(--gold); min-height: 46px; }
+        .hintbtn:disabled { opacity: .45; cursor: default; }
+        .hintbox { margin-top: 10px; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.7; color: var(--gold); background: rgba(251,191,36,.08); border: 1px dashed rgba(251,191,36,.5); }
+        .opt.gone { opacity: .25; pointer-events: none; text-decoration: line-through; }
+        .sheet { margin-top: 16px; font-size: 13.5px; font-weight: 600; }
+        .sheet summary { cursor: pointer; font-weight: 800; color: var(--accent); }
+        .sheet table { width: 100%; margin: 10px 0 0; border-collapse: collapse; text-align: left; }
+        .sheet th, .sheet td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); vertical-align: top; }
+        .sheet th { color: var(--text-muted); font-weight: 800; }
+        .sheet td:first-child { color: var(--accent); font-weight: 800; white-space: nowrap; }
+        .calc { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 10px; font-size: 13.5px; font-weight: 600; line-height: 1.8; color: var(--text-color); background: var(--card-solid); border: 1px dashed var(--border-color); word-break: break-word; }
     </style>
 </head>
 <body>
+    <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+    <div class="grid-bg"></div>
 
-<a href="games.html" class="back-btn">← ফিরে যান</a>
-
-<div class="game-card">
-    <h1 style="color: var(--accent);">🧪 IUPAC নামকরণ ব্যাটল</h1>
-    <div style="font-size: 1.2rem; margin-bottom: 20px;">স্কোর: <span id="score">0</span> | কম্বো: <span id="combo">0</span></div>
-    <h2 id="compound" style="font-size: 2.5rem; margin: 20px 0;">?</h2>
-    <div id="hint-box" style="margin-bottom: 20px; color: #94a3b8; font-style: italic;"></div>
-    <div id="options"></div>
-    <button class="btn hint-btn" onclick="giveHint()">হিন্ট নিন (-২০ পয়েন্ট)</button>
-</div>
-
-<script>
-    let score = 0, combo = 0, currentItem;
-    const data = [
-        { c: "CH3CH2CH2CH3", a: "বিউটেন", h: "এটি ৪ কার্বন বিশিষ্ট সরল অ্যালকেন।", o: ["প্রোপেন", "বিউটেন", "পেন্টেন", "ইথেন"] },
-        { c: "CH3CH(CH3)CH3", a: "২-মিথাইল প্রোপেন", h: "এর ২ নম্বর কার্বনে একটি মিথাইল শাখা আছে।", o: ["বিউটেন", "২-মিথাইল প্রোপেন", "আইসোবিউটেন", "প্রোপেন"] },
-        { c: "CH3CH2OH", a: "ইথানল", h: "এর শেষে -OH মূলক আছে এবং ২ টি কার্বন।", o: ["মিথানল", "ইথানল", "প্রোপানল", "ইথান্যাল"] },
-        { c: "CH3COCH3", a: "প্রোপানোন", h: "এটি ৩ কার্বনের একটি কিটোন।", o: ["প্রোপানোন", "বিউটানোন", "ইথানোন", "প্রোপান্যাল"] }
-    ];
-
-    function endGame(msg, correctAns) {
-        document.querySelector('.game-card').innerHTML = `
-            <div class="game-over-box">
-                <h1 style="color: #ef4444;">❌ গেম ওভার!</h1>
-                <p style="font-size: 1.2rem;">${msg}</p>
-                <div style="background: #334155; padding: 15px; border-radius: 15px; margin: 20px 0;">
-                    সঠিক উত্তর ছিল: <span style="color: #22c55e; font-weight: bold;">${correctAns}</span><br>
-                    তোমার চূড়ান্ত স্কোর: <span style="font-size: 1.5rem; color: #f59e0b;">${score}</span>
-                </div>
-                <button class="btn" style="background: var(--accent);" onclick="location.reload()">পুনরায় চেষ্টা করো 🔄</button>
-                <a href="games.html" class="btn" style="text-decoration:none;">ড্যাশবোর্ডে ফিরে যান</a>
+    <div class="wrap">
+        <header class="top">
+            <a class="btn-s" href="games.html">← <span class="back-long">গেম হাব</span></a>
+            <div class="top-r">
+                <button type="button" class="btn-s icon-btn" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+                <button type="button" class="btn-s icon-btn" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
             </div>
-        `;
-    }
+        </header>
 
-    function giveHint() {
-        if(score >= 20) {
-            score -= 20;
-            document.getElementById('hint-box').innerText = "💡 " + currentItem.h;
-            document.getElementById('score').innerText = score;
-        } else {
-            alert("পয়েন্ট কম! খেলার মাধ্যমে পয়েন্ট বাড়াও।");
+        <main class="card">
+            <section id="startView">
+                <h1>IUPAC নামকরণ ব্যাটল 🧪</h1>
+                <p class="sub">জৈব যৌগের সঠিক IUPAC নাম চেনো, গড়ো আর মেলাও!</p>
+                <div class="label">মোড বেছে নাও</div>
+                <div class="chips" id="modeRow" role="group" aria-label="মোড"></div>
+                <div class="label">লেভেল বেছে নাও</div>
+                <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+                <div class="sw-row" style="margin-top:12px;"><span>⏱ সময়ের সীমা</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="track"></span></label></div>
+                <div class="rules" id="rules"></div>
+                <details class="sheet"><summary>📖 নামকরণের নিয়ম (পড়ে নাও)</summary><table id="sheetTbl"></table></details>
+                <button type="button" class="big" id="startBtn">খেলা শুরু করো ⚡</button>
+                <div class="best-line" id="bestLine"></div>
+            </section>
+
+            <section id="playView" hidden>
+                <div class="stats">
+                    <div class="stat"><small>স্কোর</small><b id="score">০</b></div>
+                    <div class="stat best"><small>সেরা</small><b id="best">০</b></div>
+                    <div class="stat"><small>কম্বো 🔥</small><b id="combo">০</b></div>
+                    <div class="stat"><small>জীবন</small><b id="lives" aria-label="জীবন">❤️❤️❤️</b></div>
+                </div>
+                <div class="timer" id="timerBar" role="progressbar" aria-label="বাকি সময়" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="timerFill"></span></div>
+                <div class="qmeta"><span class="tag" id="qTag"></span><span id="qNo"></span></div>
+                <div class="q" id="q" aria-live="polite">--</div>
+                <div class="built" id="built"></div>
+                <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
+                <div class="hintrow"><button type="button" class="hintbtn" id="hintBtn">💡 হিন্ট (−২০ পয়েন্ট)</button></div>
+                <div class="hintbox" id="hintBox" hidden></div>
+                <div class="fb" id="fb" aria-live="polite"></div>
+                <button type="button" class="big" id="nextBtn" hidden>পরের প্রশ্ন →</button>
+                <div class="pop" id="pop"></div>
+            </section>
+
+            <section id="endView" hidden>
+                <h2 class="end-title" id="endTitle">💥 খেলা শেষ!</h2>
+                <p class="end-msg" id="endMsg"></p>
+                <div class="end-label">অর্জিত স্কোর</div>
+                <div class="end-score" id="finalScore">০</div>
+                <div class="tiles">
+                    <div class="tile"><small>সঠিক</small><b id="eRight">০</b></div>
+                    <div class="tile"><small>নির্ভুলতা</small><b id="eAcc">০%</b></div>
+                    <div class="tile"><small>সেরা কম্বো</small><b id="eStreak">০</b></div>
+                </div>
+                <div class="miss" id="missBox" hidden><h3>📖 যেগুলো ভুল হয়েছিল</h3><ul id="missList"></ul></div>
+                <button type="button" class="big" id="againBtn">আবার খেলো 🔄</button>
+                <button type="button" class="big ghost" id="menuBtn">মোড/লেভেল বদলাও</button>
+            </section>
+        </main>
+    </div>
+
+    <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+        const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+        const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+        const uniq = a => [...new Set(a)];
+
+        /* ===== যৌগ তৈরির ইঞ্জিন: গঠন থেকে সংকেত ও IUPAC নাম নিজে তৈরি হয় ===== */
+        const ST = ['', 'মিথ', 'ইথ', 'প্রোপ', 'বিউট', 'পেন্ট', 'হেক্স', 'হেপ্ট', 'অক্ট'];
+        const CLS = {
+            alkane: ['সরল অ্যালকেন', '–েন'], branch: ['শাখাযুক্ত অ্যালকেন', 'শাখার নাম + –েন'], ene: ['অ্যালকিন', '–ইন (C=C)'], yne: ['অ্যালকাইন', '–আইন (C≡C)'],
+            ol: ['অ্যালকোহল', '–অল (–OH)'], al: ['অ্যালডিহাইড', '–আল (–CHO)'], one: ['কিটোন', '–ওন (>C=O)'], acid: ['কার্বক্সিলিক অ্যাসিড', '–ওয়িক অ্যাসিড (–COOH)'],
+            hal: ['হ্যালো অ্যালকেন', 'ক্লোরো/ব্রোমো– (উপসর্গ)'], amine: ['অ্যামিন', '–অ্যামিন (–NH₂)']
+        };
+        const LOC = ['ene', 'yne', 'ol', 'one', 'hal', 'amine'];           // যেগুলোতে অবস্থান (locant) থাকে
+        const lowPos = (cls, n) => {
+            if (cls === 'ene' || cls === 'yne') return n >= 2 ? range(1, Math.floor(n / 2)) : [];
+            if (cls === 'ol' || cls === 'amine' || cls === 'hal') return range(1, Math.ceil(n / 2));
+            if (cls === 'one') return n >= 3 ? range(2, Math.ceil(n / 2)) : [];
+            return [0];
+        };
+        function range(a, b) { const r = []; for (let i = a; i <= b; i++) r.push(i); return r; }
+        const hasLocStep = (cls, n) => cls === 'branch' || (LOC.includes(cls) && ((cls === 'ene' || cls === 'yne') ? n >= 4 : cls === 'one' ? n >= 5 : n >= 3));
+
+        function nameOf(cls, n, p, x) {
+            const st = ST[n], L = v => bn(v);
+            switch (cls) {
+                case 'alkane': return st + 'েন';
+                case 'ene': return n <= 3 ? st + 'িন' : st + '-' + L(p) + '-ইন';
+                case 'yne': return n <= 3 ? st + 'াইন' : st + '-' + L(p) + '-আইন';
+                case 'ol': return n <= 2 ? st + 'ানল' : st + 'ান-' + L(p) + '-অল';
+                case 'al': return st + 'ান্যাল';
+                case 'one': return n <= 4 ? st + 'ানোন' : st + 'ান-' + L(p) + '-ওন';
+                case 'acid': return st + 'ানোয়িক অ্যাসিড';
+                case 'hal': return (n <= 2 ? '' : L(p) + '-') + (x === 'Cl' ? 'ক্লোরো' : 'ব্রোমো') + st + 'েন';
+                case 'amine': return n <= 2 ? st + 'ানামিন' : st + 'ান-' + L(p) + '-অ্যামিন';
+                case 'branch': { const k = p.length, pre = k === 1 ? 'মিথাইল' : k === 2 ? 'ডাইমিথাইল' : 'ট্রাইমিথাইল'; return p.map(L).join(',') + '-' + pre + ' ' + st + 'েন'; }
+            }
         }
-    }
-
-    function play() {
-        currentItem = data[Math.floor(Math.random() * data.length)];
-        document.getElementById('compound').innerText = currentItem.c;
-        document.getElementById('hint-box').innerText = "";
-        let grid = document.getElementById('options');
-        grid.innerHTML = '';
-        
-        currentItem.o.sort(() => Math.random() - 0.5).forEach(opt => {
-            let b = document.createElement('button');
-            b.className = 'btn'; b.innerText = opt;
-            b.onclick = () => {
-                if(opt === currentItem.a) {
-                    combo++;
-                    score += (combo >= 3) ? 20 : 10;
-                    document.getElementById('score').innerText = score;
-                    document.getElementById('combo').innerText = combo;
-                    play();
-                } else {
-                    endGame("ভুল উত্তর দিয়েছো!", currentItem.a);
+        /* সংকেত লেখা: প্রতিটি কার্বনের H গুনে */
+        function formulaOf(cls, n, p, x, rev) {
+            const bonds = Array(Math.max(0, n - 1)).fill(1), subs = Array.from({ length: n }, () => []), sp = Array(n).fill(null);
+            if (cls === 'ene') bonds[p - 1] = 2; if (cls === 'yne') bonds[p - 1] = 3;
+            if (cls === 'ol') subs[p - 1].push('OH'); if (cls === 'hal') subs[p - 1].push(x); if (cls === 'amine') subs[p - 1].push('NH2');
+            if (cls === 'al') sp[0] = 'CHO'; if (cls === 'acid') sp[0] = 'COOH'; if (cls === 'one') sp[p - 1] = 'CO';
+            if (cls === 'branch') p.forEach(l => subs[l - 1].push('CH3'));
+            const order = range(0, n - 1); if (rev) order.reverse();
+            let out = '';
+            order.forEach((idx, k) => {
+                const last = k === n - 1;
+                if (sp[idx]) out += (n === 1 ? 'H' : '') + sp[idx];
+                else {
+                    const left = idx > 0 ? bonds[idx - 1] : 0, right = idx < n - 1 ? bonds[idx] : 0, H = 4 - left - right - subs[idx].length;
+                    let t = 'C' + (H === 0 ? '' : 'H' + (H > 1 ? H : ''));
+                    const cnt = {}; subs[idx].forEach(q => cnt[q] = (cnt[q] || 0) + 1);
+                    Object.entries(cnt).forEach(([q, c]) => { if (q === 'Cl' || q === 'Br') t += q; else if (last && subs[idx].length === 1) t += q; else t += '(' + q + ')' + (c > 1 ? c : ''); });
+                    out += t;
                 }
-            };
-            grid.appendChild(b);
+                if (!last) { const nb = order[k + 1], bd = bonds[Math.min(idx, nb)]; out += bd === 2 ? '=' : bd === 3 ? '≡' : ''; }
+            });
+            return out;
+        }
+        function mk(cls, n, p, x) {
+            if (n < 1 || n > 8) return null;
+            if (cls === 'branch') { if (n < 3 || p.length < 1 || n + p.length > 9 || p.some(l => l < 2 || l > n - 1)) return null; }
+            else { if (cls === 'ene' || cls === 'yne') { if (n < 2) return null; } if (cls === 'one' && n < 3) return null; if (!lowPos(cls, n).includes(p)) return null; }
+            const forceRev = ['ol', 'hal', 'amine'].includes(cls) && p === 1 || cls === 'al' || cls === 'acid';
+            const rev = forceRev ? true : Math.random() < .5;
+            const f = formulaOf(cls, n, p, x, rev);
+            return { cls, n, p, x, name: nameOf(cls, n, p, x), f, tier: tierOf(cls, n, p), key: cls + n + JSON.stringify(p) + (x || '') };
+        }
+        function tierOf(cls, n, p) {
+            if (cls === 'branch') return (p.length === 1 && n <= 4) ? 2 : 3;
+            if (cls === 'alkane') return n <= 5 ? 1 : 2;
+            if (cls === 'ol') return n <= 4 ? 1 : 2;
+            if (cls === 'al' || cls === 'acid') return n <= 5 ? 1 : 2;
+            return n <= 4 ? 2 : 3;
+        }
+        /* সব যৌগের তালিকা */
+        const POOL = [];
+        range(1, 8).forEach(n => POOL.push(mk('alkane', n, 0)));
+        range(1, 6).forEach(n => { lowPos('ol', n).forEach(p => POOL.push(mk('ol', n, p))); POOL.push(mk('al', n, 0)); POOL.push(mk('acid', n, 0)); });
+        range(2, 6).forEach(n => { lowPos('ene', n).forEach(p => { POOL.push(mk('ene', n, p)); POOL.push(mk('yne', n, p)); }); });
+        range(3, 6).forEach(n => lowPos('one', n).forEach(p => POOL.push(mk('one', n, p))));
+        range(1, 6).forEach(n => lowPos('hal', n).forEach(p => { POOL.push(mk('hal', n, p, n % 2 ? 'Cl' : 'Br')); POOL.push(mk('amine', n, p)); }));
+        (function () {   // শাখাযুক্ত অ্যালকেন: সর্বনিম্ন সংখ্যার নিয়ম মেনে
+            range(3, 7).forEach(n => {
+                const cand = []; range(2, n - 1).forEach(a => { cand.push([a]); range(a, n - 1).forEach(b => { cand.push([a, b]); range(b, n - 1).forEach(c => cand.push([a, b, c])); }); });
+                cand.forEach(p => {
+                    if (n + p.length > 8) return;
+                    const mir = p.map(l => n + 1 - l).sort((u, v) => u - v);
+                    const cmp = (u, v) => { for (let i = 0; i < u.length; i++) if (u[i] !== v[i]) return u[i] - v[i]; return 0; };
+                    if (cmp(p, mir) > 0) return;                                  // অন্য প্রান্ত থেকে গুনলে সংখ্যা ছোট হলে এটি বাদ
+                    if (p.length === 3 && n < 4) return;
+                    POOL.push(mk('branch', n, p));
+                });
+            });
+        })();
+        const POOLF = POOL.filter(Boolean);
+
+        /* ভুল বিকল্প: সাধারণ ভুলগুলো থেকে (অবস্থান, শৃঙ্খলের দৈর্ঘ্য, শ্রেণি) */
+        const SIMILAR = { alkane: ['ene', 'yne'], ene: ['yne', 'alkane'], yne: ['ene', 'alkane'], ol: ['al', 'amine', 'hal'], al: ['ol', 'acid', 'one'], one: ['al', 'ol'], acid: ['al', 'ol'], hal: ['ol', 'amine'], amine: ['ol', 'hal'], branch: ['alkane'] };
+        function variants(s) {
+            const mol = [], names = [];
+            const add = (t, o) => { if (o && o.key !== s.key && o.f !== s.f) mol.push({ t, o }); };
+            const cpos = c => lowPos(c, s.n)[0];
+            if (s.cls === 'branch') {
+                const L = s.p, n = s.n;
+                add('pos', mk('branch', n, L.map(l => l + 1).filter(l => l <= n - 1).length === L.length ? L.map(l => l + 1) : L.slice().reverse().map(l => n + 1 - l).sort((u, v) => u - v)));
+                add('pos', mk('branch', n, L.slice(0, -1).concat([Math.min(n - 1, L[L.length - 1] + 1)])));
+                add('len', mk('branch', n + 1, L)); add('len', mk('branch', n - 1, L.filter(l => l <= n - 2)));
+                if (L.length > 1) add('cnt', mk('branch', n, [L[0]])); else add('cnt', mk('branch', n, [L[0], L[0]]));
+                add('cls', mk('alkane', n + L.length, 0));
+                names.push({ t: 'low', v: nameOf('branch', n, L.slice().reverse().map(l => n + 1 - l).sort((u, v) => v - u).reverse().length ? L.map(l => n + 1 - l).sort((u, v) => u - v) : L) });
+            } else {
+                lowPos(s.cls, s.n).forEach(p => add('pos', mk(s.cls, s.n, p, s.x)));
+                add('len', mk(s.cls, s.n + 1, lowPos(s.cls, s.n + 1)[0], s.x)); add('len', mk(s.cls, s.n - 1, lowPos(s.cls, s.n - 1)[0], s.x));
+                (SIMILAR[s.cls] || []).forEach(c => add('cls', mk(c, s.n, cpos(c), s.n % 2 ? 'Cl' : 'Br')));
+                if (LOC.includes(s.cls) && hasLocStep(s.cls, s.n)) { const hi = (s.cls === 'ene' || s.cls === 'yne') ? s.n - s.p : s.n + 1 - s.p; if (hi !== s.p && hi >= 1) names.push({ t: 'low', v: nameOf(s.cls, s.n, hi, s.x) }); }
+            }
+            return { mol, names };
+        }
+        function pickWrong(s, wantNames) {
+            const v = variants(s), out = [], seen = new Set([wantNames ? s.name : s.f]);
+            const take = (arr, k) => shuffle(arr.slice()).forEach(it => { if (out.length < 3 && k-- > 0) { const val = wantNames ? (it.o ? it.o.name : it.v) : it.o.f; if (val && !seen.has(val)) { seen.add(val); out.push(val); } } });
+            const bytype = t => v.mol.filter(m => m.t === t);
+            if (wantNames) take(v.names, 1);
+            take(bytype('pos'), 1); take(bytype('len'), 1); take(bytype('cls'), 1); take(bytype('cnt'), 1);
+            take(v.mol, 3);
+            let g = 0; while (out.length < 3 && g++ < 200) { const q = POOLF[Math.floor(Math.random() * POOLF.length)]; const val = wantNames ? q.name : q.f; if (!seen.has(val) && q.tier <= 3) { seen.add(val); out.push(val); } }
+            return out;
+        }
+        const hintOf = s => 'এটি মূল শৃঙ্খলে ' + bn(s.n) + 'টি কার্বনবিশিষ্ট (' + ST[s.n] + '–) ' + CLS[s.cls][0] + (s.cls === 'branch' ? ', শাখা ' + bn(s.p.length) + 'টি মিথাইল।' : hasLocStep(s.cls, s.n) ? '। অবস্থান: যে প্রান্ত থেকে গুনলে সংখ্যা ছোট হয় সেদিক থেকে গোনো।' : '।');
+        const explain = s => {
+            let t = plainF(s.f) + ' → মূল শৃঙ্খল: ' + bn(s.n) + 'টি C (' + ST[s.n] + ') · শ্রেণি: ' + CLS[s.cls][0] + ' (' + CLS[s.cls][1] + ')';
+            if (s.cls === 'branch') t += ' · মিথাইল শাখা ' + s.p.map(bn).join(',') + ' নং কার্বনে'; else if (hasLocStep(s.cls, s.n)) t += ' · অবস্থান ' + bn(s.p) + ' (সর্বনিম্ন সংখ্যা)';
+            return t + ' → ' + s.name;
+        };
+        const SUBM = { 0:'₀',1:'₁',2:'₂',3:'₃',4:'₄',5:'₅',6:'₆',7:'₇',8:'₈',9:'₉' };
+        const plainF = f => f.replace(/(?<=[A-Za-z)])(\d)/g, (_, d) => SUBM[d]);
+        function fmtInto(el, f) {
+            for (let k = 0; k < f.length; k++) { const ch = f[k], prev = f[k - 1];
+                if (/\d/.test(ch) && prev && /[A-Za-z)]/.test(prev)) { const s2 = document.createElement('sub'); s2.textContent = ch; el.appendChild(s2); } else el.appendChild(document.createTextNode(ch)); }
+        }
+
+        const DIFFS = {
+            easy: { name: 'সহজ', sub: 'সরল শৃঙ্খল • ২৫ সে', max: 1, time: 25 },
+            mid: { name: 'মাঝারি', sub: '+ C=C, C≡C, কিটোন, হ্যালো • ২০ সে', max: 2, time: 20 },
+            hard: { name: 'কঠিন', sub: '+ শাখাযুক্ত যৌগ • ১৫ সে', max: 3, time: 15 }
+        };
+        const MODES = {
+            name: { name: 'নাম চেনো', sub: 'সংকেত → IUPAC নাম', round: 15, rules: '📋 ১৫টি প্রশ্ন, ৩টি জীবন। সংকেত দেখে সঠিক IUPAC নাম বেছে নাও।' },
+            formula: { name: 'সংকেত চেনো', sub: 'IUPAC নাম → সংকেত', round: 15, rules: '📋 ১৫টি প্রশ্ন, ৩টি জীবন। IUPAC নাম দেখে সঠিক গঠন-সংকেতটি বেছে নাও।' },
+            steps: { name: 'ধাপে ধাপে', sub: 'শৃঙ্খল → শ্রেণি → অবস্থান', round: 10, rules: '📋 ১০টি যৌগ, ৩টি জীবন। প্রতিটি যৌগের নাম ধাপে ধাপে গড়ো: ১) মূল শৃঙ্খলে কার্বন কয়টি, ২) কোন শ্রেণি, ৩) অবস্থান। প্রতি ভুল ধাপে একটি জীবন যায়।' }
+        };
+        let mode = sget('iupac_mode', 'name'); if (!MODES[mode]) mode = 'name';
+        let diff = sget('iupac_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+        let timerOn = sget('iupac_timer', '1') === '1', soundOn = sget('iupac_sound', '1') === '1';
+        const bestKey = () => 'iupac_best_' + mode + '_' + diff;
+        const getBest = () => parseInt(sget(bestKey(), '0'), 10) || 0;
+
+        let ac = null;
+        function tone(f, t0, dur, type, vol) {
+            if (!soundOn) return;
+            try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+                const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .02); } catch (e) {}
+        }
+        const sfx = {
+            right() { tone(660, 0, .12); tone(880, .1, .16); }, wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); },
+            life() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .18); }, end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+            win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); }
+        };
+        $('themeBtn').addEventListener('click', () => { const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', next); } catch (e) {} document.documentElement.setAttribute('data-theme', next); });
+        const paintSound = () => $('soundBtn').textContent = soundOn ? '🔔' : '🔕';
+        $('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('iupac_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+        paintSound();
+
+        function chipRow(rowId, obj, current, onPick) {
+            const row = $(rowId); row.replaceChildren();
+            Object.entries(obj).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === current ? ' on' : ''); b.setAttribute('aria-pressed', String(k === current));
+                const t = document.createElement('b'); t.textContent = d.name; const u = document.createElement('small'); u.textContent = d.sub; b.append(t, u); b.addEventListener('click', () => onPick(k)); row.appendChild(b); });
+        }
+        function renderSetup() {
+            chipRow('modeRow', MODES, mode, k => { mode = k; sset('iupac_mode', k); renderSetup(); });
+            chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('iupac_diff', k); renderSetup(); });
+            $('rules').textContent = MODES[mode].rules + '  🔥 টানা সঠিক উত্তরে কম্বো বোনাস। 💡 হিন্ট নিলে ২০ পয়েন্ট কাটা যায় এবং দুটি ভুল অপশন মুছে যায়।';
+            const b = getBest(); $('bestLine').textContent = b ? '🏆 এই মোড ও লেভেলে তোমার সেরা স্কোর: ' + bn(b) : '';
+        }
+        $('timerSw').checked = timerOn; $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('iupac_timer', timerOn ? '1' : '0'); });
+        const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
+        (function () {   // নিয়মের তালিকা
+            const t = $('sheetTbl'); const hr = document.createElement('tr'); ['ধাপ / শ্রেণি', 'নিয়ম ও উদাহরণ'].forEach(x => { const th = document.createElement('th'); th.textContent = x; hr.appendChild(th); }); t.appendChild(hr);
+            const rows = [['মূল শৃঙ্খল', 'কার্বন সংখ্যা: ১ মিথ, ২ ইথ, ৩ প্রোপ, ৪ বিউট, ৫ পেন্ট, ৬ হেক্স, ৭ হেপ্ট, ৮ অক্ট। সবচেয়ে লম্বা শৃঙ্খলটি ধরো।'], ['অবস্থান', 'যে প্রান্ত থেকে গুনলে ফাংশনাল গ্রুপ/বন্ধন/শাখার সংখ্যা ছোট হয়, সেদিক থেকে গোনো। যেমন বিউটান-২-অল (৩ নয়)।']]
+                .concat(Object.entries(CLS).map(([k, v]) => [v[0], 'প্রত্যয়: ' + v[1] + ' · উদাহরণ: ' + (() => { const e = POOLF.find(q => q.cls === k && q.n >= 3) || POOLF.find(q => q.cls === k); return plainF(e.f) + ' = ' + e.name; })()]));
+            rows.forEach(r => { const tr = document.createElement('tr'); r.forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); t.appendChild(tr); });
+        })();
+
+        let score, lives, combo, bestCombo, asked, right, deck, cur, locked, deadline, tick, wrongs, limit, advTimer, hinted, stepList, stepNo, built, allRightQ, qWrongCount;
+        const newDeck = () => shuffle(POOLF.filter(s => s.tier <= DIFFS[diff].max));
+        const paintLives = () => { $('lives').textContent = lives > 0 ? '❤️'.repeat(lives) : '💔'; $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); };
+        const paintStats = () => { $('score').textContent = bn(score); $('combo').textContent = bn(combo); };
+
+        function startGame() {
+            score = 0; lives = 3; combo = 0; bestCombo = 0; asked = 0; right = 0; wrongs = []; deck = newDeck(); locked = false;
+            limit = timerOn ? DIFFS[diff].time * (mode === 'steps' ? .8 : 1) : 0;
+            $('best').textContent = bn(getBest()); paintLives(); paintStats(); show('playView'); next();
+        }
+        function showOpts(items, onPick) {
+            const box = $('opts'); box.replaceChildren(); box.hidden = false;
+            items.forEach((it, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.ok = it.ok ? '1' : '';
+                const k = document.createElement('kbd'); k.textContent = bn(i + 1); const sp = document.createElement('span'); sp.className = 'fm' + (it.frm ? ' frm' : ''); it.draw(sp); b.append(k, sp);
+                b.addEventListener('click', () => onPick(it, b)); box.appendChild(b); });
+        }
+        function next() {
+            clearTimeout(advTimer); $('pop').classList.remove('go');
+            if (asked >= MODES[mode].round) return endGame(true);
+            if (!deck.length) deck = newDeck();
+            cur = deck.pop(); asked++; locked = false; hinted = false; qWrongCount = 0;
+            $('fb').className = 'fb'; $('fb').replaceChildren(); $('nextBtn').hidden = true; $('hintBox').hidden = true; $('hintBtn').disabled = false; $('built').replaceChildren();
+            $('qNo').textContent = 'প্রশ্ন ' + bn(asked) + '/' + bn(MODES[mode].round);
+            const q = $('q'); q.replaceChildren();
+            if (mode === 'formula') {
+                $('qTag').textContent = 'এই নামের সঠিক সংকেত কোনটি?';
+                const n = document.createElement('div'); n.className = 'nmq'; n.textContent = cur.name; q.appendChild(n);
+                const wr = pickWrong(cur, false);
+                showOpts(shuffle([{ ok: 1, f: cur.f }, ...wr.map(f => ({ ok: 0, f }))]).map(o => ({ ok: o.ok, frm: 1, key: o.f, draw: sp => fmtInto(sp, o.f) })), (it, b) => answerMCQ(it, b));
+                startTimer();
+            } else if (mode === 'name') {
+                $('qTag').textContent = 'এর সঠিক IUPAC নাম কী?';
+                const f = document.createElement('span'); f.className = 'cf'; fmtInto(f, cur.f); q.appendChild(f);
+                const wr = pickWrong(cur, true);
+                showOpts(shuffle([{ ok: 1, n: cur.name }, ...wr.map(n => ({ ok: 0, n }))]).map(o => ({ ok: o.ok, key: o.n, draw: sp => sp.textContent = o.n })), (it, b) => answerMCQ(it, b));
+                startTimer();
+            } else {
+                const f = document.createElement('span'); f.className = 'cf'; fmtInto(f, cur.f); q.appendChild(f);
+                stepList = ['len', 'cls'].concat(hasLocStep(cur.cls, cur.n) ? ['loc'] : []); stepNo = 0; allRightQ = true; built = [];
+                renderStep();
+            }
+        }
+        /* ধাপে ধাপে মোড */
+        function stepOptions(kind) {
+            const s = cur;
+            if (kind === 'len') {
+                const tot = s.cls === 'branch' ? s.n + s.p.length : null;
+                const pool = uniq([s.n - 1, s.n + 1, s.n + 2, s.n - 2, tot].filter(v => v && v >= 1 && v <= 9 && v !== s.n)); const pickN = shuffle(pool).slice(0, 3);
+                if (tot && !pickN.includes(tot)) pickN[0] = tot;
+                return shuffle([s.n, ...pickN]).map(v => ({ ok: v === s.n, draw: sp => sp.textContent = bn(v) + 'টি কার্বন (' + ST[v] + '–)', label: ST[v] }));
+            }
+            if (kind === 'cls') {
+                const av = uniq(POOLF.filter(q => q.tier <= DIFFS[diff].max).map(q => q.cls)), sim = (SIMILAR[s.cls] || []).filter(c => av.includes(c));
+                const rest = shuffle(av.filter(c => c !== s.cls && !sim.includes(c)));
+                const list = uniq([s.cls, ...shuffle(sim).slice(0, 2), ...rest]).slice(0, 4);
+                return shuffle(list).map(c => ({ ok: c === s.cls, draw: sp => sp.textContent = CLS[c][0], label: CLS[c][0] }));
+            }
+            if (s.cls === 'branch') {
+                const L = s.p, n = s.n, mir = L.map(l => n + 1 - l).sort((u, v) => u - v);
+                const cands = uniq([L, mir, L.map(l => Math.min(n - 1, l + 1)), L.map(l => Math.max(2, l - 1)), L.map((l, i) => i ? l : Math.min(n - 1, l + 1))].map(a => JSON.stringify(a)));
+                const arr = shuffle(cands.filter(c => c !== JSON.stringify(L))).slice(0, 3);
+                return shuffle([JSON.stringify(L), ...arr]).map(c => ({ ok: c === JSON.stringify(L), draw: sp => sp.textContent = JSON.parse(c).map(bn).join(', ') + ' নং কার্বন', label: JSON.parse(c).map(bn).join(',') }));
+            }
+            const hi = (s.cls === 'ene' || s.cls === 'yne') ? s.n - s.p : s.n + 1 - s.p;
+            const all = (s.cls === 'ene' || s.cls === 'yne') ? range(1, s.n - 1) : s.cls === 'one' ? range(2, s.n - 1) : range(1, s.n);
+            const others = shuffle(all.filter(v => v !== s.p && v !== hi)); const list = uniq([s.p, hi !== s.p ? hi : null, ...others].filter(v => v)).slice(0, 4);
+            return shuffle(list).map(v => ({ ok: v === s.p, draw: sp => sp.textContent = bn(v) + ' নং কার্বন', label: bn(v) }));
+        }
+        const STEP_Q = { len: 'ধাপ ১: মূল (সবচেয়ে লম্বা) শৃঙ্খলে কার্বন কয়টি?', cls: 'ধাপ ২: এটি কোন শ্রেণির যৌগ?', loc: 'ধাপ ৩: ফাংশনাল গ্রুপ/বন্ধন/শাখা কত নং কার্বনে? (ছোট সংখ্যার দিক থেকে গোনো)' };
+        function renderStep() {
+            locked = false; const kind = stepList[stepNo];
+            $('qTag').textContent = STEP_Q[kind].replace(/^ধাপ \d: /, 'ধাপ ' + bn(stepNo + 1) + '/' + bn(stepList.length) + ': ');
+            $('hintBox').hidden = true; $('hintBtn').disabled = false; hinted = false;
+            showOpts(stepOptions(kind), (it, b) => answerStep(it, b, kind));
+            startTimer();
+        }
+        function paintBuilt(final) {
+            const bx = $('built'); bx.replaceChildren();
+            built.forEach(p => { const sp = document.createElement('span'); sp.textContent = p.t; if (!p.ok) sp.className = 'bad'; bx.appendChild(sp); });
+            if (final) { const sp = document.createElement('span'); sp.className = 'full'; sp.textContent = '✔ ' + cur.name; bx.appendChild(sp); }
+        }
+        function answerStep(it, btn, kind) {
+            if (locked) return; locked = true; clearInterval(tick);
+            document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('right'); });
+            const ok = !!it && it.ok, lbl = it ? it.label : '–';
+            if (!ok && btn) btn.classList.add('wrong');
+            const right_ = [...document.querySelectorAll('#opts .opt')].find(b => b.dataset.ok);
+            built.push({ t: (kind === 'len' ? 'শৃঙ্খল: ' : kind === 'cls' ? 'শ্রেণি: ' : 'অবস্থান: ') + (ok ? lbl : (right_ ? right_.textContent.replace(/^[০-৯]+/, '') : '')), ok });
+            if (ok) { combo++; bestCombo = Math.max(bestCombo, combo); score += 5 + Math.min(combo - 1, 5) * 2; sfx.right(); popText('+' + bn(5 + Math.min(combo - 1, 5) * 2)); }
+            else { combo = 0; lives--; allRightQ = false; sfx.wrong(); }
+            paintStats(); paintLives(); paintBuilt(false);
+            if (lives <= 0) { wrongs.push(cur); finishQuestion(false); return; }
+            stepNo++;
+            if (stepNo < stepList.length) { advTimer = setTimeout(renderStep, ok ? 700 : 1500); return; }
+            if (allRightQ) { right++; score += 5; paintStats(); }
+            else wrongs.push(cur);
+            finishQuestion(allRightQ);
+        }
+        /* MCQ মোড */
+        function answerMCQ(it, btn) {
+            if (locked) return; locked = true; clearInterval(tick);
+            document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('right'); });
+            const ok = !!it && it.ok; if (!ok && btn) btn.classList.add('wrong');
+            const timeLeft = limit ? Math.max(0, deadline - Date.now()) / (limit * 1000) : 0;
+            if (ok) { combo++; bestCombo = Math.max(bestCombo, combo); right++; const pts = (combo >= 3 ? 20 : 10) + (limit && timeLeft > .66 ? 5 : 0); score += pts; sfx.right(); popText('+' + bn(pts)); }
+            else { combo = 0; lives--; wrongs.push(cur); sfx.wrong(); }
+            paintStats(); paintLives(); finishQuestion(ok, !it);
+        }
+        function finishQuestion(ok, timedOut) {
+            locked = true; clearInterval(tick);
+            const fb = $('fb'); fb.replaceChildren(); const head = document.createElement('b'), calc = document.createElement('span'); calc.className = 'calc'; calc.textContent = explain(cur);
+            if (mode === 'steps') { paintBuilt(true); $('opts').hidden = true; }
+            head.textContent = ok ? ('✅ সঠিক!' + (combo >= 3 ? ' 🔥 কম্বো ' + bn(combo) : '') + (mode === 'steps' ? ' সব ধাপ নিখুঁত, +৫ বোনাস' : '')) : ((timedOut ? '⏰ সময় শেষ! ' : '❌ ভুল! ') + 'সঠিক নাম: ' + cur.name);
+            fb.className = 'fb show ' + (ok ? 'ok' : 'no'); fb.append(head, calc); $('hintBtn').disabled = true;
+            if (ok && combo > 0 && combo % 5 === 0 && lives < 3) { lives++; paintLives(); setTimeout(sfx.life, 250); head.textContent += ' · ❤️ একটি জীবন ফেরত!'; }
+            if (lives <= 0) { advTimer = setTimeout(() => endGame(false), 2200); return; }
+            $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true });
+            if (ok) advTimer = setTimeout(next, 3200);
+        }
+        $('hintBtn').addEventListener('click', () => {
+            if (locked || hinted) return; const hb = $('hintBox'); hb.hidden = false;
+            if (score < 20) { hb.textContent = '💡 হিন্টের জন্য অন্তত ২০ পয়েন্ট লাগবে। আগে কিছু পয়েন্ট জিতো!'; return; }
+            hinted = true; $('hintBtn').disabled = true; score -= 20; paintStats();
+            hb.textContent = '💡 ' + hintOf(cur) + ' (দুটি ভুল অপশন মুছে গেছে)';
+            const wrong = shuffle([...document.querySelectorAll('#opts .opt')].filter(b => !b.dataset.ok)); wrong.slice(0, Math.max(0, wrong.length - 1 > 1 ? 2 : 1)).forEach(b => { b.classList.add('gone'); b.disabled = true; });
         });
-    }
-    play();
-</script>
+
+        function startTimer() {
+            clearInterval(tick); const bar = $('timerBar'); bar.hidden = !limit; bar.classList.remove('low'); $('timerFill').style.width = '100%';
+            if (!limit) return; deadline = Date.now() + limit * 1000;
+            tick = setInterval(() => {
+                const left = Math.max(0, deadline - Date.now()), pct = left / (limit * 1000) * 100;
+                $('timerFill').style.width = pct + '%'; bar.setAttribute('aria-valuenow', String(Math.round(pct))); bar.classList.toggle('low', pct < 30);
+                if (left <= 0) { clearInterval(tick); if (mode === 'steps') answerStep(null, null, stepList[stepNo]); else answerMCQ(null, null); }
+            }, 80);
+        }
+        function popText(t) { const p = $('pop'); p.textContent = t; p.classList.remove('go'); void p.offsetWidth; p.classList.add('go'); }
+        function endGame(won) {
+            clearInterval(tick); clearTimeout(advTimer); (won ? sfx.win : sfx.end)();
+            const prev = getBest(), record = score > prev; if (record) sset(bestKey(), score);
+            $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? '🎉 অভিনন্দন!' : '💥 খেলা শেষ!');
+            $('endMsg').textContent = won ? (!wrongs.length ? 'নিখুঁত! তুমি IUPAC নামকরণের মাস্টার! 🌟' : 'রাউন্ড শেষ করেছো, দারুণ খেলেছো! 👏') : 'নামকরণের নিয়মগুলো একবার পড়ে আবার চেষ্টা করো! 💪';
+            $('finalScore').textContent = bn(score); $('eRight').textContent = bn(right) + '/' + bn(asked);
+            $('eAcc').textContent = bn(asked ? Math.round(right / asked * 100) : 0) + '%'; $('eStreak').textContent = bn(bestCombo);
+            const ul = $('missList'); ul.replaceChildren(); const seen = new Set();
+            wrongs.forEach(w => { if (seen.has(w.key)) return; seen.add(w.key); const li = document.createElement('li'); li.textContent = explain(w); ul.appendChild(li); });
+            $('missBox').hidden = !wrongs.length; show('endView'); $('againBtn').focus({ preventScroll: true });
+        }
+        $('startBtn').addEventListener('click', startGame); $('againBtn').addEventListener('click', startGame);
+        $('menuBtn').addEventListener('click', () => { clearInterval(tick); renderSetup(); show('startView'); });
+        $('nextBtn').addEventListener('click', next);
+        document.addEventListener('keydown', e => {
+            if ($('playView').hidden) return;
+            if (e.key >= '1' && e.key <= '4' && !locked) { const b = document.querySelectorAll('#opts .opt')[+e.key - 1]; if (b && !b.disabled) b.click(); }
+            else if (e.key === 'Enter' && locked && !$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); next(); }
+        });
+        let hiddenAt = 0;
+        document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; } });
+        renderSetup(); show('startView');
+    </script>
 </body>
 </html>
