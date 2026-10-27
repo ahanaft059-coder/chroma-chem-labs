@@ -1,435 +1,343 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মোলারিটি মাস্টার - ডাটাবেস এডিশন</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body {
-            background-color: #0f172a; /* গাঢ় কালো/স্ল্যাট ব্যাকগ্রাউন্ড */
-            color: #f8fafc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 10px;
-            position: relative;
-        }
-        .back-btn { 
-            position: fixed; 
-            top: 15px; 
-            left: 15px; 
-            padding: 6px 12px; 
-            background: #1e293b; 
-            color: #f8fafc; 
-            border-radius: 5px; 
-            text-decoration: none; 
-            border: 1px solid #334155; 
-            font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-        .back-btn:hover { background: #334155; }
-
-        .game-container {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            padding: 20px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            text-align: center;
-            margin-top: 20px;
-        }
-        h1 { font-size: 20px; color: #38bdf8; margin-bottom: 5px; }
-        .subtitle { font-size: 12px; color: #94a3b8; margin-bottom: 15px; }
-        
-        .score-board {
-            display: flex;
-            justify-content: space-between;
-            background: #0f172a;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            border: 1px solid #334155;
-            color: #e2e8f0;
-        }
-
-        .problem-box {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #f8fafc;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            text-align: left;
-            border: 1px solid #334155;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .input-group label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #cbd5e1;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #334155;
-            background: #0f172a;
-            color: #f8fafc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .submit-btn {
-            background: #0284c7;
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .submit-btn:hover { background: #0369a1; }
-
-        .reset-local-btn {
-            background: #d97706;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-        }
-        .reset-local-btn:hover { background: #b45309; }
-
-        .feedback {
-            margin-top: 12px;
-            font-size: 13px;
-            font-weight: bold;
-            min-height: 20px;
-        }
-
-        /* মোডাল উইন্ডো স্টাইল */
-        .modal-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            z-index: 2000;
-            padding: 10px;
-        }
-        .modal-card {
-            background: #1e293b;
-            color: #f8fafc;
-            padding: 20px 15px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 380px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-            text-align: left;
-            border: 1px solid #334155;
-        }
-        .modal-card h2 { margin-bottom: 8px; font-size: 18px; color: #38bdf8; text-align: center; }
-        .modal-card p { margin-bottom: 15px; font-size: 12px; color: #94a3b8; line-height: 1.4; text-align: center; }
-        
-        .modal-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-        }
-        .btn-start-fresh { background: #16a34a; color: white; }
-        .btn-start-fresh:hover { background: #15803d; }
-        .btn-resume { background: #0284c7; color: white; }
-        .btn-resume:hover { background: #0369a1; }
-        .btn-rules { background: #7c3aed; color: white; }
-        .btn-rules:hover { background: #6d28d9; }
-
-        .rules-content {
-            font-size: 11px;
-            color: #e2e8f0;
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            border: 1px solid #334155;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-        .rules-content h3 { font-size: 12px; color: #38bdf8; margin-top: 8px; margin-bottom: 3px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1c1f25">
+<title>মোলারিটি মাস্টার | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--desk:#d3d7dd;--text:#161a20;--muted:#556070;--line:rgba(22,26,32,.22);--hi:#e4e8ed;--gold:#9a5b00;--good:#0b7a3e;--bad:#b3261e}
+[data-theme="dark"]{--desk:#111419;--text:#eceff3;--muted:#8d98a8;--line:rgba(255,255,255,.16);--hi:#1b2028;--gold:#fbbf24;--good:#4ade80;--bad:#ff7b72}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:0 16px 56px;font-family:'Chakra Petch','Hind Siliguri','Segoe UI',system-ui,sans-serif;color:var(--text);background:var(--desk);background-image:linear-gradient(135deg,rgba(255,255,255,.05) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.05) 75%,transparent 75%);background-size:6px 6px;transition:background-color .3s,color .3s}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible{outline:3px solid #ff7a1a;outline-offset:2px}
+.top{display:flex;align-items:center;gap:8px;max-width:440px;margin:0 auto;padding:14px 0}
+.top .sp{flex:1}
+.lnk{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;font:inherit;font-weight:600;font-size:14px;text-decoration:none;color:var(--text);background:var(--hi);border:1px solid var(--line);border-radius:6px}
+.ib{width:40px;height:40px;font-size:16px;color:var(--text);background:var(--hi);border:1px solid var(--line);border-radius:6px;cursor:pointer}
+.wrap{max-width:440px;margin:0 auto}
+.brand small{font-size:12px;font-weight:600;letter-spacing:3px;color:#ff7a1a}
+.brand h1{margin:4px 0 0;font-size:clamp(2.1rem,9vw,2.9rem);line-height:1.1;font-weight:700}
+.brand p{margin:10px 0 0;font-family:'Hind Siliguri',sans-serif;font-size:15.5px;line-height:1.7;color:var(--muted)}
+.label{margin:22px 0 8px;font-size:12.5px;font-weight:600;letter-spacing:1.5px;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.cap{flex:1 1 0;min-width:96px;padding:10px 12px;text-align:center;font:inherit;cursor:pointer;color:#f3f5f7;background:linear-gradient(#555b67,#434853);border:0;border-bottom:4px solid #1b1e24;border-radius:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.cap b{display:block;font-size:15px;font-weight:600}
+.cap small{display:block;margin-top:1px;font-family:'Hind Siliguri',sans-serif;font-size:12px;opacity:.8}
+.cap:active{transform:translateY(2px);border-bottom-width:2px}
+.cap.on{color:#1b1e24;background:linear-gradient(#ffa24d,#ff7a1a);border-bottom-color:#a84a00}
+.sw-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;font-family:'Hind Siliguri',sans-serif;font-size:15px;font-weight:600}
+.switch{position:relative;width:54px;height:28px;flex-shrink:0}
+.switch input{position:absolute;inset:0;z-index:2;margin:0;opacity:0;cursor:pointer}
+.switch .tr{position:absolute;inset:0;border-radius:6px;background:#2b2f36;border-bottom:3px solid #14161a}
+.switch .tr::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:19px;border-radius:4px;background:#8a93a0;transition:transform .15s,background .15s}
+.switch input:checked~.tr::after{transform:translateX(26px);background:#ff7a1a}
+.switch input:focus-visible~.tr{outline:3px solid #ff7a1a;outline-offset:2px}
+.rules{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);font-family:'Hind Siliguri',sans-serif;font-size:14px;line-height:1.85;color:var(--muted)}
+.sheet{margin-top:12px;font-family:'Hind Siliguri',sans-serif;font-size:14px}
+.sheet summary{cursor:pointer;font-weight:600;color:var(--text)}
+.slip{margin:10px 0 0;padding:14px 16px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.75;white-space:pre-wrap;color:#1f2430;background:#f3f1ea;border-radius:2px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.go{display:block;width:100%;margin-top:14px;padding:14px;font:inherit;font-size:17px;font-weight:700;cursor:pointer;color:#10261a;background:linear-gradient(#4ade80,#22c55e);border:0;border-bottom:5px solid #14803d;border-radius:12px}
+.go:active{transform:translateY(3px);border-bottom-width:2px}
+.go.alt{color:#f3f5f7;background:linear-gradient(#555b67,#434853);border-bottom-color:#1b1e24}
+.best-line{margin-top:14px;font-family:'Hind Siliguri',sans-serif;font-size:14px;font-weight:600;color:var(--gold)}
+.device{padding:16px 14px 18px;background:linear-gradient(160deg,#2d323b,#1b1e24);border-radius:26px;border:1px solid #3b414c;box-shadow:0 22px 40px -14px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.1)}
+.bb{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;font-size:13px;font-weight:700;letter-spacing:2px;color:#9aa3b0}
+.bb button{font:inherit;font-size:12px;letter-spacing:0;font-weight:600;color:#cdd3dc;background:#2b2f36;border:1px solid #444b57;border-radius:6px;padding:5px 10px;cursor:pointer}
+.lcd{position:relative;padding:10px 12px 12px;color:#1f2c1a;background:linear-gradient(#bccdab,#adbf9b);border-radius:10px;box-shadow:inset 0 3px 8px rgba(0,0,0,.35)}
+.stat{display:flex;justify-content:space-between;gap:6px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.5px}
+.ltime{height:5px;margin:5px 0 8px;background:rgba(31,44,26,.18)}
+.ltime i{display:block;height:100%;width:100%;background:#1f2c1a}
+.ltime.low i{background:#7f1d1d}
+.prob{font-family:'Hind Siliguri',sans-serif;font-size:15px;font-weight:600;line-height:1.6}
+.er{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:10px;padding-top:6px;border-top:1px solid rgba(31,44,26,.3)}
+.expr{flex:1;min-width:0;overflow:hidden;text-align:right;white-space:nowrap;font-family:'Share Tech Mono',monospace;font-size:32px;line-height:1.1}
+.unit{font-family:'Share Tech Mono',monospace;font-size:15px;padding-bottom:3px}
+.prev{min-height:18px;text-align:right;font-family:'Share Tech Mono',monospace;font-size:14px;opacity:.75}
+.msg{min-height:22px;margin-top:4px;font-family:'Hind Siliguri',sans-serif;font-size:13.5px;font-weight:700;line-height:1.5}
+.msg.ok{color:#14532d}.msg.no{color:#7f1d1d}
+.data{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.data button{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;font-family:'Share Tech Mono',monospace;font-size:14px;color:#dfe5ec;background:#2b2f36;border:1px solid #4a515d;border-radius:6px;cursor:pointer}
+.data button b{color:#ff9d4d}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}
+.key{min-height:50px;font:inherit;font-size:21px;font-weight:600;color:#f3f5f7;cursor:pointer;background:linear-gradient(#5a606c,#474c57);border:0;border-bottom:4px solid #1b1e24;border-radius:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2);touch-action:manipulation;user-select:none}
+.key:active{transform:translateY(2px);border-bottom-width:2px}
+.key.op{background:linear-gradient(#3c414b,#2f333b);color:#ffb26b}
+.key.ac{background:linear-gradient(#e0582b,#bf3f17);border-bottom-color:#6d200a}
+.key.eq{color:#1b1e24;background:linear-gradient(#ffa24d,#ff7a1a);border-bottom-color:#a84a00}
+.row2{display:grid;grid-template-columns:1fr 1.3fr;gap:9px;margin-top:10px}
+.key.hint{font-family:'Hind Siliguri',sans-serif;font-size:14px;color:#2b1d00;background:linear-gradient(#fcd34d,#e0a50b);border-bottom-color:#8a6200}
+.key.ok{font-family:'Hind Siliguri',sans-serif;font-size:17px;color:#10261a;background:linear-gradient(#4ade80,#22c55e);border-bottom-color:#14803d}
+.key:disabled{opacity:.45;cursor:default}
+.tape{position:relative;margin:14px 14px 0;padding:14px 16px 18px;font-family:'Share Tech Mono',monospace;font-size:13.5px;line-height:1.8;color:#1f2430;background:#f3f1ea;border-radius:2px;box-shadow:0 8px 18px rgba(0,0,0,.3);animation:feed .4s ease-out;-webkit-mask:linear-gradient(#000,#000) top/100% calc(100% - 7px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/12px 7px repeat-x;mask:linear-gradient(#000,#000) top/100% calc(100% - 7px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/12px 7px repeat-x}
+.tape h4{margin:0 0 6px;font:inherit;font-weight:400;letter-spacing:2px;text-align:center;border-bottom:1px dashed #8a8f99;padding-bottom:6px}
+.tape p{margin:0;word-break:break-word}
+.tape .t{font-family:'Hind Siliguri',sans-serif;font-size:13px;margin-bottom:6px;color:#4a5160}
+@keyframes feed{from{transform:translateY(-16px);opacity:0}}
+.end-t{margin:18px 0 6px;font-size:2rem;font-weight:700;line-height:1.2}
+.end-m{margin:0 0 12px;font-family:'Hind Siliguri',sans-serif;font-size:15.5px;line-height:1.7;color:var(--muted)}
+.end-s{display:inline-block;padding:6px 16px;font-family:'Share Tech Mono',monospace;font-size:3.6rem;line-height:1.1;color:#1f2c1a;background:linear-gradient(#bccdab,#adbf9b);border-radius:10px;box-shadow:inset 0 3px 8px rgba(0,0,0,.35)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.tiles div{padding:10px 6px;text-align:center;background:var(--hi);border:1px solid var(--line);border-radius:8px}
+.tiles small{display:block;font-family:'Hind Siliguri',sans-serif;font-size:12.5px;color:var(--muted)}
+.tiles b{font-family:'Share Tech Mono',monospace;font-size:21px}
+.miss h3{margin:16px 0 8px;font-family:'Hind Siliguri',sans-serif;font-size:15px}
+.miss ul{margin:0;padding:0;list-style:none;max-height:210px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.miss li{padding:8px 10px;font-family:'Hind Siliguri',sans-serif;font-size:13.5px;line-height:1.6;background:var(--hi);border:1px solid var(--line);border-radius:6px}
+.foot{position:fixed;left:0;bottom:0;width:100%;height:34px;display:flex;align-items:center;justify-content:center;font-size:12.5px;letter-spacing:.5px;color:var(--muted);background:var(--desk);border-top:1px solid var(--line);z-index:20}
+.foot b{margin-left:5px;color:var(--text)}
+@media(max-width:380px){.expr{font-size:26px}.key{min-height:46px;font-size:19px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
+<header class="top">
+    <a class="lnk" href="games.html">← গেম হাব</a>
+    <span class="sp"></span>
+    <button type="button" class="ib" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+    <button type="button" class="ib" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+</header>
+<div class="wrap">
+    <section id="startView">
+        <div class="brand"><small>MOLAR-X · 200</small><h1>মোলারিটি মাস্টার</h1><p>মোলারিটি ও ঘনমাত্রার অঙ্ক কষো সত্যিকারের ক্যালকুলেটরে, আর সমাধান দেখো রসিদের টেপে।</p></div>
+        <div class="label">MODE</div>
+        <div class="chips" id="modeRow" role="group" aria-label="মোড"></div>
+        <div id="chOpts">
+            <div class="label">LEVEL</div><div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+            <div class="label">QUESTIONS</div><div class="chips" id="lenRow" role="group" aria-label="প্রশ্ন সংখ্যা"></div>
+            <div class="sw-row"><span>⏱ সময়ের সীমা</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="tr"></span></label></div>
+        </div>
+        <div class="rules" id="rules"></div>
+        <details class="sheet"><summary>📖 সব সূত্র ও নিয়মাবলী</summary><pre class="slip" id="formulas"></pre></details>
+        <button type="button" class="go alt" id="resumeBtn" hidden>▶ যেখান থেকে থেমেছিল</button>
+        <button type="button" class="go" id="startBtn">শুরু করো</button>
+        <div class="best-line" id="bestLine"></div>
+    </section>
 
-    <a href="index.html" class="back-btn">← ফিরে যান</a>
-
-    <!-- ইন্ট্রো পপআপ স্ক্রিন -->
-    <div class="modal-screen" id="introModal">
-        <div class="modal-card">
-            <h2>🧪 মোলারিটি মাস্টার</h2>
-            <p>মোলারিটি ও ঘনমাত্রা সম্পর্কিত সব ধরনের গাণিতিক সমস্যার প্র্যাকটিস গেম!</p>
-            
-            <div id="introButtons">
-                <button class="modal-btn btn-resume" id="resumeBtn" onclick="resumeGame()">যেখান থেকে থেমেছিল</button>
-                <button class="modal-btn btn-start-fresh" onclick="startFreshGame()">শুরু থেকে খেলুন</button>
-                <button class="modal-btn btn-rules" onclick="showRules()">সব সূত্র ও নিয়মাবলী</button>
+    <section id="playView" hidden>
+        <div class="device">
+            <div class="bb"><span>MOLAR-X 200</span><button type="button" id="menuBtn">↩ মেনু</button></div>
+            <div class="lcd">
+                <div class="stat" id="stat"></div>
+                <div class="ltime" id="ltime" role="timer" aria-label="বাকি সময়"><i id="ltFill"></i></div>
+                <div class="prob" id="prob" aria-live="polite"></div>
+                <div class="er"><div class="expr" id="expr" aria-label="আপনার রাশিমালা">0</div><div class="unit" id="unit"></div></div>
+                <div class="prev" id="prev"></div>
+                <div class="msg" id="msg" aria-live="polite"></div>
             </div>
-
-            <div id="rulesBox" style="display: none;">
-                <div class="rules-content">
-                    <h3>১. মোলারিটি নির্ণয় ($S$)</h3>
-                    • সূত্র: $S = \frac{1000W}{MV}$<br>
-                    • $W$ = দ্রবের ভর, $M$ = মোলার ভর, $V$ = আয়তন (mL)।
-
-                    <h3>২. দ্রবের ভর নির্ণয় ($W$)</h3>
-                    • সূত্র: $W = \frac{SMV}{1000}$
-
-                    <h3>৩. দ্রবণের আয়তন নির্ণয় ($V$)</h3>
-                    • সূত্র: $V = \frac{1000W}{SM}$
-
-                    <h3>৪. শতকরা মাত্রা থেকে মোলারিটি</h3>
-                    • সূত্র: $S = \frac{10 \times x}{M}$ (যেখানে $x$ হলো শতকরা হার)।
-
-                    <br><br><b>নিয়ম:</b> সঠিক উত্তর না দেওয়া পর্যন্ত পরবর্তী প্রশ্নে যাওয়া যাবে না।
-                </div>
-                <button class="modal-btn btn-start-fresh" onclick="backToIntroMenu()">ফিরে যান</button>
-            </div>
+            <div class="data" id="data" aria-label="প্রশ্নের তথ্য, ট্যাপ করলে বসবে"></div>
+            <div class="pad" id="pad"></div>
+            <div class="row2"><button type="button" class="key hint" id="hintKey">💡</button><button type="button" class="key ok" id="okKey">জমা ✔</button></div>
         </div>
-    </div>
+        <div class="tape" id="tape" hidden></div>
+    </section>
 
-    <!-- গেম ওভার স্ক্রিন -->
-    <div class="modal-screen" id="gameOverScreen" style="display: none;">
-        <div class="modal-card" style="text-align: center;">
-            <h2>অভিনন্দন!</h2>
-            <p id="finalScoreText">আপনার মোট স্কোর: ০</p>
-            <button class="modal-btn btn-start-fresh" onclick="startFreshGame()">নতুন করে শুরু করুন 🔄</button>
+    <section id="endView" hidden>
+        <h2 class="end-t" id="endTitle">অভিনন্দন!</h2>
+        <p class="end-m" id="endMsg"></p>
+        <div class="end-s" id="finalScore">0</div>
+        <div class="tiles">
+            <div><small>সঠিক</small><b id="eRight">0</b></div>
+            <div><small>নির্ভুলতা</small><b id="eAcc">0%</b></div>
+            <div><small>সেরা কম্বো</small><b id="eStreak">0</b></div>
         </div>
-    </div>
+        <div class="miss" id="missBox" hidden><h3>যে অঙ্কগুলো মেলেনি</h3><ul id="missList"></ul></div>
+        <button type="button" class="go" id="againBtn">আবার খেলো 🔄</button>
+        <button type="button" class="go alt" id="endMenuBtn">মেনুতে ফিরে যান</button>
+    </section>
+</div>
+<div class="foot">Developed &amp; Designed by <b>Ahanaf Abid Omlan</b></div>
 
-    <div class="game-container">
-        <h1>🧪 মোলারিটি মাস্টার</h1>
-        <p class="subtitle">ঘনমাত্রা ও মোলারিটি হিসাব চ্যালেঞ্জ</p>
+<script>
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+const sdel = k => { try { localStorage.removeItem(k); } catch (e) {} };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const r2 = x => +x.toFixed(2);
+const rnd = (a, b) => r2(a + Math.random() * (b - a));
+const NICE = [.1, .2, .25, .5, .75, 1, 1.5, 2];
 
-        <div class="score-board">
-            <span>স্কোর: <span id="scoreVal">0</span></span>
-            <span>প্রশ্ন: <span id="qNum">1</span>/200</span>
-        </div>
+const SUBS = [['NaOH',40],['HCl',36.5],['H₂SO₄',98],['Na₂CO₃',106],['NaCl',58.5],['KOH',56.1],['HNO₃',63],['CH₃COOH',60]];
+const CONC = [['HCl',36.5,37,1.18],['H₂SO₄',98,98,1.84],['HNO₃',63,70,1.41],['CH₃COOH',60,99,1.05],['NaOH',40,50,1.52]];
+/* সমস্যা তৈরি: প্রতিটির উত্তর দেওয়া তথ্য থেকেই হিসাব করা */
+function mk(type, nice) {
+    const [nm, M] = pick(SUBS), P = { type, unit: 'M', tol: .011 };
+    const S = () => nice ? pick(NICE) : rnd(.1, 1.6);
+    if (type === 0) { const v = pick([100, 250, 500, 1000]), w = r2(S() * M * v / 1000); P.ans = r2(1000 * w / (M * v)); P.text = w + ' গ্রাম ' + nm + ' পানিতে দ্রবীভূত করে ' + v + ' mL দ্রবণ তৈরি করা হলো। দ্রবণটির মোলারিটি (S) কত?'; P.data = [['W', w, 'g'], ['M', M, 'g/mol'], ['V', v, 'mL']];
+        P.f = 'S = 1000 × W ÷ (M × V)'; P.st = '= 1000 × ' + w + ' ÷ (' + M + ' × ' + v + ')'; }
+    else if (type === 1) { const v = pick([100, 200, 250, 500]), s = S(); P.ans = r2(s * M * v / 1000); P.unit = 'g'; P.text = v + ' mL দ্রবণে ' + s + ' M ঘনমাত্রার ' + nm + ' তৈরি করতে কত গ্রাম (W) দ্রব প্রয়োজন?'; P.data = [['S', s, 'M'], ['M', M, 'g/mol'], ['V', v, 'mL']];
+        P.f = 'W = S × M × V ÷ 1000'; P.st = '= ' + s + ' × ' + M + ' × ' + v + ' ÷ 1000'; }
+    else if (type === 2) { const v0 = pick([100, 250, 500]), s = nice ? pick(NICE) : rnd(.2, 1.2), w = r2(s * M * v0 / 1000); P.ans = r2(1000 * w / (s * M)); P.unit = 'mL'; P.text = w + ' গ্রাম ' + nm + ' ব্যবহার করে ' + s + ' M ঘনমাত্রার দ্রবণ প্রস্তুত করতে কত mL (V) আয়তনের দরকার?'; P.data = [['W', w, 'g'], ['S', s, 'M'], ['M', M, 'g/mol']];
+        P.f = 'V = 1000 × W ÷ (S × M)'; P.st = '= 1000 × ' + w + ' ÷ (' + s + ' × ' + M + ')'; }
+    else if (type === 3) { const x = pick([2, 4, 5, 10]); P.ans = r2(10 * x / M); P.text = x + '% (w/v) ' + nm + ' দ্রবণের মোলারিটি (S) কত?'; P.data = [['x', x, '%'], ['M', M, 'g/mol']]; P.f = 'S = 10 × x ÷ M'; P.st = '= 10 × ' + x + ' ÷ ' + M; }
+    else if (type === 4) { const s1 = pick([2, 5, 6, 10, 12]), s2 = pick([.1, .2, .5, 1]), v2 = pick([100, 250, 500, 1000]); P.ans = r2(s2 * v2 / s1); P.unit = 'mL'; P.text = s1 + ' M ঘনমাত্রার ' + nm + ' স্টক দ্রবণ থেকে ' + s2 + ' M ঘনমাত্রার ' + v2 + ' mL দ্রবণ তৈরি করতে কত mL স্টক দ্রবণ লাগবে?'; P.data = [['S₁', s1, 'M'], ['S₂', s2, 'M'], ['V₂', v2, 'mL']];
+        P.f = 'S₁V₁ = S₂V₂ ⇒ V₁ = S₂ × V₂ ÷ S₁'; P.st = '= ' + s2 + ' × ' + v2 + ' ÷ ' + s1; }
+    else if (type === 5) { const s = S(), v = pick([100, 200, 250, 500]); P.ans = +(s * v / 1000).toFixed(3); P.unit = 'mol'; P.tol = .005; P.text = s + ' M ঘনমাত্রার ' + nm + ' দ্রবণের ' + v + ' mL-এ কত মোল (n) দ্রব আছে?'; P.data = [['S', s, 'M'], ['V', v, 'mL']]; P.f = 'n = S × V ÷ 1000'; P.st = '= ' + s + ' × ' + v + ' ÷ 1000'; }
+    else { const [n2, M2, x, d] = pick(CONC); P.ans = r2(10 * x * d / M2); P.text = x + '% (w/w) ' + n2 + ' দ্রবণের ঘনত্ব ' + d + ' g/mL। এর মোলারিটি (S) কত?'; P.data = [['x', x, '%'], ['d', d, 'g/mL'], ['M', M2, 'g/mol']]; P.f = 'S = 10 × x × d ÷ M'; P.st = '= 10 × ' + x + ' × ' + d + ' ÷ ' + M2; P.tol = .02; }
+    P.tol = Math.max(P.tol, Math.abs(P.ans) * .015); P.mol = P.data.find(d => d[0] === 'M' && d[2] === 'g/mol');
+    return P;
+}
+const POOLS = { easy: [0, 1, 3, 5], mid: [0, 1, 2, 3, 4, 5], hard: [0, 1, 2, 3, 4, 5, 6], prac: [0, 1, 2, 3, 4, 5] };
+const gen = (kind) => mk(pick(POOLS[kind]), kind === 'easy' ? true : kind === 'mid' ? Math.random() < .5 : false);
+const PRAC_N = 200;
 
-        <div class="problem-box" id="problemText">
-            সমস্যা লোড হচ্ছে...
-        </div>
+const MODES = { prac: { name: 'অনুশীলন', sub: '২০০ প্রশ্ন • আসল নিয়ম' }, chal: { name: 'চ্যালেঞ্জ', sub: 'জীবন • সময় • কম্বো' } };
+const DIFFS = { easy: { name: 'সহজ', sub: 'গোল সংখ্যা • ৯০ সে', time: 90 }, mid: { name: 'মাঝারি', sub: 'মিশ্র + মিশ্রণ • ৭০ সে', time: 70 }, hard: { name: 'কঠিন', sub: 'ঘনত্বসহ সব • ৬০ সে', time: 60 } };
+const LENS = { 10: { name: '১০টি', sub: 'ছোট' }, 20: { name: '২০টি', sub: 'মাঝারি' }, 30: { name: '৩০টি', sub: 'লম্বা' } };
+let mode = sget('mo_mode', 'prac'); if (!MODES[mode]) mode = 'prac';
+let diff = sget('mo_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+let len = parseInt(sget('mo_len', '20'), 10); if (!LENS[len]) len = 20;
+let timerOn = sget('mo_timer', '1') === '1', soundOn = sget('mo_sound', '1') === '1';
+const bestKey = () => 'mo_best_' + diff + '_' + len, getBest = () => parseInt(sget(bestKey(), '0'), 10) || 0;
 
-        <div class="input-group">
-            <label for="userAnswer">আপনার উত্তর (দুই দশমিক ঘর পর্যন্ত):</label>
-            <input type="number" step="0.01" id="userAnswer" placeholder="যেমন: 0.5">
-        </div>
+let ac = null;
+function tone(f, t0, dur, type, vol) {
+    if (!soundOn) return;
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+        const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .02); } catch (e) {}
+}
+const sfx = { key() { tone(900, 0, .03, 'square', .05); }, right() { tone(660, 0, .12); tone(880, .1, .16); }, wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); },
+    life() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .18); }, end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); }, win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); } };
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
+const paintSound = () => $('soundBtn').textContent = soundOn ? '🔔' : '🔕';
+$('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('mo_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+paintSound();
 
-        <button class="submit-btn" onclick="checkAnswer()">উত্তর জমা দিন</button>
-        <button class="reset-local-btn" onclick="returnToIntro()">মেনুতে ফিরে যান</button>
-        
-        <div class="feedback" id="feedbackText"></div>
-    </div>
+$('formulas').textContent =
+ '১. মোলারিটি নির্ণয়\n   S = 1000 × W ÷ (M × V)\n   W = দ্রবের ভর (g), M = মোলার ভর, V = আয়তন (mL)\n\n' +
+ '২. দ্রবের ভর নির্ণয়\n   W = S × M × V ÷ 1000\n\n৩. দ্রবণের আয়তন নির্ণয়\n   V = 1000 × W ÷ (S × M)\n\n' +
+ '৪. শতকরা (w/v) থেকে মোলারিটি\n   S = 10 × x ÷ M\n\n৫. লঘুকরণ\n   S₁V₁ = S₂V₂\n\n৬. মোল সংখ্যা\n   n = S × V ÷ 1000\n\n' +
+ '৭. শতকরা (w/w) ও ঘনত্ব\n   S = 10 × x × d ÷ M\n\nনিয়ম (অনুশীলন): সঠিক উত্তর না দেওয়া পর্যন্ত পরের প্রশ্নে যাওয়া যায় না।\nসমাধান দেখে নিলে ০ পয়েন্টে এগোতে পারবে।';
+function chipRow(rowId, obj, current, onPick) {
+    const row = $(rowId); row.replaceChildren();
+    Object.entries(obj).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'cap' + (k === current ? ' on' : ''); b.setAttribute('aria-pressed', String(k === current));
+        const t = document.createElement('b'); t.textContent = d.name; const u = document.createElement('small'); u.textContent = d.sub; b.append(t, u); b.addEventListener('click', () => onPick(k)); row.appendChild(b); });
+}
+const savedIdx = () => parseInt(sget('molarity_idx', '0'), 10) || 0;
+function renderSetup() {
+    chipRow('modeRow', MODES, mode, k => { mode = k; sset('mo_mode', k); renderSetup(); });
+    chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('mo_diff', k); renderSetup(); });
+    chipRow('lenRow', LENS, String(len), k => { len = +k; sset('mo_len', k); renderSetup(); });
+    const prac = mode === 'prac'; $('chOpts').hidden = prac; $('resumeBtn').hidden = !(prac && savedIdx() > 0);
+    $('startBtn').textContent = prac ? 'শুরু থেকে খেলুন' : 'চ্যালেঞ্জ শুরু করো';
+    $('rules').textContent = prac ? '📋 ২০০টি প্রশ্ন, জীবন বা সময়ের চাপ নেই। প্রতিটি সঠিক উত্তরে +৫। সঠিক না হওয়া পর্যন্ত পরের প্রশ্নে যাওয়া যায় না, আটকে গেলে "সমাধান দেখো" চাপো। অগ্রগতি নিজে সেভ হয়।'
+        : '📋 ' + bn(len) + 'টি প্রশ্ন, ৩টি জীবন, প্রতিটিতে ২টি চেষ্টা। দুবার ভুল বা সময় শেষ হলে একটি জীবন যায়। প্রথম চেষ্টায় সঠিক হলে বাড়তি পয়েন্ট, সময় বাঁচালে বোনাস, টানা ৩ উত্তরে কম্বো। 💡 সূত্র দেখতে ১০ পয়েন্ট কাটে।';
+    const b = getBest(); $('bestLine').textContent = prac ? (savedIdx() > 0 ? '💾 সেভ করা অগ্রগতি: প্রশ্ন ' + bn(savedIdx() + 1) + '/' + bn(PRAC_N) + ' • স্কোর ' + bn(parseInt(sget('molarity_score', '0'), 10) || 0) : '') : (b ? '🏆 এই সেটিংসে তোমার সেরা স্কোর: ' + bn(b) : '');
+}
+$('timerSw').checked = timerOn; $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('mo_timer', timerOn ? '1' : '0'); });
+const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
 
-    <script>
-        const substances = [
-            { name: "NaOH", m: 40 },
-            { name: "HCl", m: 36.5 },
-            { name: "H₂SO₄", m: 98 },
-            { name: "Na₂CO₃", m: 106 },
-            { name: "NaCl", m: 58.5 },
-            { name: "KOH", m: 56.1 },
-            { name: "HNO₃", m: 63 },
-            { name: "CH₃COOH", m: 60 }
-        ];
+/* কিপ্যাড ও রাশিমালা */
+const KEYS = [['C','ac'],['⌫','ac'],['(','op'],[')','op'],['7'],['8'],['9'],['÷','op'],['4'],['5'],['6'],['×','op'],['1'],['2'],['3'],['−','op'],['0'],['.'],['=','eq'],['+','op']];
+KEYS.forEach(([k, c]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'key' + (c ? ' ' + c : ''); b.textContent = k; b.dataset.k = k; b.setAttribute('aria-label', { '⌫': 'মুছো', 'C': 'সব মুছো', '=': 'হিসাব করো', '÷': 'ভাগ', '×': 'গুণ', '−': 'বিয়োগ', '+': 'যোগ' }[k] || k); b.addEventListener('click', () => press(k)); $('pad').appendChild(b); });
+function evalExpr(s) {
+    s = s.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-'); if (!s.trim() || !/^[0-9+\-*/().\s]+$/.test(s)) return null;
+    try { const v = Function('"use strict";return (' + s + ')')(); return typeof v === 'number' && isFinite(v) ? v : null; } catch (e) { return null; }
+}
+const fmt = v => String(+v.toFixed(4));
+let expr = '';
+function paintExpr() {
+    const e = $('expr'); e.textContent = expr || '0'; e.scrollLeft = e.scrollWidth;
+    const v = /[+\-×÷−()]/.test(expr.slice(1)) ? evalExpr(expr) : null; $('prev').textContent = v !== null ? '= ' + fmt(v) : '';
+}
+function press(k) {
+    if (locked) return; sfx.key(); $('msg').className = 'msg'; $('msg').textContent = '';
+    if (k === 'C') expr = ''; else if (k === '⌫') expr = expr.slice(0, -1);
+    else if (k === '=') { const v = evalExpr(expr); if (v === null) { $('msg').className = 'msg no'; $('msg').textContent = 'রাশিমালাটি সঠিক নয়।'; } else expr = fmt(v); }
+    else if (expr.length < 32) expr += k;
+    paintExpr();
+}
 
-        function generateDatabase(totalProblems = 200) {
-            let database = [];
-            
-            for (let i = 0; i < totalProblems; i++) {
-                let sub = substances[Math.floor(Math.random() * substances.length)];
-                let type = Math.floor(Math.random() * 4);
-
-                if (type === 0) {
-                    let v = [100, 250, 500, 1000][Math.floor(Math.random() * 4)];
-                    let s = parseFloat((Math.random() * 2 + 0.1).toFixed(2));
-                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
-                    
-                    database.push({
-                        text: `${w} গ্রাম ${sub.name} কে পানিতে দ্রবীভূত করে ${v} mL দ্রবণ তৈরি করা হলো। দ্রবণটির মোলারিটি ($S$) কত?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: s
-                    });
-                } 
-                else if (type === 1) {
-                    let v = [100, 200, 250, 500][Math.floor(Math.random() * 4)];
-                    let s = parseFloat((Math.random() * 1.5 + 0.1).toFixed(2));
-                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
-                    
-                    database.push({
-                        text: `${v} mL দ্রবণে ${s} M ঘনমাত্রার ${sub.name} তৈরি করতে কত গ্রাম ($W$) দ্রবণ প্রয়োজন?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: w
-                    });
-                } 
-                else if (type === 2) {
-                    let v = [100, 250, 500][Math.floor(Math.random() * 3)];
-                    let s = parseFloat((Math.random() * 1.0 + 0.2).toFixed(2));
-                    let w = parseFloat(((s * sub.m * v) / 1000).toFixed(2));
-                    
-                    database.push({
-                        text: `${w} গ্রাম ${sub.name} ব্যবহার করে ${s} M ঘনমাত্রার দ্রবণ প্রস্তুত করতে কত mL ($V$) আয়তনের প্রয়োজন হবে?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: v
-                    });
-                } 
-                else if (type === 3) {
-                    let percent = [2, 4, 5, 10][Math.floor(Math.random() * 4)];
-                    let s = parseFloat(((10 * percent) / sub.m).toFixed(2));
-                    
-                    database.push({
-                        text: `${percent}% (w/v) ${sub.name} দ্রবণের মোলারিটি ($S$) কত হবে?<br><small style='color:#94a3b8;'>(মোলার ভর = ${sub.m} g/mol)</small>`,
-                        answer: s
-                    });
-                }
-            }
-            return database;
-        }
-
-        let gameProblems = generateDatabase(200);
-        let currentIdx = parseInt(localStorage.getItem("molarity_idx")) || 0;
-        let score = parseInt(localStorage.getItem("molarity_score")) || 0;
-
-        const problemText = document.getElementById("problemText");
-        const userAnswer = document.getElementById("userAnswer");
-        const feedbackText = document.getElementById("feedbackText");
-        const scoreVal = document.getElementById("scoreVal");
-        const qNum = document.getElementById("qNum");
-        const introModal = document.getElementById("introModal");
-        const gameOverScreen = document.getElementById("gameOverScreen");
-        const finalScoreText = document.getElementById("finalScoreText");
-        const resumeBtn = document.getElementById("resumeBtn");
-        const rulesBox = document.getElementById("rulesBox");
-        const introButtons = document.getElementById("introButtons");
-
-        function checkSavedProgress() {
-            if (!localStorage.getItem("molarity_idx") || parseInt(localStorage.getItem("molarity_idx")) === 0) {
-                resumeBtn.style.display = "none";
-            } else {
-                resumeBtn.style.display = "block";
-            }
-        }
-
-        function showRules() {
-            introButtons.style.display = "none";
-            rulesBox.style.display = "block";
-        }
-
-        function backToIntroMenu() {
-            rulesBox.style.display = "none";
-            introButtons.style.display = "block";
-        }
-
-        function startFreshGame() {
-            localStorage.removeItem("molarity_idx");
-            localStorage.removeItem("molarity_score");
-            
-            gameProblems = generateDatabase(200);
-            
-            currentIdx = 0;
-            score = 0;
-            introModal.style.display = "none";
-            gameOverScreen.style.display = "none";
-            initGame();
-        }
-
-        function resumeGame() {
-            currentIdx = parseInt(localStorage.getItem("molarity_idx")) || 0;
-            score = parseInt(localStorage.getItem("molarity_score")) || 0;
-            introModal.style.display = "none";
-            initGame();
-        }
-
-        function returnToIntro() {
-            checkSavedProgress();
-            introModal.style.display = "flex";
-        }
-
-        function initGame() {
-            if (currentIdx >= gameProblems.length) {
-                endGame();
-                return;
-            }
-            scoreVal.textContent = score;
-            qNum.textContent = currentIdx + 1;
-            problemText.innerHTML = gameProblems[currentIdx].text;
-            userAnswer.value = "";
-            feedbackText.textContent = "";
-        }
-
-        function checkAnswer() {
-            let val = parseFloat(userAnswer.value);
-            if (isNaN(val)) {
-                feedbackText.style.color = "#f87171";
-                feedbackText.textContent = "দয়া করে একটি সঠিক সংখ্যা লিখুন!";
-                return;
-            }
-
-            let correctAns = gameProblems[currentIdx].answer;
-            
-            if (Math.abs(val - correctAns) <= 0.1) {
-                score += 5;
-                scoreVal.textContent = score;
-                feedbackText.style.color = "#4ade80";
-                feedbackText.textContent = "সঠিক উত্তর! পরবর্তী প্রশ্নে যাচ্ছি...";
-                
-                currentIdx++;
-                localStorage.setItem("molarity_idx", currentIdx);
-                localStorage.setItem("molarity_score", score);
-
-                setTimeout(() => {
-                    initGame();
-                }, 1000);
-            } else {
-                feedbackText.style.color = "#f87171";
-                feedbackText.textContent = "ভুল উত্তর! সঠিক উত্তর না দেওয়া পর্যন্ত পরবর্তী প্রশ্নে যাওয়া যাবে না।";
-            }
-        }
-
-        function endGame() {
-            finalScoreText.textContent = `আপনার মোট স্কোর: ${score} (২০০টি প্রশ্নের মধ্যে)`;
-            gameOverScreen.style.display = "flex";
-        }
-
-        checkSavedProgress();
-    </script>
+let probs, idx, score, lives, combo, bestCombo, right, asked, wrongs, tries, locked, cur, seen, hintUsed, limit, deadline, tick, advTimer;
+const stat = () => { const prac = mode === 'prac'; $('stat').textContent = ''; const a = document.createElement('span'), b = document.createElement('span');
+    a.textContent = 'Q ' + (prac ? idx + 1 + '/' + PRAC_N : asked + '/' + len); b.textContent = (prac ? '' : '♥'.repeat(Math.max(lives, 0)) + ' ') + 'SCORE ' + score; $('stat').append(a, b); };
+function startGame(resume) {
+    mode === 'prac' ? (probs = Array.from({ length: PRAC_N }, () => gen('prac'))) : (probs = []);
+    idx = resume ? savedIdx() : 0; score = resume ? (parseInt(sget('molarity_score', '0'), 10) || 0) : 0;
+    if (mode === 'prac' && !resume) { sdel('molarity_idx'); sdel('molarity_score'); }
+    lives = 3; combo = 0; bestCombo = 0; right = 0; asked = 0; wrongs = []; locked = false; limit = mode === 'chal' && timerOn ? DIFFS[diff].time : 0;
+    show('playView'); next(true);
+}
+function next(first) {
+    clearTimeout(advTimer); clearInterval(tick);
+    if (mode === 'prac') { if (!first) idx++; if (idx >= PRAC_N) return endGame(true); cur = probs[idx]; }
+    else { if (asked >= len) return endGame(true); cur = gen(diff); asked++; }
+    expr = ''; locked = false; tries = 2; seen = false; hintUsed = false;
+    $('tape').hidden = true; $('msg').className = 'msg'; $('msg').textContent = ''; $('prob').textContent = cur.text; $('unit').textContent = cur.unit; paintExpr(); stat();
+    const d = $('data'); d.replaceChildren(); cur.data.forEach(([k, v, u]) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = '<span></span><b></b>'; b.firstChild.textContent = k + ' = '; b.lastChild.textContent = v + ' ' + u; b.setAttribute('aria-label', k + ' এর মান ' + v + ' বসাও'); b.addEventListener('click', () => { if (!locked && expr.length < 28) { expr += v; sfx.key(); paintExpr(); } }); d.appendChild(b); });
+    $('hintKey').textContent = mode === 'prac' ? '📄 সমাধান দেখো' : '💡 সূত্র (−১০)'; $('hintKey').disabled = false; $('okKey').textContent = 'জমা ✔';
+    $('ltime').hidden = !limit; $('ltime').classList.remove('low'); $('ltFill').style.width = '100%';
+    if (limit) { deadline = Date.now() + limit * 1000; tick = setInterval(() => { const left = Math.max(0, deadline - Date.now()), pct = left / (limit * 1000) * 100; $('ltFill').style.width = pct + '%'; $('ltime').classList.toggle('low', pct < 25); $('ltime').setAttribute('aria-valuenow', Math.round(pct)); if (left <= 0) { clearInterval(tick); fail(true); } }, 100); }
+}
+function tape(full) {
+    const t = $('tape'); t.replaceChildren(); const h = document.createElement('h4'); h.textContent = '— SOLUTION —'; t.appendChild(h);
+    const add = (txt, cls) => { const p = document.createElement('p'); p.textContent = txt; if (cls) p.className = cls; t.appendChild(p); };
+    add(cur.f); if (full) { add(cur.st); add('= ' + cur.ans + ' ' + cur.unit); if (cur.mol) add('(মোলার ভর M = ' + cur.mol[1] + ' g/mol)', 't'); } t.hidden = false;
+}
+function submit() {
+    if (locked) { next(); return; }
+    const v = evalExpr(expr); const msg = $('msg');
+    if (v === null) { msg.className = 'msg no'; msg.textContent = 'আগে একটি সঠিক সংখ্যা বা রাশিমালা লেখো।'; return; }
+    if (Math.abs(v - cur.ans) <= cur.tol) {
+        clearInterval(tick); locked = true; right++; combo++; bestCombo = Math.max(bestCombo, combo); sfx.right();
+        let pts = 5; if (mode === 'chal') { const left = limit ? Math.max(0, deadline - Date.now()) / 1000 : 0; pts = 10 + (tries === 2 ? 5 : 0) + (limit ? Math.min(9, Math.floor(left / 10)) : 0) + (combo >= 3 ? 5 : 0); }
+        score += pts; msg.className = 'msg ok'; msg.textContent = '✅ সঠিক! +' + pts + (combo >= 3 && mode === 'chal' ? ' 🔥 কম্বো ' + combo : ''); tape(true); stat();
+        if (mode === 'prac') { sset('molarity_idx', idx + 1); sset('molarity_score', score); }
+        if (mode === 'chal' && combo % 5 === 0 && lives < 3) { lives++; stat(); setTimeout(sfx.life, 250); msg.textContent += ' · ❤️ জীবন ফেরত!'; }
+        $('okKey').textContent = 'পরের প্রশ্ন →'; $('hintKey').disabled = true; advTimer = setTimeout(next, mode === 'prac' ? 1400 : 4500);
+    } else {
+        sfx.wrong(); tries--;
+        if (mode === 'prac' || tries > 0) { msg.className = 'msg no'; msg.textContent = mode === 'prac' ? '❌ ভুল উত্তর! সঠিক উত্তর না দেওয়া পর্যন্ত পরের প্রশ্নে যাওয়া যাবে না।' : '❌ ভুল! আরও ১টি চেষ্টা বাকি। ইউনিটটি আর একবার দেখো।'; }
+        else fail(false);
+    }
+}
+function fail(timedOut) {
+    if (locked) return; locked = true; clearInterval(tick); combo = 0; lives--; wrongs.push(cur); sfx.wrong(); stat(); tape(true);
+    $('msg').className = 'msg no'; $('msg').textContent = (timedOut ? '⏰ সময় শেষ! ' : '❌ চেষ্টা শেষ! ') + 'সঠিক উত্তর: ' + cur.ans + ' ' + cur.unit;
+    $('hintKey').disabled = true; if (lives <= 0) { advTimer = setTimeout(() => endGame(false), 3200); return; } $('okKey').textContent = 'পরের প্রশ্ন →';
+}
+$('okKey').addEventListener('click', submit);
+$('hintKey').addEventListener('click', () => {
+    if (locked) return;
+    if (mode === 'prac') { if (!seen) { seen = true; tape(true); $('hintKey').textContent = '⏭ পরের প্রশ্ন (০ পয়েন্ট)'; } else { sset('molarity_idx', idx + 1); wrongs.push(cur); next(); } return; }
+    if (hintUsed) return; if (score < 10) { $('msg').className = 'msg no'; $('msg').textContent = 'সূত্রের জন্য অন্তত ১০ পয়েন্ট লাগবে।'; return; }
+    hintUsed = true; score -= 10; stat(); tape(false); $('hintKey').disabled = true;
+});
+function endGame(won) {
+    clearInterval(tick); clearTimeout(advTimer); (won ? sfx.win : sfx.end)(); const prac = mode === 'prac';
+    let record = false; if (!prac) { record = score > getBest(); if (record) sset(bestKey(), score); } else { sdel('molarity_idx'); sdel('molarity_score'); }
+    $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? 'অভিনন্দন!' : '💥 ক্যালকুলেটর বন্ধ!');
+    $('endMsg').textContent = prac ? 'আপনার মোট স্কোর: ' + bn(score) + ' (' + bn(PRAC_N) + 'টি প্রশ্নের মধ্যে)' : won ? (!wrongs.length ? 'নিখুঁত হিসাব! তুমি মোলারিটির মাস্টার! 🌟' : 'সব প্রশ্ন শেষ করেছো, দারুণ খেলেছো! 👏') : 'সূত্রগুলো একবার দেখে নিয়ে আবার চেষ্টা করো! 💪';
+    $('finalScore').textContent = score; $('eRight').textContent = right + (prac ? '' : '/' + asked); $('eAcc').textContent = (prac ? '—' : (asked ? Math.round(right / asked * 100) : 0) + '%'); $('eStreak').textContent = bestCombo;
+    const ul = $('missList'); ul.replaceChildren(); wrongs.slice(0, 20).forEach(w => { const li = document.createElement('li'); li.textContent = w.text + '  →  ' + w.ans + ' ' + w.unit; ul.appendChild(li); });
+    $('missBox').hidden = !wrongs.length; show('endView');
+}
+$('startBtn').addEventListener('click', () => startGame(false)); $('resumeBtn').addEventListener('click', () => startGame(true)); $('againBtn').addEventListener('click', () => startGame(false));
+const toMenu = () => { clearInterval(tick); clearTimeout(advTimer); renderSetup(); show('startView'); };
+$('menuBtn').addEventListener('click', toMenu); $('endMenuBtn').addEventListener('click', toMenu);
+document.addEventListener('keydown', e => {
+    if ($('playView').hidden || e.ctrlKey || e.metaKey) return; const k = e.key;
+    if (k === 'Enter') { if (document.activeElement && document.activeElement.tagName === 'BUTTON' && document.activeElement !== $('okKey')) return; e.preventDefault(); submit(); }
+    else if (/^[0-9.()]$/.test(k)) press(k); else if (k === '+') press('+'); else if (k === '-') press('−'); else if (k === '*') press('×'); else if (k === '/') { e.preventDefault(); press('÷'); }
+    else if (k === '=') press('='); else if (k === 'Backspace') press('⌫'); else if (k === 'Escape') press('C');
+});
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; } });
+renderSetup(); show('startView');
+</script>
 </body>
 </html>
