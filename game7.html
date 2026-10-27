@@ -2,79 +2,804 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>রিঅ্যাকশন চেইন রিয়্যাক্টর</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0c0504">
+    <title>রিঅ্যাকশন চেইন রিয়্যাক্টর | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            let t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #10b981; --danger: #ef4444; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #f8fafc; text-align: center; padding: 20px; }
-        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #334155; color: white; border-radius: 10px; text-decoration: none; font-weight: bold; }
-        .reactor-card { max-width: 600px; margin: 60px auto; background: var(--card); padding: 30px; border-radius: 25px; border: 2px solid var(--accent); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
-        .scoreboard { display: flex; justify-content: space-around; margin-bottom: 20px; font-size: 1.2rem; background: #0f172a; padding: 15px; border-radius: 12px; }
-        .reaction-display { font-size: 2.2rem; margin: 30px 0; padding: 30px; background: #334155; border-radius: 15px; color: var(--accent); font-weight: bold; }
-        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #334155; border: none; color: white; border-radius: 12px; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
-        .btn:hover { background: var(--accent); color: var(--bg); transform: scale(1.02); }
+        /* এই গেমের থিম: ইমবার / লাভা (কমলা-লাল-অ্যাম্বার), যাতে অন্য গেমের নীল-বেগুনি থেকে আলাদা হয় */
+        :root {
+            --bg-color: #fff5ea; --card-bg: rgba(255,255,255,.82); --card-solid: #fff;
+            --text-color: #2a1205; --text-muted: #7c5a44; --border-color: rgba(124,45,18,.16);
+            --shadow: 0 10px 30px -5px rgba(124,45,18,.16); --section-border: rgba(234,88,12,.38);
+            --gradient-primary: linear-gradient(135deg,#ea580c,#dc2626); --gradient-glow: rgba(234,88,12,.25);
+            --grid-line: rgba(124,45,18,.06); --blob-opacity: .24; --good: #15803d; --bad: #be123c; --gold: #b45309; --accent: #c2410c;
+            --tint: rgba(234,88,12,.09);
+        }
+        [data-theme="dark"] {
+            --bg-color: #0c0504; --card-bg: rgba(30,14,9,.7); --card-solid: #170a06;
+            --text-color: #fff4e8; --text-muted: #c9a68f; --border-color: rgba(255,190,150,.13);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,.75); --section-border: rgba(251,146,60,.42);
+            --gradient-primary: linear-gradient(135deg,#fb923c,#ef4444); --gradient-glow: rgba(249,115,22,.32);
+            --grid-line: rgba(255,170,110,.05); --blob-opacity: .4; --good: #34d399; --bad: #fb7185; --gold: #fbbf24; --accent: #fb923c;
+            --tint: rgba(251,146,60,.09);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: 18px 16px 64px; font-family: 'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;
+            background: var(--bg-color); color: var(--text-color); transition: background .4s, color .4s; animation: pageIn .6s ease both; }
+        /* body তে filter/transform নয়, নইলে fixed জিনিস ভাসে না */
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+        .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-opacity); animation: drift 26s ease-in-out infinite alternate; }
+        .b1 { width: 480px; height: 480px; background: #ea580c; top: -150px; left: -120px; }
+        .b2 { width: 560px; height: 560px; background: #b91c1c; bottom: -220px; right: -160px; animation-duration: 32s; }
+        .b3 { width: 300px; height: 300px; background: #f59e0b; top: 40%; right: -100px; animation-duration: 22s; }
+        @keyframes drift { to { transform: translate(60px,50px) scale(1.15); } }
+        .grid-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: repeating-linear-gradient(45deg,var(--grid-line) 0 1px,transparent 1px 26px); -webkit-mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); mask-image: radial-gradient(ellipse at center,#000 30%,transparent 78%); }
+        .wrap { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+
+        .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; padding: 10px 14px; border-radius: 20px; background: var(--card-bg); border: 1.5px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .btn-s { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 13px; font-family: inherit; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1px solid var(--border-color); transition: transform .25s, border-color .25s; }
+        .btn-s:hover { transform: translateY(-2px); border-color: rgba(251,146,60,.7); }
+        .top-r { display: flex; gap: 8px; }
+        .icon-btn { width: 40px; height: 40px; padding: 0; justify-content: center; font-size: 16px; }
+        a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid #fbbf24; outline-offset: 2px; }
+
+        .card { position: relative; overflow: hidden; padding: 34px 26px 28px; border-radius: 28px; background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .card::before { content: ''; position: absolute; top: -90px; right: -70px; width: 240px; height: 240px; pointer-events: none; background: radial-gradient(circle,var(--gradient-glow),transparent 70%); }
+        .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; pointer-events: none; opacity: .9; background: repeating-linear-gradient(-45deg,#f59e0b 0 11px,#1a0c07 11px 22px); }
+        .card > section { position: relative; }
+        h1 { margin: 0 0 6px; text-align: center; font-size: clamp(1.55rem,5vw,2.05rem); font-weight: 800; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { margin: 0 0 20px; text-align: center; font-size: 15px; font-weight: 500; color: var(--text-muted); }
+        [hidden] { display: none !important; }
+        sub { font-size: .72em; line-height: 0; }
+
+        /* শুরুর স্ক্রিন */
+        .label { margin: 18px 0 8px; font-size: 14px; font-weight: 800; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { flex: 1 1 0; min-width: 96px; font-family: inherit; padding: 11px 12px; border-radius: 16px; cursor: pointer; text-align: center; color: var(--text-muted); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s; }
+        .chips.two .chip { flex: 1 1 calc(50% - 8px); }
+        .chip b { display: block; font-size: 15px; font-weight: 800; color: var(--text-color); }
+        .chip small { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; }
+        .chip:hover { transform: translateY(-2px); border-color: rgba(251,146,60,.6); }
+        .chip.on { border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .chip.on b, .chip.on small { color: #fff; }
+        .sw-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 14.5px; font-weight: 600; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { position: absolute; inset: 0; z-index: 2; margin: 0; opacity: 0; cursor: pointer; }
+        .switch .track { position: absolute; inset: 0; border-radius: 20px; background: var(--border-color); transition: background .25s; }
+        .switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: transform .25s; }
+        .switch input:checked ~ .track { background: var(--gradient-primary); }
+        .switch input:checked ~ .track::after { transform: translateX(20px); }
+        .switch input:focus-visible ~ .track { outline: 3px solid #fbbf24; outline-offset: 2px; }
+        .big { display: block; width: 100%; margin-top: 18px; padding: 15px; border: none; border-radius: 16px; font-family: inherit; font-size: 17px; font-weight: 800; color: #fff; cursor: pointer; background: var(--gradient-primary); transition: transform .25s, box-shadow .25s; }
+        .big:hover { transform: translateY(-2px); box-shadow: 0 12px 26px var(--gradient-glow); }
+        .big.ghost { color: var(--text-color); background: transparent; border: 1.5px solid var(--section-border); }
+        .rules { margin: 18px 0 0; padding: 14px 16px; border-radius: 16px; font-size: 13.5px; line-height: 1.8; font-weight: 500; color: var(--text-muted); background: var(--card-solid); border: 1px dashed var(--border-color); }
+        .best-line { margin-top: 14px; text-align: center; font-size: 14px; font-weight: 700; color: var(--gold); }
+        .lib { margin-top: 16px; border-radius: 16px; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .lib summary { padding: 13px 16px; font-size: 14px; font-weight: 800; cursor: pointer; }
+        .lib .inner { padding: 0 16px 14px; max-height: 320px; overflow-y: auto; }
+        .lib h4 { margin: 12px 0 6px; font-size: 13px; font-weight: 800; color: var(--accent); }
+        .lib ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .lib li { padding: 7px 10px; border-radius: 10px; font-size: 13px; font-weight: 600; line-height: 1.6; background: var(--tint); }
+        .lib li i { display: block; font-style: normal; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+        /* খেলার স্ক্রিন */
+        .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 12px; }
+        .stat { padding: 9px 6px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .stat small { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .stat b { display: block; margin-top: 2px; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .stat.best b { color: var(--gold); }
+        .rods { letter-spacing: 2px; color: var(--accent); }
+        .rods .lost { opacity: .3; }
+        .core { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 12.5px; font-weight: 800; color: var(--text-muted); }
+        .core .bar { flex: 1; height: 12px; border-radius: 10px; overflow: hidden; background: var(--border-color); }
+        .core .bar span { display: block; height: 100%; width: 0; border-radius: 10px; background: linear-gradient(90deg,#fbbf24,#f97316,#ef4444); transition: width .4s; }
+        .core .mult { min-width: 92px; text-align: right; color: var(--accent); }
+        .core.hot .mult { color: var(--bad); animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: .55; } }
+        .timer { height: 8px; margin-bottom: 14px; border-radius: 8px; overflow: hidden; background: var(--border-color); }
+        .timer span { display: block; height: 100%; width: 100%; border-radius: 8px; background: var(--gradient-primary); transition: background .3s; }
+        .timer.low span { background: linear-gradient(90deg,#fb7185,#f59e0b); }
+        .qmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .tag { padding: 3px 12px; border-radius: 20px; color: var(--accent); background: var(--tint); border: 1px solid var(--section-border); }
+
+        .chain { display: flex; flex-direction: column; margin: 4px 0 14px; }
+        .node { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 14px; border-radius: 14px; background: var(--card-solid); border: 1.5px solid var(--border-color); transition: border-color .25s, box-shadow .25s, background .25s; }
+        .node b { font-size: 17px; font-weight: 800; word-break: break-word; }
+        .node small { font-size: 12.5px; font-weight: 600; color: var(--text-muted); text-align: right; }
+        .node.hid { justify-content: center; border-style: dashed; color: var(--text-muted); }
+        .node.hid b { color: var(--text-muted); }
+        .node.start { border-color: rgba(251,191,36,.6); }
+        .node.done { border-color: rgba(52,211,153,.55); }
+        .node.act { border-color: var(--accent); box-shadow: 0 0 0 3px var(--gradient-glow), inset 0 0 18px var(--gradient-glow); animation: pulse 1.4s ease-in-out infinite; }
+        .node.sel { border-color: #fbbf24; box-shadow: 0 0 0 3px rgba(251,191,36,.3); }
+        .node.flash { animation: flashOk .7s; }
+        @keyframes pulse { 50% { box-shadow: 0 0 0 6px transparent, inset 0 0 26px var(--gradient-glow); } }
+        @keyframes flashOk { 0% { background: rgba(52,211,153,.4); } 100% { background: var(--card-solid); } }
+        button.node { width: 100%; font-family: inherit; color: var(--text-color); text-align: left; cursor: pointer; }
+        button.node.hid { text-align: center; }
+        .link { position: relative; min-height: 34px; margin: 0 0 0 26px; padding: 6px 0 6px 20px; border-left: 3px solid rgba(251,146,60,.55); font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; }
+        .link::after { content: '▾'; position: absolute; left: -9px; bottom: -8px; font-size: 14px; line-height: 1; color: var(--accent); }
+        .link .lt { display: inline-block; padding: 3px 11px; border-radius: 10px; line-height: 1.5; color: var(--text-color); background: var(--tint); border: 1px solid var(--section-border); }
+        .link.hid { border-left-style: dashed; }
+        .link.hid .lt { color: var(--text-muted); border-style: dashed; background: transparent; }
+        .link.act { border-left-style: dashed; border-left-color: var(--accent); }
+        .link.act .lt { color: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+
+        .ask { margin-bottom: 14px; padding: 14px; border-radius: 18px; text-align: center; font-size: 15.5px; font-weight: 800; line-height: 1.6; color: var(--accent); background: var(--tint); border: 1.5px solid var(--section-border); }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .opt { position: relative; padding: 18px 10px 14px; border-radius: 16px; font-family: inherit; font-size: 15px; font-weight: 800; line-height: 1.5; cursor: pointer; color: var(--text-color); background: var(--card-solid); border: 1.5px solid var(--border-color); transition: transform .2s, border-color .2s, background .2s, box-shadow .2s, opacity .2s; }
+        .opt b { display: block; font-size: 17px; font-weight: 800; word-break: break-word; }
+        .opt small { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .opt kbd { position: absolute; top: 6px; left: 9px; font-family: inherit; font-size: 11px; font-weight: 700; color: var(--text-muted); }
+        .opt:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(251,146,60,.8); box-shadow: 0 8px 20px var(--gradient-glow); }
+        .opt:disabled { cursor: default; }
+        .opt.used { opacity: .35; }
+        .opt.right { color: #fff; border-color: transparent; background: linear-gradient(135deg,#047857,#10b981); box-shadow: 0 8px 22px rgba(16,185,129,.35); }
+        .opt.right b, .opt.right small { color: #fff; }
+        .opt.wrong { color: #fff; border-color: transparent; background: linear-gradient(135deg,#be123c,#f43f5e); animation: shake .35s; }
+        .opt.wrong b, .opt.wrong small { color: #fff; }
+        @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .fb { margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: 14px; font-weight: 600; line-height: 1.7; display: none; }
+        .fb.show { display: block; }
+        .fb.ok { color: var(--good); background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.35); }
+        .fb.no { color: var(--bad); background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.35); }
+        .fb.info { color: var(--accent); background: var(--tint); border: 1px solid var(--section-border); }
+        .fb .note { display: block; margin-top: 4px; color: var(--text-color); font-weight: 500; }
+        .fb .note + .note { margin-top: 6px; }
+        .pop { position: absolute; left: 50%; top: 150px; z-index: 5; font-size: 1.4rem; font-weight: 800; color: var(--good); pointer-events: none; opacity: 0; transform: translate(-50%,0); text-align: center; white-space: nowrap; }
+        .pop.go { animation: pop .9s ease-out; }
+        @keyframes pop { 0% { opacity: 0; transform: translate(-50%,10px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%,-44px); } }
+
+        /* শেষ স্ক্রিন */
+        .end-score { margin: 4px 0 2px; text-align: center; font-size: 3.6rem; font-weight: 800; line-height: 1.1; color: var(--accent); }
+        .end-label { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); }
+        .end-title { margin: 0 0 6px; text-align: center; font-size: 1.9rem; font-weight: 800; }
+        .end-msg { margin: 0 0 14px; text-align: center; font-size: 15px; font-weight: 500; line-height: 1.7; color: var(--text-muted); }
+        .tiles { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 16px 0; }
+        .tile { padding: 12px 4px; border-radius: 14px; text-align: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .tile small { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .tile b { font-size: 18px; font-weight: 800; }
+        .miss h3 { margin: 18px 0 8px; font-size: 15px; font-weight: 800; }
+        .miss ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 210px; overflow-y: auto; }
+        .miss li { padding: 9px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600; line-height: 1.7; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .miss li b { color: var(--good); }
+        .credit-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500; display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #a8806a; background: rgba(12,5,4,.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,190,150,.08); }
+        [data-theme="light"] .credit-bar { background: rgba(255,255,255,.9); color: #6b4a38; border-top-color: rgba(124,45,18,.12); }
+        .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#fbbf24,#ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        @media (max-width: 480px) { .card { padding: 30px 16px 22px; } .stats { gap: 6px; } .back-long { display: none; } .tiles { grid-template-columns: repeat(2,1fr); } .node small { display: none; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
     </style>
 </head>
 <body>
+    <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+    <div class="grid-bg"></div>
 
-<a href="games.html" class="back-btn">← ফিরে যান</a>
+    <div class="wrap">
+        <header class="top">
+            <a class="btn-s" href="games.html">← <span class="back-long">গেম হাব</span></a>
+            <div class="top-r">
+                <button type="button" class="btn-s icon-btn" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+                <button type="button" class="btn-s icon-btn" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+            </div>
+        </header>
 
-<div class="reactor-card" id="game-container">
-    <h1>🔥 রিঅ্যাকশন চেইন রিয়্যাক্টর</h1>
-    <div class="scoreboard">
-        <div>চেইন লেভেল: <span id="chain-count" style="color: var(--accent);">1</span></div>
-        <div>মোট স্কোর: <span id="score" style="color: var(--accent);">0</span></div>
+        <main class="card">
+            <!-- শুরু -->
+            <section id="startView">
+                <h1>রিঅ্যাকশন চেইন রিয়্যাক্টর ☢️</h1>
+                <p class="sub">একটার পর একটা বিক্রিয়া জুড়ে পুরো চেইন সম্পূর্ণ করো — কোর যেন গলে না যায়!</p>
+
+                <div class="label">রিয়্যাক্টরের মোড</div>
+                <div class="chips two" id="modeRow" role="group" aria-label="মোড"></div>
+
+                <div class="label">চেইনের দৈর্ঘ্য</div>
+                <div class="chips" id="lvRow" role="group" aria-label="লেভেল"></div>
+
+                <div class="sw-row" style="margin-top:12px;"><span>⏱ সময়ের সীমা</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="track"></span></label></div>
+
+                <div class="rules" id="rules"></div>
+                <button type="button" class="big" id="startBtn">রিয়্যাক্টর চালু করো ⚡</button>
+                <div class="best-line" id="bestLine"></div>
+
+                <details class="lib">
+                    <summary>📚 সব বিক্রিয়ার তালিকা (পড়ে নিতে পারো)</summary>
+                    <div class="inner" id="libBox"></div>
+                </details>
+            </section>
+
+            <!-- খেলা -->
+            <section id="playView" hidden>
+                <div class="stats">
+                    <div class="stat"><small>স্কোর</small><b id="score">০</b></div>
+                    <div class="stat best"><small>সেরা</small><b id="best">০</b></div>
+                    <div class="stat"><small>চেইন ✅</small><b id="chains">০</b></div>
+                    <div class="stat"><small>সেফটি রড</small><b class="rods" id="rods" aria-label="সেফটি রড"></b></div>
+                </div>
+                <div class="core" id="core"><span>🌡 কোর তাপ</span><div class="bar"><span id="heat"></span></div><span class="mult" id="mult">×১</span></div>
+                <div class="timer" id="timerBar" role="progressbar" aria-label="বাকি সময়" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="timerFill"></span></div>
+                <div class="qmeta"><span class="tag" id="qTag"></span><span id="qNo"></span></div>
+                <div class="chain" id="chain" aria-label="বিক্রিয়া চেইন"></div>
+                <div class="ask" id="ask" aria-live="polite"></div>
+                <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
+                <div class="fb" id="fb" aria-live="polite"></div>
+                <button type="button" class="big" id="nextBtn" hidden>পরের ধাপ →</button>
+                <div class="pop" id="pop"></div>
+            </section>
+
+            <!-- শেষ -->
+            <section id="endView" hidden>
+                <h2 class="end-title" id="endTitle">☢️ কোর গলে গেছে!</h2>
+                <p class="end-msg" id="endMsg"></p>
+                <div class="end-label">অর্জিত স্কোর</div>
+                <div class="end-score" id="finalScore">০</div>
+                <div class="tiles">
+                    <div class="tile"><small>সম্পূর্ণ চেইন</small><b id="eChains">০</b></div>
+                    <div class="tile"><small>নিখুঁত চেইন</small><b id="ePerfect">০</b></div>
+                    <div class="tile"><small>নির্ভুলতা</small><b id="eAcc">০%</b></div>
+                    <div class="tile"><small>সেরা স্ট্রিক</small><b id="eStreak">০</b></div>
+                </div>
+                <div class="miss" id="missBox" hidden><h3>📖 যেগুলো ভুল হয়েছিল</h3><ul id="missList"></ul></div>
+                <button type="button" class="big" id="againBtn">আবার চালু করো 🔄</button>
+                <button type="button" class="big ghost" id="menuBtn">মোড / লেভেল বদলাও</button>
+            </section>
+        </main>
     </div>
-    <div class="reaction-display" id="reaction">?</div>
-    <div id="options"></div>
-</div>
 
-<script>
-    let chain = 1, score = 0;
-    const reactions = [
-        { r: "CH4 + Cl2 (UV)", p: "CH3Cl", o: ["CH3Cl", "CH2Cl2", "CCl4", "C2H6"] },
-        { r: "CH2=CH2 + H2O", p: "CH3CH2OH", o: ["CH3CH3", "CH3CH2OH", "CH3CHO", "CH4"] },
-        { r: "CH3CHO + [O]", p: "CH3COOH", o: ["CH3OH", "CH3CH2OH", "CH3COOH", "CH4"] },
-        { r: "CH3OH + HCl", p: "CH3Cl", o: ["CH3Cl", "CH3OCH3", "CH3COOH", "CH4"] }
-    ];
+    <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 
-    function showGameOver(finalScore) {
-        let motivation = (finalScore <= 30) ? 
-            "হতাশ হয়ো না! রসায়ন একটু জটিল, আবার চেষ্টা করো—তুমি নিশ্চয়ই পারবে! 💪" : 
-            "চমৎকার খেলেছ! তোমার রসায়নের জ্ঞান দারুণ!";
+    <script>
+        const $ = id => document.getElementById(id);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+        const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+        const fh = s => String(s).replace(/(\d+)/g, '<sub>$1</sub>');   // রাসায়নিক সংকেতে সংখ্যা নিচে
+        const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-        document.getElementById('game-container').innerHTML = `
-            <h1 style="color:var(--danger)">⚠️ চেইন ভেঙে গেছে!</h1>
-            <div style="font-size: 1.2rem; margin: 20px 0;">${motivation}</div>
-            <div style="font-size: 2rem; margin: 20px 0;">মোট স্কোর: ${finalScore}</div>
-            <button class="btn" style="background:var(--accent)" onclick="location.reload()">আবার শুরু করো 🔄</button>
-            <a href="games.html" class="btn" style="text-decoration:none;">ড্যাশবোর্ডে ফিরে যান</a>
-        `;
-    }
+        /* ============================================================
+           ডেটা ইঞ্জিন
+           C = যৌগ (সংকেত → নাম, পরিবার g: m=১ কার্বন, e=২ কার্বন, a=বেনজিন পরিবার)
+           E = বিক্রিয়া-ধাপ (থেকে → হয়, বিকারক-আইডি rid, লেখা, ধরন, ব্যাখ্যা)
+           চেইন বানানো হয় E-এর গ্রাফের পথ থেকে, তাই প্রতিটি ধাপের product-ই পরের ধাপের reactant।
+           alt = ওই ধাপে যে বিকারকও ঠিক কাজ করত (ভুল অপশনে আসবে না)
+           also = সহ-উৎপাদ যৌগ (ভুল অপশনে আসবে না)
+           ============================================================ */
+        const C = {
+            'CH4': { n: 'মিথেন', g: 'm' }, 'CH3Cl': { n: 'ক্লোরোমিথেন', g: 'm' }, 'CH3OH': { n: 'মিথানল', g: 'm' },
+            'HCHO': { n: 'মিথান্যাল (ফর্মালডিহাইড)', g: 'm' }, 'HCOOH': { n: 'মিথানোয়িক অ্যাসিড', g: 'm' },
+            'C2H6': { n: 'ইথেন', g: 'e' }, 'C2H5Cl': { n: 'ক্লোরোইথেন', g: 'e' }, 'C2H4': { n: 'ইথিন', g: 'e' },
+            'C2H5OH': { n: 'ইথানল', g: 'e' }, 'CH3CHO': { n: 'ইথান্যাল', g: 'e' }, 'CH3COOH': { n: 'ইথানোয়িক অ্যাসিড', g: 'e' },
+            'CH3COOC2H5': { n: 'ইথাইল ইথানোয়েট', g: 'e' }, 'CH3COONa': { n: 'সোডিয়াম ইথানোয়েট', g: 'e' },
+            'C2H4Br2': { n: '১,২-ডাইব্রোমোইথেন', g: 'e' }, 'C2H2': { n: 'ইথাইন', g: 'e' }, '(CH2CH2)n': { n: 'পলিইথিন', g: 'e' },
+            'C6H6': { n: 'বেনজিন', g: 'a' }, 'C6H5NO2': { n: 'নাইট্রোবেনজিন', g: 'a' }, 'C6H5NH2': { n: 'অ্যানিলিন', g: 'a' },
+            'C6H5Cl': { n: 'ক্লোরোবেনজিন', g: 'a' }, 'C6H12': { n: 'সাইক্লোহেক্সেন', g: 'a' },
+            'C6H5N2Cl': { n: 'বেনজিনডায়াজোনিয়াম ক্লোরাইড', g: 'a' }, 'C6H5OH': { n: 'ফেনল', g: 'a' }
+        };
+        const E = [];
+        const e = (from, to, rid, txt, ty, note, o) => E.push({ from, to, rid, txt, ty, note, also: (o && o.also) || [], alt: (o && o.alt) || [] });
 
-    function play() {
-        let item = reactions[Math.floor(Math.random() * reactions.length)];
-        document.getElementById('reaction').innerText = item.r + " → ?";
-        let grid = document.getElementById('options');
-        grid.innerHTML = '';
-        
-        item.o.sort(() => Math.random() - 0.5).forEach(opt => {
-            let b = document.createElement('button');
-            b.className = 'btn'; b.innerText = opt;
-            b.onclick = () => {
-                if(opt === item.p) {
-                    score += (chain * 10);
-                    chain++;
-                    document.getElementById('chain-count').innerText = chain;
-                    document.getElementById('score').innerText = score;
-                    play();
-                } else {
-                    showGameOver(score);
-                }
+        e('CH4', 'CH3Cl', 'Cl2UV', 'Cl2 (অতিবেগুনি আলো)', 'প্রতিস্থাপন', 'মুক্ত-মূলক প্রতিস্থাপন: CH4 + Cl2 → CH3Cl + HCl। একটি H-এর জায়গায় Cl বসে।');
+        e('CH3Cl', 'CH3OH', 'aqKOH', 'জলীয় KOH, তাপ', 'নিউক্লিওফিলিক প্রতিস্থাপন', 'OH⁻ আয়ন Cl-কে সরিয়ে বসে: CH3Cl + KOH → CH3OH + KCl। (CH3Cl-এ β-H নেই, তাই অপসারণ হয় না।)', { alt: ['NaOH', 'alcKOH'] });
+        e('CH3OH', 'HCHO', 'Cu573', 'Cu, ৫৭৩ K (বায়ুর উপস্থিতিতে)', 'জারণ (ডিহাইড্রোজেনেশন)', 'প্রাইমারি অ্যালকোহল আংশিক জারিত হয়ে অ্যালডিহাইড দেয়: CH3OH → HCHO + H2।', { alt: ['oxid'] });
+        e('HCHO', 'HCOOH', 'oxid', '[O]: অম্লীয় K2Cr2O7 বা KMnO4', 'জারণ', 'অ্যালডিহাইড আরও জারিত হয়ে কার্বক্সিলিক অ্যাসিড দেয়: HCHO → HCOOH।');
+        e('C2H6', 'C2H5Cl', 'Cl2UV', 'Cl2 (অতিবেগুনি আলো)', 'প্রতিস্থাপন', 'অ্যালকেনের মুক্ত-মূলক প্রতিস্থাপন: C2H6 + Cl2 → C2H5Cl + HCl।');
+        e('C2H5Cl', 'C2H5OH', 'aqKOH', 'জলীয় KOH, তাপ', 'নিউক্লিওফিলিক প্রতিস্থাপন', 'জলীয় KOH-এ প্রতিস্থাপন হয়, অ্যালকোহল পাওয়া যায়: C2H5Cl + KOH → C2H5OH + KCl।', { alt: ['NaOH'] });
+        e('C2H5Cl', 'C2H4', 'alcKOH', 'অ্যালকোহলীয় KOH, তাপ', 'অপসারণ (ডিহাইড্রোহ্যালোজেনেশন)', 'অ্যালকোহলীয় KOH-এ HCl বেরিয়ে যায়, C=C তৈরি হয়: C2H5Cl → C2H4 + HCl।');
+        e('C2H4', 'C2H5OH', 'hydr', 'H2O (বাষ্প), H3PO4, উচ্চচাপ', 'সংযোজন (হাইড্রেশন)', 'C=C-তে জল যুক্ত হয়: C2H4 + H2O → C2H5OH।');
+        e('C2H5OH', 'C2H4', 'dehyd', 'গাঢ় H2SO4, ৪৪৩ K', 'অপসারণ (ডিহাইড্রেশন)', 'অ্যালকোহল থেকে জল বেরিয়ে অ্যালকিন হয়: C2H5OH → C2H4 + H2O।');
+        e('C2H5OH', 'CH3CHO', 'Cu573', 'Cu, ৫৭৩ K (বায়ুর উপস্থিতিতে)', 'জারণ (ডিহাইড্রোজেনেশন)', 'প্রাইমারি অ্যালকোহল আংশিক জারিত হয়ে অ্যালডিহাইড দেয়: C2H5OH → CH3CHO + H2।', { alt: ['oxid'] });
+        e('CH3CHO', 'CH3COOH', 'oxid', '[O]: অম্লীয় K2Cr2O7 বা KMnO4', 'জারণ', 'ইথান্যাল জারিত হয়ে ইথানোয়িক অ্যাসিড (অ্যাসিটিক অ্যাসিড) দেয়।');
+        e('CH3CHO', 'C2H5OH', 'H2Ni', 'H2, Ni', 'বিজারণ (হাইড্রোজেনেশন)', 'C=O বন্ধন বিজারিত হয়ে প্রাইমারি অ্যালকোহল দেয়: CH3CHO + H2 → C2H5OH।', { alt: ['SnHCl'] });
+        e('CH3COOH', 'CH3COOC2H5', 'ester', 'C2H5OH + গাঢ় H2SO4, তাপ', 'এস্টারীকরণ', 'অ্যাসিড + অ্যালকোহল ⇌ এস্টার + জল। গাঢ় H2SO4 প্রভাবক ও জল-শোষক।');
+        e('CH3COOC2H5', 'CH3COONa', 'NaOH', 'NaOH দ্রবণ, তাপ (ক্ষারীয় আর্দ্রবিশ্লেষণ)', 'সাবানীকরণ', 'এস্টার + NaOH → সোডিয়াম ইথানোয়েট + ইথানল। (ইথানলও সহ-উৎপাদ হিসেবে তৈরি হয়।)', { also: ['C2H5OH'] });
+        e('CH3COOH', 'CH3COONa', 'NaOH', 'NaOH দ্রবণ', 'নিরপেক্ষীকরণ', 'অ্যাসিড + ক্ষার → লবণ + জল: CH3COOH + NaOH → CH3COONa + H2O।');
+        e('CH3COONa', 'CH4', 'sodalime', 'সোডালাইম (NaOH + CaO), তাপ', 'ডিকার্বক্সিলেশন', 'কার্বক্সিলেট লবণ সোডালাইমের সাথে গরম করলে CO2 হারিয়ে এক কার্বন কম অ্যালকেন দেয় (সাথে Na2CO3 হয়)।');
+        e('C2H4', 'C2H6', 'H2Ni', 'H2, Ni, ৪৭৩ K', 'সংযোজন (হাইড্রোজেনেশন)', 'অ্যালকিন + H2 → অ্যালকেন: C2H4 + H2 → C2H6।');
+        e('C2H4', 'C2H4Br2', 'Br2', 'Br2 (CCl4-এ দ্রবণ)', 'সংযোজন (হ্যালোজেনেশন)', 'C=C-তে Br2 যুক্ত হয়, লালচে রং মিলিয়ে যায়: C2H4 + Br2 → C2H4Br2।');
+        e('C2H4', '(CH2CH2)n', 'poly', 'উচ্চচাপ, তাপ ও প্রভাবক', 'পলিমারাইজেশন', 'বহু ইথিন অণু জুড়ে পলিইথিন (পলিথিন) তৈরি হয়।');
+        e('C2H4Br2', 'C2H2', 'alcKOH', 'অতিরিক্ত অ্যালকোহলীয় KOH, তাপ', 'অপসারণ (ডিহাইড্রোহ্যালোজেনেশন)', 'ডাইহ্যালাইড থেকে দুই ধাপে দুই অণু HBr বেরিয়ে গিয়ে C≡C তৈরি হয়।');
+        e('C2H2', 'C2H4', 'lindlar', 'H2, Pd/BaSO4 (লিন্ডলার প্রভাবক)', 'আংশিক হাইড্রোজেনেশন', 'বিষাক্ত করা প্রভাবকে অ্যালকাইন কেবল অ্যালকিন পর্যন্ত বিজারিত হয়।', { alt: ['H2Ni'] });
+        e('C2H2', 'C6H6', 'redhot', 'লোহিততপ্ত লোহার নল, ৮৭৩ K', 'ট্রাইমারাইজেশন', 'তিন অণু ইথাইন জুড়ে এক অণু বেনজিন হয়: 3C2H2 → C6H6।');
+        e('C2H2', 'CH3CHO', 'hg', 'লঘু H2SO4 + HgSO4, ৩৩৩ K', 'হাইড্রেশন (কুচেরভ বিক্রিয়া)', 'প্রথমে অস্থায়ী ভিনাইল অ্যালকোহল হয়, তারপর পুনর্বিন্যাসে ইথান্যাল তৈরি হয়।');
+        e('C6H6', 'C6H5NO2', 'mixacid', 'গাঢ় HNO3 + গাঢ় H2SO4, ৩৩৩ K', 'নাইট্রেশন (ইলেকট্রোফিলিক প্রতিস্থাপন)', 'নাইট্রোনিয়াম আয়ন (NO2⁺) বেনজিন রিংয়ে H-এর জায়গায় বসে।');
+        e('C6H5NO2', 'C6H5NH2', 'SnHCl', 'Sn + HCl', 'বিজারণ', 'নাইট্রো গ্রুপ (–NO2) বিজারিত হয়ে অ্যামিনো গ্রুপ (–NH2) হয়।', { alt: ['H2Ni'] });
+        e('C6H6', 'C6H5Cl', 'Cl2Fe', 'Cl2, অনার্দ্র FeCl3', 'ইলেকট্রোফিলিক প্রতিস্থাপন', 'লুইস অ্যাসিড প্রভাবকে রিংয়ের H-এর জায়গায় Cl বসে। (UV আলোতে হলে সংযোজন ঘটে, ক্লোরোবেনজিন হয় না।)');
+        e('C6H6', 'C6H12', 'H2Ni', 'H2, Ni, ৪৭৩ K', 'সংযোজন (হাইড্রোজেনেশন)', 'উচ্চ তাপে Ni প্রভাবকে বেনজিনের রিং সম্পৃক্ত হয়ে সাইক্লোহেক্সেন দেয়।');
+        e('C6H5NH2', 'C6H5N2Cl', 'diazo', 'NaNO2 + HCl, ২৭৩–২৭৮ K', 'ডায়াজোটাইজেশন', 'হিমশীতল অবস্থায় প্রাইমারি অ্যারোমেটিক অ্যামিন থেকে ডায়াজোনিয়াম লবণ তৈরি হয়।');
+        e('C6H5N2Cl', 'C6H5OH', 'hydrD', 'H2O, উষ্ণ করা', 'আর্দ্রবিশ্লেষণ', 'ডায়াজোনিয়াম লবণ গরম জলে ভেঙে N2 ছাড়ে ও ফেনল দেয়।');
+
+        const OUT = {}; E.forEach(x => (OUT[x.from] = OUT[x.from] || []).push(x));
+        const hasEdge = (a, b) => E.some(x => x.from === a && x.to === b);
+
+        /* সব সরল পথ (পুনরাবৃত্তি ছাড়া) — দৈর্ঘ্য L */
+        const PATHS = {};
+        function pathsOf(L) {
+            if (PATHS[L]) return PATHS[L];
+            const res = [];
+            Object.keys(C).forEach(s => {
+                (function dfs(node, seen, acc) {
+                    if (acc.length === L) { res.push(acc.slice()); return; }
+                    (OUT[node] || []).forEach(x => {
+                        if (seen.has(x.to)) return;
+                        seen.add(x.to); acc.push(x);
+                        dfs(x.to, seen, acc);
+                        acc.pop(); seen.delete(x.to);
+                    });
+                })(s, new Set([s]), []);
+            });
+            return (PATHS[L] = res);
+        }
+        const pathKey = p => p.map(x => x.from + '>' + x.to).join('|');
+        const recent = [];
+        function pickChain(L) {
+            const P = pathsOf(L);
+            let p, tries = 0;
+            do { p = P[Math.floor(Math.random() * P.length)]; tries++; } while (recent.includes(pathKey(p)) && tries < 40);
+            recent.push(pathKey(p)); if (recent.length > 10) recent.shift();
+            return p;
+        }
+
+        /* ভুল অপশন বানানো */
+        function wrongProducts(ed, k) {
+            const sib = (OUT[ed.from] || []).map(x => x.to);
+            const arr = Object.keys(C).filter(f => f !== ed.to && f !== ed.from && !ed.also.includes(f)).map(f => ({
+                f, s: (sib.includes(f) ? 3 : 0) + (C[f].g === C[ed.to].g ? 2 : 0) + Math.random() * 2
+            }));
+            return arr.sort((a, b) => b.s - a.s).slice(0, k).map(x => x.f);
+        }
+        function wrongReagents(ed, k) {
+            const bad = new Set([ed.rid].concat(ed.alt));
+            const seen = new Map();
+            E.forEach(x => { if (!bad.has(x.rid) && !seen.has(x.rid)) seen.set(x.rid, x); });
+            const arr = Array.from(seen.values()).filter(x => x.txt !== ed.txt).map(x => ({
+                x, s: (x.from === ed.from ? 3 : 0) + (C[x.from].g === C[ed.from].g ? 2 : 0) + Math.random() * 2
+            }));
+            return arr.sort((a, b) => b.s - a.s).slice(0, k).map(o => o.x);
+        }
+        function wrongMiddle(nodes, j, k) {
+            const A = nodes[j - 1], B = nodes[j], Cn = nodes[j + 1];
+            const ed = E.find(x => x.from === A && x.to === B);
+            const sib = (OUT[A] || []).map(x => x.to);
+            const arr = Object.keys(C).filter(f => f !== A && f !== B && f !== Cn && !ed.also.includes(f) && !(hasEdge(A, f) && hasEdge(f, Cn))).map(f => ({
+                f, s: (sib.includes(f) ? 3 : 0) + (C[f].g === C[B].g ? 2 : 0) + (E.some(x => x.from === f && C[x.to].g === C[Cn].g) ? 1 : 0) + Math.random() * 2
+            }));
+            return arr.sort((a, b) => b.s - a.s).slice(0, k).map(x => x.f);
+        }
+        const prodOpt = (f, ok) => ({ key: f, ok, html: '<b>' + fh(f) + '</b><small>' + C[f].n + '</small>' });
+        const reagOpt = (x, ok) => ({ key: x.rid, ok, html: '<span>' + fh(x.txt) + '</span>' });
+
+        /* ============================================================
+           খেলার কনফিগ ও অবস্থা
+           ============================================================ */
+        const LV = [
+            { k: 'e', n: 'সহজ', s: '৩ ধাপের চেইন', L: 3, m: 1 },
+            { k: 'm', n: 'মাঝারি', s: '৪ ধাপের চেইন', L: 4, m: 2 },
+            { k: 'h', n: 'কঠিন', s: '৫ ধাপের চেইন', L: 5, m: 3 }
+        ];
+        const MODES = [
+            { k: 'run', ic: '⚡', n: 'চেইন রান', s: 'পরের যৌগ বলো',
+              r: 'প্রতিটি তীরে বিকারক দেওয়া থাকবে — বিক্রিয়ায় কোন যৌগ তৈরি হয় সেটা বলে চেইনটা এগিয়ে নাও।' },
+            { k: 'build', ic: '🔧', n: 'চেইন বিল্ডার', s: 'ঘর সাজাও',
+              r: 'সব বিকারক দেওয়া আছে, কিন্তু যৌগগুলো লুকানো। নিচের যৌগ-তালিকা থেকে বেছে ঘরগুলো ভরো। যেকোনো ঘরে ক্লিক করে আগে সেটা বেছে নেওয়া যায়। ২টি বাড়তি যৌগ আছে!' },
+            { k: 'reag', ic: '🧪', n: 'রিএজেন্ট ম্যাচ', s: 'বিকারক বলো',
+              r: 'চেইনের সব যৌগ দেখা যাবে, কিন্তু তীরের বিকারক/শর্ত ঢাকা। সঠিক বিকারকটি বেছে নাও।' },
+            { k: 'miss', ic: '🔍', n: 'মিসিং লিংক', s: 'মাঝের যৌগ',
+              r: 'চেইনের একটি যৌগ হারিয়ে গেছে! আগে-পরের যৌগ ও বিকারক দেখে মাঝের যৌগটি খুঁজে বের করো।' }
+        ];
+        const LV_BY = {}; LV.forEach(l => LV_BY[l.k] = l);
+        const MODE_BY = {}; MODES.forEach(m => MODE_BY[m.k] = m);
+
+        let mode = sget('chainreactor_mode', 'run'); if (!MODE_BY[mode]) mode = 'run';
+        let lvk = sget('chainreactor_lv', 'm'); if (!LV_BY[lvk]) lvk = 'm';
+        let timerOn = sget('chainreactor_timer', '0') === '1';
+        let soundOn = sget('chainreactor_sound', '1') === '1';
+        const bestKey = (m, l) => 'chainreactor_best_' + m + '_' + l;
+        const getBest = () => parseInt(sget(bestKey(mode, lvk), '0'), 10) || 0;
+
+        let g = null;          // চলমান খেলা
+        let tmr = null;        // সময়ের টাইমার
+
+        /* ---------- শব্দ ---------- */
+        let AC = null;
+        function beep(f, d, type, vol, delay) {
+            if (!soundOn) return;
+            try {
+                AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+                const t = AC.currentTime + (delay || 0), o = AC.createOscillator(), gn = AC.createGain();
+                o.type = type || 'sine'; o.frequency.value = f;
+                gn.gain.setValueAtTime(vol || .08, t); gn.gain.exponentialRampToValueAtTime(.0001, t + d);
+                o.connect(gn); gn.connect(AC.destination); o.start(t); o.stop(t + d);
+            } catch (er) {}
+        }
+        const sfx = {
+            ok() { beep(660, .12); beep(880, .16, 'sine', .08, .1); },
+            no() { beep(180, .3, 'sawtooth', .07); },
+            done() { [523, 659, 784, 1047].forEach((f, i) => beep(f, .2, 'triangle', .08, i * .1)); },
+            over() { beep(220, .3, 'sawtooth', .08); beep(130, .6, 'sawtooth', .07, .28); },
+            tick() { beep(900, .04, 'square', .03); }
+        };
+
+        /* ---------- শুরুর স্ক্রিন ---------- */
+        function paintSound() { $('soundBtn').textContent = soundOn ? '🔔' : '🔕'; }
+        function paintBest() { const b = getBest(); $('bestLine').textContent = b ? '🏆 এই মোড ও লেভেলের সেরা স্কোর: ' + bn(b) : ''; }
+        function paintRules() {
+            $('rules').innerHTML = '<b>' + MODE_BY[mode].ic + ' ' + MODE_BY[mode].n + ':</b> ' + MODE_BY[mode].r + '<br>' +
+                '⬢ ৩টি সেফটি রড। ভুল উত্তর বা সময় শেষ হলে একটি রড গলে যায়, ৩টিই গেলে কোর গলে যায়।<br>' +
+                '🌡 টানা সঠিক উত্তরে কোর তাপ বাড়ে ও স্কোর গুণক (সর্বোচ্চ ×৪) বাড়ে।<br>' +
+                '✅ ভুল ছাড়া পুরো চেইন শেষ করলে বোনাস স্কোর ও একটি রড ফেরত।<br>' +
+                '⌨️ কিবোর্ডে <b>১ ২ ৩ ৪…</b> চেপে বেছে নেওয়া যায়, <b>Enter</b> দিয়ে পরের ধাপে।';
+        }
+        function renderChips() {
+            const mr = $('modeRow'); mr.replaceChildren();
+            MODES.forEach(m => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'chip' + (m.k === mode ? ' on' : '');
+                b.innerHTML = '<b>' + m.ic + ' ' + m.n + '</b><small>' + m.s + '</small>';
+                b.addEventListener('click', () => { mode = m.k; sset('chainreactor_mode', mode); renderChips(); paintBest(); paintRules(); });
+                mr.appendChild(b);
+            });
+            const lr = $('lvRow'); lr.replaceChildren();
+            LV.forEach(l => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'chip' + (l.k === lvk ? ' on' : '');
+                b.innerHTML = '<b>' + l.n + '</b><small>' + l.s + '</small>';
+                b.addEventListener('click', () => { lvk = l.k; sset('chainreactor_lv', lvk); renderChips(); paintBest(); });
+                lr.appendChild(b);
+            });
+        }
+        function renderLib() {
+            const groups = [['m', '১ কার্বন (মিথেন পরিবার)'], ['e', '২ কার্বন (ইথেন / ইথিন / ইথাইন পরিবার)'], ['a', 'বেনজিন পরিবার']];
+            let h = '';
+            groups.forEach(([k, t]) => {
+                h += '<h4>' + t + '</h4><ul>';
+                E.filter(x => C[x.from].g === k).forEach(x => {
+                    h += '<li>' + fh(x.from) + ' → ' + fh(x.to) + ' <i>' + fh(x.txt) + ' · ' + x.ty + '</i></li>';
+                });
+                h += '</ul>';
+            });
+            $('libBox').innerHTML = h;
+        }
+
+        /* ---------- খেলা শুরু ---------- */
+        function show(id) { ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = v !== id); window.scrollTo(0, 0); }
+        function startGame() {
+            g = {
+                mode, lv: LV_BY[lvk], timed: timerOn, score: 0, best: getBest(), streak: 0, bestStreak: 0,
+                chains: 0, perfect: 0, rods: 3, right: 0, wrong: 0, miss: [], over: false, rec: false,
+                chain: null, steps: [], si: 0, locked: false
             };
-            grid.appendChild(b);
+            show('playView');
+            nextChain();
+        }
+        function paintStats() {
+            $('score').textContent = bn(g.score);
+            $('best').textContent = bn(Math.max(g.best, g.score));
+            $('chains').textContent = bn(g.chains);
+            let r = ''; for (let i = 0; i < 3; i++) r += '<span' + (i >= g.rods ? ' class="lost"' : '') + '>⬢</span>';
+            $('rods').innerHTML = r; $('rods').setAttribute('aria-label', bn(g.rods) + 'টি রড বাকি');
+            const m = multi();
+            $('heat').style.width = Math.min(100, g.streak * 10) + '%';
+            $('mult').textContent = m > 1 ? '🔥 ওভারড্রাইভ ×' + bn(m) : '×১';
+            $('core').classList.toggle('hot', m >= 3);
+        }
+        const multi = () => 1 + Math.min(3, Math.floor(g.streak / 3));
+
+        /* ---------- চেইন ও ধাপ ---------- */
+        function nextChain() {
+            stopTimer();
+            const p = pickChain(g.lv.L);
+            const nodes = [p[0].from].concat(p.map(x => x.to));
+            g.chain = { edges: p, nodes };
+            g.cMiss = 0; g.si = 0; g.locked = false;
+            const L = p.length;
+            g.nodeShow = nodes.map(() => false);
+            g.linkShow = p.map(() => false);
+            if (g.mode === 'run') {
+                g.nodeShow[0] = true;
+                g.steps = p.map((ed, i) => ({ kind: 'prod', i, ed }));
+            } else if (g.mode === 'reag') {
+                g.nodeShow = nodes.map(() => true);
+                g.steps = p.map((ed, i) => ({ kind: 'reag', i, ed }));
+            } else if (g.mode === 'miss') {
+                g.nodeShow = nodes.map(() => true);
+                g.linkShow = p.map(() => true);
+                g.steps = [];
+                for (let j = 1; j < L; j++) g.steps.push({ kind: 'node', j });
+            } else { // build
+                g.nodeShow[0] = true;
+                g.linkShow = p.map(() => true);
+                const used = new Set(nodes);
+                const alsoAll = new Set(); p.forEach(x => x.also.forEach(f => alsoAll.add(f)));
+                const fam = C[nodes[nodes.length - 1]].g;
+                const decoy = shuffle(Object.keys(C).filter(f => !used.has(f) && !alsoAll.has(f)).sort((a, b) => ((C[b].g === fam) - (C[a].g === fam)) || (Math.random() - .5))).slice(0, 8).slice(0, 2);
+                g.pool = shuffle(nodes.slice(1).concat(decoy));
+                g.sel = null;
+                g.steps = [{ kind: 'build' }];
+            }
+            g.nStep = g.steps.length;
+            showStep();
+        }
+
+        function renderChain() {
+            const ch = $('chain'); ch.replaceChildren();
+            const act = g.active || {};
+            g.chain.nodes.forEach((f, i) => {
+                const known = g.nodeShow[i];
+                const el = document.createElement(g.mode === 'build' && !known ? 'button' : 'div');
+                if (el.tagName === 'BUTTON') { el.type = 'button'; el.setAttribute('aria-label', 'ঘর ' + bn(i)); el.addEventListener('click', () => { if (!g.locked && !g.nodeShow[i]) { g.sel = i; renderChain(); } }); }
+                el.className = 'node' + (known ? (i === 0 ? ' start' : ' done') : ' hid') + (act.t === 'n' && act.i === i ? ' act' : '') + (g.mode === 'build' && g.sel === i && !known ? ' sel' : '');
+                el.dataset.i = i;
+                el.innerHTML = known ? '<b>' + fh(f) + '</b><small>' + C[f].n + '</small>' : '<b>?</b>';
+                ch.appendChild(el);
+                if (i < g.chain.edges.length) {
+                    const lk = document.createElement('div');
+                    const sh = g.linkShow[i];
+                    lk.className = 'link' + (sh ? '' : ' hid') + (act.t === 'l' && act.i === i ? ' act' : '');
+                    lk.innerHTML = '<span class="lt">' + (sh ? fh(g.chain.edges[i].txt) : '?') + '</span>';
+                    ch.appendChild(lk);
+                }
+            });
+        }
+
+        function startTimer(sec) {
+            stopTimer();
+            if (!g.timed) { $('timerBar').style.visibility = 'hidden'; return; }
+            $('timerBar').style.visibility = 'visible';
+            const t0 = performance.now(); let lastTick = -1;
+            const fill = $('timerFill'), bar = $('timerBar');
+            tmr = setInterval(() => {
+                const left = Math.max(0, sec - (performance.now() - t0) / 1000), pct = left / sec * 100;
+                fill.style.width = pct + '%'; bar.classList.toggle('low', pct < 30); bar.setAttribute('aria-valuenow', Math.round(pct));
+                if (left < 5 && Math.ceil(left) !== lastTick) { lastTick = Math.ceil(left); sfx.tick(); }
+                if (left <= 0) { stopTimer(); onTimeout(); }
+            }, 100);
+            fill.style.width = '100%'; bar.classList.remove('low');
+        }
+        function stopTimer() { if (tmr) { clearInterval(tmr); tmr = null; } }
+
+        function showStep() {
+            const st = g.steps[g.si];
+            g.cur = st; g.locked = false;
+            $('fb').className = 'fb'; $('fb').innerHTML = '';
+            $('nextBtn').hidden = true;
+            const opts = $('opts'); opts.replaceChildren();
+            const cn = g.chains + 1;
+            $('qTag').textContent = MODE_BY[g.mode].ic + ' ' + MODE_BY[g.mode].n + ' · ' + g.lv.n;
+            $('qNo').textContent = 'চেইন ' + bn(cn) + (g.mode === 'build' ? '' : ' · ধাপ ' + bn(g.si + 1) + '/' + bn(g.nStep));
+            let list;
+            if (st.kind === 'prod') {
+                g.linkShow[st.i] = true; g.active = { t: 'n', i: st.i + 1 };
+                $('ask').innerHTML = fh(g.chain.nodes[st.i]) + ' + ' + fh(st.ed.txt) + ' → ?<br><span style="font-weight:600;color:var(--text-muted)">কোন যৌগ তৈরি হবে?</span>';
+                list = shuffle([prodOpt(st.ed.to, true)].concat(wrongProducts(st.ed, 3).map(f => prodOpt(f, false))));
+                startTimer(20);
+            } else if (st.kind === 'reag') {
+                g.active = { t: 'l', i: st.i };
+                $('ask').innerHTML = fh(g.chain.nodes[st.i]) + ' → ' + fh(g.chain.nodes[st.i + 1]) + '<br><span style="font-weight:600;color:var(--text-muted)">কোন বিকারক / শর্তে এটি ঘটে?</span>';
+                list = shuffle([reagOpt(st.ed || g.chain.edges[st.i], true)].concat(wrongReagents(g.chain.edges[st.i], 3).map(x => reagOpt(x, false))));
+                startTimer(25);
+            } else if (st.kind === 'node') {
+                g.nodeShow[st.j] = false; g.active = { t: 'n', i: st.j };
+                $('ask').innerHTML = fh(g.chain.nodes[st.j - 1]) + ' → ? → ' + fh(g.chain.nodes[st.j + 1]) + '<br><span style="font-weight:600;color:var(--text-muted)">মাঝের যৌগটি কী?</span>';
+                const B = g.chain.nodes[st.j];
+                list = shuffle([prodOpt(B, true)].concat(wrongMiddle(g.chain.nodes, st.j, 3).map(f => prodOpt(f, false))));
+                startTimer(25);
+            } else { // build
+                g.active = null;
+                if (g.sel === null || g.nodeShow[g.sel]) g.sel = g.nodeShow.indexOf(false);
+                $('ask').innerHTML = 'প্রতিটি তীরের বিকারক দেখে খালি ঘর ভরো<br><span style="font-weight:600;color:var(--text-muted)">যেকোনো ঘরে ক্লিক করে বেছে নেওয়া যায় · ২টি যৌগ বাড়তি</span>';
+                list = g.pool.map(f => prodOpt(f, false));
+                startTimer(15 * g.chain.edges.length);
+            }
+            list.forEach((o, i) => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'opt'; b.dataset.ok = o.ok ? '1' : '0'; b.dataset.key = o.key;
+                b.innerHTML = '<kbd>' + bn(i + 1) + '</kbd>' + o.html;
+                b.addEventListener('click', () => (st.kind === 'build' ? placeChip(b) : answer(b, o)));
+                opts.appendChild(b);
+            });
+            if (st.kind === 'build') g.sel = g.nodeShow.indexOf(false);
+            renderChain(); paintStats();
+        }
+
+        const ptsNow = () => 10 * g.lv.m * multi();
+        function popText(t, bad) {
+            const p = $('pop'); p.textContent = t; p.style.color = bad ? 'var(--bad)' : 'var(--good)';
+            p.classList.remove('go'); void p.offsetWidth; p.classList.add('go');
+        }
+        function noteHtml(ed) { return '<span class="note"><b style="color:var(--accent)">' + ed.ty + '</b> — ' + fh(ed.note) + '</span>'; }
+        function recordMiss(html) { if (!g.miss.includes(html)) g.miss.push(html); }
+        function loseRod() { g.rods = Math.max(0, g.rods - 1); g.streak = 0; g.wrong++; g.cMiss++; if (g.rods === 0) g.over = true; }
+
+        /* ---------- উত্তর (run / reag / miss) ---------- */
+        function answer(btn, opt) {
+            if (g.locked) return;
+            g.locked = true; stopTimer();
+            const st = g.cur, ed = st.kind === 'node' ? g.chain.edges[st.j - 1] : g.chain.edges[st.i];
+            const all = Array.from($('opts').children);
+            all.forEach(b => { b.disabled = true; if (b.dataset.ok === '1') b.classList.add('right'); });
+            const fb = $('fb');
+            if (opt.ok) {
+                g.right++; g.streak++; g.bestStreak = Math.max(g.bestStreak, g.streak);
+                const p = ptsNow(); g.score += p;
+                fb.className = 'fb show ok'; fb.innerHTML = '<b>✔ সঠিক! +' + bn(p) + '</b>' + noteHtml(ed);
+                sfx.ok(); popText('+' + bn(p));
+            } else {
+                btn.classList.add('wrong'); loseRod();
+                const correct = all.find(b => b.dataset.ok === '1');
+                fb.className = 'fb show no'; fb.innerHTML = '<b>✘ ঠিক উত্তর: ' + (st.kind === 'reag' ? fh(ed.txt) : fh(st.kind === 'node' ? g.chain.nodes[st.j] : ed.to)) + '</b>' + noteHtml(ed);
+                recordMiss(st.kind === 'reag' ? fh(ed.from) + ' → ' + fh(ed.to) + ' : <b>' + fh(ed.txt) + '</b>' :
+                    st.kind === 'node' ? fh(g.chain.nodes[st.j - 1]) + ' → <b>' + fh(g.chain.nodes[st.j]) + '</b> → ' + fh(g.chain.nodes[st.j + 1]) :
+                    fh(ed.from) + ' + ' + fh(ed.txt) + ' → <b>' + fh(ed.to) + '</b>');
+                sfx.no(); if (navigator.vibrate) try { navigator.vibrate(120); } catch (er) {}
+            }
+            reveal(st);
+            afterStep();
+        }
+        function reveal(st) {
+            if (st.kind === 'prod') g.nodeShow[st.i + 1] = true;
+            else if (st.kind === 'reag') g.linkShow[st.i] = true;
+            else if (st.kind === 'node') g.nodeShow[st.j] = true;
+            g.active = null; renderChain();
+        }
+        function onTimeout() {
+            if (!g || g.locked) return;
+            g.locked = true;
+            const st = g.cur, fb = $('fb');
+            if (st.kind === 'build') {
+                loseRod();
+                const ed0 = g.chain.edges;
+                g.nodeShow = g.nodeShow.map(() => true); g.sel = null;
+                Array.from($('opts').children).forEach(b => b.disabled = true);
+                fb.className = 'fb show no';
+                fb.innerHTML = '<b>⏰ সময় শেষ! সঠিক চেইনটি:</b>' + ed0.map(x => '<span class="note">' + fh(x.from) + ' → ' + fh(x.to) + ' <i style="color:var(--text-muted);font-style:normal">(' + fh(x.txt) + ')</i></span>').join('');
+                recordMiss(fh(g.chain.nodes.join(' → ')));
+                sfx.no(); renderChain(); paintStats();
+                finishChain(true);
+                return;
+            }
+            const ed = st.kind === 'node' ? g.chain.edges[st.j - 1] : g.chain.edges[st.i];
+            Array.from($('opts').children).forEach(b => { b.disabled = true; if (b.dataset.ok === '1') b.classList.add('right'); });
+            loseRod();
+            fb.className = 'fb show no';
+            fb.innerHTML = '<b>⏰ সময় শেষ! ঠিক উত্তর: ' + (st.kind === 'reag' ? fh(ed.txt) : fh(st.kind === 'node' ? g.chain.nodes[st.j] : ed.to)) + '</b>' + noteHtml(ed);
+            recordMiss(st.kind === 'reag' ? fh(ed.from) + ' → ' + fh(ed.to) + ' : <b>' + fh(ed.txt) + '</b>' :
+                st.kind === 'node' ? fh(g.chain.nodes[st.j - 1]) + ' → <b>' + fh(g.chain.nodes[st.j]) + '</b> → ' + fh(g.chain.nodes[st.j + 1]) :
+                fh(ed.from) + ' + ' + fh(ed.txt) + ' → <b>' + fh(ed.to) + '</b>');
+            sfx.no();
+            reveal(st);
+            afterStep();
+        }
+
+        function afterStep() {
+            paintStats();
+            const last = g.si >= g.steps.length - 1;
+            if (g.over) { setNext('ফলাফল দেখো →', endGame); return; }
+            if (last) { finishChain(false); return; }
+            setNext('পরের ধাপ →', () => { g.si++; showStep(); });
+        }
+        function setNext(label, fn) {
+            const b = $('nextBtn'); b.textContent = label; b.hidden = false; b.onclick = fn;
+            b.focus({ preventScroll: true });
+        }
+
+        /* ---------- বিল্ডার ---------- */
+        function placeChip(btn) {
+            if (g.locked) return;
+            if (g.sel === null || g.nodeShow[g.sel]) g.sel = g.nodeShow.indexOf(false);
+            if (g.sel < 0) return;
+            const target = g.chain.nodes[g.sel], f = btn.dataset.key, fb = $('fb');
+            if (f === target) {
+                g.right++; g.streak++; g.bestStreak = Math.max(g.bestStreak, g.streak);
+                const p = ptsNow(); g.score += p;
+                g.nodeShow[g.sel] = true; btn.disabled = true; btn.classList.add('used');
+                const ed = g.chain.edges[g.sel - 1];
+                fb.className = 'fb show ok'; fb.innerHTML = '<b>✔ ঠিক বসেছে! +' + bn(p) + '</b>' + noteHtml(ed);
+                sfx.ok(); popText('+' + bn(p));
+                g.sel = g.nodeShow.indexOf(false);
+                renderChain(); paintStats();
+                if (g.sel === -1) {
+                    g.locked = true; stopTimer();
+                    Array.from($('opts').children).forEach(b => b.disabled = true);
+                    finishChain(false);
+                }
+            } else {
+                loseRod(); btn.classList.add('wrong'); setTimeout(() => btn.classList.remove('wrong'), 400);
+                const ed = g.chain.edges[g.sel - 1];
+                fb.className = 'fb show no';
+                fb.innerHTML = '<b>✘ এটি এই ঘরে বসবে না।</b><span class="note">ঘর ' + bn(g.sel) + ': ' + fh(g.chain.nodes[g.sel - 1]) + ' + ' + fh(ed.txt) + ' → ? — আবার ভাবো।</span>';
+                recordMiss(fh(ed.from) + ' + ' + fh(ed.txt) + ' → <b>' + fh(ed.to) + '</b>');
+                sfx.no(); paintStats();
+                if (g.over) {
+                    g.locked = true; stopTimer();
+                    Array.from($('opts').children).forEach(b => b.disabled = true);
+                    setNext('ফলাফল দেখো →', endGame);
+                }
+            }
+        }
+
+        /* ---------- চেইন শেষ ---------- */
+        function finishChain(timedOut) {
+            stopTimer();
+            g.chains++;
+            const fb = $('fb');
+            const perfect = g.cMiss === 0 && !timedOut;
+            if (perfect) {
+                g.perfect++;
+                const bonus = 25 * g.lv.m; g.score += bonus;
+                const gained = g.rods < 3 && !g.over; if (gained) g.rods++;
+                sfx.done(); popText('🎯 নিখুঁত চেইন! +' + bn(bonus) + (gained ? ' · ⬢+১' : ''));
+                const sum = '<span class="note"><b>🎯 নিখুঁত চেইন! +' + bn(bonus) + (gained ? ' এবং একটি সেফটি রড ফেরত।' : '।') + '</b><br>' + g.chain.nodes.map(fh).join(' → ') + '</span>';
+                if (g.mode === 'build') { fb.className = 'fb show ok'; fb.innerHTML = sum; }
+                else { fb.insertAdjacentHTML('beforeend', sum); }
+            } else if (!timedOut && g.mode !== 'build') {
+                fb.insertAdjacentHTML('beforeend', '<span class="note"><b>চেইন সম্পূর্ণ:</b> ' + g.chain.nodes.map(fh).join(' → ') + '</span>');
+            } else if (!timedOut && g.mode === 'build') {
+                fb.className = 'fb show info';
+                fb.innerHTML = '<b>✅ চেইন সম্পূর্ণ!</b><span class="note">' + g.chain.nodes.map(fh).join(' → ') + '</span>';
+            }
+            paintStats();
+            if (g.over) { setNext('ফলাফল দেখো →', endGame); return; }
+            setNext('পরের চেইন →', nextChain);
+        }
+
+        /* ---------- শেষ ---------- */
+        function endGame() {
+            stopTimer();
+            show('endView');
+            sfx.over();
+            const prev = getBest(); const record = g.score > prev && g.score > 0;
+            if (record) sset(bestKey(g.mode, g.lv.k), g.score);
+            const att = g.right + g.wrong, acc = att ? Math.round(g.right / att * 100) : 0;
+            $('endTitle').textContent = record ? '🏆 নতুন রেকর্ড!' : '☢️ কোর গলে গেছে!';
+            $('endMsg').textContent = g.score === 0 ? 'এবার বিক্রিয়াগুলো একটু দেখে নিয়ে আবার চেষ্টা করো — শুরুর পাতার তালিকাটা কাজে লাগবে! 💪' :
+                acc >= 85 ? 'অসাধারণ! বিক্রিয়ার সূত্রগুলো তোমার প্রায় মুখস্থ!' :
+                acc >= 60 ? 'ভালো খেলেছ! ভুল হওয়া বিক্রিয়াগুলো একবার ঝালিয়ে নিলেই আরও এগোবে।' :
+                'হতাশ হয়ো না! রসায়ন একটু জটিল — নিচের ভুলগুলো দেখে আবার চেষ্টা করো, তুমি পারবে!';
+            $('finalScore').textContent = bn(g.score);
+            $('eChains').textContent = bn(g.chains);
+            $('ePerfect').textContent = bn(g.perfect);
+            $('eAcc').textContent = bn(acc) + '%';
+            $('eStreak').textContent = bn(g.bestStreak);
+            const ml = $('missList'); ml.replaceChildren();
+            g.miss.forEach(h => { const li = document.createElement('li'); li.innerHTML = h; ml.appendChild(li); });
+            $('missBox').hidden = g.miss.length === 0;
+        }
+
+        /* ---------- ইভেন্ট ---------- */
+        $('startBtn').addEventListener('click', startGame);
+        $('againBtn').addEventListener('click', startGame);
+        $('menuBtn').addEventListener('click', () => { show('startView'); paintBest(); });
+        $('timerSw').addEventListener('change', ev => { timerOn = ev.target.checked; sset('chainreactor_timer', timerOn ? '1' : '0'); });
+        $('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('chainreactor_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.ok(); });
+        $('themeBtn').addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            try { localStorage.setItem('theme', next); } catch (er) {}
+            document.documentElement.setAttribute('data-theme', next);
         });
-    }
-    play();
-</script>
+        document.addEventListener('keydown', ev => {
+            if ($('playView').hidden || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+            if (ev.key === 'Enter' && !$('nextBtn').hidden) { ev.preventDefault(); $('nextBtn').click(); return; }
+            const n = parseInt(ev.key, 10);
+            if (n >= 1 && n <= 9) {
+                const b = $('opts').children[n - 1];
+                if (b && !b.disabled) b.click();
+            }
+        });
+
+        $('timerSw').checked = timerOn;
+        paintSound(); renderChips(); paintRules(); paintBest(); renderLib();
+    </script>
 </body>
 </html>
