@@ -1,339 +1,364 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আইসোটোপ আইল্যান্ড (Isotope Island) - Pro Edition</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent: #ffb703;
-            --accent-hover: #fb8500;
-            --border: #334155;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            overflow: hidden;
-        }
-        .back-btn { 
-            position: fixed; 
-            top: 25px; 
-            left: 25px; 
-            padding: 10px 20px; 
-            background: rgba(30, 41, 59, 0.8); 
-            backdrop-filter: blur(10px);
-            color: #94a3b8; 
-            border-radius: 12px; 
-            text-decoration: none; 
-            border: 1px solid rgba(51, 65, 85, 0.8); 
-            transition: 0.3s; 
-            z-index: 1000; 
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .back-btn:hover { 
-            background: #334155; 
-            color: white; 
-            transform: translateX(-3px); 
-        }
-        .game-container {
-            background: var(--card-bg);
-            border: 2px solid var(--accent);
-            border-radius: 20px;
-            padding: 30px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            text-align: center;
-            position: relative;
-        }
-        h1 {
-            color: var(--accent);
-            margin-bottom: 10px;
-            font-size: 26px;
-        }
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(255,183,3,0.1);
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        .question-box {
-            font-size: 18px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-            background: rgba(255,255,255,0.05);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .option-btn {
-            background: #334155;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: bold;
-        }
-        .option-btn:hover {
-            background: var(--accent);
-            color: #000;
-            transform: translateY(-2px);
-        }
-        #message {
-            font-size: 16px;
-            font-weight: bold;
-            min-height: 25px;
-        }
-        /* পপ-আপ স্ক্রিন স্টাইল */
-        .overlay-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.96);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-        }
-        .overlay-screen h2 { color: var(--accent); font-size: 24px; margin-bottom: 15px; }
-        .overlay-screen p { color: #cbd5e1; font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
-        .dashboard-stats {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,183,3,0.3);
-            border-radius: 14px;
-            padding: 15px;
-            width: 100%;
-            margin-bottom: 20px;
-            text-align: left;
-            font-size: 15px;
-            line-height: 1.8;
-            color: #cbd5e1;
-        }
-        .dashboard-stats span { color: #4cc9f0; float: right; font-weight: bold; }
-        .main-btn {
-            background: linear-gradient(135deg, #ffb703, #fb8500);
-            color: #000;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(255, 183, 3, 0.4);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2fa8bf">
+<title>আইসোটোপ আইল্যান্ড | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'light';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--sky1:#c9f0f7;--sky2:#7fd3e0;--sky3:#2fa8bf;--card:rgba(255,255,255,.94);--text:#08334a;--muted:#3f6a80;--line:rgba(8,51,74,.16);--coral:#ff6b4a;--sand:#f6dfae;--palm:#1f9d6a;--gold:#b45309;--good:#0f8a52;--bad:#d1304a;--sun:#ffd36b;--foam:#fff}
+[data-theme="dark"]{--sky1:#041a26;--sky2:#07384a;--sky3:#0b5568;--card:rgba(10,38,52,.94);--text:#e6f6fb;--muted:#8fb6c4;--line:rgba(255,255,255,.16);--coral:#ff7f61;--sand:#cdb57d;--palm:#3ddc97;--gold:#fbbf24;--good:#4ade9b;--bad:#ff7a98;--sun:#dfe9ff;--foam:#9bd6e6}
+*{box-sizing:border-box}
+html{background:var(--sky3)}
+body{margin:0;min-height:100vh;padding:0 16px 60px;font-family:'Baloo Da 2','Hind Siliguri','Segoe UI',system-ui,sans-serif;font-weight:500;color:var(--text);background:linear-gradient(var(--sky1) 0,var(--sky2) 40%,var(--sky3) 100%) fixed;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;top:44px;right:8%;width:78px;height:78px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 14px color-mix(in srgb,var(--sun) 30%,transparent),0 0 60px 20px color-mix(in srgb,var(--sun) 40%,transparent);pointer-events:none}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.wv{position:fixed;left:0;width:100%;height:44px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 44' preserveAspectRatio='none'%3E%3Cpath d='M0 22 Q75 2 150 22 T300 22 T450 22 T600 22 V44 H0Z' fill='%23fff'/%3E%3C/svg%3E") repeat-x;background-size:600px 44px;opacity:.28;animation:wvm 14s linear infinite}
+.wv.a{bottom:34px}.wv.b{bottom:52px;opacity:.16;animation-duration:22s;animation-direction:reverse}
+@keyframes wvm{to{background-position-x:600px}}
+.top{position:relative;z-index:2;display:flex;align-items:center;gap:8px;max-width:620px;margin:0 auto;padding:14px 0}
+.top .sp{flex:1}
+.lnk{display:inline-flex;align-items:center;min-height:42px;padding:0 16px;font:inherit;font-weight:700;font-size:15px;text-decoration:none;color:var(--text);background:var(--card);border-radius:999px;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.ib{width:42px;height:42px;font-size:17px;color:var(--text);background:var(--card);border:0;border-radius:50%;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.wrap{position:relative;z-index:2;max-width:620px;margin:0 auto}
+.panel{position:relative;padding:26px 22px 24px;background:var(--card);border-radius:30px;box-shadow:0 18px 40px -12px rgba(4,40,60,.5)}
+.hero{text-align:center;margin-bottom:6px}
+.hero .em{display:block;font-size:54px;line-height:1.1;animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-2deg)}}
+h1{margin:0;font-size:clamp(2rem,8vw,2.7rem);line-height:1.15;font-weight:800;color:var(--text)}
+.sub{margin:6px 0 0;font-size:16px;line-height:1.6;color:var(--muted)}
+.label{margin:20px 0 8px;font-size:14px;font-weight:700;color:var(--muted)}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{flex:1 1 0;min-width:104px;padding:10px 12px;text-align:center;font:inherit;cursor:pointer;color:var(--muted);background:transparent;border:2px solid var(--line);border-radius:18px;transition:transform .15s,border-color .15s}
+.chip b{display:block;font-size:16px;font-weight:700;color:var(--text);line-height:1.3}
+.chip small{display:block;font-size:12.5px;line-height:1.3}
+.chip:hover{transform:translateY(-2px);border-color:var(--coral)}
+.chip.on{background:var(--coral);border-color:var(--coral);box-shadow:0 5px 0 #c9482b}
+.chip.on b,.chip.on small{color:#fff}
+.sw-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;font-size:16px;font-weight:600}
+.switch{position:relative;width:54px;height:30px;flex-shrink:0}
+.switch input{position:absolute;inset:0;z-index:2;margin:0;opacity:0;cursor:pointer}
+.switch .tr{position:absolute;inset:0;border-radius:999px;background:var(--line)}
+.switch .tr::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25);transition:transform .2s}
+.switch input:checked~.tr{background:var(--palm)}
+.switch input:checked~.tr::after{transform:translateX(24px)}
+.switch input:focus-visible~.tr{outline:3px solid var(--coral);outline-offset:3px}
+.rules{margin-top:16px;padding:12px 14px;font-size:14.5px;line-height:1.7;color:var(--muted);background:color-mix(in srgb,var(--palm) 10%,transparent);border-radius:16px}
+.sheet{margin-top:12px;font-size:14.5px;line-height:1.8;color:var(--muted)}
+.sheet summary{cursor:pointer;font-weight:700;color:var(--text)}
+.go{display:block;width:100%;margin-top:18px;padding:14px;font:inherit;font-size:19px;font-weight:800;cursor:pointer;color:#fff;background:var(--coral);border:0;border-radius:20px;box-shadow:0 6px 0 #c9482b;transition:transform .1s,box-shadow .1s}
+.go:active{transform:translateY(4px);box-shadow:0 2px 0 #c9482b}
+.go.alt{color:var(--text);background:transparent;border:2px solid var(--line);box-shadow:none;margin-top:10px}
+.go.alt:active{transform:none}
+.best-line{margin-top:12px;text-align:center;font-size:15px;font-weight:700;color:var(--gold)}
+.peb{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.peb div{padding:5px 6px 4px;text-align:center;font-size:12.5px;line-height:1.2;color:var(--muted);background:color-mix(in srgb,var(--sand) 35%,transparent);border-radius:16px}
+.peb b{display:block;font-size:20px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+.strip{position:relative;height:150px;margin:0 -22px 14px;overflow:hidden;background:linear-gradient(var(--sky2),var(--sky3))}
+.tide{position:absolute;left:0;bottom:0;width:100%;height:0;background:rgba(255,255,255,.34);border-top:4px solid var(--foam);transition:height .2s linear;z-index:4}
+.tide.low{background:rgba(255,107,74,.34);border-top-color:var(--coral)}
+.secs{position:absolute;top:8px;left:12px;z-index:5;padding:2px 12px;font-size:15px;font-weight:800;color:var(--text);background:var(--card);border-radius:999px}
+.track{position:absolute;left:0;right:0;bottom:26px;display:flex;justify-content:center;gap:10px;z-index:3}
+.track.hop{animation:hop .5s ease-out}
+@keyframes hop{from{transform:translateX(70px)}}
+.isl{position:relative;flex:0 0 58px;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;line-height:1;border-radius:50%;background:var(--sand);box-shadow:0 5px 0 rgba(0,0,0,.14),0 0 0 4px rgba(255,255,255,.35)}
+.isl small{margin-top:1px;font-size:11px;font-weight:800;color:#5a4318}
+.isl.ghost{visibility:hidden}
+.isl.far{opacity:.5;transform:scale(.85)}
+.isl.done{background:#9be3b6}
+.isl.now{background:#fff;box-shadow:0 5px 0 rgba(0,0,0,.14),0 0 0 5px var(--coral)}
+.isl.big{flex-basis:70px;height:70px;font-size:30px;margin-top:-12px}
+.isl .boat{position:absolute;top:-34px;left:50%;font-size:30px;transform:translateX(-50%);animation:sail 2.4s ease-in-out infinite}
+@keyframes sail{50%{transform:translateX(-50%) translateY(-4px) rotate(5deg)}}
+.q{margin:0 0 14px;font-size:clamp(1.15rem,4.6vw,1.4rem);font-weight:700;line-height:1.55}
+.qn{margin-bottom:4px;font-size:13px;font-weight:700;color:var(--coral)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{position:relative;display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:8px 14px 8px 8px;text-align:left;font:inherit;font-size:16.5px;font-weight:600;line-height:1.4;cursor:pointer;color:var(--text);background:transparent;border:2px solid var(--line);border-radius:999px;transition:transform .12s,border-color .12s,background .12s}
+.opt .lt{flex:0 0 38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;background:var(--coral);border-radius:50%;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
+.opt:nth-child(2) .lt{background:#f59e0b}.opt:nth-child(3) .lt{background:var(--palm)}.opt:nth-child(4) .lt{background:#3b82f6}
+.opt:hover:not(:disabled){transform:translateX(4px);border-color:var(--coral)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good);border-color:var(--good);color:#fff}
+.opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff;animation:shk .35s}
+.opt.right .lt,.opt.wrong .lt{background:rgba(255,255,255,.28)}
+.opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.life{display:flex;gap:10px;margin-top:14px}
+.lf{flex:1;min-height:44px;padding:0 10px;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;color:var(--text);background:color-mix(in srgb,var(--sand) 40%,transparent);border:2px dashed var(--line);border-radius:16px}
+.lf:disabled{opacity:.4;cursor:default;text-decoration:line-through}
+.msg{margin-top:12px;min-height:26px;font-size:16px;font-weight:700;line-height:1.5}
+.msg.ok{color:var(--good)}.msg.no{color:var(--bad)}
+.pop{position:absolute;left:50%;top:30%;z-index:9;font-size:1.7rem;font-weight:800;color:var(--good);pointer-events:none;opacity:0;white-space:nowrap}
+.pop.go2{animation:pop .95s ease-out}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-50px)}}
+.log{margin:14px 0;padding:8px 16px;background:color-mix(in srgb,var(--sand) 30%,transparent);border-radius:20px}
+.log p{display:flex;align-items:baseline;gap:6px;margin:0;padding:7px 0;font-size:16px;font-weight:600}
+.log p::after{content:'';order:2;flex:1;border-bottom:2px dotted var(--line);transform:translateY(-4px)}
+.log p span{order:1}.log p b{order:3;font-weight:800}
+.end-t{margin:4px 0 6px;text-align:center;font-size:2rem;font-weight:800;line-height:1.2}
+.end-m{margin:0;text-align:center;font-size:16px;line-height:1.7;color:var(--muted)}
+.miss h3{margin:16px 0 8px;font-size:16px}
+.miss ul{margin:0;padding:0;list-style:none;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.miss li{padding:9px 12px;font-size:14.5px;line-height:1.55;border:2px solid var(--line);border-radius:14px}
+.miss li b{color:var(--good)}
+.foot{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:20;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text);background:var(--card)}
+.foot b{margin-left:5px;color:var(--coral)}
+@media(max-width:480px){.panel{padding:22px 16px 20px}.strip{margin:0 -16px 14px}.isl{flex-basis:50px;height:50px;font-size:21px}.isl.big{flex-basis:60px;height:60px}.track{gap:6px}.lnk .long{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
+<div class="wv a"></div><div class="wv b"></div>
+<header class="top">
+    <a class="lnk" href="games.html">← <span class="long">গেম হাব</span></a>
+    <span class="sp"></span>
+    <button type="button" class="ib" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+    <button type="button" class="ib" id="themeBtn" aria-label="থিম পরিবর্তন" title="দিন/রাত">🌓</button>
+</header>
+<div class="wrap"><main class="panel">
+    <section id="startView">
+        <div class="hero"><span class="em">🏝️</span><h1>আইসোটোপ আইল্যান্ড</h1><p class="sub">সঠিক উত্তর দিয়ে এক দ্বীপ থেকে আরেক দ্বীপে পাড়ি জমাও। জোয়ার আসার আগেই!</p></div>
+        <div class="label">অভিযানের ধরন</div>
+        <div class="chips" id="modeRow" role="group" aria-label="মোড"></div>
+        <div class="label">সমুদ্রের অবস্থা (লেভেল)</div>
+        <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+        <div class="sw-row"><span>🌊 জোয়ার (সময়ের সীমা)</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="tr"></span></label></div>
+        <div class="rules" id="rules"></div>
+        <details class="sheet"><summary>📖 এক নজরে: আইসো-পরিবার</summary>
+            <b>আইসোটোপ:</b> প্রোটন সংখ্যা সমান, ভরসংখ্যা ভিন্ন (¹²C, ¹⁴C)।<br>
+            <b>আইসোবার:</b> ভরসংখ্যা সমান, প্রোটন সংখ্যা ভিন্ন (⁴⁰Ar, ⁴⁰Ca)।<br>
+            <b>আইসোটোন:</b> নিউট্রন সংখ্যা সমান (¹⁴C, ¹⁵N)।<br>
+            <b>ভরসংখ্যা</b> = প্রোটন + নিউট্রন। <b>নিউট্রন</b> = ভরসংখ্যা − পারমাণবিক সংখ্যা।
+        </details>
+        <button type="button" class="go" id="startBtn">নোঙর তোলো ⛵</button>
+        <div class="best-line" id="bestLine"></div>
+    </section>
 
-    <a href="games.html" class="back-btn">← ফিরে যান</a>
-
-    <div class="game-container">
-        <!-- গেম ওভার পপ-আপ স্ক্রিন -->
-        <div id="dashboardScreen" class="overlay-screen" style="display: none;">
-            <h2>🏆 গেম ওভার - রিপোর্ট কার্ড</h2>
-            <div class="dashboard-stats" id="dashContent"></div>
-            <button class="main-btn" onclick="startGame()">পুনরায় খেলুন 🔄</button>
+    <section id="playView" hidden>
+        <div class="peb">
+            <div>স্কোর<b id="score">০</b></div><div>সেরা<b id="best">০</b></div><div>দ্বীপ জয়<b id="isl">০</b></div><div>জীবন<b id="lives" aria-label="জীবন">🛟🛟🛟</b></div>
         </div>
-
-        <h1>🏝️ আইসোটোপ আইল্যান্ড</h1>
-        <p>সঠিক উত্তর দিয়ে দ্বীপ জয় করো। একটি ভুল হলেই খেলা শেষ!</p>
-
-        <div class="stats-bar">
-            <span>স্কোর: <span id="score">0</span></span>
-            <span>সময়: <span id="timer">30</span>সে</span>
+        <div class="strip" aria-hidden="true">
+            <span class="secs" id="secs">🌊 ৩০</span>
+            <div class="track" id="track"></div>
+            <div class="tide" id="tide"></div>
         </div>
-
-        <div id="game-area">
-            <div class="question-box" id="question-text">প্রশ্ন লোড হচ্ছে...</div>
-            <div class="options-grid" id="options-container"></div>
+        <div class="qn" id="qn"></div>
+        <p class="q" id="q" aria-live="polite">--</p>
+        <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
+        <div class="life">
+            <button type="button" class="lf" id="f50">✂️ ৫০:৫০</button>
+            <button type="button" class="lf" id="fT">⏳ +১৫ সেকেন্ড</button>
         </div>
+        <div class="msg" id="msg" aria-live="polite"></div>
+        <button type="button" class="go" id="nextBtn" hidden>পরের দ্বীপে →</button>
+        <div class="pop" id="pop"></div>
+    </section>
 
-        <div id="message"></div>
-    </div>
+    <section id="endView" hidden>
+        <h2 class="end-t" id="endTitle">🏆 রিপোর্ট কার্ড</h2>
+        <p class="end-m" id="endMsg"></p>
+        <div class="log" id="log"></div>
+        <div class="miss" id="missBox" hidden><h3>📖 যে প্রশ্নগুলোতে আটকে গিয়েছিলে</h3><ul id="missList"></ul></div>
+        <button type="button" class="go" id="againBtn">পুনরায় খেলুন 🔄</button>
+        <button type="button" class="go alt" id="menuBtn">সেটিংস বদলাও</button>
+    </section>
+</main></div>
+<div class="foot">Developed &amp; Designed by <b>Ahanaf Abid Omlan</b></div>
 
-    <script>
-        const questions = [
-            { q: "কার্বনের কোন আইসোটোপটি প্রাচীন জীবাশ্মের বয়স নির্ণয়ে ব্যবহৃত হয়?", options: ["Carbon-12", "Carbon-13", "Carbon-14", "Carbon-11"], answer: "Carbon-14" },
-            { q: "হাইড্রোজেনের কোন আইসোটোপটিতে কোনো নিউট্রন নেই?", options: ["প্রোটিয়াম (Protium)", "ডিউটেরিয়াম", "ট্রিটিয়াম", "হাইড্রাইড"], answer: "প্রোটিয়াম (Protium)" },
-            { q: "ক্লোরিনের দুটি প্রধান আইসোটোপের ভরসংখ্যা ৩৫ এবং কত?", options: ["৩৭", "৩৬", "৩৮", "৩৯"], answer: "৩৭" },
-            { q: "ইউরেনিয়ামের কোন আইসোটোপটি পারমাণবিক চুল্লিতে জ্বালানি হিসেবে ব্যবহৃত হয়?", options: ["U-235", "U-238", "U-234", "U-233"], answer: "U-235" },
-            { q: "আইসোটোপসমূহের ক্ষেত্রে নিচের কোন বৈশিষ্ট্যটি সর্বদা সমান থাকে?", options: ["ভরসংখ্যা", "নিউট্রন সংখ্যা", "প্রোটন সংখ্যা", "নিউক্লিয়ন সংখ্যা"], answer: "প্রোটন সংখ্যা" },
-            { q: "কোন মৌলের আইসোটোপ সংখ্যা প্রকৃতিতে সবচেয়ে বেশি পাওয়া যায়?", options: ["টিন (Sn)", "কার্বন", "অক্সিজেন", "হাইড্রোজেন"], answer: "টিন (Sn)" },
-            { q: "ভারী জলের (Heavy Water) সংকেতে হাইড্রোজেনের কোন আইসোটোপটি ব্যবহৃত হয়?", options: ["ডিউটেরিয়াম", "প্রোটিয়াম", "ট্রিটিয়াম", "কোনোটিই নয়"], answer: "ডিউটেরিয়াম" },
-            { q: "হাইড্রোজেনের তেজস্ক্রিয় আইসোটোপ কোনটি?", options: ["ট্রিটিয়াম (Tritium)", "প্রোটিয়াম", "ডিউটেরিয়াম", "নিয়ন"], answer: "ট্রিটিয়াম (Tritium)" },
-            { q: "আইসোবার (Isobar)-দের ক্ষেত্রে কোন রাশিটি সমান থাকে?", options: ["প্রোটন সংখ্যা", "ভরসংখ্যা", "নিউট্রন সংখ্যা", "ইলেকট্রন বিন্যাস"], answer: "ভরসংখ্যা" },
-            { q: "যেসব পরমাণুর নিউট্রন সংখ্যা সমান কিন্তু ভরসংখ্যা ও প্রোটন সংখ্যা ভিন্ন, তাদেরকে কী বলে?", options: ["আইসোটোন (Isotone)", "আইসোটোপ", "আইসোবার", "আইসোমার"], answer: "আইসোটোন (Isotone)" },
-            { q: "কোবাল্টের তেজস্ক্রিয় আইসোটোপ (Co-60) কী চিকিৎসায় ব্যবহৃত হয়?", options: ["ক্যান্সার চিকিৎসায়", "রক্তচাপ নিয়ন্ত্রণে", "হাড়ের চিকিৎসায়", "চোখের চিকিৎসায়"], answer: "ক্যান্সার চিকিৎসায়" },
-            { q: "আয়োডিনের কোন আইসোটোপটি গলগণ্ড বা থাইরয়েড রোগ নির্ণয় ও চিকিৎসায় ব্যবহৃত হয়?", options: ["I-131", "I-127", "I-125", "I-133"], answer: "I-131" },
-            { q: "ফসফরাসের তেজস্ক্রিয় আইসোটোপ কোথায় ব্যবহৃত হয়?", options: ["লিউকেমিয়া বা রক্তরোগ চিকিৎসায়", "কৃষিতে সার হিসেবে", "ব্যাটারিতে", "গাড়ির ইঞ্জিনে"], answer: "লিউকেমিয়া বা রক্তরোগ চিকিৎসায়" },
-            { q: "সোডিয়ামের আইসোটোপ Na-24 মানবদেহের কোথায় ব্যবহৃত হয়?", options: ["রক্তনালীর রক্তপ্রবাহ বা ব্লকেজ নির্ণয়ে", "মস্তিষ্কের স্ক্যানে", "হৃদপিণ্ডের গতি মাপতে", "ফুসফুস পরীক্ষায়"], answer: "রক্তনালীর রক্তপ্রবাহ বা ব্লকেজ নির্ণয়ে" },
-            { q: "আইসোমার (Isomer) কি?", options: ["একই আণবিক সংকেত কিন্তু ভিন্ন গঠন", "ভিন্ন প্রোটন কিন্তু একই ভর", "সমান নিউট্রন সংখ্যা", "সমান ইলেকট্রন বিন্যাস"], answer: "একই আণবিক সংকেত কিন্তু ভিন্ন গঠন" },
-            { q: "প্রাকৃতিক আইসোটোপের শতকরা পরিমাণকে কী বলা হয়?", options: ["আইসোটোপীয় আবৃত্তি (Abundance)", "পারমাণবিক ভর", "আইসোটোপ অনুপাত", "ভর ত্রুটি"], answer: "আইসোটোপীয় আবৃত্তি (Abundance)" },
-            { q: "ক্লোরিনের পারমাণবিক ভর ভগ্নাংশ (35.5) হওয়ার কারণ কী?", options: ["আইসোটোপগুলোর আপেক্ষিক উপস্থিতির গড় মান", "প্রোটন ও নিউট্রনের যোগফল", "পরীক্ষামূলক ভুল", "ইলেকট্রনের ভর যোগ করায়"], answer: "আইসোটোপগুলোর আপেক্ষিক উপস্থিতির গড় মান" },
-            { q: "প্রোটিয়ামে নিউট্রন সংখ্যা কত?", options: ["০", "১", "২", "৩"], answer: "০" },
-            { q: "ডিউটেরিয়ামে নিউট্রন সংখ্যা কত?", options: ["১", "০", "২", "৩"], answer: "১" },
-            { q: "ট্রিটিয়ামে নিউট্রন সংখ্যা কত?", options: ["২", "১", "০", "৩"], answer: "২" },
-            { q: "কার্বন ডেটিং পদ্ধতিতে কিসের বয়স মাপা হয়?", options: ["জীবদেহাংশ ও প্রাচীন কাঠ", "পাথর ও মাটি", "লোহার অস্ত্র", "প্লাস্টিক"], answer: "জীবদেহাংশ ও প্রাচীন কাঠ" },
-            { q: "যেসব পরমাণুর ইলেকট্রন সংখ্যা সমান কিন্তু ভরসংখ্যা ভিন্ন, তাদেরকে মূলত কী বলে?", options: ["আইসোটোপ", "আইসোবার", "আইসোটোন", "আইসোস্টার"], answer: "আইসোটোপ" },
-            { q: "অর্গান (Ar - 40) এবং ক্যালসিয়াম (Ca - 40) পরস্পর কী?", options: ["আইসোবার", "আইসোটোপ", "আইসোটোন", "আইসোমার"], answer: "আইসোবার" },
-            { q: "কার্বন-১২ এবং কার্বন-১৪ এর মধ্যে পার্থক্য কোথায়?", options: ["নিউট্রন সংখ্যায়", "প্রোটন সংখ্যায়", "ইলেকট্রন সংখ্যায়", "প্রোটন ও ইলেকট্রন উভয়েই"], answer: "নিউট্রন সংখ্যায়" },
-            { q: "তেজস্ক্রিয় আইসোটোপ স্বতঃস্ফূর্তভাবে কী বিকিরণ করে?", options: ["আলফা, বিটা ও গামা রশ্মি", "শুধু এক্স-রে", "অবলোহিত রশ্মি", "শব্দ তরঙ্গ"], answer: "আলফা, বিটা ও গামা রশ্মি" },
-            { q: "তেজস্ক্রিয়তা আবিষ্কার করেন কোন বিজ্ঞানী?", options: ["হেনরি বেকেরেল", "ম্যাসকিউরি", "রাদারফোর্ড", "জেমস চ্যাডউইক"], answer: "হেনরি বেকেরেল" },
-            { q: "আইসোটোপ শব্দটির প্রবক্তা কে?", options: ["ফ্রেডরিক সোডি", "জন ডাল্টন", "জে জে থমসন", "বোর"], answer: "ফ্রেডরিক সোডি" },
-            { q: "পরমাণুর কেন্দ্র বা নিউক্লিয়াসে কি কি থাকে?", options: ["প্রোটন ও নিউট্রন", "প্রোটন ও ইলেকট্রন", "নিউট্রন ও ইলেকট্রন", "শুধু প্রোটন"], answer: "প্রোটন ও নিউট্রন" },
-            { q: "হাইড্রোজেনের স্থায়ী আইসোটোপ কয়টি?", options: ["দুটি (প্রোটিয়াম ও ডিউটেরিয়াম)", "একটি", "তিনটি", "চারটি"], answer: "দুটি (প্রোটিয়াম ও ডিউটেরিয়াম)" },
-            { q: "তেজস্ক্রিয় সোডিয়াম (Na-24) এর অর্ধায়ু (Half-life) কত?", options: ["১৫ ঘণ্টা", "১ বছর", "৫ দিন", "১০ মিনিট"], answer: "১৫ ঘণ্টা" }
-        ];
+<script>
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-        let score = 0;
-        let correctCount = 0;
-        let timeLeft = 30;
-        let timerInterval;
-        let activeQuestions = [];
-        let currentQ = {};
+const Q = [
+ { q: "কার্বনের কোন আইসোটোপটি প্রাচীন জীবাশ্মের বয়স নির্ণয়ে ব্যবহৃত হয়?", options: ["Carbon-12", "Carbon-13", "Carbon-14", "Carbon-11"], answer: "Carbon-14" },
+ { q: "হাইড্রোজেনের কোন আইসোটোপটিতে কোনো নিউট্রন নেই?", options: ["প্রোটিয়াম (Protium)", "ডিউটেরিয়াম", "ট্রিটিয়াম", "হাইড্রাইড"], answer: "প্রোটিয়াম (Protium)" },
+ { q: "ক্লোরিনের দুটি প্রধান আইসোটোপের ভরসংখ্যা ৩৫ এবং কত?", options: ["৩৭", "৩৬", "৩৮", "৩৯"], answer: "৩৭" },
+ { q: "ইউরেনিয়ামের কোন আইসোটোপটি পারমাণবিক চুল্লিতে জ্বালানি হিসেবে ব্যবহৃত হয়?", options: ["U-235", "U-238", "U-234", "U-233"], answer: "U-235" },
+ { q: "আইসোটোপসমূহের ক্ষেত্রে নিচের কোন বৈশিষ্ট্যটি সর্বদা সমান থাকে?", options: ["ভরসংখ্যা", "নিউট্রন সংখ্যা", "প্রোটন সংখ্যা", "নিউক্লিয়ন সংখ্যা"], answer: "প্রোটন সংখ্যা" },
+ { q: "কোন মৌলের আইসোটোপ সংখ্যা প্রকৃতিতে সবচেয়ে বেশি পাওয়া যায়?", options: ["টিন (Sn)", "কার্বন", "অক্সিজেন", "হাইড্রোজেন"], answer: "টিন (Sn)" },
+ { q: "ভারী জলের (Heavy Water) সংকেতে হাইড্রোজেনের কোন আইসোটোপটি ব্যবহৃত হয়?", options: ["ডিউটেরিয়াম", "প্রোটিয়াম", "ট্রিটিয়াম", "কোনোটিই নয়"], answer: "ডিউটেরিয়াম" },
+ { q: "হাইড্রোজেনের তেজস্ক্রিয় আইসোটোপ কোনটি?", options: ["ট্রিটিয়াম (Tritium)", "প্রোটিয়াম", "ডিউটেরিয়াম", "নিয়ন"], answer: "ট্রিটিয়াম (Tritium)" },
+ { q: "আইসোবার (Isobar)-দের ক্ষেত্রে কোন রাশিটি সমান থাকে?", options: ["প্রোটন সংখ্যা", "ভরসংখ্যা", "নিউট্রন সংখ্যা", "ইলেকট্রন বিন্যাস"], answer: "ভরসংখ্যা" },
+ { q: "যেসব পরমাণুর নিউট্রন সংখ্যা সমান কিন্তু ভরসংখ্যা ও প্রোটন সংখ্যা ভিন্ন, তাদেরকে কী বলে?", options: ["আইসোটোন (Isotone)", "আইসোটোপ", "আইসোবার", "আইসোমার"], answer: "আইসোটোন (Isotone)" },
+ { q: "কোবাল্টের তেজস্ক্রিয় আইসোটোপ (Co-60) কী চিকিৎসায় ব্যবহৃত হয়?", options: ["ক্যান্সার চিকিৎসায়", "রক্তচাপ নিয়ন্ত্রণে", "হাড়ের চিকিৎসায়", "চোখের চিকিৎসায়"], answer: "ক্যান্সার চিকিৎসায়" },
+ { q: "আয়োডিনের কোন আইসোটোপটি গলগণ্ড বা থাইরয়েড রোগ নির্ণয় ও চিকিৎসায় ব্যবহৃত হয়?", options: ["I-131", "I-127", "I-125", "I-133"], answer: "I-131" },
+ { q: "ফসফরাসের তেজস্ক্রিয় আইসোটোপ কোথায় ব্যবহৃত হয়?", options: ["লিউকেমিয়া বা রক্তরোগ চিকিৎসায়", "কৃষিতে সার হিসেবে", "ব্যাটারিতে", "গাড়ির ইঞ্জিনে"], answer: "লিউকেমিয়া বা রক্তরোগ চিকিৎসায়" },
+ { q: "সোডিয়ামের আইসোটোপ Na-24 মানবদেহের কোথায় ব্যবহৃত হয়?", options: ["রক্তনালীর রক্তপ্রবাহ বা ব্লকেজ নির্ণয়ে", "মস্তিষ্কের স্ক্যানে", "হৃদপিণ্ডের গতি মাপতে", "ফুসফুস পরীক্ষায়"], answer: "রক্তনালীর রক্তপ্রবাহ বা ব্লকেজ নির্ণয়ে" },
+ { q: "আইসোমার (Isomer) কি?", options: ["একই আণবিক সংকেত কিন্তু ভিন্ন গঠন", "ভিন্ন প্রোটন কিন্তু একই ভর", "সমান নিউট্রন সংখ্যা", "সমান ইলেকট্রন বিন্যাস"], answer: "একই আণবিক সংকেত কিন্তু ভিন্ন গঠন" },
+ { q: "প্রাকৃতিক আইসোটোপের শতকরা পরিমাণকে কী বলা হয়?", options: ["আইসোটোপীয় আবৃত্তি (Abundance)", "পারমাণবিক ভর", "আইসোটোপ অনুপাত", "ভর ত্রুটি"], answer: "আইসোটোপীয় আবৃত্তি (Abundance)" },
+ { q: "ক্লোরিনের পারমাণবিক ভর ভগ্নাংশ (35.5) হওয়ার কারণ কী?", options: ["আইসোটোপগুলোর আপেক্ষিক উপস্থিতির গড় মান", "প্রোটন ও নিউট্রনের যোগফল", "পরীক্ষামূলক ভুল", "ইলেকট্রনের ভর যোগ করায়"], answer: "আইসোটোপগুলোর আপেক্ষিক উপস্থিতির গড় মান" },
+ { q: "প্রোটিয়ামে নিউট্রন সংখ্যা কত?", options: ["০", "১", "২", "৩"], answer: "০" },
+ { q: "ডিউটেরিয়ামে নিউট্রন সংখ্যা কত?", options: ["১", "০", "২", "৩"], answer: "১" },
+ { q: "ট্রিটিয়ামে নিউট্রন সংখ্যা কত?", options: ["২", "১", "০", "৩"], answer: "২" },
+ { q: "কার্বন ডেটিং পদ্ধতিতে কিসের বয়স মাপা হয়?", options: ["জীবদেহাংশ ও প্রাচীন কাঠ", "পাথর ও মাটি", "লোহার অস্ত্র", "প্লাস্টিক"], answer: "জীবদেহাংশ ও প্রাচীন কাঠ" },
+ { q: "যেসব পরমাণুর ইলেকট্রন সংখ্যা সমান কিন্তু ভরসংখ্যা ভিন্ন, তাদেরকে মূলত কী বলে?", options: ["আইসোটোপ", "আইসোবার", "আইসোটোন", "আইসোস্টার"], answer: "আইসোটোপ" },
+ { q: "অর্গান (Ar - 40) এবং ক্যালসিয়াম (Ca - 40) পরস্পর কী?", options: ["আইসোবার", "আইসোটোপ", "আইসোটোন", "আইসোমার"], answer: "আইসোবার" },
+ { q: "কার্বন-১২ এবং কার্বন-১৪ এর মধ্যে পার্থক্য কোথায়?", options: ["নিউট্রন সংখ্যায়", "প্রোটন সংখ্যায়", "ইলেকট্রন সংখ্যায়", "প্রোটন ও ইলেকট্রন উভয়েই"], answer: "নিউট্রন সংখ্যায়" },
+ { q: "তেজস্ক্রিয় আইসোটোপ স্বতঃস্ফূর্তভাবে কী বিকিরণ করে?", options: ["আলফা, বিটা ও গামা রশ্মি", "শুধু এক্স-রে", "অবলোহিত রশ্মি", "শব্দ তরঙ্গ"], answer: "আলফা, বিটা ও গামা রশ্মি" },
+ { q: "তেজস্ক্রিয়তা আবিষ্কার করেন কোন বিজ্ঞানী?", options: ["হেনরি বেকেরেল", "ম্যাসকিউরি", "রাদারফোর্ড", "জেমস চ্যাডউইক"], answer: "হেনরি বেকেরেল" },
+ { q: "আইসোটোপ শব্দটির প্রবক্তা কে?", options: ["ফ্রেডরিক সোডি", "জন ডাল্টন", "জে জে থমসন", "বোর"], answer: "ফ্রেডরিক সোডি" },
+ { q: "পরমাণুর কেন্দ্র বা নিউক্লিয়াসে কি কি থাকে?", options: ["প্রোটন ও নিউট্রন", "প্রোটন ও ইলেকট্রন", "নিউট্রন ও ইলেকট্রন", "শুধু প্রোটন"], answer: "প্রোটন ও নিউট্রন" },
+ { q: "হাইড্রোজেনের স্থায়ী আইসোটোপ কয়টি?", options: ["দুটি (প্রোটিয়াম ও ডিউটেরিয়াম)", "একটি", "তিনটি", "চারটি"], answer: "দুটি (প্রোটিয়াম ও ডিউটেরিয়াম)" },
+ { q: "তেজস্ক্রিয় সোডিয়াম (Na-24) এর অর্ধায়ু (Half-life) কত?", options: ["১৫ ঘণ্টা", "১ বছর", "৫ দিন", "১০ মিনিট"], answer: "১৫ ঘণ্টা" },
+ /* নতুন প্রশ্ন */
+ { q: "পরমাণুর ভরসংখ্যা কীসের সমান?", options: ["প্রোটন + নিউট্রন সংখ্যা", "প্রোটন + ইলেকট্রন সংখ্যা", "নিউট্রন − প্রোটন সংখ্যা", "শুধু ইলেকট্রন সংখ্যা"], answer: "প্রোটন + নিউট্রন সংখ্যা" },
+ { q: "Cl-35 ও Cl-37 এর প্রাকৃতিক অনুপাত আনুমানিক কত?", options: ["৩ : ১", "১ : ১", "১ : ৩", "২ : ১"], answer: "৩ : ১" },
+ { q: "ডিউটেরিয়ামের প্রতীক কোনটি?", options: ["D (²H)", "T (³H)", "H (¹H)", "He"], answer: "D (²H)" },
+ { q: "ট্রিটিয়ামের ভরসংখ্যা কত?", options: ["৩", "১", "২", "৪"], answer: "৩" },
+ { q: "ইউরেনিয়াম-২৩৮ (পারমাণবিক সংখ্যা ৯২) এ নিউট্রন সংখ্যা কত?", options: ["১৪৬", "১৪৩", "৯২", "২৩৮"], answer: "১৪৬" },
+ { q: "ইউরেনিয়াম-২৩৫ (পারমাণবিক সংখ্যা ৯২) এ নিউট্রন সংখ্যা কত?", options: ["১৪৩", "১৪৬", "৯২", "২৩৫"], answer: "১৪৩" },
+ { q: "কার্বন-১৪ এ প্রোটন ও নিউট্রন সংখ্যা যথাক্রমে কত?", options: ["৬ ও ৮", "৮ ও ৬", "৬ ও ৬", "১৪ ও ৬"], answer: "৬ ও ৮" },
+ { q: "একটি পরমাণুর পারমাণবিক সংখ্যা ১৭ ও ভরসংখ্যা ৩৭। এতে নিউট্রন কয়টি?", options: ["২০", "১৭", "৩৭", "১৮"], answer: "২০" },
+ { q: "Mg-24, Mg-25 ও Mg-26 পরস্পর কী?", options: ["আইসোটোপ", "আইসোবার", "আইসোটোন", "আইসোমার"], answer: "আইসোটোপ" },
+ { q: "C-14 (নিউট্রন ৮) ও N-15 (নিউট্রন ৮) পরস্পর কী?", options: ["আইসোটোন", "আইসোবার", "আইসোটোপ", "আইসোমার"], answer: "আইসোটোন" },
+ { q: "C-14 ও N-14 পরস্পর কী?", options: ["আইসোবার", "আইসোটোপ", "আইসোটোন", "আইসোমার"], answer: "আইসোবার" },
+ { q: "তেজস্ক্রিয় পদার্থের ক্ষয়ের হার কোন রাশি দিয়ে প্রকাশ করা হয়?", options: ["অর্ধায়ু", "ঘনত্ব", "ভরত্রুটি", "যোজনী"], answer: "অর্ধায়ু" },
+ { q: "কোনো আইসোটোপের অর্ধায়ু ১০ দিন। ৮০ গ্রাম নমুনা ৩০ দিন পরে কত গ্রাম অবশিষ্ট থাকবে?", options: ["১০ গ্রাম", "২০ গ্রাম", "৪০ গ্রাম", "৫ গ্রাম"], answer: "১০ গ্রাম" },
+ { q: "কার্বন-১৪ এর অর্ধায়ু প্রায় কত?", options: ["৫৭৩০ বছর", "৫৭ বছর", "৫৭,৩০০ বছর", "৫৭৩ বছর"], answer: "৫৭৩০ বছর" },
+ { q: "আয়োডিন-১৩১ এর অর্ধায়ু প্রায় কত?", options: ["৮ দিন", "৮ ঘণ্টা", "৮ বছর", "৮০ দিন"], answer: "৮ দিন" },
+ { q: "Co-60 ক্যান্সার কোষ ধ্বংসে কোন রশ্মি ব্যবহার করে?", options: ["গামা রশ্মি", "আলট্রাভায়োলেট রশ্মি", "অবলোহিত রশ্মি", "রেডিও তরঙ্গ"], answer: "গামা রশ্মি" },
+ { q: "কৃষিতে রেডিওআইসোটোপ ট্রেসার হিসেবে কী কাজে লাগে?", options: ["সার ও পুষ্টির চলাচল জানতে", "মাটির রং বদলাতে", "পানি জমাতে", "ফসল রং করতে"], answer: "সার ও পুষ্টির চলাচল জানতে" },
+ { q: "পরমাণু চুল্লিতে নিউট্রনের গতি কমাতে কোনটি মডারেটর হিসেবে ব্যবহৃত হয়?", options: ["ভারী পানি (D₂O)", "লোহা", "তামা", "সোডিয়াম ক্লোরাইড"], answer: "ভারী পানি (D₂O)" },
+ { q: "প্রকৃতিতে হাইড্রোজেনের কোন আইসোটোপটি সবচেয়ে বেশি পাওয়া যায়?", options: ["প্রোটিয়াম", "ডিউটেরিয়াম", "ট্রিটিয়াম", "সমান পরিমাণে"], answer: "প্রোটিয়াম" },
+ { q: "ক্লোরিনের গড় পারমাণবিক ভর প্রায় কত?", options: ["৩৫.৫", "৩৫", "৩৭", "৩৬"], answer: "৩৫.৫" },
+ { q: "নিচের কোন জোড়াটি আইসোটোপের উদাহরণ?", options: ["¹²C ও ¹⁴C", "¹⁴C ও ¹⁴N", "¹⁴C ও ¹⁵N", "O₂ ও O₃"], answer: "¹²C ও ¹⁴C" },
+ { q: "O₂ ও O₃ পরস্পর কী?", options: ["অ্যালোট্রোপ", "আইসোটোপ", "আইসোবার", "আইসোমার"], answer: "অ্যালোট্রোপ" },
+ { q: "পরমাণু ভর একক (amu) কোন পরমাণুর ভরের ১/১২ অংশ?", options: ["কার্বন-১২", "কার্বন-১৪", "হাইড্রোজেন-১", "অক্সিজেন-১৬"], answer: "কার্বন-১২" },
+ { q: "ভর স্পেকট্রোমিটার কোন কাজে ব্যবহৃত হয়?", options: ["আইসোটোপের ভর ও আপেক্ষিক প্রাচুর্য নির্ণয়ে", "রক্তচাপ মাপতে", "তাপমাত্রা মাপতে", "pH মাপতে"], answer: "আইসোটোপের ভর ও আপেক্ষিক প্রাচুর্য নির্ণয়ে" },
+ { q: "ইউরেনিয়াম সমৃদ্ধকরণে কোনটির অনুপাত বাড়ানো হয়?", options: ["U-235", "U-238", "ইলেকট্রন সংখ্যা", "প্রোটন সংখ্যা"], answer: "U-235" },
+ { q: "নিচের কোন মৌলের মাত্র একটি স্থায়ী আইসোটোপ আছে?", options: ["ফ্লোরিন", "ক্লোরিন", "কার্বন", "অক্সিজেন"], answer: "ফ্লোরিন" },
+ { q: "শিল্পে রেডিওআইসোটোপ ট্রেসার কী কাজে লাগে?", options: ["পাইপলাইনের ফুটো শনাক্তকরণে", "ইস্পাত রং করতে", "কাচ কাটতে", "কাগজ ভাঁজ করতে"], answer: "পাইপলাইনের ফুটো শনাক্তকরণে" },
+ { q: "রেডিয়াম ও পোলোনিয়াম আবিষ্কার করেন কারা?", options: ["মেরি কুরি ও পিয়ের কুরি", "রাদারফোর্ড ও সোডি", "বোর ও হাইজেনবার্গ", "ডাল্টন ও থমসন"], answer: "মেরি কুরি ও পিয়ের কুরি" },
+ { q: "নিউট্রন আবিষ্কার করেন কোন বিজ্ঞানী?", options: ["জেমস চ্যাডউইক", "রাদারফোর্ড", "জে জে থমসন", "নিলস বোর"], answer: "জেমস চ্যাডউইক" },
+ { q: "বায়ুমণ্ডলে কার্বন-১৪ তৈরি হয় নিউট্রনের সঙ্গে কোন নিউক্লিয়াসের বিক্রিয়ায়?", options: ["নাইট্রোজেন-১৪", "অক্সিজেন-১৬", "কার্বন-১২", "হাইড্রোজেন-১"], answer: "নাইট্রোজেন-১৪" },
+ { q: "আলফা কণা আসলে কী?", options: ["হিলিয়াম নিউক্লিয়াস", "ইলেকট্রন", "ফোটন", "নিউট্রন"], answer: "হিলিয়াম নিউক্লিয়াস" },
+ { q: "বিটা (β⁻) কণা আসলে কী?", options: ["ইলেকট্রন", "প্রোটন", "হিলিয়াম নিউক্লিয়াস", "নিউট্রন"], answer: "ইলেকট্রন" },
+ { q: "গামা রশ্মি কী?", options: ["উচ্চশক্তির তড়িৎচুম্বকীয় তরঙ্গ", "ইলেকট্রনের স্রোত", "হিলিয়াম নিউক্লিয়াসের স্রোত", "শব্দতরঙ্গ"], answer: "উচ্চশক্তির তড়িৎচুম্বকীয় তরঙ্গ" }
+];
+const LETTERS = ['ক', 'খ', 'গ', 'ঘ'];
+const MODES = { voyage: { name: 'অভিযান', sub: '৩টি জীবন' }, sudden: { name: 'আকস্মিক', sub: 'একটি ভুলেই শেষ' } };
+const DIFFS = { easy: { name: 'শান্ত সাগর', sub: '৪৫ সেকেন্ড', time: 45 }, mid: { name: 'মাঝারি ঢেউ', sub: '৩০ সেকেন্ড', time: 30 }, hard: { name: 'ঝড়ো সাগর', sub: '২০ সেকেন্ড', time: 20 } };
+let mode = sget('is_mode', 'voyage'); if (!MODES[mode]) mode = 'voyage';
+let diff = sget('is_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+let timerOn = sget('is_timer', '1') === '1', soundOn = sget('is_sound', '1') === '1';
+const bestKey = () => 'is_best_' + mode + '_' + diff, getBest = () => parseInt(sget(bestKey(), '0'), 10) || 0;
 
-        const scoreDisplay = document.getElementById("score");
-        const timerDisplay = document.getElementById("timer");
-        const questionText = document.getElementById("question-text");
-        const optionsContainer = document.getElementById("options-container");
-        const message = document.getElementById("message");
-        const dashboardScreen = document.getElementById("dashboardScreen");
+let ac = null;
+function tone(f, t0, dur, type, vol) {
+    if (!soundOn) return;
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+        const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .02); } catch (e) {}
+}
+const sfx = { right() { tone(660, 0, .12); tone(880, .1, .16); }, wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); }, big() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .1); tone(1047, .3, .25); },
+    end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); }, win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); } };
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
+const paintSound = () => $('soundBtn').textContent = soundOn ? '🔔' : '🔕';
+$('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('is_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+paintSound();
 
-        function startGame() {
-            dashboardScreen.style.display = "none";
-            score = 0;
-            correctCount = 0;
-            scoreDisplay.textContent = score;
-            activeQuestions = [...questions].sort(() => Math.random() - 0.5);
-            nextQuestion();
-        }
+function chipRow(rowId, obj, current, onPick) {
+    const row = $(rowId); row.replaceChildren();
+    Object.entries(obj).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === current ? ' on' : ''); b.setAttribute('aria-pressed', String(k === current));
+        const t = document.createElement('b'); t.textContent = d.name; const u = document.createElement('small'); u.textContent = d.sub; b.append(t, u); b.addEventListener('click', () => onPick(k)); row.appendChild(b); });
+}
+function renderSetup() {
+    chipRow('modeRow', MODES, mode, k => { mode = k; sset('is_mode', k); renderSetup(); });
+    chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('is_diff', k); renderSetup(); });
+    $('rules').textContent = '📋 ' + bn(Q.length) + 'টি প্রশ্নের পুরো আর্কিপেলাগো জয় করাই লক্ষ্য। ' + (mode === 'sudden' ? 'একটি ভুল হলেই খেলা শেষ (আসল নিয়ম)।' : '৩টি জীবন, ভুল বা জোয়ারে ডুবলে একটি করে যায়।') + ' প্রতি ৫টি দ্বীপে বড় দ্বীপের বোনাস +২০। সাহায্য: ৫০:৫০ একবার, +১৫ সেকেন্ড একবার।';
+    const b = getBest(); $('bestLine').textContent = b ? '🏆 এই সেটিংসে তোমার সেরা স্কোর: ' + bn(b) : '';
+}
+$('timerSw').checked = timerOn; $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('is_timer', timerOn ? '1' : '0'); });
+const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
 
-        function startTimer() {
-            timeLeft = 30;
-            timerDisplay.textContent = timeLeft;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerDisplay.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    gameOver("সময় শেষ!");
-                }
-            }, 1000);
-        }
-
-        function nextQuestion() {
-            if (activeQuestions.length === 0) {
-                activeQuestions = [...questions].sort(() => Math.random() - 0.5);
-            }
-            currentQ = activeQuestions.pop();
-            startTimer();
-
-            questionText.textContent = currentQ.q;
-            optionsContainer.innerHTML = "";
-            message.textContent = "";
-
-            let shuffledOpts = [...currentQ.options].sort(() => Math.random() - 0.5);
-            shuffledOpts.forEach(opt => {
-                const btn = document.createElement("button");
-                btn.classList.add("option-btn");
-                btn.textContent = opt;
-                btn.onclick = () => checkAnswer(opt);
-                optionsContainer.appendChild(btn);
-            });
-        }
-
-        function checkAnswer(selected) {
-            clearInterval(timerInterval);
-            const buttons = document.querySelectorAll(".option-btn");
-            
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.textContent === currentQ.answer) {
-                    btn.style.background = "#2ecc71";
-                    btn.style.color = "#000";
-                } else if (btn.textContent === selected) {
-                    btn.style.background = "#e74c3c";
-                    btn.style.color = "#fff";
-                }
-            });
-
-            if (selected === currentQ.answer) {
-                score += 10;
-                correctCount++;
-                scoreDisplay.textContent = score;
-                message.textContent = "✅ চমৎকার! সঠিক উত্তর।";
-                message.style.color = "#2ecc71";
-
-                setTimeout(() => {
-                    nextQuestion();
-                }, 1200);
-            } else {
-                message.textContent = "❌ ভুল উত্তর! গেম ওভার।";
-                message.style.color = "#e74c3c";
-
-                setTimeout(() => {
-                    showDashboard();
-                }, 1500);
-            }
-        }
-
-        function gameOver(reason) {
-            message.textContent = `❌ ${reason} গেম ওভার।`;
-            message.style.color = "#e74c3c";
-            setTimeout(() => {
-                showDashboard();
-            }, 1200);
-        }
-
-        function showDashboard() {
-            clearInterval(timerInterval);
-            let grade = "C (উন্নতি প্রয়োজন)";
-            if (correctCount >= 15) grade = "A+ (আইসোটোপ বিশেষজ্ঞ 🧪)";
-            else if (correctCount >= 8) grade = "B (দারুণ চেষ্টা 👍)";
-            else if (correctCount >= 3) grade = "C+ (ভালো)";
-
-            const dashContent = document.getElementById("dashContent");
-            dashContent.innerHTML = `
-                মোট স্কোর: <span>${score}</span><br>
-                সঠিক উত্তর দিয়েছেন: <span>${correctCount} টি</span><br>
-                পারফরম্যান্স গ্রেড: <span>${grade}</span>
-            `;
-            dashboardScreen.style.display = "flex";
-        }
-
-        // গেম শুরু করা
-        startGame();
-    </script>
+let deck, cur, conq, score, lives, combo, bestCombo, correctN, wrongs, locked, limit, deadline, tick, advTimer, used50, usedT, asked;
+const paintLives = () => { $('lives').textContent = lives > 0 ? '🛟'.repeat(lives) : '💔'; $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); };
+const paintStats = () => { $('score').textContent = bn(score); $('isl').textContent = bn(conq); };
+function paintTrack(hop) {
+    const tr = $('track'); tr.replaceChildren(); const n = conq + 1;
+    for (let i = n - 2; i <= n + 3; i++) {
+        const d = document.createElement('div'); d.className = 'isl'; const big = i > 0 && i % 5 === 0;
+        if (i < 1) d.classList.add('ghost'); else if (i < n) { d.classList.add('done'); d.textContent = '🌴'; } else if (i === n) { d.classList.add('now'); d.textContent = big ? '🏝️' : '🌴'; const b = document.createElement('span'); b.className = 'boat'; b.textContent = '⛵'; d.appendChild(b); } else { d.classList.add('far'); d.textContent = big ? '🏝️' : '🌴'; }
+        if (big) d.classList.add('big'); if (i > 0) { const s = document.createElement('small'); s.textContent = bn(i); d.appendChild(s); } tr.appendChild(d);
+    }
+    if (hop) { tr.classList.remove('hop'); void tr.offsetWidth; tr.classList.add('hop'); }
+}
+function startGame() {
+    deck = shuffle(Q.slice()); conq = 0; score = 0; combo = 0; bestCombo = 0; correctN = 0; asked = 0; wrongs = []; used50 = false; usedT = false; locked = false;
+    lives = mode === 'sudden' ? 1 : 3; limit = timerOn ? DIFFS[diff].time : 0;
+    $('best').textContent = bn(getBest()); paintLives(); paintStats(); show('playView'); paintTrack(false); nextQ();
+}
+function nextQ() {
+    clearTimeout(advTimer); clearInterval(tick); $('pop').classList.remove('go2');
+    if (!deck.length) return endGame(true);
+    cur = deck.pop(); asked++; locked = false; $('msg').className = 'msg'; $('msg').textContent = ''; $('nextBtn').hidden = true;
+    $('qn').textContent = '🏝️ দ্বীপ ' + bn(conq + 1) + ' • প্রশ্ন ' + bn(asked) + '/' + bn(Q.length); $('q').textContent = cur.q;
+    const box = $('opts'); box.replaceChildren();
+    shuffle(cur.options.slice()).forEach((o, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.ok = o === cur.answer ? '1' : '';
+        const l = document.createElement('span'); l.className = 'lt'; l.textContent = LETTERS[i]; const t = document.createElement('span'); t.textContent = o; b.append(l, t); b.addEventListener('click', () => answer(o, b)); box.appendChild(b); });
+    $('f50').disabled = used50; $('fT').disabled = usedT || !limit;
+    $('tide').classList.remove('low'); $('tide').style.height = '0'; $('secs').hidden = !limit;
+    if (limit) { deadline = Date.now() + limit * 1000;
+        tick = setInterval(() => { const left = Math.max(0, deadline - Date.now()), frac = left / (limit * 1000); $('tide').style.height = Math.min(88, (1 - frac) * 100) + '%'; $('tide').classList.toggle('low', frac < .3); $('secs').textContent = '🌊 ' + bn(Math.ceil(left / 1000));
+            if (left <= 0) { clearInterval(tick); answer(null, null); } }, 100); }
+}
+function answer(sel, btn) {
+    if (locked) return; locked = true; clearInterval(tick);
+    document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('right'); });
+    $('f50').disabled = true; $('fT').disabled = true; const ok = sel === cur.answer, msg = $('msg');
+    if (ok) {
+        const left = limit ? Math.max(0, deadline - Date.now()) / 1000 : 0; combo++; bestCombo = Math.max(bestCombo, combo); correctN++; conq++;
+        let pts = 10 + (limit ? Math.floor(left / 5) : 0) + (combo >= 3 ? 5 : 0), bigIsl = conq % 5 === 0; if (bigIsl) pts += 20;
+        score += pts; (bigIsl ? sfx.big : sfx.right)(); popText('+' + bn(pts)); paintStats(); paintTrack(true);
+        msg.className = 'msg ok'; msg.textContent = bigIsl ? '🏝️ বড় দ্বীপ জয়! +২০ বোনাস' : '✅ চমৎকার! সঠিক উত্তর।' + (combo >= 3 ? ' 🔥 ' + bn(combo) + ' টানা' : '');
+        advTimer = setTimeout(nextQ, 1400);
+    } else {
+        if (btn) btn.classList.add('wrong'); combo = 0; lives--; wrongs.push(cur); sfx.wrong(); paintLives();
+        msg.className = 'msg no'; msg.textContent = (sel === null ? '🌊 জোয়ারে ডুবে গেলে! ' : '❌ ভুল উত্তর! ') + (lives <= 0 ? 'অভিযান এখানেই শেষ।' : 'সঠিক উত্তরটি সবুজ হয়ে আছে।');
+        if (lives <= 0) advTimer = setTimeout(() => endGame(false), 2200); else { $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true }); }
+    }
+}
+$('f50').addEventListener('click', () => { if (locked || used50) return; used50 = true; $('f50').disabled = true;
+    shuffle([...document.querySelectorAll('#opts .opt')].filter(b => !b.dataset.ok)).slice(0, 2).forEach(b => { b.classList.add('gone'); b.disabled = true; }); });
+$('fT').addEventListener('click', () => { if (locked || usedT || !limit) return; usedT = true; $('fT').disabled = true; deadline += 15000; });
+function popText(t) { const p = $('pop'); p.textContent = t; p.classList.remove('go2'); void p.offsetWidth; p.classList.add('go2'); }
+function endGame(won) {
+    clearInterval(tick); clearTimeout(advTimer); (won ? sfx.win : sfx.end)();
+    const prev = getBest(), record = score > prev; if (record) sset(bestKey(), score);
+    let grade = 'C (উন্নতি প্রয়োজন)'; if (correctN >= 15) grade = 'A+ (আইসোটোপ বিশেষজ্ঞ 🧪)'; else if (correctN >= 8) grade = 'B (দারুণ চেষ্টা 👍)'; else if (correctN >= 3) grade = 'C+ (ভালো)';
+    $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? '🎉 পুরো দ্বীপপুঞ্জ জয়!' : '🏆 গেম ওভার - রিপোর্ট কার্ড');
+    $('endMsg').textContent = won ? 'সবগুলো প্রশ্নের দ্বীপ পেরিয়ে এলে, অসাধারণ! 🌟' : 'পরের বার আরও দূর যাবে, আবার পাড়ি জমাও! ⛵';
+    const rows = [['মোট স্কোর', bn(score)], ['জয় করা দ্বীপ', bn(conq) + 'টি'], ['সঠিক উত্তর', bn(correctN) + 'টি'], ['সেরা টানা সঠিক', bn(bestCombo)], ['পারফরম্যান্স গ্রেড', grade]];
+    const lg = $('log'); lg.replaceChildren(); rows.forEach(([a, b]) => { const p = document.createElement('p'), s = document.createElement('span'), v = document.createElement('b'); s.textContent = a; v.textContent = b; p.append(s, v); lg.appendChild(p); });
+    const ul = $('missList'); ul.replaceChildren(); wrongs.forEach(w => { const li = document.createElement('li'), b = document.createElement('b'); li.textContent = w.q + ' → '; b.textContent = w.answer; li.appendChild(b); ul.appendChild(li); });
+    $('missBox').hidden = !wrongs.length; show('endView'); $('againBtn').focus({ preventScroll: true });
+}
+$('startBtn').addEventListener('click', startGame); $('againBtn').addEventListener('click', startGame);
+$('menuBtn').addEventListener('click', () => { clearInterval(tick); renderSetup(); show('startView'); });
+$('nextBtn').addEventListener('click', nextQ);
+document.addEventListener('keydown', e => {
+    if ($('playView').hidden) return;
+    if (e.key >= '1' && e.key <= '4' && !locked) { const b = document.querySelectorAll('#opts .opt')[+e.key - 1]; if (b && !b.disabled) b.click(); }
+    else if (e.key === 'Enter' && locked && !$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); nextQ(); }
+});
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; } });
+renderSetup(); show('startView');
+</script>
 </body>
 </html>
