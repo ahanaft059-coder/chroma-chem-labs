@@ -1,472 +1,502 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>গ্যাসের ল্যাব (Gas Lab) - Life Edition</title>
-    <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #1e1b4b, #312e81, #0f172a);
-            --card-bg: rgba(30, 41, 59, 0.75);
-            --text-color: #f8fafc;
-            --accent-primary: #06b6d4;
-            --accent-secondary: #3b82f6;
-            --danger: #f43f5e;
-            --success: #10b981;
-            --border: rgba(255, 255, 255, 0.1);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body {
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            overflow: hidden;
-        }
-        .back-btn { 
-            position: fixed; 
-            top: 25px; 
-            left: 25px; 
-            padding: 10px 20px; 
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(12px);
-            color: #38bdf8; 
-            border-radius: 14px; 
-            text-decoration: none; 
-            border: 1px solid rgba(56, 189, 248, 0.3); 
-            transition: 0.3s; 
-            z-index: 1000; 
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .back-btn:hover { 
-            background: #06b6d4; 
-            color: #0f172a; 
-            transform: translateY(-2px); 
-        }
-        .game-container {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 35px;
-            width: 100%;
-            max-width: 620px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            text-align: center;
-            position: relative;
-        }
-        .badge {
-            background: linear-gradient(135deg, #06b6d4, #3b82f6);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        h1 {
-            color: #fff;
-            margin-bottom: 8px;
-            font-size: 26px;
-            text-shadow: 0 2px 10px rgba(6, 182, 212, 0.3);
-        }
-        .subtitle {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border);
-            padding: 12px 20px;
-            border-radius: 14px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            font-size: 15px;
-        }
-        .stats-bar span span {
-            color: #38bdf8;
-        }
-        .lives-container {
-            font-size: 18px;
-            letter-spacing: 3px;
-        }
-        /* প্রশ্ন বক্স: লাইট এবং উজ্জ্বল */
-        .question-box {
-            font-size: 18px;
-            margin-bottom: 25px;
-            line-height: 1.6;
-            background: #f1f5f9;
-            color: #0f172a;
-            padding: 22px;
-            border-radius: 16px;
-            border: 1px solid #cbd5e1;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        /* অপশন: ডিপ এবং ডার্ক */
-        .option-btn {
-            background: #090d16;
-            color: #e2e8f0;
-            border: 1px solid #1e293b;
-            padding: 16px;
-            border-radius: 14px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 600;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-        .option-btn:hover {
-            background: linear-gradient(135deg, #06b6d4, #3b82f6);
-            border-color: transparent;
-            color: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(6, 182, 212, 0.4);
-        }
-        #message {
-            font-size: 16px;
-            font-weight: bold;
-            min-height: 25px;
-        }
-        .overlay-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(15px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-            padding: 35px;
-            border-radius: 24px;
-            text-align: center;
-        }
-        .overlay-screen h2 { color: #38bdf8; font-size: 26px; margin-bottom: 15px; }
-        .overlay-screen p { color: #cbd5e1; font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
-        .dashboard-stats {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            border-radius: 16px;
-            padding: 20px;
-            width: 100%;
-            margin-bottom: 25px;
-            text-align: left;
-            font-size: 15px;
-            line-height: 1.8;
-            color: #cbd5e1;
-        }
-        .dashboard-stats span { color: #38bdf8; float: right; font-weight: bold; }
-        .main-btn {
-            background: linear-gradient(135deg, #06b6d4, #3b82f6);
-            color: #fff;
-            border: none;
-            padding: 14px 35px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
-            transition: 0.3s;
-        }
-        .main-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(6, 182, 212, 0.6);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07030d">
+<title>গ্যাসের ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg:#fff3e6;--card:#fff;--text:#2a0f1f;--muted:#7a5a6c;--line:rgba(42,15,31,.18);--soft:rgba(42,15,31,.06);--th:linear-gradient(90deg,#3b1fb8,#c2185b,#ff6d00,#ffd600);--good:#0b8f55;--bad:#d1163f;--gold:#b45309;--heat:0}
+[data-theme="dark"]{--bg:#07030d;--card:#12081f;--text:#fff4ea;--muted:#b59bc9;--line:rgba(255,255,255,.15);--soft:rgba(255,255,255,.06);--good:#3dffa0;--bad:#ff4d79;--gold:#ffd600}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:0 16px 56px;font-family:'Anek Bangla','Hind Siliguri','Segoe UI',system-ui,sans-serif;font-weight:500;color:var(--text);background:var(--bg);overflow-x:hidden;transition:background-color .3s,color .3s}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(90% 55% at 50% 112%,hsl(calc(262 - var(--heat)*232) 100% 52%/.55),transparent 72%),radial-gradient(60% 40% at 90% -10%,hsl(calc(300 - var(--heat)*250) 100% 55%/.22),transparent 70%)}
+.flash{position:fixed;inset:0;z-index:60;pointer-events:none;background:#fff;opacity:0}
+.flash.go{animation:fl .6s ease-out}
+@keyframes fl{0%{opacity:.9}100%{opacity:0}}
+body.shake .wrap{animation:shk .55s}
+@keyframes shk{10%{transform:translate(-9px,5px)}30%{transform:translate(8px,-6px)}50%{transform:translate(-6px,-4px)}70%{transform:translate(5px,6px)}90%{transform:translate(-3px,2px)}}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #ffd600;outline-offset:3px}
+.top{position:relative;z-index:2;display:flex;align-items:center;gap:8px;max-width:680px;margin:0 auto;padding:14px 0}
+.top .sp{flex:1}
+.lnk{display:inline-flex;align-items:center;min-height:42px;padding:0 16px;font:inherit;font-weight:700;font-size:14.5px;text-decoration:none;color:var(--text);background:var(--card);border:1.5px solid var(--line);border-radius:12px}
+.ib{width:42px;height:42px;font-size:17px;color:var(--text);background:var(--card);border:1.5px solid var(--line);border-radius:12px;cursor:pointer}
+.wrap{position:relative;z-index:2;max-width:680px;margin:0 auto}
+.card{border:2px solid transparent;border-radius:22px;background:linear-gradient(var(--card),var(--card)) padding-box,var(--th) border-box;box-shadow:0 14px 44px -10px hsl(calc(280 - var(--heat)*250) 100% 50%/.45)}
+.pad{padding:22px 20px}
+.kick{display:inline-block;padding:3px 14px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:2px;color:#12081f;background:var(--th);border-radius:999px}
+h1{margin:10px 0 0;font-size:clamp(2.8rem,13vw,5rem);line-height:1;font-weight:800;letter-spacing:-2px;background:var(--th);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 22px rgba(255,109,0,.45))}
+.lead{margin:12px 0 0;font-size:16.5px;line-height:1.65;color:var(--muted)}
+.label{margin:20px 0 8px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{flex:1 1 0;min-width:120px;padding:10px 12px;text-align:left;font:inherit;cursor:pointer;color:var(--muted);background:var(--soft);border:1.5px solid var(--line);border-radius:14px;transition:transform .15s,border-color .15s}
+.chip b{display:block;font-size:16px;font-weight:700;color:var(--text);line-height:1.3}
+.chip small{display:block;font-size:12.5px;line-height:1.35}
+.chip:hover{transform:translateY(-2px);border-color:#ff6d00}
+.chip.on{border-color:transparent;background:var(--th)}
+.chip.on b,.chip.on small{color:#12081f}
+.sw-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;font-size:16px;font-weight:600}
+.switch{position:relative;width:54px;height:30px;flex-shrink:0}
+.switch input{position:absolute;inset:0;z-index:2;margin:0;opacity:0;cursor:pointer}
+.switch .tr{position:absolute;inset:0;border-radius:999px;background:var(--line)}
+.switch .tr::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch input:checked~.tr{background:linear-gradient(90deg,#c2185b,#ff6d00)}
+.switch input:checked~.tr::after{transform:translateX(24px)}
+.rules{margin-top:16px;padding:12px 14px;font-size:14.5px;line-height:1.75;color:var(--muted);border-left:4px solid #ff6d00;background:var(--soft);border-radius:0 12px 12px 0}
+.sheet{margin-top:12px;font-size:14.5px;line-height:1.9;color:var(--muted)}
+.sheet summary{cursor:pointer;font-weight:700;color:var(--text)}
+.go{display:block;width:100%;margin-top:16px;padding:14px;font:inherit;font-size:19px;font-weight:800;cursor:pointer;color:#12081f;background:var(--th);border:0;border-radius:16px;box-shadow:0 0 0 0 rgba(255,109,0,.6);transition:transform .15s,box-shadow .2s}
+.go:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,109,0,.55)}
+.go:disabled{opacity:.4;cursor:default}
+.go.alt{color:var(--text);background:transparent;border:1.5px solid var(--line)}
+.go.fire{background:linear-gradient(90deg,#ff6d00,#ffd600);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 28px rgba(255,160,0,.7)}}
+.best-line{margin-top:12px;font-size:15px;font-weight:700;color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.stats div{padding:6px 8px;text-align:center;font-size:12px;color:var(--muted);background:var(--card);border:1.5px solid var(--line);border-radius:12px}
+.stats b{display:block;font-family:'Space Mono',monospace;font-size:18px;color:var(--text)}
+.tbar{height:8px;margin-bottom:10px;border-radius:8px;overflow:hidden;background:var(--line)}
+.tbar i{display:block;height:100%;width:100%;background:var(--th)}
+.lab{position:relative;padding:10px 10px 12px;margin-bottom:12px}
+.lab.danger{animation:dng .5s ease-in-out infinite alternate}
+@keyframes dng{to{box-shadow:0 0 36px rgba(255,40,70,.8)}}
+#cv{display:block;width:100%;height:auto;background:#09040f;border-radius:14px}
+.ro{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.ro div{padding:5px 8px;background:var(--soft);border-radius:10px}
+.ro small{display:block;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--muted)}
+.ro b{display:block;font-family:'Space Mono',monospace;font-size:17px;line-height:1.3;color:var(--text);white-space:nowrap}
+.ro i{display:block;height:4px;margin-top:3px;border-radius:4px;background:var(--th);width:0;transition:width .15s}
+.qn{margin-bottom:4px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;color:#ff6d00}
+.q{margin:0 0 14px;font-size:clamp(1.15rem,4.6vw,1.4rem);font-weight:700;line-height:1.55}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.opts{grid-template-columns:1fr}}
+.opt{position:relative;min-height:54px;padding:10px 12px;text-align:left;font:inherit;font-size:15.5px;font-weight:600;line-height:1.4;cursor:pointer;color:var(--text);background:var(--soft);border:1.5px solid var(--line);border-radius:14px;transition:transform .12s,border-color .12s,background .12s}
+.opt:hover:not(:disabled){transform:translateY(-2px);border-color:#ff6d00;background:rgba(255,109,0,.12)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good);border-color:var(--good);color:#06130c}
+.opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff;animation:sk .35s}
+.opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes sk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.life{display:flex;gap:10px;margin-top:12px}
+.lf{flex:1;min-height:44px;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;color:var(--text);background:transparent;border:1.5px dashed var(--line);border-radius:12px}
+.lf:disabled{opacity:.4;cursor:default;text-decoration:line-through}
+.task{font-size:16.5px;font-weight:600;line-height:1.7}
+.task em{font-style:normal;font-family:'Space Mono',monospace;font-weight:700;color:#ffd600;padding:0 4px}
+[data-theme="light"] .task em{color:#c2185b}
+.sl{margin:14px 0 4px}
+.sl label{display:flex;justify-content:space-between;font-size:15px;font-weight:700}
+.sl label b{font-family:'Space Mono',monospace;color:#ff6d00}
+input[type=range]{width:100%;height:12px;margin:10px 0;border-radius:8px;-webkit-appearance:none;appearance:none;background:var(--th);cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;border:4px solid #12081f;box-shadow:0 0 0 2px #ff6d00,0 2px 10px rgba(0,0,0,.5)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid #12081f}
+input[type=range]:disabled{opacity:.45;cursor:default}
+.two{display:flex;gap:10px}
+.two .go{margin-top:12px}
+.two .go.alt{flex:0 0 38%;font-size:15px}
+.note{margin-top:10px;padding:9px 12px;font-family:'Space Mono',monospace;font-size:13px;line-height:1.7;color:var(--gold);border:1.5px dashed var(--gold);border-radius:12px}
+.msg{margin-top:12px;min-height:26px;font-size:16px;font-weight:700;line-height:1.55}
+.msg.ok{color:var(--good)}.msg.no{color:var(--bad)}
+.pre{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pre button{flex:1 1 0;min-width:110px;min-height:44px;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;color:var(--text);background:var(--soft);border:1.5px solid var(--line);border-radius:12px}
+.pre button:hover{border-color:#ff6d00}
+.pop{position:fixed;left:50%;top:26%;z-index:70;font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;color:var(--good);pointer-events:none;opacity:0;white-space:nowrap;text-shadow:0 0 18px currentColor}
+.pop.go2{animation:pop .95s ease-out}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-60px)}}
+.end-t{margin:0 0 6px;font-size:2.1rem;font-weight:800;line-height:1.2}
+.end-m{margin:0;font-size:16px;line-height:1.7;color:var(--muted)}
+.end-s{margin:8px 0;font-family:'Space Mono',monospace;font-size:4.4rem;font-weight:700;line-height:1;background:var(--th);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.log{margin:12px 0}
+.log p{display:flex;justify-content:space-between;gap:10px;margin:0;padding:9px 0;font-size:16px;border-bottom:1px solid var(--line)}
+.log b{font-family:'Space Mono',monospace;color:#ff6d00;text-align:right}
+.miss h3{margin:14px 0 8px;font-size:16px}
+.miss ul{margin:0;padding:0;list-style:none;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.miss li{padding:9px 12px;font-size:14.5px;line-height:1.6;background:var(--soft);border-radius:12px}
+.miss li b{color:var(--good)}
+.foot{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:20;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);background:var(--card);border-top:1px solid var(--line)}
+.foot b{margin-left:5px;color:var(--text)}
+@media(max-width:480px){.pad{padding:18px 14px}.ro b{font-size:14px}.lnk .long{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
+<div class="flash" id="flash"></div>
+<header class="top">
+    <a class="lnk" href="games.html">← <span class="long">গেম হাব</span></a>
+    <span class="sp"></span>
+    <button type="button" class="ib" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+    <button type="button" class="ib" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+</header>
+<div class="wrap">
+    <section id="startView" class="card pad">
+        <span class="kick">GAS LAB · SIM EDITION</span>
+        <h1>গ্যাসের ল্যাব</h1>
+        <p class="lead">সত্যিকারের গ্যাস-অণু নাচছে সিলিন্ডারের ভেতর। পিস্টন চাপো, আগুন জ্বালো, আর বয়েল-চার্লসের সূত্র হাতে-কলমে প্রমাণ করো। সাবধান, ট্যাংক কিন্তু ফাটতে পারে! 💥</p>
+        <div class="label">MODE</div>
+        <div class="chips" id="modeRow" role="group" aria-label="মোড"></div>
+        <div id="lvBox">
+            <div class="label">LEVEL</div>
+            <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+            <div class="sw-row"><span>⏱ সময়ের সীমা</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="tr"></span></label></div>
+        </div>
+        <div class="rules" id="rules"></div>
+        <details class="sheet"><summary>📖 সূত্রগুলো এক নজরে</summary>
+            <b>বয়েল (T স্থির):</b> P₁V₁ = P₂V₂<br><b>চার্লস (P স্থির):</b> V₁/T₁ = V₂/T₂<br><b>গে-লুসাক (V স্থির):</b> P₁/T₁ = P₂/T₂<br><b>আদর্শ গ্যাস:</b> PV = nRT (R = 0.0821 L·atm/mol·K)<br>T(K) = t(°C) + 273
+        </details>
+        <button type="button" class="go" id="startBtn">ল্যাব চালু করো 🔥</button>
+        <div class="best-line" id="bestLine"></div>
+    </section>
 
-    <a href="games.html" class="back-btn">← ফিরে যান</a>
-
-    <div class="game-container">
-        <!-- গেম ওভার পপ-আপ স্ক্রিন -->
-        <div id="dashboardScreen" class="overlay-screen" style="display: none;">
-            <h2>📊 ল্যাব রিপোর্ট কার্ড</h2>
-            <div class="dashboard-stats" id="dashContent"></div>
-            <button class="main-btn" onclick="startGame()">পুনরায় খেলুন 🔄</button>
+    <section id="playView" hidden>
+        <div id="hud">
+            <div class="stats"><div>স্কোর<b id="score">0</b></div><div>সেরা<b id="best">0</b></div><div>রাউন্ড<b id="rnd">1</b></div><div>জীবন<b id="lives" aria-label="জীবন">🔥🔥🔥</b></div></div>
+            <div class="tbar" id="tbar" role="timer" aria-label="বাকি সময়"><i id="tfill"></i></div>
+        </div>
+        <div class="card lab" id="lab">
+            <canvas id="cv" width="720" height="260" aria-label="গ্যাস সিলিন্ডার সিমুলেশন"></canvas>
+            <div class="ro">
+                <div><small>P (atm)</small><b id="rP">1.00</b><i id="bP"></i></div>
+                <div><small>V (L)</small><b id="rV">4.0</b><i id="bV"></i></div>
+                <div><small>T (K)</small><b id="rT">300</b><i id="bT"></i></div>
+                <div><small>n (mol)</small><b id="rN">0.16</b></div>
+            </div>
         </div>
 
-        <div class="badge">Gas Law Challenge</div>
-        <h1>⚗️ গ্যাসের ল্যাব</h1>
-        <p class="subtitle">বয়েল ও চালর্সের সূত্রের নিখুঁত হিসাব মেলাও। ৩টি লাইফ আছে!</p>
-
-        <div class="stats-bar">
-            <span>স্কোর: <span id="score">0</span></span>
-            <span>সময়: <span id="timer">30</span>সে</span>
-            <span class="lives-container" id="lives">❤️❤️❤️</span>
+        <div class="card pad" id="qBox">
+            <div class="qn" id="qn"></div>
+            <p class="q" id="q" aria-live="polite">--</p>
+            <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
+            <div class="life"><button type="button" class="lf" id="f50">✂️ ৫০:৫০</button><button type="button" class="lf" id="fC">❄️ ঠান্ডা করো (+১০ সে)</button></div>
         </div>
 
-        <div id="game-area">
-            <div class="question-box" id="question-text">প্রশ্ন লোড হচ্ছে...</div>
-            <div class="options-grid" id="options-container"></div>
+        <div class="card pad" id="sBox" hidden>
+            <div class="qn" id="sn"></div>
+            <div class="task" id="task"></div>
+            <div class="sl"><label for="sl"><span id="slLab">--</span><b id="slVal">--</b></label><input type="range" id="sl"></div>
+            <div class="note" id="hintBox" hidden></div>
+            <div class="two"><button type="button" class="go alt" id="hintBtn">💡 সূত্র (−১০)</button><button type="button" class="go fire" id="fireBtn">🔥 চালু করো</button></div>
         </div>
 
-        <div id="message"></div>
-    </div>
+        <div class="card pad" id="pBox" hidden>
+            <div class="qn">খেলাঘর · মুক্ত ল্যাব</div>
+            <div class="sl"><label for="pT"><span>🌡️ তাপমাত্রা T</span><b id="pTv">300 K</b></label><input type="range" id="pT" min="100" max="900" step="5" value="300"></div>
+            <div class="sl"><label for="pV"><span>🗜️ আয়তন V (পিস্টন)</span><b id="pVv">4.0 L</b></label><input type="range" id="pV" min="1" max="10" step="0.1" value="4"></div>
+            <div class="sl"><label for="pN"><span>⚗️ গ্যাসের পরিমাণ n</span><b id="pNv">0.50 mol</b></label><input type="range" id="pN" min="0.1" max="2" step="0.05" value="0.5"></div>
+            <div class="pre"><button type="button" id="pCold">❄️ তরল নাইট্রোজেন</button><button type="button" id="pHot">🔥 আগুন দাও</button><button type="button" id="pSq">🗜️ পিস্টন চাপো</button></div>
+            <div class="msg" id="pMsg" aria-live="polite">চাপ ২০ atm পার হলে ট্যাংক ফাটবে! 💥</div>
+            <button type="button" class="go alt" id="pExit">মেনুতে ফিরে যাও</button>
+        </div>
 
-    <script>
-        const questions = [
-            { q: "বয়েলের সূত্রে কোন রাশি দুটি স্থির বা ধ্রুবক থাকে?", options: ["তাপমাত্রা ও ভর", "চাপ ও আয়তন", "চাপ ও তাপমাত্রা", "ঘনত্ব ও ভর"], answer: "তাপমাত্রা ও ভর" },
-            { q: "বয়েলের সূত্র অনুসারে স্থির তাপমাত্রায় নির্দিষ্ট ভরের গ্যাসের চাপ (P) ও আয়তন (V) এর সম্পর্ক কীরূপ?", options: ["P $\\propto$ 1/V (ব্যস্তানুপাতিক)", "P $\\propto$ V (সমানুপাতিক)", "P $\\propto$ V²", "P ও V স্বাধীন"], answer: "P $\\propto$ 1/V (ব্যস্তানুপাতিক)" },
-            { q: "বয়েলের সূত্রের গাণিতিক রূপ নিচের কোনটি?", options: ["PV = ধ্রুবক", "V/T = ধ্রুবক", "P/T = ধ্রুবক", "PVT = ধ্রুবক"], answer: "PV = ধ্রুবক" },
-            { q: "চালর্সের সূত্রে কোন রাশি দুটি স্থির বা ধ্রুবক থাকে?", options: ["চাপ ও ভর", "তাপমাত্রা ও আয়তন", "চাপ ও তাপমাত্রা", "কোনোটিই নয়"], answer: "চাপ ও ভর" },
-            { q: "চালর্সের সূত্র অনুযায়ী স্থির চাপে নির্দিষ্ট ভরের গ্যাসের আয়তন প্রতি ডিগ্রি সেলসিয়াস তাপমাত্রা বৃদ্ধি বা হ্রাসের জন্য 0 °C তাপমাত্রার আয়তনের কত অংশ পরিবর্তিত হয়?", options: ["1/273 অংশ", "1/100 অংশ", "1/22.4 অংশ", "1/546 অংশ"], answer: "1/273 অংশ" },
-            { q: "চালর্সের সূত্রের গাণিতিক রূপ কোনটি?", options: ["V/T = ধ্রুবক", "PV = ধ্রুবক", "P/T = ধ্রুবক", "V $\\times$ T = ধ্রুবক"], answer: "V/T = ধ্রুবক" },
-            { q: "পরম শূন্য তাপমাত্রা (Absolute Zero Temperature) এর মান সেলসিয়াস স্কেলে কত?", options: ["-273 °C", "0 °C", "-100 °C", "-273.15 K"], answer: "-273 °C" },
-            { q: "কেলভিন স্কেলে বা পরম স্কেলে পরম শূন্য তাপমাত্রার মান কত?", options: ["0 K", "273 K", "-273 K", "100 K"], answer: "0 K" },
-            { q: "যে তাত্ত্বিক তাপমাত্রায় গ্যাসের আয়তন শূন্য হয়ে যায় বলে কল্পনা করা হয়, তাকে কী বলে?", options: ["পরম শূন্য তাপমাত্রা", "সমন্বিত তাপমাত্রা", "ক্রান্তি তাপমাত্রা", "গলনাঙ্ক"], answer: "পরম শূন্য তাপমাত্রা" },
-            { q: "চার্লসের সূত্রানুসারে V বনাম T (কেলভিন স্কেলে) লেখচিত্রের প্রকৃতি কীরূপ হয়?", options: ["মূলবিন্দুগামী সরলরেখা", "পরাবৃত্ত", "অধিবৃত্ত", "বক্ররেখা"], answer: "মূলবিন্দুগামী সরলরেখা" },
-            { q: "বয়েলের সূত্রানুসারে P বনাম 1/V লেখচিত্র কেমন হয়?", options: ["মূলবিন্দুগামী সরলরেখা", "বক্ররেখা", "সমান্তরাল রেখা", "বৃত্তাকার"], answer: "মূলবিন্দুগামী সরলরেখা" },
-            { q: "বয়েলের সূত্রানুসারে P বনাম V লেখচিত্রের আকৃতি কীরূপ?", options: ["সমপরাবৃত্ত (Hyperbola)", "সরলরেখা", "পরাবৃত্ত", "সাঁপের মতো পেঁচানো"], answer: "সমপরাবৃত্ত (Hyperbola)" },
-            { q: "নির্দিষ্ট ভরের কোনো গ্যাসের ক্ষেত্রে T1 তাপমাত্রায় আয়তন V1 এবং T2 তাপমাত্রায় আয়তন V2 হলে চালর্সের সূত্র অনুযায়ী কোনটি সঠিক?", options: ["V1/T1 = V2/T2", "V1V2 = T1T2", "V1T1 = V2T2", "V1/V2 = T2/T1"], answer: "V1/T1 = V2/T2" },
-            { q: "নির্দিষ্ট ভরের কোনো গ্যাসের ক্ষেত্রে P1 চাপে আয়তন V1 এবং P2 চাপে আয়তন V2 হলে বয়েলের সূত্র অনুযায়ী কোনটি সঠিক?", options: ["P1V1 = P2V2", "P1/V1 = P2/V2", "P1P2 = V1V2", "P1/P2 = V1/V2"], answer: "P1V1 = P2V2" },
-            { q: "গ্যাসের গতিীয় তত্ত্ব অনুযায়ী পরম শূন্য তাপমাত্রায় গ্যাসের অণুগুলোর গতিশক্তি কেমন হয়?", options: ["শূন্য (Zero)", "সর্বোচ্চ", "অপরিবর্তিত", "দ্বিগুণ"], answer: "শূন্য (Zero)" },
-            { q: "কোন বিজ্ঞানী প্রথম গ্যাসের আয়তন ও তাপমাত্রার সম্পর্ক আবিষ্কার করেন?", options: ["জ্যাক চার্লস", "রবার্ট বয়েল", "অ্যাভোগাদ্রো", "টরিৎসেলি"], answer: "জ্যাক চার্লস" },
-            { q: "রবার্ট বয়েল কোন দেশের বিজ্ঞানী ছিলেন?", options: ["আয়ারল্যান্ড", "ইংল্যান্ড", "ফ্রান্স", "জার্মানি"], answer: "আয়ারল্যান্ড" },
-            { q: "কোন সূত্রটি ব্যাখ্যা করতে গিয়ে পরম শূন্য তাপমাত্রার ধারণা এসেছে?", options: ["চালর্সের সূত্র", "বয়েলের সূত্র", "গ্রাহামের ব্যাপন সূত্র", "ডাল্টনের সূত্র"], answer: "চালর্সের সূত্র" },
-            { q: "সেলসিয়াস স্কেল থেকে কেলভিন স্কেলে তাপমাত্রা নিতে হলে প্রদত্ত মানের সাথে কত যোগ করতে হয়?", options: ["273", "100", "22.4", "546"], answer: "273" },
-            { q: "স্থির তাপমাত্রায় একটি গ্যাসের চাপ দ্বিগুণ করলে এর আয়তন কত হবে?", options: ["অর্ধেক হবে", "দ্বিগুণ হবে", "চারগুণ হবে", "অপরিবর্তিত থাকবে"], answer: "অর্ধেক হবে" },
-            { q: "স্থির চাপে নির্দিষ্ট ভরের গ্যাসের তাপমাত্রা 0 °C থেকে বাড়িয়ে 273 °C করা হলে এর আয়তন কত হবে?", options: ["দ্বিগুণ হবে", "অর্ধেক হবে", "তিনগুণ হবে", "চারগুণ হবে"], answer: "দ্বিগুণ হবে" },
-            { q: "গে-লুসাকের চাপীয় সূত্র অনুযায়ী স্থির আয়তনে নির্দিষ্ট ভরের গ্যাসের চাপ (P) ও পরম তাপমাত্রা (T) এর সম্পর্ক কেমন?", options: ["P $\\propto$ T (সমানুপাতিক)", "P $\\propto$ 1/T", "P $\\propto$ T²", "P স্বাধীন"], answer: "P $\\propto$ T (সমানুপাতিক)" },
-            { q: "গে-লুসাকের সূত্র অনুযায়ী কোন রাশিটি ধ্রুবক থাকে?", options: ["আয়তন (Volume)", "চাপ", "তাপমাত্রা", "ঘনত্ব"], answer: "আয়তন (Volume)" },
-            { q: "আদর্শ গ্যাস সমীকরণ কোনটি?", options: ["PV = nRT", "PV = RT", "P = nRT", "V = nRT"], answer: "PV = nRT" },
-            { q: "আদর্শ গ্যাস সমীকরণে R কে কী বলা হয়?", options: ["মোলার গ্যাস ধ্রুবক", "বয়েল ধ্রুবক", "চার্লস ধ্রুবক", "আদর্শ ধ্রুবক"], answer: "মোলার গ্যাস ধ্রুবক" },
-            { q: "এসটিপিতে (STP) আদর্শ গ্যাসের মোলার আয়তন কত?", options: ["22.4 লিটার", "24.78 লিটার", "11.2 লিটার", "1 লিটার"], answer: "22.4 লিটার" },
-            { q: "এসটিপিতে চাপ (P) এর প্রমাণ মান কত ধরা হয়?", options: ["1 atm (101.325 kPa)", "2 atm", "0.5 atm", "5 atm"], answer: "1 atm (101.325 kPa)" },
-            { q: "এসটিপিতে তাপমাত্রা (T) এর প্রমাণ মান কত?", options: ["273.15 K (0 °C)", "298 K", "0 K", "100 K"], answer: "273.15 K (0 °C)" },
-            { q: "বাস্তব গ্যাস কোন পরিস্থিতিতে আদর্শ গ্যাসের ন্যায় আচরণ করে?", options: ["উচ্চ তাপমাত্রা ও নিম্ন চাপে", "নিম্ন তাপমাত্রা ও উচ্চ চাপে", "উচ্চ তাপমাত্রা ও উচ্চ চাপে", "সর্বদা"], answer: "উচ্চ তাপমাত্রা ও নিম্ন চাপে" },
-            { q: "গ্রাহামের গ্যাস ব্যাপন সূত্র নিচের কোনটির সাথে সম্পর্কিত?", options: ["গ্যাসের ঘনত্ব ও আণবিক ভর", "চাপ ও আয়তন", "তাপমাত্রা ও সান্দ্রতা", "পৃষ্ঠটান"], answer: "গ্যাসের ঘনত্ব ও আণবিক ভর" },
-            { q: "গ্রাহামের ব্যাপন সূত্রানুসারে গ্যাসের ব্যাপন হার (r) এবং ঘনত্বের (d) সম্পর্ক কীরূপ?", options: ["r $\\propto$ 1/\\sqrt{d}", "r $\\propto$ d", "r $\\propto$ \\sqrt{d}", "r স্বাধীন"], answer: "r $\\propto$ 1/\\sqrt{d}" },
-            { q: "কোন গ্যাসের ব্যাপনের হার বেশি হবে?", options: ["হাইড্রোজেন (H2)", "অক্সিজেন (O2)", "কার্বন ডাই-অক্সাইড (CO2)", "নাইট্রোজেন (N2)"], answer: "হাইড্রোজেন (H2)" },
-            { q: "মোলার গ্যাস ধ্রুবক R এর এসআই (SI) একক কোনটি?", options: ["J K⁻¹ mol⁻¹", "L atm K⁻¹ mol⁻¹", "cal K⁻¹ mol⁻¹", "erg K⁻¹ mol⁻¹"], answer: "J K⁻¹ mol⁻¹" },
-            { q: "SI এককে R এর আদর্শ মান কত?", options: ["8.314 J K⁻¹ mol⁻¹", "0.0821 L atm K⁻¹ mol⁻¹", "1.987 cal K⁻¹ mol⁻¹", "0.083 L bar K⁻¹ mol⁻¹"], answer: "8.314 J K⁻¹ mol⁻¹" },
-            { q: "লিটার-বায়ুমণ্ডল এককে R এর মান কত?", options: ["0.0821 L atm K⁻¹ mol⁻¹", "8.314 L atm K⁻¹ mol⁻¹", "0.00821 L atm K⁻¹ mol⁻¹", "82.1 L atm K⁻¹ mol⁻¹"], answer: "0.0821 L atm K⁻¹ mol⁻¹" },
-            { q: "অ্যাভোগাদ্রোর সূত্র অনুযায়ী নির্দিষ্ট তাপমাত্রা ও চাপে সকল গ্যাসের সমআয়তনে কী সমান থাকে?", options: ["অণুর সংখ্যা", "ভর", "ঘনত্ব", "পরমাণুর সংখ্যা"], answer: "অণুর সংখ্যা" },
-            { q: "অ্যাভোগাদ্রোর সূত্রের গাণিতিক রূপ কোনটি?", options: ["V $\\propto$ n", "V $\\propto$ T", "P $\\propto$ V", "PV = n"], answer: "V $\\propto$ n" },
-            { q: "এক মোল গ্যাসে অণুর সংখ্যা (অ্যাভোগাদ্রোর সংখ্যা N_A) কত?", options: ["6.023 $\\times$ 10²³", "3.14 $\\times$ 10²²", "9.11 $\\times$ 10⁻³¹", "1.66 $\\times$ 10⁻²⁴"], answer: "6.023 $\\times$ 10²³" },
-            { q: "ডাল্টনের গ্যাসীয় চাপ সম্পর্কিত সূত্রটি কোন ক্ষেত্রে প্রযোজ্য?", options: ["পরস্পর বিক্রিয়া করে না এমন গ্যাস মিশ্রণ", "পরস্পর বিক্রিয়া করে এমন গ্যাস", "শুধুমাত্র আদর্শ গ্যাস", "শুধুমাত্র তরল পদার্থ"], answer: "পরস্পর বিক্রিয়া করে না এমন গ্যাস মিশ্রণ" },
-            { q: "ডাল্টনের আংশিক চাপ সূত্রের মূল বক্তব্য কী?", options: ["মিশ্রণের মোট চাপ উপাদান গ্যাসগুলোর আংশিক চাপের সমষ্টির সমান", "মোট চাপ উপাদানগুলোর চাপের গুণফলের সমান", "চাপ সর্বদা ধ্রুবক থাকে", "আংশিক চাপ শূন্য হয়"], answer: "মিশ্রণের মোট চাপ উপাদান গ্যাসগুলোর আংশিক চাপের সমষ্টির সমান" },
-            { q: "গ্যাসের ব্যাপন কাকে বলে?", options: ["স্বতঃস্ফূর্তভাবে কোনো গ্যাসের অন্য গ্যাসে ছড়িয়ে পড়া", "গ্যাসের তরলে পরিণত হওয়া", "গ্যাসের চাপ বৃদ্ধি পাওয়া", "গ্যাসের তাপমাত্রা কমা"], answer: "স্বতঃস্ফূর্তভাবে কোনো গ্যাসের অন্য গ্যাসে ছড়িয়ে পড়া" },
-            { q: "একটি সরু ছিদ্রপথে উচ্চ চাপের অঞ্চল থেকে নিম্ন চাপের অঞ্চলে গ্যাসের সজোরে বেরিয়ে আসার প্রক্রিয়াকে কী বলে?", options: ["নিঃসরণ (Effusion)", "ব্যাপন (Diffusion)", "বাষ্পীভবন", "ঘনীভবন"], answer: "নিঃসরণ (Effusion)" },
-            { q: "বেলুনের ভেতর গ্যাস ভরলে তা ফুলে ওঠে, এটি গ্যাসের কোন ধর্মকে নির্দেশ করে?", options: ["গ্যাসের আয়তন ও চাপ প্রয়োগ", "ব্যাপন", "সান্দ্রতা", "নির্দিষ্ট আকৃতি"], answer: "গ্যাসের আয়তন ও চাপ প্রয়োগ" },
-            { q: "গ্যাসের অণুগুলোর গতিশক্তি কার সমানুপাতিক?", options: ["কেলভিন তাপমাত্রা", "চাপ", "আয়তন", "ঘনত্ব"], answer: "কেলভিন তাপমাত্রা" },
-            { q: "কোন গ্যাসটি আদর্শ গ্যাস থেকে সবচেয়ে বেশি বিচ্যুতি দেখায়?", options: ["NH3 (অ্যামোনিয়া)", "H2", "He", "N2"], answer: "NH3 (অ্যামোনিয়া)" },
-            { q: "বাস্তব গ্যাসের ক্ষেত্রে ভ্যান্ডারওয়ালস সমীকরণে কিসের সংশোধন করা হয়?", options: ["অণুর আয়তন ও আন্তঃআণবিক আকর্ষণ বল", "শুধু তাপমাত্রা", "শুধু চাপ", "কোনোটিই নয়"], answer: "অণুর আয়তন ও আন্তঃআণবিক আকর্ষণ বল" },
-            { q: "ভ্যান্ডারওয়ালস সমীকরণে 'a' কী নির্দেশ করে?", options: ["আন্তঃআণবিক আকর্ষণ বলের পরিমাপ", "অণুর প্রকৃত আয়তন", "গ্যাসের চাপ", "তাপমাত্রা ধ্রুবক"], answer: "আন্তঃআণবিক আকর্ষণ বলের পরিমাপ" },
-            { q: "ভ্যান্ডারওয়ালস সমীকরণে 'b' কী নির্দেশ করে?", options: ["গ্যাসের অণুগুলোর কার্যকর বা বর্জিত আয়তন", "মোট পাত্রের আয়তন", "গ্যাসের ঘনত্ব", "চাপের ত্রুটি"], answer: "গ্যাসের অণুগুলোর কার্যকর বা বর্জিত আয়তন" },
-            { q: "ক্রান্ত তাপমাত্রা (Critical Temperature) কাকে বলে?", options: ["যে তাপমাত্রার উপরে কোনো গ্যাসকে কেবল চাপে তরল করা যায় না", "যে তাপমাত্রায় বরফ গলে", "যে তাপমাত্রায় পানি ফোটে", "পরম শূন্য তাপমাত্রা"], answer: "যে তাপমাত্রার উপরে কোনো গ্যাসকে কেবল চাপে তরল করা যায় না" },
-            { q: "কার্বন ডাই-অক্সাইডের ক্রান্তি তাপমাত্রা কত?", options: ["31.1 °C", "0 °C", "100 °C", "-273 °C"], answer: "31.1 °C" },
-            { q: "বায়ুমণ্ডলীয় চাপ মাপার যন্ত্রের নাম কী?", options: ["ব্যোমিটার বা ব্যারোমিটার", "ম্যানোমিটার", "থার্মোমিটার", "হাইড্রোমিটার"], answer: "ব্যোমিটার বা ব্যারোমিটার" },
-            { q: "টরিৎসেলি পরীক্ষামূলকভাবে কিসের মান নির্ণয় করেছিলেন?", options: ["বায়ুমণ্ডলীয় চাপ", "গ্যাসের ঘনত্ব", "তাপমাত্রা", "ব্যাপন হার"], answer: "বায়ুমণ্ডলীয় চাপ" },
-            { q: "স্বাভাবিক বায়ুমণ্ডলীয় চাপে ব্যারোমিটারে পারদ স্তম্ভের উচ্চতা কত হয়?", options: ["76 সেমি (760 মিমি)", "100 সেমি", "50 সেমি", "10 মিমি"], answer: "76 সেমি (760 মিমি)" },
-            { q: "যদি কোনো গ্যাসের তাপমাত্রা দ্বিগুণ করা হয় এবং চাপ অর্ধেক করা হয়, তবে আদর্শ গ্যাস সমীকরণ অনুযায়ী আয়তন কত হবে?", options: ["চারগুণ হবে", "অর্ধেক হবে", "একই থাকবে", "আটগুণ হবে"], answer: "চারগুণ হবে" },
-            { q: "এসটিপিতে (STP) নির্দিষ্ট ভরের 1 মোল অক্সিজেন গ্যাসের ভর কত?", options: ["32 গ্রাম", "16 গ্রাম", "22.4 গ্রাম", "64 গ্রাম"], answer: "32 গ্রাম" },
-            { q: "এসটিপিতে 2 লিটার নাইট্রোজেন গ্যাসে কত মোল নাইট্রোজেন আছে?", options: ["2 / 22.4 মোল", "22.4 / 2 মোল", "2 মোল", "22.4 মোল"], answer: "2 / 22.4 মোল" },
-            { q: "গ্যাসের গতিীয় তত্ত্বের মূল প্রবক্তা বা অবদানকারী বিজ্ঞানীদের মধ্যে কে অন্যতম?", options: ["ম্যাক্সওয়েল ও বোল্টজম্যান", "রবার্ট বয়েল", "চার্লস", "টরিৎসেলি"], answer: "ম্যাক্সওয়েল ও বোল্টজম্যান" },
-            { q: "গ্যাসের অণুগুলোর বেগ পরিমাপের জন্য কোন বেগটি সবচেয়ে বেশি ব্যবহৃত হয়?", options: ["মূল গড় বর্গবেগ (RMS Velocity)", "সুষম বেগ", "সর্বোচ্চ বেগ", "ধ্রুবক বেগ"], answer: "মূল গড় বর্গবেগ (RMS Velocity)" },
-            { q: "তাপমাত্রা বাড়লে গ্যাসের অণুগুলোর মূল গড় বর্গবেগের কী পরিবর্তন হয়?", options: ["বৃদ্ধি পায়", "হ্রাস পায়", "অপরিবর্তিত থাকে", "শূন্য হয়ে যায়"], answer: "বৃদ্ধি পায়" },
-            { q: "কোনো গ্যাসের ব্যাপনের হার তার আণবিক ভরের সাথে কীভাবে সম্পর্কিত?", options: ["বর্গমূলের ব্যস্তানুপাতিক", "সমানুপাতিক", "বর্গমূলের সমানুপাতিক", "স্বাধীন"], answer: "বর্গমূলের ব্যস্তানুপাতিক" },
-            { q: "সমন্বিত গ্যাস সূত্র (Combined Gas Law) কোনটি?", options: ["P1V1/T1 = P2V2/T2", "P1V1 = P2V2", "V1/T1 = V2/T2", "PV = nRT"], answer: "P1V1/T1 = P2V2/T2" },
-            { q: "গ্যাসের ঘনত্ব পরিমাপের ক্ষেত্রে কোন সূত্রটি সরাসরি ব্যবহার করা যায়?", options: ["PM = dRT", "PV = nRT", "V/T = ধ্রুবক", "P1V1 = P2V2"], answer: "PM = dRT" },
-            { q: "আদর্শ গ্যাস সমীকরণে M কী নির্দেশ করে?", options: ["মোলার ভর (Molar Mass)", "মোল সংখ্যা", "ভর", "ঘনত্ব"], answer: "মোলার ভর (Molar Mass)" },
-            { q: "স্থির তাপমাত্রায় গ্যাসের চাপ বাড়ালে অণুগুলোর মধ্যবর্তী দূরত্ব কেমন হয়?", options: ["কমে যায়", "বেড়ে যায়", "একই থাকে", "অসীম হয়"], answer: "কমে যায়" },
-            { q: "প্রমাণ তাপমাত্রা ও চাপে (STP) যে কোনো গ্যাসের মোলার ঘনত্ব কত?", options: ["1 / 22.4 mol/L", "22.4 mol/L", "1 mol/L", "2 mol/L"], answer: "1 / 22.4 mol/L" },
-            { q: "কোন গ্যাসটি বায়ুমণ্ডলে সবচেয়ে বেশি পরিমাণে থাকে?", options: ["নাইট্রোজেন (N2)", "অক্সিজেন (O2)", "আর্গন (Ar)", "কার্বন ডাই-অক্সাইড (CO2)"], answer: "নাইট্রোজেন (N2)" },
-            { q: "গ্রাহামের ব্যাপন সূত্রের সাহায্যে কী নির্ণয় করা যায় না?", options: ["গ্যাসের তাপমাত্রা", "আণবিক ভর", "আপেক্ষিক ঘনত্ব", "ব্যাপন বেগের তুলনা"], answer: "গ্যাসের তাপমাত্রা" },
-            { q: "হিলিয়াম গ্যাসের আণবিক ভর কত?", options: ["4 গ্রাম/মোল", "2 গ্রাম/মোল", "1 গ্রাম/মোল", "8 গ্রাম/মোল"], answer: "4 গ্রাম/মোল" },
-            { q: "এসটিপিতে 1 গ্রাম হাইড্রোজেন গ্যাসের আয়তন কত?", options: ["11.2 লিটার", "22.4 লিটার", "5.6 লিটার", "1 লিটার"], answer: "11.2 লিটার" },
-            { q: "কোন বিজ্ঞানী বাস্তব গ্যাসের আদর্শ আচরণ থেকে বিচ্যুতির কারণ ব্যাখ্যা করেন?", options: ["ভ্যান্ডারওয়ালস", "বয়েল", "চার্লস", "ডাল্টন"], answer: "ভ্যান্ডারওয়ালস" },
-            { q: "গ্যাসের গতীয় সমীকরণ কোনটি?", options: ["PV = 1/3 mnc²", "PV = nRT", "PM = dRT", "P/T = ধ্রুবক"], answer: "PV = 1/3 mnc²" },
-            { q: "গ্যাসের গতীয় সমীকরণে 'm' কী নির্দেশ করে?", options: ["একটি অণুর ভর", "মোট ভর", "মোল সংখ্যা", "আয়তন"], answer: "একটি অণুর ভর" },
-            { q: "গ্যাসের গতীয় সমীকরণে 'n' কী নির্দেশ করে?", options: ["গ্যাসের মোট অণুর সংখ্যা", "মোল সংখ্যা", "চাপ", "বেগ"], answer: "গ্যাসের মোট অণুর সংখ্যা" },
-            { q: "গ্যাসের অণুগুলোর গতিবেগ কেমন হয়?", options: ["সব অণুর বেগ সমান নয়, বিভিন্ন মানের হয়", "সকল অণুর বেগ সর্বদা সমান", "সব অণু স্থির থাকে", "বেগ শূন্য হয়"], answer: "সব অণুর বেগ সমান নয়, বিভিন্ন মানের হয়" },
-            { q: "গ্যাসের অণুগুলোর সংঘর্ষ কেমন প্রকৃতির?", options: ["সম্পূর্ণ স্থিতিস্থাপক (Perfectly elastic)", "অস্থিতিস্থাপক", "ঘর্ষণযুক্ত", "স্থির"], answer: "সম্পূর্ণ স্থিতিস্থাপক (Perfectly elastic)" },
-            { q: "গ্যাসের অণুগুলোর নিজস্ব আয়তন পাত্রের মোট আয়তনের তুলনায় কেমন?", options: ["নগণ্য বা অত্যন্ত ক্ষুদ্র", "অনেক বেশি", "সমান", "অর্ধেক"], answer: "নগণ্য বা অত্যন্ত ক্ষুদ্র" },
-            { q: "কোন গ্যাসটির ব্যাপন হার সবচেয়ে কম?", options: ["কার্বন ডাই-অক্সাইড (CO2)", "অক্সিজেন (O2)", "নাইট্রোজেন (N2)", "হিলিয়াম (He)"], answer: "কার্বন ডাই-অক্সাইড (CO2)" },
-            { q: "আদর্শ গ্যাসের ক্ষেত্রে অণুগুলোর মধ্যে আন্তঃআণবিক আকর্ষণ বল কেমন ধরা হয়?", options: ["শূন্য (Zero)", "খub বেশি", "মধ্যম", "পরিবর্তনশীল"], answer: "শূন্য (Zero)" },
-            { q: "একটি গ্যাসের বাষ্প ঘনত্ব D এবং আণবিক ভর M হলে এদের মধ্যে সম্পর্ক কোনটি?", options: ["M = 2D", "M = D/2", "M = D", "M = 4D"], answer: "M = 2D" },
-            { q: "কোনো গ্যাসের বাষ্প ঘনত্ব 16 হলে, গ্যাসটির আণবিক ভর কত?", options: ["32", "16", "8", "64"], answer: "32" },
-            { q: "প্রমাণ চাপ ও তাপমাত্রার সংক্ষিপ্ত রূপ কোনটি?", options: ["STP", "NTP", "CST", "ATP"], answer: "STP" },
-            { q: "এসটিপিতে 4.4 গ্রাম CO2 গ্যাসের আয়তন কত?", options: ["2.24 লিটার", "22.4 লিটার", "1.12 লিটার", "4.4 লিটার"], answer: "2.24 লিটার" },
-            { q: "কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেলের মান সমান হয়?", options: ["-40 °", "0 °", "100 °", "-273 °"], answer: "-40 °" },
-            { q: "থার্মোডাইনামিক তাপমাত্রা স্কেল বা পরম তাপমাত্রা স্কেলের প্রবক্তা কে?", options: ["লর্ড কেলভিন", "রবার্ট বয়েল", "সেলসিয়াস", "ফ্যারেনহাইট"], answer: "লর্ড কেলভিন" },
-            { q: "গ্যাস সিলিন্ডারে গ্যাস ভরার সময় কোন সূত্রটি লঙ্ঘিত হতে পারে যদি তাপমাত্রা খুব বেশি হয়?", options: ["আদর্শ গ্যাসের আচরণ", "বয়েলের সূত্র", "চালর্সের সূত্র", "ব্যাপন সূত্র"], answer: "আদর্শ গ্যাসের আচরণ" },
-            { q: "কোন গ্যাসের ব্যাপন হার অপর একটি গ্যাসের ব্যাপনের দ্বিগুণ হলে, তাদের আণবিক ভরের অনুপাত কত হবে?", options: ["1 : 4", "4 : 1", "1 : 2", "2 : 1"], answer: "1 : 4" },
-            { q: "গ্যাসের চাপ সৃষ্টির মূল কারণ কী?", options: ["পাত্রের দেওয়ালে গ্যাসের অণুগুলোর অনবরত সংঘর্ষ", "অণুগুলোর নিজেদের মধ্যে ধাক্কা", "মহাকর্ষ বল", "তাপমাত্রার প্রভাব"], answer: "পাত্রের দেওয়ালে গ্যাসের অণুগুলোর অনবরত সংঘর্ষ" },
-            { q: "স্বাভাবিক অবস্থায় সব গ্যাসের 1 অণুর গতিশক্তি কিসের ওপর নির্ভর করে?", options: ["কেবল তাপমাত্রা", "চাপ", "আয়তন", "ভর"], answer: "কেবল তাপমাত্রা" },
-            { q: "নিচের কোন সমীকরণটি ডাল্টনের আংশিক চাপ সূত্রের সাথে সম্পর্কিত?", options: ["P_total = P1 + P2 + P3...", "PV = nRT", "P1V1 = P2V2", "V/T = ধ্রুবক"], answer: "P_total = P1 + P2 + P3..." },
-            { q: "বায়ুমণ্ডলীয় চাপে পানির স্ফুটনাঙ্ক সেলসিয়াস স্কেলে কত?", options: ["100 °C", "0 °C", "273 °C", "373 °C"], answer: "100 °C" },
-            { q: "কোনো গ্যাসের অণুর সংখ্যা দ্বিগুণ করলে স্থির তাপমাত্রায় ও চাপে আয়তন কত হবে?", options: ["দ্বিগুণ হবে", "অর্ধেক হবে", "অপরিবর্তিত থাকবে", "চারগুণ হবে"], answer: "দ্বিগুণ হবে" },
-            { q: "উচ্চচাপে বাস্তব গ্যাসগুলো আদর্শ আচরণ থেকে কী ধরনের বিচ্যুতি দেখায়?", options: ["ধনাত্মক বিচ্যুতি (Positive deviation)", "ঋণাত্মক বিচ্যুতি", "কোনো বিচ্যুতি নেই", "শূন্য"], answer: "ধনাত্মক বিচ্যুতি (Positive deviation)" },
-            { q: "কোন গ্যাসটি ঘরের তাপমাত্রায় সহজে তরলে পরিণত হয় না?", options: ["নাইট্রোজেন (N2)", "অ্যামোনিয়া (NH3)", "কার্বন ডাই-অক্সাইড (CO2)", "সালফার ডাই-অক্সাইড (SO2)"], answer: "নাইট্রোজেন (N2)" },
-            { q: "গ্যাসের ঘনত্ব কিসের ব্যস্তানুপাতিক?", options: ["তাপমাত্রা (পরম তাপমাত্রার)", "চাপ", "আয়তন", "ভর"], answer: "তাপমাত্রা (পরম তাপমাত্রার)" },
-            { q: "একটি নির্দিষ্ট গ্যাসের ক্ষেত্রে রুট মিন স্কয়ার ভেলোসিটি (c) ও পরম তাপমাত্রা (T) এর সম্পর্ক কেমন?", options: ["c $\\propto$ \\sqrt{T}", "c $\\propto$ T", "c $\\propto$ 1/T", "c স্বাধীন"], answer: "c $\\propto$ \\sqrt{T}" },
-            { q: "কোন বিজ্ঞানী গ্যাসের গতি তত্ত্বের সূত্রগুলোর গাণিতিক ভিত্তি স্থাপন করেন?", options: ["ড্যানিয়েল বার্নৌলি", "রবার্ট বয়েল", "চার্লস", "অ্যাভোগাদ্রো"], answer: "ড্যানিয়েল বার্নৌলি" },
-            { q: "বাস্তব গ্যাসগুলো কখন আদর্শ গ্যাসের মতো আচরণ করে?", options: ["যখন অণুগুলোর মধ্যবর্তী দূরত্ব অনেক বেশি থাকে", "যখন চাপ খুব বেশি থাকে", "যখন তাপমাত্রা খুব কম থাকে", "যখন অণুগুলোর আকার বড় হয়"], answer: "যখন অণুগুলোর মধ্যবর্তী দূরত্ব অনেক বেশি থাকে" },
-            { q: "কোন গ্যাসটি বায়ুর চেয়ে হালকা?", options: ["অ্যামোনিয়া (NH3)", "কার্বন ডাই-অক্সাইড (CO2)", "ক্লোরিন (Cl2)", "অক্সিজেন (O2)"], answer: "অ্যামোনিয়া (NH3)" },
-            { q: "এসটিপিতে কার্বন ডাই-অক্সাইড গ্যাসের ঘনত্ব কত?", options: ["1.96 g/L", "1.25 g/L", "0.089 g/L", "1.43 g/L"], answer: "1.96 g/L" },
-            { q: "গ্যাসের তাপমাত্রা 27 °C থেকে বাড়িয়ে 327 °C করা হলে এর গতিশক্তি কত গুণ হবে?", options: ["দ্বিগুণ হবে", "চারগুণ হবে", "অর্ধেক হবে", "একই থাকবে"], answer: "দ্বিগুণ হবে" },
-            { q: "কোনো আবদ্ধ পাত্রে গ্যাস রাখলে তা পাত্রের দেওয়ালে কী প্রয়োগ করে?", options: ["চাপ (Pressure)", "ঘর্ষণ", "টান", "সান্দ্রতা"], answer: "চাপ (Pressure)" }
-        ];
+        <div class="msg" id="msg" aria-live="polite"></div>
+        <button type="button" class="go" id="nextBtn" hidden>পরের রাউন্ড →</button>
+    </section>
 
-        let score = 0;
-        let correctCount = 0;
-        let lives = 3;
-        let timeLeft = 30;
-        let timerInterval;
-        let activeQuestions = [];
-        let currentQ = {};
+    <section id="endView" class="card pad" hidden>
+        <h2 class="end-t" id="endTitle">🧪 ল্যাব পারফরম্যান্স রিপোর্ট</h2>
+        <p class="end-m" id="endMsg"></p>
+        <div class="end-s" id="finalScore">0</div>
+        <div class="log" id="log"></div>
+        <div class="miss" id="missBox" hidden><h3>যেগুলোতে আটকে গিয়েছিলে</h3><ul id="missList"></ul></div>
+        <button type="button" class="go" id="againBtn">পুনরায় ল্যাব শুরু করুন 🔄</button>
+        <button type="button" class="go alt" id="menuBtn">সেটিংস বদলাও</button>
+    </section>
+</div>
+<div class="pop" id="pop"></div>
+<div class="foot">Developed &amp; Designed by <b>Ahanaf Abid Omlan</b></div>
 
-        const scoreDisplay = document.getElementById("score");
-        const timerDisplay = document.getElementById("timer");
-        const livesDisplay = document.getElementById("lives");
-        const questionText = document.getElementById("question-text");
-        const optionsContainer = document.getElementById("options-container");
-        const message = document.getElementById("message");
-        const dashboardScreen = document.getElementById("dashboardScreen");
+<script>
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const R = .0821;
 
-        function startGame() {
-            dashboardScreen.style.display = "none";
-            score = 0;
-            correctCount = 0;
-            lives = 3;
-            scoreDisplay.textContent = score;
-            livesDisplay.textContent = "❤️❤️❤️";
-            activeQuestions = [...questions].sort(() => Math.random() - 0.5);
-            nextQuestion();
-        }
+const Q = [
+ { q: "বয়েলের সূত্রে কোন রাশি দুটি স্থির বা ধ্রুবক থাকে?", options: ["তাপমাত্রা ও ভর", "চাপ ও আয়তন", "চাপ ও তাপমাত্রা", "ঘনত্ব ও ভর"], answer: "তাপমাত্রা ও ভর" },
+ { q: "বয়েলের সূত্র অনুসারে স্থির তাপমাত্রায় নির্দিষ্ট ভরের গ্যাসের চাপ (P) ও আয়তন (V) এর সম্পর্ক কীরূপ?", options: ["P ∝ 1/V (ব্যস্তানুপাতিক)", "P ∝ V (সমানুপাতিক)", "P ∝ V²", "P ও V স্বাধীন"], answer: "P ∝ 1/V (ব্যস্তানুপাতিক)" },
+ { q: "বয়েলের সূত্রের গাণিতিক রূপ নিচের কোনটি?", options: ["PV = ধ্রুবক", "V/T = ধ্রুবক", "P/T = ধ্রুবক", "PVT = ধ্রুবক"], answer: "PV = ধ্রুবক" },
+ { q: "চার্লসের সূত্রে কোন রাশি দুটি স্থির বা ধ্রুবক থাকে?", options: ["চাপ ও ভর", "তাপমাত্রা ও আয়তন", "চাপ ও তাপমাত্রা", "কোনোটিই নয়"], answer: "চাপ ও ভর" },
+ { q: "চার্লসের সূত্র অনুযায়ী স্থির চাপে নির্দিষ্ট ভরের গ্যাসের আয়তন প্রতি ডিগ্রি সেলসিয়াস তাপমাত্রা বৃদ্ধি বা হ্রাসের জন্য 0 °C তাপমাত্রার আয়তনের কত অংশ পরিবর্তিত হয়?", options: ["1/273 অংশ", "1/100 অংশ", "1/22.4 অংশ", "1/546 অংশ"], answer: "1/273 অংশ" },
+ { q: "চার্লসের সূত্রের গাণিতিক রূপ কোনটি?", options: ["V/T = ধ্রুবক", "PV = ধ্রুবক", "P/T = ধ্রুবক", "V × T = ধ্রুবক"], answer: "V/T = ধ্রুবক" },
+ { q: "পরম শূন্য তাপমাত্রা (Absolute Zero Temperature) এর মান সেলসিয়াস স্কেলে কত?", options: ["-273 °C", "0 °C", "-100 °C", "-273.15 K"], answer: "-273 °C" },
+ { q: "কেলভিন স্কেলে বা পরম স্কেলে পরম শূন্য তাপমাত্রার মান কত?", options: ["0 K", "273 K", "-273 K", "100 K"], answer: "0 K" },
+ { q: "যে তাত্ত্বিক তাপমাত্রায় গ্যাসের আয়তন শূন্য হয়ে যায় বলে কল্পনা করা হয়, তাকে কী বলে?", options: ["পরম শূন্য তাপমাত্রা", "সমন্বিত তাপমাত্রা", "ক্রান্তি তাপমাত্রা", "গলনাঙ্ক"], answer: "পরম শূন্য তাপমাত্রা" },
+ { q: "চার্লসের সূত্রানুসারে V বনাম T (কেলভিন স্কেলে) লেখচিত্রের প্রকৃতি কীরূপ হয়?", options: ["মূলবিন্দুগামী সরলরেখা", "পরাবৃত্ত", "অধিবৃত্ত", "বক্ররেখা"], answer: "মূলবিন্দুগামী সরলরেখা" },
+ { q: "বয়েলের সূত্রানুসারে P বনাম 1/V লেখচিত্র কেমন হয়?", options: ["মূলবিন্দুগামী সরলরেখা", "বক্ররেখা", "সমান্তরাল রেখা", "বৃত্তাকার"], answer: "মূলবিন্দুগামী সরলরেখা" },
+ { q: "বয়েলের সূত্রানুসারে P বনাম V লেখচিত্রের আকৃতি কীরূপ?", options: ["সমপরাবৃত্ত (Hyperbola)", "সরলরেখা", "পরাবৃত্ত", "সাপের মতো পেঁচানো"], answer: "সমপরাবৃত্ত (Hyperbola)" },
+ { q: "নির্দিষ্ট ভরের কোনো গ্যাসের ক্ষেত্রে T1 তাপমাত্রায় আয়তন V1 এবং T2 তাপমাত্রায় আয়তন V2 হলে চার্লসের সূত্র অনুযায়ী কোনটি সঠিক?", options: ["V1/T1 = V2/T2", "V1V2 = T1T2", "V1T1 = V2T2", "V1/V2 = T2/T1"], answer: "V1/T1 = V2/T2" },
+ { q: "নির্দিষ্ট ভরের কোনো গ্যাসের ক্ষেত্রে P1 চাপে আয়তন V1 এবং P2 চাপে আয়তন V2 হলে বয়েলের সূত্র অনুযায়ী কোনটি সঠিক?", options: ["P1V1 = P2V2", "P1/V1 = P2/V2", "P1P2 = V1V2", "P1/P2 = V1/V2"], answer: "P1V1 = P2V2" },
+ { q: "গ্যাসের গতিতত্ত্ব অনুযায়ী পরম শূন্য তাপমাত্রায় গ্যাসের অণুগুলোর গতিশক্তি কেমন হয়?", options: ["শূন্য (Zero)", "সর্বোচ্চ", "অপরিবর্তিত", "দ্বিগুণ"], answer: "শূন্য (Zero)" },
+ { q: "কোন বিজ্ঞানী প্রথম গ্যাসের আয়তন ও তাপমাত্রার সম্পর্ক আবিষ্কার করেন?", options: ["জ্যাক চার্লস", "রবার্ট বয়েল", "অ্যাভোগাদ্রো", "টরিচেলি"], answer: "জ্যাক চার্লস" },
+ { q: "রবার্ট বয়েল কোন দেশের বিজ্ঞানী ছিলেন?", options: ["আয়ারল্যান্ড", "ইংল্যান্ড", "ফ্রান্স", "জার্মানি"], answer: "আয়ারল্যান্ড" },
+ { q: "কোন সূত্রটি ব্যাখ্যা করতে গিয়ে পরম শূন্য তাপমাত্রার ধারণা এসেছে?", options: ["চার্লসের সূত্র", "বয়েলের সূত্র", "গ্রাহামের ব্যাপন সূত্র", "ডাল্টনের সূত্র"], answer: "চার্লসের সূত্র" },
+ { q: "সেলসিয়াস স্কেল থেকে কেলভিন স্কেলে তাপমাত্রা নিতে হলে প্রদত্ত মানের সাথে কত যোগ করতে হয়?", options: ["273", "100", "22.4", "546"], answer: "273" },
+ { q: "স্থির তাপমাত্রায় একটি গ্যাসের চাপ দ্বিগুণ করলে এর আয়তন কত হবে?", options: ["অর্ধেক হবে", "দ্বিগুণ হবে", "চারগুণ হবে", "অপরিবর্তিত থাকবে"], answer: "অর্ধেক হবে" },
+ { q: "স্থির চাপে নির্দিষ্ট ভরের গ্যাসের তাপমাত্রা 0 °C থেকে বাড়িয়ে 273 °C করা হলে এর আয়তন কত হবে?", options: ["দ্বিগুণ হবে", "অর্ধেক হবে", "তিনগুণ হবে", "চারগুণ হবে"], answer: "দ্বিগুণ হবে" },
+ { q: "গে-লুসাকের চাপীয় সূত্র অনুযায়ী স্থির আয়তনে নির্দিষ্ট ভরের গ্যাসের চাপ (P) ও পরম তাপমাত্রা (T) এর সম্পর্ক কেমন?", options: ["P ∝ T (সমানুপাতিক)", "P ∝ 1/T", "P ∝ T²", "P স্বাধীন"], answer: "P ∝ T (সমানুপাতিক)" },
+ { q: "গে-লুসাকের সূত্র অনুযায়ী কোন রাশিটি ধ্রুবক থাকে?", options: ["আয়তন (Volume)", "চাপ", "তাপমাত্রা", "ঘনত্ব"], answer: "আয়তন (Volume)" },
+ { q: "আদর্শ গ্যাস সমীকরণ কোনটি?", options: ["PV = nRT", "PV = RT", "P = nRT", "V = nRT"], answer: "PV = nRT" },
+ { q: "আদর্শ গ্যাস সমীকরণে R কে কী বলা হয়?", options: ["মোলার গ্যাস ধ্রুবক", "বয়েল ধ্রুবক", "চার্লস ধ্রুবক", "আদর্শ ধ্রুবক"], answer: "মোলার গ্যাস ধ্রুবক" },
+ { q: "এসটিপিতে (STP) আদর্শ গ্যাসের মোলার আয়তন কত?", options: ["22.4 লিটার", "24.78 লিটার", "11.2 লিটার", "1 লিটার"], answer: "22.4 লিটার" },
+ { q: "এসটিপিতে চাপ (P) এর প্রমাণ মান কত ধরা হয়?", options: ["1 atm (101.325 kPa)", "2 atm", "0.5 atm", "5 atm"], answer: "1 atm (101.325 kPa)" },
+ { q: "এসটিপিতে তাপমাত্রা (T) এর প্রমাণ মান কত?", options: ["273.15 K (0 °C)", "298 K", "0 K", "100 K"], answer: "273.15 K (0 °C)" },
+ { q: "বাস্তব গ্যাস কোন পরিস্থিতিতে আদর্শ গ্যাসের ন্যায় আচরণ করে?", options: ["উচ্চ তাপমাত্রা ও নিম্ন চাপে", "নিম্ন তাপমাত্রা ও উচ্চ চাপে", "উচ্চ তাপমাত্রা ও উচ্চ চাপে", "সর্বদা"], answer: "উচ্চ তাপমাত্রা ও নিম্ন চাপে" },
+ { q: "গ্রাহামের গ্যাস ব্যাপন সূত্র নিচের কোনটির সাথে সম্পর্কিত?", options: ["গ্যাসের ঘনত্ব ও আণবিক ভর", "চাপ ও আয়তন", "তাপমাত্রা ও সান্দ্রতা", "পৃষ্ঠটান"], answer: "গ্যাসের ঘনত্ব ও আণবিক ভর" },
+ /* নতুন */
+ { q: "অ্যাভোগাদ্রোর সূত্র অনুযায়ী একই তাপমাত্রা ও চাপে সমআয়তনের সব গ্যাসে কী সমান থাকে?", options: ["অণুর সংখ্যা", "ভর", "ঘনত্ব", "পরমাণু ভর"], answer: "অণুর সংখ্যা" },
+ { q: "একত্রিত গ্যাস সমীকরণ কোনটি?", options: ["P₁V₁/T₁ = P₂V₂/T₂", "P₁T₁/V₁ = P₂T₂/V₂", "P₁V₂ = P₂V₁T", "V₁T₁ = V₂T₂"], answer: "P₁V₁/T₁ = P₂V₂/T₂" },
+ { q: "ডাল্টনের আংশিক চাপের সূত্র অনুযায়ী গ্যাস মিশ্রণের মোট চাপ কত?", options: ["প্রতিটি গ্যাসের আংশিক চাপের যোগফল", "প্রতিটি গ্যাসের আংশিক চাপের গুণফল", "সবচেয়ে বেশি আংশিক চাপটির সমান", "শূন্য"], answer: "প্রতিটি গ্যাসের আংশিক চাপের যোগফল" },
+ { q: "১ atm চাপ কত mmHg-এর সমান?", options: ["৭৬০", "৭৬", "১০০", "১০১৩"], answer: "৭৬০" },
+ { q: "২৭ °C তাপমাত্রা কেলভিনে কত?", options: ["৩০০ K", "২৭ K", "২৪৬ K", "৩২৭ K"], answer: "৩০০ K" },
+ { q: "স্থির আয়তনে গ্যাসের পরম তাপমাত্রা দ্বিগুণ করলে চাপ কত হবে?", options: ["দ্বিগুণ", "অর্ধেক", "অপরিবর্তিত", "চারগুণ"], answer: "দ্বিগুণ" },
+ { q: "স্থির তাপমাত্রায় ২ L গ্যাসের চাপ ১ atm। চাপ ৪ atm করলে আয়তন কত হবে?", options: ["০.৫ L", "২ L", "৮ L", "১ L"], answer: "০.৫ L" },
+ { q: "স্থির চাপে ৩০০ K তাপমাত্রায় ৬ L গ্যাসকে ৬০০ K এ গরম করলে আয়তন কত হবে?", options: ["১২ L", "৩ L", "৬ L", "১৮ L"], answer: "১২ L" },
+ { q: "গ্যাসের অণুর গড় গতিশক্তি কিসের সমানুপাতিক?", options: ["পরম তাপমাত্রা", "চাপ", "আয়তন", "ঘনত্ব"], answer: "পরম তাপমাত্রা" },
+ { q: "R এর মান (L·atm/mol·K এককে) প্রায় কত?", options: ["০.০৮২১", "৮.৩১৪", "২২.৪", "১.৯৮৭"], answer: "০.০৮২১" },
+ { q: "R এর মান (J/mol·K এককে) প্রায় কত?", options: ["৮.৩১৪", "০.০৮২১", "২২.৪", "৬২.৩"], answer: "৮.৩১৪" },
+ { q: "১ মোল আদর্শ গ্যাসে অণুর সংখ্যা কত?", options: ["৬.০২২ × ১০²³", "৬.০২২ × ১০²²", "৩.০১ × ১০²³", "১.৬ × ১০⁻¹⁹"], answer: "৬.০২২ × ১০²³" },
+ { q: "হাইড্রোজেন ও অক্সিজেনের মধ্যে কোন গ্যাসটি দ্রুত ব্যাপিত হয়?", options: ["হাইড্রোজেন", "অক্সিজেন", "দুটিই সমান", "কোনোটিই নয়"], answer: "হাইড্রোজেন" },
+ { q: "বাস্তব গ্যাসের আচরণ ব্যাখ্যা করতে কোন সমীকরণ ব্যবহৃত হয়?", options: ["ভ্যান ডার ওয়ালস সমীকরণ", "নার্নস্ট সমীকরণ", "আরহেনিয়াস সমীকরণ", "বার্নুলি সমীকরণ"], answer: "ভ্যান ডার ওয়ালস সমীকরণ" },
+ { q: "আদর্শ গ্যাসের অণুগুলোর মধ্যে আন্তঃআণবিক আকর্ষণ কেমন ধরা হয়?", options: ["নগণ্য (শূন্য)", "অত্যন্ত বেশি", "দ্বিগুণ", "চাপের সমান"], answer: "নগণ্য (শূন্য)" },
+ { q: "গ্যাসের চাপ সৃষ্টি হয় কীভাবে?", options: ["অণুগুলো পাত্রের দেয়ালে ধাক্কা দিয়ে", "অণুগুলো একে অপরকে আকর্ষণ করে", "অণুগুলো গলে গিয়ে", "অণুগুলো স্থির থাকার কারণে"], answer: "অণুগুলো পাত্রের দেয়ালে ধাক্কা দিয়ে" },
+ { q: "চাপ পরিমাপের SI একক কোনটি?", options: ["প্যাসকেল (Pa)", "অ্যাটমোস্ফিয়ার", "টর", "বার"], answer: "প্যাসকেল (Pa)" },
+ { q: "ব্যারোমিটার দিয়ে কী মাপা হয়?", options: ["বায়ুমণ্ডলীয় চাপ", "তাপমাত্রা", "আর্দ্রতা", "বাতাসের গতি"], answer: "বায়ুমণ্ডলীয় চাপ" },
+ { q: "তাপমাত্রা বাড়ালে গ্যাসের অণুর গড় গতিবেগ কী হয়?", options: ["বাড়ে", "কমে", "অপরিবর্তিত থাকে", "শূন্য হয়"], answer: "বাড়ে" },
+ { q: "কোন গ্যাস আদর্শ গ্যাসের আচরণের সবচেয়ে কাছাকাছি?", options: ["হিলিয়াম", "অ্যামোনিয়া", "কার্বন ডাই-অক্সাইড", "জলীয় বাষ্প"], answer: "হিলিয়াম" },
+ { q: "STP তে ২ মোল আদর্শ গ্যাসের আয়তন কত?", options: ["৪৪.৮ L", "২২.৪ L", "১১.২ L", "৬৭.২ L"], answer: "৪৪.৮ L" },
+ { q: "স্থির তাপমাত্রায় চাপ বাড়ালে গ্যাসের ঘনত্বের কী হয়?", options: ["বাড়ে", "কমে", "অপরিবর্তিত থাকে", "শূন্য হয়"], answer: "বাড়ে" },
+ { q: "গ্যাসকে সহজে সিলিন্ডারে সংকুচিত করা যায় কেন?", options: ["অণুগুলোর মাঝে অনেক ফাঁকা জায়গা আছে বলে", "অণুগুলো খুব ভারী বলে", "অণুগুলো স্থির বলে", "অণুগুলো আঠালো বলে"], answer: "অণুগুলোর মাঝে অনেক ফাঁকা জায়গা আছে বলে" }
+];
 
-        function startTimer() {
-            timeLeft = 30;
-            timerDisplay.textContent = timeLeft;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerDisplay.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    handleWrongAnswer("সময় শেষ!");
-                }
-            }, 1000);
-        }
+/* ===== সিমুলেশন ===== */
+const cv = $('cv'), g = cv.getContext('2d'), W = 720, H = 260, X0 = 26, XM = 640, Y0 = 22, Y1 = H - 36;
+const SIM = { T: 300, Tg: 300, V: 4, Vg: 4, n: 4 / (R * 300), parts: [], sparks: [], flash: 0, burstT: 0, burstCb: null, hide: { P: false, V: false }, on: false, limit: 20 };
+const STOPS = [[59, 31, 184], [123, 31, 162], [233, 30, 99], [255, 109, 0], [255, 214, 0], [255, 248, 225]];
+function hot(t) { t = clamp(t, 0, .9999) * (STOPS.length - 1); const i = Math.floor(t), f = t - i, a = STOPS[i], b = STOPS[i + 1]; return 'rgb(' + a.map((c, k) => Math.round(c + (b[k] - c) * f)).join(',') + ')'; }
+function simInit(count) { SIM.parts = []; const xr = X0 + SIM.V / 10 * (XM - X0); for (let i = 0; i < count; i++) { const a = Math.random() * 6.283; SIM.parts.push({ x: X0 + 8 + Math.random() * (xr - X0 - 16), y: Y0 + 8 + Math.random() * (Y1 - Y0 - 16), ux: Math.cos(a), uy: Math.sin(a), f: .5 + Math.random() }); } SIM.sparks = []; SIM.burstT = 0; }
+function spark(x, y, n, col, sp) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.283, s = (sp || 160) * (.3 + Math.random()); SIM.sparks.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: .6 + Math.random() * .7, c: col || hot(Math.random()) }); } }
+function simBurst(cb) { if (SIM.burstT > 0) return; SIM.burstT = 1.3; SIM.burstCb = cb; const xr = X0 + SIM.V / 10 * (XM - X0); spark(xr * .6, (Y0 + Y1) / 2, 140, null, 380); SIM.flash = 1; sfx.boom(); $('flash').classList.remove('go'); void $('flash').offsetWidth; $('flash').classList.add('go'); document.body.classList.add('shake'); setTimeout(() => document.body.classList.remove('shake'), 600); }
+let last = 0, roT = 0;
+function loop(ts) {
+    requestAnimationFrame(loop); const dt = Math.min(.033, (ts - last) / 1000 || .016); last = ts; if (!SIM.on || document.hidden) return;
+    SIM.T += (SIM.Tg - SIM.T) * Math.min(1, dt * 4); SIM.V += (SIM.Vg - SIM.V) * Math.min(1, dt * 5);
+    const heat = clamp((SIM.T - 100) / 800, 0, 1); document.documentElement.style.setProperty('--heat', heat.toFixed(3));
+    const xp = X0 + SIM.V / 10 * (XM - X0), base = 120 * Math.sqrt(SIM.T / 300);
+    if (SIM.burstT <= 0) SIM.parts.forEach(p => {
+        const v = base * p.f; p.x += p.ux * v * dt; p.y += p.uy * v * dt;
+        if (p.x < X0 + 4) { p.x = X0 + 4; p.ux = Math.abs(p.ux); } if (p.x > xp - 4) { p.x = xp - 4; p.ux = -Math.abs(p.ux); SIM.flash = Math.min(1, SIM.flash + .06); }
+        if (p.y < Y0 + 4) { p.y = Y0 + 4; p.uy = Math.abs(p.uy); } if (p.y > Y1 - 4) { p.y = Y1 - 4; p.uy = -Math.abs(p.uy); }
+    });
+    SIM.flash = Math.max(0, SIM.flash - dt * 2.2);
+    g.clearRect(0, 0, W, H);
+    if (heat > .1) for (let k = 0; k < 9; k++) { const fx = X0 + 30 + k * ((XM - X0 - 60) / 8), fh = (10 + heat * 46) * (.6 + .4 * Math.sin(ts / 90 + k * 1.7)); const gr = g.createLinearGradient(0, H - 4, 0, H - 4 - fh); gr.addColorStop(0, 'rgba(255,214,0,.9)'); gr.addColorStop(.5, 'rgba(255,109,0,.7)'); gr.addColorStop(1, 'rgba(194,24,91,0)'); g.fillStyle = gr; g.beginPath(); g.moveTo(fx - 14, H - 4); g.quadraticCurveTo(fx, H - 4 - fh * 1.2, fx + 14, H - 4); g.fill(); }
+    g.fillStyle = 'rgba(255,255,255,.04)'; g.fillRect(X0, Y0, xp - X0, Y1 - Y0);
+    const hg = g.createLinearGradient(0, Y0, 0, Y1); hg.addColorStop(0, 'rgba(255,255,255,0)'); hg.addColorStop(1, 'rgba(255,109,0,' + (heat * .35).toFixed(2) + ')'); g.fillStyle = hg; g.fillRect(X0, Y0, xp - X0, Y1 - Y0);
+    g.strokeStyle = hot(.15 + heat * .8); g.lineWidth = 4; g.lineJoin = 'round'; g.beginPath(); g.moveTo(xp, Y0 - 2); g.lineTo(X0 - 2, Y0 - 2); g.lineTo(X0 - 2, Y1 + 2); g.lineTo(xp, Y1 + 2); g.stroke();
+    g.strokeStyle = '#8b8aa5'; g.lineWidth = 6; g.beginPath(); g.moveTo(xp + 14, (Y0 + Y1) / 2); g.lineTo(W - 22, (Y0 + Y1) / 2); g.stroke(); g.fillStyle = '#a7a6bf'; g.fillRect(W - 24, (Y0 + Y1) / 2 - 22, 12, 44);
+    const pg = g.createLinearGradient(xp, 0, xp + 14, 0); pg.addColorStop(0, '#d9d8ea'); pg.addColorStop(1, '#6f6e8c'); g.fillStyle = pg; g.fillRect(xp, Y0 - 6, 14, Y1 - Y0 + 12);
+    if (SIM.flash > .02) { g.fillStyle = 'rgba(255,214,0,' + (SIM.flash * .5).toFixed(2) + ')'; g.fillRect(xp - 6, Y0 - 6, 8, Y1 - Y0 + 12); }
+    if (SIM.burstT <= 0) { g.globalCompositeOperation = 'lighter'; SIM.parts.forEach(p => { const c = hot((p.f * Math.sqrt(SIM.T / 300) - .35) / 2.1); g.fillStyle = c; g.globalAlpha = .28; g.beginPath(); g.arc(p.x, p.y, 8, 0, 6.283); g.fill(); g.globalAlpha = 1; g.beginPath(); g.arc(p.x, p.y, 3.6, 0, 6.283); g.fill(); }); g.globalCompositeOperation = 'source-over'; }
+    if (SIM.sparks.length) { g.globalCompositeOperation = 'lighter'; SIM.sparks = SIM.sparks.filter(s => (s.life -= dt) > 0); SIM.sparks.forEach(s => { s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 120 * dt; g.globalAlpha = clamp(s.life, 0, 1); g.fillStyle = s.c; g.beginPath(); g.arc(s.x, s.y, 3, 0, 6.283); g.fill(); }); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; }
+    if (SIM.burstT > 0) { SIM.burstT -= dt; const r = (1.3 - SIM.burstT) * 320; g.strokeStyle = 'rgba(255,214,0,' + clamp(SIM.burstT, 0, 1) + ')'; g.lineWidth = 6; g.beginPath(); g.arc(xp * .6, (Y0 + Y1) / 2, r, 0, 6.283); g.stroke(); if (SIM.burstT <= 0 && SIM.burstCb) { const cb = SIM.burstCb; SIM.burstCb = null; cb(); } }
+    roT -= dt; if (roT <= 0) { roT = .1; readouts(); }
+}
+function readouts() {
+    const P = SIM.n * R * SIM.T / Math.max(.5, SIM.V), hP = SIM.hide.P, hV = SIM.hide.V;
+    $('rP').textContent = hP ? '?' : P.toFixed(2); $('rV').textContent = hV ? '?' : SIM.V.toFixed(1); $('rT').textContent = Math.round(SIM.T); $('rN').textContent = SIM.n.toFixed(2);
+    $('bP').style.width = hP ? '0' : clamp(P / 12, 0, 1) * 100 + '%'; $('bV').style.width = hV ? '0' : SIM.V / 10 * 100 + '%'; $('bT').style.width = clamp((SIM.T - 100) / 800, 0, 1) * 100 + '%';
+}
+requestAnimationFrame(loop);
+const simP = () => SIM.n * R * SIM.T / SIM.V;
 
-        function nextQuestion() {
-            if (activeQuestions.length === 0) {
-                activeQuestions = [...questions].sort(() => Math.random() - 0.5);
-            }
-            currentQ = activeQuestions.pop();
-            startTimer();
+/* ===== সাধারণ ===== */
+let ac = null;
+function tone(f, t0, dur, type, vol, f2) {
+    if (!soundOn) return;
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), gn = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(gn); gn.connect(ac.destination);
+        const t = ac.currentTime + t0; if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur); gn.gain.setValueAtTime(.0001, t); gn.gain.exponentialRampToValueAtTime(vol || .18, t + .02); gn.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .02); } catch (e) {}
+}
+const sfx = { right() { tone(660, 0, .12); tone(880, .1, .16); }, boom() { tone(140, 0, .7, 'sawtooth', .3, 30); tone(900, 0, .25, 'square', .1, 60); }, whoosh() { tone(200, 0, .4, 'sine', .12, 900); },
+    tick() { tone(1200, 0, .04, 'square', .05); }, end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); }, win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); } };
+let soundOn = sget('gl_sound', '1') === '1', timerOn = sget('gl_timer', '1') === '1';
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
+const paintSound = () => $('soundBtn').textContent = soundOn ? '🔔' : '🔕';
+$('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('gl_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+paintSound();
+const MODES = { quiz: { name: 'কুইজ', sub: '৫৪ প্রশ্ন • ট্যাংক গরম হচ্ছে!' }, sim: { name: 'ল্যাব টাস্ক', sub: 'অনুমান করে পরীক্ষা চালাও' }, mix: { name: 'মিশ্র', sub: 'কুইজ + ল্যাব পর্যায়ক্রমে' }, play: { name: 'খেলাঘর', sub: 'মুক্ত সিমুলেশন' } };
+const DIFFS = { easy: { name: 'সহজ', sub: 'ভুলের সীমা ১০% • বেশি সময়', qt: 40, st: 70, tol: .10, w: .2 }, mid: { name: 'মাঝারি', sub: 'ভুলের সীমা ৫%', qt: 30, st: 50, tol: .05, w: .12 }, hard: { name: 'কঠিন', sub: 'ভুলের সীমা ২.৫% • কম সময়', qt: 20, st: 35, tol: .025, w: .06 } };
+let mode = sget('gl_mode', 'mix'); if (!MODES[mode]) mode = 'mix';
+let diff = sget('gl_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+const bestKey = () => 'gl_best_' + mode + '_' + diff, getBest = () => parseInt(sget(bestKey(), '0'), 10) || 0;
+function chipRow(rowId, obj, current, onPick) {
+    const row = $(rowId); row.replaceChildren();
+    Object.entries(obj).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === current ? ' on' : ''); b.setAttribute('aria-pressed', String(k === current));
+        const t = document.createElement('b'); t.textContent = d.name; const u = document.createElement('small'); u.textContent = d.sub; b.append(t, u); b.addEventListener('click', () => onPick(k)); row.appendChild(b); });
+}
+const RULES = { quiz: '📋 ' + Q.length + 'টি প্রশ্ন। সময় কমার সাথে সাথে ট্যাংক গরম হয়ে চাপ বাড়ে। সময় শেষ বা ভুল উত্তর মানেই 💥 বিস্ফোরণ ও একটি জীবন নষ্ট। ৩টি জীবন।',
+    sim: '📋 ১০টি ল্যাব টাস্ক। স্লাইডার দিয়ে পিস্টন বা তাপমাত্রা ঠিক করে "চালু করো" চাপলে সত্যিকারের ফলাফল দেখা যাবে। আগে হিসাব, পরে পরীক্ষা! ভুলে একটি জীবন যায়। ৩টি জীবন।',
+    mix: '📋 ১৪ রাউন্ড: একবার কুইজ, একবার ল্যাব টাস্ক। ৩টি জীবন, টানা সঠিক উত্তরে কম্বো বোনাস।', play: '📋 কোনো স্কোর নেই। তাপমাত্রা, আয়তন আর গ্যাসের পরিমাণ বদলে সূত্রগুলো নিজের চোখে দেখো। চাপ ২০ atm পার করলে ট্যাংক ফাটবে!' };
+function renderSetup() {
+    chipRow('modeRow', MODES, mode, k => { mode = k; sset('gl_mode', k); renderSetup(); });
+    chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('gl_diff', k); renderSetup(); });
+    $('lvBox').hidden = mode === 'play'; $('rules').textContent = RULES[mode]; $('startBtn').textContent = mode === 'play' ? 'খেলাঘরে ঢোকো 🧪' : 'ল্যাব চালু করো 🔥';
+    const b = getBest(); $('bestLine').textContent = mode !== 'play' && b ? '🏆 এই সেটিংসে তোমার সেরা স্কোর: ' + bn(b) : '';
+}
+$('timerSw').checked = timerOn; $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('gl_timer', timerOn ? '1' : '0'); });
+const show = id => { ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id)); SIM.on = id === 'playView'; if (id !== 'playView') document.documentElement.style.setProperty('--heat', '0'); };
+const popText = t => { const p = $('pop'); p.textContent = t; p.classList.remove('go2'); void p.offsetWidth; p.classList.add('go2'); };
 
-            questionText.innerHTML = currentQ.q;
-            optionsContainer.innerHTML = "";
-            message.textContent = "";
+let deck, cur, kind, rounds, round, score, lives, combo, bestCombo, right, asked, wrongs, locked, limit, deadline, tick, advTimer, used50, usedC, hinted, task, tasksDone;
+const paintLives = () => { $('lives').textContent = lives > 0 ? '🔥'.repeat(lives) : '💀'; $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); };
+const paintStats = () => { $('score').textContent = score; $('rnd').textContent = round; };
+function startGame() {
+    if (mode === 'play') return startPlay();
+    deck = shuffle(Q.slice()); score = 0; lives = 3; combo = 0; bestCombo = 0; right = 0; asked = 0; wrongs = []; round = 0; used50 = false; usedC = false; locked = false; tasksDone = 0;
+    rounds = mode === 'quiz' ? Q.length : mode === 'sim' ? 10 : 14;
+    $('hud').hidden = false; $('pBox').hidden = true; $('best').textContent = getBest(); paintLives(); show('playView'); nextRound();
+}
+function nextRound() {
+    clearTimeout(advTimer); clearInterval(tick); SIM.hide = { P: false, V: false };
+    if (round >= rounds || (mode === 'quiz' && !deck.length)) return endGame(true);
+    round++; locked = false; $('msg').className = 'msg'; $('msg').textContent = ''; $('nextBtn').hidden = true; $('lab').classList.remove('danger'); paintStats();
+    kind = mode === 'quiz' ? 'q' : mode === 'sim' ? 's' : (round % 2 ? 'q' : 's');
+    $('qBox').hidden = kind !== 'q'; $('sBox').hidden = kind !== 's'; SIM.Tg = SIM.T < 120 ? 300 : 300;
+    if (kind === 'q') quizRound(); else taskRound();
+}
+function runTimer(sec, onTick, onEnd) {
+    limit = timerOn ? sec : 0; $('tbar').hidden = !limit; if (!limit) return; deadline = Date.now() + limit * 1000; let ls = -1;
+    tick = setInterval(() => { const left = Math.max(0, deadline - Date.now()), fr = left / (limit * 1000); $('tfill').style.width = fr * 100 + '%'; onTick && onTick(fr); const s = Math.ceil(left / 1000); if (s !== ls) { ls = s; if (s <= 5 && s > 0) sfx.tick(); }
+        if (left <= 0) { clearInterval(tick); onEnd(); } }, 80);
+}
+/* কুইজ */
+function quizRound() {
+    cur = deck.pop(); asked++; SIM.V = SIM.Vg = 4; SIM.n = 4 / (R * 300); SIM.T = SIM.Tg = 300; simInit(46);
+    $('qn').textContent = 'প্রশ্ন ' + asked + ' / ' + Q.length; $('q').textContent = cur.q;
+    const box = $('opts'); box.replaceChildren();
+    shuffle(cur.options.slice()).forEach(o => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.ok = o === cur.answer ? '1' : ''; b.textContent = o; b.addEventListener('click', () => answerQ(o, b)); box.appendChild(b); });
+    $('f50').disabled = used50; $('fC').disabled = usedC || !DIFFS[diff].qt;
+    runTimer(DIFFS[diff].qt, fr => { SIM.Tg = 300 + (1 - fr) * 600; $('lab').classList.toggle('danger', fr < .25); }, () => { qFail(true); });
+}
+function answerQ(sel, btn) {
+    if (locked) return; locked = true; clearInterval(tick); $('f50').disabled = $('fC').disabled = true;
+    document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('right'); });
+    if (sel === cur.answer) {
+        const left = limit ? Math.max(0, deadline - Date.now()) / 1000 : 0; combo++; bestCombo = Math.max(bestCombo, combo); right++;
+        const pts = 10 + (limit ? Math.floor(left / 5) : 0) + (combo >= 3 ? 5 : 0); score += pts; sfx.right(); popText('+' + pts); SIM.Tg = 300; spark(300, 120, 60, '#3dffa0', 200); $('lab').classList.remove('danger');
+        $('msg').className = 'msg ok'; $('msg').textContent = '✅ চমৎকার! সঠিক হিসাব।' + (combo >= 3 ? ' 🔥 কম্বো ' + combo : ''); paintStats(); advTimer = setTimeout(nextRound, 1500);
+    } else { if (btn) btn.classList.add('wrong'); qFail(false); }
+}
+function qFail(timeout) {
+    locked = true; clearInterval(tick); combo = 0; lives--; wrongs.push({ t: cur.q, a: cur.answer }); document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('right'); });
+    $('lab').classList.remove('danger'); paintLives(); $('msg').className = 'msg no'; $('msg').textContent = (timeout ? '⏰ সময় শেষ, ট্যাংক ফেটে গেছে! 💥 ' : '💥 ভুল হিসাব, ট্যাংক ফেটে গেছে! ') + (lives <= 0 ? 'ল্যাব শাটডাউন।' : '');
+    simBurst(() => { if (lives <= 0) endGame(false); else { $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true }); } });
+}
+$('f50').addEventListener('click', () => { if (locked || used50) return; used50 = true; $('f50').disabled = true; shuffle([...document.querySelectorAll('#opts .opt')].filter(b => !b.dataset.ok)).slice(0, 2).forEach(b => { b.classList.add('gone'); b.disabled = true; }); });
+$('fC').addEventListener('click', () => { if (locked || usedC || !limit) return; usedC = true; $('fC').disabled = true; deadline += 10000; SIM.Tg = Math.max(300, SIM.T - 150); sfx.whoosh(); spark(300, 120, 50, '#7fd8ff', 160); });
 
-            let shuffledOpts = [...currentQ.options].sort(() => Math.random() - 0.5);
-            shuffledOpts.forEach(opt => {
-                const btn = document.createElement("button");
-                btn.classList.add("option-btn");
-                btn.innerHTML = opt;
-                btn.onclick = () => checkAnswer(opt);
-                optionsContainer.appendChild(btn);
-            });
-        }
+/* ল্যাব টাস্ক */
+const f1 = x => +x.toFixed(2), tl = () => DIFFS[diff].tol;
+function mkTask() {
+    const t = pick(['boyle', 'charles', 'gl', 'burst']), T = {};
+    if (t === 'boyle') { for (let i = 0; i < 80; i++) { const P1 = pick([1, 1.5, 2, 3]), V1 = pick([4, 5, 6, 8]), V2 = f1(pick([1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10])); if (Math.abs(V2 - V1) < .9) continue; const P2 = P1 * V1 / V2; if (Math.abs(P2 * 100 - Math.round(P2 * 100)) > 1e-6 || P2 > 12) continue; Object.assign(T, { T: pick([273, 300, 350]), P1, V1, P2, V2 }); break; } T.type = t; }
+    else if (t === 'charles') { for (let i = 0; i < 80; i++) { const T1 = pick([200, 250, 300, 400]), V1 = pick([2, 3, 4, 5]), k = pick([.5, 1.5, 2, 2.5, 1.2, 3]), T2 = T1 * k, V2 = V1 * k; if (T2 % 5 || T2 < 100 || T2 > 900 || V2 > 10 || V2 < 1 || Math.abs(V2 * 10 - Math.round(V2 * 10)) > 1e-6) continue; Object.assign(T, { P: pick([1, 2]), T1, V1, T2, V2 }); break; } T.type = t; }
+    else if (t === 'gl') { for (let i = 0; i < 80; i++) { const T1 = pick([200, 300, 400]), P1 = pick([1, 2, 1.5]), k = pick([.5, 1.5, 2, 2.5, 3]), T2 = T1 * k; if (T2 % 5 || T2 < 100 || T2 > 900) continue; Object.assign(T, { V: pick([3, 4, 5, 6]), T1, P1, T2, P2: P1 * k }); break; } T.type = t; }
+    else Object.assign(T, { type: 'burst', V: pick([3, 4, 5]), T1: pick([200, 250, 300]), P1: 2, Pmax: pick([4, 5, 6]) });
+    if (!T.type || (t === 'boyle' && !T.V1) || (t === 'charles' && !T.T1) || (t === 'gl' && !T.T1)) return mkTask();
+    return T;
+}
+function setSlider(lab, min, max, step, val, fmt) { const s = $('sl'); s.min = min; s.max = max; s.step = step; s.value = val; s.disabled = false; $('slLab').textContent = lab; s._f = fmt; $('slVal').textContent = fmt(val); }
+function taskRound() {
+    task = mkTask(); hinted = false; $('hintBox').hidden = true; $('hintBtn').disabled = false; $('fireBtn').disabled = false; $('sn').textContent = 'ল্যাব টাস্ক ' + (++tasksDone);
+    SIM.hide = { P: false, V: false }; const t = task, e = s => '<em>' + s + '</em>';
+    if (t.type === 'boyle') { SIM.n = t.P1 * t.V1 / (R * t.T); SIM.T = SIM.Tg = t.T; SIM.V = SIM.Vg = t.V1; SIM.hide.P = false;
+        $('task').innerHTML = 'তাপমাত্রা ' + e(t.T + ' K') + ' স্থির। শুরুতে ' + e('P₁ = ' + t.P1 + ' atm') + ', ' + e('V₁ = ' + t.V1 + ' L') + '। পিস্টন সরিয়ে চাপ ' + e('P₂ = ' + t.P2 + ' atm') + ' করতে হবে। আয়তন কত করবে? (পিস্টন সরালে চাপ এখানে লুকোনো থাকবে)'; SIM.hide.P = true;
+        setSlider('🗜️ আয়তন V₂', 1, 10, .1, t.V1, v => (+v).toFixed(1) + ' L'); }
+    else if (t.type === 'charles') { SIM.n = t.P * t.V1 / (R * t.T1); SIM.T = SIM.Tg = t.T1; SIM.V = SIM.Vg = t.V1; SIM.hide.V = false;
+        $('task').innerHTML = 'চাপ ' + e(t.P + ' atm') + ' স্থির (মুক্ত পিস্টন)। শুরুতে ' + e('T₁ = ' + t.T1 + ' K') + ', ' + e('V₁ = ' + t.V1 + ' L') + '। আয়তন ' + e('V₂ = ' + t.V2 + ' L') + ' করতে গ্যাসকে কত K তাপমাত্রায় নিতে হবে?'; setSlider('🌡️ তাপমাত্রা T₂', 100, 900, 5, t.T1, v => v + ' K'); }
+    else if (t.type === 'gl') { SIM.n = t.P1 * t.V / (R * t.T1); SIM.T = SIM.Tg = t.T1; SIM.V = SIM.Vg = t.V;
+        $('task').innerHTML = 'আয়তন ' + e(t.V + ' L') + ' স্থির (শক্ত পাত্র)। শুরুতে ' + e('T₁ = ' + t.T1 + ' K') + ', ' + e('P₁ = ' + t.P1 + ' atm') + '। চাপ ' + e('P₂ = ' + t.P2 + ' atm') + ' করতে তাপমাত্রা কত K করবে?'; setSlider('🌡️ তাপমাত্রা T₂', 100, 900, 5, t.T1, v => v + ' K'); }
+    else { SIM.n = t.P1 * t.V / (R * t.T1); SIM.T = SIM.Tg = t.T1; SIM.V = SIM.Vg = t.V;
+        $('task').innerHTML = 'শক্ত ট্যাংক ' + e(t.V + ' L') + '। শুরুতে ' + e('T₁ = ' + t.T1 + ' K') + ', ' + e('P₁ = ' + t.P1 + ' atm') + '। ট্যাংক ' + e(t.Pmax + ' atm') + ' এর বেশি চাপ সইতে পারে না। ফাটার আগে যতটা সম্ভব গরম করো, চাপ যেন ' + e(f1(t.Pmax * (1 - DIFFS[diff].w)) + '–' + t.Pmax + ' atm') + ' এর মধ্যে থাকে! (আসল চাপ লুকোনো)'; SIM.hide.P = true; setSlider('🌡️ তাপমাত্রা T', 100, 900, 5, t.T1, v => v + ' K'); }
+    if (t.type === 'gl') SIM.hide.P = true; if (t.type === 'charles') SIM.hide.V = true;
+    simInit(46); $('sl').oninput = null;
+    runTimer(DIFFS[diff].st, null, () => taskFail(true));
+}
+$('sl').addEventListener('input', e => { if (locked || !task || $('sBox').hidden) return; const v = +e.target.value; $('slVal').textContent = e.target._f(v); if (task.type === 'boyle') SIM.Vg = v; else SIM.Tg = v; });
+function taskEval() {
+    const t = task, v = +$('sl').value, tol = tl(); let ok, shown, ideal, err;
+    if (t.type === 'boyle') { const P = t.P1 * t.V1 / v; err = Math.abs(P - t.P2) / t.P2; ok = err <= tol + 1e-9; shown = 'চাপ P₂ = ' + P.toFixed(2) + ' atm (লক্ষ্য ' + t.P2 + ')'; ideal = 'V₂ = ' + (t.P1 * t.V1 / t.P2).toFixed(1) + ' L'; SIM.hide.P = false; }
+    else if (t.type === 'charles') { const V = t.V1 * v / t.T1; err = Math.abs(V - t.V2) / t.V2; ok = err <= tol + 1e-9 && V <= 10; shown = 'আয়তন V₂ = ' + Math.min(V, 10).toFixed(1) + ' L (লক্ষ্য ' + t.V2 + ')'; ideal = 'T₂ = ' + t.T2 + ' K'; SIM.Vg = clamp(V, 1, 10); SIM.hide.V = false; }
+    else if (t.type === 'gl') { const P = t.P1 * v / t.T1; err = Math.abs(P - t.P2) / t.P2; ok = err <= tol + 1e-9; shown = 'চাপ P₂ = ' + P.toFixed(2) + ' atm (লক্ষ্য ' + t.P2 + ')'; ideal = 'T₂ = ' + t.T2 + ' K'; SIM.hide.P = false; }
+    else { const P = t.P1 * v / t.T1, lo = t.Pmax * (1 - DIFFS[diff].w); ok = P <= t.Pmax + 1e-9 && P >= lo - 1e-9; err = P > t.Pmax ? 1 : Math.max(0, (t.Pmax - P) / t.Pmax); shown = 'চাপ = ' + P.toFixed(2) + ' atm (সীমা ' + t.Pmax + ')'; ideal = 'T ≈ ' + Math.round(t.T1 * t.Pmax / t.P1) + ' K এর একটু নিচে'; t.burst = P > t.Pmax + 1e-9; SIM.hide.P = false; }
+    return { ok, shown, ideal, err };
+}
+$('fireBtn').addEventListener('click', () => {
+    if (locked) return; locked = true; clearInterval(tick); $('fireBtn').disabled = $('hintBtn').disabled = true; $('sl').disabled = true; sfx.whoosh(); const left = limit ? Math.max(0, deadline - Date.now()) / 1000 : 0;
+    const r = taskEval(); $('msg').className = 'msg ' + (r.ok ? 'ok' : 'no');
+    if (r.ok) { combo++; bestCombo = Math.max(bestCombo, combo); right++; const pts = 25 + (limit ? Math.floor(left / 3) : 0) + (r.err < tl() / 3 ? 15 : 0) + (combo >= 3 ? 10 : 0) - (hinted ? 10 : 0); score += pts; sfx.right(); popText('+' + pts); spark(500, 120, 90, null, 240);
+        $('msg').textContent = '✅ দারুণ পরীক্ষা! ' + r.shown + (combo >= 3 ? ' 🔥 কম্বো ' + combo : ''); paintStats(); advTimer = setTimeout(nextRound, 2600); }
+    else { combo = 0; lives--; wrongs.push({ t: $('task').textContent, a: r.ideal }); paintLives(); $('msg').textContent = '❌ ' + r.shown + '। সঠিক: ' + r.ideal + (lives <= 0 ? ' • ল্যাব শাটডাউন।' : '');
+        const after = () => { if (lives <= 0) endGame(false); else { $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true }); } };
+        if (task.type === 'burst' && task.burst) simBurst(after); else setTimeout(after, 900); }
+    paintStats();
+});
+function taskFail(timeout) { if (locked) return; locked = true; combo = 0; lives--; wrongs.push({ t: $('task').textContent, a: 'সময় শেষ' }); paintLives(); $('fireBtn').disabled = $('hintBtn').disabled = true; $('sl').disabled = true; $('msg').className = 'msg no'; $('msg').textContent = '⏰ সময় শেষ, পরীক্ষা বাতিল!'; sfx.end(); if (lives <= 0) { advTimer = setTimeout(() => endGame(false), 1600); } else { $('nextBtn').hidden = false; } }
+const HINTS = { boyle: 'P₁V₁ = P₂V₂ ⇒ V₂ = P₁ × V₁ ÷ P₂', charles: 'V₁/T₁ = V₂/T₂ ⇒ T₂ = T₁ × V₂ ÷ V₁', gl: 'P₁/T₁ = P₂/T₂ ⇒ T₂ = T₁ × P₂ ÷ P₁', burst: 'P₁/T₁ = P₂/T₂ ⇒ T = T₁ × P ÷ P₁' };
+$('hintBtn').addEventListener('click', () => { if (locked || hinted) return; if (score < 10) { $('hintBox').hidden = false; $('hintBox').textContent = 'সূত্রের জন্য অন্তত ১০ পয়েন্ট লাগবে।'; return; } hinted = true; score -= 10; paintStats(); $('hintBtn').disabled = true; $('hintBox').hidden = false; $('hintBox').textContent = HINTS[task.type]; });
 
-        function checkAnswer(selected) {
-            clearInterval(timerInterval);
-            const buttons = document.querySelectorAll(".option-btn");
-            
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.innerHTML === currentQ.answer) {
-                    btn.style.background = "#10b981";
-                    btn.style.color = "#fff";
-                } else if (btn.innerHTML === selected) {
-                    btn.style.background = "#f43f5e";
-                    btn.style.color = "#fff";
-                }
-            });
+/* খেলাঘর */
+function startPlay() {
+    show('playView'); $('hud').hidden = true; $('qBox').hidden = true; $('sBox').hidden = true; $('pBox').hidden = false; $('tbar').hidden = true; $('nextBtn').hidden = true; $('msg').textContent = ''; SIM.hide = { P: false, V: false }; locked = false;
+    const t = +$('pT').value, v = +$('pV').value, n = +$('pN').value; SIM.T = SIM.Tg = t; SIM.V = SIM.Vg = v; SIM.n = n; simInit(Math.round(clamp(n * 70, 10, 130))); pUpd();
+}
+let pBurst = false;
+function pUpd() { const t = +$('pT').value, v = +$('pV').value, n = +$('pN').value; $('pTv').textContent = t + ' K'; $('pVv').textContent = v.toFixed(1) + ' L'; $('pNv').textContent = n.toFixed(2) + ' mol';
+    SIM.Tg = t; SIM.Vg = v; SIM.n = n; const want = Math.round(clamp(n * 70, 10, 130)); while (SIM.parts.length < want) { const a = Math.random() * 6.283; SIM.parts.push({ x: X0 + 10 + Math.random() * 20, y: Y0 + 10 + Math.random() * (Y1 - Y0 - 20), ux: Math.cos(a), uy: Math.sin(a), f: .5 + Math.random() }); } if (SIM.parts.length > want) SIM.parts.length = want;
+    const P = n * R * t / v; $('pMsg').className = 'msg' + (P > 14 ? ' no' : ''); $('pMsg').textContent = P > 20 ? '' : P > 14 ? '⚠️ বিপজ্জনক চাপ! ট্যাংক ফাটার উপক্রম!' : 'চাপ ২০ atm পার হলে ট্যাংক ফাটবে! 💥';
+    if (P > 20 && !pBurst) { pBurst = true; $('pMsg').className = 'msg no'; $('pMsg').textContent = '💥 বুম! ট্যাংক ফেটে গেছে। আবার চেষ্টা করো।'; simBurst(() => { $('pT').value = 300; $('pV').value = 4; $('pN').value = 0.5; pBurst = false; startPlay(); }); } }
+['pT', 'pV', 'pN'].forEach(id => $(id).addEventListener('input', () => { if (!pBurst) pUpd(); }));
+$('pCold').addEventListener('click', () => { $('pT').value = 100; sfx.whoosh(); spark(300, 120, 50, '#7fd8ff', 160); pUpd(); });
+$('pHot').addEventListener('click', () => { $('pT').value = 900; sfx.whoosh(); pUpd(); });
+$('pSq').addEventListener('click', () => { $('pV').value = 1; sfx.whoosh(); pUpd(); });
+$('pExit').addEventListener('click', () => { SIM.on = false; renderSetup(); show('startView'); });
 
-            if (selected === currentQ.answer) {
-                score += 10;
-                correctCount++;
-                scoreDisplay.textContent = score;
-                message.textContent = "✅ চমৎকার! সঠিক হিসাব।";
-                message.style.color = "#10b981";
-
-                setTimeout(() => {
-                    nextQuestion();
-                }, 1200);
-            } else {
-                handleWrongAnswer("ভুল হিসাব!");
-            }
-        }
-
-        function handleWrongAnswer(reason) {
-            lives--;
-            updateLivesDisplay();
-
-            if (lives > 0) {
-                message.textContent = `❌ ${reason} একটি লাইফ হারিয়েছে! (${lives}টি বাকি)`;
-                message.style.color = "#f43f5e";
-                setTimeout(() => {
-                    nextQuestion();
-                }, 1500);
-            } else {
-                message.textContent = `❌ ${reason} সব লাইফ শেষ! ল্যাব শাটডাউন।`;
-                message.style.color = "#f43f5e";
-                setTimeout(() => {
-                    showDashboard();
-                }, 1500);
-            }
-        }
-
-        function updateLivesDisplay() {
-            let hearts = "";
-            for (let i = 0; i < lives; i++) hearts += "❤️";
-            for (let i = lives; i < 3; i++) hearts += "🖤";
-            livesDisplay.textContent = hearts;
-        }
-
-        function showDashboard() {
-            clearInterval(timerInterval);
-            let grade = "C (উন্নতি প্রয়োজন)";
-            if (correctCount >= 15) grade = "A+ (গ্যাস ল্যাব মাস্টার ⚗️)";
-            else if (correctCount >= 8) grade = "B (দারুণ চেষ্টা 👍)";
-            else if (correctCount >= 3) grade = "C+ (ভালো)";
-
-            const dashContent = document.getElementById("dashContent");
-            dashContent.innerHTML = `
-                মোট স্কোর: <span>${score}</span><br>
-                সঠিক উত্তর দিয়েছেন: <span>${correctCount} টি</span><br>
-                পারফরম্যান্স গ্রেড: <span>${grade}</span>
-            `;
-            dashboardScreen.style.display = "flex";
-        }
-
-        startGame();
-    </script>
+function endGame(won) {
+    clearInterval(tick); clearTimeout(advTimer); (won ? sfx.win : sfx.end)(); const prev = getBest(), record = score > prev; if (record) sset(bestKey(), score);
+    const acc = round ? Math.round(right / Math.max(1, round - (locked ? 0 : 1)) * 100) : 0, a2 = clamp(acc, 0, 100);
+    const grade = a2 >= 90 ? 'A+ (গ্যাস ল্যাব মাস্টার ⚗️)' : a2 >= 70 ? 'A (দক্ষ বিজ্ঞানী 🔬)' : a2 >= 50 ? 'B (দারুণ চেষ্টা 👍)' : a2 >= 25 ? 'C+ (ভালো)' : 'C (উন্নতি প্রয়োজন)';
+    $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? '🧪 ল্যাব পারফরম্যান্স রিপোর্ট' : '💥 ল্যাব শাটডাউন');
+    $('endMsg').textContent = won ? 'আপনার কেমিক্যাল অ্যানালাইসিস সম্পন্ন হয়েছে।' : 'সূত্রগুলো আরেকবার দেখে নিয়ে আবার ল্যাবে ঢোকো! 💪';
+    $('finalScore').textContent = score; const lg = $('log'); lg.replaceChildren();
+    [['সঠিক উত্তর', right + ' টি'], ['সেরা কম্বো', bestCombo], ['অর্জন গ্রেড', grade]].forEach(([a, b]) => { const p = document.createElement('p'), s = document.createElement('span'), v = document.createElement('b'); s.textContent = a; v.textContent = b; p.append(s, v); lg.appendChild(p); });
+    const ul = $('missList'); ul.replaceChildren(); wrongs.slice(0, 20).forEach(w => { const li = document.createElement('li'), b = document.createElement('b'); li.textContent = w.t + ' → '; b.textContent = w.a; li.appendChild(b); ul.appendChild(li); });
+    $('missBox').hidden = !wrongs.length; show('endView'); $('againBtn').focus({ preventScroll: true });
+}
+$('startBtn').addEventListener('click', startGame); $('againBtn').addEventListener('click', startGame);
+$('menuBtn').addEventListener('click', () => { clearInterval(tick); renderSetup(); show('startView'); });
+$('nextBtn').addEventListener('click', nextRound);
+document.addEventListener('keydown', e => {
+    if ($('playView').hidden || mode === 'play') return;
+    if (e.key >= '1' && e.key <= '4' && !locked && kind === 'q') { const b = document.querySelectorAll('#opts .opt')[+e.key - 1]; if (b && !b.disabled) b.click(); }
+    else if (e.key === 'Enter') { if (locked && !$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); nextRound(); } else if (!locked && kind === 's' && document.activeElement !== $('hintBtn') && document.activeElement !== $('sl')) { e.preventDefault(); $('fireBtn').click(); } }
+});
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; } });
+renderSetup(); show('startView');
+</script>
 </body>
 </html>
