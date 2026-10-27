@@ -1,150 +1,407 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <title>pH Lab: Expert Mode</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #05070c; color: #e2e8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        
-        .back-btn { position: fixed; top: 15px; left: 15px; color: #38bdf8; text-decoration: none; font-weight: bold; font-size: 1.1rem; padding: 10px; z-index: 1000; border: 1px solid #38bdf8; border-radius: 8px; }
-        .back-btn:hover { background: #38bdf8; color: #05070c; }
-
-        .lab-panel { background: #111827; padding: 30px; border-radius: 30px; border: 2px solid #334155; width: 400px; text-align: center; }
-        .game-title { color: #fbbf24; font-size: 1.6rem; margin-bottom: 20px; border-bottom: 2px solid #fbbf24; padding-bottom: 10px; }
-        
-        .ph-gauge { width: 100%; height: 25px; background: #1e293b; border-radius: 12px; margin: 20px 0; overflow: hidden; border: 1px solid #475569; }
-        #bar { height: 100%; width: 50%; transition: 0.5s; }
-        
-        input { width: 90px; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #05070c; color: white; text-align: center; font-size: 1.5rem; margin-bottom: 15px; }
-        
-        .controls button { padding: 12px 25px; margin: 5px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .info-box { margin-top: 20px; padding: 15px; background: #1e293b; border-radius: 15px; display: none; text-align: left; border-left: 5px solid #3b82f6; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08171b">
+<title>pH Lab: Expert Mode | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg:#eef6f3;--text:#0d2a2e;--muted:#4d6d6e;--line:rgba(13,42,46,.2);--soft:rgba(13,42,46,.06);--good:#0f7a4a;--bad:#c0264b;--gold:#a15c07;--liq:#3fae49}
+[data-theme="dark"]{--bg:#08171b;--text:#e8f3f1;--muted:#8aa5a6;--line:rgba(255,255,255,.17);--soft:rgba(255,255,255,.06);--good:#4ade9b;--bad:#ff7a98;--gold:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:0 18px 56px;font-family:'Outfit','Hind Siliguri','Segoe UI',system-ui,sans-serif;color:var(--text);background:radial-gradient(70% 55% at 50% 22%,color-mix(in srgb,var(--liq) 24%,transparent),transparent 72%),var(--bg);transition:background-color .3s,color .3s}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--liq);outline-offset:3px}
+.head{display:flex;align-items:center;gap:10px;max-width:760px;margin:0 auto;padding:16px 0}
+.head .sp{flex:1}
+.lnk{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 4px;font:inherit;font-size:14px;font-weight:600;text-decoration:none;color:var(--muted);background:none;border:0;cursor:pointer}
+.lnk:hover{color:var(--text)}
+.ib{width:40px;height:40px;border-radius:50%;font-size:16px;border:1.5px solid var(--line);background:var(--soft);color:var(--text);cursor:pointer;transition:border-color .2s}
+.ib:hover{border-color:var(--liq)}
+.wrap{max-width:760px;margin:0 auto}
+h1{margin:0;font-size:clamp(2.6rem,10vw,4.4rem);line-height:.95;font-weight:700;letter-spacing:-2px}
+h1 em{display:block;margin-top:8px;font-size:.28em;font-style:normal;font-weight:500;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+.lead{margin:16px 0 0;max-width:44ch;font-size:16px;line-height:1.7;color:var(--muted)}
+.scale{position:relative;height:16px;margin:30px 0 28px;border-radius:10px;background:linear-gradient(90deg,#e4202a,#f26a21,#f9c823,#c9d93a,#3fae49,#1aa88a,#2b6fd6,#4b4fc9,#7a2d9a)}
+.scale span{position:absolute;top:22px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);transform:translateX(-50%)}
+.label{margin:24px 0 8px;font-size:13px;font-weight:600;letter-spacing:.4px;color:var(--muted)}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{flex:1 1 0;min-width:108px;padding:12px 16px;text-align:center;font:inherit;cursor:pointer;color:var(--muted);background:transparent;border:1.5px solid var(--line);border-radius:999px;transition:border-color .2s,background .2s}
+.chip b{display:block;font-size:15px;font-weight:600;color:var(--text)}
+.chip small{display:block;margin-top:1px;font-size:12px}
+.chip:hover{border-color:var(--text)}
+.chip.on{background:var(--text);border-color:var(--text)}
+.chip.on b,.chip.on small{color:var(--bg)}
+.sw-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;font-size:15px;font-weight:500}
+.switch{position:relative;width:50px;height:28px;flex-shrink:0}
+.switch input{position:absolute;inset:0;z-index:2;margin:0;opacity:0;cursor:pointer}
+.switch .tr{position:absolute;inset:0;border-radius:999px;background:var(--line);transition:background .2s}
+.switch .tr::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--bg);transition:transform .2s}
+.switch input:checked~.tr{background:var(--text)}
+.switch input:checked~.tr::after{transform:translateX(22px)}
+.switch input:focus-visible~.tr{outline:3px solid var(--liq);outline-offset:3px}
+.rules{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:14px;line-height:1.85;color:var(--muted)}
+.sheet{margin-top:14px;font-size:14px;line-height:1.9;color:var(--muted)}
+.sheet summary{cursor:pointer;font-weight:600;color:var(--text)}
+.go{display:block;width:100%;margin-top:24px;padding:16px;font:inherit;font-size:17px;font-weight:600;cursor:pointer;color:var(--bg);background:var(--text);border:0;border-radius:999px;box-shadow:0 10px 30px -8px var(--liq);transition:transform .2s,box-shadow .2s}
+.go:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 36px -8px var(--liq)}
+.go:disabled{opacity:.4;cursor:default}
+.go.alt{margin-top:10px;color:var(--text);background:transparent;border:1.5px solid var(--line);box-shadow:none}
+.best-line{margin-top:16px;font-size:14px;font-weight:600;color:var(--gold)}
+.sts{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.sts div{flex:1;text-align:center}
+.sts div:first-child{text-align:left}.sts div:last-child{text-align:right}
+.sts b{display:block;margin-top:2px;font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--text)}
+.bench{position:relative;display:grid;grid-template-columns:minmax(150px,.8fr) 1.2fr;gap:8px 18px;align-items:center;padding:18px 0 4px}
+.beaker{position:relative;width:100%;max-width:210px;margin:0 auto}
+.beaker svg{display:block;width:100%;height:auto;overflow:visible}
+.tag{position:absolute;left:50%;top:62%;max-width:76%;padding:5px 10px;transform:translate(-50%,-50%) rotate(-3deg);text-align:center;font-size:clamp(12px,3.4vw,15px);font-weight:700;line-height:1.3;color:#0d2a2e;background:#fff;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.28)}
+.wave{animation:wv 3.2s linear infinite}
+@keyframes wv{to{transform:translateX(-80px)}}
+.bub{animation:rise 3.6s ease-in infinite;opacity:0}
+.bub:nth-of-type(2){animation-delay:1.1s}.bub:nth-of-type(3){animation-delay:2.2s}
+@keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.8}100%{transform:translateY(-70px);opacity:0}}
+.beaker.shake{animation:shk .35s}
+@keyframes shk{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.inst{text-align:center}
+.dial{width:100%;max-width:330px}
+#needle{transform-origin:120px 125px;transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
+.read{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-top:-4px}
+.read input{width:3.4ch;padding:0;font-family:'IBM Plex Mono',monospace;font-size:clamp(2.6rem,10vw,3.6rem);font-weight:600;text-align:center;color:var(--text);background:transparent;border:0;border-bottom:2px solid var(--line);-moz-appearance:textfield;appearance:textfield}
+.read input::-webkit-outer-spin-button,.read input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.read span{font-size:14px;font-weight:600;color:var(--muted)}
+.clock{position:absolute;top:10px;right:0;width:58px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--muted)}
+.clock svg{display:block;width:100%}
+.clock.low{color:var(--bad)}
+.ctl{padding:8px 0}
+.slider{width:100%;height:14px;margin:6px 0 14px;border-radius:8px;outline-offset:6px;-webkit-appearance:none;appearance:none;cursor:pointer;background:linear-gradient(90deg,#e4202a,#f26a21,#f9c823,#c9d93a,#3fae49,#1aa88a,#2b6fd6,#4b4fc9,#7a2d9a)}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--bg);border:4px solid var(--text);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--bg);border:4px solid var(--text)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.st{min-height:46px;font:inherit;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;cursor:pointer;color:var(--text);background:var(--soft);border:1.5px solid var(--line);border-radius:999px;touch-action:manipulation;user-select:none;transition:border-color .15s}
+.st:hover{border-color:var(--liq)}
+.st:active{background:var(--line)}
+.tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+.pips{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.pips i{width:12px;height:12px;border-radius:50%;background:var(--text)}
+.pips i.off{background:transparent;border:1.5px solid var(--line)}
+.hintbtn{min-height:40px;padding:0 16px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:var(--gold);background:transparent;border:1.5px solid var(--gold);border-radius:999px}
+.hintbtn:disabled{opacity:.4;cursor:default}
+.note{margin-top:10px;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.7;font-weight:500;color:var(--gold);background:var(--soft)}
+.fb{display:none;margin-top:14px;padding:14px 16px;border-radius:16px;font-size:15px;line-height:1.7;font-weight:600;background:var(--soft);border-left:5px solid}
+.fb.show{display:block}
+.fb.ok{color:var(--good);border-color:var(--good)}
+.fb.no{color:var(--bad);border-color:var(--bad)}
+.fb span{display:block;margin-top:4px;color:var(--text);font-weight:500;font-size:14px}
+.pop{position:absolute;left:50%;top:34%;z-index:5;font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:600;color:var(--good);pointer-events:none;opacity:0;white-space:nowrap}
+.pop.go2{animation:pop .9s ease-out}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-46px)}}
+.end-t{margin:20px 0 6px;font-size:2.2rem;font-weight:700;line-height:1.15;letter-spacing:-.5px}
+.end-m{margin:0 0 10px;font-size:15.5px;line-height:1.7;color:var(--muted)}
+.end-s{font-family:'IBM Plex Mono',monospace;font-size:4.6rem;line-height:1;font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);margin:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tiles div{padding:14px 6px;text-align:center}
+.tiles div+div{border-left:1px solid var(--line)}
+.tiles small{display:block;font-size:12.5px;color:var(--muted)}
+.tiles b{font-family:'IBM Plex Mono',monospace;font-size:21px}
+.miss h3{margin:16px 0 8px;font-size:15px}
+.miss ul{margin:0;padding:0;list-style:none;max-height:200px;overflow-y:auto}
+.miss li{padding:9px 0;font-size:14px;line-height:1.6;border-bottom:1px solid var(--line)}
+.foot{margin:40px auto 0;text-align:center;font-size:12.5px;letter-spacing:.5px;color:var(--muted)}
+.foot b{color:var(--text)}
+@media(max-width:520px){.bench{grid-template-columns:1fr}.beaker{max-width:170px}.clock{top:6px}.head .long{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
+<header class="head">
+    <a class="lnk" href="games.html">← <span class="long">গেম হাব</span></a>
+    <span class="sp"></span>
+    <button type="button" class="ib" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
+    <button type="button" class="ib" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+</header>
+<div class="wrap"><main>
+    <section id="startView">
+        <h1>pH Lab<em>Expert Mode</em></h1>
+        <p class="lead">স্যাম্পলের নাম দেখে ডায়ালের কাঁটা আর বিকারের রং মিলিয়ে নিখুঁত pH ঠিক করো।</p>
+        <div class="scale" aria-hidden="true" id="scale"></div>
+        <div class="label">কয়টি স্যাম্পল?</div>
+        <div class="chips" id="lenRow" role="group" aria-label="স্যাম্পল সংখ্যা"></div>
+        <div class="label">লেভেল</div>
+        <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
+        <div class="sw-row"><span>⏱ ঘড়ির কাঁটা (সময়ের সীমা)</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="tr"></span></label></div>
+        <div class="rules" id="rules"></div>
+        <details class="sheet"><summary>📖 pH স্কেল গাইড</summary>
+            pH ০–৬.৯: অ্যাসিডিক (লাল-কমলা-হলুদ)। pH ৭: প্রশম (সবুজ)। pH ৭.১–১৪: ক্ষারীয় (নীল-বেগুনি)।<br>
+            মনে রাখার মতো: পেটের অ্যাসিড ~১.৫, লেবু ~২.২, কফি ~৫, দুধ ~৬.৫, বিশুদ্ধ পানি ৭, রক্ত ৭.৪, বেকিং সোডা ~৮.৫, সাবান ~১০, অ্যামোনিয়া ~১১.৫, ব্লিচ ~১২.৫।
+        </details>
+        <button type="button" class="go" id="startBtn">পরীক্ষা শুরু করো</button>
+        <div class="best-line" id="bestLine"></div>
+    </section>
 
-<a href="games.html" class="back-btn">ফিরে যান</a>
+    <section id="playView" hidden style="position:relative">
+        <div class="sts">
+            <div>স্কোর<b id="score">০</b></div><div>সেরা<b id="best">০</b></div><div>স্যাম্পল<b id="qNo">১/১০</b></div><div>কম্বো<b id="combo">০</b></div><div>জীবন<b id="lives" aria-label="জীবন">❤️❤️❤️</b></div>
+        </div>
+        <div class="bench">
+            <div class="clock" id="clock" aria-label="বাকি সময়" role="timer"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".5"/><g id="ticks"></g><line id="hand" x1="32" y1="32" x2="32" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="transform-origin:32px 32px"/><circle cx="32" cy="32" r="3" fill="currentColor"/></svg><span id="secs">৩০</span></div>
+            <div class="beaker" id="beaker">
+                <svg viewBox="0 0 160 205" aria-hidden="true">
+                    <defs><clipPath id="inner"><path d="M33 14 V150 Q33 175 58 175 H102 Q127 175 127 150 V14 Z"/></clipPath></defs>
+                    <ellipse cx="80" cy="196" rx="52" ry="6" fill="#000" opacity=".25"/>
+                    <g clip-path="url(#inner)">
+                        <rect id="liqR" x="0" y="82" width="160" height="110" style="fill:var(--liq);transition:fill .35s"/>
+                        <path id="liqW" class="wave" d="M-40 82 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 V90 H-40Z" style="fill:var(--liq);transition:fill .35s"/>
+                        <circle class="bub" cx="55" cy="160" r="4" fill="#fff"/><circle class="bub" cx="82" cy="165" r="3" fill="#fff"/><circle class="bub" cx="105" cy="158" r="5" fill="#fff"/>
+                    </g>
+                    <path d="M33 14 V150 Q33 175 58 175 H102 Q127 175 127 150 V14" fill="rgba(255,255,255,.07)" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+                    <path d="M25 14 H135" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+                    <g stroke="currentColor" stroke-width="2" opacity=".5"><path d="M127 50 h-10"/><path d="M127 80 h-14"/><path d="M127 110 h-10"/><path d="M127 140 h-14"/></g>
+                </svg>
+                <div class="tag" id="tag">--</div>
+            </div>
+            <div class="inst">
+                <svg class="dial" viewBox="0 0 240 150" id="dial" role="img" aria-label="pH ডায়াল"></svg>
+                <div class="read"><input type="number" id="phInput" value="7.0" step="0.1" min="0" max="14" inputmode="decimal" aria-label="pH মান"><span id="kind">প্রশম</span></div>
+            </div>
+        </div>
+        <div class="ctl">
+            <input type="range" class="slider" id="slider" min="0" max="14" step="0.1" value="7" aria-label="pH স্লাইডার">
+            <div class="steps">
+                <button type="button" class="st" id="mM1" aria-label="এক কমাও">−১</button><button type="button" class="st" id="mS" aria-label="০.১ কমাও (অ্যাসিড)">−০.১</button>
+                <button type="button" class="st" id="pS" aria-label="০.১ বাড়াও (ক্ষার)">+০.১</button><button type="button" class="st" id="pM1" aria-label="এক বাড়াও">+১</button>
+            </div>
+            <div class="tools"><div class="pips" id="pips" aria-live="polite"></div><button type="button" class="hintbtn" id="hintBtn">💡 হিন্ট (−৩০)</button></div>
+            <div class="note" id="hintBox" hidden></div>
+            <button type="button" class="go" id="submitBtn">সাবমিট স্যাম্পল</button>
+        </div>
+        <div class="fb" id="fb" aria-live="polite"></div>
+        <button type="button" class="go alt" id="nextBtn" hidden>পরের স্যাম্পল →</button>
+        <div class="pop" id="pop"></div>
+    </section>
 
-<div class="lab-panel">
-    <h1 class="game-title">pH Lab: Expert Mode</h1>
-    
-    <h3 style="color:#38bdf8;">🧪 স্যাম্পল: <span id="sampleName" style="color:#fff"></span></h3>
-    
-    <div class="ph-gauge"><div id="bar"></div></div>
-    
-    <div>
-        <input type="number" id="phInput" value="7.0" step="0.1" oninput="updateFromInput()">
-    </div>
-    
-    <div class="controls">
-        <button style="background:#ef4444; color:white" onclick="adjust(-0.1)">এসিড (-)</button>
-        <button style="background:#22c55e; color:white" onclick="adjust(0.1)">ক্ষার (+)</button>
-    </div>
-    
-    <button onclick="submit()" style="margin-top:20px; padding:12px 40px; background:#3b82f6; color:white; border-radius:10px; border:none; cursor:pointer; font-size:1rem;">সাবমিট স্যাম্পল</button>
-    
-    <div id="info" class="info-box">
-        <strong id="usageTitle" style="color:#38bdf8"></strong><br>
-        <span id="usageDetails"></span>
-    </div>
-    <p id="feedback" style="margin-top:15px; font-weight:bold;"></p>
-</div>
+    <section id="endView" hidden>
+        <h2 class="end-t" id="endTitle">পরীক্ষা শেষ</h2>
+        <p class="end-m" id="endMsg"></p>
+        <div class="end-s" id="finalScore">০</div>
+        <div class="tiles">
+            <div><small>সঠিক</small><b id="eRight">০</b></div>
+            <div><small>নির্ভুলতা</small><b id="eAcc">০%</b></div>
+            <div><small>সেরা কম্বো</small><b id="eStreak">০</b></div>
+        </div>
+        <div class="miss" id="missBox" hidden><h3>যে স্যাম্পলগুলো মেলেনি</h3><ul id="missList"></ul></div>
+        <button type="button" class="go" id="againBtn">আবার খেলো 🔄</button>
+        <button type="button" class="go alt" id="menuBtn">সেটিংস বদলাও</button>
+    </section>
+</main></div>
+<div class="foot">Developed &amp; Designed by <b>Ahanaf Abid Omlan</b></div>
 
 <script>
-    const samples = [
-        {name: "পেটের এসিড", ph: 1.5, use: "হজমে সহায়তা ও ব্যাকটেরিয়া ধ্বংস করে।"},
-        {name: "লেবুর রস", ph: 2.2, use: "ভিটামিন-সি ও খাবার সংরক্ষণ।"},
-        {name: "ভিনেগার", ph: 2.9, use: "রান্নায় স্বাদ ও জীবাণুনাশক।"},
-        {name: "আপেল", ph: 3.5, use: "পুষ্টি ও ফাইবার সরবরাহ করে।"},
-        {name: "কমলা", ph: 3.8, use: "সাইট্রিক অ্যাসিড ও অ্যান্টিঅক্সিডেন্ট।"},
-        {name: "টমেটো", ph: 4.3, use: "ভিটামিন ও লাইকোপেন সমৃদ্ধ।"},
-        {name: "কফি", ph: 5.0, use: "ক্লান্তি দূর ও সতেজতা।"},
-        {name: "চা", ph: 5.5, use: "অ্যান্টিঅক্সিডেন্ট ও ক্যাফেইন।"},
-        {name: "দুধ", ph: 6.5, use: "ক্যালসিয়াম ও হাড়ের পুষ্টি।"},
-        {name: "বিশুদ্ধ পানি", ph: 7.0, use: "জীবনের অস্তিত্ব ও দ্রাবক।"},
-        {name: "রক্ত", ph: 7.4, use: "অক্সিজেন ও পুষ্টি পরিবহন।"},
-        {name: "ডিম", ph: 7.8, use: "উচ্চমানের প্রোটিনের উৎস।"},
-        {name: "বেকিং সোডা", ph: 8.5, use: "রান্নায় ফুলে ওঠার জন্য।"},
-        {name: "সাবান পানি", ph: 10.0, use: "ময়লা ও তেল দূর করে।"},
-        {name: "অ্যামোনিয়া", ph: 11.5, use: "পরিষ্কারক ও সারের উপাদান।"},
-        {name: "ব্লিচ", ph: 12.5, use: "জীবাণুনাশক ও দাগ তোলা।"},
-        {name: "কলা", ph: 4.8, use: "পটাশিয়াম ও শক্তির উৎস।"},
-        {name: "আঙ্গুর", ph: 3.5, use: "ভিটামিন ও খনিজ উপাদান।"},
-        {name: "পেঁয়াজ", ph: 5.5, use: "রান্নায় স্বাদ ও ভেষজ গুণ।"},
-        {name: "আলু", ph: 5.8, use: "কার্বোহাইড্রেট ও শক্তি সরবরাহ।"},
-        {name: "লবণ পানি", ph: 7.0, use: "ইলেক্ট্রোলাইট ভারসাম্য।"},
-        {name: "লালা (Saliva)", ph: 6.8, use: "মুখের পরিপাক ও সুরক্ষা।"},
-        {name: "সামুদ্রিক পানি", ph: 8.1, use: "সামুদ্রিক জীবের ভারসাম্য।"},
-        {name: "মধু", ph: 3.9, use: "প্রাকৃতিক মিষ্টি ও ঔষধি।"},
-        {name: "বিয়ার", ph: 4.5, use: "খাদ্য ও পানীয়।"},
-        {name: "वाइन", ph: 3.8, use: "খাদ্য ও উৎসব।"},
-        {name: "গাজরের রস", ph: 6.0, use: "ভিটামিন-এ সমৃদ্ধ।"},
-        {name: "শসা", ph: 5.1, use: "হাইড্রেটিং ও পুষ্টি।"},
-        {name: "দই", ph: 4.5, use: "প্রোবায়োটিক ও হজম।"},
-        {name: "চিজ", ph: 5.9, use: "ক্যালসিয়াম ও প্রোটিন।"},
-        {name: "মাখন", ph: 6.1, use: "ফ্যাট ও ভিটামিন।"},
-        {name: "মাংস", ph: 6.0, use: "প্রোটিন ও শক্তি।"},
-        {name: "মাছ", ph: 6.5, use: "ওমেগা-৩ ও প্রোটিন।"},
-        {name: "চিনি", ph: 7.0, use: "শক্তির দ্রুত উৎস।"},
-        {name: "টুথপেস্ট", ph: 8.0, use: "দাঁত পরিষ্কার ও সুরক্ষা।"},
-        {name: "ম্যাগনেসিয়া", ph: 10.5, use: "অ্যাসিডিটি কমাতে।"},
-        {name: "চুনের পানি", ph: 12.4, use: "নির্মাণ শিল্পে ব্যবহৃত।"},
-        {name: "পিতল ক্লিনার", ph: 9.5, use: "ধাতু পরিষ্কার।"},
-        {name: "ডিটারজেন্ট", ph: 9.0, use: "কাপড় পরিষ্কার।"},
-        {name: "শ্যাম্পু", ph: 6.0, use: "চুল ও ত্বক পরিষ্কার।"},
-        {name: "কন্ডিশনার", ph: 5.5, use: "চুল মসৃণ রাখা।"},
-        {name: "স্কিন ক্রিম", ph: 6.0, use: "ত্বকের আর্দ্রতা।"},
-        {name: "ঘাম", ph: 5.5, use: "শরীরের তাপমাত্রা নিয়ন্ত্রণ।"},
-        {name: "মূত্র", ph: 6.0, use: "বর্জ্য নিঃসরণ।"},
-        {name: "বৃষ্টির পানি", ph: 5.6, use: "প্রাকৃতিক সেচ।"},
-        {name: "ভেষজ চা", ph: 6.5, use: "মানসিক প্রশান্তি।"},
-        {name: "সয়া সস", ph: 4.8, use: "রান্নায় লবণের উৎস।"},
-        {name: "কোকাকোলা", ph: 2.5, use: "পানীয় হিসেবে জনপ্রিয়।"},
-        {name: "মিষ্টি আলু", ph: 5.5, use: "ভিটামিন ও ফাইবার।"},
-        {name: "পাউরুটি", ph: 5.5, use: "শক্তির উৎস।" }
-    ];
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+const bn1 = n => Number(n).toLocaleString('bn-BD', { useGrouping: false, minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-    let current = samples[Math.floor(Math.random() * samples.length)];
-    
-    function update() {
-        document.getElementById('sampleName').innerText = current.name;
-        let val = parseFloat(document.getElementById('phInput').value);
-        document.getElementById('bar').style.width = (val / 14) * 100 + "%";
-        
-        let bar = document.getElementById('bar');
-        if (val < 6.5) bar.style.background = "#ef4444";
-        else if (val > 7.5) bar.style.background = "#22c55e";
-        else bar.style.background = "#3b82f6";
+const samples = [
+ {name:"পেটের এসিড",ph:1.5,use:"হজমে সহায়তা ও ব্যাকটেরিয়া ধ্বংস করে।"},{name:"লেবুর রস",ph:2.2,use:"ভিটামিন-সি ও খাবার সংরক্ষণ।"},{name:"ভিনেগার",ph:2.9,use:"রান্নায় স্বাদ ও জীবাণুনাশক।"},
+ {name:"আপেল",ph:3.5,use:"পুষ্টি ও ফাইবার সরবরাহ করে।"},{name:"কমলা",ph:3.8,use:"সাইট্রিক অ্যাসিড ও অ্যান্টিঅক্সিডেন্ট।"},{name:"টমেটো",ph:4.3,use:"ভিটামিন ও লাইকোপেন সমৃদ্ধ।"},
+ {name:"কফি",ph:5.0,use:"ক্লান্তি দূর ও সতেজতা।"},{name:"চা",ph:5.5,use:"অ্যান্টিঅক্সিডেন্ট ও ক্যাফেইন।"},{name:"দুধ",ph:6.5,use:"ক্যালসিয়াম ও হাড়ের পুষ্টি।"},
+ {name:"বিশুদ্ধ পানি",ph:7.0,use:"জীবনের অস্তিত্ব ও দ্রাবক।"},{name:"রক্ত",ph:7.4,use:"অক্সিজেন ও পুষ্টি পরিবহন।"},{name:"ডিম",ph:7.8,use:"উচ্চমানের প্রোটিনের উৎস।"},
+ {name:"বেকিং সোডা",ph:8.5,use:"রান্নায় ফুলে ওঠার জন্য।"},{name:"সাবান পানি",ph:10.0,use:"ময়লা ও তেল দূর করে।"},{name:"অ্যামোনিয়া",ph:11.5,use:"পরিষ্কারক ও সারের উপাদান।"},
+ {name:"ব্লিচ",ph:12.5,use:"জীবাণুনাশক ও দাগ তোলা।"},{name:"কলা",ph:4.8,use:"পটাশিয়াম ও শক্তির উৎস।"},{name:"আঙ্গুর",ph:3.5,use:"ভিটামিন ও খনিজ উপাদান।"},
+ {name:"পেঁয়াজ",ph:5.5,use:"রান্নায় স্বাদ ও ভেষজ গুণ।"},{name:"আলু",ph:5.8,use:"কার্বোহাইড্রেট ও শক্তি সরবরাহ।"},{name:"লবণ পানি",ph:7.0,use:"ইলেক্ট্রোলাইট ভারসাম্য।"},
+ {name:"লালা (Saliva)",ph:6.8,use:"মুখের পরিপাক ও সুরক্ষা।"},{name:"সামুদ্রিক পানি",ph:8.1,use:"সামুদ্রিক জীবের ভারসাম্য।"},{name:"মধু",ph:3.9,use:"প্রাকৃতিক মিষ্টি ও ঔষধি।"},
+ {name:"বিয়ার",ph:4.5,use:"খাদ্য ও পানীয়।"},{name:"ওয়াইন",ph:3.8,use:"খাদ্য ও উৎসব।"},{name:"গাজরের রস",ph:6.0,use:"ভিটামিন-এ সমৃদ্ধ।"},
+ {name:"শসা",ph:5.1,use:"হাইড্রেটিং ও পুষ্টি।"},{name:"দই",ph:4.5,use:"প্রোবায়োটিক ও হজম।"},{name:"চিজ",ph:5.9,use:"ক্যালসিয়াম ও প্রোটিন।"},
+ {name:"মাখন",ph:6.1,use:"ফ্যাট ও ভিটামিন।"},{name:"মাংস",ph:6.0,use:"প্রোটিন ও শক্তি।"},{name:"মাছ",ph:6.5,use:"ওমেগা-৩ ও প্রোটিন।"},
+ {name:"চিনি",ph:7.0,use:"শক্তির দ্রুত উৎস।"},{name:"টুথপেস্ট",ph:8.0,use:"দাঁত পরিষ্কার ও সুরক্ষা।"},{name:"ম্যাগনেসিয়া",ph:10.5,use:"অ্যাসিডিটি কমাতে।"},
+ {name:"চুনের পানি",ph:12.4,use:"নির্মাণ শিল্পে ব্যবহৃত।"},{name:"পিতল ক্লিনার",ph:9.5,use:"ধাতু পরিষ্কার।"},{name:"ডিটারজেন্ট",ph:9.0,use:"কাপড় পরিষ্কার।"},
+ {name:"শ্যাম্পু",ph:6.0,use:"চুল ও ত্বক পরিষ্কার।"},{name:"কন্ডিশনার",ph:5.5,use:"চুল মসৃণ রাখা।"},{name:"স্কিন ক্রিম",ph:6.0,use:"ত্বকের আর্দ্রতা।"},
+ {name:"ঘাম",ph:5.5,use:"শরীরের তাপমাত্রা নিয়ন্ত্রণ।"},{name:"মূত্র",ph:6.0,use:"বর্জ্য নিঃসরণ।"},{name:"বৃষ্টির পানি",ph:5.6,use:"প্রাকৃতিক সেচ।"},
+ {name:"ভেষজ চা",ph:6.5,use:"মানসিক প্রশান্তি।"},{name:"সয়া সস",ph:4.8,use:"রান্নায় লবণের উৎস।"},{name:"কোকাকোলা",ph:2.5,use:"পানীয় হিসেবে জনপ্রিয়।"},
+ {name:"মিষ্টি আলু",ph:5.5,use:"ভিটামিন ও ফাইবার।"},{name:"পাউরুটি",ph:5.5,use:"শক্তির উৎস।"}
+];
+const STOPS = ['#e4202a','#ec4a24','#f26a21','#f7931e','#f9c823','#d9d93a','#a8cf3d','#3fae49','#1aa88a','#1a9bb5','#2b6fd6','#4b4fc9','#6b3fb8','#7a2d9a','#5b1f7a'];
+const hex2 = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+function phColor(v) {
+    const x = Math.max(0, Math.min(13.999, v)), i = Math.floor(x), t = x - i, a = hex2(STOPS[i]), b = hex2(STOPS[i + 1]);
+    return 'rgb(' + a.map((c, k) => Math.round(c + (b[k] - c) * t)).join(',') + ')';
+}
+const LENS = { 10: { name: '১০টি', sub: 'ছোট রাউন্ড' }, 25: { name: '২৫টি', sub: 'মাঝারি রাউন্ড' }, 50: { name: '৫০টি', sub: 'সব স্যাম্পল' } };
+const DIFFS = {
+    easy: { name: 'সহজ', sub: '±০.৫ চলবে • ৪০ সে', tol: .6, time: 40, show: '±০.৫' },
+    mid: { name: 'মাঝারি', sub: '±০.১ (আসল নিয়ম) • ৩০ সে', tol: .2, time: 30, show: '±০.১' },
+    hard: { name: 'এক্সপার্ট', sub: 'হুবহু মিল • ২৫ সে', tol: .05, time: 25, show: 'হুবহু' }
+};
+let len = parseInt(sget('ph_len', '10'), 10); if (!LENS[len]) len = 10;
+let diff = sget('ph_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
+let timerOn = sget('ph_timer', '1') === '1', soundOn = sget('ph_sound', '1') === '1';
+const bestKey = () => 'ph_best_' + diff + '_' + len, getBest = () => parseInt(sget(bestKey(), '0'), 10) || 0;
+
+let ac = null;
+function tone(f, t0, dur, type, vol) {
+    if (!soundOn) return;
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+        const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .02); } catch (e) {}
+}
+const sfx = {
+    right() { tone(660, 0, .12); tone(880, .1, .16); }, wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); },
+    tick() { tone(1200, 0, .04, 'square', .05); }, life() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .18); },
+    end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); }, win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); }
+};
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
+const paintSound = () => $('soundBtn').textContent = soundOn ? '🔔' : '🔕';
+$('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('ph_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
+paintSound();
+
+/* স্থির অংশ: স্কেল, ডায়াল, ঘড়ির দাগ */
+(function () {
+    const sc = $('scale'); [0, 2, 4, 6, 7, 8, 10, 12, 14].forEach(v => { const s = document.createElement('span'); s.style.left = (v / 14 * 100) + '%'; s.textContent = v; sc.appendChild(s); });
+    const NS = 'http://www.w3.org/2000/svg', d = $('dial'), cx = 120, cy = 125, R = 100, r = 76, n = 70;
+    const P = (rad, v) => { const t = Math.PI * (1 - v / 14); return (cx + rad * Math.cos(t)).toFixed(2) + ' ' + (cy - rad * Math.sin(t)).toFixed(2); };
+    for (let i = 0; i < n; i++) { const a = i / n * 14, b = (i + 1) / n * 14 + .02, p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', 'M' + P(R, a) + ' A' + R + ' ' + R + ' 0 0 1 ' + P(R, b) + ' L' + P(r, b) + ' A' + r + ' ' + r + ' 0 0 0 ' + P(r, a) + 'Z'); p.setAttribute('fill', phColor((a + b) / 2)); d.appendChild(p); }
+    for (let v = 0; v <= 14; v += 2) { const t = document.createElementNS(NS, 'text'), t0 = Math.PI * (1 - v / 14);
+        t.setAttribute('x', (cx + (r - 13) * Math.cos(t0)).toFixed(1)); t.setAttribute('y', (cy - (r - 13) * Math.sin(t0) + 4).toFixed(1)); t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-size', '11'); t.setAttribute('font-family', 'IBM Plex Mono,monospace'); t.setAttribute('fill', 'currentColor'); t.setAttribute('opacity', '.75'); t.textContent = v; d.appendChild(t); }
+    const g = document.createElementNS(NS, 'g'); g.id = 'needle'; g.innerHTML = '<path d="M117 125 L120 36 L123 125Z" fill="currentColor"/><circle cx="120" cy="125" r="9" fill="currentColor"/><circle cx="120" cy="125" r="3.5" fill="var(--bg)"/>'; d.appendChild(g);
+    d.style.color = 'var(--text)';
+    const tk = $('ticks'); for (let i = 0; i < 12; i++) { const l = document.createElementNS(NS, 'line'); l.setAttribute('x1', 32); l.setAttribute('x2', 32); l.setAttribute('y1', 6); l.setAttribute('y2', i % 3 ? 9 : 12); l.setAttribute('stroke', 'currentColor'); l.setAttribute('stroke-width', 2); l.setAttribute('transform', 'rotate(' + i * 30 + ' 32 32)'); tk.appendChild(l); }
+})();
+function chipRow(rowId, obj, current, onPick) {
+    const row = $(rowId); row.replaceChildren();
+    Object.entries(obj).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === current ? ' on' : ''); b.setAttribute('aria-pressed', String(k === current));
+        const t = document.createElement('b'); t.textContent = d.name; const u = document.createElement('small'); u.textContent = d.sub; b.append(t, u); b.addEventListener('click', () => onPick(k)); row.appendChild(b); });
+}
+function renderSetup() {
+    chipRow('lenRow', LENS, String(len), k => { len = +k; sset('ph_len', k); renderSetup(); });
+    chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('ph_diff', k); renderSetup(); });
+    $('rules').textContent = '📋 ' + bn(len) + 'টি স্যাম্পল, ৩টি জীবন, প্রতিটিতে ৩টি চেষ্টা। বিকারের লেবেল দেখে কাঁটা বা স্লাইডার সরিয়ে pH ঠিক করো (গ্রহণযোগ্য ভুল: ' + DIFFS[diff].show + ')। ভুল হলে বলে দেওয়া হবে স্যাম্পল আরও অ্যাসিডিক না ক্ষারীয়। প্রথম চেষ্টায় সঠিক হলে সর্বোচ্চ পয়েন্ট, সময় থাকতে সাবমিট করলে বোনাস। 💡 হিন্টে pH-এর একটি পরিসর দেখা যায়।';
+    const b = getBest(); $('bestLine').textContent = b ? '🏆 এই সেটিংসে তোমার সেরা স্কোর: ' + bn(b) : '';
+}
+$('timerSw').checked = timerOn; $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('ph_timer', timerOn ? '1' : '0'); });
+const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
+
+let score, lives, combo, bestCombo, asked, right, cur, locked, tries, val, hinted, deck, wrongs, limit, advTimer, deadline, tick, startedAt;
+const paintLives = () => { $('lives').textContent = lives > 0 ? '❤️'.repeat(lives) : '💔'; $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); };
+const paintStats = () => { $('score').textContent = bn(score); $('combo').textContent = bn(combo); };
+function setVal(v) {
+    v = Math.round(Math.max(0, Math.min(14, isNaN(v) ? 7 : v)) * 10) / 10; val = v;
+    const c = phColor(v); document.documentElement.style.setProperty('--liq', c);
+    $('needle').style.transform = 'rotate(' + (-90 + v / 14 * 180) + 'deg)';
+    if (document.activeElement !== $('phInput')) $('phInput').value = v.toFixed(1);
+    $('slider').value = v; $('kind').textContent = v < 7 ? 'অ্যাসিডিক' : v > 7 ? 'ক্ষারীয়' : 'প্রশম';
+}
+const step = d => { if (!locked) setVal(val + d); };
+function bindStep(btn, d) {
+    let t, iv; const stop = () => { clearTimeout(t); clearInterval(iv); };
+    btn.addEventListener('pointerdown', () => { if (locked) return; step(d); t = setTimeout(() => { iv = setInterval(() => step(d), 70); }, 380); });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+    btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(d); } });
+}
+bindStep($('mM1'), -1); bindStep($('mS'), -.1); bindStep($('pS'), .1); bindStep($('pM1'), 1);
+$('slider').addEventListener('input', e => { if (!locked) setVal(parseFloat(e.target.value)); else setVal(val); });
+$('phInput').addEventListener('input', e => { if (locked) return; const v = parseFloat(e.target.value); if (!isNaN(v)) { const k = Math.max(0, Math.min(14, v)); val = Math.round(k * 10) / 10; document.documentElement.style.setProperty('--liq', phColor(val)); $('needle').style.transform = 'rotate(' + (-90 + val / 14 * 180) + 'deg)'; $('slider').value = val; $('kind').textContent = val < 7 ? 'অ্যাসিডিক' : val > 7 ? 'ক্ষারীয়' : 'প্রশম'; } });
+$('phInput').addEventListener('blur', () => setVal(val));
+const paintPips = () => { const p = $('pips'); p.replaceChildren(); const l = document.createElement('span'); l.textContent = 'চেষ্টা '; p.appendChild(l); for (let i = 0; i < 3; i++) { const d = document.createElement('i'); if (i >= tries) d.className = 'off'; p.appendChild(d); } };
+
+function startGame() {
+    score = 0; lives = 3; combo = 0; bestCombo = 0; asked = 0; right = 0; wrongs = []; deck = []; locked = false;
+    limit = timerOn ? DIFFS[diff].time : 0;
+    $('best').textContent = bn(getBest()); paintLives(); paintStats(); show('playView'); next();
+}
+function next() {
+    clearTimeout(advTimer); $('pop').classList.remove('go2');
+    if (asked >= len) return endGame(true);
+    if (!deck.length) deck = shuffle(samples.slice());
+    cur = deck.pop(); asked++; locked = false; tries = 3; hinted = false;
+    $('fb').className = 'fb'; $('fb').replaceChildren(); $('nextBtn').hidden = true; $('hintBox').hidden = true; $('hintBtn').disabled = false; $('submitBtn').disabled = false;
+    $('qNo').textContent = bn(asked) + '/' + bn(len); $('tag').textContent = cur.name; paintPips(); setVal(7);
+    startTimer();
+}
+function startTimer() {
+    clearInterval(tick); $('clock').hidden = !limit; $('clock').classList.remove('low'); if (!limit) return;
+    deadline = Date.now() + limit * 1000; let lastSec = -1;
+    tick = setInterval(() => {
+        const left = Math.max(0, deadline - Date.now()), s = Math.ceil(left / 1000);
+        $('hand').style.transform = 'rotate(' + ((1 - left / (limit * 1000)) * 360) + 'deg)'; $('secs').textContent = bn(s); $('clock').setAttribute('aria-label', 'বাকি ' + bn(s) + ' সেকেন্ড');
+        $('clock').classList.toggle('low', s <= 8); if (s !== lastSec) { lastSec = s; if (s <= 5 && s > 0) sfx.tick(); }
+        if (left <= 0) { clearInterval(tick); fail(true); }
+    }, 100);
+}
+function submit() {
+    if (locked) return; const d = Math.abs(val - cur.ph), ok = d < DIFFS[diff].tol, fb = $('fb');
+    if (ok) {
+        locked = true; clearInterval(tick); combo++; bestCombo = Math.max(bestCombo, combo); right++;
+        const used = 3 - tries, left = limit ? Math.max(0, deadline - Date.now()) / 1000 : 0, exact = d < .05;
+        const pts = [100, 60, 30][used] + (limit ? Math.floor(left) * 2 : 0) + (exact ? 20 : 0) + (combo >= 2 ? 10 * Math.min(combo - 1, 5) : 0);
+        score += pts; sfx.right(); popText('+' + bn(pts)); paintStats();
+        fb.replaceChildren(); const h = document.createElement('b'), sp = document.createElement('span');
+        h.textContent = '✅ সঠিক! স্যাম্পল ব্যালেন্সড।' + (exact ? ' (হুবহু মিল +২০)' : '') + (combo >= 3 ? ' 🔥 কম্বো ' + bn(combo) : '');
+        sp.textContent = cur.name + ' এর pH ' + bn1(cur.ph) + '। ব্যবহার: ' + cur.use; fb.append(h, sp); fb.className = 'fb show ok';
+        if (combo % 5 === 0 && lives < 3) { lives++; paintLives(); setTimeout(sfx.life, 250); h.textContent += ' · ❤️ একটি জীবন ফেরত!'; }
+        finish();
+    } else {
+        tries--; paintPips(); sfx.wrong(); const bk = $('beaker'); bk.classList.remove('shake'); void bk.offsetWidth; bk.classList.add('shake');
+        if (tries <= 0) return fail(false);
+        fb.replaceChildren(); const h = document.createElement('b'), sp = document.createElement('span');
+        h.textContent = val < cur.ph ? '❌ ভুল! স্যাম্পলটি আরও ক্ষারীয় হবে।' : '❌ ভুল! স্যাম্পলটি আরও এসিডিক হবে।'; sp.textContent = 'আর ' + bn(tries) + 'টি চেষ্টা বাকি।'; fb.append(h, sp); fb.className = 'fb show no';
     }
-
-    function adjust(n) {
-        let input = document.getElementById('phInput');
-        input.value = parseFloat((parseFloat(input.value) + n).toFixed(1));
-        update();
-    }
-
-    function updateFromInput() { update(); }
-
-    function submit() {
-        let val = parseFloat(document.getElementById('phInput').value);
-        let fb = document.getElementById('feedback');
-        let info = document.getElementById('info');
-        
-        if(Math.abs(val - current.ph) < 0.2) {
-            fb.innerHTML = "<span style='color:#22c55e'>✅ সঠিক! স্যাম্পল ব্যালেন্সড।</span>";
-            info.style.display = "block";
-            document.getElementById('usageTitle').innerText = current.name + " এর ব্যবহার:";
-            document.getElementById('usageDetails').innerText = current.use;
-            setTimeout(() => { 
-                current = samples[Math.floor(Math.random() * samples.length)];
-                document.getElementById('phInput').value = 7.0;
-                fb.innerText = ""; info.style.display = "none"; update();
-            }, 5000);
-        } else {
-            fb.innerHTML = val < current.ph ? "❌ ভুল! স্যাম্পলটি আরও ক্ষারীয় হবে।" : "❌ ভুল! স্যাম্পলটি আরও এসিডিক হবে।";
-        }
-    }
-    update();
+}
+function fail(timedOut) {
+    if (locked) return; locked = true; clearInterval(tick); combo = 0; lives--; wrongs.push(cur); sfx.wrong(); setVal(cur.ph); paintStats(); paintLives();
+    const fb = $('fb'); fb.replaceChildren(); const h = document.createElement('b'), sp = document.createElement('span');
+    h.textContent = (timedOut ? '⏰ সময় শেষ! ' : '❌ চেষ্টা শেষ! ') + cur.name + ' এর সঠিক pH ছিল ' + bn1(cur.ph) + '।'; sp.textContent = 'ব্যবহার: ' + cur.use; fb.append(h, sp); fb.className = 'fb show no';
+    finish();
+}
+function finish() {
+    $('hintBtn').disabled = true; $('submitBtn').disabled = true;
+    if (lives <= 0) { advTimer = setTimeout(() => endGame(false), 3000); return; }
+    $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true });
+    if ($('fb').classList.contains('ok')) advTimer = setTimeout(next, 6000);
+}
+$('hintBtn').addEventListener('click', () => {
+    if (locked || hinted) return; const hb = $('hintBox'); hb.hidden = false;
+    if (score < 30) { hb.textContent = '💡 হিন্টের জন্য অন্তত ৩০ পয়েন্ট লাগবে। আগে কিছু পয়েন্ট জিতো!'; return; }
+    hinted = true; $('hintBtn').disabled = true; score -= 30; paintStats();
+    const a = Math.max(0, Math.floor(cur.ph) - 1), b = Math.min(14, Math.ceil(cur.ph) + 1);
+    hb.textContent = '💡 ' + cur.name + ' এর pH ' + bn(a) + ' থেকে ' + bn(b) + ' এর মধ্যে, এটি ' + (cur.ph < 7 ? 'অ্যাসিডিক।' : cur.ph > 7 ? 'ক্ষারীয়।' : 'প্রশম।');
+});
+function popText(t) { const p = $('pop'); p.textContent = t; p.classList.remove('go2'); void p.offsetWidth; p.classList.add('go2'); }
+function endGame(won) {
+    clearInterval(tick); clearTimeout(advTimer); (won ? sfx.win : sfx.end)();
+    const prev = getBest(), record = score > prev; if (record) sset(bestKey(), score);
+    $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? '🎉 পরীক্ষা সম্পূর্ণ!' : '💥 পরীক্ষাগার বন্ধ!');
+    $('endMsg').textContent = won ? (!wrongs.length ? 'নিখুঁত! তুমি pH-এর সত্যিকারের এক্সপার্ট! 🌟' : 'সব স্যাম্পল শেষ করেছো, দারুণ খেলেছো! 👏') : 'pH স্কেলটা আরেকবার দেখে নিয়ে আবার চেষ্টা করো! 💪';
+    $('finalScore').textContent = bn(score); $('eRight').textContent = bn(right) + '/' + bn(asked);
+    $('eAcc').textContent = bn(asked ? Math.round(right / asked * 100) : 0) + '%'; $('eStreak').textContent = bn(bestCombo);
+    const ul = $('missList'); ul.replaceChildren(); const seen = new Set();
+    wrongs.forEach(w => { if (seen.has(w.name)) return; seen.add(w.name); const li = document.createElement('li'); li.textContent = w.name + ' → pH ' + bn1(w.ph); ul.appendChild(li); });
+    $('missBox').hidden = !wrongs.length; document.documentElement.style.setProperty('--liq', '#3fae49'); show('endView'); $('againBtn').focus({ preventScroll: true });
+}
+$('startBtn').addEventListener('click', startGame); $('againBtn').addEventListener('click', startGame);
+$('menuBtn').addEventListener('click', () => { clearInterval(tick); document.documentElement.style.setProperty('--liq', '#3fae49'); renderSetup(); show('startView'); });
+$('submitBtn').addEventListener('click', submit); $('nextBtn').addEventListener('click', next);
+document.addEventListener('keydown', e => {
+    if ($('playView').hidden) return; const tg = e.target.tagName;
+    if (e.key === 'Enter') { if (!locked) { e.preventDefault(); submit(); } else if (!$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); next(); } }
+    else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && tg !== 'INPUT') { e.preventDefault(); step((e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : .1)); }
+});
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; } });
+renderSetup(); show('startView');
 </script>
 </body>
 </html>
