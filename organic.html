@@ -1,233 +1,127 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রসায়ন ক্যালকুলেটর হাব</title>
-    
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-
-    <style>
-        :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --border-color: #cbd5e1;
-            --shadow: rgba(15, 23, 42, 0.05);
-        }
-        [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --border-color: #334155;
-            --shadow: rgba(0, 0, 0, 0.4);
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 25px 40px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .top-action-bar {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .back-home-btn {
-            display: inline-flex;
-            align-items: center;
-            background: #10b981; 
-            color: white !important;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 15px;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .back-home-btn:hover {
-            background: #059669;
-            transform: scale(1.02);
-        }
-
-        .hub-header-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .hub-main-title {
-            font-size: 38px;
-            font-weight: 800;
-            color: #d97706; 
-            margin: 0 0 12px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        [data-theme="dark"] .hub-main-title {
-            color: #f59e0b;
-        }
-
-        .hub-main-title span.icon {
-            font-size: 36px;
-            transform: rotate(-15deg);
-            display: inline-block;
-        }
-
-        .hub-subtitle {
-            font-size: 16px;
-            color: #475569;
-            margin: 0;
-            font-weight: 500;
-        }
-        [data-theme="dark"] .hub-subtitle {
-            color: #94a3b8;
-        }
-
-        .chemistry-calculator-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .hub-custom-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px; 
-            padding: 35px;
-            box-shadow: 0 10px 30px var(--shadow);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 220px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .hub-custom-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
-        }
-
-        .hub-card-title {
-            font-size: 24px; 
-            font-weight: 700;
-            color: var(--text-color);
-            margin: 0 0 12px 0;
-            line-height: 1.3;
-        }
-
-        .hub-card-desc {
-            font-size: 15px;
-            color: #64748b;
-            line-height: 1.6;
-            margin: 0 0 30px 0;
-        }
-        [data-theme="dark"] .hub-card-desc {
-            color: #94a3b8;
-        }
-
-        .hub-green-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            align-self: flex-start;
-            background: #10b981;
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            white-space: nowrap;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
-            transition: background 0.2s ease, transform 0.1s ease;
-        }
-
-        .hub-green-btn:hover {
-            background: #059669;
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 20px; }
-            .hub-main-title { font-size: 30px; }
-            .chemistry-calculator-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>জৈব যৌগ (Organic Chemistry Hub) | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--accent:#7c3aed}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--accent:#a78bfa}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:30px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:26px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.9rem,5vw,3rem);font-weight:800;letter-spacing:-.5px;line-height:1.3;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:620px;font-size:16px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.path{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin-top:20px}
+.path span{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:30px;font-size:13px;font-weight:700;color:var(--text-muted);background:var(--card-solid);border:1px solid var(--border-color)}
+.path span b{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:11px;color:#fff;background:var(--gradient-primary)}
+.path i{font-style:normal;color:var(--text-muted)}
+.section-title{display:flex;align-items:center;gap:10px;margin:34px 0 18px;padding-bottom:12px;font-size:22px;font-weight:800;border-bottom:2px dashed var(--section-border)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:24px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .3s,border-color .3s,box-shadow .3s;animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.card::before{content:'';position:absolute;top:-80px;right:-60px;width:200px;height:200px;pointer-events:none;background:radial-gradient(circle,var(--gradient-glow),transparent 70%)}
+.card>*{position:relative}
+.card:hover{transform:translateY(-6px);border-color:rgba(168,85,247,.7);box-shadow:0 24px 44px -16px var(--gradient-glow)}
+.no{position:absolute;top:16px;right:18px;font-size:12px;font-weight:800;color:var(--text-muted)}
+.icon{width:56px;height:56px;margin-bottom:14px;border-radius:18px;font-size:28px;display:flex;align-items:center;justify-content:center;background:var(--card-solid);border:1px solid var(--border-color)}
+.card h3{margin:0 0 8px;font-size:20px;font-weight:800;line-height:1.35}
+.card p{margin:0;font-size:14.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.tag{display:inline-block;margin-top:12px;padding:2px 11px;border-radius:20px;font-size:12px;font-weight:800;color:var(--accent);background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.play{display:block;text-align:center;padding:13px;border-radius:14px;font-size:15px;font-weight:800;text-decoration:none;color:#fff;background:var(--gradient-primary);transition:transform .25s,box-shadow .25s}
+.play:hover{transform:translateY(-2px);box-shadow:0 10px 22px var(--gradient-glow)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
 
-    <div class="container">
-        
-        <div class="top-action-bar">
-            <a href="index.html" class="back-home-btn">← ফিরে যান</a>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Organic Hub</small></span></a>
+        <div class="top-right">
+            <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="back-btn" href="dashboard.html">← <span class="long">ড্যাশবোর্ডে ফিরে যান</span></a>
         </div>
+    </header>
 
-        <div class="hub-header-section">
-            <h1 class="hub-main-title">
-                <span class="icon">🧪</span> জৈব যৌগ (Organic Chemistry Hub)
-            </h1>
-            <p class="hub-subtitle">জৈব যৌগের শ্রেণীবিভাগ, প্রস্তুতি এবং IUPAC নামকরণের সহজ ও বিস্তারিত ক্যালকুলেটর।</p>
-        </div>
+    <section class="hero">
+        <span class="pill">🧬 কার্বনের রসায়ন</span>
+        <h1>🧪 জৈব যৌগ (Organic Chemistry Hub)</h1>
+        <p>জৈব যৌগের শ্রেণীবিভাগ, প্রস্তুতি এবং IUPAC নামকরণের সহজ ও বিস্তারিত ক্যালকুলেটর।</p>
+        <div class="path" aria-label="পড়ার ক্রম"><span><b>১</b> পরিচিতি</span><i>→</i><span><b>২</b> প্রস্তুতি</span><i>→</i><span><b>৩</b> নামকরণ</span></div>
+    </section>
 
-        <div class="chemistry-calculator-grid">
-            
-            <div class="hub-custom-card">
-                <div>
-                    <h2 class="hub-card-title">জৈব যৌগের তথ্য ও পরিচিতি</h2>
-                    <p class="hub-card-desc">বিভিন্ন হাইড্রোকার্বনের সাধারণ সংকেত, কার্যকরী মূলক এবং সাধারণ রাসায়নিক ধর্মসমূহ দেখে নাও।</p>
-                </div>
-                <a href="organic-info.html" class="hub-green-btn">
-                    <span>দেখুন</span>
-                    <span>⚡</span>
-                </a>
-            </div>
+    <h2 class="section-title">📚 শেখো ও হিসাব করো</h2>
+    <div class="grid" id="grid"></div>
+</div>
 
-            <div class="hub-custom-card">
-                <div>
-                    <h2 class="hub-card-title">কীভাবে তৈরি হয় (বিক্রিয়ার সূত্র)</h2>
-                    <p class="hub-card-desc">ল্যাবরেটরি এবং শিল্প কারখানায় জৈব যৌগ প্রস্তুত করার রাসায়নিক সমীকরণ ও গাঠনিক সূত্রসমূহ দেখো।</p>
-                </div>
-                <a href="organic-prep.html" class="hub-green-btn">
-                    <span>দেখুন</span>
-                    <span>⚡</span>
-                </a>
-            </div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 
-            <div class="hub-custom-card">
-                <div>
-                    <h2 class="hub-card-title">IUPAC নামকরণ ক্যালকুলেটর</h2>
-                    <p class="hub-card-desc">যৌগের শ্রেণী ও কার্বন সংখ্যা (১-২০) ইনপুট দিয়ে ডাইনামিকালি আণবিক ও গাঠনিক সংকেত বের করো।</p>
-                </div>
-                <a href="organic-naming.html" class="hub-green-btn">
-                    <span>হিসাব করুন</span>
-                    <span>⚡</span>
-                </a>
-            </div>
-
-        </div>
-
-    </div>
-
+<script>
+/* নতুন কার্ড যোগ করতে শুধু এখানে একটি লাইন যোগ করো: [আইকন, নাম, বিবরণ, লিংক, ট্যাগ, বাটনের লেখা] */
+const ITEMS = [
+    ['📖', 'জৈব যৌগের তথ্য ও পরিচিতি', 'বিভিন্ন হাইড্রোকার্বনের সাধারণ সংকেত, কার্যকরী মূলক এবং সাধারণ রাসায়নিক ধর্মসমূহ দেখে নাও।', 'organic-info.html', 'ধাপ ১ · তথ্য', 'দেখুন'],
+    ['⚗️', 'কীভাবে তৈরি হয় (বিক্রিয়ার সূত্র)', 'ল্যাবরেটরি এবং শিল্প কারখানায় জৈব যৌগ প্রস্তুত করার রাসায়নিক সমীকরণ ও গাঠনিক সূত্রসমূহ দেখো।', 'organic-prep.html', 'ধাপ ২ · বিক্রিয়া', 'দেখুন'],
+    ['🏷️', 'IUPAC নামকরণ ক্যালকুলেটর', 'যৌগের শ্রেণী ও কার্বন সংখ্যা (১-২০) ইনপুট দিয়ে ডাইনামিকালি আণবিক ও গাঠনিক সংকেত বের করো।', 'organic-naming.html', 'ধাপ ৩ · ক্যালকুলেটর', 'হিসাব করুন']
+];
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+$('themeBtn').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', next);
+});
+ITEMS.forEach(([icon, t, d, href, tag, btn], i) => {
+    const el = document.createElement('article'); el.className = 'card'; el.style.animationDelay = i * 70 + 'ms';
+    const no = document.createElement('span'); no.className = 'no'; no.textContent = 'ধাপ ' + bn(i + 1);
+    const top = document.createElement('div');
+    const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = icon; ic.setAttribute('aria-hidden', 'true');
+    const h = document.createElement('h3'); h.textContent = t; const p = document.createElement('p'); p.textContent = d;
+    const tg = document.createElement('span'); tg.className = 'tag'; tg.textContent = tag; top.append(ic, h, p, tg);
+    const a = document.createElement('a'); a.className = 'play'; a.href = href; a.textContent = btn + ' ⚡'; a.setAttribute('aria-label', t + ' ' + btn);
+    el.append(no, top, a); $('grid').appendChild(el);
+});
+</script>
 </body>
 </html>
