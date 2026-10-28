@@ -337,7 +337,7 @@ $('themeBtn').addEventListener('click', () => { const nx = document.documentElem
 const paintSound = () => $('soundBtn').textContent = soundOn ? '🔔' : '🔕';
 $('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('gl_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
 paintSound();
-const MODES = { quiz: { name: 'কুইজ', sub: '৫৪ প্রশ্ন • ট্যাংক গরম হচ্ছে!' }, sim: { name: 'ল্যাব টাস্ক', sub: 'অনুমান করে পরীক্ষা চালাও' }, mix: { name: 'মিশ্র', sub: 'কুইজ + ল্যাব পর্যায়ক্রমে' }, play: { name: 'খেলাঘর', sub: 'মুক্ত সিমুলেশন' } };
+const MODES = { quiz: { name: 'কুইজ', sub: bn(Q.length) + 'টি প্রশ্ন • ট্যাংক গরম হচ্ছে!' }, sim: { name: 'ল্যাব টাস্ক', sub: 'অনুমান করে পরীক্ষা চালাও' }, mix: { name: 'মিশ্র', sub: 'কুইজ + ল্যাব পর্যায়ক্রমে' }, play: { name: 'খেলাঘর', sub: 'মুক্ত সিমুলেশন' } };
 const DIFFS = { easy: { name: 'সহজ', sub: 'ভুলের সীমা ১০% • বেশি সময়', qt: 40, st: 70, tol: .10, w: .2 }, mid: { name: 'মাঝারি', sub: 'ভুলের সীমা ৫%', qt: 30, st: 50, tol: .05, w: .12 }, hard: { name: 'কঠিন', sub: 'ভুলের সীমা ২.৫% • কম সময়', qt: 20, st: 35, tol: .025, w: .06 } };
 let mode = sget('gl_mode', 'mix'); if (!MODES[mode]) mode = 'mix';
 let diff = sget('gl_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
