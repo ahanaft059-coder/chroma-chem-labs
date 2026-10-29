@@ -1,259 +1,153 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রাসায়নিক বিক্রিয়া | ড্যাশবোর্ড</title>
-    
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-
-    <style>
-        :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --border-color: #e2e8f0;
-            --primary-grad: linear-gradient(135deg, #10b981, #06b6d4);
-            --btn-grad: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            --shadow: rgba(15, 23, 42, 0.05);
-        }
-        [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --border-color: #334155;
-            --shadow: rgba(0, 0, 0, 0.4);
-        }
-
-        body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            margin: 0; 
-            padding: 30px 40px; 
-            transition: background 0.3s, color 0.3s; 
-        }
-
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-        }
-        
-        /* ফিরে যান বাটন */
-        .top-action-bar {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .back-home-btn {
-            display: inline-flex;
-            align-items: center;
-            background: #10b981; 
-            color: white !important;
-            text-decoration: none;
-            padding: 10px 22px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 15px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-        }
-
-        .back-home-btn:hover {
-            background: #059669;
-            transform: scale(1.02);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-        }
-
-        /* ব্যানার স্টাইল */
-        .banner { 
-            background: var(--primary-grad); 
-            height: 140px; 
-            border-radius: 24px; 
-            margin-bottom: 40px; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
-            gap: 8px;
-        }
-
-        .banner h1 {
-            margin: 0;
-            font-size: 38px;
-            font-weight: 800;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .banner p {
-            margin: 0;
-            font-size: 15px;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-
-        /* প্রতি লাইনে ৩টি করে কার্ড রাখার গ্রিড লেআউট */
-        .reaction-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 25px; 
-            margin-top: 20px; 
-        }
-        
-        /* কাস্টম প্রিমিয়াম কার্ড */
-        .card { 
-            background: var(--card-bg); 
-            border: 1px solid var(--border-color); 
-            padding: 30px; 
-            border-radius: 24px; 
-            box-shadow: 0 10px 25px var(--shadow); 
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
-        }
-
-        .card h3 { 
-            margin-top: 0; 
-            font-size: 22px;
-            font-weight: 700;
-            color: #10b981; 
-            margin-bottom: 12px;
-        }
-        [data-theme="dark"] .card h3 {
-            color: #34d399;
-        }
-
-        /* সমতাকরণ কার্ডের জন্য আলাদা হাইলাইট কালার (ঐচ্ছিক) */
-        .card.special-card h3 {
-            color: #3b82f6;
-        }
-        [data-theme="dark"] .card.special-card h3 {
-            color: #60a5fa;
-        }
-
-        .card p {
-            font-size: 14px;
-            color: #64748b;
-            line-height: 1.6;
-            margin: 0 0 20px 0;
-            flex-grow: 1;
-        }
-        [data-theme="dark"] .card p {
-            color: #94a3b8;
-        }
-
-        /* বাটন স্টাইল */
-        .btn { 
-            display: inline-flex; 
-            align-items: center;
-            justify-content: center;
-            background: var(--btn-grad); 
-            color: white !important; 
-            padding: 12px 20px; 
-            border-radius: 12px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            font-size: 15px;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-        }
-
-        .btn:hover { 
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            transform: scale(1.02);
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
-        }
-        
-        /* রেসপনসিভনেস */
-        @media (max-width: 992px) {
-            .reaction-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 768px) { 
-            body { padding: 20px; }
-            .banner h1 { font-size: 28px; }
-            .reaction-grid { grid-template-columns: 1fr; } 
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>রাসায়নিক বিক্রিয়া ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--accent:#7c3aed;--gold:#d97706}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--accent:#a78bfa;--gold:#fbbf24}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:30px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:26px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(2rem,5vw,3.1rem);font-weight:800;letter-spacing:-.5px;line-height:1.3;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:620px;font-size:16px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.demo{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px;padding:10px 20px;border-radius:18px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;font-weight:700;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.demo .a{color:#fb7185}.demo .b{color:#60a5fa}.demo .ar{color:var(--accent)}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:8px}
+.search{flex:1 1 260px;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-bg);border:1.5px solid var(--border-color);outline:none;backdrop-filter:blur(12px);transition:border-color .25s,box-shadow .25s}
+.search:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.count{margin:10px 4px 0;font-size:13px;font-weight:600;color:var(--text-muted)}
+.section-title{display:flex;align-items:center;gap:10px;margin:34px 0 18px;padding-bottom:12px;font-size:22px;font-weight:800;border-bottom:2px dashed var(--section-border)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:24px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .3s,border-color .3s,box-shadow .3s;animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.card::before{content:'';position:absolute;top:-80px;right:-60px;width:200px;height:200px;pointer-events:none;background:radial-gradient(circle,var(--hue,var(--gradient-glow)),transparent 70%);opacity:.9}
+.card>*{position:relative}
+.card:hover{transform:translateY(-6px);border-color:rgba(168,85,247,.7);box-shadow:0 24px 44px -16px var(--gradient-glow)}
+.card.special{border-color:rgba(96,165,250,.5)}
+.no{position:absolute;top:16px;right:18px;font-size:12px;font-weight:800;color:var(--text-muted)}
+.icon{width:56px;height:56px;margin-bottom:14px;border-radius:18px;font-size:28px;display:flex;align-items:center;justify-content:center;background:var(--card-solid);border:1px solid var(--border-color)}
+.card h3{margin:0 0 8px;font-size:20px;font-weight:800;line-height:1.35}
+.card p{margin:0;font-size:14.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.eq{margin-top:14px;padding:10px 12px;border-radius:14px;background:var(--card-solid);border:1px dashed var(--border-color);font-family:ui-monospace,Menlo,Consolas,monospace;line-height:1.7}
+.eq small{display:block;font-size:11.5px;font-weight:700;letter-spacing:.3px;color:var(--text-muted);font-family:'Plus Jakarta Sans','Hind Siliguri',sans-serif}
+.eq b{display:block;font-size:14.5px;font-weight:700;color:var(--text-color);word-break:break-word}
+.play{display:block;text-align:center;padding:13px;border-radius:14px;font-size:15px;font-weight:800;text-decoration:none;color:#fff;background:var(--gradient-primary);transition:transform .25s,box-shadow .25s}
+.play:hover{transform:translateY(-2px);box-shadow:0 10px 22px var(--gradient-glow)}
+.empty{display:none;margin:40px 0;padding:30px;text-align:center;border-radius:20px;font-weight:600;color:var(--text-muted);background:var(--card-bg);border:1px dashed var(--border-color)}
+.empty.show{display:block}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
 
-<div class="container">
-    <!-- ফিরে যান বাটন -->
-    <div class="top-action-bar">
-        <a href="index.html" class="back-home-btn">← ফিরে যান</a>
-    </div>
-
-    <!-- ব্যানার -->
-    <div class="banner">
-        <h1>⚛️ রাসায়নিক বিক্রিয়া ল্যাব </h1>
-        <p>বিভিন্ন প্রকার রাসায়নিক বিক্রিয়ার কৌশল, সমীকরণ ও গাণিতিক রূপ বিশ্লেষণ</p>
-    </div>
-
-    <!-- ৩টি করে কলামের গ্রিড লেআউট -->
-    <div class="reaction-grid">
-        <!-- কার্ড ১ -->
-        <div class="card">
-            <div>
-                <h3>সংযোজন বিক্রিয়া</h3>
-                <p>দুই বা ততোধিক মৌল বা যৌগ পরস্পরের সাথে যুক্ত হয়ে একটি মাত্র নতুন যৌগ গঠনের প্রক্রিয়া বিস্তারিত দেখুন।</p>
-            </div>
-            <a href="synthesis.html" class="btn">প্রবেশ করুন →</a>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" id="brandLink" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Reaction Lab</small></span></a>
+        <div class="top-right">
+            <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="back-btn" id="backBtn" href="dashboard.html">← <span class="long">ফিরে যান</span></a>
         </div>
+    </header>
 
-        <!-- কার্ড ২ -->
-        <div class="card">
-            <div>
-                <h3>বিয়োজন বিক্রিয়া</h3>
-                <p>একটি জটিল যৌগ তাপ, বিদ্যুৎ বা অন্য কোনো প্রভাবে ভেঙে একাধিক সরল পদার্থে রূপান্তরের বিস্তারিত কৌশল।</p>
-            </div>
-            <a href="decomposition.html" class="btn">প্রবেশ করুন →</a>
-        </div>
-        
-        <!-- কার্ড ৩ -->
-        <div class="card">
-            <div>
-                <h3>জারণ-বিজারণ</h3>
-                <p>বিক্রিয়ায় পরমাণু বা আয়নের মধ্যে ইলেকট্রন আদান-প্রদান এবং জারণ মান পরিবর্তনের আধুনিক ইলেকট্রনীয় মতবাদ।</p>
-            </div>
-            <a href="redox.html" class="btn">প্রবেশ করুন →</a>
-        </div>
+    <section class="hero">
+        <span class="pill">🔥 বিক্রিয়ার জগৎ</span>
+        <h1>⚛️ রাসায়নিক বিক্রিয়া ল্যাব</h1>
+        <p>বিভিন্ন প্রকার রাসায়নিক বিক্রিয়ার কৌশল, সমীকরণ ও গাণিতিক রূপ বিশ্লেষণ।</p>
+        <div class="demo" aria-hidden="true"><span class="a">2H₂</span><span>+</span><span class="b">O₂</span><span class="ar">⟶</span><span>2H₂O</span></div>
+    </section>
 
-        <!-- কার্ড ৪ -->
-        <div class="card">
-            <div>
-                <h3>প্রতিস্থাপন বিক্রিয়া</h3>
-                <p>অধিক সক্রিয় কোনো মৌল বা মূলক কর্তৃক কম সক্রিয় কোনো মৌলকে তার যৌগ থেকে অপসারণ করে নতুন যৌগ গঠনের পদ্ধতি।</p>
-            </div>
-            <a href="displacement.html" class="btn">প্রবেশ করুন →</a>
-        </div>
+    <div class="tools"><input class="search" id="q" type="search" placeholder="বিক্রিয়া খোঁজো… (যেমন: জারণ, সমতা, বিয়োজন)" aria-label="বিক্রিয়া খোঁজো" autocomplete="off"></div>
+    <div class="count" id="count" aria-live="polite"></div>
 
-        <!-- নতুন কার্ড ৫: সমতাকরণ সেকশন -->
-        <div class="card special-card">
-            <div>
-                <h3>সমতাকরণ ক্যালকুলেটর</h3>
-                <p>বিক্রিয়ক ও উৎপাদের পরমাণুর সংখ্যা সমান করার গাণিতিক ট্রিকস এবং বিক্রিয়ার সমতা নির্ণয়ের লাইভ টুল।</p>
-            </div>
-            <a href="balancing.html" class="btn">হিসাব করুন →</a>
-        </div>
-    </div>
+    <h2 class="section-title">🧭 বিক্রিয়ার ধরন</h2>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty">কোনো বিক্রিয়া পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজে দেখো।</div>
 </div>
 
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
 <script>
-    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+/* ফিরে যাওয়ার পেজ বদলাতে চাইলে শুধু এই লাইনটি বদলাও */
+const BACK_URL = 'dashboard.html';
+/* নতুন কার্ড যোগ করতে শুধু এখানে একটি লাইন যোগ করো: [আইকন, নাম, বিবরণ, লিংক, সাধারণ রূপ, উদাহরণ, বাটন, বিশেষ?, রং] */
+const ITEMS = [
+    ['➕', 'সংযোজন বিক্রিয়া', 'দুই বা ততোধিক মৌল বা যৌগ পরস্পরের সাথে যুক্ত হয়ে একটি মাত্র নতুন যৌগ গঠনের প্রক্রিয়া বিস্তারিত দেখুন।', 'synthesis.html', 'A + B → AB', 'N₂ + 3H₂ → 2NH₃', 'প্রবেশ করুন →', false, 'rgba(16,185,129,.28)'],
+    ['💥', 'বিয়োজন বিক্রিয়া', 'একটি জটিল যৌগ তাপ, বিদ্যুৎ বা অন্য কোনো প্রভাবে ভেঙে একাধিক সরল পদার্থে রূপান্তরের বিস্তারিত কৌশল।', 'decomposition.html', 'AB → A + B', 'CaCO₃ →(তাপ) CaO + CO₂', 'প্রবেশ করুন →', false, 'rgba(244,63,94,.26)'],
+    ['🔁', 'জারণ-বিজারণ', 'বিক্রিয়ায় পরমাণু বা আয়নের মধ্যে ইলেকট্রন আদান-প্রদান এবং জারণ মান পরিবর্তনের আধুনিক ইলেকট্রনীয় মতবাদ।', 'redox.html', 'জারণ: e⁻ ত্যাগ · বিজারণ: e⁻ গ্রহণ', 'Zn + Cu²⁺ → Zn²⁺ + Cu', 'প্রবেশ করুন →', false, 'rgba(245,158,11,.28)'],
+    ['🔀', 'প্রতিস্থাপন বিক্রিয়া', 'অধিক সক্রিয় কোনো মৌল বা মূলক কর্তৃক কম সক্রিয় কোনো মৌলকে তার যৌগ থেকে অপসারণ করে নতুন যৌগ গঠনের পদ্ধতি।', 'displacement.html', 'A + BC → AC + B', 'Fe + CuSO₄ → FeSO₄ + Cu', 'প্রবেশ করুন →', false, 'rgba(59,130,246,.28)'],
+    ['⚖️', 'সমতাকরণ ক্যালকুলেটর', 'বিক্রিয়ক ও উৎপাদের পরমাণুর সংখ্যা সমান করার গাণিতিক ট্রিকস এবং বিক্রিয়ার সমতা নির্ণয়ের লাইভ টুল।', 'balancing.html', 'H₂ + O₂ → H₂O  ⇒  সমতা', '2H₂ + O₂ → 2H₂O', 'হিসাব করুন →', true, 'rgba(96,165,250,.34)']
+].map(([icon, t, d, href, form, ex, btn, special, hue]) => ({ icon, t, d, href, form, ex, btn, special, hue }));
+
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+$('brandLink').href = BACK_URL; $('backBtn').href = BACK_URL;
+$('themeBtn').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', next);
+});
+function card(g, n) {
+    const el = document.createElement('article'); el.className = 'card' + (g.special ? ' special' : ''); el.style.animationDelay = n * 70 + 'ms'; el.style.setProperty('--hue', g.hue);
+    const no = document.createElement('span'); no.className = 'no'; no.textContent = (g.special ? 'টুল ' : 'বিক্রিয়া ') + bn(n + 1);
+    const top = document.createElement('div');
+    const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = g.icon; ic.setAttribute('aria-hidden', 'true');
+    const h = document.createElement('h3'); h.textContent = g.t; const p = document.createElement('p'); p.textContent = g.d;
+    const eq = document.createElement('div'); eq.className = 'eq'; const s1 = document.createElement('small'); s1.textContent = 'সাধারণ রূপ'; const b1 = document.createElement('b'); b1.textContent = g.form;
+    const s2 = document.createElement('small'); s2.textContent = 'উদাহরণ'; s2.style.marginTop = '6px'; const b2 = document.createElement('b'); b2.textContent = g.ex; eq.append(s1, b1, s2, b2);
+    top.append(ic, h, p, eq);
+    const a = document.createElement('a'); a.className = 'play'; a.href = g.href; a.textContent = g.btn; a.setAttribute('aria-label', g.t + ' ' + g.btn);
+    el.append(no, top, a); return el;
+}
+function render() {
+    const q = $('q').value.trim().toLowerCase();
+    const list = ITEMS.filter(g => !q || (g.t + ' ' + g.d + ' ' + g.form + ' ' + g.ex).toLowerCase().includes(q));
+    const grid = $('grid'); grid.replaceChildren(); list.forEach(g => grid.appendChild(card(g, ITEMS.indexOf(g))));
+    $('empty').classList.toggle('show', !list.length); $('count').textContent = bn(list.length) + 'টি বিষয় দেখানো হচ্ছে';
+}
+$('q').addEventListener('input', render); render();
 </script>
 </body>
 </html>
