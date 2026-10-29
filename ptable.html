@@ -31,12 +31,12 @@ body{margin:0;min-height:100vh;background:radial-gradient(1100px 600px at 10% -1
 @keyframes pageIn{from{opacity:0}to{opacity:1}}
 button,select,input{font:inherit;color:inherit}
 button{cursor:pointer}
-.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:10px;padding:10px 16px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+.top{position:sticky;top:0;z-index:40;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:10px 16px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
 .back{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--tx);background:var(--card);border:1px solid var(--bd);padding:7px 12px;border-radius:12px;font-size:.88rem;white-space:nowrap}
 .back:hover{border-color:var(--ac)}
-.ttl{font-weight:800;font-size:1.1rem;letter-spacing:.2px;white-space:nowrap}
+.ttl{font-weight:800;font-size:1.1rem;letter-spacing:.2px;white-space:nowrap;text-align:center}
 .ttl small{display:block;font-weight:500;font-size:.68rem;color:var(--mut);letter-spacing:0}
-.sbox{position:relative;flex:1;max-width:420px;margin-left:auto;min-width:0}
+.tr{display:flex;align-items:center;gap:8px;justify-content:flex-end;min-width:0}.sbox{position:relative;flex:1;max-width:320px;min-width:0}
 .sbox input{width:100%;padding:9px 12px 9px 36px;border-radius:12px;border:1px solid var(--bd);background:var(--card);outline:none}
 .sbox input:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acs)}
 .sbox .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.6;pointer-events:none}
@@ -215,7 +215,7 @@ details summary{cursor:pointer;color:var(--ac);font-size:.84rem}
 .credit-bar{position:fixed;left:0;right:0;bottom:0;z-index:30;text-align:center;padding:9px 12px;font-size:.78rem;color:var(--mut);background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--bd)}
 .credit-bar b{background:linear-gradient(90deg,var(--ac),#a77bff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .noanim *{transition:none!important;animation:none!important}
-@media(max-width:560px){.top{flex-wrap:wrap}.ttl{font-size:1rem}.sbox{order:9;flex:1 1 100%;max-width:none;margin-left:0}.back{padding:6px 10px}.top .ibtn:first-of-type{margin-left:auto}}
+@media(max-width:700px){.top{row-gap:8px}.tr{grid-column:1/-1;grid-row:2}.sbox{max-width:none}.ttl{font-size:1rem}.back{padding:6px 10px}}
 @media(max-width:820px){
  .ttl small{display:none}.sbox{max-width:none}
  #dr{top:auto;bottom:0;width:100%;height:88%;border-left:0;border-top:1px solid var(--bd);border-radius:22px 22px 0 0;transform:translateY(105%)}
@@ -229,16 +229,16 @@ details summary{cursor:pointer;color:var(--ac);font-size:.84rem}
 </head>
 <body>
 <header class="top">
-  <a class="back" id="back" href="index.html">← <span id="backT">হোম</span></a>
+  <div class="tl2"><a class="back" id="back" href="dashboard.html">← <span id="backT">ড্যাশবোর্ড</span></a></div>
   <div class="ttl">⚛️ পর্যায় সারণি<small>Lab Alchemy · ১১৮টি মৌল</small></div>
-  <div class="sbox">
+  <div class="tr"><div class="sbox">
     <span class="ic">🔍</span>
     <input id="q" type="search" autocomplete="off" placeholder="নাম, প্রতীক বা নম্বর… (/ চাপুন)" aria-label="মৌল খুঁজুন">
     <div class="sug" id="sug"></div>
   </div>
   <button class="ibtn" id="bFav" title="প্রিয় মৌল দেখান">☆</button>
   <button class="ibtn" id="bGuide" title="সারণি গাইড">📖</button>
-  <button class="ibtn" id="bSet" title="সেটিংস">⚙️</button>
+  <button class="ibtn" id="bSet" title="সেটিংস">⚙️</button></div>
 </header>
 <main>
   <div class="bar">
@@ -489,7 +489,7 @@ function move(dir){const cur=S.sel||S.hov||(document.activeElement&&document.act
 
 function init(){
  load();
- try{const u=window.Auth&&Auth.currentUser&&Auth.currentUser();if(u){$('#back').href='dashboard.html';$('#backT').textContent='ড্যাশবোর্ড'}}catch(e){}
+ 
  $('#mode').innerHTML=Object.entries(MODES).map(([k,m])=>`<option value="${k}">${m.label}</option>`).join('');
  $('#trSel').innerHTML=Object.keys(NUM).map(k=>`<option value="${k}">${NUM[k].label}</option>`).join('');
  $('#acc').innerHTML=[['blue','#4da3ff'],['purple','#a77bff'],['pink','#ff6fb5'],['green','#4ade80'],['orange','#ffa94d'],['cyan','#22d3ee']].map(([k,c])=>`<button data-a="${k}" style="--a:${c}" title="${k}"></button>`).join('');
