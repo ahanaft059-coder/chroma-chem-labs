@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>এসিড-ক্ষার টাইট্রেশন ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Digital Lab</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="digitallab.html">← <span class="long">ল্যাব হাবে ফিরে যান</span></a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="pill">⚗️ পরিমাণগত রসায়ন · প্র্যাক্টিক্যাল</span>
+    <h1><span class="em">🧪</span> এসিড-ক্ষার টাইট্রেশন ল্যাব</h1>
+    <p>বিউরেট থেকে এসিড ছেড়ে অজানা ঘনমাত্রার NaOH দ্রবণের ঘনমাত্রা বের করো। নির্দেশক বেছে নাও, রং বদলের দিকে চোখ রাখো, রিডিং লেখো, হিসাব করো — একদম সত্যিকারের ল্যাবের মতো!</p>
+  </section>
+
+  <div class="lab">
+    <section class="card stage">
+      <h2>🔬 পরীক্ষার টেবিল</h2>
+      <svg id="svg" viewBox="0 0 380 540" role="img" aria-label="বিউরেট ও কনিক্যাল ফ্লাস্কের চিত্র">
+        <defs>
+          <clipPath id="clipF"><path id="flaskPath" d="M168 372 L168 410 L108 492 Q100 508 118 508 L262 508 Q280 508 272 492 L212 410 L212 372 Z"/></clipPath>
+          <clipPath id="clipB"><rect x="168" y="50" width="30" height="262" rx="3"/></clipPath>
+          <linearGradient id="glassG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".25" stop-color="#fff" stop-opacity=".05"/><stop offset=".8" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/></linearGradient>
+        </defs>
+        <!-- stand -->
+        <rect x="28" y="520" width="324" height="12" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
+        <rect x="52" y="30" width="10" height="492" rx="5" fill="var(--stand)" stroke="var(--border-color)"/>
+        <rect x="60" y="120" width="110" height="8" rx="4" fill="var(--stand)" stroke="var(--border-color)"/>
+        <rect x="160" y="108" width="46" height="32" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
+        <!-- white tile -->
+        <rect x="86" y="508" width="208" height="8" rx="3" fill="#fff" stroke="var(--border-color)"/>
+        <!-- burette -->
+        <g id="burette">
+          <rect x="168" y="50" width="30" height="262" rx="3" fill="rgba(255,255,255,.06)" stroke="var(--glass)" stroke-width="1.5"/>
+          <g clip-path="url(#clipB)"><rect id="bLiq" x="168" y="60" width="30" height="252" fill="#9bd0ff" fill-opacity=".45"/><rect id="bMen" x="168" y="58" width="30" height="4" fill="#6aa9ff" fill-opacity=".65"/></g>
+          <g id="ticks"></g>
+          <rect x="168" y="50" width="30" height="262" rx="3" fill="url(#glassG)" pointer-events="none"/>
+          <path d="M168 312 L198 312 L187 330 L187 346 L179 346 L179 330 Z" fill="rgba(255,255,255,.12)" stroke="var(--glass)" stroke-width="1.5"/>
+          <rect x="198" y="318" width="34" height="9" rx="4" fill="#64748b" id="lever" style="transform-origin:187px 322px;transition:transform .25s"/>
+          <circle cx="187" cy="322" r="6" fill="#94a3b8" stroke="#475569"/>
+          <path id="ptr" d="M205 60 l-9 -5 v10 z" fill="#a855f7"/>
+          <text id="ptrT" x="212" y="64" font-size="12" font-weight="800" fill="var(--text-color)" font-family="inherit">০.০০</text>
+        </g>
+        <!-- stream & drip -->
+        <rect id="stream" x="185.5" y="346" width="3" height="0" fill="#9bd0ff" fill-opacity=".85" rx="1.5"/>
+        <circle id="drop" class="drip" cx="187" cy="348" r="3.4" fill="#9bd0ff" style="display:none"/>
+        <!-- flask -->
+        <g id="flask">
+          <g clip-path="url(#clipF)"><rect id="fLiq" x="90" y="470" width="200" height="60" fill="rgba(160,200,255,.35)"/><ellipse id="fSurf" cx="190" cy="470" rx="38" ry="3.5" fill="rgba(255,255,255,.25)"/></g>
+          <path d="M168 372 L168 410 L108 492 Q100 508 118 508 L262 508 Q280 508 272 492 L212 410 L212 372 Z" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+          <path d="M164 372 L216 372" stroke="var(--glass)" stroke-width="3" stroke-linecap="round"/>
+          <text x="190" y="486" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit" id="fTxt"></text>
+        </g>
+        <text x="96" y="204" font-size="11" fill="var(--text-muted)" font-family="inherit" id="lblB">বিউরেট</text>
+        <text x="234" y="446" font-size="11" fill="var(--text-muted)" font-family="inherit" id="lblF"></text>
+      </svg>
+      <div class="hud">
+        <div class="box"><small>বিউরেট রিডিং</small><b id="hRead">—</b></div>
+        <div class="box"><small>ছাড়া হয়েছে</small><b id="hAdded">—</b></div>
+        <div class="box" id="mBox" style="display:none"><small>pH মিটার</small><b id="hPH">—</b></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>🧭 ধাপে ধাপে করো</h2>
+        <div class="stepper" id="stepper">
+          <div class="st active" id="s1">
+            <span class="no">১</span>
+            <div class="tx"><b>বিউরেটে এসিড ভরো</b><small>বিউরেট প্রমাণ এসিড দ্রবণ দিয়ে ধুয়ে নিয়ে ভরো এবং শূন্যের কাছে সেট করো।</small>
+              <select id="acid" aria-label="এসিড বেছে নাও"><option value="hcl">HCl · ০.১০০ M (হাইড্রোক্লোরিক এসিড)</option><option value="h2so4">H₂SO₄ · ০.০৫০ M (সালফিউরিক এসিড)</option><option value="ace">CH₃COOH · ০.১০০ M (দুর্বল এসিড)</option></select></div>
+            <button class="btn" id="b1">ভরো</button>
+          </div>
+          <div class="st lock" id="s2">
+            <span class="no">২</span>
+            <div class="tx"><b>পিপেট দিয়ে অজানা NaOH নাও</b><small>পিপেট ক্ষার দ্রবণে ধুয়ে নির্দিষ্ট আয়তন কনিক্যাল ফ্লাস্কে ঢালো। (ফ্লাস্ক শুধু পাতিত পানিতে ধোয়া!)</small>
+              <select id="vb" aria-label="ক্ষারের আয়তন"><option value="10">১০.০ mL</option><option value="20" selected>২০.০ mL</option><option value="25">২৫.০ mL</option></select></div>
+            <button class="btn" id="b2" disabled>নাও</button>
+          </div>
+          <div class="st lock" id="s3">
+            <span class="no">৩</span>
+            <div class="tx"><b>নির্দেশক দাও</b><small>২–৩ ফোঁটা যথেষ্ট। এই এসিড-ক্ষার জোড়ায় কোনটা ঠিক হবে ভেবে বেছে নাও।</small>
+              <select id="ind" aria-label="নির্দেশক"><option value="pp">ফেনোলফথেলিন</option><option value="mo">মিথাইল অরেঞ্জ</option><option value="mr">মিথাইল রেড</option><option value="btb">ব্রোমোথাইমল ব্লু</option></select></div>
+            <button class="btn" id="b3" disabled>দাও</button>
+          </div>
+          <div class="st lock" id="s4">
+            <span class="no">৪</span>
+            <div class="tx"><b>টাইট্রেট করো</b><small>ট্যাপ খুলে এসিড ছাড়ো। রং বদলের কাছাকাছি এলে <b>ফোঁটা ফোঁটা</b> করে দাও এবং ফ্লাস্ক ঝাঁকাও। স্থায়ী রং বদলালেই থামো।</small></div>
+          </div>
+        </div>
+
+        <div id="titr" style="display:none">
+          <div class="tap" id="tap">
+            <button class="btn ghost on" data-r="0">⏹ বন্ধ</button>
+            <button class="btn ghost" data-r="0.12">💧 ধীরে</button>
+            <button class="btn ghost" data-r="0.6">🚰 মাঝারি</button>
+            <button class="btn ghost" data-r="2.5">🌊 দ্রুত</button>
+          </div>
+          <div class="row" style="margin-top:6px">
+            <button class="btn" id="drop1">💧 ১ ফোঁটা (০.০৫ mL)</button>
+            <button class="btn ghost" id="swirlB">🌀 ফ্লাস্ক ঝাঁকাও</button>
+            <button class="btn ghost" id="meterB">📟 pH মিটার</button>
+          </div>
+          <div class="live" id="live">ট্যাপ খুলে এসিড ছাড়ো। প্রথমবার দ্রুত করে আন্দাজ (rough) পাও, তারপর সঠিক টাইট্রেশন!</div>
+          <div class="row">
+            <button class="btn warn" id="rec" disabled>📝 রিডিং খাতায় তোলো</button>
+            <button class="btn ghost" id="newF" disabled>🔁 নতুন ফ্লাস্ক নাও</button>
+            <button class="btn ghost" id="restart">↺ সব নতুন করে শুরু</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="tcard" style="margin-top:22px;display:none">
+        <h2>📒 তোমার খাতা (সর্বোচ্চ ৫টি পাঠ)</h2>
+        <table class="tbl" id="tbl"><thead><tr><th>পাঠ</th><th>শুরুর রিডিং (mL)</th><th>শেষ রিডিং (mL)</th><th>এসিডের আয়তন (mL)</th><th>ব্যবহার</th></tr></thead><tbody></tbody></table>
+        <p class="hint">পরপর দুটি পাঠের ব্যবধান ০.১০ mL-এর মধ্যে হলে তাদের <b>সমঞ্জস (concordant)</b> বলে। ব্যবহার করতে চাও এমন পাঠ টিক দাও।</p>
+        <div class="row"><button class="btn" id="calc" disabled>🧮 হিসাব করো</button></div>
+        <div id="calcOut"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="card" id="graphCard" style="margin-top:22px;display:none">
+    <h2>📈 টাইট্রেশন কার্ভ (pH বনাম আয়তন)</h2>
+    <div class="chartwrap" id="chart"></div>
+    <p class="hint" id="chartNote"></p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-p="p1">📘 তত্ত্ব ও সূত্র</button>
+    <button class="tab" data-p="p2">🎨 নির্দেশক</button>
+    <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
+    <button class="tab" data-p="p4">🎓 ভাইভা প্রশ্নোত্তর</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1">
+      <h3>টাইট্রেশন কী?</h3>
+      <p>একটি দ্রবণের (ফ্লাস্কে) অজানা ঘনমাত্রা বের করতে অন্য একটি <b>প্রমাণ দ্রবণ</b> (বিউরেটে) যোগ করা হয় — যতক্ষণ না বিক্রিয়া ঠিক সম্পূর্ণ হয়। বিক্রিয়া সম্পূর্ণ হওয়ার বিন্দুকে বলে <b>সমতা বিন্দু (equivalence point)</b>, আর নির্দেশকের রং বদলে যে বিন্দু ধরা পড়ে সেটি <b>শেষ বিন্দু (end point)</b>।</p>
+      <h3>মূল সমীকরণ</h3>
+      <span class="formula">HCl + NaOH → NaCl + H₂O</span>
+      <span class="formula">H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O</span>
+      <span class="formula">CH₃COOH + NaOH → CH₃COONa + H₂O</span>
+      <h3>হিসাবের সূত্র</h3>
+      <span class="formula">(S₁ × V₁) / (S₂ × V₂) = n₁ / n₂</span>
+      <ul>
+        <li><b>S₁, V₁</b> = এসিডের ঘনমাত্রা (M) ও আয়তন (mL, বিউরেট থেকে)</li>
+        <li><b>S₂, V₂</b> = ক্ষারের ঘনমাত্রা (M, অজানা) ও আয়তন (mL, পিপেট থেকে)</li>
+        <li><b>n₁, n₂</b> = সমীকৃত রাসায়নিক সমীকরণে এসিড ও ক্ষারের মোল সংখ্যা। HCl-এর জন্য ১ : ১; H₂SO₄-এর জন্য ১ : ২।</li>
+      </ul>
+      <p>উদাহরণ: ০.১ M HCl-এর ১২.০ mL ২০ mL NaOH-কে প্রশমিত করলে, S₂ = (০.১ × ১২.০ × ১) / (২০ × ১) = <b>০.০৬ M</b>।</p>
+      <h3>প্রমাণ দ্রবণ</h3>
+      <p>NaOH ও HCl সরাসরি <b>প্রাথমিক প্রমাণ (primary standard)</b> নয় (NaOH আর্দ্রতা ও CO₂ শোষণ করে, HCl উদ্বায়ী)। তাই সাধারণত নির্ভুল ওজনে Na₂CO₃ বা অক্সালিক এসিড দিয়ে দ্রবণ বানিয়ে তা দিয়ে এগুলোর ঘনমাত্রা যাচাই করা হয়।</p>
+    </div>
+    <div class="pane" id="p2">
+      <h3>নির্দেশক ও pH পরিসর</h3>
+      <table>
+        <tr><th>নির্দেশক</th><th>pH পরিসর</th><th>অম্লীয় রং</th><th>ক্ষারীয় রং</th><th>কোথায় ভালো</th></tr>
+        <tr><td>ফেনোলফথেলিন</td><td>৮.২ – ১০.০</td><td><span class="sw" style="background:#e8f2fc"></span>বর্ণহীন</td><td><span class="sw" style="background:#e91e8c"></span>গোলাপি</td><td>শক্তিশালী ক্ষার × শক্তিশালী/দুর্বল এসিড</td></tr>
+        <tr><td>মিথাইল অরেঞ্জ</td><td>৩.১ – ৪.৪</td><td><span class="sw" style="background:#e62828"></span>লাল</td><td><span class="sw" style="background:#fac81e"></span>হলুদ</td><td>শক্তিশালী এসিড × শক্তিশালী/দুর্বল ক্ষার</td></tr>
+        <tr><td>মিথাইল রেড</td><td>৪.৪ – ৬.২</td><td><span class="sw" style="background:#e62828"></span>লাল</td><td><span class="sw" style="background:#fac81e"></span>হলুদ</td><td>শক্তিশালী এসিড × দুর্বল ক্ষার</td></tr>
+        <tr><td>ব্রোমোথাইমল ব্লু</td><td>৬.০ – ৭.৬</td><td><span class="sw" style="background:#f5d728"></span>হলুদ</td><td><span class="sw" style="background:#285ae6"></span>নীল</td><td>শক্তিশালী এসিড × শক্তিশালী ক্ষার</td></tr>
+      </table>
+      <h3>নির্দেশক বাছাইয়ের নিয়ম</h3>
+      <ul>
+        <li>নির্দেশকের pH পরিসর অবশ্যই সমতা বিন্দুর কাছের <b>খাড়া লাফের (pH jump)</b> ভেতর পড়তে হবে।</li>
+        <li>শক্তিশালী এসিড–শক্তিশালী ক্ষার: সমতা বিন্দুতে pH = ৭; লাফ প্রায় pH ৩ থেকে ১১ — প্রায় সব নির্দেশকই চলে।</li>
+        <li>দুর্বল এসিড–শক্তিশালী ক্ষার (যেমন CH₃COOH–NaOH): সমতা বিন্দুতে pH ≈ ৮.৭ (ক্ষারীয়), তাই <b>ফেনোলফথেলিন</b> ঠিক। মিথাইল অরেঞ্জ এখানে ভুল ফল দেয়।</li>
+        <li>ল্যাবে ব্যবহৃত বিউরেটে এসিড ও ফ্লাস্কে ক্ষার থাকলে ফেনোলফথেলিনের রং <b>গোলাপি → বর্ণহীন</b> হয়; মিথাইল অরেঞ্জে <b>হলুদ → কমলা/লালচে</b>।</li>
+      </ul>
+    </div>
+    <div class="pane" id="p3">
+      <h3>পরীক্ষাগারের সতর্কতা</h3>
+      <ul>
+        <li>বিউরেট ধুতে প্রথমে পাতিত পানি, তারপর যে দ্রবণ ভরবে সেটি দিয়ে ২–৩ বার ধুয়ে নাও।</li>
+        <li>পিপেটও যে দ্রবণ মাপবে সেটি দিয়ে ধুতে হয়। কিন্তু <b>কনিক্যাল ফ্লাস্ক শুধু পাতিত পানিতে ধোবে</b> — দ্রবণ দিয়ে ধুলে মোল সংখ্যা বদলে যাবে।</li>
+        <li>পিপেটে কখনো মুখ দিয়ে টানবে না — পিপেট ফিলার ব্যবহার করো।</li>
+        <li>ট্যাপের ডগায় বা নলে বায়ু-বুদবুদ থাকলে রিডিং ভুল আসে — আগে ছেড়ে বুদবুদ দূর করো।</li>
+        <li>রিডিং নেওয়ার সময় চোখ মেনিস্কাসের সমতলে রাখো; বর্ণহীন দ্রবণে মেনিস্কাসের <b>নিচের প্রান্ত</b> পড়ো।</li>
+        <li>ফ্লাস্ক নিয়মিত ঝাঁকাও/ঘোরাও যাতে দ্রবণ ভালো মেশে।</li>
+        <li>শেষ বিন্দুর কাছে ফোঁটা ফোঁটা করে দাও; সাদা টাইলের উপর ফ্লাস্ক রাখলে রং স্পষ্ট দেখা যায়।</li>
+        <li>অন্তত ৩টি পাঠ নাও; সমঞ্জস (ব্যবধান ≤ ০.১ mL) দুটির গড় নাও।</li>
+        <li>চশমা ও অ্যাপ্রন পরো; এসিড বা ক্ষার গায়ে লাগলে প্রচুর পানি দিয়ে ধুয়ে ফেলো।</li>
+      </ul>
+    </div>
+    <div class="pane" id="p4">
+      <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>ফ্লাস্ককে দ্রবণ দিয়ে না ধুয়ে কেন পানিতে ধোয়া হয়?</summary><p>পানির অবশিষ্টাংশ দ্রবণের মোল সংখ্যা বদলায় না, কিন্তু দ্রবণ দিয়ে ধুলে ফ্লাস্কের গায়ে বাড়তি দ্রবণ লেগে থাকে, ফলে মোল সংখ্যা বেড়ে যায় ও ফল ভুল হয়।</p></details>
+      <details class="qa"><summary>বিউরেট ও পিপেটকে কেন তাদের নিজ নিজ দ্রবণে ধোয়া হয়?</summary><p>ভেজা অবস্থায় পাতিত পানি থাকলে দ্রবণ পাতলা হয়ে ঘনমাত্রা কমে যায়। তাই যে দ্রবণ মাপা হবে তা দিয়ে ২–৩ বার ধুয়ে নেওয়া হয়।</p></details>
+      <details class="qa"><summary>CH₃COOH–NaOH টাইট্রেশনে মিথাইল অরেঞ্জ কেন ব্যবহার করা যায় না?</summary><p>সমতা বিন্দুতে দ্রবণ ক্ষারীয় (pH ≈ ৮.৭)। মিথাইল অরেঞ্জের পরিবর্তন-পরিসর (pH ৩.১–৪.৪) অম্লীয় দিকে, তাই সমতা বিন্দুর অনেক আগেই বা পরে রং বদলায় — মান ভুল আসে। এখানে ফেনোলফথেলিন উপযুক্ত।</p></details>
+      <details class="qa"><summary>লিটমাস কেন টাইট্রেশনের নির্দেশক হিসেবে ভালো নয়?</summary><p>লিটমাসের রং ধীরে ও বিস্তৃত pH পরিসরে (প্রায় ৫–৮) বদলায়; তাই শেষ বিন্দু তীক্ষ্ণ ধরা যায় না।</p></details>
+      <details class="qa"><summary>সমতা বিন্দু ও শেষ বিন্দুর পার্থক্য কী?</summary><p>সমতা বিন্দু তাত্ত্বিক — যেখানে এসিড ও ক্ষার ঠিক সমান সমতুল্য পরিমাণে বিক্রিয়া করেছে। শেষ বিন্দু ব্যবহারিক — যেখানে নির্দেশকের রং বদলায়। ভালো নির্দেশক বাছলে দুটি খুব কাছাকাছি হয়।</p></details>
+      <details class="qa"><summary>শেষ বিন্দুর পর আরেক ফোঁটা বেশি দিলে কী হয়?</summary><p>ওভারশুট হয় — মাপা আয়তন সত্যিকার মানের চেয়ে সামান্য বেশি আসে, ফলে হিসাব করা ক্ষারের ঘনমাত্রা বাস্তবের চেয়ে বেশি দেখাবে।</p></details>
+      <details class="qa"><summary>NaOH কেন প্রাথমিক প্রমাণ দ্রবণ নয়?</summary><p>NaOH আর্দ্রতাগ্রাহী এবং বাতাসের CO₂ শোষণ করে Na₂CO₃ তৈরি করে, তাই ওজন করে ঘনমাত্রা নিখুঁত জানা যায় না। Na₂CO₃ বা অক্সালিক এসিড প্রাথমিক প্রমাণ।</p></details>
+      <details class="qa"><summary>H₂SO₄-এর ক্ষেত্রে সূত্রে n₁ : n₂ কত হয়?</summary><p>H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O, তাই n₁ : n₂ = ১ : ২।</p></details>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const BDG = '০১২৩৪৫৬৭৮৯';
+const bn = (n, d = 2) => Number(n).toFixed(d).replace(/\d/g, x => BDG[x]);
+const bi = n => String(n).replace(/\d/g, x => BDG[x]);
+const norm = s => String(s).trim().replace(/[০-৯]/g, x => BDG.indexOf(x)).replace(',', '.');
+const KW = 1e-14;
+const ACIDS = {
+    hcl:  { name: 'HCl', C: 0.1,  nA: 1, weak: false, eq: 'HCl + NaOH → NaCl + H₂O', nacid: 1, nbase: 1 },
+    h2so4:{ name: 'H₂SO₄', C: 0.05, nA: 2, weak: false, eq: 'H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O', nacid: 1, nbase: 2 },
+    ace:  { name: 'CH₃COOH', C: 0.1, nA: 1, weak: true, Ka: 1.8e-5, eq: 'CH₃COOH + NaOH → CH₃COONa + H₂O', nacid: 1, nbase: 1 }
+};
+const INDS = {
+    pp:  { name: 'ফেনোলফথেলিন', pKa: 9.4, lo: [215, 232, 250, .30], hi: [233, 30, 140, .88], endpH: 8.3, range: [8.2, 10.0], desc: 'গোলাপি → বর্ণহীন' },
+    mo:  { name: 'মিথাইল অরেঞ্জ', pKa: 3.7, lo: [230, 40, 40, .88], hi: [250, 200, 30, .88], endpH: 4.0, range: [3.1, 4.4], desc: 'হলুদ → কমলা/লাল' },
+    mr:  { name: 'মিথাইল রেড', pKa: 5.0, lo: [230, 40, 40, .88], hi: [250, 200, 30, .88], endpH: 5.0, range: [4.4, 6.2], desc: 'হলুদ → কমলা/লাল' },
+    btb: { name: 'ব্রোমোথাইমল ব্লু', pKa: 7.1, lo: [245, 215, 40, .88], hi: [40, 90, 230, .88], endpH: 7.0, range: [6.0, 7.6], desc: 'নীল → সবুজ → হলুদ' }
+};
+const S = { step: 0, acid: 'hcl', ind: 'pp', vb: 20, Cb: 0.1, Va: 0, init: 0, rate: 0, trials: [], meter: false, pts: [], answered: false, flaskOn: false, indOn: false, lastT: 0, dropAcc: 0 };
+
+/* ---- কেমিস্ট্রি ---- */
+function pHat(Va, acid = ACIDS[S.acid], Cb = S.Cb, Vb = S.vb) {
+    const Na = Cb * Vb, A = acid.C * acid.nA * Va, Vt = Vb + Va;
+    const f = h => {
+        const frac = acid.weak ? acid.Ka / (acid.Ka + h) : 1;
+        return Na / Vt + h - KW / h - (A / Vt) * frac;
+    };
+    let lo = -14.5, hi = 0.5;
+    for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (f(Math.pow(10, m)) > 0) hi = m; else lo = m; }
+    return -(lo + hi) / 2;
+}
+const Veq = (acid = ACIDS[S.acid], Cb = S.Cb, Vb = S.vb) => Cb * Vb / (acid.C * acid.nA);
+function Vend(indKey) {
+    const target = INDS[indKey].endpH; let lo = 0, hi = 120;
+    for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (pHat(m) > target) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+}
+function indColor(pH, key) {
+    const I = INDS[key], a = 1 / (1 + Math.pow(10, I.pKa - pH));
+    const c = I.lo.map((v, i) => v + (I.hi[i] - v) * a);
+    return c;
+}
+const rgba = c => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${c[3]})`;
+const WATER = [160, 200, 255, .35];
+
+/* ---- UI helpers ---- */
+let toastT;
+function toast(t) { const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => e.classList.remove('on'), 2400); }
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => { document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t)); document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === t.dataset.p)); });
+
+/* ---- burette ticks ---- */
+const Y0 = 60, K = 4.7;
+const yOf = r => Y0 + r * K;
+(function () {
+    let h = '';
+    for (let i = 0; i <= 50; i++) {
+        const y = yOf(i), big = i % 5 === 0;
+        h += `<line x1="${big ? 168 : 168}" x2="${big ? 182 : 175}" y1="${y}" y2="${y}" stroke="var(--tick)" stroke-width="${big ? 1.4 : .8}"/>`;
+        if (big) h += `<text x="164" y="${y + 4}" text-anchor="end" font-size="10" font-weight="700" fill="var(--tick)" font-family="inherit">${bi(i)}</text>`;
+    }
+    $('ticks').innerHTML = h;
+})();
+
+/* ---- render ---- */
+function reading() { return S.init + S.Va; }
+function render() {
+    const r = Math.min(50, reading());
+    const y = yOf(r);
+    $('bLiq').setAttribute('y', S.step >= 1 ? y : 312); $('bLiq').setAttribute('height', S.step >= 1 ? Math.max(0, 312 - y) : 0);
+    $('bMen').setAttribute('y', y - 2); $('bMen').style.display = S.step >= 1 ? '' : 'none';
+    $('ptr').setAttribute('transform', `translate(0,${y - 60})`); $('ptrT').setAttribute('y', y + 4); $('ptrT').textContent = S.step >= 1 ? bn(Math.round(r * 20) / 20) : '';
+    $('ptr').style.display = S.step >= 1 ? '' : 'none';
+    // flask
+    const vol = S.flaskOn ? (S.vb + S.Va) : 0;
+    const fy = 505 - (vol / 80) * 90 - 6;
+    $('fLiq').setAttribute('y', S.flaskOn ? fy : 530); $('fSurf').setAttribute('cy', fy); $('fSurf').style.display = S.flaskOn ? '' : 'none';
+    let col = WATER;
+    const pH = S.flaskOn ? pHat(S.Va) : 14;
+    if (S.indOn) col = indColor(pH, S.ind);
+    $('fLiq').setAttribute('fill', rgba(col));
+    $('fTxt').textContent = S.flaskOn ? (S.indOn ? '' : 'NaOH দ্রবণ') : '';
+    $('lblB').textContent = S.step >= 1 ? ACIDS[S.acid].name + ' (' + bn(ACIDS[S.acid].C, 3) + ' M)' : 'বিউরেট';
+    $('lblB').setAttribute('x', 66); $('lblB').setAttribute('y', 204);
+    $('lblF').textContent = S.flaskOn ? 'NaOH + ' + (S.indOn ? INDS[S.ind].name : 'পানি') : '';
+    $('lblF').setAttribute('x', 262); $('lblF').setAttribute('y', 470); $('lblF').setAttribute('text-anchor', 'start');
+    // flow visuals
+    const flowing = S.rate > 0 && S.step >= 4 && r < 50;
+    $('stream').setAttribute('height', flowing && S.rate >= 0.6 ? (fy - 346) : 0);
+    $('drop').style.display = flowing && S.rate < 0.6 ? '' : 'none';
+    $('drop').style.setProperty('--fd', Math.max(10, fy - 350) + 'px');
+    $('drop').style.animationDuration = (0.9 - Math.min(0.5, S.rate * 3)) + 's';
+    $('lever').style.transform = flowing ? 'rotate(90deg)' : 'rotate(0deg)';
+    // HUD
+    $('hRead').textContent = S.step >= 1 ? bn(Math.round(r * 20) / 20) + ' mL' : '—';
+    $('hAdded').textContent = S.step >= 4 ? bn(Math.round(S.Va * 20) / 20) + ' mL' : '—';
+    $('mBox').style.display = S.meter && S.flaskOn ? '' : 'none'; $('hPH').textContent = S.flaskOn ? bn(pH, 2) : '—';
+    $('rec').disabled = !(S.step >= 4 && S.Va > 0.05 && !S.recorded && S.trials.length < 5);
+    $('newF').disabled = !(S.step >= 4 && S.trials.length < 5 && (S.recorded || S.Va > 0));
+    liveMsg(pH);
+}
+function liveMsg(pH) {
+    if (S.step < 4) return;
+    const el = $('live'); const a = indColor(pH, S.ind);
+    const I = INDS[S.ind];
+    const al = 1 / (1 + Math.pow(10, I.pKa - pH));
+    let t;
+    if (S.Va < 0.05) t = 'ট্যাপ খুলে এসিড ছাড়ো। প্রথমবার দ্রুত করে আন্দাজ (rough) পাও, তারপর সঠিক টাইট্রেশন!';
+    else if (S.ind === 'pp') t = al > 0.7 ? '🌸 দ্রবণ গাঢ় গোলাপি — ক্ষার এখনো অনেক।' : al > 0.12 ? '🌷 গোলাপি ফিকে হচ্ছে — শেষ বিন্দু কাছে! ফোঁটা ফোঁটা করে দাও।' : '✅ গোলাপি রং চলে গেছে — শেষ বিন্দু ছাড়িয়ে গেছো। রিডিং খাতায় তোলো।';
+    else if (S.ind === 'btb') t = al > 0.85 ? '🔵 নীল — ক্ষারীয়।' : al > 0.15 ? '🟢 সবুজ আভা — শেষ বিন্দুর কাছে! ফোঁটা ফোঁটা দাও।' : '✅ হলুদ হয়ে গেছে — শেষ বিন্দু পেরিয়েছে।';
+    else t = al > 0.85 ? '🟡 হলুদ — দ্রবণ ক্ষারীয়/প্রায় নিরপেক্ষ।' : al > 0.25 ? '🟠 কমলা হচ্ছে — শেষ বিন্দুর খুব কাছে!' : '✅ লালচে হয়ে গেছে — শেষ বিন্দু পেরিয়েছে।';
+    if (reading() >= 50) t = '⛔ বিউরেট শেষ! নতুন ফ্লাস্ক নাও বা পাঠ লিখে নাও।';
+    el.textContent = t;
+}
+
+/* ---- steps ---- */
+function setStep(n) {
+    S.step = n;
+    ['s1', 's2', 's3', 's4'].forEach((id, i) => { const e = $(id); e.classList.toggle('done', i < n); e.classList.toggle('active', i === n); e.classList.toggle('lock', i > n); });
+    $('b2').disabled = n !== 1; $('b3').disabled = n !== 2; $('b1').disabled = n !== 0;
+    $('acid').disabled = n > 0; $('vb').disabled = n > 1; $('ind').disabled = n > 2;
+    $('titr').style.display = n >= 4 ? '' : 'none'; $('tcard').style.display = n >= 4 ? '' : 'none';
+    render();
+}
+function freshBurette() { S.Va = 0; S.init = Math.round(Math.random() * 16) * 0.05; S.recorded = false; S.rate = 0; setTapUI(0); }
+$('b1').onclick = () => { S.acid = $('acid').value; freshBurette(); S.Cb = Math.round((0.05 + Math.random() * 0.1) * 1000) / 1000; toast('বিউরেট ধুয়ে ' + ACIDS[S.acid].name + ' দিয়ে ভরা হলো'); setStep(1); };
+$('b2').onclick = () => { S.vb = +$('vb').value; S.flaskOn = true; toast(bn(S.vb, 1) + ' mL NaOH ফ্লাস্কে নেওয়া হলো'); setStep(2); };
+$('b3').onclick = () => { S.ind = $('ind').value; S.indOn = true; setStep(4); toast(INDS[S.ind].name + ' দেওয়া হলো — এবার টাইট্রেট করো!'); };
+$('s4').classList.add('lock');
+function setTapUI(r) { document.querySelectorAll('#tap button').forEach(b => b.classList.toggle('on', +b.dataset.r === r)); }
+document.querySelectorAll('#tap button').forEach(b => b.onclick = () => { if (S.step < 4) return; S.rate = +b.dataset.r; S.recorded = false; setTapUI(S.rate); render(); });
+function addVol(dv) {
+    const room = 50 - reading(); dv = Math.max(0, Math.min(dv, room));
+    if (dv <= 0) { if (S.rate) { S.rate = 0; setTapUI(0); } return; }
+    S.Va += dv; S.recorded = false;
+    const last = S.pts[S.pts.length - 1];
+    if (!last || S.Va - last[0] >= 0.1) S.pts.push([S.Va, pHat(S.Va)]);
+}
+$('drop1').onclick = () => { if (S.step < 4) return; S.rate = 0; setTapUI(0); addVol(0.05); render(); };
+$('swirlB').onclick = () => { const f = $('flask'); f.classList.remove('swirl'); void f.getBoundingClientRect(); f.classList.add('swirl'); };
+$('meterB').onclick = () => { S.meter = !S.meter; $('meterB').classList.toggle('ghost', !S.meter); render(); toast(S.meter ? 'pH মিটার চালু (ডিজিটাল সুবিধা — আসল ল্যাবে সাধারণত থাকে না)' : 'pH মিটার বন্ধ'); };
+$('meterB').classList.add('ghost');
+function loop(t) {
+    const dt = Math.min(0.1, (t - (S.lastT || t)) / 1000); S.lastT = t;
+    if (S.rate > 0 && S.step >= 4) { addVol(S.rate * dt); render(); }
+    requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+document.addEventListener('keydown', e => {
+    if (S.step < 4 || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    if (e.key === ' ' || e.key === 'Escape') { e.preventDefault(); S.rate = 0; setTapUI(0); render(); }
+    else if (e.key === 'd' || e.key === 'D') { S.rate = 0; setTapUI(0); addVol(0.05); render(); }
+});
+
+/* ---- trials ---- */
+$('rec').onclick = () => {
+    if (S.trials.length >= 5) return;
+    S.rate = 0; setTapUI(0);
+    const fin = Math.round(reading() * 20) / 20, ini = Math.round(S.init * 20) / 20;
+    S.trials.push({ ini, fin, v: Math.round((fin - ini) * 100) / 100, use: true, truth: S.Cb });
+    S.recorded = true; renderTbl();
+    const ve = Vend(S.ind), v = S.trials[S.trials.length - 1].v;
+    const diff = v - ve;
+    toast(Math.abs(diff) <= 0.15 ? '👏 দারুণ! শেষ বিন্দু একদম ঠিক ধরেছো।' : diff > 0 ? '⚠️ একটু বেশি এসিড দিয়ে ফেলেছো (ওভারশুট) — পরের বার ফোঁটা ফোঁটা করে দাও।' : '⚠️ শেষ বিন্দু পৌঁছানোর আগেই থেমে গেছো।');
+    render();
+};
+$('newF').onclick = () => { if (S.trials.length >= 5) { toast('সর্বোচ্চ ৫টি পাঠ'); return; } freshBurette(); S.pts = []; render(); toast('বিউরেট আবার ভরা ও নতুন ফ্লাস্কে একই ক্ষার — নতুন পাঠ শুরু'); };
+$('restart').onclick = () => { if (!confirm('সব মুছে নতুন করে শুরু করবে? (অজানা ঘনমাত্রা বদলে যাবে)')) return; S.trials = []; S.pts = []; S.Va = 0; S.rate = 0; S.flaskOn = false; S.indOn = false; S.answered = false; setTapUI(0); $('calcOut').innerHTML = ''; $('graphCard').style.display = 'none'; renderTbl(); setStep(0); };
+function renderTbl() {
+    const tb = document.querySelector('#tbl tbody');
+    tb.innerHTML = S.trials.map((t, i) => `<tr class="${t.use ? 'sel' : ''}"><td>${bi(i + 1)}</td><td>${bn(t.ini)}</td><td>${bn(t.fin)}</td><td><b>${bn(t.v)}</b></td><td><input type="checkbox" data-i="${i}" ${t.use ? 'checked' : ''} aria-label="পাঠ ${i + 1} ব্যবহার করো"></td></tr>`).join('') || '<tr><td colspan="5" style="color:var(--text-muted)">এখনো কোনো পাঠ নেই</td></tr>';
+    tb.querySelectorAll('input').forEach(c => c.onchange = () => { S.trials[+c.dataset.i].use = c.checked; renderTbl(); });
+    $('calc').disabled = !S.trials.some(t => t.use);
+}
+renderTbl();
+
+/* ---- হিসাব ---- */
+$('calc').onclick = () => {
+    const used = S.trials.filter(t => t.use); if (!used.length) return;
+    const vs = used.map(t => t.v), mean = vs.reduce((a, b) => a + b, 0) / vs.length;
+    const spread = Math.max(...vs) - Math.min(...vs);
+    const A = ACIDS[S.acid];
+    const trueC = S.Cb, calcC = A.C * mean * A.nbase / (S.vb * A.nacid);
+    const err = (calcC - trueC) / trueC * 100;
+    const ve = Veq(), vend = Vend(S.ind);
+    let html = `<div class="res"><h3>🧮 ধাপে ধাপে হিসাব</h3>`;
+    html += `<div>নেওয়া পাঠ: ${used.map(t => bn(t.v)).join(', ')} mL ${used.length > 1 ? (spread <= 0.1001 ? '— <b style="color:var(--ok)">সমঞ্জস ✔</b>' : '— <b style="color:var(--bad)">ব্যবধান ' + bn(spread) + ' mL (০.১০-এর বেশি) ✖ — আরো পাঠ নাও</b>') : '— একটি মাত্র পাঠ, আরও পাঠ নেওয়া ভালো'}</div>`;
+    html += `<div>গড় আয়তন V₁ = <code>${bn(mean)} mL</code></div>`;
+    html += `<span class="formula">${A.eq}</span>`;
+    html += `<span class="formula">(S₁ × V₁) / (S₂ × V₂) = n₁ / n₂</span>`;
+    html += `<div>S₁ = ${bn(A.C, 3)} M, V₁ = ${bn(mean)} mL, V₂ = ${bn(S.vb, 1)} mL, n₁ : n₂ = ${bi(A.nacid)} : ${bi(A.nbase)}</div>`;
+    html += `<div>S₂ = (${bn(A.C, 3)} × ${bn(mean)} × ${bi(A.nbase)}) / (${bn(S.vb, 1)} × ${bi(A.nacid)}) = <code>${bn(calcC, 4)} M</code></div></div>`;
+    html += `<div class="row"><label for="ans" style="font-weight:700">তোমার হিসাব করা S₂ (M):</label><input class="num" id="ans" inputmode="decimal" placeholder="যেমন: ০.০৭৫০"><button class="btn" id="chk">✅ যাচাই করো</button></div><div id="chkOut"></div>`;
+    $('calcOut').innerHTML = html;
+    $('chk').onclick = () => {
+        const v = parseFloat(norm($('ans').value));
+        if (!isFinite(v)) { toast('একটি সংখ্যা লেখো'); return; }
+        const e = Math.abs(v - trueC) / trueC * 100;
+        const ok = e <= 3;
+        S.answered = true;
+        let h = `<div class="res ${ok ? 'ok' : 'bad'}"><h3>${ok ? '🎉 ঠিক আছে!' : '🤔 আরেকবার ভেবে দেখো'}</h3>`;
+        h += ok ? `তোমার উত্তর ${bn(v, 4)} M — আসল মানের সাথে ব্যবধান মাত্র ${bn(e, 1)}%।` : `তোমার উত্তরে ${bn(e, 1)}% ব্যবধান আছে। সূত্র ও n₁ : n₂ অনুপাত আবার দেখো। (সাহায্য: উপরের ধাপে হিসাব দেখানো আছে।)`;
+        h += `<hr style="border:0;border-top:1px dashed var(--border-color);margin:10px 0">`;
+        h += `<b>আসল অজানা ঘনমাত্রা:</b> <code>${bn(trueC, 3)} M</code><br>`;
+        h += `<b>তাত্ত্বিক সমতা বিন্দু:</b> <code>${bn(ve)} mL</code> · ${vend > 50 ? `<b>${INDS[S.ind].name}:</b> রং বদলের বিন্দু বিউরেটের পরিসরের (৫০ mL) বাইরে — এই জোড়ায় নির্দেশকটি কার্যকর নয়<br>` : `<b>${INDS[S.ind].name}-এর শেষ বিন্দু:</b> <code>${bn(vend)} mL</code> (নির্দেশক ত্রুটি ${bn(vend - ve)} mL)<br>`}`;
+        h += `<b>তোমার মাপা গড় আয়তন:</b> <code>${bn(mean)} mL</code> → হিসাবকৃত ঘনমাত্রা ${bn(calcC, 4)} M (পরীক্ষণ ত্রুটি ${bn(err, 1)}%)`;
+        if (S.acid === 'ace' && (S.ind === 'mo' || S.ind === 'mr')) h += `<br>💡 দুর্বল এসিড–শক্তিশালী ক্ষারে সমতা বিন্দুর pH ≈ ৮.৭ — এই নির্দেশক এখানে মানানসই নয়, তাই বড় নির্দেশক ত্রুটি। ফেনোলফথেলিন ব্যবহার করে দেখো!`;
+        h += `</div>`;
+        $('chkOut').innerHTML = h;
+        drawChart(used);
+    };
+};
+$('calc').addEventListener('click', () => { setTimeout(() => $('calcOut').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50); });
+
+/* ---- কার্ভ ---- */
+function drawChart(used) {
+    const W = 520, H = 280, l = 40, r = 14, t = 14, b = 34, xmax = 50;
+    const X = v => l + (W - l - r) * v / xmax, Y = p => t + (H - t - b) * (1 - p / 14);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="টাইট্রেশন কার্ভ">`;
+    for (let p = 0; p <= 14; p += 2) s += `<line x1="${l}" x2="${W - r}" y1="${Y(p)}" y2="${Y(p)}" stroke="var(--border-color)"/><text x="${l - 6}" y="${Y(p) + 3}" text-anchor="end">${bi(p)}</text>`;
+    for (let v = 0; v <= 50; v += 10) s += `<text x="${X(v)}" y="${H - 14}" text-anchor="middle">${bi(v)}</text>`;
+    s += `<text x="${(W + l) / 2}" y="${H - 1}" text-anchor="middle">যোগ করা এসিডের আয়তন (mL)</text><text x="12" y="${H / 2}" transform="rotate(-90 12 ${H / 2})" text-anchor="middle">pH</text>`;
+    const I = INDS[S.ind];
+    s += `<rect x="${l}" y="${Y(I.range[1])}" width="${W - l - r}" height="${Y(I.range[0]) - Y(I.range[1])}" fill="rgba(168,85,247,.16)"/><text x="${W - r - 4}" y="${Y(I.range[1]) - 3}" text-anchor="end" style="fill:#a855f7;font-weight:700">${I.name}-এর পরিসর</text>`;
+    let d = ''; for (let v = 0; v <= xmax; v += 0.25) d += (d ? 'L' : 'M') + X(v).toFixed(1) + ' ' + Y(pHat(v)).toFixed(1);
+    s += `<path d="${d}" fill="none" stroke="#3b82f6" stroke-width="2.6"/>`;
+    const ve = Veq(); s += `<line x1="${X(ve)}" x2="${X(ve)}" y1="${t}" y2="${H - b}" stroke="#22c55e" stroke-dasharray="4 4"/><text x="${X(ve) + 4}" y="${t + 10}" style="fill:#22c55e;font-weight:700">সমতা বিন্দু ${bn(ve, 1)} mL</text>`;
+    used.forEach(u => { s += `<circle cx="${X(u.v)}" cy="${Y(pHat(u.v))}" r="5" fill="#f59e0b" stroke="var(--card-solid)" stroke-width="2"/>`; });
+    s += `</svg>`;
+    $('chart').innerHTML = s; $('graphCard').style.display = '';
+    const vend = Vend(S.ind);
+    $('chartNote').innerHTML = `নীল রেখা = তাত্ত্বিক কার্ভ · সবুজ ড্যাশ = সমতা বিন্দু · কমলা বিন্দু = তোমার পাঠ। সমতা বিন্দুর কাছে pH হঠাৎ লাফ দেয় — তাই এক ফোঁটাতেই রং বদলে যায়। ${S.acid === 'ace' ? 'দুর্বল এসিডে সমতা বিন্দুর pH ৭-এর উপরে (≈ ৮.৭) এবং শুরুর দিকে বাফার অঞ্চল দেখা যায়।' : 'শক্তিশালী এসিড–ক্ষারে সমতা বিন্দুর pH = ৭।'}`;
+    setTimeout(() => $('graphCard').scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+}
+setStep(0);
+</script>
+</body>
+</html>
