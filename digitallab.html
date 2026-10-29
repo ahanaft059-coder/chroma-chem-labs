@@ -1,300 +1,190 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ডিজিটাল ল্যাব হাব - Lab Alchemy</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-
-    <style>
-        :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
-            --section-border: rgba(168, 85, 247, 0.25);
-            --gradient-primary: linear-gradient(135deg, #9333ea, #3b82f6);
-            --gradient-glow: rgba(147, 51, 234, 0.15);
-        }
-        [data-theme="dark"] {
-            --bg-color: #030712;
-            --card-bg: #0b0f19;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #1e293b;
-            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-            --section-border: rgba(168, 85, 247, 0.35);
-            --gradient-primary: linear-gradient(135deg, #a855f7, #60a5fa);
-            --gradient-glow: rgba(168, 85, 247, 0.25);
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 30px 20px;
-            transition: background 0.4s ease, color 0.4s ease;
-        }
-
-        .container { max-width: 1200px; margin: 0 auto; }
-
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; border-bottom: 1px solid var(--border-color);
-            padding-bottom: 22px; flex-wrap: wrap; gap: 20px;
-        }
-        .logo-area { display: flex; align-items: center; gap: 14px; cursor: pointer; text-decoration: none; color: var(--text-color); }
-        .logo-icon-box { display: flex; align-items: center; gap: 4px; }
-        .logo-text h1 { margin: 0; font-size: 24px; font-weight: 800; }
-        .logo-text span { font-size: 12px; color: #a855f7; font-weight: 700; display: block; }
-
-        .header-right { display: flex; align-items: center; gap: 12px; }
-        .theme-btn {
-            background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
-            width: 42px; height: 42px; border-radius: 16px; cursor: pointer; font-size: 16px;
-            display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow);
-        }
-
-        /* ল্যাব হিরো */
-        .lab-hero {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)), var(--card-bg);
-            border: 2px solid var(--section-border);
-            border-radius: 28px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-        .lab-hero h2 { font-size: 30px; font-weight: 800; margin: 0 0 10px 0; }
-        .lab-hero h2 span { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .lab-hero p { font-size: 15px; color: var(--text-muted); max-width: 650px; margin: 0 auto; line-height: 1.6; }
-
-        /* এক্সপেরিমেন্ট গ্রিড */
-        .experiments-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .exp-card {
-            background: var(--card-bg);
-            border: 2px solid var(--section-border);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .exp-card:hover {
-            transform: translateY(-6px);
-            border-color: #a855f7;
-            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.2);
-        }
-
-        .exp-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .exp-icon {
-            width: 55px; height: 55px;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1));
-            border: 1px solid var(--section-border);
-            border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: #a855f7;
-            flex-shrink: 0;
-        }
-        .exp-title-area h3 { font-size: 20px; font-weight: 800; margin: 0 0 4px 0; }
-        .exp-tag { font-size: 12px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 3px 10px; border-radius: 20px; display: inline-block; }
-
-        .exp-desc {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.7;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-
-        .exp-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            padding: 14px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 0 8px 20px var(--gradient-glow);
-            transition: 0.3s;
-        }
-        .exp-btn:hover { opacity: 0.95; transform: translateY(-2px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>ডিজিটাল ল্যাব হাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:30px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:26px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(2rem,5vw,3.1rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:620px;font-size:16px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:8px}
+.search{flex:1 1 260px;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-bg);border:1.5px solid var(--border-color);outline:none;backdrop-filter:blur(12px);transition:border-color .25s,box-shadow .25s}
+.search:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:transform .2s,color .2s,border-color .2s}
+.chip:hover{color:var(--text-color);border-color:rgba(168,85,247,.55);transform:translateY(-2px)}
+.chip.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.count{margin:10px 4px 0;font-size:13px;font-weight:600;color:var(--text-muted)}
+.section-title{display:flex;align-items:center;gap:10px;margin:34px 0 18px;padding-bottom:12px;font-size:22px;font-weight:800;border-bottom:2px dashed var(--section-border)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:24px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .3s,border-color .3s,box-shadow .3s;animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.card::before{content:'';position:absolute;top:-80px;right:-60px;width:200px;height:200px;pointer-events:none;background:radial-gradient(circle,var(--gradient-glow),transparent 70%)}
+.card>*{position:relative}
+.card:hover{transform:translateY(-6px);border-color:rgba(168,85,247,.7);box-shadow:0 24px 44px -16px var(--gradient-glow)}
+.no{position:absolute;top:16px;right:18px;font-size:12px;font-weight:800;color:var(--text-muted)}
+.icon{width:56px;height:56px;margin-bottom:14px;border-radius:18px;font-size:28px;display:flex;align-items:center;justify-content:center;background:var(--card-solid);border:1px solid var(--border-color)}
+.card h3{margin:0 0 8px;font-size:20px;font-weight:800;line-height:1.35}
+.card p{margin:0;font-size:14.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.tag{padding:2px 11px;border-radius:20px;font-size:12px;font-weight:800;color:var(--accent);background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.section-title.soon{border-bottom-color:rgba(251,191,36,.55);color:var(--gold)}
+.card.soon{border-color:rgba(251,191,36,.4);opacity:.85}
+.card.soon:hover{transform:none;box-shadow:var(--shadow);border-color:rgba(251,191,36,.7)}
+.card.soon .play{color:var(--text-muted);background:var(--card-solid);border:1px dashed var(--border-color);cursor:not-allowed}
+.card.soon .play:hover{transform:none;box-shadow:none}
+.tag.k{color:var(--text-muted);background:transparent;border-color:var(--border-color);font-weight:700}
+.play{display:block;text-align:center;padding:13px;border-radius:14px;font-size:15px;font-weight:800;text-decoration:none;color:#fff;background:var(--gradient-primary);transition:transform .25s,box-shadow .25s}
+.play:hover{transform:translateY(-2px);box-shadow:0 10px 22px var(--gradient-glow)}
+.empty{display:none;margin:40px 0;padding:30px;text-align:center;border-radius:20px;font-weight:600;color:var(--text-muted);background:var(--card-bg);border:1px dashed var(--border-color)}
+.empty.show{display:block}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
 
-    <div class="container">
-        <header>
-            <a href="index.html" class="logo-area">
-                <div class="logo-icon-box">
-                    <i class="fas fa-vial" style="font-size: 24px; color: #00f2fe;"></i>
-                    <i class="fas fa-flask" style="font-size: 30px; color: #00f2fe;"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>Lab Alchemy</h1>
-                    <span>Digital Lab Hub</span>
-                </div>
-            </a>
-
-            <div class="header-right">
-                <button class="theme-btn" onclick="toggleTheme()">🌓</button>
-            </div>
-        </header>
-
-        <div class="lab-hero">
-            <h2>ডিজিটাল ল্যাব <span>এক্সপেরিমেন্ট হাব</span></h2>
-            <p>সিলেবাসের বিভিন্ন গুরুত্বপূর্ণ প্র্যাকটিক্যাল ও ল্যাব পরীক্ষাগুলোর বিস্তারিত তালিকা। তোমার প্রয়োজনীয় এক্সপেরিমেন্টে প্রবেশ করো।</p>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Digital Lab Hub</small></span></a>
+        <div class="top-right">
+            <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="back-btn" href="dashboard.html">← <span class="long">মূল পৃষ্ঠায় ফিরে যান</span></a>
         </div>
+    </header>
 
-        <div class="experiments-grid">
-            <!-- এক্সপেরিমেন্ট ১ -->
-            <div class="exp-card">
-                <div>
-                    <div class="exp-header">
-                        <div class="exp-icon"><i class="fas fa-flask"></i></div>
-                        <div class="exp-title-area">
-                            <h3>এসিড-ক্ষার টাইট্রেশন</h3>
-                            <span class="exp-tag">পরিমাণগত রসায়ন</span>
-                        </div>
-                    </div>
-                    <p class="exp-desc">নির্দিষ্ট ঘনমাত্রার এসিড দ্রবণ ব্যবহার করে ক্ষার দ্রবণের অজানা ঘনমাত্রা নির্ণয় এবং নির্দেশকের সাহায্যে প্রশমন বিন্দু নির্ধারণের সম্পূর্ণ পদ্ধতি।</p>
-                </div>
-                <a href="experiment-titration.html" class="exp-btn">
-                    <span>ল্যাবে প্রবেশ করো</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
+    <section class="hero">
+        <span class="pill">🔬 সিলেবাসের প্র্যাকটিক্যাল</span>
+        <h1><span class="em">🧫</span> ডিজিটাল ল্যাব এক্সপেরিমেন্ট হাব</h1>
+        <p>সিলেবাসের গুরুত্বপূর্ণ প্র্যাকটিক্যাল ও ল্যাব পরীক্ষাগুলোর বিস্তারিত তালিকা। তোমার প্রয়োজনীয় এক্সপেরিমেন্টে প্রবেশ করো।</p>
+    </section>
 
-            <!-- এক্সপেরিমেন্ট ২ -->
-            <div class="exp-card">
-                <div>
-                    <div class="exp-header">
-                        <div class="exp-icon"><i class="fas fa-vial"></i></div>
-                        <div class="exp-title-area">
-                            <h3>লবণ শনাক্তকরণ পরীক্ষা</h3>
-                            <span class="exp-tag">মৌলিক বিশ্লেষণ</span>
-                        </div>
-                    </div>
-                    <p class="exp-desc">শুষ্ক ও আর্দ্র পরীক্ষার মাধ্যমে অজৈব লবণের ক্যাটায়ন ($\text{Cu}^{2+}, \text{Fe}^{2+}, \text{Al}^{3+}$ ইত্যাদি) এবং অ্যানায়ন শনাক্তকরণের প্রক্রিয়া।</p>
-                </div>
-                <a href="experiment-salt.html" class="exp-btn">
-                    <span>ল্যাবে প্রবেশ করো</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <!-- এক্সপেরিমেন্ট ৩ -->
-            <div class="exp-card">
-                <div>
-                    <div class="exp-header">
-                        <div class="exp-icon"><i class="fas fa-fire"></i></div>
-                        <div class="exp-title-area">
-                            <h3>গ্যাস প্রস্তুতি ও ধর্ম</h3>
-                            <span class="exp-tag">অজৈব রসায়ন</span>
-                        </div>
-                    </div>
-                    <p class="exp-desc">পরীক্ষাগারে অক্সিজেন ($\text{O}_2$), কার্বন ডাই-অক্সাইড ($\text{CO}_2$) বা হাইড্রোজেন ($\text{H}_2$) গ্যাস প্রস্তুতকরণ, সংগ্রহ এবং তাদের মূল বৈশিষ্ট্য যাচাই।</p>
-                </div>
-                <a href="experiment-gas.html" class="exp-btn">
-                    <span>ল্যাবে প্রবেশ করো</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <!-- এক্সপেরিমেন্ট ৪ -->
-            <div class="exp-card">
-                <div>
-                    <div class="exp-header">
-                        <div class="exp-icon"><i class="fas fa-atom"></i></div>
-                        <div class="exp-title-area">
-                            <h3>দ্রবণ প্রস্তুতি ও মোলারিটি</h3>
-                            <span class="exp-tag">স্টয়কিওমেট্রি</span>
-                        </div>
-                    </div>
-                    <p class="exp-desc">নির্দিষ্ট আয়তনের প্রমাণ দ্রবণ ($\text{Na}_2\text{CO}_3$ বা অক্সালিক এসিড) প্রস্তুত করার গাণিতিক হিসাব এবং ল্যাবরেটরি টেকনিক।</p>
-                </div>
-                <a href="experiment-solution.html" class="exp-btn">
-                    <span>ল্যাবে প্রবেশ করো</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <!-- এক্সপেরিমেন্ট ৫ -->
-            <div class="exp-card">
-                <div>
-                    <div class="exp-header">
-                        <div class="exp-icon"><i class="fas fa-bolt"></i></div>
-                        <div class="exp-title-area">
-                            <h3>তড়িৎ বিশ্লেষ্য ও পরিবাহিতা</h3>
-                            <span class="exp-tag">তড়িৎ রসায়ন</span>
-                        </div>
-                    </div>
-                    <p class="exp-desc">বিভিন্ন দ্রবণের মধ্য দিয়ে বিদ্যুৎ পরিবাহিতা পরীক্ষা এবং কপার সালফেট ($\text{CuSO}_4$) দ্রবণের তড়িৎ বিশ্লেষণ প্রক্রিয়া পর্যবেক্ষণ।</p>
-                </div>
-                <a href="experiment-electrochem.html" class="exp-btn">
-                    <span>ল্যাবে প্রবেশ করো</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <!-- এক্সপেরিমেন্ট ৬ -->
-            <div class="exp-card">
-                <div>
-                    <div class="exp-header">
-                        <div class="exp-icon"><i class="fas fa-seedling"></i></div>
-                        <div class="exp-title-area">
-                            <h3>জৈব যৌগের কার্যকরী মূলক</h3>
-                            <span class="exp-tag">জৈব রসায়ন</span>
-                        </div>
-                    </div>
-                    <p class="exp-desc">অজানা জৈব যৌগে সম্পৃক্ততা/অসম্পৃক্ততা পরীক্ষা, এবং অ্যালকোহল, কার্বোজিলিক এসিড বা অ্যালডিহাইড মূলক শনাক্তকরণ।</p>
-                </div>
-                <a href="experiment-organic.html" class="exp-btn">
-                    <span>ল্যাবে প্রবেশ করো</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
+    <div class="tools">
+        <input class="search" id="q" type="search" placeholder="এক্সপেরিমেন্ট খোঁজো… (যেমন: টাইট্রেশন, গ্যাস, লবণ)" aria-label="এক্সপেরিমেন্ট খোঁজো" autocomplete="off">
+        <div class="chips" id="chips" role="group" aria-label="ফিল্টার">
+            <button type="button" class="chip on" data-f="all">সব</button>
+            <button type="button" class="chip" data-f="open">চালু</button>
+            <button type="button" class="chip" data-f="soon">শীঘ্রই আসছে</button>
         </div>
     </div>
+    <div class="count" id="count" aria-live="polite"></div>
 
-    <script>
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', next);
-            document.documentElement.setAttribute('data-theme', next);
-        }
-    </script>
+    <div id="sections"></div>
+    <div class="empty" id="empty">কোনো এক্সপেরিমেন্ট পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজে দেখো।</div>
+</div>
+
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+<script>
+/* নতুন এক্সপেরিমেন্ট যোগ করতে শুধু এখানে একটি লাইন যোগ করো।
+   [আইকন, নাম, বিভাগ, বিবরণ, লিংক, মূল শব্দ[]] */
+const EXPS = [
+    ['⚗️', 'এসিড-ক্ষার টাইট্রেশন', 'পরিমাণগত রসায়ন', 'নির্দিষ্ট ঘনমাত্রার এসিড দ্রবণ ব্যবহার করে ক্ষার দ্রবণের অজানা ঘনমাত্রা নির্ণয় এবং নির্দেশকের সাহায্যে প্রশমন বিন্দু নির্ধারণের সম্পূর্ণ পদ্ধতি।', 'experiment-titration.html', ['নির্দেশক', 'প্রশমন বিন্দু', 'ঘনমাত্রা']],
+    ['🧪', 'লবণ শনাক্তকরণ পরীক্ষা', 'মৌলিক বিশ্লেষণ', 'শুষ্ক ও আর্দ্র পরীক্ষার মাধ্যমে অজৈব লবণের ক্যাটায়ন (Cu²⁺, Fe²⁺, Al³⁺ ইত্যাদি) এবং অ্যানায়ন শনাক্তকরণের প্রক্রিয়া।', 'experiment-salt.html', ['ক্যাটায়ন', 'অ্যানায়ন', 'শুষ্ক ও আর্দ্র পরীক্ষা']],
+    ['🔥', 'গ্যাস প্রস্তুতি ও ধর্ম', 'অজৈব রসায়ন', 'পরীক্ষাগারে অক্সিজেন (O₂), কার্বন ডাই-অক্সাইড (CO₂) বা হাইড্রোজেন (H₂) গ্যাস প্রস্তুতকরণ, সংগ্রহ এবং তাদের মূল বৈশিষ্ট্য যাচাই।', 'experiment-gas.html', ['প্রস্তুতি', 'সংগ্রহ', 'গ্যাসের ধর্ম']],
+    ['⚖️', 'দ্রবণ প্রস্তুতি ও মোলারিটি', 'স্টয়কিওমেট্রি', 'নির্দিষ্ট আয়তনের প্রমাণ দ্রবণ (Na₂CO₃ বা অক্সালিক এসিড) প্রস্তুত করার গাণিতিক হিসাব এবং ল্যাবরেটরি টেকনিক।', 'experiment-solution.html', ['প্রমাণ দ্রবণ', 'মোলারিটি', 'হিসাব']],
+    ['⚡', 'তড়িৎ বিশ্লেষ্য ও পরিবাহিতা', 'তড়িৎ রসায়ন', 'বিভিন্ন দ্রবণের মধ্য দিয়ে বিদ্যুৎ পরিবাহিতা পরীক্ষা এবং কপার সালফেট (CuSO₄) দ্রবণের তড়িৎ বিশ্লেষণ প্রক্রিয়া পর্যবেক্ষণ।', 'experiment-electrochem.html', ['পরিবাহিতা', 'তড়িৎ বিশ্লেষণ', 'ইলেকট্রোড']],
+    ['🌱', 'জৈব যৌগের কার্যকরী মূলক', 'জৈব রসায়ন', 'অজানা জৈব যৌগে সম্পৃক্ততা/অসম্পৃক্ততা পরীক্ষা, এবং অ্যালকোহল, কার্বক্সিলিক এসিড বা অ্যালডিহাইড মূলক শনাক্তকরণ।', 'experiment-organic.html', ['সম্পৃক্ততা', 'কার্যকরী মূলক', 'শনাক্তকরণ']],
+    /* শীঘ্রই আসছে — লিংক বসালেই "চালু" হয়ে যাবে */
+    ['🌈', 'সার্বজনীন নির্দেশক ও pH পরীক্ষা', 'এসিড-ক্ষার', 'লিটমাস, ফেনোলফথেলিন, মিথাইল অরেঞ্জ ও সার্বজনীন নির্দেশকে বিভিন্ন দ্রবণের রং দেখে pH আন্দাজ করা।', null, ['নির্দেশক', 'pH', 'রং পরিবর্তন']],
+    ['🔥', 'শিখা পরীক্ষা (Flame Test)', 'মৌলিক বিশ্লেষণ', 'Na, K, Ca, Ba, Cu, Li-এর লবণ শিখায় ধরে আলাদা আলাদা রং দেখে ধাতব আয়ন শনাক্ত করা।', null, ['শিখার রং', 'ধাতব আয়ন', 'শুষ্ক পরীক্ষা']],
+    ['🟣', 'KMnO₄ দিয়ে জারণ-বিজারণ টাইট্রেশন', 'পরিমাণগত রসায়ন', 'পটাশিয়াম পারম্যাঙ্গানেট দিয়ে Fe²⁺ বা অক্সালিক এসিডের ঘনমাত্রা নির্ণয়; স্ব-নির্দেশক হিসেবে KMnO₄-এর ব্যবহার।', null, ['জারণ-বিজারণ', 'স্ব-নির্দেশক', 'ঘনমাত্রা']],
+    ['💦', 'পানির কাঠিন্য ও সাবান পরীক্ষা', 'পরিমাণগত রসায়ন', 'Ca²⁺ ও Mg²⁺ আয়নের কারণে পানির কাঠিন্য, সাবানের ফেনা ও স্থায়ী-অস্থায়ী কাঠিন্য দূর করার পদ্ধতি।', null, ['কাঠিন্য', 'সাবানের ফেনা', 'স্থায়ী-অস্থায়ী']],
+    ['⏱️', 'বিক্রিয়ার হার ও তাপমাত্রা', 'রাসায়নিক গতিবিদ্যা', 'Na₂S₂O₃ ও HCl-এর বিক্রিয়ায় ঘোলাটে হওয়ার সময় মেপে ঘনমাত্রা ও তাপমাত্রার প্রভাব দেখা।', null, ['বিক্রিয়ার হার', 'ঘনমাত্রা', 'তাপমাত্রা']],
+    ['⚖', 'লে-শাতেলিয়ার নীতি ও সাম্য', 'রাসায়নিক সাম্য', 'FeCl₃ ও KSCN-এর সাম্য দ্রবণে ঘনমাত্রা বদলে রঙের পরিবর্তন দেখে সাম্যের স্থানান্তর বোঝা।', null, ['সাম্য', 'ঘনমাত্রার প্রভাব', 'রং পরিবর্তন']],
+    ['🪙', 'ধাতুর সক্রিয়তা ও স্থানচ্যুতি বিক্রিয়া', 'অজৈব রসায়ন', 'Zn, Fe, Cu ও Mg-কে এসিড ও লবণ দ্রবণে ফেলে সক্রিয়তা সারি যাচাই করা।', null, ['সক্রিয়তা সারি', 'স্থানচ্যুতি', 'ধাতু ও এসিড']],
+    ['🥈', 'তড়িৎ প্রলেপন (Electroplating)', 'তড়িৎ রসায়ন', 'কপার সালফেট দ্রবণে তামার প্রলেপ দিয়ে ক্যাথোড-অ্যানোডের ভূমিকা ও ফ্যারাডের সূত্র যাচাই।', null, ['ক্যাথোড-অ্যানোড', 'প্রলেপ', 'ফ্যারাডের সূত্র']],
+    ['🧼', 'সাবান প্রস্তুতি (সাবানীকরণ)', 'জৈব রসায়ন', 'তেল বা চর্বি ও NaOH-এর বিক্রিয়ায় সাবান তৈরি এবং লবণ দিয়ে সাবান আলাদা করার পদ্ধতি।', null, ['সাবানীকরণ', 'লবণ-বিশোধন', 'ফ্যাটি এসিড']],
+    ['🍎', 'ইস্টার প্রস্তুতি (ফলের গন্ধ)', 'জৈব রসায়ন', 'অ্যালকোহল ও কার্বক্সিলিক এসিড থেকে H₂SO₄-এর উপস্থিতিতে সুগন্ধি ইস্টার তৈরি।', null, ['ইস্টারীকরণ', 'অনুঘটক', 'সুগন্ধ']],
+    ['🧴', 'ভিনেগারে অ্যাসিটিক এসিডের পরিমাণ', 'পরিমাণগত রসায়ন', 'NaOH প্রমাণ দ্রবণ দিয়ে ভিনেগারের টাইট্রেশন করে এসিটিক এসিডের শতকরা পরিমাণ নির্ণয়।', null, ['টাইট্রেশন', 'শতকরা ঘনমাত্রা', 'ফেনোলফথেলিন']],
+    ['🍞', 'খাদ্যে স্টার্চ, গ্লুকোজ ও প্রোটিন পরীক্ষা', 'জৈব রসায়ন', 'আয়োডিন, বেনেডিক্ট ও বিউরেট দ্রবণ দিয়ে খাদ্যের উপাদান শনাক্তকরণ।', null, ['আয়োডিন', 'বেনেডিক্ট', 'বিউরেট']],
+    ['🧲', 'মিশ্রণ পৃথকীকরণ (পাতন, ক্রোমাটোগ্রাফি, স্ফটিকীকরণ)', 'মৌলিক বিশ্লেষণ', 'পরিস্রাবণ, পাতন, কাগজ ক্রোমাটোগ্রাফি ও স্ফটিকীকরণ দিয়ে মিশ্রণের উপাদান আলাদা করা।', null, ['পাতন', 'ক্রোমাটোগ্রাফি', 'স্ফটিকীকরণ']],
+    ['🌡️', 'প্রশমন তাপ নির্ণয়', 'তাপ রসায়ন', 'ক্যালরিমিটারে HCl ও NaOH মিশিয়ে তাপমাত্রা বৃদ্ধি মেপে প্রশমন তাপের মান বের করা।', null, ['ক্যালরিমিটার', 'ΔH', 'তাপমাত্রা']]
+].map(([icon, t, cat, d, href, kw], i) => ({ icon, t, cat, d, href, kw, n: i + 1 }));
+
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+$('themeBtn').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', next);
+});
+let filter = 'all';
+document.querySelectorAll('#chips .chip').forEach(b => b.addEventListener('click', () => { filter = b.dataset.f; document.querySelectorAll('#chips .chip').forEach(x => x.classList.toggle('on', x === b)); render(); }));
+
+function card(c, i) {
+    const el = document.createElement('article'); el.className = 'card' + (c.href ? '' : ' soon'); el.style.animationDelay = Math.min(i, 8) * 50 + 'ms';
+    const no = document.createElement('span'); no.className = 'no'; no.textContent = 'এক্সপেরিমেন্ট ' + bn(c.n);
+    const top = document.createElement('div');
+    const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = c.icon; ic.setAttribute('aria-hidden', 'true');
+    const h = document.createElement('h3'); h.textContent = c.t; const p = document.createElement('p'); p.textContent = c.d;
+    const tg = document.createElement('div'); tg.className = 'tags';
+    const t1 = document.createElement('span'); t1.className = 'tag'; t1.textContent = c.cat; tg.appendChild(t1);
+    c.kw.forEach(k => { const s = document.createElement('span'); s.className = 'tag k'; s.textContent = k; tg.appendChild(s); });
+    top.append(ic, h, p, tg);
+    const a = document.createElement('a'); a.className = 'play';
+    if (!c.href) { a.textContent = 'শীঘ্রই আসছে 🔒'; a.href = '#'; a.tabIndex = -1; a.setAttribute('aria-disabled', 'true'); a.addEventListener('click', e => e.preventDefault()); }
+    else { a.href = c.href; a.textContent = 'ল্যাবে প্রবেশ করো ⚡'; a.setAttribute('aria-label', c.t + ' ল্যাবে প্রবেশ করো'); }
+    el.append(no, top, a); return el;
+}
+function render() {
+    const q = $('q').value.trim().toLowerCase();
+    const list = EXPS.filter(c => (filter === 'all' || (filter === 'open' && c.href) || (filter === 'soon' && !c.href)) && (!q || (c.t + ' ' + c.d + ' ' + c.cat + ' ' + c.kw.join(' ')).toLowerCase().includes(q)));
+    const root = $('sections'); root.replaceChildren();
+    const open = list.filter(c => c.href), soon = list.filter(c => !c.href);
+    const sec = (title, cls, arr) => { const w = document.createElement('div'); const h = document.createElement('h2'); h.className = 'section-title ' + cls; h.textContent = title; const g = document.createElement('div'); g.className = 'grid'; arr.forEach((c, i) => g.appendChild(card(c, i))); w.append(h, g); root.appendChild(w); };
+    if (open.length) sec('🧪 চালু এক্সপেরিমেন্ট', '', open);
+    if (soon.length) sec('🚧 শীঘ্রই আসছে', 'soon', soon);
+    $('empty').classList.toggle('show', !list.length);
+    $('count').textContent = bn(list.length) + 'টি এক্সপেরিমেন্ট দেখানো হচ্ছে · ' + bn(open.length) + 'টি চালু';
+}
+$('q').addEventListener('input', render);
+render();
+</script>
 </body>
 </html>
