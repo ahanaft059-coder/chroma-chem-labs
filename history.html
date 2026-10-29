@@ -1,455 +1,423 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রসায়নের ইতিহাস ও আবিষ্কারের সম্পূর্ণ টাইমলাইন</title>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #111827;
-            --text-color: #f3f4f6;
-            --accent-color: #38bdf8;
-            --border-color: #1f2937;
-            --year-color: #f43f5e;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>রসায়নের সময়যাত্রা | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg:#eef2f9;--card:rgba(255,255,255,.8);--solid:#fff;--text:#0f172a;--muted:#5b6b82;--line:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.1);--grad:linear-gradient(135deg,#9333ea,#3b82f6);--glow:rgba(147,51,234,.2);--gl:rgba(15,23,42,.05);--blob:.22;--era:#f59e0b;--year:#e11d48}
+[data-theme="dark"]{--bg:#05060f;--card:rgba(16,20,36,.72);--solid:#0b0f1c;--text:#f8fafc;--muted:#94a3b8;--line:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--grad:linear-gradient(135deg,#a855f7,#60a5fa);--glow:rgba(168,85,247,.3);--gl:rgba(255,255,255,.035);--blob:.42;--year:#fb7185}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:14px 16px 70px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s}
+.glowL{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.glowL i{position:absolute;width:640px;height:640px;border-radius:50%;filter:blur(110px);opacity:0;transition:opacity 1s}
+.glowL i.on{opacity:var(--blob)}
+.glowL i:nth-child(odd){top:-180px;left:-160px}.glowL i:nth-child(even){bottom:-240px;right:-180px}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--gl) 1px,transparent 1px),linear-gradient(90deg,var(--gl) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.prog{position:fixed;top:0;left:0;height:4px;width:0;z-index:100;background:var(--era);box-shadow:0 0 12px var(--era);transition:background .6s}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto}
+.top{position:sticky;top:8px;z-index:60;display:flex;align-items:center;gap:12px;padding:10px 16px;margin-bottom:22px;border-radius:22px;background:var(--card);border:1.5px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);flex:1;min-width:0}
+.orb{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,var(--era) 55%,#a855f7);box-shadow:0 0 16px var(--era);transition:background .6s,box-shadow .6s}
+.brand b{display:block;font-size:17px;font-weight:800;line-height:1.2}.brand small{display:block;font-size:12px;font-weight:700;color:var(--era);transition:color .6s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 14px;font:inherit;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;color:var(--text);background:var(--solid);border:1px solid var(--line);border-radius:12px;transition:transform .2s,border-color .2s}
+.btn:hover{transform:translateY(-2px);border-color:var(--era)}
+.btn.sq{width:40px;padding:0}
+.hero{text-align:center;margin:10px 0 22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:var(--era);background:color-mix(in srgb,var(--era) 12%,transparent);border:1px solid color-mix(in srgb,var(--era) 40%,transparent);transition:all .6s}
+.hero h1{margin:14px 0 8px;font-size:clamp(2.1rem,6vw,3.5rem);font-weight:800;line-height:1.2;letter-spacing:-.5px;background:var(--grad);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:600px;font-size:16px;line-height:1.7;color:var(--muted)}
+.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.stats span{padding:8px 16px;border-radius:16px;font-size:13px;font-weight:700;color:var(--muted);background:var(--solid);border:1px solid var(--line)}
+.stats b{display:block;font-size:20px;color:var(--text)}
+.tools{position:sticky;top:76px;z-index:50;display:flex;flex-direction:column;gap:10px;padding:12px;margin-bottom:8px;border-radius:20px;background:var(--card);border:1.5px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 220px;font:inherit;font-size:15px;font-weight:600;padding:11px 16px;border-radius:14px;color:var(--text);background:var(--solid);border:1.5px solid var(--line);outline:none}
+.search:focus{border-color:var(--era)}
+.chip{font:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:30px;cursor:pointer;color:var(--muted);background:var(--solid);border:1.5px solid var(--line);white-space:nowrap;transition:all .2s}
+.chip:hover{color:var(--text);border-color:var(--era)}
+.chip.on{color:#fff;border-color:transparent;background:var(--grad)}
+.row1{flex-wrap:nowrap;gap:6px}
+.row1 .search{flex:1 1 auto;min-width:0;padding:10px 14px}
+.ab{flex:0 0 auto;display:inline-flex;align-items:center;gap:2px;padding:9px 12px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.grid5 .chip{padding:8px 4px;font-size:12.5px;text-align:center;overflow:hidden;text-overflow:ellipsis}
+#eraChips .chip{border-color:color-mix(in srgb,var(--c) 55%,transparent)}
+#eraChips .chip.on{color:#fff;background:var(--c);border-color:transparent}
+.count{margin:8px 4px 0;font-size:13px;font-weight:600;color:var(--muted)}
+.tl{position:relative;padding:10px 0 20px}
+.tl::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:4px;margin-left:-2px;border-radius:4px;background:linear-gradient(to bottom,#f59e0b,#22d3ee,#a855f7,#f43f5e,#10b981);opacity:.85}
+.era{position:relative;z-index:2;max-width:620px;margin:46px auto 26px;padding:16px 20px;text-align:center;border-radius:22px;background:var(--card);border:2px solid var(--c);box-shadow:0 0 34px -8px var(--c);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.era small{display:block;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--c)}
+.era h2{margin:4px 0;font-size:clamp(1.1rem,3.4vw,1.45rem);font-weight:800;line-height:1.4}
+.era p{margin:4px 0 0;font-size:14px;line-height:1.7;color:var(--muted)}
+.it{position:relative;width:calc(50% - 38px);margin-bottom:26px;opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+.it.in{opacity:1;transform:none}
+.it.l{margin-right:auto}.it.r{margin-left:auto}
+.it::before{content:'';position:absolute;top:22px;width:16px;height:16px;border-radius:50%;background:var(--c);border:3px solid var(--bg);box-shadow:0 0 14px var(--c)}
+.it.l::before{right:-47px}.it.r::before{left:-47px}
+.it::after{content:'';position:absolute;top:29px;width:30px;height:2px;background:var(--c);opacity:.6}
+.it.l::after{right:-38px}.it.r::after{left:-38px}
+.it.cur::before{transform:scale(1.5);animation:pl 1.4s infinite}
+@keyframes pl{50%{box-shadow:0 0 28px 6px var(--c)}}
+.cd{position:relative;padding:18px;border-radius:20px;background:var(--card);border:1.5px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .25s,border-color .25s}
+.cd:hover{transform:translateY(-3px);border-color:var(--c)}
+.it.cur .cd{border-color:var(--c);box-shadow:0 0 30px -10px var(--c)}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.yr{font-size:14px;font-weight:800;color:var(--year);transition:filter .3s}
+.cat{padding:1px 10px;border-radius:20px;font-size:11.5px;font-weight:800;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.fav{margin-left:auto;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;color:var(--muted);background:var(--solid);border:1px solid var(--line);transition:transform .2s}
+.fav.on{color:#fbbf24;border-color:#fbbf24}
+.fav:hover{transform:scale(1.15) rotate(12deg)}
+.ttl{margin:0 0 4px;font-size:18px;font-weight:800;line-height:1.4}
+.who{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--c);transition:filter .3s}
+.ds{margin:0;font-size:14.5px;line-height:1.75;color:var(--muted)}
+body.study .cd:not(.shown) .yr,body.study .cd:not(.shown) .who{filter:blur(7px);cursor:pointer;user-select:none}
+.hint{display:none;margin-top:8px;font-size:12px;font-weight:700;color:var(--muted)}
+body.study .cd:not(.shown) .hint{display:block}
+.empty{display:none;margin:40px 0;padding:30px;text-align:center;border-radius:20px;font-weight:600;color:var(--muted);background:var(--card);border:1px dashed var(--line)}
+.empty.show{display:block}
+.badge{position:fixed;right:14px;bottom:46px;z-index:70;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 80px);padding:8px 16px;border-radius:30px;font-size:13px;font-weight:800;background:var(--card);border:2px solid var(--era);box-shadow:0 0 22px -4px var(--era);backdrop-filter:blur(12px);transition:border-color .6s,box-shadow .6s}
+.badge b{color:var(--year)}
+.up{position:fixed;left:14px;bottom:46px;z-index:70;width:42px;height:42px;border-radius:50%;font-size:17px;cursor:pointer;color:var(--text);background:var(--card);border:1.5px solid var(--line);backdrop-filter:blur(12px)}
+.credit{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:65;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(max-width:560px){.tx{display:none}.ab{padding:9px 11px}.grid5{gap:4px}.grid5 .chip{padding:8px 2px;font-size:11px}.tools{padding:10px 8px}}
+@media(max-width:860px){.tl::before{left:20px}.it{width:auto;margin:0 0 22px 52px!important}.it::before{left:-40px!important;right:auto!important}.it::after{left:-31px!important;right:auto!important;width:22px}.era{margin-left:44px;margin-right:0;max-width:none;text-align:left}.tools{top:70px}.top .long{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.it{opacity:1;transform:none}}
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 40px 20px;
-        }
 
-        .timeline-container {
-            max-width: 850px;
-            margin: 0 auto;
-            position: relative;
-        }
+/* Hamburger menu: search, filters and timeline controls */
+.menu-toggle {
+    position: sticky;
+    top: 76px;
+    z-index: 80;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 46px;
+    height: 44px;
+    margin: 0 0 10px auto;
+    padding: 9px;
+    cursor: pointer;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    color: var(--text);
+    background: var(--card);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+.menu-toggle span {
+    display: block;
+    width: 23px;
+    height: 2.5px;
+    border-radius: 5px;
+    background: var(--text);
+    transition: transform .25s ease, opacity .2s ease;
+}
+.menu-toggle.active span:first-child {
+    transform: translateY(7.5px) rotate(45deg);
+}
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:last-child {
+    transform: translateY(-7.5px) rotate(-45deg);
+}
+.tools.menu-hidden { display: none; }
+.tools:not(.menu-hidden) {
+    display: flex;
+    top: 130px;
+    animation: menuPanelIn .22s ease-out;
+}
+@keyframes menuPanelIn {
+    from { opacity: 0; transform: translateY(-7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 860px) {
+    .menu-toggle { top: 70px; }
+    .tools:not(.menu-hidden) { top: 122px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .menu-toggle span, .tools:not(.menu-hidden) { transition: none; animation: none; }
+}
 
-        /* Center vertical line */
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 30px;
-            width: 4px;
-            background: linear-gradient(to bottom, #38bdf8, #a855f7, #f43f5e, #10b981);
-        }
-
-        .header-title {
-            text-align: center;
-            font-size: 28px;
-            color: var(--accent-color);
-            margin-bottom: 10px;
-        }
-
-        .header-subtitle {
-            text-align: center;
-            font-size: 15px;
-            color: #9ca3af;
-            margin-bottom: 50px;
-        }
-
-        .epoch-heading {
-            font-size: 20px;
-            color: #a855f7;
-            background: rgba(168, 85, 247, 0.1);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            padding: 10px 20px;
-            border-radius: 12px;
-            margin: 40px 0 25px 55px;
-            font-weight: bold;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 30px;
-            margin-left: 65px;
-        }
-
-        /* Timeline Dot */
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -41px;
-            top: 15px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background-color: var(--accent-color);
-            border: 3px solid var(--bg-color);
-            box-shadow: 0 0 10px var(--accent-color);
-        }
-
-        .timeline-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .timeline-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-color);
-        }
-
-        .timeline-year {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--year-color);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-        }
-
-        .timeline-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 8px;
-        }
-
-        .timeline-desc {
-            font-size: 14px;
-            color: #9ca3af;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        @media (max-width: 600px) {
-            .timeline-container::before { left: 15px; }
-            .timeline-item { margin-left: 40px; }
-            .timeline-item::before { left: -29px; }
-            .epoch-heading { margin-left: 30px; font-size: 17px; }
-        }
-    </style>
+</style>
 </head>
 <body>
+<div class="prog" id="prog"></div>
+<div class="glowL" id="glowL"></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" id="brandLink" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small id="eraName">রসায়নের সময়যাত্রা</small></span></a>
+        <button type="button" class="btn sq" id="themeBtn" aria-label="থিম পরিবর্তন" title="থিম">🌓</button>
+        <a class="btn" id="backBtn" href="dashboard.html">← <span class="long">ফিরে যান</span></a>
+    </header>
 
-    <div class="timeline-container">
-        <h1 class="header-title">রসায়নের ইতিহাস ও আবিষ্কারের  টাইমলাইন</h1>
-        <p class="header-subtitle">সভ্যতার সূচনা থেকে আধুনিক যুগ পর্যন্ত</p>
+    <section class="hero">
+        <span class="pill">⏳ সভ্যতার সূচনা থেকে আজ পর্যন্ত</span>
+        <h1>রসায়নের সময়যাত্রা</h1>
+        <p>রসায়নের ইতিহাস ও আবিষ্কারের সম্পূর্ণ টাইমলাইন। স্ক্রল করলে সময় এগোবে, আর পেছনের আলোও যুগের সাথে রং বদলাবে।</p>
+        <div class="stats" id="stats"></div>
+    </section>
 
-        <!-- যুগ ১ -->
-        <div class="epoch-heading">যুগ ১: প্রাচীনকাল ও আলকেমি যুগ (খ্রিস্টপূর্ব ৪০০০ - ১৬শ শতাব্দী)</div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">খ্রিস্টপূর্ব ৪০০০ অব্দ</div>
-                <div class="timeline-title">ধাতু নিষ্কাশন ও ব্যবহার</div>
-                <p class="timeline-desc">প্রকৃতি থেকে তামা সংগ্রহ এবং তা গলিয়ে বিভিন্ন ব্যবহারের জিনিস তৈরির সূচনা হয়, যা মেটালার্জির ভিত্তি গড়ে দেয়।</p>
-            </div>
+    <button type="button" id="menuToggle" class="menu-toggle" aria-expanded="false" aria-controls="toolsPanel" aria-label="মেনু খুলুন" title="মেনু খুলুন">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="tools menu-hidden" id="toolsPanel">
+        <div class="row row1">
+            <input class="search" id="q" type="search" placeholder="খোঁজো… (যেমন: মেন্ডেলিভ, ১৮৬৯)" aria-label="ঘটনা খোঁজো" autocomplete="off">
+            <button type="button" class="chip ab" id="rnd" title="যেকোনো একটি ঘটনায় যাও" aria-label="এলোমেলো ঘটনা">🎲<span class="tx"> এলোমেলো</span></button>
+            <button type="button" class="chip ab" id="studyBtn" title="স্টাডি মোড: বছর ও নাম লুকাও" aria-label="স্টাডি মোড" aria-pressed="false">🧠<span class="tx"> স্টাডি</span></button>
+            <button type="button" class="chip ab" id="favBtn" title="শুধু প্রিয় ঘটনা দেখাও" aria-label="প্রিয় ঘটনা" aria-pressed="false">⭐<span class="tx"> প্রিয়</span></button>
         </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">খ্রিস্টপূর্ব ৩৫০০ অব্দ</div>
-                <div class="timeline-title">ব্রোঞ্জের আবিষ্কার</div>
-                <p class="timeline-desc">তামা এবং টিন একত্রে মিশিয়ে তুলনামূলক শক্ত ধাতু বা ব্রোঞ্জ তৈরির কৌশল আবিষ্কৃত হয়।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">খ্রিস্টপূর্ব ১২০০ অব্দ</div>
-                <div class="timeline-title">লৌহ যুগের সূচনা</div>
-                <p class="timeline-desc">আয়রন ওর বা আকরিক থেকে লোহা গলিয়ে অস্ত্র ও শক্ত যন্ত্রপাতি তৈরির প্রযুক্তি মানুষের আয়ত্তে আসে।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">খ্রিস্টপূর্ব ৩০০ অব্দ</div>
-                <div class="timeline-title">অ্যারিস্টোটলের উপাদান তত্ত্ব</div>
-                <p class="timeline-desc"> অ্যারিস্টোটল মাটি, পানি, বাতাস ও আগুন—এই চারটি মূল উপাদানের ধারণা দেন</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">৮০০ শতাব্দী</div>
-                <div class="timeline-title">জাবের ইবনে হাইয়ানের স্বর্ণযুগ</div>
-                <p class="timeline-desc">মুসলিম বিজ্ঞানী জাবের ইবনে হাইয়ান পাতন (Distillation), কেলাসন (Crystallization) এবং সালফিউরিক এসিড আবিষ্কার করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">৯০০ শতাব্দী</div>
-                <div class="timeline-title">আল-রাজি ও অ্যালকোহল আবিষ্কার</div>
-                <p class="timeline-desc">রাজি (Rhazes) পাতন প্রক্রিয়ার মাধ্যমে বিশুদ্ধ ইথানল বা অ্যালকোহল প্রস্তুত করেন এবং চিকিৎসা রসায়নে অবদান রাখেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৫৫০ শতাব্দী</div>
-                <div class="timeline-title">জর্জেস আগ্রিকোলার মেটালার্জি</div>
-                <p class="timeline-desc">খনিজ পদার্থ ও ধাতু নিষ্কাশন নিয়ে প্রথম বিজ্ঞানভিত্তিক প্রামাণ্য গ্রন্থ 'ডি রে মেটালিকা' প্রকাশিত হয়।</p>
-            </div>
-        </div>
-
-
-        <!-- যুগ ২ -->
-        <div class="epoch-heading">যুগ ২: বৈজ্ঞানিক বিপ্লব ও বায়ু গবেষণা (১৭শ - ১৮শ শতাব্দী)</div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৬৬১</div>
-                <div class="timeline-title">বয়েলের 'The Sceptical Chymist' প্রকাশ</div>
-                <p class="timeline-desc">রবার্ট বয়েল আলকেমির ধারণা থেকে বেরিয়ে এসে মৌল এবং যৌগের আধুনিক বৈজ্ঞানিক সংজ্ঞা প্রদান করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৬৬২</div>
-                <div class="timeline-title">বয়েলের সূত্র</div>
-                <p class="timeline-desc">নির্দিষ্ট তাপমাত্রায় গ্যাসের চাপ ও আয়তনের ব্যস্তানুপাতিক সম্পর্ক বৈজ্ঞানিক পরীক্ষার মাধ্যমে প্রমাণ করা হয়।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৭৫৪</div>
-                <div class="timeline-title">কার্বন ডাই-অক্সাইড আবিষ্কার</div>
-                <p class="timeline-desc">স্কটিশ বিজ্ঞানী জোসেফ ব্ল্যাক 'নির্দিষ্ট বায়ু' বা কার্বন ডাই-অক্সাইড গ্যাস পৃথক করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৭৬৬</div>
-                <div class="timeline-title">হাইড্রোজেন গ্যাস আবিষ্কার</div>
-                <p class="timeline-desc">হেনরি ক্যাভেন্ডিশ অত্যন্ত হালকা ও দহনশীল গ্যাস হিসেবে হাইড্রোজেন আবিষ্কার করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৭৭৪</div>
-                <div class="timeline-title">অক্সিজেন আবিষ্কার</div>
-                <p class="timeline-desc">জোসেফ প্রিস্টলি ও কার্ল ভিলহেল্ম শেলি স্বাধীনভাবে অক্সিজেন গ্যাস আবিষ্কার করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৭৭৯</div>
-                <div class="timeline-title">ল্যাভয়সিয়ে ও ভরের নিত্যতা সূত্র</div>
-                <p class="timeline-desc">অ্যান্টোইন ল্যাভয়সিয়ে দহনে অক্সিজেনের ভূমিকা প্রমাণ করেন এবং 'ভরের নিত্যতা সূত্র' প্রতিষ্ঠা করে আধুনিক রসায়নের ভিত্তি গড়েন।</p>
-            </div>
-        </div>
-
-
-        <!-- যুগ ৩ -->
-        <div class="epoch-heading">যুগ ৩: পারমাণবিক তত্ত্ব ও পর্যায় সারণির বিকাশ (১৯শ শতাব্দী)</div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮০৩</div>
-                <div class="timeline-title">ডালটনের পারমাণবিক তত্ত্ব</div>
-                <p class="timeline-desc">জন ডালটন পরমাণু নিয়ে প্রথম পূর্ণাঙ্গ ও সুসংহত বৈজ্ঞানিক তত্ত্ব প্রকাশ করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮০৮</div>
-                <div class="timeline-title">গে-লুসাকের গ্যাস আয়তন সূত্র</div>
-                <p class="timeline-desc">জোসেফ লুই গে-লুসাক গ্যাসীয় বিক্রিয়ায় আয়তনের সরল অনুপাতের সূত্র প্রদান করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮১১</div>
-                <div class="timeline-title">অ্যাভোগাদ্রোর অনুকল্প</div>
-                <p class="timeline-desc">আমাদেও অ্যাভোগাদ্রো সম আয়তনের সকল গ্যাসে সমান সংখ্যক অণু থাকে মর্মে হাইপোথিসিস দেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮২৮</div>
-                <div class="timeline-title">জৈব যৌগের কৃত্রিম সংশ্লেষণ</div>
-                <p class="timeline-desc">ফ্রেডরিখ ভোলার অজৈব পদার্থ থেকে ইউরিয়া তৈরি করে প্রমাণ করেন জৈব যৌগ শুধু প্রাণদেহে নয়, পরীক্ষাগারেও তৈরি সম্ভব।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮৬০</div>
-                <div class="timeline-title">কার্লস্রুহে কংগ্রেস</div>
-                <p class="timeline-desc">পরমাণু ভর ও আণবিক সূত্র নির্ধারণের জন্য বিজ্ঞানীদের প্রথম আন্তর্জাতিক সম্মেলন অনুষ্ঠিত হয়।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮৬৫</div>
-                <div class="timeline-title">কাকুলির বেনজিন রিং আবিষ্কার</div>
-                <p class="timeline-desc">আগস্ট কাকুলি বেনজিনের ষাটভুজাকৃতির চক্রাকার গঠন আবিষ্কার করে জৈব রসায়নে বিপ্লব ঘটান।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮৬৯</div>
-                <div class="timeline-title">মেন্ডেলিভের পর্যায় সারণি</div>
-                <p class="timeline-desc">দিমিত্রি মেন্ডেলিভ মৌলগুলোর রাসায়নিক ধর্ম ও পারমাণবিক ভরভিত্তিক পর্যায় সারণি প্রকাশ করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮৮৫</div>
-                <div class="timeline-title">ভ্যান্ট হফ ও আরহেনিয়াসের দ্রবণ তত্ত্ব</div>
-                <p class="timeline-desc">জ্যাকুয়াস হেনরিকাস ভ্যান্ট হফ রাসায়নিক গতিবিদ্যা ও অসমোটিক চাপ আবিষ্কার করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮৯৭</div>
-                <div class="timeline-title">ইলেকট্রন আবিষ্কার</div>
-                <p class="timeline-desc">জে. জে. থমসন ক্যাথোড রশ্মি পরীক্ষার মাধ্যমে পরমাণুর ভেতরে ইলেকট্রন কণা আবিষ্কার করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৮৯৮</div>
-                <div class="timeline-title">রেডিয়াম ও পোলোনিয়াম আবিষ্কার</div>
-                <p class="timeline-desc">পিয়েরে কুরি ও মারি কুরি তেজস্ক্রিয় মৌল রেডিয়াম ও পোলোনিয়াম আবিষ্কার করে বিজ্ঞানে নতুন দিগন্ত উন্মোচন করেন।</p>
-            </div>
-        </div>
-
-
-        <!-- যুগ ৪ -->
-        <div class="epoch-heading">যুগ ৪: আধুনিক পরমাণু ও কোয়ান্টাম রসায়ন (২০শ শতাব্দী)</div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯০৯</div>
-                <div class="timeline-title">হাবার-বশ পদ্ধতি (Haber-Bosch Process)</div>
-                <p class="timeline-desc">ফ্রিটজ হাবার ও কার্ল বশ বায়ু থেকে অ্যামোনিয়া গ্যাস সংশ্লেষণের মাধ্যমে কৃত্রিম সার তৈরির পথ উন্মুক্ত করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯১১</div>
-                <div class="timeline-title">রাদারফোর্ডের নিউক্লিয়াস আবিষ্কার</div>
-                <p class="timeline-desc">আলফা কণা বিচ্ছুরণ পরীক্ষার মাধ্যমে রাদারফোর্ড পরমাণুর কেন্দ্রস্থলে নিউক্লিয়াস আবিষ্কার করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯১৩</div>
-                <div class="timeline-title">বোরের পরমাণু মডেল ও pH স্কেল</div>
-                <p class="timeline-desc">নিলস বোর শক্তিস্তরভিত্তিক পরমাণু মডেল দেন এবং সোরেনসেন পিএইচ (pH) স্কেলের প্রবর্তন করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯১৪</div>
-                <div class="timeline-title">হেনরি মোসলে ও পারমাণবিক সংখ্যা</div>
-                <p class="timeline-desc">মোসলে এক্স-রে স্পেকট্রোস্কোপি ব্যবহার করে পারমাণবিক ভরের পরিবর্তে পারমাণবিক সংখ্যার ভিত্তিতে পর্যায় সারণিকে নতুন রূপ দেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯১৯</div>
-                <div class="timeline-title">নাইট্রোজেনের কৃত্রিম রূপান্তর</div>
-                <p class="timeline-desc">আর্নেস্ট রাদারফোর্ড আলফা কণা দিয়ে নাইট্রোজেনকে অক্সিজেনে রূপান্তর করে প্রথম কৃত্রিম তেজস্ক্রিয়তা ও নিউক্লিয়ার বিক্রিয়া ঘটান।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯৩২</div>
-                <div class="timeline-title">নিউট্রন আবিষ্কার</div>
-                <p class="timeline-desc">জেমস চ্যাডউইক পরমাণুর নিউক্লিয়াসে আধানহীন কণা নিউট্রন আবিষ্কার করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯৩৪</div>
-                <div class="timeline-title">কৃত্রিম তেজস্ক্রিয়তা আবিষ্কার</div>
-                <p class="timeline-desc">আইরিন জুলিও-কুরি ও ফ্রেডরিখ জুলিও-কুরি কৃত্রিম উপায়ে তেজস্ক্রিয় মৌল তৈরি করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯৩৮</div>
-                <div class="timeline-title">পারমাণবিক বিভাজন (Nuclear Fission)</div>
-                <p class="timeline-desc">অটো হান ও ফ্রিটজ স্ট্রেসম্যান ইউরেনিয়াম নিউক্লিয়াস বিভাজনে সক্ষম হন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯৫৪</div>
-                <div class="timeline-title">পলুং-এর রাসায়নিক বন্ধন তত্ত্ব</div>
-                <p class="timeline-desc">লাইনুস পাউলিং রাসায়নিক বন্ধন ও তড়িৎ ঋণাত্মকতার ধারণা দিয়ে আধুনিক রসায়নে নোবেল অর্জন করেন।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯৬২</div>
-                <div class="timeline-title">প্রথম নোবল গ্যাস যৌগ তৈরি</div>
-                <p class="timeline-desc">নিল বার্টলেট জেনন হেক্সাফ্লুরোplatinate তৈরি করে প্রমাণ করেন যে নিষ্ক্রিয় গ্যাসও যৌগ গঠন করতে পারে।</p>
-            </div>
-        </div>
-
-
-        <!-- যুগ ৫ -->
-        <div class="epoch-heading">যুগ ৫: ন্যানোটেকনোলজি ও বর্তমান যুগ (একবিংশ শতাব্দী)</div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯৮৫</div>
-                <div class="timeline-title">ফুলরিন (Fullerene) আবিষ্কার</div>
-                <p class="timeline-desc">কার্বনের নতুন রূপভেদ বাকিবল বা ফুলরিন ($C_{60}$) আবিষ্কৃত হয়, যা ন্যানোটেকনোলজির দুয়ার খুলে দেয়।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">১৯৯৬</div>
-                <div class="timeline-title">ক্লোনিং ও ডলি ভেড়া</div>
-                <p class="timeline-desc">রসায়নের জৈব-প্রযুক্তির শাখায় ডিএনএ এবং আণবিক পর্যায়ে এক বিশাল মাইলফলক অর্জিত হয়।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">২০০৪</div>
-                <div class="timeline-title">গ্রাফিন (Graphene) পৃথকীকরণ</div>
-                <p class="timeline-desc">গ্রাফাইট থেকে অত্যন্ত শক্তিশালী ও পাতলা এক পরমাণু পুরু কার্বনের স্তর গ্রাফিন তৈরি করা হয়।</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-card">
-                <div class="timeline-year">২০২০ - বর্তমান</div>
-                <div class="timeline-title">এআই চালিত রসায়ন ও গ্রিন কেমিস্ট্রি</div>
-                <p class="timeline-desc">কৃত্রিম বুদ্ধিমত্তা (AI) ব্যবহার করে নতুন উপাদান ও ওষুধ ডিজাইন এবং পরিবেশবান্ধব রাসায়নিক প্রক্রিয়া নিয়ে বিশ্বব্যাপী গবেষণা চলছে।</p>
-            </div>
-        </div>
-
+        <div class="grid5" id="cats" role="group" aria-label="ধরন"></div>
+        <div class="grid5" id="eraChips" role="group" aria-label="যুগে যাও"></div>
     </div>
+    <div class="count" id="count" aria-live="polite"></div>
 
+    <div class="tl" id="tl"></div>
+    <div class="empty" id="empty">কোনো ঘটনা পাওয়া যায়নি। অন্য শব্দ বা ফিল্টার দিয়ে দেখো।</div>
+</div>
+<div class="badge" id="badge" aria-live="polite">📍 <b id="bYear">—</b> <span id="bEra"></span></div>
+<button type="button" class="up" id="up" aria-label="উপরে যাও" title="উপরে">↑</button>
+<div class="credit">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+<script>
+const BACK_URL = 'dashboard.html';
+const ERAS = [
+    ['যুগ ১', 'প্রাচীনকাল ও আলকেমি যুগ', 'খ্রিস্টপূর্ব ৪০০০ – ১৬শ শতাব্দী', 'ধাতু গলানো থেকে পাতন পর্যন্ত, রসায়ন তখনো কারুশিল্প ও দর্শনের মাঝামাঝি।', '#f59e0b'],
+    ['যুগ ২', 'বৈজ্ঞানিক বিপ্লব ও বায়ু গবেষণা', '১৭শ – ১৮শ শতাব্দী', 'পরীক্ষা আর পরিমাপ আলকেমিকে সরিয়ে আধুনিক রসায়নের জন্ম দিল।', '#22d3ee'],
+    ['যুগ ৩', 'পারমাণবিক তত্ত্ব ও পর্যায় সারণির বিকাশ', '১৯শ শতাব্দী', 'পরমাণু, অণু আর মৌলের শৃঙ্খলা মিলে রসায়ন পূর্ণাঙ্গ বিজ্ঞান হয়ে উঠল।', '#a855f7'],
+    ['যুগ ৪', 'আধুনিক পরমাণু ও কোয়ান্টাম রসায়ন', '২০শ শতাব্দী (১৯০০–১৯৬৯)', 'পরমাণুর ভেতরের গঠন, রাসায়নিক বন্ধন আর নিউক্লীয় শক্তির যুগ।', '#f43f5e'],
+    ['যুগ ৫', 'ন্যানোটেকনোলজি ও বর্তমান যুগ', '১৯৭০ – বর্তমান', 'নতুন কার্বন রূপ, জৈব-প্রযুক্তি আর কৃত্রিম বুদ্ধিমত্তার রসায়ন।', '#10b981']
+];
+const CATS = { t: ['🔭', 'তত্ত্ব ও সূত্র'], d: ['🧪', 'আবিষ্কার'], p: ['⚙️', 'প্রযুক্তি ও শিল্প'], e: ['📌', 'গুরুত্বপূর্ণ ঘটনা'] };
+/* [বছরের লেখা, ক্রম (খ্রিস্টপূর্ব হলে ঋণাত্মক), ধরন, শিরোনাম, কে, বিবরণ] */
+const RAW = [
+ ['খ্রিস্টপূর্ব ~৪০০০', -4000, 'p', 'ধাতু নিষ্কাশন ও ব্যবহার', 'প্রাচীন সভ্যতাসমূহ', 'প্রকৃতি থেকে তামা সংগ্রহ এবং তা গলিয়ে বিভিন্ন ব্যবহারের জিনিস তৈরির সূচনা হয়, যা মেটালার্জির ভিত্তি গড়ে দেয়।'],
+ ['খ্রিস্টপূর্ব ~৩৫০০', -3500, 'p', 'ব্রোঞ্জের আবিষ্কার', 'প্রাচীন সভ্যতাসমূহ', 'তামা এবং টিন একত্রে মিশিয়ে তুলনামূলক শক্ত ধাতু বা ব্রোঞ্জ (প্রথম সংকর ধাতু) তৈরির কৌশল আবিষ্কৃত হয়।'],
+ ['খ্রিস্টপূর্ব ~১২০০', -1200, 'p', 'লৌহ যুগের সূচনা', 'প্রাচীন সভ্যতাসমূহ', 'আকরিক থেকে লোহা গলিয়ে অস্ত্র ও শক্ত যন্ত্রপাতি তৈরির প্রযুক্তি মানুষের আয়ত্তে আসে।'],
+ ['খ্রিস্টপূর্ব ~৪৫০', -450, 't', 'চার মূল উপাদানের ধারণা', 'এম্পিডোক্লিস', 'সবকিছু মাটি, পানি, বাতাস ও আগুনের মিশ্রণ, এই ধারণা প্রথম স্পষ্টভাবে প্রকাশ পায়।'],
+ ['খ্রিস্টপূর্ব ~৪৩০', -430, 't', 'পরমাণুবাদের প্রথম ধারণা', 'ডেমোক্রিটাস', 'পদার্থ অবিভাজ্য ক্ষুদ্র কণা দিয়ে তৈরি, এই ধারণা থেকেই "অ্যাটম" শব্দের জন্ম।'],
+ ['খ্রিস্টপূর্ব ~৩৫০', -350, 't', 'অ্যারিস্টোটলের উপাদান তত্ত্ব', 'অ্যারিস্টোটল', 'চার উপাদানের ধারণাকে সুসংহত করেন, যা প্রায় দুই হাজার বছর রসায়নের চিন্তায় প্রভাব ফেলেছে।'],
+ ['৮ম–৯ম শতাব্দী', 780, 'd', 'জাবের ইবনে হাইয়ানের স্বর্ণযুগ', 'জাবের ইবনে হাইয়ান', 'পাতন, কেলাসন ও পরীক্ষানির্ভর পদ্ধতির ভিত্তি গড়েন। ঐতিহ্যগতভাবে সালফিউরিক ও নাইট্রিক এসিড প্রস্তুতির কৃতিত্বও তাঁকে দেওয়া হয়।'],
+ ['~৯০০ খ্রিষ্টাব্দ', 900, 'd', 'আল-রাজি ও পাতনবিদ্যা', 'আল-রাজি (Rhazes)', 'পদার্থকে শ্রেণিবদ্ধ করেন, পাতনের মাধ্যমে অ্যালকোহল প্রস্তুতির কৃতিত্ব তাঁকে দেওয়া হয় এবং চিকিৎসা রসায়নে অবদান রাখেন।'],
+ ['১৫৫৬', 1556, 'e', 'ডি রে মেটালিকা প্রকাশ', 'জর্জিয়াস আগ্রিকোলা', 'খনিজ পদার্থ ও ধাতু নিষ্কাশন নিয়ে প্রথম বিজ্ঞানভিত্তিক প্রামাণ্য গ্রন্থ প্রকাশিত হয়।'],
+ ['১৫৯৭', 1597, 'e', 'আলকেমিয়া: প্রথম রসায়ন পাঠ্যবই', 'আন্দ্রেয়াস লিবাভিয়াস', 'রসায়নের পরীক্ষা ও যন্ত্রপাতি নিয়ে সংগঠিত পাঠ্যবই লেখা হয়, যাকে প্রথম রসায়ন পাঠ্যবই বলা হয়।'],
+ ['১৬৬১', 1661, 't', 'দ্য স্কেপটিক্যাল কেমিস্ট', 'রবার্ট বয়েল', 'আলকেমির ধারণা থেকে বেরিয়ে এসে মৌল এবং যৌগের আধুনিক বৈজ্ঞানিক সংজ্ঞা প্রদান করেন।'],
+ ['১৬৬২', 1662, 't', 'বয়েলের সূত্র', 'রবার্ট বয়েল', 'নির্দিষ্ট তাপমাত্রায় গ্যাসের চাপ ও আয়তনের ব্যস্তানুপাতিক সম্পর্ক পরীক্ষার মাধ্যমে প্রমাণিত হয়।'],
+ ['১৭৫৪', 1754, 'd', 'কার্বন ডাই-অক্সাইড আবিষ্কার', 'জোসেফ ব্ল্যাক', 'স্কটিশ বিজ্ঞানী "নির্দিষ্ট বায়ু" বা কার্বন ডাই-অক্সাইড গ্যাস পৃথক করে শনাক্ত করেন।'],
+ ['১৭৬৬', 1766, 'd', 'হাইড্রোজেন গ্যাস আবিষ্কার', 'হেনরি ক্যাভেন্ডিশ', 'অত্যন্ত হালকা ও দহনশীল গ্যাস হিসেবে হাইড্রোজেনকে আলাদা মৌল হিসেবে শনাক্ত করেন।'],
+ ['১৭৭৪', 1774, 'd', 'অক্সিজেন আবিষ্কার', 'জোসেফ প্রিস্টলি ও কার্ল শেলি', 'দুজন বিজ্ঞানী স্বাধীনভাবে অক্সিজেন গ্যাস আবিষ্কার করেন।'],
+ ['১৭৮৯', 1789, 't', 'ভরের নিত্যতা সূত্র ও আধুনিক রসায়ন', 'অ্যান্টোইন ল্যাভয়সিয়ে', 'দহনে অক্সিজেনের ভূমিকা প্রমাণ করেন এবং বিক্রিয়ায় মোট ভর অপরিবর্তিত থাকে, এই সূত্র প্রতিষ্ঠা করে আধুনিক রসায়নের ভিত্তি গড়েন।'],
+ ['১৮০০', 1800, 'p', 'ভোল্টীয় কোষ (প্রথম ব্যাটারি)', 'আলেসান্দ্রো ভোল্টা', 'রাসায়নিক বিক্রিয়া থেকে প্রথম স্থায়ী বিদ্যুৎ উৎস তৈরি হয়, যা তড়িৎ রসায়নের পথ খোলে।'],
+ ['১৮০৩', 1803, 't', 'ডালটনের পারমাণবিক তত্ত্ব', 'জন ডালটন', 'পরমাণু নিয়ে প্রথম পূর্ণাঙ্গ ও সুসংহত বৈজ্ঞানিক তত্ত্ব প্রকাশ করেন।'],
+ ['১৮০৭', 1807, 'd', 'সোডিয়াম ও পটাশিয়াম আবিষ্কার', 'হামফ্রি ডেভি', 'তড়িৎ বিশ্লেষণ ব্যবহার করে গলিত ক্ষার থেকে প্রথমবারের মতো সক্রিয় ধাতু আলাদা করেন।'],
+ ['১৮০৮', 1808, 't', 'গে-লুসাকের গ্যাস আয়তন সূত্র', 'জোসেফ লুই গে-লুসাক', 'গ্যাসীয় বিক্রিয়ায় আয়তনের সরল অনুপাতের সূত্র প্রদান করেন।'],
+ ['১৮১১', 1811, 't', 'অ্যাভোগাদ্রোর অনুকল্প', 'আমেদেও অ্যাভোগাদ্রো', 'একই তাপমাত্রা ও চাপে সম আয়তনের সব গ্যাসে সমান সংখ্যক অণু থাকে, এই অনুকল্প দেন।'],
+ ['১৮২৮', 1828, 'e', 'জৈব যৌগের কৃত্রিম সংশ্লেষণ', 'ফ্রেডরিখ ভোলার', 'অজৈব পদার্থ থেকে ইউরিয়া তৈরি করে প্রমাণ করেন জৈব যৌগ শুধু প্রাণদেহে নয়, পরীক্ষাগারেও তৈরি সম্ভব।'],
+ ['১৮৩৪', 1834, 't', 'ফ্যারাডের তড়িৎ বিশ্লেষণ সূত্র', 'মাইকেল ফ্যারাডে', 'তড়িৎ বিশ্লেষণে উৎপন্ন পদার্থের পরিমাণ ও বিদ্যুতের পরিমাণের মধ্যে পরিমাণগত সম্পর্ক নির্ণয় করেন।'],
+ ['১৮৬০', 1860, 'e', 'কার্লস্রুহে কংগ্রেস', 'আন্তর্জাতিক রসায়নবিদগণ', 'পরমাণু ভর ও আণবিক সূত্র নির্ধারণের জন্য বিজ্ঞানীদের প্রথম আন্তর্জাতিক সম্মেলন অনুষ্ঠিত হয়।'],
+ ['১৮৬৫', 1865, 't', 'কেকুলের বেনজিন রিং', 'ফ্রিডরিখ আউগুস্ট কেকুলে', 'বেনজিনের ষড়ভুজাকৃতির চক্রাকার গঠন প্রস্তাব করে জৈব রসায়নে বিপ্লব ঘটান।'],
+ ['১৮৬৯', 1869, 't', 'মেন্ডেলিভের পর্যায় সারণি', 'দিমিত্রি মেন্ডেলিভ', 'মৌলগুলোর রাসায়নিক ধর্ম ও পারমাণবিক ভরভিত্তিক পর্যায় সারণি প্রকাশ করেন এবং অনাবিষ্কৃত মৌলের জায়গা ফাঁকা রাখেন।'],
+ ['১৮৭৫', 1875, 'd', 'গ্যালিয়াম আবিষ্কার', 'লেকক দ্য বোয়াবদ্রঁ', 'মেন্ডেলিভের ভবিষ্যদ্বাণী করা "একা-অ্যালুমিনিয়াম" মৌলটি আবিষ্কৃত হয়ে পর্যায় সারণির সাফল্য প্রমাণ করে।'],
+ ['১৮৮৪–৮৭', 1887, 't', 'আরহেনিয়াস ও ভ্যান্ট হফের দ্রবণ তত্ত্ব', 'আরহেনিয়াস ও ভ্যান্ট হফ', 'আরহেনিয়াস দ্রবণে আয়নীকরণ তত্ত্ব দেন, আর ভ্যান্ট হফ রাসায়নিক গতিবিদ্যা ও অসমোটিক চাপের সূত্র আবিষ্কার করেন।'],
+ ['১৮৯৬', 1896, 'd', 'তেজস্ক্রিয়তা আবিষ্কার', 'হেনরি বেকেরেল', 'ইউরেনিয়াম লবণ থেকে আপনাআপনি রশ্মি নির্গত হওয়া শনাক্ত করেন।'],
+ ['১৮৯৬', 1896.5, 'd', 'মারকিউরাস নাইট্রাইট', 'প্রফুল্লচন্দ্র রায়', 'বাংলার রসায়নবিদ আচার্য রায় স্থিতিশীল মারকিউরাস নাইট্রাইট সংশ্লেষণ করেন এবং পরে বেঙ্গল কেমিক্যালস প্রতিষ্ঠা করেন।'],
+ ['১৮৯৭', 1897, 'd', 'ইলেকট্রন আবিষ্কার', 'জে. জে. থমসন', 'ক্যাথোড রশ্মি পরীক্ষার মাধ্যমে পরমাণুর ভেতরে ইলেকট্রন কণা আবিষ্কার করেন।'],
+ ['১৮৯৮', 1898, 'd', 'রেডিয়াম ও পোলোনিয়াম আবিষ্কার', 'পিয়েরে ও মারি কুরি', 'তেজস্ক্রিয় মৌল রেডিয়াম ও পোলোনিয়াম আবিষ্কার করে বিজ্ঞানে নতুন দিগন্ত উন্মোচন করেন।'],
+ ['১৯০৭', 1907, 'p', 'ব্যাকেলাইট: প্রথম কৃত্রিম প্লাস্টিক', 'লিও বেকল্যান্ড', 'সম্পূর্ণ কৃত্রিম উপায়ে তৈরি প্রথম প্লাস্টিক বাজারে আসে।'],
+ ['১৯০৯', 1909, 't', 'pH স্কেলের প্রবর্তন', 'এস. পি. এল. সোরেনসেন', 'দ্রবণের অম্লত্ব মাপার জন্য pH স্কেল প্রবর্তন করেন।'],
+ ['১৯০৯–১৩', 1909.5, 'p', 'হাবার-বশ প্রক্রিয়া', 'ফ্রিটজ হাবার ও কার্ল বশ', 'বায়ু থেকে অ্যামোনিয়া সংশ্লেষণ করে কৃত্রিম সার তৈরির পথ খুলে দেন, যা বিশ্বের খাদ্য উৎপাদন বদলে দেয়।'],
+ ['১৯১১', 1911, 'd', 'নিউক্লিয়াস আবিষ্কার', 'আর্নেস্ট রাদারফোর্ড', 'আলফা কণা বিচ্ছুরণ পরীক্ষার মাধ্যমে পরমাণুর কেন্দ্রস্থলে নিউক্লিয়াস আবিষ্কার করেন।'],
+ ['১৯১৩', 1913, 't', 'বোরের পরমাণু মডেল', 'নিলস বোর', 'ইলেকট্রন নির্দিষ্ট শক্তিস্তরে ঘোরে, এই মডেল দিয়ে হাইড্রোজেনের বর্ণালি ব্যাখ্যা করেন।'],
+ ['১৯১৪', 1914, 't', 'পারমাণবিক সংখ্যা', 'হেনরি মোসলে', 'এক্স-রে বর্ণালি ব্যবহার করে পারমাণবিক ভরের বদলে পারমাণবিক সংখ্যার ভিত্তিতে পর্যায় সারণিকে নতুন রূপ দেন।'],
+ ['১৯১৬', 1916, 't', 'সমযোজী বন্ধন ও অষ্টক নিয়ম', 'গিলবার্ট লুইস', 'ইলেকট্রন জোড়া ভাগাভাগির মাধ্যমে সমযোজী বন্ধন এবং অষ্টক নিয়মের ধারণা দেন।'],
+ ['১৯১৯', 1919, 'e', 'প্রথম কৃত্রিম নিউক্লীয় রূপান্তর', 'আর্নেস্ট রাদারফোর্ড', 'আলফা কণা দিয়ে নাইট্রোজেনকে অক্সিজেনে রূপান্তর করে প্রথম কৃত্রিম নিউক্লীয় বিক্রিয়া ঘটান।'],
+ ['১৯২৬', 1926, 't', 'কোয়ান্টাম যান্ত্রিক পরমাণু মডেল', 'শ্রোডিঙ্গার ও হাইজেনবার্গ', 'ইলেকট্রনকে তরঙ্গ হিসেবে ধরে অরবিটালের ধারণা আসে, যা আধুনিক রাসায়নিক বন্ধন ব্যাখ্যার ভিত্তি।'],
+ ['১৯৩২', 1932, 'd', 'নিউট্রন আবিষ্কার', 'জেমস চ্যাডউইক', 'পরমাণুর নিউক্লিয়াসে আধানহীন কণা নিউট্রন আবিষ্কার করেন।'],
+ ['১৯৩৪', 1934, 'd', 'কৃত্রিম তেজস্ক্রিয়তা', 'আইরিন ও ফ্রেডরিক জুলিও-কুরি', 'কৃত্রিম উপায়ে তেজস্ক্রিয় আইসোটোপ তৈরি করেন, যা চিকিৎসা ও গবেষণায় নতুন পথ খোলে।'],
+ ['১৯৩৫', 1935, 'p', 'নাইলন সংশ্লেষণ', 'ওয়ালেস ক্যারোদার্স', 'প্রথম সফল কৃত্রিম আঁশ নাইলন তৈরি হয়, যা পলিমার শিল্পের সূচনা করে।'],
+ ['১৯৩৮', 1938, 'e', 'নিউক্লীয় বিভাজন (Nuclear Fission)', 'অটো হান ও ফ্রিটজ স্ট্রেসম্যান', 'ইউরেনিয়াম নিউক্লিয়াস ভাঙতে সক্ষম হন; লিজে মাইটনার ও অটো ফ্রিশ পরে এর ব্যাখ্যা দেন।'],
+ ['১৯৫৩', 1953, 'd', 'ডিএনএ-র দ্বিসর্পিল গঠন', 'ওয়াটসন, ক্রিক, ফ্র্যাঙ্কলিন ও উইলকিন্স', 'জীবনের মূল অণু ডিএনএ-র গঠন বোঝা যায়, যা আণবিক জীববিজ্ঞান ও জৈব রসায়নকে জুড়ে দেয়।'],
+ ['১৯৫৪', 1954, 'e', 'পাউলিংয়ের নোবেল: রাসায়নিক বন্ধন', 'লাইনাস পাউলিং', 'রাসায়নিক বন্ধনের প্রকৃতি ও তড়িৎ ঋণাত্মকতার ধারণা দিয়ে রসায়নে নোবেল পুরস্কার অর্জন করেন।'],
+ ['১৯৬২', 1962, 'd', 'প্রথম নোবল গ্যাস যৌগ', 'নিল বার্টলেট', 'জেননের সাথে প্লাটিনাম হেক্সাফ্লুরাইড বিক্রিয়ায় যৌগ তৈরি করে প্রমাণ করেন নিষ্ক্রিয় গ্যাসও যৌগ গঠন করতে পারে।'],
+ ['১৯৮৫', 1985, 'd', 'ফুলরিন (Fullerene) আবিষ্কার', 'ক্রোটো, কার্ল ও স্মলি', 'কার্বনের নতুন রূপভেদ বাকিবল বা ফুলরিন (C₆₀) আবিষ্কৃত হয়, যা ন্যানোটেকনোলজির দুয়ার খুলে দেয়।'],
+ ['১৯৯৬', 1996, 'e', 'ক্লোনিং ও ডলি ভেড়া', 'ইয়ান উইলমুট ও দল', 'প্রাপ্তবয়স্ক কোষ থেকে প্রথম ক্লোন করা স্তন্যপায়ী ডলি জন্মায়, যা জৈব-প্রযুক্তির বড় মাইলফলক।'],
+ ['২০০৪', 2004, 'd', 'গ্রাফিন (Graphene) পৃথকীকরণ', 'আন্দ্রে গাইম ও কনস্ট্যান্টিন নোভোসেলভ', 'গ্রাফাইট থেকে অত্যন্ত শক্তিশালী ও পাতলা, এক পরমাণু পুরু কার্বনের স্তর আলাদা করা হয়।'],
+ ['২০১০–১৬', 2010, 'e', 'পর্যায় সারণির সপ্তম পর্যায় পূর্ণ', 'IUPAC ও গবেষক দল', 'নতুন মৌল টেনেসিন ও অগানেসনসহ চারটি মৌলের নাম স্বীকৃত হয়ে পর্যায় সারণির সপ্তম পর্যায় পূর্ণ হয়।'],
+ ['২০১২', 2012, 'p', 'ক্রিস্পার জিন-সম্পাদনা', 'ডাউডনা ও শার্পঁতিয়ে', 'ডিএনএ নিখুঁতভাবে কাটাছেঁড়ার রাসায়নিক-জৈব প্রযুক্তি আবিষ্কৃত হয়; এর জন্য ২০২০ সালে রসায়নে নোবেল দেওয়া হয়।'],
+ ['২০১৯', 2019, 'e', 'লিথিয়াম-আয়ন ব্যাটারির নোবেল', 'গুডএনাফ, হুইটিংহাম ও ইয়োশিনো', 'মোবাইল থেকে বৈদ্যুতিক গাড়ির ব্যাটারির পেছনের রসায়নের স্বীকৃতিতে রসায়নে নোবেল দেওয়া হয়।'],
+ ['২০২০–২৪', 2020, 'p', 'আলফাফোল্ড ও প্রোটিন ডিজাইন', 'হ্যাসাবিস, জাম্পার ও বেকার', 'এআই প্রোটিনের ত্রিমাত্রিক গঠন অনুমান করতে শেখে; ২০২৪ সালের রসায়নে নোবেল এই কাজের স্বীকৃতিতে দেওয়া হয়।'],
+ ['২০২৫ – বর্তমান', 2025, 'p', 'এআই চালিত রসায়ন ও গ্রিন কেমিস্ট্রি', 'বিশ্বব্যাপী গবেষকগণ', 'কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে নতুন উপাদান ও ওষুধ ডিজাইন এবং পরিবেশবান্ধব রাসায়নিক প্রক্রিয়া নিয়ে বিশ্বব্যাপী গবেষণা চলছে।'],
+ ['খ্রিস্টপূর্ব ~২০০০', -2000, 'p', 'কাচ তৈরির প্রাচীন কৌশল', 'মেসোপটেমিয়া ও মিশরের কারিগর', 'বালি, ক্ষার ও অন্যান্য খনিজ উত্তপ্ত করে কাচ তৈরির প্রাচীন কৌশল বিকশিত হয়। কাচের রং ও গুণ পরিবর্তনে খনিজ পদার্থের রাসায়নিক ভূমিকা ছিল গুরুত্বপূর্ণ।'],
+ ['খ্রিস্টপূর্ব ~১৫০০', -1500, 'p', 'রঞ্জক ও প্রসাধনীর ব্যবহার', 'প্রাচীন মিশরীয় কারিগর', 'খনিজ ও উদ্ভিদজাত পদার্থ থেকে রং, সুগন্ধি এবং প্রসাধনী তৈরি করা হতো। এসব কাজে মিশ্রণ, উত্তাপন ও নিষ্কাশনের প্রাথমিক কৌশল ব্যবহৃত হয়।'],
+ ['৮ম শতাব্দী', 750, 'd', 'পাতন ও পরীক্ষাগার যন্ত্রের উন্নয়ন', 'মধ্যযুগীয় আরব ও পারস্যের রসায়নচর্চা', 'পাতনপাত্র, সংগ্রাহক ও উত্তাপনযন্ত্রের উন্নত ব্যবহারে তরল পৃথকীকরণ এবং পদার্থ বিশুদ্ধ করার পদ্ধতি আরও কার্যকর হয়।'],
+ ['১২৬৭', 1267, 'e', 'পরীক্ষাভিত্তিক বিজ্ঞানের পক্ষে লেখা', 'রজার বেকন', 'পর্যবেক্ষণ ও পরীক্ষা দিয়ে প্রাকৃতিক জগত বোঝার গুরুত্ব তুলে ধরেন। পরবর্তী বৈজ্ঞানিক পদ্ধতির বিকাশে এ ধরনের চিন্তা ভূমিকা রাখে।'],
+ ['১৬০০', 1600, 'e', 'De Magnete প্রকাশ', 'উইলিয়াম গিলবার্ট', 'চুম্বকত্ব ও বিদ্যুৎ নিয়ে পরীক্ষাভিত্তিক আলোচনা প্রকাশিত হয়। পদার্থের বৈশিষ্ট্যকে পর্যবেক্ষণ ও পরীক্ষায় যাচাই করার ধারা আরও জোরদার হয়।'],
+ ['১৬২০', 1620, 't', 'বৈজ্ঞানিক পদ্ধতির গুরুত্ব', 'ফ্রান্সিস বেকন', 'পর্যবেক্ষণ, পরীক্ষা এবং প্রমাণের ভিত্তিতে জ্ঞান গড়ে তোলার পদ্ধতি জনপ্রিয় করেন, যা রসায়নসহ আধুনিক বিজ্ঞানের বিকাশে প্রভাব ফেলে।'],
+ ['১৬৪৩', 1643, 'd', 'বায়ুচাপ পরিমাপের বারোমিটার', 'এভানজেলিস্তা তোরিচেল্লি', 'পারদের স্তম্ভ ব্যবহার করে বায়ুচাপ মাপার যন্ত্র তৈরি করা হয়। গ্যাস ও বায়ুমণ্ডল নিয়ে পরবর্তী পরীক্ষার জন্য এটি গুরুত্বপূর্ণ ছিল।'],
+ ['১৬৬৯', 1669, 'd', 'ফসফরাসের ইউরোপীয় আবিষ্কার', 'হেনিগ ব্র্যান্ড', 'মূত্র থেকে পদার্থ আলাদা করার পরীক্ষায় ফসফরাস শনাক্ত করা হয়। এটি প্রাথমিক যুগের পরিচিত মৌল আবিষ্কারগুলোর একটি।'],
+ ['১৬৭০-এর দশক', 1675, 't', 'ফ্লজিস্টন ধারণার উত্থান', 'জোহান ইয়োয়াখিম বেখার ও জর্জ স্টাল', 'দহন ব্যাখ্যা করতে ফ্লজিস্টন তত্ত্ব জনপ্রিয় হয়। পরে অক্সিজেনভিত্তিক ব্যাখ্যা এই তত্ত্বকে প্রতিস্থাপন করে—বিজ্ঞানে তত্ত্ব বদলের একটি গুরুত্বপূর্ণ উদাহরণ।'],
+ ['১৭৩৫', 1735, 'd', 'কোবাল্টকে পৃথক মৌল হিসেবে শনাক্ত', 'জর্জ ব্র্যান্ড্ট', 'খনিজের নীল রঙের জন্য দায়ী ধাতু কোবাল্টকে আলাদা মৌল হিসেবে শনাক্ত করা হয়। ধাতুর রং ও গঠন নিয়ে রসায়নচর্চা এগিয়ে যায়।'],
+ ['১৭৪৮', 1748, 't', 'ভরের নিত্যতার প্রাথমিক বক্তব্য', 'মিখাইল লোমোনোসভ', 'রাসায়নিক পরিবর্তনে পদার্থের মোট ভর সংরক্ষিত থাকার ধারণা তুলে ধরেন। পরে ল্যাভয়সিয়েরের কাজ এই সূত্রকে পরীক্ষাভিত্তিকভাবে সুপ্রতিষ্ঠিত করে।'],
+ ['১৭৫৫', 1755, 'd', 'ম্যাগনেসিয়া থেকে ম্যাগনেসিয়ার ধারণা', 'জোসেফ ব্ল্যাক', 'ম্যাগনেসিয়া ও চুনাপাথরের পার্থক্য নিয়ে গবেষণা ক্ষারীয় মৃত্তিকা পদার্থের রসায়ন বোঝার পথ খুলে দেয়।'],
+ ['১৭৭২', 1772, 't', 'দহনে বায়ুর ভূমিকা নিয়ে পরীক্ষা', 'ড্যানিয়েল রাদারফোর্ড ও অন্যান্য গবেষক', 'বায়ুর বিভিন্ন উপাদান আলাদা করে পরীক্ষা করার ফলে বোঝা যায় বায়ু একক পদার্থ নয়; এর গঠন ও দহনের ভূমিকা নিয়ে গবেষণা ত্বরান্বিত হয়।'],
+ ['১৭৮৩', 1783, 'd', 'পানির গঠন নির্ণয়', 'হেনরি ক্যাভেন্ডিশ ও অ্যান্টোইন ল্যাভয়সিয়ে', 'হাইড্রোজেন ও অক্সিজেনের সঙ্গে পানির সম্পর্ক পরীক্ষায় স্পষ্ট হয়। পানি মৌল নয়, বরং রাসায়নিক যৌগ—এ ধারণা প্রতিষ্ঠিত হতে সাহায্য করে।'],
+ ['১৭৯৯', 1799, 't', 'নির্দিষ্ট অনুপাত সূত্র', 'জোসেফ প্রুস্ত', 'একটি নির্দিষ্ট বিশুদ্ধ যৌগে উপাদান মৌলগুলো সর্বদা নির্দিষ্ট ভর অনুপাতে থাকে—এই সূত্র রাসায়নিক সংযোজনের পরিমাণগত ব্যাখ্যাকে শক্তিশালী করে।'],
+ ['১৮০০', 1800, 'd', 'বিদ্যুৎ বিশ্লেষণের সূচনা', 'উইলিয়াম নিকলসন ও অ্যান্থনি কার্লাইল', 'ভোল্টার ব্যাটারির সাহায্যে পানির বিদ্যুৎ বিশ্লেষণ করা হয়। বিদ্যুৎ ও রাসায়নিক পরিবর্তনের সম্পর্ক নিয়ে নতুন গবেষণা শুরু হয়।'],
+ ['১৮০৫', 1805, 't', 'গ্যাসের আংশিক চাপের সূত্র', 'জন ডালটন', 'মিশ্র গ্যাসের মোট চাপকে প্রতিটি গ্যাসের আংশিক চাপের যোগফল হিসেবে ব্যাখ্যা করা হয়। গ্যাসের আচরণ ও গণনায় সূত্রটি গুরুত্বপূর্ণ।'],
+ ['১৮১৩–১৮২৬', 1813, 't', 'রাসায়নিক প্রতীক ও সূত্রের আধুনিক রূপ', 'ইয়ন্স ইয়াকব বের্জেলিয়াস', 'মৌল বোঝাতে অক্ষরভিত্তিক প্রতীক এবং যৌগের সূত্র লেখার পদ্ধতি জনপ্রিয় করেন, ফলে রাসায়নিক সমীকরণ সংক্ষিপ্ত ও আন্তর্জাতিকভাবে ব্যবহারযোগ্য হয়।'],
+ ['১৮২০', 1820, 'd', 'বেনজিনের পূর্বসূরি গ্যাস গবেষণা', 'মাইকেল ফ্যারাডে', 'আলোকগ্যাস থেকে নতুন হাইড্রোকার্বন পৃথক করার কাজ জৈব রসায়নের বিকাশে অবদান রাখে; পরবর্তী গবেষণায় বেনজিনের গঠন নির্ধারণ সম্ভব হয়।'],
+ ['১৮২৪', 1824, 'p', 'পোর্টল্যান্ড সিমেন্টের পেটেন্ট', 'জোসেফ অ্যাসপডিন', 'চুনাপাথর ও কাদামাটিভিত্তিক উপাদান উত্তপ্ত করে আধুনিক সিমেন্টের প্রাথমিক রূপ তৈরি করা হয়। নির্মাণশিল্পে রাসায়নিক প্রক্রিয়ার ব্যবহার বাড়ে।'],
+ ['১৮৩১', 1831, 'd', 'ক্লোরোফর্ম আবিষ্কার', 'স্যামুয়েল গুথরি, ইউজিন সুবেরাঁ ও জাস্টাস ফন লিবিগ', 'স্বাধীন গবেষণায় ক্লোরোফর্ম প্রস্তুত হয়। পরে এটি অ্যানেস্থেশিয়ায় ব্যবহৃত হলেও নিরাপত্তাজনিত ঝুঁকির কারণে এর ব্যবহার সীমিত হয়েছে।'],
+ ['১৮৩৯', 1839, 'p', 'ভালকানাইজড রাবার', 'চার্লস গুডইয়ার', 'রাবারের সঙ্গে সালফার গরম করে এর স্থায়িত্ব ও স্থিতিস্থাপকতা উন্নত করা হয়। পলিমার ও উপাদান রসায়নের শিল্পপ্রয়োগে এটি গুরুত্বপূর্ণ মাইলফলক।'],
+ ['১৮৪৫', 1845, 'd', 'অ্যাসিটিলিনের আবিষ্কার', 'এডমুন্ড ডেভি', 'ক্যালসিয়াম কার্বাইড-সম্পর্কিত গবেষণার ধারায় অ্যাসিটিলিনের পরিচিতি বাড়ে; পরে এটি জৈব সংশ্লেষণ ও ধাতু কাটার কাজে ব্যবহৃত হয়।'],
+ ['১৮৫৬', 1856, 'p', 'প্রথম কৃত্রিম অ্যানিলিন রঞ্জক', 'উইলিয়াম পারকিন', 'কুইনাইন তৈরির পরীক্ষায় দুর্ঘটনাক্রমে মভিন নামের বেগুনি রঞ্জক তৈরি হয়। এটি আধুনিক কৃত্রিম রং ও রাসায়নিক শিল্পের বিকাশে বড় ভূমিকা রাখে।'],
+ ['১৮৫৮', 1858, 't', 'কার্বনের চতুর্যোজী ধারণা', 'আউগুস্ট কেকুলে ও আর্চিবাল্ড কুপার', 'কার্বন চারটি বন্ধন গঠন করতে পারে এবং কার্বন পরমাণু পরস্পরের সঙ্গে যুক্ত হতে পারে—এই ধারণা জৈব অণুর গঠন ব্যাখ্যায় সহায়তা করে।'],
+ ['১৮৬১', 1861, 'd', 'মিথেনের গঠন নিয়ে গবেষণা', 'আলেকজান্ডার বুটলেরভ', 'রাসায়নিক গঠন তত্ত্বের বিকাশে অণুর ভেতরে পরমাণুর সংযোগের গুরুত্ব প্রতিষ্ঠিত হয়, যা একই সূত্রের ভিন্ন গঠনবিশিষ্ট যৌগ বোঝাতে সাহায্য করে।'],
+ ['১৮৬৪', 1864, 't', 'রাসায়নিক সাম্যাবস্থার সূত্রায়ন', 'সি. এম. গুল্ডবার্গ ও পিটার ওয়াগে', 'ভরক্রিয়া সূত্র রাসায়নিক বিক্রিয়ার গতি ও সাম্যাবস্থা বোঝার ভিত্তি দেয়। শিল্পে উৎপাদনের অনুকূল শর্ত নির্ধারণে এ ধারণা গুরুত্বপূর্ণ।'],
+ ['১৮৭৬', 1876, 't', 'রাসায়নিক তাপগতিবিদ্যার ভিত্তি', 'জোসিয়া উইলার্ড গিবস', 'রাসায়নিক সাম্যাবস্থা, মুক্তশক্তি ও স্বতঃস্ফূর্ত পরিবর্তন ব্যাখ্যায় তাপগতিবিদ্যার ধারণা প্রয়োগ করা হয়। আধুনিক ভৌত রসায়নের ভিত্তি শক্ত হয়।'],
+ ['১৮৮৪', 1884, 't', 'লে শাতেলিয়েরের নীতি', 'অঁরি লে শাতেলিয়ের', 'সাম্যাবস্থায় থাকা ব্যবস্থার তাপমাত্রা, চাপ বা ঘনত্ব বদলালে সেটি পরিবর্তনের প্রভাব কমানোর দিকে সাড়া দেয়—শিল্প রসায়নে গুরুত্বপূর্ণ নীতি।'],
+ ['১৮৮৬', 1886, 'd', 'ফ্লোরিন পৃথকীকরণ', 'অঁরি মোয়াসাঁ', 'অত্যন্ত সক্রিয় ফ্লোরিন গ্যাসকে নিরাপদভাবে পৃথক করা হয়। হ্যালোজেন রসায়ন ও শিল্পে ফ্লোরিন যৌগের ব্যবহার বাড়ে।'],
+ ['১৮৯৪–১৮৯৮', 1894, 'd', 'নিষ্ক্রিয় গ্যাসগুলোর আবিষ্কার', 'লর্ড র‍্যালি, উইলিয়াম র‍্যামজি ও সহযোগীরা', 'আর্গন, নিয়ন, ক্রিপ্টন ও জেননের মতো গ্যাস শনাক্ত হয়। পর্যায় সারণিতে নতুন গ্রুপের অবস্থান স্পষ্ট হয়।'],
+ ['১৯০০', 1900, 't', 'কোয়ান্টাম ধারণার সূচনা', 'ম্যাক্স প্ল্যাঙ্ক', 'শক্তি নির্দিষ্ট ক্ষুদ্র প্যাকেট বা কোয়ান্টায় আদান-প্রদান হতে পারে—এই ধারণা পরে পরমাণু ও রাসায়নিক বন্ধন বোঝার ভিত্তি হয়।'],
+ ['১৯০৫', 1905, 't', 'ব্রাউনীয় গতির ব্যাখ্যা', 'আলবার্ট আইনস্টাইন', 'তরলে ভাসমান ক্ষুদ্র কণার অনিয়মিত গতি দিয়ে অণু-পরমাণুর অস্তিত্বের পক্ষে শক্তিশালী পরিমাণগত ব্যাখ্যা দেওয়া হয়।'],
+ ['১৯১২', 1912, 'd', 'এক্স-রে ক্রিস্টালোগ্রাফির সূচনা', 'ম্যাক্স ফন লাউয়ে', 'স্ফটিকে এক্স-রে বিচ্ছুরণ পর্যবেক্ষণ করে স্ফটিকের নিয়মিত গঠন নির্ণয়ের পথ তৈরি হয়। পরে অণুর ত্রিমাত্রিক গঠন জানতে এটি অপরিহার্য হয়।'],
+ ['১৯২৩', 1923, 't', 'ব্রøনস্টেড–লোরি অম্ল-ক্ষার তত্ত্ব', 'ইয়োহানেস ব্রøনস্টেড ও থমাস লোরি', 'অম্লকে প্রোটন দাতা এবং ক্ষারকে প্রোটন গ্রহীতা হিসেবে ব্যাখ্যা করা হয়। জলীয় দ্রবণের বাইরেও অম্ল-ক্ষার বিক্রিয়া বোঝা সহজ হয়।'],
+ ['১৯২৩', 1923.1, 't', 'লুইস অম্ল-ক্ষার তত্ত্ব', 'গিলবার্ট এন. লুইস', 'ইলেকট্রন জোড় গ্রহণকারীকে লুইস অম্ল এবং দানকারীকে লুইস ক্ষার বলা হয়। সমন্বয় যৌগ ও জৈব বিক্রিয়া ব্যাখ্যায় এটি কার্যকর।'],
+ ['১৯২৭', 1927, 't', 'অনিশ্চয়তা নীতি', 'ওয়ার্নার হাইজেনবার্গ', 'ক্ষুদ্র কণার অবস্থান ও ভরবেগ একই সঙ্গে ইচ্ছামতো নির্ভুলভাবে জানা যায় না। কোয়ান্টাম রসায়নে ইলেকট্রনের আচরণ ব্যাখ্যায় নীতিটি গুরুত্বপূর্ণ।'],
+ ['১৯৩০-এর দশক', 1930, 'p', 'পলিমার রসায়নের আধুনিক বিকাশ', 'হারমান স্টাউডিঙ্গার ও গবেষকগণ', 'পলিমারকে দীর্ঘ অণুশৃঙ্খল হিসেবে বোঝার ধারণা প্রতিষ্ঠিত হয়। প্লাস্টিক, তন্তু, রাবার ও নতুন উপাদান তৈরির বিজ্ঞান দ্রুত এগোয়।'],
+ ['১৯৩৭', 1937, 'd', 'সাইক্লোট্রন ও কৃত্রিম মৌল গবেষণা', 'আর্নেস্ট লরেন্স ও গবেষকগণ', 'আধানযুক্ত কণাকে ত্বরিত করে নিউক্লিয়াসে আঘাত করার প্রযুক্তি আইসোটোপ ও নতুন নিউক্লীয় বিক্রিয়া গবেষণাকে এগিয়ে দেয়।'],
+ ['১৯৪০', 1940, 'd', 'নেপচুনিয়াম শনাক্ত', 'এডউইন ম্যাকমিলান ও ফিলিপ অ্যাবেলসন', 'ইউরেনিয়ামের চেয়ে বেশি পারমাণবিক সংখ্যার প্রথম কৃত্রিমভাবে তৈরি মৌল নেপচুনিয়াম শনাক্ত হয়, যা ট্রান্সইউরেনিয়াম মৌল গবেষণার সূচনা করে।'],
+ ['১৯৪৭', 1947, 'p', 'আধুনিক ক্রোমাটোগ্রাফির বিস্তার', 'আর্চার মার্টিন ও রিচার্ড সিং', 'মিশ্রণের উপাদান পৃথক ও বিশ্লেষণের জন্য ক্রোমাটোগ্রাফির পদ্ধতি উন্নত হয়। খাদ্য, ওষুধ, পরিবেশ ও ফরেনসিক পরীক্ষায় এটি অপরিহার্য হয়ে ওঠে।'],
+ ['১৯৫০-এর দশক', 1955, 'd', 'নোবেলিয়াম ও ভারী মৌল গবেষণা', 'আন্তর্জাতিক গবেষক দল', 'কণাত্বরক ও নিউক্লীয় বিক্রিয়া ব্যবহার করে অতিভারী মৌল তৈরির চেষ্টা জোরদার হয়। নতুন মৌলের পরিচয় ও নামকরণে আন্তর্জাতিক যাচাই গুরুত্বপূর্ণ হয়ে ওঠে।'],
+ ['১৯৭১', 1971, 't', 'মোল SI একক হিসেবে গৃহীত', 'আন্তর্জাতিক একক পদ্ধতি (SI)', 'মোলকে SI-এর মৌলিক একক হিসেবে গ্রহণ করা হয়, যা পদার্থের পরিমাণ প্রকাশ করে। রাসায়নিক গণনা, বিক্রিয়ার অনুপাত ও দ্রবণের ঘনমাত্রা নির্ধারণে মোল কেন্দ্রীয় ভূমিকা রাখে।'],
+ ['১৯৬৫', 1965, 'p', 'জৈব সংশ্লেষণে নতুন কৌশল', 'রবার্ট উডওয়ার্ড ও গবেষকগণ', 'জটিল প্রাকৃতিক অণু পরীক্ষাগারে ধাপে ধাপে তৈরি করার কৌশল উন্নত হয়। আধুনিক ওষুধ ও সূক্ষ্ম রাসায়নিক তৈরিতে এ ধরনের পদ্ধতি গুরুত্বপূর্ণ।'],
+ ['১৯৭০', 1970, 'p', 'পরিবেশ রসায়নের প্রসার', 'বিশ্বব্যাপী গবেষকগণ', 'বায়ু, পানি ও মাটিতে দূষকের উপস্থিতি, তাদের রাসায়নিক রূপান্তর এবং জীবজগতের ওপর প্রভাব পরিমাপের গবেষণা দ্রুত বিস্তৃত হয়।'],
+ ['১৯৭৪', 1974, 'e', 'ওজোন স্তর ক্ষয়ের রাসায়নিক ব্যাখ্যা', 'মারিও মলিনা ও শেরউড রোল্যান্ড', 'ক্লোরোফ্লুরোকার্বন থেকে উৎপন্ন ক্লোরিন র‌্যাডিক্যাল কীভাবে ওজোন ভাঙে তা ব্যাখ্যা করা হয়। পরিবেশনীতি ও বায়ুমণ্ডলীয় রসায়নে এটি গুরুত্বপূর্ণ ঘটনা।'],
+ ['১৯৮1', 1981, 't', 'অরবিটাল-সমমিতি ও রাসায়নিক বিক্রিয়া', 'কেনিচি ফুকুই ও রোয়াল্ড হফম্যান', 'অণুর অরবিটালের সমমিতি ব্যবহার করে কিছু রাসায়নিক বিক্রিয়া কেন ঘটে তা ব্যাখ্যা করা হয়। জৈব সংশ্লেষণের পরিকল্পনায় এ তত্ত্ব সহায়ক।'],
+ ['১৯৯১', 1991, 'p', 'লিথিয়াম-আয়ন ব্যাটারির বাণিজ্যিকীকরণ', 'আকিরা ইয়োশিনোর নেতৃত্বে শিল্প গবেষণা', 'হালকা ও পুনরায় চার্জযোগ্য ব্যাটারির প্রযুক্তি বাণিজ্যিকভাবে বিস্তার লাভ করে। বহনযোগ্য ইলেকট্রনিকস ও পরে বৈদ্যুতিক যানবাহনে এর বড় প্রভাব পড়ে।'],
+ ['১৯৯৮', 1998, 't', 'ঘনত্ব-কার্যকরী তত্ত্বের ব্যবহার বৃদ্ধি', 'ওয়াল্টার কোহন ও গবেষকগণ', 'কোয়ান্টাম তত্ত্বের কম্পিউটারভিত্তিক পদ্ধতি দিয়ে অণু ও কঠিন পদার্থের গঠন এবং বৈশিষ্ট্য গণনা সহজ হয়। কম্পিউটেশনাল রসায়নের বিস্তার ঘটে।'],
+ ['২০০১', 2001, 'd', 'প্রোটিনের গঠন নির্ণয়ে নতুন পদ্ধতি', 'জৈব রসায়ন ও কাঠামোগত জীববিজ্ঞান গবেষকগণ', 'এক্স-রে ক্রিস্টালোগ্রাফি, নিউক্লিয়ার ম্যাগনেটিক রেজোন্যান্স ও কম্পিউটেশনাল পদ্ধতি মিলিয়ে জটিল জৈব অণুর গঠন বিশ্লেষণ আরও উন্নত হয়।'],
+ ['২০০৫', 2005, 't', 'মেটাথেসিস বিক্রিয়ার স্বীকৃতি', 'ইভ শভাঁ, রবার্ট গ্রাবস ও রিচার্ড শক', 'কার্বন-কার্বন বন্ধন গঠনের কার্যকর অনুঘটক পদ্ধতি জৈব সংশ্লেষণে নতুন সম্ভাবনা সৃষ্টি করে। কম বর্জ্যে জটিল অণু তৈরির কাজ এগিয়ে যায়।'],
+ ['২০০৯', 2009, 'd', 'রাইবোসোমের গঠন ও কাজ', 'ভেঙ্কটরামন রামকৃষ্ণন, থমাস স্টেইটজ ও আডা ইয়োনাথ', 'রাইবোসোমের ত্রিমাত্রিক গঠন ব্যাখ্যা করা হয়, যা প্রোটিন সংশ্লেষণ ও কিছু অ্যান্টিবায়োটিকের কার্যপদ্ধতি বুঝতে সাহায্য করে।'],
+ ['২০১৫', 2015, 'e', 'টেকসই উন্নয়ন ও সবুজ রসায়নের গুরুত্ব বৃদ্ধি', 'বিশ্বব্যাপী বিজ্ঞানী ও নীতিনির্ধারক', 'কম বিপজ্জনক দ্রাবক, শক্তি-সাশ্রয়ী বিক্রিয়া, পুনর্ব্যবহারযোগ্য উপাদান ও বর্জ্য কমানোর কৌশল শিল্প ও গবেষণায় আরও গুরুত্ব পায়।'],
+ ['২০১৬', 2016, 'd', 'আণবিক যন্ত্রের বিকাশ', 'জ্যঁ-পিয়ের সোভাজ, ফ্রেজার স্টডার্ট ও বার্নার্ড ফেরিঙ্গা', 'আণবিক স্তরে নিয়ন্ত্রিত গতির যন্ত্র ও সুইচ তৈরির ধারণা বাস্তবায়িত হয়, যা ন্যানোস্কেলের উপাদান ও ভবিষ্যৎ প্রযুক্তির গবেষণায় প্রভাব ফেলে।'],
+ ['২০২১', 2021, 'p', 'এমআরএনএ প্রযুক্তির দ্রুত সম্প্রসারণ', 'জৈব রসায়ন ও ওষুধ গবেষকগণ', 'নিউক্লিক অ্যাসিডের রাসায়নিক স্থিতিশীলতা, লিপিড ন্যানোকণা ও ডেলিভারি প্রযুক্তির উন্নয়ন এমআরএনএ-ভিত্তিক চিকিৎসা ও টিকার ব্যবহারে সহায়তা করে।'],
+ ['২০২২', 2022, 'd', 'ক্লিক কেমিস্ট্রি ও বায়োঅর্থোগোনাল রসায়ন', 'ক্যারোলিন বার্তোজ্জি, মর্টেন মেলডাল ও কে. ব্যারি শার্পলেস', 'নির্বাচিত অণুকে সহজে ও নির্ভরযোগ্যভাবে যুক্ত করার বিক্রিয়া জীবন্ত কোষের জটিল পরিবেশেও নির্দিষ্ট অণু শনাক্ত ও অনুসরণে সহায়ক হয়।'],
+ ['২০২৩', 2023, 'd', 'কোয়ান্টাম ডটের স্বীকৃতি', 'মুঙ্গি বাওয়েন্ডি, লুইস ব্রুস ও আলেক্সেই একিমভ', 'ন্যানোমিটারের মাপে সেমিকন্ডাক্টর কণার আকার বদলালে তাদের আলোকীয় বৈশিষ্ট্য বদলে যায়—এই কোয়ান্টাম ডট প্রযুক্তি ডিসপ্লে, আলো ও চিকিৎসা গবেষণায় ব্যবহৃত হয়।'],
+ ['২০২৪', 2024, 'd', 'প্রোটিন নকশা ও গঠন পূর্বাভাসের স্বীকৃতি', 'ডেভিড বেকার, ডেমিস হ্যাসাবিস ও জন জাম্পার', 'কম্পিউটারভিত্তিক নকশা ও কৃত্রিম বুদ্ধিমত্তা প্রোটিনের গঠন ও নতুন প্রোটিন তৈরির গবেষণায় বড় অগ্রগতি আনে; এই কাজের জন্য রসায়নে নোবেল পুরস্কার দেওয়া হয়।'],
+ ['২০২৫–বর্তমান', 2026, 'p', 'স্বয়ংক্রিয় পরীক্ষাগার ও এআই-সহায়ক উপাদান আবিষ্কার', 'বিশ্বব্যাপী গবেষণা দল', 'রোবোটিক পরীক্ষাগার, মেশিন লার্নিং ও উচ্চগতির বিশ্লেষণ ব্যবহার করে নতুন অনুঘটক, ব্যাটারি উপাদান ও পরিবেশবান্ধব রাসায়নিক প্রক্রিয়া দ্রুত পরীক্ষা করা হচ্ছে।']
+
+];
+RAW.sort((a, b) => a[1] - b[1]);
+const eraOf = y => y < 1600 ? 0 : y < 1800 ? 1 : y < 1900 ? 2 : y < 1970 ? 3 : 4;
+const EV = RAW.map(([yr, k, c, t, w, d], i) => ({ id: i, yr, k, c, t, w, d, era: eraOf(k) }));
+
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+$('brandLink').href = BACK_URL; $('backBtn').href = BACK_URL;
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
+let favs = new Set(); try { favs = new Set(JSON.parse(localStorage.getItem('chem_tl_fav') || '[]')); } catch (e) {}
+const saveFavs = () => { try { localStorage.setItem('chem_tl_fav', JSON.stringify([...favs])); } catch (e) {} };
+let cat = 'all', study = false, onlyFav = false, curEra = 0, io = null;
+
+ERAS.forEach((e, i) => { const g = document.createElement('i'); g.style.background = e[4]; g.id = 'g' + i; $('glowL').appendChild(g); });
+$('stats').innerHTML = ''; [[EV.length, 'ঘটনা'], [ERAS.length, 'যুগ'], ['৬০০০+', 'বছরের ইতিহাস']].forEach(([n, l]) => { const s = document.createElement('span'), b = document.createElement('b'); b.textContent = typeof n === 'number' ? bn(n) : n; s.append(b, l); $('stats').appendChild(s); });
+function mkChip(parent, label, on, fn, color) { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (on ? ' on' : ''); b.textContent = label; if (color) b.style.setProperty('--c', color); b.addEventListener('click', fn); parent.appendChild(b); return b; }
+const CAT_SHORT = { t: 'তত্ত্ব', d: 'আবিষ্কার', p: 'প্রযুক্তি', e: 'ঘটনা' };
+const ERA_SHORT = ['প্রাচীন', 'বিপ্লব', 'পরমাণু', 'কোয়ান্টাম', 'বর্তমান'];
+function renderChips() {
+    const c = $('cats'); c.replaceChildren(); mkChip(c, 'সব ধরন', cat === 'all', () => { cat = 'all'; render(); }).title = 'সব ধরনের ঘটনা';
+    Object.entries(CATS).forEach(([k, v]) => { const b = mkChip(c, v[0] + ' ' + CAT_SHORT[k], cat === k, () => { cat = k; render(); }); b.title = v[1]; });
+    const e = $('eraChips'); e.replaceChildren();
+    ERAS.forEach((x, i) => { const b = mkChip(e, ERA_SHORT[i], i === curEra, () => { const t = document.getElementById('era' + i); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, x[4]); b.title = x[0] + ': ' + x[1]; });
+}
+function setEra(i) {
+    if (i === curEra && $('g' + i).classList.contains('on')) return; curEra = i; const col = ERAS[i][4];
+    document.documentElement.style.setProperty('--era', col); $('eraName').textContent = ERAS[i][0] + ' · ' + ERAS[i][1]; $('bEra').textContent = ERAS[i][1];
+    document.querySelectorAll('#glowL i').forEach((g, k) => g.classList.toggle('on', k === i));
+    document.querySelectorAll('#eraChips .chip').forEach((c, k) => c.classList.toggle('on', k === i));
+}
+function card(ev) {
+    const it = document.createElement('div'); it.className = 'it'; it.dataset.id = ev.id; it.style.setProperty('--c', ERAS[ev.era][4]);
+    const cd = document.createElement('div'); cd.className = 'cd';
+    const m = document.createElement('div'); m.className = 'meta';
+    const y = document.createElement('span'); y.className = 'yr'; y.textContent = ev.yr;
+    const ct = document.createElement('span'); ct.className = 'cat'; ct.textContent = CATS[ev.c][0] + ' ' + CATS[ev.c][1];
+    const f = document.createElement('button'); f.type = 'button'; f.className = 'fav' + (favs.has(ev.id) ? ' on' : ''); f.textContent = '★'; f.setAttribute('aria-label', 'প্রিয় তালিকায় যোগ/বাদ'); f.setAttribute('aria-pressed', String(favs.has(ev.id)));
+    f.addEventListener('click', e => { e.stopPropagation(); if (favs.has(ev.id)) favs.delete(ev.id); else favs.add(ev.id); saveFavs(); f.classList.toggle('on'); f.setAttribute('aria-pressed', String(favs.has(ev.id))); if (onlyFav) render(); });
+    m.append(y, ct, f);
+    const h = document.createElement('h3'); h.className = 'ttl'; h.textContent = ev.t;
+    const w = document.createElement('p'); w.className = 'who'; w.textContent = '👤 ' + ev.w;
+    const d = document.createElement('p'); d.className = 'ds'; d.textContent = ev.d;
+    const hn = document.createElement('div'); hn.className = 'hint'; hn.textContent = '👆 বছর ও নাম আন্দাজ করে ট্যাপ করো';
+    cd.append(m, h, w, d, hn); cd.addEventListener('click', () => { if (study) cd.classList.add('shown'); }); it.appendChild(cd); return it;
+}
+function render() {
+    renderChips(); const q = $('q').value.trim().toLowerCase();
+    const list = EV.filter(e => (cat === 'all' || e.c === cat) && (!onlyFav || favs.has(e.id)) && (!q || (e.yr + ' ' + e.t + ' ' + e.w + ' ' + e.d).toLowerCase().includes(q)));
+    const tl = $('tl'); tl.replaceChildren(); if (io) io.disconnect(); io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold: .12 });
+    let side = 0;
+    ERAS.forEach((er, i) => {
+        const part = list.filter(e => e.era === i); if (!part.length) return;
+        const h = document.createElement('div'); h.className = 'era'; h.id = 'era' + i; h.style.setProperty('--c', er[4]);
+        const s = document.createElement('small'); s.textContent = er[0].toUpperCase() + ' · ' + bn(part.length) + 'টি ঘটনা'; const t = document.createElement('h2'); t.textContent = er[1]; const r = document.createElement('p'); r.textContent = er[2] + ' — ' + er[3]; h.append(s, t, r); tl.appendChild(h);
+        part.forEach(e => { const c = card(e); c.classList.add(side++ % 2 ? 'r' : 'l'); tl.appendChild(c); io.observe(c); });
+    });
+    $('empty').classList.toggle('show', !list.length); $('count').textContent = bn(list.length) + 'টি ঘটনা দেখানো হচ্ছে' + (favs.size ? ' · ⭐ ' + bn(favs.size) + 'টি প্রিয়' : '');
+    track();
+}
+let ticking = false;
+function track() {
+    const items = [...document.querySelectorAll('.it')], h = innerHeight, mid = h * .45; let best = null, bd = 1e9;
+    items.forEach(it => { const r = it.getBoundingClientRect(), d = Math.abs(r.top + Math.min(r.height, 140) / 2 - mid); if (r.bottom > 0 && r.top < h && d < bd) { bd = d; best = it; } });
+    items.forEach(it => it.classList.toggle('cur', it === best));
+    if (best) { const ev = EV[+best.dataset.id]; $('bYear').textContent = ev.yr; setEra(ev.era); }
+    const max = document.documentElement.scrollHeight - h; $('prog').style.width = (max > 0 ? scrollY / max * 100 : 0) + '%'; $('up').style.opacity = scrollY > 400 ? 1 : 0; $('up').style.pointerEvents = scrollY > 400 ? 'auto' : 'none';
+}
+addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; track(); }); } }, { passive: true }); addEventListener('resize', track);
+$('q').addEventListener('input', render);
+$('studyBtn').addEventListener('click', e => { study = !study; document.body.classList.toggle('study', study); e.currentTarget.classList.toggle('on', study); e.currentTarget.setAttribute('aria-pressed', String(study)); if (!study) document.querySelectorAll('.cd.shown').forEach(c => c.classList.remove('shown')); });
+$('favBtn').addEventListener('click', e => { onlyFav = !onlyFav; e.currentTarget.classList.toggle('on', onlyFav); e.currentTarget.setAttribute('aria-pressed', String(onlyFav)); render(); });
+$('rnd').addEventListener('click', () => { const its = [...document.querySelectorAll('.it')]; if (!its.length) return; const t = its[Math.floor(Math.random() * its.length)]; t.classList.add('in'); t.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+$('up').addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+setEra(0); render();
+
+// Hamburger menu: show/hide search and filters
+const menuToggle = document.getElementById('menuToggle');
+const toolsPanel = document.getElementById('toolsPanel');
+menuToggle.addEventListener('click', () => {
+    const isNowHidden = toolsPanel.classList.toggle('menu-hidden');
+    menuToggle.classList.toggle('active', !isNowHidden);
+    menuToggle.setAttribute('aria-expanded', String(!isNowHidden));
+    menuToggle.setAttribute('aria-label', isNowHidden ? 'মেনু খুলুন' : 'মেনু বন্ধ করুন');
+    menuToggle.title = isNowHidden ? 'মেনু খুলুন' : 'মেনু বন্ধ করুন';
+});
+
+</script>
 </body>
 </html>
