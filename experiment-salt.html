@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>লবণ শনাক্তকরণ ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.tagx{margin-left:auto;font-size:12px;font-weight:800;padding:3px 12px;border-radius:20px;color:var(--accent);background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.sh h3{margin:16px 0 8px;font-size:14px;font-weight:800;color:var(--text-muted)}
+.shg{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.rg{display:flex;align-items:center;gap:8px;text-align:left;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 12px;border-radius:14px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:transform .2s,border-color .2s,box-shadow .2s}
+.rg:hover{transform:translateY(-2px);border-color:rgba(168,85,247,.6);box-shadow:0 8px 18px var(--gradient-glow)}
+.rg.used{border-color:rgba(74,222,128,.55)}
+.rg.used::after{content:'✓';margin-left:auto;color:var(--ok);font-weight:800}
+.rg.hint{animation:pulse 1s ease 3;border-color:#fbbf24}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(251,191,36,.35)}}
+.logbox{max-height:340px;overflow:auto}
+.le{display:flex;gap:10px;align-items:flex-start;padding:10px 4px;border-bottom:1px solid var(--border-color);font-size:14px;line-height:1.6}
+.le .n{flex:0 0 24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--card-solid);border:1px solid var(--border-color)}
+.le .dot{flex:0 0 14px;height:14px;border-radius:50%;margin-top:5px;border:1px solid var(--border-color)}
+.le span:last-child{color:var(--text-muted)}
+.sel{font-family:inherit;font-size:14px;font-weight:600;padding:9px 12px;border-radius:12px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);max-width:100%}
+.sel option{background:var(--card-solid);color:var(--text-color)}
+label{font-size:13px;font-weight:700;color:var(--text-muted)}
+.scroll{overflow-x:auto}
+.scroll table{min-width:900px;font-size:13px}
+.scroll td{vertical-align:top}
+.bub{animation:rise 1.6s linear infinite}
+@keyframes rise{to{transform:translateY(-150px);opacity:0}}
+.flick{animation:flick .25s ease-in-out infinite alternate;transform-origin:50% 100%;transform-box:fill-box}
+@keyframes flick{to{transform:scale(.95,1.05)}}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Digital Lab</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="digitallab.html">← <span class="long">ল্যাব হাবে ফিরে যান</span></a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="pill">🧪 মৌলিক বিশ্লেষণ · প্র্যাক্টিক্যাল</span>
+    <h1><span class="em">🔎</span> লবণ শনাক্তকরণ ল্যাব</h1>
+    <p>একটি অজানা লবণের নমুনা তোমাকে দেওয়া হয়েছে। শুষ্ক ও আর্দ্র পরীক্ষা করে এর ক্যাটায়ন ও অ্যানায়ন শনাক্ত করো — কম পরীক্ষায় সঠিক উত্তর দিলে বেশি তারা!</p>
+  </section>
+
+  <div class="lab">
+    <section class="card stage">
+      <h2>🔬 পরীক্ষার টেবিল <span id="sampleTag" class="tagx">নমুনা #১</span></h2>
+      <svg id="svg" viewBox="0 0 380 440" role="img" aria-label="টেস্ট টিউব">
+        <defs>
+          <clipPath id="clipT"><path d="M150 40 L150 372 Q150 404 190 404 Q230 404 230 372 L230 40 Z"/></clipPath>
+          <linearGradient id="glassG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".25" stop-color="#fff" stop-opacity=".05"/><stop offset=".8" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/></linearGradient>
+          <radialGradient id="fl" cx=".5" cy=".75"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".45" id="flMid" stop-color="#60a5fa" stop-opacity=".95"/><stop offset="1" id="flOut" stop-color="#3b82f6" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect x="28" y="420" width="324" height="12" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
+        <rect x="52" y="30" width="10" height="392" rx="5" fill="var(--stand)" stroke="var(--border-color)"/>
+        <!-- tube mode -->
+        <g id="gTube">
+          <rect x="60" y="150" width="90" height="8" rx="4" fill="var(--stand)" stroke="var(--border-color)"/>
+          <g clip-path="url(#clipT)">
+            <rect id="liq" x="140" y="170" width="100" height="240" fill="rgba(160,200,255,.28)" style="transition:fill 1s"/>
+            <rect id="ppt" x="140" y="404" width="100" height="0" fill="#fff" style="transition:height 1.4s ease,y 1.4s ease,fill .6s"/>
+            <rect id="ring" x="150" y="268" width="80" height="9" fill="#92400e" opacity="0" style="transition:opacity .8s"/>
+            <g id="bubbles"></g>
+          </g>
+          <path d="M150 40 L150 372 Q150 404 190 404 Q230 404 230 372 L230 40" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+          <rect x="144" y="36" width="92" height="8" rx="4" fill="rgba(255,255,255,.25)" stroke="var(--glass)"/>
+          <g id="fumes" opacity="0" style="transition:opacity .6s"><ellipse cx="190" cy="140" rx="26" ry="38" id="fume1" fill="#fff" opacity=".55"/><ellipse cx="190" cy="100" rx="22" ry="30" id="fume2" fill="#fff" opacity=".4"/><ellipse cx="190" cy="60" rx="18" ry="24" id="fume3" fill="#fff" opacity=".3"/></g>
+          <text id="tubeCap" x="190" y="428" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
+        </g>
+        <!-- flame test -->
+        <g id="gFlame" style="display:none">
+          <rect x="165" y="330" width="50" height="86" rx="6" fill="#64748b"/><rect x="170" y="300" width="40" height="34" rx="4" fill="#94a3b8"/>
+          <ellipse id="flameE" cx="190" cy="230" rx="38" ry="78" fill="url(#fl)" class="flick"/>
+          <path d="M190 160 L190 244" stroke="#cbd5e1" stroke-width="3"/><circle cx="190" cy="154" r="9" fill="none" stroke="#cbd5e1" stroke-width="3"/>
+          <text x="190" y="436" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit">বুনসেন বার্নারে শিখা পরীক্ষা</text>
+        </g>
+        <!-- heat -->
+        <g id="gHeat" style="display:none">
+          <rect x="165" y="340" width="50" height="76" rx="6" fill="#64748b"/>
+          <ellipse id="heatF" cx="190" cy="318" rx="22" ry="40" fill="url(#fl)" class="flick"/>
+          <g transform="rotate(-18 190 180)">
+            <path d="M170 80 L170 266 Q170 286 190 286 Q210 286 210 266 L210 80" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+            <rect id="heatRes" x="172" y="262" width="36" height="22" rx="8" fill="#e5e7eb"/>
+            <g id="heatFumes" opacity="0" style="transition:opacity .6s"><ellipse cx="196" cy="70" rx="18" ry="28" id="hf1" fill="#fff" opacity=".5"/><ellipse cx="204" cy="30" rx="14" ry="22" id="hf2" fill="#fff" opacity=".35"/></g>
+          </g>
+          <text x="190" y="436" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit">শুষ্ক টেস্ট টিউবে লবণ উত্তপ্ত করা</text>
+        </g>
+      </svg>
+      <div class="live" id="live">নিচের শেলফ থেকে একটি পরীক্ষা বেছে নাও। প্রতিবার নতুন নমুনা (টেস্ট টিউব) নেওয়া হয়।</div>
+    </section>
+
+    <section>
+      <div class="card">
+        <div class="row" style="margin-top:0;justify-content:space-between">
+          <h2 style="margin:0">🧴 রিএজেন্ট ও পরীক্ষা</h2>
+          <div class="row" style="margin:0"><select class="sel" id="level" aria-label="কঠিনতা"><option value="easy">সহজ (১২টি লবণ)</option><option value="full">পূর্ণ (৩১টি লবণ)</option></select><button class="btn ghost" id="newS">🎲 নতুন নমুনা</button></div>
+        </div>
+        <div id="shelf"></div>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h2>📒 পর্যবেক্ষণ খাতা <span class="tagx" id="cnt">০টি পরীক্ষা</span></h2>
+        <div id="log" class="logbox"><p class="hint">এখনো কোনো পরীক্ষা করা হয়নি।</p></div>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h2>🎯 তোমার সিদ্ধান্ত</h2>
+        <div class="row" style="margin-top:0">
+          <label>ক্যাটায়ন:<br><select class="sel" id="selC"></select></label>
+          <label>অ্যানায়ন:<br><select class="sel" id="selA"></select></label>
+          <button class="btn" id="submit">✅ জমা দাও</button>
+          <button class="btn ghost" id="hintB">💡 ইঙ্গিত</button>
+        </div>
+        <div id="result"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-p="p1">📋 ক্যাটায়ন সারণি</button>
+    <button class="tab" data-p="p2">📋 অ্যানায়ন সারণি</button>
+    <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
+    <button class="tab" data-p="p4">🎓 ভাইভা</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1"><h3>ক্যাটায়ন শনাক্তকরণের সারাংশ</h3><div class="scroll"><table id="tabC"></table></div><p class="hint">নোট: সব পর্যবেক্ষণ পাঠ্যবইয়ের সাধারণ ফল; আসল ল্যাবে ঘনমাত্রা ও তাপমাত্রার উপর রং/ফল সামান্য ভিন্ন হতে পারে।</p></div>
+    <div class="pane" id="p2"><h3>অ্যানায়ন শনাক্তকরণের সারাংশ</h3><div class="scroll"><table id="tabA"></table></div></div>
+    <div class="pane" id="p3"><h3>ল্যাবে সতর্কতা</h3><ul>
+      <li>ঘন H₂SO₄ ও ঘন HNO₃ অত্যন্ত ক্ষয়কারী — চশমা, গ্লাভস ও অ্যাপ্রন পরো; টেস্ট টিউবের মুখ নিজের বা অন্যের দিকে রেখো না।</li>
+      <li>গরম করার সময় টেস্ট টিউব ৪৫° কাত করে ধরো ও ঘন ঘন নাড়ো।</li>
+      <li>গ্যাসের গন্ধ নিতে হাত দিয়ে বাতাস নাকের দিকে টেনে হালকা ভাবে শোঁকো — সরাসরি নাক দিও না। (NH₃, SO₂, Br₂ বিষাক্ত)</li>
+      <li>প্রতিটি পরীক্ষায় পরিষ্কার টেস্ট টিউব ও পাতিত পানি ব্যবহার করো; ড্রপার আলাদা রাখো।</li>
+      <li>শিখা পরীক্ষায় প্ল্যাটিনাম/নাইক্রোম তার আগে ঘন HCl-এ ভিজিয়ে শিখায় পরিষ্কার করে নাও।</li>
+      <li>ব্যবহৃত রাসায়নিক সিঙ্কে ঢালার আগে প্রচুর পানি দিয়ে লঘু করো; সীসা (Pb) ও পারদ যৌগ আলাদা বর্জ্য পাত্রে ফেলো।</li></ul></div>
+    <div class="pane" id="p4"><h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>ফেরাস (Fe²⁺) ও ফেরিক (Fe³⁺) আয়নের পার্থক্য কীভাবে করবে?</summary><p>NaOH-এ Fe²⁺ নোংরা সবুজ অধঃক্ষেপ (পরে বাদামী) দেয়, Fe³⁺ লালচে-বাদামী। KSCN-এ Fe³⁺ গাঢ় রক্তলাল দ্রবণ দেয়, Fe²⁺ দেয় না। K₃[Fe(CN)₆]-এ Fe²⁺ গাঢ় নীল অধঃক্ষেপ (টার্নবুলের নীল) দেয়।</p></details>
+      <details class="qa"><summary>Al³⁺ ও Zn²⁺ কীভাবে আলাদা করা যায়?</summary><p>দুটোই NaOH-এ সাদা অধঃক্ষেপ দেয় যা বেশি NaOH-এ গলে যায়। কিন্তু NH₄OH বেশি দিলে Zn(OH)₂ গলে যায় (জিঙ্ক-অ্যামিন জটিল), Al(OH)₃ গলে না।</p></details>
+      <details class="qa"><summary>ব্রাউন রিং টেস্ট কিসের জন্য? কীভাবে করে?</summary><p>নাইট্রেট (NO₃⁻) শনাক্তকরণে। লবণের দ্রবণে তাজা FeSO₄ দ্রবণ মিশিয়ে টেস্ট টিউবের পাশ বেয়ে ধীরে ধীরে ঘন H₂SO₄ ঢালা হয়। দুই স্তরের সংযোগস্থলে [Fe(NO)]²⁺ জটিলের বাদামী বলয় তৈরি হয়।</p></details>
+      <details class="qa"><summary>Cl⁻, Br⁻, I⁻ কীভাবে আলাদা করবে?</summary><p>AgNO₃ দিলে Cl⁻-এ সাদা, Br⁻-এ ফিকে হলুদ, I⁻-এ গাঢ় হলুদ অধঃক্ষেপ। NH₄OH-এ AgCl সহজে, AgBr আংশিক (ঘন NH₄OH-এ), AgI একেবারেই গলে না। ঘন H₂SO₄-এ Cl⁻ থেকে HCl গ্যাস, Br⁻ থেকে বাদামী Br₂, I⁻ থেকে বেগুনি I₂ বাষ্প।</p></details>
+      <details class="qa"><summary>SO₄²⁻ ও CO₃²⁻ দুটোই BaCl₂-এ সাদা অধঃক্ষেপ দেয় — পার্থক্য কী?</summary><p>লঘু HCl দিলে BaCO₃ অধঃক্ষেপ গলে বুদবুদ (CO₂) ছাড়ে, কিন্তু BaSO₄ গলে না।</p></details>
+      <details class="qa"><summary>চুনের পানি ঘোলা হলে কী বোঝায়?</summary><p>গ্যাসটি CO₂ — Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O। বেশি CO₂ চালালে ঘোলাটে ভাব আবার কেটে যায় (Ca(HCO₃)₂ হয়)।</p></details>
+      <details class="qa"><summary>অ্যামোনিয়াম (NH₄⁺) আয়ন কীভাবে শনাক্ত করা যায়?</summary><p>NaOH দিয়ে উত্তপ্ত করলে ঝাঁঝালো গন্ধের NH₃ গ্যাস বের হয়, যা ভেজা লাল লিটমাসকে নীল করে এবং HCl-ডোবানো কাঠির কাছে সাদা ধোঁয়া (NH₄Cl) তৈরি করে।</p></details>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $ = id => document.getElementById(id);
+const BDG = '০১২৩৪৫৬৭৮৯';
+const bi = n => String(n).replace(/\d/g, x => BDG[x]);
+let toastT;
+function toast(t) { const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => e.classList.remove('on'), 2400); }
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => { document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t)); document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === t.dataset.p)); });
+
+/* ================= ডেটা ================= */
+const NONE = 'কোনো দৃশ্যমান পরিবর্তন নেই';
+const W = '#f4f6fa';
+const CAT = {
+  Na:  { s: 'Na⁺',  n: 'সোডিয়াম',      solid: 'সাদা', col: null, flame: ['উজ্জ্বল সোনালি হলুদ শিখা', '#ffc83d'], ev: 'শিখায় সোনালি হলুদ রং' , t: {} },
+  K:   { s: 'K⁺',   n: 'পটাশিয়াম',      solid: 'সাদা', col: null, flame: ['হালকা বেগুনি (ল্যাভেন্ডার) শিখা — নীল কোবাল্ট কাচে দেখলে ভালো বোঝা যায়', '#c4a3ff'], ev: 'শিখায় হালকা বেগুনি রং', t: {} },
+  NH4: { s: 'NH₄⁺', n: 'অ্যামোনিয়াম',   solid: 'সাদা', col: null, ev: 'NaOH-এর সাথে উত্তপ্ত করলে NH₃ গ্যাস (ঝাঁঝালো গন্ধ, লাল লিটমাস নীল)', t: {
+      naoh: { t: 'ঠান্ডায় সামান্য ঝাঁঝালো গন্ধ; অধঃক্ষেপ নেই' },
+      naohheat: { t: 'ঝাঁঝালো গন্ধের গ্যাস (NH₃); ভেজা লাল লিটমাস নীল হয়; HCl-ডোবানো কাঠির কাছে সাদা ধোঁয়া (NH₄Cl)', fume: '#eef2f7' } } },
+  Ca:  { s: 'Ca²⁺', n: 'ক্যালসিয়াম',    solid: 'সাদা', col: null, flame: ['ইটের মতো লাল শিখা', '#e0502e'], ev: 'শিখায় ইট-লাল রং', t: {
+      naoh: { t: 'সামান্য সাদা ঘোলাটে ভাব (Ca(OH)₂ অল্প দ্রবণীয়)', p: W, h: 22 },
+      naohex: { t: 'ঘোলাটে ভাব বেশি NaOH-এও থেকে যায়', p: W, h: 22 } } },
+  Mg:  { s: 'Mg²⁺', n: 'ম্যাগনেসিয়াম',  solid: 'সাদা', col: null, ev: 'NaOH ও NH₄OH-এ সাদা অধঃক্ষেপ, বেশি দিলেও গলে না; শিখায় কোনো রং নেই', t: {
+      naoh: { t: 'সাদা অধঃক্ষেপ Mg(OH)₂', p: W },
+      naohex: { t: 'অধঃক্ষেপ বেশি NaOH-এও গলে না', p: W },
+      nh4oh: { t: 'সাদা অধঃক্ষেপ Mg(OH)₂ (প্রচুর NH₄Cl থাকলে অধঃক্ষেপ নাও পড়তে পারে)', p: W },
+      nh4ohex: { t: 'অধঃক্ষেপ বেশি NH₄OH-এ গলে না', p: W } } },
+  Ba:  { s: 'Ba²⁺', n: 'বেরিয়াম',       solid: 'সাদা', col: null, flame: ['আপেল সবুজ শিখা', '#7fd35a'], ev: 'শিখায় আপেল-সবুজ রং; লঘু H₂SO₄-এ সাদা অধঃক্ষেপ', t: {
+      h2so4d: { t: 'ভারী সাদা অধঃক্ষেপ BaSO₄ (অম্লেও অদ্রবণীয়)', p: W } } },
+  Al:  { s: 'Al³⁺', n: 'অ্যালুমিনিয়াম', solid: 'সাদা', col: null, ev: 'NaOH-এ সাদা জেলির মতো অধঃক্ষেপ, বেশি NaOH-এ গলে; NH₄OH বেশি দিলে গলে না', t: {
+      naoh: { t: 'সাদা জেলির মতো অধঃক্ষেপ Al(OH)₃', p: W },
+      naohex: { t: 'অধঃক্ষেপ গলে বর্ণহীন দ্রবণ ([Al(OH)₄]⁻ — অ্যালুমিনেট)', p: W, d: true },
+      nh4oh: { t: 'সাদা জেলির মতো অধঃক্ষেপ Al(OH)₃', p: W },
+      nh4ohex: { t: 'অধঃক্ষেপ বেশি NH₄OH-এ গলে না', p: W } } },
+  Zn:  { s: 'Zn²⁺', n: 'জিঙ্ক',          solid: 'সাদা', col: null, ev: 'NaOH ও NH₄OH — দুটোতেই সাদা অধঃক্ষেপ, বেশি দিলে দুটোতেই গলে', t: {
+      naoh: { t: 'সাদা অধঃক্ষেপ Zn(OH)₂', p: W },
+      naohex: { t: 'অধঃক্ষেপ গলে বর্ণহীন দ্রবণ ([Zn(OH)₄]²⁻ — জিঙ্কেট)', p: W, d: true },
+      nh4oh: { t: 'সাদা অধঃক্ষেপ Zn(OH)₂', p: W },
+      nh4ohex: { t: 'অধঃক্ষেপ গলে বর্ণহীন দ্রবণ ([Zn(NH₃)₄]²⁺)', p: W, d: true },
+      k4fe: { t: 'সাদা অধঃক্ষেপ Zn₂[Fe(CN)₆]', p: W },
+      k3fe: { t: 'হলুদ-বাদামী অধঃক্ষেপ', p: '#c9a23a' } } },
+  Fe2: { s: 'Fe²⁺', n: 'ফেরাস (আয়রন II)', solid: 'ফিকে সবুজ', col: '#9fd3a0', ev: 'NaOH-এ নোংরা সবুজ অধঃক্ষেপ (পরে বাদামী); K₃[Fe(CN)₆]-এ গাঢ় নীল; KSCN-এ রং নেই', t: {
+      naoh: { t: 'নোংরা সবুজ অধঃক্ষেপ Fe(OH)₂ — বাতাসে ধীরে ধীরে বাদামী হয়', p: '#6b8f5a' },
+      naohex: { t: 'অধঃক্ষেপ বেশি NaOH-এও গলে না', p: '#6b8f5a' },
+      nh4oh: { t: 'নোংরা সবুজ অধঃক্ষেপ Fe(OH)₂', p: '#6b8f5a' },
+      nh4ohex: { t: 'অধঃক্ষেপ গলে না', p: '#6b8f5a' },
+      kscn: { t: 'কোনো লাল রং নেই (সামান্য ফিকে)' },
+      k4fe: { t: 'সাদা থেকে ফিকে নীল অধঃক্ষেপ — বাতাসে নীল হয়ে যায়', p: '#a9c9e8' },
+      k3fe: { t: 'গাঢ় নীল অধঃক্ষেপ (টার্নবুলের নীল, Fe₃[Fe(CN)₆]₂)', p: '#1e40af' } } },
+  Fe3: { s: 'Fe³⁺', n: 'ফেরিক (আয়রন III)', solid: 'হলুদ-বাদামী', col: '#d6a54a', ev: 'NaOH-এ লালচে-বাদামী অধঃক্ষেপ; KSCN-এ রক্তলাল; K₄[Fe(CN)₆]-এ প্রুশিয়ান নীল', t: {
+      naoh: { t: 'লালচে-বাদামী অধঃক্ষেপ Fe(OH)₃', p: '#8b3a1a' },
+      naohex: { t: 'অধঃক্ষেপ বেশি NaOH-এও গলে না', p: '#8b3a1a' },
+      nh4oh: { t: 'লালচে-বাদামী অধঃক্ষেপ Fe(OH)₃', p: '#8b3a1a' },
+      nh4ohex: { t: 'অধঃক্ষেপ গলে না', p: '#8b3a1a' },
+      kscn: { t: 'গাঢ় রক্তলাল দ্রবণ ([Fe(SCN)]²⁺)', liq: '#b91c1c' },
+      k4fe: { t: 'গাঢ় নীল অধঃক্ষেপ (প্রুশিয়ান নীল, Fe₄[Fe(CN)₆]₃)', p: '#1e3a8a' },
+      k3fe: { t: 'বাদামী-সবুজ দ্রবণ; অধঃক্ষেপ নেই', liq: '#8a7a2a' } } },
+  Cu:  { s: 'Cu²⁺', n: 'কপার (II)', solid: 'নীল / নীলচে সবুজ', col: '#4da3ff', flame: ['নীলচে সবুজ শিখা', '#3fbf9f'], ev: 'দ্রবণ নীল; শিখা নীলচে সবুজ; বেশি NH₄OH-এ গাঢ় নীল দ্রবণ', t: {
+      naoh: { t: 'হালকা নীল অধঃক্ষেপ Cu(OH)₂', p: '#6fa8dc' },
+      naohex: { t: 'অধঃক্ষেপ বেশি NaOH-এও গলে না', p: '#6fa8dc' },
+      nh4oh: { t: 'হালকা নীল অধঃক্ষেপ', p: '#6fa8dc' },
+      nh4ohex: { t: 'অধঃক্ষেপ গলে গাঢ় নীল দ্রবণ ([Cu(NH₃)₄]²⁺)', p: '#6fa8dc', d: true, liq: '#1d3fb8' },
+      k4fe: { t: 'চকোলেট-বাদামী অধঃক্ষেপ Cu₂[Fe(CN)₆]', p: '#7b3f20' },
+      k3fe: { t: 'হলুদাভ-সবুজ অধঃক্ষেপ', p: '#9aab3a' },
+      kscn: { t: 'গাঢ় সবুজ থেকে কালচে রং (অস্পষ্ট)' } } },
+  Pb:  { s: 'Pb²⁺', n: 'সীসা (লেড II)', solid: 'সাদা', col: null, ev: 'NaOH-এ সাদা অধঃক্ষেপ বেশি দিলে গলে, NH₄OH বেশি দিলে গলে না; লঘু H₂SO₄ ও HCl-এ সাদা অধঃক্ষেপ', t: {
+      naoh: { t: 'সাদা অধঃক্ষেপ Pb(OH)₂', p: W },
+      naohex: { t: 'অধঃক্ষেপ গলে বর্ণহীন দ্রবণ (প্লামবাইট)', p: W, d: true },
+      nh4oh: { t: 'সাদা অধঃক্ষেপ Pb(OH)₂', p: W },
+      nh4ohex: { t: 'অধঃক্ষেপ বেশি NH₄OH-এ গলে না', p: W },
+      h2so4d: { t: 'ভারী সাদা অধঃক্ষেপ PbSO₄', p: W },
+      dilhcl: { t: 'সাদা অধঃক্ষেপ PbCl₂ (গরম পানিতে দ্রবণীয়)', p: W },
+      k4fe: { t: 'সাদা অধঃক্ষেপ', p: W } } }
+};
+const AN = {
+  Cl: { s: 'Cl⁻', n: 'ক্লোরাইড', ev: 'AgNO₃-এ সাদা দইয়ের মতো অধঃক্ষেপ, NH₄OH-এ সম্পূর্ণ গলে', t: {
+      concH2SO4: { t: 'ঝাঁঝালো বর্ণহীন গ্যাস (HCl) — NH₄OH-ডোবানো কাঠি ধরলে সাদা ধোঁয়া', fume: '#f1f5f9' },
+      agno3: { t: 'সাদা দইয়ের মতো অধঃক্ষেপ AgCl', p: W },
+      agnh4oh: { t: 'AgCl অধঃক্ষেপ NH₄OH-এ সহজেই সম্পূর্ণ গলে যায় ([Ag(NH₃)₂]Cl)', p: W, d: true } } },
+  Br: { s: 'Br⁻', n: 'ব্রোমাইড', ev: 'AgNO₃-এ ফিকে হলুদ অধঃক্ষেপ; ঘন H₂SO₄-এ লালচে-বাদামী Br₂ বাষ্প', t: {
+      concH2SO4: { t: 'লালচে-বাদামী বাষ্প (Br₂)', fume: '#b45309' },
+      agno3: { t: 'ফিকে হলুদ অধঃক্ষেপ AgBr', p: '#f2e6a0' },
+      agnh4oh: { t: 'AgBr আংশিক গলে — লঘু NH₄OH-এ প্রায় গলে না, ঘন NH₄OH-এ গলে', p: '#f2e6a0' } } },
+  I: { s: 'I⁻', n: 'আয়োডাইড', ev: 'AgNO₃-এ গাঢ় হলুদ অধঃক্ষেপ, NH₄OH-এ গলে না; ঘন H₂SO₄-এ বেগুনি I₂ বাষ্প', t: {
+      concH2SO4: { t: 'বেগুনি বাষ্প (I₂)', fume: '#7c3aed' },
+      agno3: { t: 'গাঢ় হলুদ অধঃক্ষেপ AgI', p: '#facc15' },
+      agnh4oh: { t: 'AgI অধঃক্ষেপ NH₄OH-এ একেবারেই গলে না', p: '#facc15' } } },
+  SO4: { s: 'SO₄²⁻', n: 'সালফেট', ev: 'BaCl₂-এ সাদা অধঃক্ষেপ যা লঘু HCl-এও গলে না', t: {
+      bacl2: { t: 'ভারী সাদা অধঃক্ষেপ BaSO₄', p: W },
+      bacl2hcl: { t: 'সাদা অধঃক্ষেপ লঘু HCl-এও গলে না', p: W } } },
+  CO3: { s: 'CO₃²⁻', n: 'কার্বনেট', ev: 'লঘু অম্লে বুদবুদ (CO₂) যা চুনের পানি ঘোলা করে; BaCl₂-এর অধঃক্ষেপ HCl-এ গলে', t: {
+      dilhcl: { t: 'ফুটন্ত বুদবুদ — বর্ণহীন, গন্ধহীন গ্যাস (CO₂)', bub: 1 },
+      h2so4d: { t: 'ফুটন্ত বুদবুদ — বর্ণহীন, গন্ধহীন গ্যাস (CO₂)', bub: 1 },
+      limewater: { t: 'গ্যাস চুনের পানিকে দুধের মতো ঘোলা করে (CaCO₃↓)', liq: '#e5e7eb' },
+      concH2SO4: { t: 'প্রবল বুদবুদ — CO₂ গ্যাস', bub: 1 },
+      agno3: { t: 'বুদবুদ (CO₂ — HNO₃ দিয়ে অম্লীয় করা আছে); অধঃক্ষেপ নেই', bub: 1 },
+      bacl2: { t: 'সাদা অধঃক্ষেপ BaCO₃', p: W },
+      bacl2hcl: { t: 'সাদা অধঃক্ষেপ লঘু HCl-এ গলে যায় ও বুদবুদ (CO₂) ওঠে', p: W, d: true, bub: 1 } } },
+  NO3: { s: 'NO₃⁻', n: 'নাইট্রেট', ev: 'ব্রাউন রিং টেস্টে বাদামী বলয়', t: {
+      ring: { t: 'দুই স্তরের সংযোগস্থলে গাঢ় বাদামী বলয় ([Fe(NO)]²⁺)', ring: 1 },
+      concH2SO4: { t: 'ফিকে বাদামী ধোঁয়া (NO₂) — তামার টুকরো দিলে স্পষ্ট দেখা যায়', fume: '#b45309' } } }
+};
+const SALTS = [
+ ['NaCl','সোডিয়াম ক্লোরাইড','Na','Cl',1,'ফাটার শব্দ (ডিক্রিপিটেশন); উল্লেখযোগ্য রাসায়নিক পরিবর্তন নেই',null,'#e5e7eb'],
+ ['KCl','পটাশিয়াম ক্লোরাইড','K','Cl',1,'কোনো পরিবর্তন নেই; খুব উচ্চ তাপে গলে',null,'#e5e7eb'],
+ ['NH₄Cl','অ্যামোনিয়াম ক্লোরাইড','NH4','Cl',1,'সাদা ধোঁয়া ওঠে ও নলের ঠান্ডা অংশে সাদা পদার্থ জমে (উর্ধ্বপাতন); ঝাঁঝালো গন্ধ','#f8fafc','#f8fafc'],
+ ['CaCl₂','ক্যালসিয়াম ক্লোরাইড','Ca','Cl',1,'জলীয় বাষ্প ছাড়ে; সাদা অবশেষ থাকে',null,'#e5e7eb'],
+ ['BaCl₂','বেরিয়াম ক্লোরাইড','Ba','Cl',0,'জলীয় বাষ্প (কেলাসজল) ছাড়ে; সাদা অবশেষ',null,'#e5e7eb'],
+ ['FeCl₃','ফেরিক ক্লোরাইড','Fe3','Cl',1,'বাদামী-হলুদ ধোঁয়া ওঠে; লালচে-বাদামী অবশেষ','#d6a54a','#b45d2a'],
+ ['CuCl₂','কপার (II) ক্লোরাইড','Cu','Cl',0,'জলীয় বাষ্প ছাড়ে; হলুদ-বাদামী অনার্দ্র লবণ',null,'#a16207'],
+ ['ZnCl₂','জিঙ্ক ক্লোরাইড','Zn','Cl',0,'গলে যায়; অল্প সাদা ধোঁয়া',null,'#e5e7eb'],
+ ['MgCl₂','ম্যাগনেসিয়াম ক্লোরাইড','Mg','Cl',0,'জলীয় বাষ্প ও হালকা HCl-এর ধোঁয়া; সাদা অবশেষ','#f1f5f9','#e5e7eb'],
+ ['AlCl₃','অ্যালুমিনিয়াম ক্লোরাইড','Al','Cl',0,'সাদা ধোঁয়া (HCl) ওঠে; সাদা অবশেষ (Al₂O₃)','#f1f5f9','#e5e7eb'],
+ ['Na₂SO₄','সোডিয়াম সালফেট','Na','SO4',0,'কোনো পরিবর্তন নেই',null,'#e5e7eb'],
+ ['K₂SO₄','পটাশিয়াম সালফেট','K','SO4',0,'কোনো পরিবর্তন নেই',null,'#e5e7eb'],
+ ['(NH₄)₂SO₄','অ্যামোনিয়াম সালফেট','NH4','SO4',0,'গলে গিয়ে NH₃-এর ঝাঁঝালো গন্ধ ও সাদা ধোঁয়া; অবশেষ প্রায় থাকে না','#f8fafc','#f8fafc'],
+ ['MgSO₄','ম্যাগনেসিয়াম সালফেট','Mg','SO4',1,'কেলাসজল হারায়; সাদা অবশেষ',null,'#e5e7eb'],
+ ['Al₂(SO₄)₃','অ্যালুমিনিয়াম সালফেট','Al','SO4',0,'কেলাসজল হারিয়ে সাদা অনার্দ্র লবণ',null,'#e5e7eb'],
+ ['ZnSO₄','জিঙ্ক সালফেট','Zn','SO4',1,'কেলাসজল ছাড়ে; সাদা অবশেষ',null,'#e5e7eb'],
+ ['FeSO₄','ফেরাস সালফেট','Fe2','SO4',1,'কেলাসজল ছেড়ে সাদা হয়, পরে লালচে-বাদামী অবশেষ (Fe₂O₃) ও ঝাঁঝালো SO₂ গ্যাস','#e5e7eb','#8b3a1a'],
+ ['CuSO₄','কপার (II) সালফেট','Cu','SO4',1,'নীল কেলাস পানি ছেড়ে সাদা (অনার্দ্র CuSO₄) হয়; নলের গায়ে জলকণা',null,'#f1f5f9'],
+ ['Na₂CO₃','সোডিয়াম কার্বনেট','Na','CO3',1,'কোনো পরিবর্তন নেই (তাপ-সহনশীল)',null,'#e5e7eb'],
+ ['K₂CO₃','পটাশিয়াম কার্বনেট','K','CO3',0,'কোনো পরিবর্তন নেই',null,'#e5e7eb'],
+ ['(NH₄)₂CO₃','অ্যামোনিয়াম কার্বনেট','NH4','CO3',0,'সম্পূর্ণ ভেঙে NH₃ (ঝাঁঝালো গন্ধ) ও CO₂ দেয়; কোনো অবশেষ থাকে না','#f8fafc','#00000000'],
+ ['NaNO₃','সোডিয়াম নাইট্রেট','Na','NO3',1,'গলে যায় ও O₂ গ্যাস ছাড়ে — জ্বলন্ত কাঠি উজ্জ্বল হয়; অবশেষে সোডিয়াম নাইট্রাইট',null,'#e5e7eb'],
+ ['KNO₃','পটাশিয়াম নাইট্রেট','K','NO3',0,'গলে যায় ও O₂ গ্যাস ছাড়ে — জ্বলন্ত কাঠি উজ্জ্বল হয়',null,'#e5e7eb'],
+ ['Ca(NO₃)₂','ক্যালসিয়াম নাইট্রেট','Ca','NO3',0,'বাদামী ধোঁয়া (NO₂) ও O₂; সাদা অবশেষ (CaO)','#b45309','#f1f5f9'],
+ ['Pb(NO₃)₂','লেড (II) নাইট্রেট','Pb','NO3',0,'ফাটার শব্দ; ঘন বাদামী ধোঁয়া (NO₂); হলুদ অবশেষ (PbO)','#b45309','#e0b020'],
+ ['Cu(NO₃)₂','কপার (II) নাইট্রেট','Cu','NO3',0,'ঘন বাদামী ধোঁয়া (NO₂); কালো অবশেষ (CuO)','#b45309','#111827'],
+ ['Zn(NO₃)₂','জিঙ্ক নাইট্রেট','Zn','NO3',0,'বাদামী ধোঁয়া (NO₂); অবশেষ গরমে হলুদ, ঠান্ডায় সাদা (ZnO)','#b45309','#e7d36a'],
+ ['NaBr','সোডিয়াম ব্রোমাইড','Na','Br',0,'কোনো পরিবর্তন নেই; গলে যেতে পারে',null,'#e5e7eb'],
+ ['KBr','পটাশিয়াম ব্রোমাইড','K','Br',0,'কোনো পরিবর্তন নেই',null,'#e5e7eb'],
+ ['NaI','সোডিয়াম আয়োডাইড','Na','I',0,'কোনো পরিবর্তন নেই; গলে যেতে পারে',null,'#e5e7eb'],
+ ['KI','পটাশিয়াম আয়োডাইড','K','I',1,'কোনো পরিবর্তন নেই; গলে যায়',null,'#e5e7eb']
+].map(([f, n, c, a, easy, heat, hf, hr]) => ({ f, n, c, a, easy: !!easy, heat, hf, hr }));
+const ACID_CATS = ['NH4', 'Al', 'Zn', 'Fe2', 'Fe3', 'Cu', 'Pb'];
+const TESTS = [
+ { g: 'শুষ্ক ও প্রাথমিক পরীক্ষা', id: 'phys', ic: '👁️', l: 'রং ও পানিতে দ্রবণীয়তা', d: 'নমুনার রং দেখো ও পানিতে গোলো' },
+ { g: 'শুষ্ক ও প্রাথমিক পরীক্ষা', id: 'heat', ic: '🔥', l: 'শুষ্ক নলে উত্তপ্ত করা', d: 'শুকনো টেস্ট টিউবে লবণ গরম করো' },
+ { g: 'শুষ্ক ও প্রাথমিক পরীক্ষা', id: 'flame', ic: '🕯️', l: 'শিখা পরীক্ষা', d: 'বুনসেন শিখায় তারে লবণ ধরো' },
+ { g: 'শুষ্ক ও প্রাথমিক পরীক্ষা', id: 'litmus', ic: '📄', l: 'দ্রবণের লিটমাস পরীক্ষা', d: 'নীল ও লাল লিটমাস কাগজ ডোবাও' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'dilhcl', ic: '🧪', l: 'লঘু HCl', d: 'লবণে লঘু হাইড্রোক্লোরিক এসিড দাও' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'h2so4d', ic: '🧪', l: 'লঘু H₂SO₄', d: 'লবণ/দ্রবণে লঘু সালফিউরিক এসিড দাও' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'limewater', ic: '🥛', l: 'লঘু HCl + চুনের পানি', d: 'নির্গত গ্যাস চুনের পানিতে চালনা করো' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'concH2SO4', ic: '☣️', l: 'ঘন H₂SO₄ (গরম)', d: 'লবণে ঘন H₂SO₄ দিয়ে হালকা গরম করো' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'agno3', ic: '⚪', l: 'AgNO₃ (লঘু HNO₃ সহ)', d: 'দ্রবণে সিলভার নাইট্রেট দাও' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'agnh4oh', ic: '⚪', l: 'AgNO₃ → তারপর NH₄OH', d: 'অধঃক্ষেপে অ্যামোনিয়া দ্রবণ দাও' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'bacl2', ic: '🧂', l: 'BaCl₂', d: 'দ্রবণে বেরিয়াম ক্লোরাইড দাও' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'bacl2hcl', ic: '🧂', l: 'BaCl₂ → তারপর লঘু HCl', d: 'অধঃক্ষেপে লঘু HCl দাও' },
+ { g: 'অ্যানায়ন পরীক্ষা', id: 'ring', ic: '🟤', l: 'ব্রাউন রিং টেস্ট', d: 'FeSO₄ + পাশ বেয়ে ঘন H₂SO₄' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'naoh', ic: '💧', l: 'NaOH (কয়েক ফোঁটা)', d: 'দ্রবণে সোডিয়াম হাইড্রক্সাইড দাও' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'naohex', ic: '💧', l: 'NaOH (বেশি পরিমাণ)', d: 'আরও NaOH যোগ করে নাড়ো' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'nh4oh', ic: '🫧', l: 'NH₄OH (কয়েক ফোঁটা)', d: 'অ্যামোনিয়াম হাইড্রক্সাইড দাও' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'nh4ohex', ic: '🫧', l: 'NH₄OH (বেশি পরিমাণ)', d: 'আরও NH₄OH যোগ করো' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'naohheat', ic: '♨️', l: 'NaOH + উত্তপ্ত করা', d: 'NaOH যোগ করে গরম করো, গ্যাস পরীক্ষা করো' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'kscn', ic: '🩸', l: 'KSCN', d: 'পটাশিয়াম থায়োসায়ানেট দাও' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'k4fe', ic: '🔵', l: 'K₄[Fe(CN)₆]', d: 'পটাশিয়াম ফেরোসায়ানাইড দাও' },
+ { g: 'ক্যাটায়ন পরীক্ষা', id: 'k3fe', ic: '🔷', l: 'K₃[Fe(CN)₆]', d: 'পটাশিয়াম ফেরিসায়ানাইড দাও' }
+];
+const TL = Object.fromEntries(TESTS.map(t => [t.id, t]));
+
+/* ================= অবস্থা ================= */
+const S = { salt: null, log: [], used: new Set(), hints: 0, wrong: 0, done: false, level: 'easy', n: 0 };
+function pick() {
+  const pool = SALTS.filter(s => S.level === 'full' || s.easy);
+  let s; do { s = pool[Math.floor(Math.random() * pool.length)]; } while (pool.length > 1 && S.salt && s === S.salt);
+  S.salt = s; S.log = []; S.used = new Set(); S.hints = 0; S.wrong = 0; S.done = false; S.n++;
+  $('sampleTag').textContent = 'নমুনা #' + bi(S.n); $('result').innerHTML = '';
+  renderLog(); resetView(); $('live').textContent = 'নতুন নমুনা প্রস্তুত! নিচের শেলফ থেকে একটি পরীক্ষা বেছে নাও।';
+}
+
+/* ================= বিক্রিয়া ইঞ্জিন ================= */
+function litmusText(s) {
+  if (s.a === 'CO3') return { t: 'লাল লিটমাস নীল হয় — দ্রবণ ক্ষারীয় (কার্বনেটের আর্দ্র-বিশ্লেষণ)' };
+  if (ACID_CATS.includes(s.c)) return { t: 'নীল লিটমাস লাল হয় — দ্রবণ অম্লীয় (ক্যাটায়নের আর্দ্র-বিশ্লেষণ)' };
+  if (s.c === 'Mg') return { t: 'প্রায় নিরপেক্ষ (খুবই সামান্য অম্লীয়)' };
+  return { t: 'লিটমাসের রং বদলায় না — দ্রবণ প্রায় নিরপেক্ষ' };
+}
+function runTest(id) {
+  const s = S.salt, C = CAT[s.c], A = AN[s.a];
+  if (id === 'phys') return { kind: 'tube', t: `নমুনা: ${C.solid} কেলাস/গুঁড়া। পানিতে সম্পূর্ণ দ্রবীভূত হয়ে ${C.col ? (s.c === 'Cu' ? 'নীল' : s.c === 'Fe2' ? 'ফিকে সবুজ' : 'হলুদ-বাদামী') : 'বর্ণহীন'} দ্রবণ তৈরি করে।${s.c === 'NH4' && s.a === 'CO3' ? ' হালকা ঝাঁঝালো গন্ধ আছে।' : ''}` };
+  if (id === 'heat') return { kind: 'heat', t: s.heat, fume: s.hf, res: s.hr };
+  if (id === 'flame') { const f = C.flame; return { kind: 'flame', t: f ? f[0] : 'কোনো উল্লেখযোগ্য রং নেই (সামান্য ম্লান শিখা)', fl: f ? f[1] : null }; }
+  if (id === 'litmus') return Object.assign({ kind: 'tube' }, litmusText(s));
+  const a = C.t[id], b = A.t[id];
+  const ts = [a && a.t, b && b.t].filter(Boolean);
+  const r = { kind: 'tube', t: ts.length ? ts.join(' ⟶ ') : NONE };
+  [a, b].forEach(x => { if (!x) return; ['p', 'd', 'h', 'liq', 'fume', 'bub', 'ring'].forEach(k => { if (x[k] != null) r[k] = x[k]; }); });
+  return r;
+}
+
+/* ================= ভিউ ================= */
+const hex2rgba = (h, a) => { const n = parseInt(h.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+const WATER = 'rgba(160,200,255,.28)';
+let timers = [];
+function later(f, ms) { timers.push(setTimeout(f, ms)); }
+function baseLiq() { const c = CAT[S.salt.c].col; return c ? hex2rgba(c, .55) : WATER; }
+function resetView(mode = 'tube') {
+  timers.forEach(clearTimeout); timers = [];
+  $('gTube').style.display = mode === 'tube' ? '' : 'none'; $('gFlame').style.display = mode === 'flame' ? '' : 'none'; $('gHeat').style.display = mode === 'heat' ? '' : 'none';
+  $('liq').setAttribute('fill', S.salt ? baseLiq() : WATER);
+  $('ppt').setAttribute('height', 0); $('ppt').setAttribute('y', 404); $('ring').setAttribute('opacity', 0);
+  $('fumes').setAttribute('opacity', 0); $('bubbles').innerHTML = ''; $('tubeCap').textContent = '';
+  $('heatFumes').setAttribute('opacity', 0);
+}
+function bubbles() {
+  const g = $('bubbles'); let h = '';
+  for (let i = 0; i < 18; i++) h += `<circle class="bub" cx="${158 + Math.random() * 64}" cy="${390 - Math.random() * 30}" r="${2 + Math.random() * 3}" fill="rgba(255,255,255,.85)" style="animation-delay:${(Math.random() * 2).toFixed(2)}s;animation-duration:${(1.4 + Math.random()).toFixed(2)}s"/>`;
+  g.innerHTML = h; later(() => g.innerHTML = '', 4200);
+}
+function play(r, id) {
+  if (r.kind === 'tube') {
+    resetView('tube'); $('tubeCap').textContent = TL[id].l;
+    const L = $('liq'), P = $('ppt');
+    if (r.p) {
+      const h = r.h || 78; L.setAttribute('fill', hex2rgba(r.p.length === 7 ? r.p : '#ffffff', .55));
+      later(() => { P.setAttribute('fill', r.p); P.setAttribute('y', 404 - h); P.setAttribute('height', h); L.setAttribute('fill', r.liq ? hex2rgba(r.liq, .55) : baseLiq()); }, 400);
+      if (r.d) later(() => { P.setAttribute('height', 0); P.setAttribute('y', 404); L.setAttribute('fill', r.liq ? hex2rgba(r.liq, .6) : (r.p === W ? 'rgba(160,200,255,.25)' : baseLiq())); }, 2600);
+    } else if (r.liq) later(() => L.setAttribute('fill', hex2rgba(r.liq, .65)), 300);
+    if (r.bub) bubbles();
+    if (r.fume) { ['fume1', 'fume2', 'fume3'].forEach(i => $(i).setAttribute('fill', r.fume)); $('fumes').setAttribute('opacity', 1); later(() => $('fumes').setAttribute('opacity', 0), 4200); }
+    if (r.ring) later(() => $('ring').setAttribute('opacity', .9), 500);
+  } else if (r.kind === 'flame') {
+    resetView('flame'); const c = r.fl || '#60a5fa';
+    $('flMid').setAttribute('stop-color', r.fl ? c : '#60a5fa'); $('flOut').setAttribute('stop-color', r.fl ? c : '#3b82f6');
+  } else if (r.kind === 'heat') {
+    resetView('heat'); $('flMid').setAttribute('stop-color', '#60a5fa'); $('flOut').setAttribute('stop-color', '#3b82f6');
+    $('heatRes').setAttribute('fill', r.res || '#e5e7eb'); $('heatRes').setAttribute('opacity', r.res === '#00000000' ? 0 : 1);
+    if (r.fume) { ['hf1', 'hf2'].forEach(i => $(i).setAttribute('fill', r.fume)); later(() => $('heatFumes').setAttribute('opacity', 1), 500); }
+  }
+}
+
+/* ================= শেলফ ও খাতা ================= */
+function buildShelf() {
+  let h = '', g = '';
+  TESTS.forEach(t => {
+    if (t.g !== g) { if (g) h += '</div>'; g = t.g; h += `<div class="sh"><h3>${t.g}</h3><div class="shg">`; }
+    h += `<button class="rg" data-t="${t.id}" title="${t.d}"><span class="ic">${t.ic}</span><span>${t.l}</span></button>`;
+  });
+  $('shelf').innerHTML = h + '</div></div>';
+  $('shelf').addEventListener('click', e => { const b = e.target.closest('.rg'); if (b) doTest(b.dataset.t); });
+}
+function doTest(id) {
+  if (!S.salt) return;
+  if (S.done) { toast('এই নমুনা শেষ — নতুন নমুনা নাও'); return; }
+  const r = runTest(id); play(r, id);
+  S.used.add(id); S.log.push({ id, t: r.t, c: r.p || r.fl || r.fume || r.liq || null });
+  $('live').innerHTML = `<b>${TL[id].ic} ${TL[id].l}:</b> ${r.t}`;
+  document.querySelectorAll('.rg').forEach(b => b.classList.toggle('used', S.used.has(b.dataset.t)));
+  renderLog();
+}
+function renderLog() {
+  document.querySelectorAll('.rg').forEach(b => b.classList.toggle('used', S.used.has(b.dataset.t)));
+  $('cnt').textContent = bi(S.used.size) + 'টি ভিন্ন পরীক্ষা';
+  $('log').innerHTML = S.log.length ? S.log.map((x, i) => `<div class="le"><span class="n">${bi(i + 1)}</span><span class="dot" style="background:${x.c || 'transparent'}"></span><div><b>${TL[x.id].ic} ${TL[x.id].l}</b><br><span>${x.t}</span></div></div>`).reverse().join('') : '<p class="hint">এখনো কোনো পরীক্ষা করা হয়নি।</p>';
+}
+
+/* ================= সিদ্ধান্ত ================= */
+function fillSel() {
+  $('selC').innerHTML = '<option value="">— বেছে নাও —</option>' + Object.entries(CAT).map(([k, v]) => `<option value="${k}">${v.s} (${v.n})</option>`).join('');
+  $('selA').innerHTML = '<option value="">— বেছে নাও —</option>' + Object.entries(AN).map(([k, v]) => `<option value="${k}">${v.s} (${v.n})</option>`).join('');
+}
+function stars() {
+  let n = 3; if (S.used.size > 12) n--; if (S.hints) n--; if (S.wrong) n--; return Math.max(1, n);
+}
+$('submit').onclick = () => {
+  if (S.done) return;
+  const c = $('selC').value, a = $('selA').value; if (!c || !a) { toast('ক্যাটায়ন ও অ্যানায়ন দুটোই বেছে নাও'); return; }
+  const s = S.salt, okC = c === s.c, okA = a === s.a;
+  if (okC && okA) {
+    S.done = true; const st = stars();
+    $('result').innerHTML = `<div class="res ok"><h3>🎉 সঠিক! ${'⭐'.repeat(st)}${'☆'.repeat(3 - st)}</h3>নমুনাটি ছিল <b>${s.f}</b> — ${s.n}।<br><br><b>ক্যাটায়ন ${CAT[s.c].s}:</b> ${CAT[s.c].ev}<br><b>অ্যানায়ন ${AN[s.a].s}:</b> ${AN[s.a].ev}<br><br><span class="hint">তুমি ${bi(S.used.size)}টি ভিন্ন পরীক্ষা করেছো${S.hints ? ', ইঙ্গিত নিয়েছো' : ''}${S.wrong ? ', ' + bi(S.wrong) + 'বার ভুল করেছো' : ''}। কম পরীক্ষায় ঠিক উত্তর দিলে বেশি তারা।</span><div class="row"><button class="btn" id="again">🎲 নতুন নমুনা</button></div></div>`;
+    $('again').onclick = pick;
+  } else {
+    S.wrong++;
+    const msg = okC ? 'ক্যাটায়ন ঠিক আছে ✔, কিন্তু অ্যানায়ন মেলেনি ✖' : okA ? 'অ্যানায়ন ঠিক আছে ✔, কিন্তু ক্যাটায়ন মেলেনি ✖' : 'ক্যাটায়ন ও অ্যানায়ন — দুটোই আবার ভেবে দেখো';
+    $('result').innerHTML = `<div class="res bad"><h3>🤔 এখনো হয়নি</h3>${msg}। খাতার পর্যবেক্ষণ আবার মিলিয়ে দেখো এবং আরও পরীক্ষা করো।${S.wrong >= 3 ? '<div class="row"><button class="btn ghost" id="reveal">👀 উত্তর দেখো</button></div>' : ''}</div>`;
+    if ($('reveal')) $('reveal').onclick = () => { S.done = true; $('result').innerHTML = `<div class="res"><h3>উত্তর: ${s.f} (${s.n})</h3><b>${CAT[s.c].s}:</b> ${CAT[s.c].ev}<br><b>${AN[s.a].s}:</b> ${AN[s.a].ev}<div class="row"><button class="btn" id="again">🎲 নতুন নমুনা</button></div></div>`; $('again').onclick = pick; };
+  }
+};
+$('hintB').onclick = () => {
+  if (S.done) return;
+  const s = S.salt; const keyC = s.c === 'Na' || s.c === 'K' || s.c === 'Ca' || s.c === 'Ba' || s.c === 'Cu' ? ['flame'] : ['naoh', 'naohex', 'nh4ohex'];
+  const keyA = { Cl: ['agno3', 'agnh4oh'], Br: ['agno3', 'concH2SO4'], I: ['agno3', 'concH2SO4'], SO4: ['bacl2', 'bacl2hcl'], CO3: ['dilhcl', 'limewater'], NO3: ['ring'] }[s.a];
+  const left = [...keyC, ...keyA].filter(t => !S.used.has(t));
+  S.hints++;
+  if (!left.length) { $('live').textContent = '💡 তোমার কাছে প্রয়োজনীয় সব মূল পরীক্ষার ফল আছে — খাতা মিলিয়ে ভাবো!'; return; }
+  const t = TL[left[0]]; $('live').innerHTML = `💡 ইঙ্গিত: <b>${t.ic} ${t.l}</b> করে দেখতে পারো।`;
+  document.querySelectorAll('.rg').forEach(b => b.classList.toggle('hint', b.dataset.t === t.id));
+  setTimeout(() => document.querySelectorAll('.rg').forEach(b => b.classList.remove('hint')), 3500);
+};
+$('newS').onclick = pick;
+$('level').onchange = e => { S.level = e.target.value; pick(); toast(e.target.value === 'easy' ? 'সহজ স্তর: ১২টি পরিচিত লবণ' : 'পূর্ণ স্তর: ৩১টি লবণ'); };
+
+/* ================= সারণি ================= */
+function buildTables() {
+  const sh = (o, k) => o.t[k] ? o.t[k].t : '—';
+  const cols = [['flame', 'শিখা'], ['naoh', 'NaOH (অল্প)'], ['naohex', 'NaOH (বেশি)'], ['nh4oh', 'NH₄OH (অল্প)'], ['nh4ohex', 'NH₄OH (বেশি)'], ['kscn', 'KSCN'], ['k4fe', 'K₄[Fe(CN)₆]'], ['k3fe', 'K₃[Fe(CN)₆]'], ['h2so4d', 'লঘু H₂SO₄'], ['naohheat', 'NaOH + তাপ']];
+  $('tabC').innerHTML = `<tr><th>আয়ন</th>${cols.map(c => `<th>${c[1]}</th>`).join('')}</tr>` + Object.values(CAT).map(c => `<tr><td><b>${c.s}</b><br>${c.n}<br><small>${c.col ? 'দ্রবণ রঙিন' : 'দ্রবণ বর্ণহীন'}</small></td>${cols.map(([k]) => `<td>${k === 'flame' ? (c.flame ? c.flame[0].split(' —')[0] : '—') : sh(c, k)}</td>`).join('')}</tr>`).join('');
+  const ac = [['dilhcl', 'লঘু HCl'], ['limewater', 'চুনের পানি'], ['concH2SO4', 'ঘন H₂SO₄ (গরম)'], ['agno3', 'AgNO₃'], ['agnh4oh', 'NH₄OH যোগ'], ['bacl2', 'BaCl₂'], ['bacl2hcl', 'HCl যোগ'], ['ring', 'ব্রাউন রিং']];
+  $('tabA').innerHTML = `<tr><th>আয়ন</th>${ac.map(c => `<th>${c[1]}</th>`).join('')}</tr>` + Object.values(AN).map(c => `<tr><td><b>${c.s}</b><br>${c.n}</td>${ac.map(([k]) => `<td>${c.t[k] ? c.t[k].t : '—'}</td>`).join('')}</tr>`).join('');
+}
+buildShelf(); fillSel(); buildTables(); pick();
+</script>
+</body>
+</html>
