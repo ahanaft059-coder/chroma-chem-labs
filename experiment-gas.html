@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>গ্যাস প্রস্তুতি ও ধর্ম ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.tagx{margin-left:auto;font-size:12px;font-weight:800;padding:3px 12px;border-radius:20px;color:var(--accent);background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.sh h3{margin:16px 0 8px;font-size:14px;font-weight:800;color:var(--text-muted)}
+.shg{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.rg{display:flex;align-items:center;gap:8px;text-align:left;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 12px;border-radius:14px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:transform .2s,border-color .2s,box-shadow .2s}
+.rg:hover{transform:translateY(-2px);border-color:rgba(168,85,247,.6);box-shadow:0 8px 18px var(--gradient-glow)}
+.rg.used{border-color:rgba(74,222,128,.55)}
+.rg.used::after{content:'✓';margin-left:auto;color:var(--ok);font-weight:800}
+.rg.hint{animation:pulse 1s ease 3;border-color:#fbbf24}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(251,191,36,.35)}}
+.logbox{max-height:340px;overflow:auto}
+.le{display:flex;gap:10px;align-items:flex-start;padding:10px 4px;border-bottom:1px solid var(--border-color);font-size:14px;line-height:1.6}
+.le .n{flex:0 0 24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--card-solid);border:1px solid var(--border-color)}
+.le .dot{flex:0 0 14px;height:14px;border-radius:50%;margin-top:5px;border:1px solid var(--border-color)}
+.le span:last-child{color:var(--text-muted)}
+.sel{font-family:inherit;font-size:14px;font-weight:600;padding:9px 12px;border-radius:12px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);max-width:100%}
+.sel option{background:var(--card-solid);color:var(--text-color)}
+label{font-size:13px;font-weight:700;color:var(--text-muted)}
+.scroll{overflow-x:auto}
+.scroll table{min-width:900px;font-size:13px}
+.scroll td{vertical-align:top}
+.bub{animation:rise 1.6s linear infinite}
+@keyframes rise{to{transform:translateY(-150px);opacity:0}}
+.flick{animation:flick .25s ease-in-out infinite alternate;transform-origin:50% 100%;transform-box:fill-box}
+@keyframes flick{to{transform:scale(.95,1.05)}}
+
+.bub2{animation:rise2 1.6s linear infinite}
+@keyframes rise2{from{transform:translateY(0);opacity:1}to{transform:translateY(-60px);opacity:0}}
+label{cursor:pointer}
+input[type=checkbox]{accent-color:#a855f7;width:18px;height:18px}
+input[type=range]{accent-color:#a855f7}
+.lab>*{min-width:0}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Digital Lab</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="digitallab.html">← <span class="long">ল্যাব হাবে ফিরে যান</span></a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="pill">🔥 অজৈব রসায়ন · প্র্যাক্টিক্যাল</span>
+    <h1><span class="em">🎈</span> গ্যাস প্রস্তুতি ও ধর্ম ল্যাব</h1>
+    <p>O₂, CO₂ ও H₂ গ্যাস নিজ হাতে তৈরি করো, সঠিক পদ্ধতিতে সংগ্রহ করো, তারপর কাঠি, চুনের পানি, লিটমাস দিয়ে ধর্ম পরীক্ষা করো। ভুল রিএজেন্ট বা ভুল সংগ্রহ-পদ্ধতি বাছলে কী হয় তাও দেখো!</p>
+  </section>
+
+  <div class="tabs" role="tablist" style="margin-top:0">
+    <button class="tab on" data-m="prep">🧪 গ্যাস প্রস্তুতি</button>
+    <button class="tab" data-m="ident">🔍 অজানা গ্যাস শনাক্ত</button>
+  </div>
+
+  <div class="lab">
+    <section class="card stage">
+      <h2>🔬 পরীক্ষার টেবিল <span class="tagx" id="stageTag">যন্ত্র</span></h2>
+      <svg id="svgA" viewBox="0 0 520 420" role="img" aria-label="গ্যাস প্রস্তুতির যন্ত্র">
+        <defs>
+          <linearGradient id="glassG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".3" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".3"/></linearGradient>
+          <radialGradient id="fl" cx=".5" cy=".75"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".45" stop-color="#60a5fa" stop-opacity=".95"/><stop offset="1" stop-color="#3b82f6" stop-opacity="0"/></radialGradient>
+          <clipPath id="clipFl"><path d="M95 205 L95 250 L48 372 Q44 392 66 392 L154 392 Q176 392 172 372 L125 250 L125 205 Z"/></clipPath>
+          <clipPath id="clipJW"><rect x="350" y="228" width="82" height="112" rx="6"/></clipPath>
+          <clipPath id="clipJU"><rect x="350" y="268" width="82" height="122" rx="6"/></clipPath>
+          <clipPath id="clipJD"><rect x="350" y="150" width="82" height="122" rx="6"/></clipPath>
+        </defs>
+        <rect x="14" y="398" width="492" height="12" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
+        <!-- delivery tube (path set by JS) -->
+        <path id="tube" d="" fill="none" stroke="var(--glass)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="tubeIn" d="" fill="none" stroke="rgba(160,200,255,.35)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- flask variant -->
+        <g id="gFlask">
+          <path d="M70 120 L112 120 L100 150 L100 346 L96 346 L96 150 Z" fill="rgba(255,255,255,.12)" stroke="var(--glass)" stroke-width="2"/>
+          <path d="M96 150 L100 150 L100 346 L96 346 Z" fill="rgba(160,200,255,.4)" id="stemL"/>
+          <g clip-path="url(#clipFl)"><rect id="fLiq" x="40" y="330" width="140" height="70" fill="rgba(160,200,255,.3)" style="transition:fill 1s"/><g id="solids"></g><g id="fBub"></g></g>
+          <path d="M95 205 L95 250 L48 372 Q44 392 66 392 L154 392 Q176 392 172 372 L125 250 L125 205" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+          <rect x="92" y="196" width="36" height="14" rx="4" fill="#9a3412"/>
+          <text id="flLbl" x="110" y="412" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
+        </g>
+        <!-- test-tube variant -->
+        <g id="gTT" style="display:none">
+          <rect x="20" y="120" width="12" height="270" rx="5" fill="var(--stand)" stroke="var(--border-color)"/>
+          <rect x="26" y="226" width="86" height="8" rx="4" fill="var(--stand)" stroke="var(--border-color)"/>
+          <g transform="rotate(-14 110 270)"><path d="M70 210 L70 330 Q70 360 100 360 Q130 360 130 330 L130 210" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+            <rect x="72" y="320" width="56" height="36" rx="12" fill="#e5e7eb" id="ttSolid"/><rect x="66" y="200" width="68" height="14" rx="4" fill="#9a3412"/></g>
+          <text x="110" y="412" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit">শক্ত কাচের টেস্ট টিউব (শুকনো)</text>
+        </g>
+        <!-- burner -->
+        <g id="gBurner" style="display:none"><rect x="92" y="396" width="36" height="2" fill="#64748b"/><ellipse id="bFl" cx="110" cy="388" rx="20" ry="30" fill="url(#fl)" class="flick"/></g>
+        <!-- trough + water jar -->
+        <g id="gWater">
+          <rect x="300" y="318" width="190" height="80" rx="8" fill="rgba(160,200,255,.18)" stroke="var(--glass)" stroke-width="2"/>
+          <rect x="302" y="334" width="186" height="62" fill="rgba(120,170,235,.28)"/>
+          <rect x="350" y="228" width="82" height="112" rx="6" fill="rgba(120,170,235,.35)" id="jwWater"/>
+          <rect id="jwGas" x="350" y="228" width="82" height="0" fill="rgba(255,255,255,.55)"/>
+          <rect x="350" y="228" width="82" height="112" rx="6" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+          <g id="wBub"></g>
+        </g>
+        <!-- upright jar -->
+        <g id="gUp" style="display:none">
+          <rect x="350" y="268" width="82" height="122" rx="6" fill="rgba(255,255,255,.04)"/>
+          <rect id="juGas" x="350" y="390" width="82" height="0" fill="rgba(255,255,255,.55)"/>
+          <rect x="350" y="268" width="82" height="122" rx="6" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+          <g id="uBub"></g>
+        </g>
+        <!-- inverted jar in air -->
+        <g id="gDown" style="display:none">
+          <rect id="jdGas" x="350" y="150" width="82" height="0" fill="rgba(255,255,255,.55)"/>
+          <rect x="350" y="150" width="82" height="122" rx="6" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+          <g id="dBub"></g>
+        </g>
+        <rect id="plate" x="344" y="0" width="94" height="6" rx="2" fill="#bfe3ff" stroke="var(--glass)" opacity="0" style="transition:opacity .5s"/>
+        <g id="warnG" style="display:none"><text x="260" y="40" text-anchor="middle" font-size="16" font-weight="800" fill="#ef4444" font-family="inherit" id="warnT"></text></g>
+        <text id="jLbl" x="391" y="416" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
+      </svg>
+
+      <svg id="svgT" viewBox="0 0 400 360" role="img" aria-label="গ্যাসের ধর্ম পরীক্ষা" style="display:none">
+        <defs><radialGradient id="fl2" cx=".5" cy=".75"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".45" id="f2m" stop-color="#fbbf24" stop-opacity=".95"/><stop offset="1" id="f2o" stop-color="#f97316" stop-opacity="0"/></radialGradient></defs>
+        <rect x="20" y="340" width="360" height="10" rx="5" fill="var(--stand)" stroke="var(--border-color)"/>
+        <!-- jar with gas -->
+        <rect id="tjGas" x="140" y="120" width="120" height="220" rx="8" fill="rgba(255,255,255,.1)"/>
+        <rect x="140" y="120" width="120" height="220" rx="8" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/>
+        <rect x="134" y="114" width="132" height="8" rx="3" fill="rgba(255,255,255,.3)" stroke="var(--glass)"/>
+        <text id="tjLbl" x="200" y="334" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-color)" font-family="inherit"></text>
+        <!-- splint -->
+        <g id="oSplint" style="display:none"><g id="splintG" style="transition:transform 1s ease"><rect x="196" y="10" width="8" height="150" rx="3" fill="#b8864a"/><circle id="sGlow" cx="200" cy="162" r="9" fill="#ef4444" opacity="0" style="transition:opacity .4s"/><ellipse id="sFl" cx="200" cy="150" rx="10" ry="22" fill="url(#fl2)" opacity="0" style="transition:all .5s;transform-box:fill-box;transform-origin:50% 100%"/></g></g>
+        <!-- flash -->
+        <g id="oPop" opacity="0" style="transition:opacity .15s"><polygon points="200,50 215,95 262,80 232,118 280,140 228,152 240,200 200,170 160,200 172,152 120,140 168,118 138,80 185,95" fill="#fde047" stroke="#f97316" stroke-width="3"/><text x="200" y="146" text-anchor="middle" font-size="22" font-weight="900" fill="#b91c1c" font-family="inherit">পপ!</text></g>
+        <!-- lime water tube -->
+        <g id="oLime" style="display:none"><path d="M290 160 L290 300 Q290 322 312 322 Q334 322 334 300 L334 160" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2"/><rect id="limeL" x="292" y="220" width="40" height="100" fill="rgba(160,200,255,.3)" style="transition:fill 1.6s"/><text x="312" y="150" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit">চুনের পানি</text></g>
+        <!-- litmus -->
+        <g id="oLit" style="display:none"><rect id="litP" x="190" y="30" width="20" height="130" rx="3" fill="#3b6df0" style="transition:fill 2s"/><text x="200" y="22" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit">ভেজা নীল লিটমাস</text></g>
+        <!-- candle -->
+        <g id="oCandle" style="display:none"><rect x="44" y="286" width="22" height="54" fill="#fde68a" stroke="#d6b656"/><ellipse id="cFl" cx="55" cy="272" rx="7" ry="15" fill="url(#fl2)" style="transition:opacity .5s"/><text x="55" y="360" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text></g>
+        <!-- soap -->
+        <g id="oSoap" style="display:none"><circle id="soapB" cx="320" cy="260" r="22" fill="rgba(180,220,255,.25)" stroke="#9bd0ff" stroke-width="2" style="transition:cy 2s ease"/></g>
+        <!-- magnesium / sulfur / coal flash -->
+        <g id="oBurn" style="display:none"><circle id="bFlash" cx="200" cy="230" r="10" fill="#fff" opacity="0" style="transition:all .5s"/></g>
+        <text id="tcap" x="200" y="352" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
+      </svg>
+      <div class="live" id="live">ধাপ ১: কোন গ্যাস বানাতে চাও বেছে নাও, তারপর রিএজেন্ট ঠিক করো।</div>
+      <div class="hud"><div class="box"><small>গ্যাস উৎপাদন</small><b id="hRate">—</b></div><div class="box"><small>জারে গ্যাস</small><b id="hFill">—</b></div><div class="box"><small>সময়</small><b id="hTime">—</b></div></div>
+    </section>
+
+    <section>
+      <div id="prepPanel">
+        <div class="card">
+          <h2>🧭 ধাপে ধাপে করো</h2>
+          <div class="stepper">
+            <div class="st active" id="s1"><span class="no">১</span><div class="tx"><b>কোন গ্যাস বানাবে?</b><small>লক্ষ্য ঠিক করো; পরে যাচাই হবে সত্যিই সেটা পেলে কি না।</small>
+              <select class="sel" id="goal"><option value="O2">অক্সিজেন (O₂)</option><option value="CO2">কার্বন ডাই-অক্সাইড (CO₂)</option><option value="H2">হাইড্রোজেন (H₂)</option></select></div><button class="btn" id="b1">ঠিক আছে</button></div>
+            <div class="st lock" id="s2"><span class="no">২</span><div class="tx"><b>রিএজেন্ট বাছো ও যন্ত্র সাজাও</b><small>ফ্লাস্কে কোন কঠিন ও কোন তরল নেবে? গরম করবে কি?</small>
+              <div class="row" style="margin-top:6px"><label>কঠিন<br><select class="sel" id="solid"></select></label><label>তরল<br><select class="sel" id="liquid"></select></label></div>
+              <label style="display:inline-flex;gap:8px;margin-top:8px;align-items:center"><input type="checkbox" id="heat"> 🔥 বুনসেন বার্নারে গরম করো</label></div><button class="btn" id="b2" disabled>সাজাও</button></div>
+            <div class="st lock" id="s3"><span class="no">৩</span><div class="tx"><b>সংগ্রহ-পদ্ধতি বাছো</b><small>গ্যাসের ঘনত্ব ও দ্রবণীয়তা ভেবে জার কীভাবে বসাবে ঠিক করো।</small>
+              <select class="sel" id="coll"><option value="water">পানিভর্তি জার উল্টো করে পানির ট্রফে</option><option value="up">শুকনো জার সোজা রেখে, নল জারের তলা পর্যন্ত</option><option value="down">শুকনো জার উল্টো করে, নল জারের মাথা পর্যন্ত</option></select></div><button class="btn" id="b3" disabled>ঠিক</button></div>
+            <div class="st lock" id="s4"><span class="no">৪</span><div class="tx"><b>গ্যাস তৈরি করো ও জার ভরো</b><small>প্রথমে ফ্লাস্কের বাতাস বেরোতে দাও (কয়েক সেকেন্ড), তারপর জার বসাও। ভরা হলে কাচের প্লেটে ঢেকে দাও।</small></div></div>
+          </div>
+          <div id="runCtl" style="display:none">
+            <div class="row" style="margin-top:0"><label style="flex:1 1 200px">গ্যাস তৈরির গতি (এসিড ঢালা / তাপ)<br><input type="range" id="speed" min="0" max="100" value="45" style="width:100%"></label></div>
+            <div class="row"><button class="btn" id="go">▶ শুরু করো</button><button class="btn ghost" id="place" disabled>🫙 জার বসাও</button><button class="btn ghost" id="cover" disabled>🪟 প্লেট দিয়ে ঢাকো</button><button class="btn ghost" id="fast">⏩ ×৩</button><button class="btn ghost" id="restart">↺ নতুন করে</button></div>
+          </div>
+        </div>
+        <div class="card" id="reportCard" style="margin-top:22px;display:none"><h2>📋 ফলাফল রিপোর্ট</h2><div id="report"></div></div>
+      </div>
+
+      <div id="identPanel" style="display:none"><div class="card"><h2>🔍 অজানা গ্যাস শনাক্তকরণ</h2><p class="hint" style="margin-top:0">একটি জারে তিনটির একটি বিশুদ্ধ গ্যাস আছে: O₂, CO₂ বা H₂। পরীক্ষা করে বলো কোনটি। কম পরীক্ষায় ঠিক করলে বেশি তারা!</p>
+        <div class="row"><select class="sel" id="idSel"><option value="">— গ্যাসটি কী? —</option><option value="O2">অক্সিজেন (O₂)</option><option value="CO2">কার্বন ডাই-অক্সাইড (CO₂)</option><option value="H2">হাইড্রোজেন (H₂)</option></select><button class="btn" id="idGo">✅ জমা দাও</button><button class="btn ghost" id="idNew">🎲 নতুন জার</button></div><div id="idRes"></div></div></div>
+
+      <div class="card" id="testCard" style="margin-top:22px;display:none">
+        <h2>🧪 গ্যাসের ধর্ম পরীক্ষা <span class="tagx" id="tcnt">০টি</span></h2>
+        <div id="shelf" class="shg"></div>
+        <div id="log" class="logbox" style="margin-top:12px"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-p="p1">📘 সমীকরণ</button>
+    <button class="tab" data-p="p2">📊 গ্যাসের তুলনা</button>
+    <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
+    <button class="tab" data-p="p4">🎓 ভাইভা</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1">
+      <h3>অক্সিজেন (O₂) প্রস্তুতি</h3>
+      <span class="formula">2H₂O₂ —(MnO₂ অনুঘটক)→ 2H₂O + O₂↑</span>
+      <span class="formula">2KClO₃ —(MnO₂, তাপ)→ 2KCl + 3O₂↑</span>
+      <p>MnO₂ অনুঘটক — বিক্রিয়ার শেষে অপরিবর্তিত থাকে, শুধু বিক্রিয়ার গতি বাড়ায়। KClO₃ ব্যবহার করলে শুকনো টেস্ট টিউবে গরম করতে হয়।</p>
+      <h3>কার্বন ডাই-অক্সাইড (CO₂) প্রস্তুতি</h3>
+      <span class="formula">CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑</span>
+      <p>মার্বেল/চুনাপাথর ও লঘু HCl। লঘু H₂SO₄ দিলে অদ্রবণীয় CaSO₄ স্তর জমে মার্বেল ঢেকে বিক্রিয়া থামিয়ে দেয়।</p>
+      <h3>হাইড্রোজেন (H₂) প্রস্তুতি</h3>
+      <span class="formula">Zn + H₂SO₄ → ZnSO₄ + H₂↑</span>
+      <span class="formula">Zn + 2HCl → ZnCl₂ + H₂↑</span>
+      <p>হাইড্রোজেনের উপরের ধাতু (Zn, Fe, Mg) লঘু এসিড থেকে H₂ মুক্ত করে। Cu হাইড্রোজেনের নিচে, তাই লঘু এসিডে বিক্রিয়া করে না। ঘন H₂SO₄ দিলে H₂ নয়, SO₂ তৈরি হয়।</p>
+    </div>
+    <div class="pane" id="p2">
+      <h3>গ্যাসের ধর্ম ও সংগ্রহ</h3>
+      <div class="scroll"><table style="min-width:640px"><tr><th>গ্যাস</th><th>বাতাসের তুলনায় ঘনত্ব</th><th>পানিতে দ্রবণীয়তা</th><th>সংগ্রহ</th><th>শনাক্তকরণ</th></tr>
+      <tr><td><b>O₂</b></td><td>সামান্য ভারী (≈ ১.১×)</td><td>খুব কম</td><td>পানির অপসারণই সবচেয়ে ভালো</td><td>ধিকিধিকি কাঠি দপ করে জ্বলে</td></tr>
+      <tr><td><b>CO₂</b></td><td>ভারী (≈ ১.৫×)</td><td>মাঝারি</td><td>জার সোজা রেখে, নল তলায় (বায়ুর উর্ধ্বমুখী অপসারণ)</td><td>চুনের পানি ঘোলা; জ্বলন্ত কাঠি নেভে</td></tr>
+      <tr><td><b>H₂</b></td><td>অনেক হালকা (≈ ০.০৭×)</td><td>প্রায় অদ্রবণীয়</td><td>পানির অপসারণ অথবা জার উল্টো করে (বায়ুর নিম্নমুখী অপসারণ)</td><td>জ্বলন্ত কাঠিতে "পপ" শব্দ</td></tr></table></div>
+      <h3>কেন এই পদ্ধতি?</h3>
+      <ul><li>ভারী গ্যাস বাতাসকে ঠেলে উপরে তুলে নিজে তলায় জমে → জার <b>সোজা</b> থাকে।</li><li>হালকা গ্যাস উপরে ওঠে → জার <b>উল্টো</b> থাকে, নল জারের মাথা পর্যন্ত।</li><li>পানিতে অদ্রবণীয় গ্যাস পানির অপসারণে সংগ্রহ করলে বিশুদ্ধ পাওয়া যায়।</li></ul>
+    </div>
+    <div class="pane" id="p3">
+      <h3>ল্যাবে সতর্কতা</h3>
+      <ul><li><b>H₂ বিস্ফোরক:</b> বাতাসের সাথে মিশ্রণ জ্বলন্ত কাঠির সংস্পর্শে বিস্ফোরণ ঘটায়। ফ্লাস্কের বাতাস বের করে দিয়ে তবে জার ভরো; জারের মুখ নিচু করে ছোট শিখায় পরীক্ষা করো।</li>
+      <li>KClO₃ গরম করার সময় কোনো জৈব পদার্থ (কাগজ, তেল) না থাকে; ঘন H₂SO₄-এর সাথে KClO₃ মেশালে বিস্ফোরণ হয়।</li>
+      <li>ঘন H₂SO₄ ক্ষয়কারী; Zn বা Cu-এর সাথে বিষাক্ত SO₂ দেয়।</li>
+      <li>গরম করার সময় প্রথমে নলের সবদিক সমানভাবে গরম করো, পরে নির্দিষ্ট স্থানে।</li>
+      <li>পানির ট্রফে সংগ্রহের সময় গরম বন্ধ করার আগে নল পানি থেকে তুলে নাও — না হলে পানি পিছনে ফিরে (suck-back) গরম কাচ ভাঙতে পারে।</li>
+      <li>সালফার/ম্যাগনেসিয়ামের দহন পরীক্ষায় সরাসরি আলোর দিকে তাকিও না (ম্যাগনেসিয়ামের আলো চোখের জন্য ক্ষতিকর)।</li></ul>
+    </div>
+    <div class="pane" id="p4">
+      <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>O₂ প্রস্তুতিতে MnO₂-এর কাজ কী?</summary><p>অনুঘটক — H₂O₂ বা KClO₃-এর বিয়োজন দ্রুত করে, নিজে অপরিবর্তিত থাকে।</p></details>
+      <details class="qa"><summary>CO₂ কেন পানির অপসারণে সংগ্রহ করা ভালো নয়?</summary><p>CO₂ পানিতে মাঝারি দ্রবণীয় (H₂CO₃ তৈরি করে), তাই অনেকটা পানিতে গলে যায়। বাতাসের চেয়ে ভারী বলে বায়ুর উর্ধ্বমুখী অপসারণই উত্তম।</p></details>
+      <details class="qa"><summary>H₂ কেন জার উল্টো করে সংগ্রহ করা হয়?</summary><p>H₂ বাতাসের চেয়ে অনেক হালকা, তাই উপরে উঠে যেত চায়; উল্টো জারের ভেতরে নিচ থেকে ঢুকে উপরে জমা হয়।</p></details>
+      <details class="qa"><summary>H₂ প্রস্তুতিতে Cu ব্যবহার করা যায় না কেন?</summary><p>সক্রিয়তা সারিতে Cu হাইড্রোজেনের নিচে। তাই লঘু এসিড থেকে H₂ প্রতিস্থাপন করতে পারে না।</p></details>
+      <details class="qa"><summary>জ্বলন্ত কাঠি জারে ঢোকালে "পপ" শব্দ কেন হয়?</summary><p>H₂ বাতাসের O₂-এর সাথে দ্রুত জ্বলে পানি তৈরি করে (2H₂ + O₂ → 2H₂O); হঠাৎ প্রসারণে শব্দ হয়।</p></details>
+      <details class="qa"><summary>CO₂ জ্বলন্ত কাঠি নেভায় কেন?</summary><p>CO₂ দহনে সহায়ক নয় এবং বাতাসের চেয়ে ভারী হয়ে কাঠির চারপাশ থেকে O₂ সরিয়ে দেয়।</p></details>
+      <details class="qa"><summary>চুনের পানিতে বেশি CO₂ চালালে ঘোলাটে ভাব কেটে যায় কেন?</summary><p>প্রথমে CaCO₃ অধঃক্ষেপ পড়ে, পরে আরও CO₂ ও পানির সাথে দ্রবণীয় Ca(HCO₃)₂ হয়ে যায়।</p></details>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $ = id => document.getElementById(id);
+const BDG = '০১২৩৪৫৬৭৮৯';
+const bi = n => String(n).replace(/\d/g, x => BDG[x]);
+let toastT;
+function toast(t) { const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => e.classList.remove('on'), 2600); }
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+document.querySelectorAll('.tab[data-p]').forEach(t => t.onclick = () => { document.querySelectorAll('.tab[data-p]').forEach(x => x.classList.toggle('on', x === t)); document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === t.dataset.p)); });
+
+/* ================= ডেটা ================= */
+const GAS = {
+  O2:  { n: 'অক্সিজেন (O₂)', s: 'O₂' },
+  CO2: { n: 'কার্বন ডাই-অক্সাইড (CO₂)', s: 'CO₂' },
+  H2:  { n: 'হাইড্রোজেন (H₂)', s: 'H₂' },
+  SO2: { n: 'সালফার ডাই-অক্সাইড (SO₂)', s: 'SO₂' },
+  none:{ n: 'কোনো গ্যাস নয়', s: '—' }
+};
+const SOLIDS = [
+  ['none', 'কোনো কঠিন নেই', '#00000000'], ['caco3', 'মার্বেল / CaCO₃ (টুকরো)', '#f1f5f9'], ['na2co3', 'সোডা অ্যাশ / Na₂CO₃ (গুঁড়া)', '#e5e7eb'],
+  ['zn', 'দস্তা / Zn (দানা)', '#9ca3af'], ['mg', 'ম্যাগনেসিয়াম / Mg (ফিতা)', '#d1d5db'], ['fe', 'লোহা / Fe (কণা)', '#4b5563'], ['cu', 'তামা / Cu (ছাঁট)', '#d97706'],
+  ['mno2', 'MnO₂ (কালো গুঁড়া)', '#111827'], ['kclo3', 'KClO₃ (একা)', '#f8fafc'], ['kclo3mn', 'KClO₃ + অল্প MnO₂', '#3f3f46']
+];
+const LIQS = [['none', 'কোনো তরল নেই (শুকনো)'], ['hcl', 'লঘু HCl'], ['h2so4', 'লঘু H₂SO₄'], ['conc', 'ঘন H₂SO₄'], ['h2o2', 'H₂O₂ দ্রবণ (৬%)'], ['water', 'পাতিত পানি']];
+function react(s, l, heat) {
+  const R = (gas, rate, note, eq, warn) => ({ gas, rate, note, eq: eq || '', warn: !!warn });
+  const dil = l === 'hcl' || l === 'h2so4';
+  if (s === 'kclo3' || s === 'kclo3mn') {
+    if (l === 'conc') return R('none', 0, '⚠️ KClO₃ + ঘন H₂SO₄ বিস্ফোরক! এটি কখনোই করা যায় না।', '', true);
+    if (l !== 'none') return R('none', 0, 'KClO₃ গরম করতে শুকনো টেস্ট টিউব লাগে — তরল ঢালা ঠিক নয়।');
+    if (!heat) return R('none', 0, 'তাপ ছাড়া KClO₃ ভাঙে না — বার্নার জ্বালাও।');
+    return s === 'kclo3mn' ? R('O2', 1.1, 'MnO₂ অনুঘটক থাকায় অপেক্ষাকৃত কম তাপে ভালো গতিতে O₂ পাওয়া যায়।', '2KClO₃ —(MnO₂, তাপ)→ 2KCl + 3O₂↑') : R('O2', 0.2, 'অনুঘটক ছাড়া KClO₃ ভাঙতে অনেক বেশি তাপ লাগে — গ্যাস খুব ধীরে আসছে।', '2KClO₃ —(তাপ)→ 2KCl + 3O₂↑');
+  }
+  if (s === 'mno2') return l === 'h2o2' ? R('O2', 1.2, 'MnO₂ অনুঘটক হিসেবে H₂O₂-কে দ্রুত ভাঙছে।', '2H₂O₂ —(MnO₂)→ 2H₂O + O₂↑') : R('none', 0, 'MnO₂ একা কোনো গ্যাস দেয় না (সে তো অনুঘটক)।');
+  if (s === 'none') return l === 'h2o2' ? R('O2', 0.04, 'অনুঘটক ছাড়া H₂O₂ খুব ধীরে ভাঙে — প্রায় কিছুই হচ্ছে না।', '2H₂O₂ → 2H₂O + O₂↑') : R('none', 0, 'ফ্লাস্কে কিছু বিক্রিয়া হচ্ছে না।');
+  if (s === 'caco3') {
+    if (l === 'hcl') return R('CO2', 1, 'ফুটন্ত বুদবুদ সহ নিয়ন্ত্রিত গতিতে CO₂ তৈরি হচ্ছে।', 'CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑');
+    if (l === 'h2so4') return R('CO2', 0.25, 'শুরুতে গ্যাস ওঠে, কিন্তু অদ্রবণীয় CaSO₄ মার্বেলের গায়ে জমে বিক্রিয়া ধীর করে দিচ্ছে।', 'CaCO₃ + H₂SO₄ → CaSO₄↓ + H₂O + CO₂↑');
+    if (l === 'conc') return R('CO2', 0.1, 'ঘন H₂SO₄-এ CaSO₄ স্তর দ্রুত জমে বিক্রিয়া প্রায় থামিয়ে দেয়।', '', false);
+    return R('none', 0, 'মার্বেল পানিতে বিক্রিয়া করে না — এসিড লাগবে।');
+  }
+  if (s === 'na2co3') return dil ? R('CO2', 3, 'বিক্রিয়া অত্যন্ত দ্রুত — ফেনা উপচে পড়তে পারে, নিয়ন্ত্রণ কঠিন।', 'Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂↑') : R('none', 0, 'তরল ছাড়া বা পানিতে CO₂ হয় না।');
+  if (s === 'zn') {
+    if (dil) return R('H2', 1, 'দস্তার গা থেকে ধীরে ধীরে H₂ বুদবুদ উঠছে।', l === 'hcl' ? 'Zn + 2HCl → ZnCl₂ + H₂↑' : 'Zn + H₂SO₄ → ZnSO₄ + H₂↑');
+    if (l === 'conc') return R('SO2', 1.2, '⚠️ ঘন H₂SO₄ জারক — H₂ নয়, বিষাক্ত ঝাঁঝালো SO₂ তৈরি হচ্ছে!', 'Zn + 2H₂SO₄(ঘন) → ZnSO₄ + SO₂↑ + 2H₂O', true);
+    return R('none', 0, 'Zn পানিতে (সাধারণ তাপে) বিক্রিয়া করে না — এসিড লাগবে।');
+  }
+  if (s === 'mg') return dil ? R('H2', 3, 'Mg অত্যন্ত সক্রিয় — বিক্রিয়া খুব দ্রুত ও তাপ উৎপন্ন করছে।', 'Mg + 2HCl → MgCl₂ + H₂↑') : R('none', 0, 'পানিতে ঠান্ডায় Mg-র বিক্রিয়া নগণ্য।');
+  if (s === 'fe') return dil ? R('H2', heat ? 0.7 : 0.35, heat ? 'গরম করায় বিক্রিয়ার গতি কিছুটা বেড়েছে।' : 'Fe ধীরে বিক্রিয়া করে — হালকা গরম করলে গতি বাড়ে।', 'Fe + H₂SO₄ → FeSO₄ + H₂↑') : R('none', 0, 'বিক্রিয়া হচ্ছে না।');
+  if (s === 'cu') {
+    if (l === 'conc' && heat) return R('SO2', 1, '⚠️ Cu ঘন H₂SO₄-এর সাথে গরমে SO₂ দেয় (H₂ নয়)।', 'Cu + 2H₂SO₄(ঘন) → CuSO₄ + SO₂↑ + 2H₂O', true);
+    return R('none', 0, dil ? 'Cu সক্রিয়তা সারিতে H-এর নিচে — লঘু এসিড থেকে H₂ তৈরি করতে পারে না।' : 'বিক্রিয়া হচ্ছে না।');
+  }
+  return R('none', 0, 'কোনো বিক্রিয়া ঘটছে না।');
+}
+/* সংগ্রহ-গুণমান */
+const COLL = {
+  water: { O2: [1, 'পানির অপসারণ — O₂ পানিতে প্রায় অদ্রবণীয়, বিশুদ্ধ গ্যাস পাওয়া যায়।'], H2: [1, 'পানির অপসারণ — H₂ অদ্রবণীয়, বিশুদ্ধ গ্যাস পাওয়া যায়।'], CO2: [0.55, 'CO₂ পানিতে মাঝারি দ্রবণীয় — অনেকটা গলে যায় ও গ্যাস কম বিশুদ্ধ/কম পরিমাণে পাওয়া যায়।'], SO2: [0.1, 'SO₂ পানিতে প্রচণ্ড দ্রবণীয় — প্রায় সবই গলে যায়।'] },
+  up:    { O2: [0.7, 'O₂ বাতাসের চেয়ে সামান্য ভারী বলে বাতাসের সাথে কিছুটা মিশে যায়।'], CO2: [1, 'CO₂ বাতাসের চেয়ে ভারী — জারের তলায় জমে বাতাসকে ঠেলে বের করে দেয়।'], H2: [0, 'H₂ অনেক হালকা — জারে জমে না, উপরে উঠে বেরিয়ে যায়!'], SO2: [1, 'SO₂ ভারী — সোজা জারে জমে।'] },
+  down:  { H2: [1, 'H₂ হালকা — উল্টো জারের মাথায় জমে, বাতাস নিচ দিয়ে বেরিয়ে যায়।'], O2: [0.1, 'O₂ ভারী — উল্টো জারে জমে না, নিচে পড়ে যায়।'], CO2: [0, 'CO₂ ভারী — উল্টো জার থেকে নিচে পড়ে বেরিয়ে যায়।'], SO2: [0, 'SO₂ ভারী — জার থেকে পড়ে যায়।'] }
+};
+const TESTS = [
+  { id: 'obs', ic: '👁️', l: 'রং ও গন্ধ' },
+  { id: 'splint', ic: '🔥', l: 'জ্বলন্ত কাঠি' },
+  { id: 'glow', ic: '🌟', l: 'ধিকিধিকি কাঠি' },
+  { id: 'lime', ic: '🥛', l: 'চুনের পানি (ঝাঁকাও)' },
+  { id: 'litmus', ic: '📄', l: 'ভেজা নীল লিটমাস' },
+  { id: 'candle', ic: '🕯️', l: 'জার থেকে মোমবাতির উপর ঢালো' },
+  { id: 'soap', ic: '🫧', l: 'সাবানের বুদবুদ' },
+  { id: 'water', ic: '💧', l: 'পানি ঝাঁকাও (দ্রবণীয়তা)' },
+  { id: 'sulfur', ic: '🟡', l: 'জ্বলন্ত সালফার' },
+  { id: 'mg', ic: '✨', l: 'জ্বলন্ত ম্যাগনেসিয়াম ফিতা' },
+  { id: 'coal', ic: '⚫', l: 'জ্বলন্ত কাঠকয়লা' },
+  { id: 'cocl', ic: '🩷', l: 'কোবাল্ট ক্লোরাইড কাগজ + শিখা' }
+];
+const TL = Object.fromEntries(TESTS.map(t => [t.id, t]));
+/* ফল: [লেখা, ভিজ্যুয়াল] */
+const RES = {
+  O2: {
+    obs: ['বর্ণহীন, গন্ধহীন গ্যাস।', 'none'],
+    splint: ['জ্বলন্ত কাঠি আরও উজ্জ্বল ও তীব্রভাবে জ্বলে।', 'bright'],
+    glow: ['ধিকিধিকি জ্বলা কাঠি দপ করে শিখাসহ জ্বলে ওঠে — O₂-এর বৈশিষ্ট্যসূচক পরীক্ষা।', 'relight'],
+    lime: ['কোনো পরিবর্তন নেই; চুনের পানি স্বচ্ছ থাকে।', 'limeClear'],
+    litmus: ['ভেজা নীল লিটমাসের রং বদলায় না (প্রশম গ্যাস)।', 'none'],
+    candle: ['মোমবাতির শিখা আরও উজ্জ্বল হয়ে ওঠে।', 'candleBright'],
+    soap: ['বুদবুদ ধীরে ধীরে নিচে নেমে আসে (বাতাসের চেয়ে সামান্য ভারী)।', 'soapDown'],
+    water: ['পানিতে খুব সামান্য গলে — প্রায় অদ্রবণীয়।', 'none'],
+    sulfur: ['সালফার উজ্জ্বল গাঢ় নীল শিখায় জ্বলে; ঝাঁঝালো SO₂ গ্যাস তৈরি হয় (ভেজা লিটমাসে লাল)।\nS + O₂ → SO₂', 'blue'],
+    mg: ['ম্যাগনেসিয়াম চোখ ধাঁধানো সাদা আলোয় জ্বলে; সাদা ছাই (MgO) তৈরি হয়।\n2Mg + O₂ → 2MgO', 'flash'],
+    coal: ['কাঠকয়লা উজ্জ্বল লালচে-সাদা ভাবে জ্বলে; CO₂ তৈরি হয় (চুনের পানিতে ঘোলাটে)।\nC + O₂ → CO₂', 'bright'],
+    cocl: ['কোনো পরিবর্তন নেই।', 'none']
+  },
+  CO2: {
+    obs: ['বর্ণহীন, প্রায় গন্ধহীন গ্যাস (সামান্য টক স্বাদের)।', 'none'],
+    splint: ['জ্বলন্ত কাঠি তৎক্ষণাৎ নিভে যায়।', 'out'],
+    glow: ['ধিকিধিকি কাঠিও নিভে যায়।', 'glowOut'],
+    lime: ['চুনের পানি দুধের মতো ঘোলা হয়ে যায়।\nCa(OH)₂ + CO₂ → CaCO₃↓ + H₂O', 'limeMilky'],
+    litmus: ['ভেজা নীল লিটমাস ধীরে ধীরে হালকা লাল হয় (দুর্বল এসিড H₂CO₃ তৈরি হয়)।', 'litRed'],
+    candle: ['জার থেকে "পানির মতো ঢাললে" মোমবাতি নিভে যায় — CO₂ বাতাসের চেয়ে ভারী।', 'candleOut'],
+    soap: ['বুদবুদ ধীরে ধীরে নিচে নেমে যায়।', 'soapDown'],
+    water: ['জারে পানি ঝাঁকালে গ্যাসের কিছুটা গলে যায় (জারের আয়তন কমে); টক-টক দ্রবণ হয় — মাঝারি দ্রবণীয়।', 'none'],
+    sulfur: ['জ্বলন্ত সালফার নিভে যায়।', 'out'],
+    mg: ['ম্যাগনেসিয়াম CO₂-এও জ্বলে! সাদা MgO ও কালো কার্বন তৈরি হয়।\n2Mg + CO₂ → 2MgO + C', 'flash'],
+    coal: ['জ্বলন্ত কাঠকয়লা নিভে যায়।', 'out'],
+    cocl: ['কোনো পরিবর্তন নেই।', 'none']
+  },
+  H2: {
+    obs: ['বর্ণহীন, গন্ধহীন গ্যাস।', 'none'],
+    splint: ['"পপ" শব্দ করে গ্যাস জ্বলে ওঠে ও কাঠি নিভে যায় — H₂-এর বৈশিষ্ট্যসূচক পরীক্ষা।\n2H₂ + O₂ → 2H₂O', 'pop'],
+    glow: ['ধিকিধিকি কাঠি নিভে যায় (H₂ দহনে সহায়ক নয়)।', 'glowOut'],
+    lime: ['কোনো পরিবর্তন নেই।', 'limeClear'],
+    litmus: ['ভেজা নীল লিটমাসের রং বদলায় না।', 'none'],
+    candle: ['গ্যাস উপরে পালিয়ে যায় (অনেক হালকা), মোমবাতির উপর কিছুই ঢালা যায় না।', 'none'],
+    soap: ['বুদবুদ দ্রুত উপরে উঠে যায় — বাতাসের চেয়ে অনেক হালকা।', 'soapUp'],
+    water: ['পানিতে প্রায় একেবারেই গলে না।', 'none'],
+    sulfur: ['জ্বলন্ত সালফার নিভে যায়।', 'out'],
+    mg: ['ম্যাগনেসিয়াম জ্বলতে পারে না — H₂ দহনে সহায়ক নয়।', 'out'],
+    coal: ['জ্বলন্ত কাঠকয়লা নিভে যায়।', 'out'],
+    cocl: ['জারের মুখে H₂ ফ্যাকাশে নীল শিখায় জ্বলে; ঠান্ডা কাচে জমা ফোঁটা কোবাল্ট ক্লোরাইড কাগজকে নীল থেকে গোলাপি করে — পানি তৈরি হয়েছে!', 'blue']
+  },
+  SO2: {
+    obs: ['বর্ণহীন কিন্তু তীব্র ঝাঁঝালো গন্ধ — এটি বিষাক্ত!', 'none'], splint: ['জ্বলন্ত কাঠি নিভে যায়।', 'out'], glow: ['ধিকিধিকি কাঠি নিভে যায়।', 'glowOut'],
+    lime: ['চুনের পানি ঘোলা হয় (CaSO₃)।', 'limeMilky'], litmus: ['ভেজা নীল লিটমাস দ্রুত লাল ও পরে সাদা হয়।', 'litRed'], candle: ['মোমবাতি নিভে যায়।', 'candleOut'], soap: ['বুদবুদ নিচে নামে।', 'soapDown'],
+    water: ['পানিতে প্রচণ্ড দ্রবণীয়।', 'none'], sulfur: ['নিভে যায়।', 'out'], mg: ['ম্যাগনেসিয়াম জ্বলে।', 'flash'], coal: ['নিভে যায়।', 'out'], cocl: ['কোনো পরিবর্তন নেই।', 'none']
+  },
+  air: {
+    obs: ['বর্ণহীন, গন্ধহীন (সাধারণ বাতাস)।', 'none'], splint: ['কাঠি স্বাভাবিকভাবে জ্বলতে থাকে।', 'normal'], glow: ['ধিকিধিকি কাঠি ধিকিধিকি জ্বলতেই থাকে, দপ করে ওঠে না।', 'none'],
+    lime: ['চুনের পানি স্বচ্ছ থাকে।', 'limeClear'], litmus: ['কোনো পরিবর্তন নেই।', 'none'], candle: ['মোমবাতির শিখা স্বাভাবিক।', 'normal'], soap: ['বুদবুদ ধীরে ভেসে নামে।', 'soapDown'],
+    water: ['উল্লেখযোগ্য কিছু ঘটে না।', 'none'], sulfur: ['সালফার ক্ষীণ নীল শিখায় জ্বলে।', 'none'], mg: ['ম্যাগনেসিয়াম বাতাসেও উজ্জ্বল সাদা আলোয় জ্বলে।', 'flash'], coal: ['কাঠকয়লা ধিকিধিকি জ্বলে।', 'none'], cocl: ['কোনো পরিবর্তন নেই।', 'none']
+  }
+};
+function result(gas, q, id) {
+  if (gas === 'none' || q < 0.4) return { t: RES.air[id][0], v: RES.air[id][1], mix: gas !== 'none' && q < 0.4 };
+  const r = RES[gas][id];
+  if (q >= 0.8) return { t: r[0], v: r[1] };
+  // মিশ্র গ্যাস
+  if (gas === 'H2' && id === 'splint') return { t: '💥 জোরে বিস্ফোরণ! (H₂ ও বাতাসের মিশ্রণ বিস্ফোরক) — আসল ল্যাবে প্রথম জারের গ্যাসে এমনই হয়, তাই বাতাস বের করে তবেই জার ভরতে হয়।', v: 'pop', mix: true };
+  const weak = { bright: 'সামান্য উজ্জ্বল হয়', relight: 'কাঠি একটু উজ্জ্বল হয়, পুরোপুরি দপ করে ওঠে না', out: 'কিছুক্ষণ পর নিভে যায়', limeMilky: 'চুনের পানি অল্প ঘোলা হয়', litRed: 'রং খুব সামান্য বদলায়', pop: 'ক্ষীণ পপ শব্দ' };
+  const k = r[1];
+  return { t: `⚠️ গ্যাস বিশুদ্ধ নয় (বাতাস মেশানো) — ফল দুর্বল: ${weak[k] || r[0].split('\n')[0]}।`, v: k === 'bright' ? 'normal' : k === 'relight' ? 'none' : k, mix: true };
+}
+
+/* ================= অবস্থা ================= */
+const S = { mode: 'prep', step: 0, goal: 'O2', solid: 'none', liquid: 'none', heat: false, coll: 'water', rx: null, running: false, t0: 0, tElapsed: 0, placed: false, placeT: null, fill: 0, covered: false, qc: 1, qp: 1, gas: 'none', purity: 0, speed: .45, ff: false, tests: new Set(), log: [], failed: false, last: 0, idGas: 'O2', idDone: false, over: 0 };
+
+/* ================= ভিউ ================= */
+function tubePath() {
+  const w = S.coll, ss = S.step >= 2;
+  if (!ss) return ['', ''];
+  const sx = S.rx && (S.solid === 'kclo3' || S.solid === 'kclo3mn') ? 120 : 110, sy = S.rx && (S.solid === 'kclo3' || S.solid === 'kclo3mn') ? 205 : 200;
+  if (w === 'water') return [`M${sx} ${sy} L${sx} 160 L391 160 L391 375 L391 345`, `M${sx} ${sy} L${sx} 160 L391 160 L391 375 L391 345`];
+  if (w === 'up') return [`M${sx} ${sy} L${sx} 160 L391 160 L391 380`, `M${sx} ${sy} L${sx} 160 L391 160 L391 380`];
+  return [`M${sx} ${sy} L${sx} 160 L391 160 L391 398 L391 200`, ''];
+}
+function drawSetup() {
+  const ttMode = S.solid === 'kclo3' || S.solid === 'kclo3mn';
+  $('gFlask').style.display = ttMode ? 'none' : ''; $('gTT').style.display = ttMode ? '' : 'none';
+  $('gBurner').style.display = S.step >= 2 && S.heat ? '' : 'none'; $('gBurner').setAttribute('transform', ttMode ? 'translate(5,-30)' : '');
+  const col = (SOLIDS.find(s => s[0] === S.solid) || [])[2] || '#00000000';
+  let h = ''; if (S.solid !== 'none' && !ttMode) for (let i = 0; i < 8; i++) h += `<circle cx="${70 + i * 13 + (i % 2) * 4}" cy="${384 - (i % 3) * 5}" r="${S.solid === 'na2co3' || S.solid === 'mno2' ? 3 : 7}" fill="${col}" stroke="rgba(0,0,0,.25)"/>`;
+  $('solids').innerHTML = h; $('ttSolid').setAttribute('fill', S.solid === 'none' ? '#00000000' : col);
+  const liq = S.liquid !== 'none' && !ttMode;
+  $('fLiq').setAttribute('y', liq ? 318 : 410); $('fLiq').setAttribute('fill', S.liquid === 'conc' ? 'rgba(250,220,120,.4)' : S.liquid === 'h2o2' ? 'rgba(200,235,255,.35)' : 'rgba(160,200,255,.32)');
+  $('stemL').style.display = liq ? '' : 'none';
+  $('flLbl').textContent = S.step >= 2 ? (ttMode ? '' : (SOLIDS.find(s => s[0] === S.solid)[1].split(' ')[0] + ' + ' + (LIQS.find(l => l[0] === S.liquid)[1].split(' (')[0]))) : '';
+  const tp = tubePath(); $('tube').setAttribute('d', tp[0]); $('tubeIn').setAttribute('d', tp[1]);
+  $('gWater').style.display = S.coll === 'water' ? '' : 'none'; $('gUp').style.display = S.coll === 'up' ? '' : 'none'; $('gDown').style.display = S.coll === 'down' ? '' : 'none';
+  $('jLbl').textContent = S.step >= 3 ? (S.coll === 'water' ? 'পানির অপসারণ' : S.coll === 'up' ? 'জার সোজা, নল তলায়' : 'জার উল্টো, নল মাথায়') : '';
+  const f = Math.min(1, S.fill);
+  $('jwGas').setAttribute('height', 112 * f); $('juGas').setAttribute('height', 122 * f); $('juGas').setAttribute('y', 390 - 122 * f); $('jdGas').setAttribute('height', 122 * f);
+  $('plate').setAttribute('opacity', S.covered ? 1 : 0); $('plate').setAttribute('y', S.coll === 'down' ? 268 : S.coll === 'water' ? 334 : 262);
+  $('jwWater').style.display = S.placed || S.coll !== 'water' ? '' : 'none';
+}
+const rateLbl = e => e <= 0 ? 'বিক্রিয়া নেই' : e < .15 ? 'প্রায় নেই' : e < .5 ? 'খুব ধীর' : e < 1.6 ? 'ভালো গতি ✔' : e < 2.6 ? 'দ্রুত' : 'অতি দ্রুত ⚠️';
+function effRate() { if (!S.rx) return 0; const s = 0.2 + S.speed * 1.4 * 1.1; return S.rx.rate * s * (S.running ? 1 : 0); }
+function bubbleFx() {
+  const e = effRate(), on = e > 0.03 && S.step >= 4;
+  const mk = (cx0, cy0, n, spread) => { let h = ''; for (let i = 0; i < n; i++) h += `<circle class="bub2" cx="${cx0 + (Math.random() - .5) * spread}" cy="${cy0}" r="${2 + Math.random() * 2.5}" fill="rgba(255,255,255,.85)" style="animation-delay:${(Math.random() * 1.5).toFixed(2)}s;animation-duration:${(1.8 / Math.max(.4, Math.min(2.5, e + .3))).toFixed(2)}s"/>`; return h; };
+  const ttMode = S.solid === 'kclo3' || S.solid === 'kclo3mn';
+  $('fBub').innerHTML = on && !ttMode && S.rx.gas !== 'none' ? mk(110, 380, Math.min(10, 3 + Math.round(e * 3)), 60) : '';
+  const placing = on && S.rx.gas !== 'none';
+  $('wBub').innerHTML = placing && S.coll === 'water' ? mk(391, 340, 4, 6) : '';
+  $('uBub').innerHTML = ''; $('dBub').innerHTML = '';
+}
+let lastBubKey = '';
+function liveText() {
+  const l = $('live');
+  if (S.failed) return;
+  if (S.step < 4) return;
+  if (!S.running && !S.covered && !S.placed) { l.textContent = '▶ শুরু করো — গ্যাস বুদবুদ উঠতে দেখো।'; return; }
+  if (S.running && !S.placed) { const el = S.tElapsed; l.textContent = el < 5 ? '🌬️ ফ্লাস্কের বাতাস বেরিয়ে যাচ্ছে… এখনই জার বসালে বাতাস মিশে যাবে। কয়েক সেকেন্ড অপেক্ষা করো।' : '✅ ফ্লাস্কের বাতাস প্রায় বেরিয়ে গেছে — এবার জার বসাতে পারো।'; }
+  else if (S.placed && !S.covered) l.textContent = S.fill >= 0.98 ? '🫙 জার ভরে গেছে! কাচের প্লেট দিয়ে ঢেকে দাও।' : S.qc === 0 ? '⚠️ গ্যাস জারে জমছে না — সংগ্রহ-পদ্ধতি এই গ্যাসের জন্য ঠিক নয়!' : '🫙 জারে গ্যাস জমছে…';
+}
+function hud() {
+  $('hRate').textContent = S.step >= 4 ? rateLbl(effRate()) : '—';
+  $('hFill').textContent = S.placed ? bi(Math.round(Math.min(1, S.fill) * 100)) + '%' : '—';
+  $('hTime').textContent = S.step >= 4 ? bi(Math.floor(S.tElapsed)) + ' সে.' : '—';
+}
+
+/* ================= ধাপ ================= */
+function setStep(n) {
+  S.step = n;
+  ['s1', 's2', 's3', 's4'].forEach((id, i) => { const e = $(id); e.classList.toggle('done', i < n); e.classList.toggle('active', i === n); e.classList.toggle('lock', i > n); });
+  $('b1').disabled = n !== 0; $('b2').disabled = n !== 1; $('b3').disabled = n !== 2; $('goal').disabled = n > 0;
+  $('solid').disabled = n > 1; $('liquid').disabled = n > 1; $('heat').disabled = n > 1; $('coll').disabled = n > 2;
+  $('runCtl').style.display = n >= 4 ? '' : 'none';
+  drawSetup(); hud();
+}
+$('solid').innerHTML = SOLIDS.map(s => `<option value="${s[0]}">${s[1]}</option>`).join('');
+$('liquid').innerHTML = LIQS.map(s => `<option value="${s[0]}">${s[1]}</option>`).join('');
+function updSetupPreview() { S.solid = $('solid').value; S.liquid = $('liquid').value; S.heat = $('heat').checked; drawSetup(); $('b2').disabled = S.step !== 1; }
+['solid', 'liquid', 'heat'].forEach(i => $(i).addEventListener('change', () => { if (S.step === 1) { updSetupPreview(); const ttMode = S.solid.startsWith('kclo3'); $('live').textContent = ttMode ? '🧪 KClO₃ শুকনো টেস্ট টিউবে নিতে হয়।' : ''; } }));
+$('b1').onclick = () => { S.goal = $('goal').value; setStep(1); $('live').textContent = 'ধাপ ২: ফ্লাস্কে কোন কঠিন ও তরল নেবে বেছে "সাজাও" চাপো।'; };
+$('b2').onclick = () => {
+  updSetupPreview(); S.rx = react(S.solid, S.liquid, S.heat);
+  if (S.rx.warn && S.rx.gas === 'none') { toast('⚠️ এটি বিপজ্জনক সংমিশ্রণ — অন্য কিছু বেছে নাও!'); $('live').innerHTML = '⛔ ' + S.rx.note; return; }
+  setStep(2); $('live').textContent = 'যন্ত্র সাজানো হয়েছে। এবার সংগ্রহ-পদ্ধতি ঠিক করো।';
+};
+$('coll').addEventListener('change', () => { S.coll = $('coll').value; drawSetup(); });
+$('b3').onclick = () => { S.coll = $('coll').value; setStep(4); drawSetup(); $('live').textContent = '▶ শুরু করো — গ্যাস তৈরি হতে দাও।'; };
+$('speed').oninput = e => { S.speed = e.target.value / 100; };
+$('go').onclick = () => {
+  if (S.failed) return;
+  if (!S.running) { S.running = true; S.t0 = performance.now(); $('go').textContent = '⏸ থামাও'; if (S.rx.warn) toast('⚠️ বিপজ্জনক গ্যাস! (SO₂ বিষাক্ত)'); }
+  else { S.running = false; $('go').textContent = '▶ আবার চালাও'; }
+};
+$('place').onclick = () => {
+  if (S.placed) return; S.placed = true; S.placeT = S.tElapsed;
+  const q = (COLL[S.coll][S.rx.gas] || [0, ''])[0]; S.qc = S.rx.gas === 'none' ? 1 : q;
+  S.qp = S.tElapsed < 3 ? .55 : S.tElapsed < 5 ? .85 : 1; S.gas = S.rx.gas;
+  $('place').disabled = true; $('cover').disabled = false; drawSetup(); toast('জার বসানো হয়েছে');
+};
+$('cover').onclick = () => {
+  if (S.covered) return;
+  if (S.fill < 0.6 && S.qc > 0 && S.gas !== 'none') { toast('আরও কিছুক্ষণ গ্যাস জমতে দাও'); return; }
+  S.covered = true; S.running = false; $('go').disabled = true; $('cover').disabled = true; drawSetup(); bubbleFx();
+  S.purity = S.gas === 'none' ? 0 : S.qc * S.qp * (S.rx.rate < .15 ? .5 : 1);
+  finishPrep();
+};
+$('fast').onclick = () => { S.ff = !S.ff; $('fast').classList.toggle('ghost', !S.ff); };
+$('restart').onclick = () => resetPrep();
+function resetPrep() {
+  Object.assign(S, { step: 0, running: false, placed: false, placeT: null, fill: 0, covered: false, qc: 1, qp: 1, gas: 'none', purity: 0, tElapsed: 0, failed: false, rx: null, tests: new Set(), log: [], over: 0 });
+  $('go').disabled = false; $('go').textContent = '▶ শুরু করো'; $('place').disabled = true; $('cover').disabled = true;
+  $('testCard').style.display = 'none'; $('reportCard').style.display = 'none'; $('svgA').style.display = ''; $('svgT').style.display = 'none'; $('stageTag').textContent = 'যন্ত্র';
+  $('goal').disabled = false; setStep(0); $('live').textContent = 'ধাপ ১: কোন গ্যাস বানাতে চাও বেছে নাও।'; renderLog(); bubbleFx();
+}
+function loop(t) {
+  const dt = Math.min(.1, (t - (S.last || t)) / 1000); S.last = t;
+  if (S.mode === 'prep' && S.step >= 4 && S.running && !S.covered && !S.failed) {
+    const k = S.ff ? 3 : 1; S.tElapsed += dt * k;
+    const e = effRate();
+    if (e > 3.4) { S.over += dt * k; if (S.over > 2) { S.failed = true; S.running = false; $('live').innerHTML = '💥 বিক্রিয়া অতি দ্রুত — ফেনা উপচে ও নল ছুটে গেছে! গতি কমিয়ে নতুন করে শুরু করো।'; $('go').disabled = true; } } else S.over = Math.max(0, S.over - dt);
+    if (S.placed) {
+      const spd = (S.qc === 0 ? 0.0 : 1) * Math.min(e, 2) * 0.075;
+      S.fill = Math.min(1, S.fill + spd * dt * k);
+      if (S.qc === 0) S.fill = Math.min(S.fill + 0, .08);
+    }
+    $('place').disabled = S.placed || S.failed; $('cover').disabled = !S.placed;
+    drawSetup(); hud(); liveText(); const key = Math.round(e * 10) + '|' + S.running + S.coll; if (key !== lastBubKey) { lastBubKey = key; bubbleFx(); }
+    $('bFl') && $('bFl').setAttribute('ry', 18 + Math.min(e, 3) * 10);
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ================= রিপোর্ট ও টেস্ট ================= */
+function finishPrep() {
+  const rx = S.rx, g = S.gas, ok = g === S.goal && S.purity >= .8;
+  const stars = ok ? (S.qp < 1 ? 2 : 3) : (g === S.goal ? 1 : 0);
+  let h = `<div class="res ${ok ? 'ok' : 'bad'}"><h3>${ok ? '🎉 সফল! ' + '⭐'.repeat(Math.max(1, stars)) : '🤔 লক্ষ্য পুরো পূরণ হয়নি'}</h3>`;
+  h += `<b>লক্ষ্য গ্যাস:</b> ${GAS[S.goal].n}<br><b>আসলে তৈরি হয়েছে:</b> ${GAS[g].n}<br>`;
+  h += `<b>বিক্রিয়া:</b> ${rx.eq ? `<code>${rx.eq}</code>` : '—'}<br><span class="hint">${rx.note}</span><br>`;
+  h += `<b>সংগ্রহ:</b> ${(COLL[S.coll][g] || [0, 'এই গ্যাসের তথ্য নেই'])[1]}<br>`;
+  h += `<b>গ্যাসের বিশুদ্ধতা:</b> ${S.purity >= .8 ? 'ভালো ✔' : S.purity >= .4 ? 'মিশ্র ⚠️ (বাতাস মিশেছে)' : 'প্রায় বাতাস ✖'}`;
+  if (S.qp < 1 && g !== 'none') h += `<br><span class="hint">জার বসানোর আগে ফ্লাস্কের বাতাস পুরোপুরি বেরোতে দাওনি (${bi(Math.round(S.placeT))} সেকেন্ডে বসিয়েছো) — কমপক্ষে ৫ সেকেন্ড অপেক্ষা করো।</span>`;
+  if (g !== S.goal) h += `<br><span class="hint">💡 ${S.goal === 'O2' ? 'O₂-র জন্য H₂O₂ + MnO₂, অথবা শুকনো KClO₃ + MnO₂ গরম করে দেখো।' : S.goal === 'CO2' ? 'CO₂-র জন্য মার্বেল + লঘু HCl চেষ্টা করো।' : 'H₂-র জন্য Zn + লঘু H₂SO₄ বা HCl চেষ্টা করো।'}</span>`;
+  h += `<div class="row"><button class="btn" id="again">↺ আবার করো</button></div></div>`;
+  $('report').innerHTML = h; $('reportCard').style.display = ''; $('again').onclick = resetPrep;
+  startTests(g === 'none' ? 'none' : g, S.purity, 'প্রস্তুত জার');
+  $('live').textContent = ok ? 'দারুণ! এবার জারের গ্যাসের ধর্ম পরীক্ষা করো।' : 'জার তৈরি — যা পেয়েছো তার ধর্ম পরীক্ষা করে দেখো।';
+}
+let TG = { gas: 'none', q: 0 };
+function startTests(gas, q, label) {
+  TG = { gas, q }; S.tests = new Set(); S.log = [];
+  $('svgA').style.display = 'none'; $('svgT').style.display = ''; $('stageTag').textContent = 'পরীক্ষা'; $('tjLbl').textContent = label;
+  $('tjGas').setAttribute('fill', 'rgba(255,255,255,.12)');
+  $('testCard').style.display = ''; buildShelf(); renderLog(); resetTestView();
+}
+function buildShelf() { $('shelf').innerHTML = TESTS.map(t => `<button class="rg" data-t="${t.id}"><span class="ic">${t.ic}</span><span>${t.l}</span></button>`).join(''); }
+$('shelf').addEventListener('click', e => { const b = e.target.closest('.rg'); if (b) doTest(b.dataset.t); });
+function renderLog() {
+  document.querySelectorAll('.rg').forEach(b => b.classList.toggle('used', S.tests.has(b.dataset.t)));
+  $('tcnt').textContent = bi(S.tests.size) + 'টি';
+  $('log').innerHTML = S.log.length ? S.log.map((x, i) => `<div class="le"><span class="n">${bi(i + 1)}</span><div><b>${TL[x.id].ic} ${TL[x.id].l}</b><br><span>${x.t.replace(/\n/g, '<br>')}</span></div></div>`).reverse().join('') : '<p class="hint">এখনো কোনো পরীক্ষা করা হয়নি।</p>';
+}
+let tt = [];
+function later(f, ms) { tt.push(setTimeout(f, ms)); }
+function resetTestView() {
+  tt.forEach(clearTimeout); tt = [];
+  ['oSplint', 'oLime', 'oLit', 'oCandle', 'oSoap', 'oBurn'].forEach(i => $(i).style.display = 'none');
+  $('splintG').style.transition = 'none'; $('splintG').setAttribute('style', 'transform:translateY(-120px)'); $('sFl').setAttribute('opacity', 0); $('sGlow').setAttribute('opacity', 0); $('oPop').setAttribute('opacity', 0);
+  $('limeL').setAttribute('fill', 'rgba(160,200,255,.3)'); $('litP').setAttribute('fill', '#3b6df0'); $('soapB').setAttribute('cy', 260); $('cFl').setAttribute('opacity', 1); $('bFlash').setAttribute('opacity', 0); $('tcap').textContent = '';
+}
+function doTest(id) {
+  if (S.mode === 'ident' && S.idDone) { toast('এই জার শেষ — নতুন জার নাও'); return; }
+  const r = result(TG.gas, TG.q, id);
+  S.tests.add(id); S.log.push({ id, t: r.t }); renderLog();
+  resetTestView(); $('tcap').textContent = TL[id].l;
+  const v = r.v, spl = ['splint', 'glow'].includes(id), drop = () => { $('splintG').setAttribute('style', 'transition:transform 1s ease;transform:translateY(0)'); };
+  if (id === 'lime') { $('oLime').style.display = ''; later(() => $('limeL').setAttribute('fill', v === 'limeMilky' ? 'rgba(235,235,235,.9)' : 'rgba(160,200,255,.3)'), 300); }
+  else if (id === 'litmus') { $('oLit').style.display = ''; later(() => $('litP').setAttribute('fill', v === 'litRed' ? '#e04848' : '#3b6df0'), 300); }
+  else if (id === 'candle') { $('oCandle').style.display = ''; later(() => $('cFl').setAttribute('opacity', v === 'candleOut' ? 0 : 1), 900); }
+  else if (id === 'soap') { $('oSoap').style.display = ''; later(() => $('soapB').setAttribute('cy', v === 'soapUp' ? 40 : 320), 200); }
+  else if (spl || ['sulfur', 'mg', 'coal', 'cocl'].includes(id)) {
+    $('oSplint').style.display = ''; $('f2m').setAttribute('stop-color', v === 'blue' ? '#60a5fa' : '#fbbf24'); $('f2o').setAttribute('stop-color', v === 'blue' ? '#3b82f6' : '#f97316');
+    const lit = id === 'splint' || ['sulfur', 'mg', 'coal', 'cocl'].includes(id);
+    if (id === 'glow') $('sGlow').setAttribute('opacity', 1);
+    if (lit) { $('sFl').setAttribute('opacity', 1); $('sFl').setAttribute('ry', 22); }
+    later(drop, 100);
+    later(() => {
+      if (v === 'bright' || v === 'relight' || v === 'blue') { $('sFl').setAttribute('opacity', 1); $('sFl').setAttribute('ry', 46); $('sFl').setAttribute('rx', 18); $('sGlow').setAttribute('opacity', 0); }
+      else if (v === 'out' || v === 'glowOut') { $('sFl').setAttribute('opacity', 0); $('sGlow').setAttribute('opacity', 0); }
+      else if (v === 'pop') { $('oPop').setAttribute('opacity', 1); $('sFl').setAttribute('opacity', 0); later(() => $('oPop').setAttribute('opacity', 0), 700); }
+      else if (v === 'flash') { $('oBurn').style.display = ''; $('bFlash').setAttribute('r', 60); $('bFlash').setAttribute('opacity', .95); }
+    }, 1200);
+  }
+  $('live').innerHTML = `<b>${TL[id].ic} ${TL[id].l}:</b> ${r.t.replace(/\n/g, '<br>')}`;
+}
+
+/* ================= মোড ================= */
+function setMode(m) {
+  S.mode = m; document.querySelectorAll('.tab[data-m]').forEach(x => x.classList.toggle('on', x.dataset.m === m));
+  $('prepPanel').style.display = m === 'prep' ? '' : 'none'; $('identPanel').style.display = m === 'ident' ? '' : 'none';
+  if (m === 'prep') { resetPrep(); }
+  else { $('reportCard').style.display = 'none'; newIdent(); }
+}
+document.querySelectorAll('.tab[data-m]').forEach(t => t.onclick = () => setMode(t.dataset.m));
+function newIdent() {
+  const keys = ['O2', 'CO2', 'H2']; let g; do { g = keys[Math.floor(Math.random() * 3)]; } while (g === S.idGas && Math.random() < .7);
+  S.idGas = g; S.idDone = false; $('idRes').innerHTML = ''; $('idSel').value = '';
+  S.running = false; startTests(g, 1, 'অজানা গ্যাস'); $('live').textContent = 'একটি অজানা গ্যাসের জার প্রস্তুত। পরীক্ষা করে শনাক্ত করো।'; $('hRate').textContent = '—'; $('hFill').textContent = '—'; $('hTime').textContent = '—';
+}
+$('idNew').onclick = newIdent;
+$('idGo').onclick = () => {
+  if (S.idDone) return; const v = $('idSel').value; if (!v) { toast('একটি গ্যাস বেছে নাও'); return; }
+  if (!S.tests.size) { toast('আগে অন্তত একটি পরীক্ষা করো'); return; }
+  if (v === S.idGas) {
+    S.idDone = true; const n = S.tests.size, st = n <= 3 ? 3 : n <= 5 ? 2 : 1;
+    const why = { O2: 'ধিকিধিকি জ্বলা কাঠি জারে দপ করে জ্বলে ওঠে।', CO2: 'চুনের পানি ঘোলা হয় এবং জ্বলন্ত কাঠি নিভে যায়।', H2: 'জ্বলন্ত কাঠিতে "পপ" শব্দ হয়।' }[v];
+    $('idRes').innerHTML = `<div class="res ok"><h3>🎉 ঠিক! ${'⭐'.repeat(st)}${'☆'.repeat(3 - st)}</h3>গ্যাসটি ছিল <b>${GAS[v].n}</b>।<br>মূল পরীক্ষা: ${why}<br><span class="hint">তুমি ${bi(n)}টি পরীক্ষা করেছো।</span></div>`;
+  } else $('idRes').innerHTML = `<div class="res bad"><h3>🤔 মেলেনি</h3>খাতার ফল আবার ভালো করে মেলাও; আরও পরীক্ষা করে দেখো।</div>`;
+};
+resetPrep();
+</script>
+</body>
+</html>
