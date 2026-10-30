@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#05060f">
-<title>দ্রবণ প্রস্তুতি ও মোলারিটি ল্যাব | Lab Alchemy</title>
+<title>জৈব যৌগের কার্যকরী মূলক ল্যাব | Lab Alchemy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -143,6 +143,8 @@ table.rt th{color:var(--text-muted);font-size:12.5px}
 .inv{animation:inv .7s ease}
 @keyframes stir{0%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}100%{transform:rotate(-7deg)}}
 .stirring{animation:stir .45s ease 2}
+.bub{opacity:0;animation:rise 1.5s linear infinite}
+@keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-120px);opacity:0}}
 </style>
 </head>
 <body>
@@ -156,140 +158,98 @@ table.rt th{color:var(--text-muted);font-size:12.5px}
       <a class="back-btn" href="digitallab.html">← <span class="long">ল্যাব হাবে ফিরে যান</span></a>
     </div>
   </header>
-
   <section class="hero">
-    <span class="pill">⚖️ স্টয়কিওমেট্রি · প্র্যাক্টিক্যাল</span>
-    <h1><span class="em">🧫</span> দ্রবণ প্রস্তুতি ও মোলারিটি ল্যাব</h1>
-    <p>হিসাব করে ওজন নাও, দ্রবীভূত করো, ভলিউমেট্রিক ফ্লাস্কে ঠিক মার্ক পর্যন্ত পানি দাও — তারপর দেখো তোমার প্রমাণ দ্রবণের আসল মোলারিটি লক্ষ্যের কতটা কাছে!</p>
+    <span class="pill">🌱 জৈব রসায়ন · প্র্যাক্টিক্যাল</span>
+    <h1><span class="em">🧴</span> জৈব যৌগের কার্যকরী মূলক ল্যাব</h1>
+    <p>একটি অজানা জৈব নমুনা তোমার হাতে। সম্পৃক্ত না অসম্পৃক্ত? কোন কার্যকরী মূলক — –OH, –COOH, –CHO, নাকি কিটোন? পরীক্ষা চালাও, পর্যবেক্ষণ লেখো, যৌগটি শনাক্ত করো!</p>
   </section>
 
-  <div class="tabs" role="tablist" style="margin-top:0">
-    <button class="tab on" data-m="lab">🧪 দ্রবণ প্রস্তুতি ল্যাব</button>
-    <button class="tab" data-m="calc">🧮 দ্রুত হিসাব</button>
-  </div>
-
-  <div id="labMode">
   <div class="lab">
     <section class="card stage">
-      <h2>🔬 পরীক্ষার টেবিল <span class="tagx" id="stageTag">১</span></h2>
-      <svg id="svg" viewBox="0 0 400 420" role="img" aria-label="দ্রবণ প্রস্তুতির যন্ত্র">
+      <h2>🔬 পরীক্ষার টেবিল <span class="tagx" id="sampT">নমুনা ?</span></h2>
+      <svg id="svg" viewBox="0 0 400 360" role="img" aria-label="টেস্ট টিউব">
         <defs>
           <linearGradient id="glassG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".3" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".3"/></linearGradient>
-          <clipPath id="clipF"><path d="M138 40 L138 210 C80 230 55 270 55 310 C55 365 100 395 150 395 C200 395 245 365 245 310 C245 270 220 230 162 210 L162 40 Z"/></clipPath>
-          <clipPath id="clipZ"><circle cx="320" cy="120" r="56"/></clipPath>
-          <clipPath id="clipB"><path d="M110 150 L110 320 Q110 336 126 336 L274 336 Q290 336 290 320 L290 150 Z"/></clipPath>
+          <linearGradient id="mirG" x1="0" x2="1"><stop offset="0" stop-color="#f1f5f9"/><stop offset=".5" stop-color="#94a3b8"/><stop offset="1" stop-color="#e2e8f0"/></linearGradient>
+          <clipPath id="clipT"><path d="M165 50 V290 Q165 318 200 318 Q235 318 235 290 V50 Z"/></clipPath>
+          <radialGradient id="flG"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
         </defs>
-        <rect x="14" y="400" width="372" height="12" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
-        <!-- scene 1: balance -->
-        <g id="sBal">
-          <rect x="70" y="300" width="260" height="90" rx="14" fill="var(--stand)" stroke="var(--border-color)" stroke-width="2"/>
-          <rect x="100" y="316" width="130" height="46" rx="8" fill="#0b1220" stroke="#334155"/>
-          <text id="balTxt" x="214" y="349" text-anchor="end" font-size="26" font-weight="800" fill="#4ade80" font-family="ui-monospace,monospace">0.00</text>
-          <text x="222" y="349" font-size="14" font-weight="700" fill="#4ade80" font-family="ui-monospace,monospace">g</text>
-          <circle cx="285" cy="340" r="16" fill="#334155" stroke="#64748b"/><text x="285" y="344" text-anchor="middle" font-size="10" font-weight="800" fill="#e2e8f0" font-family="inherit">TARE</text>
-          <ellipse cx="200" cy="290" rx="74" ry="9" fill="#cbd5e1" stroke="#94a3b8"/>
-          <g id="boat" style="display:none"><path d="M150 288 L250 288 L238 262 L162 262 Z" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/><g id="pile"></g></g>
-          <text id="balNote" x="200" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-muted)" font-family="inherit">ডিজিটাল ব্যালেন্স</text>
-          <g id="spat" style="display:none"><path d="M330 120 L230 210" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/><ellipse cx="222" cy="218" rx="14" ry="6" fill="#cbd5e1" stroke="#94a3b8" transform="rotate(-40 222 218)"/></g>
-        </g>
-        <!-- scene 2: beaker -->
-        <g id="sBkr" style="display:none">
-          <g clip-path="url(#clipB)"><rect id="bkW" x="100" y="336" width="200" height="0" fill="rgba(90,160,255,.55)"/><g id="bkP"></g></g>
-          <path d="M110 150 L110 320 Q110 336 126 336 L274 336 Q290 336 290 320 L290 150" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2.5"/>
-          <g id="bkTicks"></g>
-          <g id="rod" style="transform-origin:200px 120px"><rect x="196" y="70" width="8" height="260" rx="4" fill="rgba(200,230,255,.55)" stroke="var(--glass)"/></g>
-          <text x="200" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-muted)" font-family="inherit">বিকার (দ্রবীভূত করা)</text>
-        </g>
-        <!-- scene 3: volumetric flask -->
-        <g id="sFl" style="display:none">
-          <g id="flaskG" style="transform-origin:150px 220px">
-            <g clip-path="url(#clipF)"><rect id="flLiq" x="40" y="395" width="220" height="0" fill="rgba(90,160,255,.6)" style="transition:fill .6s"/></g>
-            <path d="M138 40 L138 210 C80 230 55 270 55 310 C55 365 100 395 150 395 C200 395 245 365 245 310 C245 270 220 230 162 210 L162 40" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2.5"/>
-            <line x1="134" x2="166" y1="117.5" y2="117.5" stroke="#ef4444" stroke-width="2.5"/>
-            <text x="172" y="121" font-size="10" font-weight="700" fill="#ef4444" font-family="inherit" id="markT">মার্ক</text>
-            <rect id="stop" x="132" y="26" width="36" height="16" rx="4" fill="#9a3412" style="display:none"/>
+        <rect x="14" y="334" width="372" height="12" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
+        <g id="gTube">
+          <g clip-path="url(#clipT)">
+            <rect id="liq" x="150" y="150" width="100" height="180" fill="rgba(190,220,255,.2)" style="transition:fill .9s"/>
+            <rect id="lay" x="150" y="150" width="100" height="40" fill="rgba(250,240,180,.55)" opacity="0"/>
+            <rect id="ppt" x="150" y="270" width="100" height="0" fill="#fde047" style="transition:fill .6s"/>
+            <rect id="mir" x="150" y="150" width="100" height="170" fill="url(#mirG)" opacity="0" style="transition:opacity 1.2s" clip-path="url(#clipT)"/>
+            <g id="bub"></g>
           </g>
-          <circle cx="320" cy="120" r="58" fill="var(--card-solid)" stroke="var(--glass)" stroke-width="3"/>
-          <g clip-path="url(#clipZ)"><rect id="zLiq" x="262" y="150" width="116" height="80" fill="rgba(120,170,235,.5)"/><path id="zMen" d="M262 150 Q320 168 378 150" fill="none" stroke="#6aa9ff" stroke-width="3"/><line x1="262" x2="378" y1="120" y2="120" stroke="#ef4444" stroke-width="2.5"/></g>
-          <text x="320" y="196" text-anchor="middle" font-size="11" font-weight="800" fill="var(--text-color)" font-family="inherit" id="zT"></text>
-          <text x="320" y="44" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text-muted)" font-family="inherit">মেনিস্কাসের ক্লোজ-আপ</text>
-          <text id="flLbl" x="150" y="414" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
+          <path d="M165 50 V290 Q165 318 200 318 Q235 318 235 290 V50" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2.5"/>
+          <ellipse cx="200" cy="50" rx="37" ry="5" fill="none" stroke="var(--glass)" stroke-width="2"/>
         </g>
+        <g id="gFlame" style="display:none">
+          <path d="M150 290 L250 290 L240 310 L160 310 Z" fill="#475569" stroke="#94a3b8"/>
+          <rect x="140" y="292" width="120" height="6" fill="#64748b"/>
+          <ellipse id="smoke" cx="200" cy="90" rx="46" ry="52" fill="#0f172a" opacity="0" style="transition:opacity .8s"/>
+          <path id="fl" d="M200 100 C 168 160 172 240 200 290 C 228 240 232 160 200 100 Z" fill="#60a5fa" opacity=".9" style="transition:fill .5s"/>
+          <path id="fl2" d="M200 190 C 186 220 190 258 200 288 C 210 258 214 220 200 190 Z" fill="#e0f2fe" opacity=".9"/>
+        </g>
+        <text id="tubeT" x="200" y="352" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
       </svg>
-      <div class="live" id="live">ধাপ ১: কোন রাসায়নিকের প্রমাণ দ্রবণ বানাবে বেছে নাও।</div>
-      <div class="hud"><div class="box"><small>লক্ষ্য</small><b id="hGoal">—</b></div><div class="box"><small>ওজন / আয়তন</small><b id="hNow">—</b></div></div>
+      <div class="live" id="live">একটি পরীক্ষা বেছে নাও।</div>
+      <div class="hud"><div class="box"><small>পরীক্ষা করা হয়েছে</small><b id="hN">০</b></div><div class="box"><small>সম্ভাব্য যৌগ</small><b id="hC">—</b></div></div>
     </section>
 
     <section>
-      <div class="card"><h2>🧭 ধাপসমূহ <span class="tagx" id="stepTag">১ / ৭</span></h2>
-        <div class="prog"><i id="prog"></i></div>
-        <div id="panel"></div>
+      <div class="card"><h2>🧪 পরীক্ষা বেছে নাও <span class="tagx" id="lvl"></span></h2>
+        <div class="row" style="margin-top:0"><button class="ob on" id="lvE">🌱 সহজ (৬টি যৌগ)</button><button class="ob" id="lvF">🔥 পূর্ণ (৯টি যৌগ)</button><button class="btn ghost" id="newS">🎲 নতুন নমুনা</button></div>
+        <div class="opts" id="tests"></div>
+        <div id="obs"></div>
       </div>
-      <div class="card" id="repCard" style="margin-top:22px;display:none"><h2>📋 ল্যাব রিপোর্ট</h2><div id="report"></div></div>
+      <div class="card" style="margin-top:22px"><h2>📒 লগবুক</h2>
+        <div class="scroll"><table class="rt" id="logT"><tr><th>পরীক্ষা</th><th>পর্যবেক্ষণ</th></tr></table></div>
+      </div>
+      <div class="card" style="margin-top:22px"><h2>🎯 শনাক্তকরণ</h2>
+        <div class="row" style="margin-top:0"><label>যৌগ<br><select class="sel" id="selC"></select></label><label>কার্যকরী মূলক / শ্রেণি<br><select class="sel" id="selG"></select></label></div>
+        <div class="row"><button class="btn" id="sub">✔ জমা দাও</button><button class="btn ghost" id="hint">💡 ইঙ্গিত</button></div>
+        <div id="res"></div>
+      </div>
     </section>
   </div>
-  </div>
 
-  <div id="calcMode" style="display:none">
-    <div class="grid2">
-      <div class="card"><h2>⚖️ মোলারিটি নির্ণয়</h2>
-        <div class="row" style="margin-top:0"><label>রাসায়নিক<br><select class="sel" id="c1chem"></select></label></div>
-        <div class="row"><label>ভর (g)<br><input class="num" id="c1m" inputmode="decimal" value="2.65"></label><label>আয়তন (mL)<br><input class="num" id="c1v" inputmode="decimal" value="250"></label></div>
-        <div class="row"><button class="btn" id="c1go">হিসাব করো</button></div><div id="c1out"></div></div>
-      <div class="card"><h2>⚗️ ওজন নির্ণয় (কত গ্রাম লাগবে?)</h2>
-        <div class="row" style="margin-top:0"><label>রাসায়নিক<br><select class="sel" id="c2chem"></select></label></div>
-        <div class="row"><label>মোলারিটি (M)<br><input class="num" id="c2m" inputmode="decimal" value="0.1"></label><label>আয়তন (mL)<br><input class="num" id="c2v" inputmode="decimal" value="250"></label></div>
-        <div class="row"><button class="btn" id="c2go">হিসাব করো</button></div><div id="c2out"></div></div>
-      <div class="card"><h2>💧 ডাইলুশন (M₁V₁ = M₂V₂)</h2>
-        <div class="row" style="margin-top:0"><label>M₁ (M)<br><input class="num" id="c3a" inputmode="decimal" value="1"></label><label>M₂ (M)<br><input class="num" id="c3b" inputmode="decimal" value="0.1"></label></div>
-        <div class="row"><label>V₂ — চূড়ান্ত আয়তন (mL)<br><input class="num" id="c3v" inputmode="decimal" value="250"></label></div>
-        <div class="row"><button class="btn" id="c3go">হিসাব করো</button></div><div id="c3out"></div></div>
-      <div class="card"><h2>🔄 ঘনমাত্রার একক রূপান্তর</h2>
-        <div class="row" style="margin-top:0"><label>রাসায়নিক<br><select class="sel" id="c4chem"></select></label><label>মোলারিটি (M)<br><input class="num" id="c4m" inputmode="decimal" value="0.1"></label></div>
-        <div class="row"><button class="btn" id="c4go">রূপান্তর করো</button></div><div id="c4out"></div></div>
-    </div>
-  </div>
-
-  <div class="tabs" role="tablist">
-    <button class="tab on" data-p="p1">📘 তত্ত্ব</button>
-    <button class="tab" data-p="p2">📋 আণবিক ভর</button>
+  <div class="tabs">
+    <button class="tab on" data-p="p1">📘 কার্যকরী মূলক</button>
+    <button class="tab" data-p="p2">📋 ফলাফল ছক</button>
     <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
     <button class="tab" data-p="p4">🎓 ভাইভা</button>
   </div>
   <div class="card th">
     <div class="pane on" id="p1">
-      <h3>মোলারিটি কী?</h3>
-      <p>১ লিটার (১০০০ mL) দ্রবণে দ্রবীভূত দ্রবের মোল সংখ্যাকে মোলারিটি (M) বলে।</p>
-      <span class="formula">M = (w / Mw) × (1000 / V)</span>
-      <ul><li><b>w</b> = দ্রবের ভর (g)</li><li><b>Mw</b> = দ্রবের আণবিক ভর (g/mol)</li><li><b>V</b> = দ্রবণের আয়তন (mL)</li></ul>
-      <p>উল্টে ওজন বের করতে: <b>w = M × Mw × V / ১০০০</b>। উদাহরণ: ০.১ M Na₂CO₃-এর ২৫০ mL লাগলে w = ০.১ × ১০৬ × ২৫০ / ১০০০ = <b>২.৬৫ g</b>।</p>
-      <h3>প্রাথমিক প্রমাণ পদার্থের শর্ত</h3>
-      <ul><li>অত্যন্ত বিশুদ্ধ ও সুনির্দিষ্ট সংকেতযুক্ত</li><li>বাতাসে স্থিতিশীল (আর্দ্রতা বা CO₂ শোষণ করে না)</li><li>বেশি আণবিক ভর (ওজনের ত্রুটি কম)</li><li>পানিতে ভালো দ্রবণীয়</li></ul>
-      <p>Na₂CO₃, অক্সালিক এসিড, K₂Cr₂O₇ ইত্যাদি প্রাথমিক প্রমাণ। NaOH ও KOH আর্দ্রতাগ্রাহী — তাই নয়।</p>
-      <h3>কেন ভলিউমেট্রিক ফ্লাস্ক?</h3>
-      <p>নির্দিষ্ট তাপমাত্রায় (সাধারণত ২০°C) গলার দাগ পর্যন্ত ঠিক নির্দিষ্ট আয়তন ধরার জন্য ক্যালিব্রেট করা। বিকার বা মাপন চোঙ এর মতো নির্ভুল নয়।</p>
-      <h3>ধাপে ধাপে পদ্ধতি</h3>
-      <ol><li>ওজন বের করো ও বোটে মেপে নাও (টেয়ার করে)।</li><li>বিকারে পরিমিত (⅓) পানিতে দ্রবীভূত করো।</li><li>ফানেল দিয়ে ফ্লাস্কে ঢালো; বিকার ও ফানেল পাতিত পানিতে ৩ বার ধুয়ে সেই পানিও ঢালো।</li><li>মার্কের ১–২ cm নিচ পর্যন্ত পানি, তারপর ড্রপারে ফোঁটা ফোঁটা করে মেনিস্কাসের নিচের প্রান্ত দাগে মেলাও (চোখ দাগের সমতলে)।</li><li>ছিপি দিয়ে ১০–১৫ বার উল্টে-পাল্টে মেশাও।</li></ol>
+      <h3>সম্পৃক্ত ও অসম্পৃক্ত</h3>
+      <ul><li><b>সম্পৃক্ত (অ্যালকেন):</b> শুধু C–C একক বন্ধন। ব্রোমিন পানি ও KMnO₄ বিবর্ণ করে না। নীল, কালিহীন শিখায় জ্বলে।</li>
+      <li><b>অসম্পৃক্ত (অ্যালকিন/অ্যালকাইন):</b> C=C বা C≡C আছে। ব্রোমিন পানির রং (লাল-বাদামি) ও ঠান্ডা ক্ষারীয় KMnO₄-র বেগুনি রং দ্রুত বিবর্ণ করে। হলুদ কালিযুক্ত শিখায় জ্বলে।</li></ul>
+      <h3>মূলক শনাক্তকরণ — এক নজরে</h3>
+      <div class="scroll"><table class="rt" style="min-width:520px"><tr><th>মূলক</th><th>পরীক্ষা ও ফল</th></tr>
+      <tr><td>অ্যালকোহল –OH</td><td>Na ধাতুতে H₂; আয়োডোফর্ম (ইথানল); এস্টারিফিকেশনে ফলের গন্ধ</td></tr>
+      <tr><td>কার্বক্সিলিক এসিড –COOH</td><td>নীল লিটমাস লাল; NaHCO₃-এ CO₂ বুদবুদ; Na-তে H₂; অ্যালকোহলের সাথে এস্টার</td></tr>
+      <tr><td>অ্যালডিহাইড –CHO</td><td>টলেন্সে রুপালি দর্পণ; ফেলিং-এ লাল Cu₂O; 2,4-DNPH-এ কমলা অধঃক্ষেপ</td></tr>
+      <tr><td>কিটোন &gt;C=O</td><td>2,4-DNPH-এ অধঃক্ষেপ; টলেন্স ও ফেলিং নেগেটিভ (অ্যালডিহাইড থেকে পার্থক্য)</td></tr>
+      <tr><td>ফেনল –OH (বেনজিন রিং)</td><td>FeCl₃-এ বেগুনি; ব্রোমিন পানিতে সাদা অধঃক্ষেপ; লিটমাসে পরিবর্তন নেই</td></tr>
+      <tr><td>এস্টার –COO–</td><td>ফলের মতো মিষ্টি গন্ধ; অন্য সব পরীক্ষায় প্রায় নেগেটিভ</td></tr></table></div>
     </div>
-    <div class="pane" id="p2"><h3>সাধারণ যৌগের আণবিক ভর (SSC/HSC-র গোলাকার মান)</h3><div class="scroll"><table id="mwT" style="min-width:420px"></table></div></div>
+    <div class="pane" id="p2"><h3>৯টি যৌগের ফলাফল ছক</h3><div class="scroll"><table class="rt" id="mat" style="min-width:900px;font-size:12.5px"></table></div></div>
     <div class="pane" id="p3">
-      <h3>ল্যাবের সতর্কতা</h3>
-      <ul><li>ব্যালেন্সে সরাসরি রাসায়নিক রাখবে না — ওজন-বোট বা ঘড়ির কাচ ব্যবহার করো এবং ব্যালেন্সের দরজা বন্ধ রেখে পড়ো।</li>
-      <li>NaOH, KOH আর্দ্রতা টানে ও ক্ষয়কারী — দ্রুত ওজন করে ঢাকনা বন্ধ করো; হাতে ধরো না।</li>
-      <li>ভলিউমেট্রিক ফ্লাস্ক কখনো গরম করবে না (আয়তন বদলে যায়)। গরম দ্রবণ ঠান্ডা হলে তবেই মার্ক পর্যন্ত পূর্ণ করো।</li>
-      <li>রাসায়নিক ঢালার সময় ফানেল ব্যবহার করো; ছিটকানো দ্রব ধুয়ে ফ্লাস্কে ঢালো।</li>
-      <li>মেনিস্কাস মাপার সময় চোখ দাগের সমতলে রাখো — নইলে প্যারালাক্স ত্রুটি হয়।</li>
-      <li>প্রস্তুত দ্রবণে লেবেল লাগাও: নাম, ঘনমাত্রা, তারিখ, প্রস্তুতকারী।</li></ul>
+      <h3>সতর্কতা</h3>
+      <ul><li>জৈব দ্রাবক (ইথানল, অ্যাসিটোন, হেক্সেন) দাহ্য — আগুনের কাছে ঢাকনা খোলা রেখো না।</li><li>গন্ধ শোঁকার সময় হাত দিয়ে বাতাস নাকের দিকে টেনে আনো, সরাসরি নাক ডুবিও না।</li><li>ফেনল ত্বকে জ্বালা করে ও বিষাক্ত — হাত দস্তানা পরো।</li><li>ব্রোমিন পানি ও কনক H₂SO₄ ক্ষয়কারী — ফিউম হুডে ব্যবহার করো।</li><li>টলেন্স বিকারকের মিশ্রণ বেশিক্ষণ রেখো না (বিস্ফোরক সিলভার নাইট্রাইড হতে পারে) — ব্যবহারের পরই ফেলে দাও।</li></ul>
     </div>
     <div class="pane" id="p4">
       <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
-      <details class="qa"><summary>দ্রবণ প্রস্তুতিতে বিকারের বদলে ভলিউমেট্রিক ফ্লাস্ক কেন?</summary><p>ফ্লাস্কের গলার দাগে ঠিক নির্দিষ্ট আয়তন (যেমন ২৫০ ± ০.১৫ mL) পাওয়া যায়। বিকারের দাগ আনুমানিক, তাই নির্ভুল ঘনমাত্রা মেলে না।</p></details>
-      <details class="qa"><summary>বিকার ও ফানেল ৩ বার ধুয়ে ফ্লাস্কে কেন ঢালা হয়?</summary><p>বিকারের গায়ে লেগে থাকা সামান্য দ্রবও যাতে ফ্লাস্কে আসে — নইলে মোল সংখ্যা কমে যায় ও ঘনমাত্রা ভুল হয় (quantitative transfer)।</p></details>
-      <details class="qa"><summary>NaOH দিয়ে সরাসরি প্রমাণ দ্রবণ বানানো যায় না কেন?</summary><p>NaOH আর্দ্রতা ও CO₂ শোষণ করে, ওজন ক্রমাগত বদলায় ও বিশুদ্ধতা অনিশ্চিত। তাই NaOH-এর দ্রবণ বানিয়ে প্রাথমিক প্রমাণ (যেমন অক্সালিক এসিড) দিয়ে টাইট্রেট করে ঘনমাত্রা বের করতে হয়।</p></details>
-      <details class="qa"><summary>মার্ক ছাড়িয়ে পানি দিলে কী হয়?</summary><p>আয়তন বেশি হয়ে গেলে ঘনমাত্রা কমে যায় (M = n/V)। আসল ল্যাবে ফেলে দিয়ে আবার করতে হয়।</p></details>
-      <details class="qa"><summary>ছিপি দিয়ে উল্টে-পাল্টে কেন মেশানো হয়?</summary><p>মার্ক পর্যন্ত পানি ঢালার পর উপরের দিক পাতলা থাকে, নিচে গাঢ় — মেশালে সারা দ্রবণে ঘনমাত্রা সমান হয়।</p></details>
-      <details class="qa"><summary>মোলারিটি ও মোললিটি (molality)-এর পার্থক্য কী?</summary><p>মোলারিটি = মোল / লিটার <b>দ্রবণ</b> (তাপমাত্রায় বদলায়); মোললিটি = মোল / কেজি <b>দ্রাবক</b> (তাপমাত্রায় অপরিবর্তিত)।</p></details>
-      <details class="qa"><summary>নরমালিটি ও মোলারিটির সম্পর্ক কী?</summary><p>N = M × n-ফ্যাক্টর। Na₂CO₃ ও অক্সালিক এসিডের n-ফ্যাক্টর ২, HCl ও NaOH-এর ১। তাই ০.১ M Na₂CO₃ = ০.২ N।</p></details>
+      <details class="qa"><summary>ব্রোমিন পানি দিয়ে অসম্পৃক্ততা কীভাবে বোঝা যায়?</summary><p>C=C-এ Br₂ যুক্ত হয়ে বর্ণহীন ডাইব্রোমাইড তৈরি হয় (সংযোজন বিক্রিয়া), তাই লাল-বাদামি রং বিবর্ণ হয়। অ্যালকেনে এমন সংযোজন হয় না।</p></details>
+      <details class="qa"><summary>টলেন্স ও ফেলিং পরীক্ষায় কিটোন নেগেটিভ কেন?</summary><p>কিটোনে –CHO-র হাইড্রোজেন নেই; তাই সহজে জারিত হয় না। অ্যালডিহাইড সহজেই কার্বক্সিলিক এসিডে জারিত হয়।</p></details>
+      <details class="qa"><summary>ফেনল লিটমাস লাল করে না কেন?</summary><p>ফেনল খুবই দুর্বল এসিড (pKa ≈ ১০) — লিটমাসের রং বদলানোর মতো H⁺ দেয় না। কিন্তু NaOH-এর সাথে বিক্রিয়া করে সোডিয়াম ফেনোক্সাইড তৈরি করে।</p></details>
+      <details class="qa"><summary>কার্বক্সিলিক এসিড ও ফেনলকে NaHCO₃ দিয়ে কীভাবে আলাদা করা যায়?</summary><p>কার্বক্সিলিক এসিড NaHCO₃-এর সাথে CO₂ দেয়; ফেনল (কার্বনিক এসিডের চেয়ে দুর্বল) দেয় না।</p></details>
+      <details class="qa"><summary>আয়োডোফর্ম পরীক্ষা কোন যৌগে পজিটিভ?</summary><p>CH₃CO– গ্রুপ বা CH₃CH(OH)– গ্রুপযুক্ত যৌগে — যেমন ইথানল, অ্যাসিটালডিহাইড, অ্যাসিটোন। ফল: হলুদ CHI₃ অধঃক্ষেপ।</p></details>
+      <details class="qa"><summary>এস্টারিফিকেশন কী?</summary><p>কার্বক্সিলিক এসিড + অ্যালকোহল ⇌ এস্টার + পানি (কনক H₂SO₄ অনুঘটক)। এস্টারের মিষ্টি ফলের গন্ধ হয়।</p></details>
+      <details class="qa"><summary>অসম্পৃক্ত যৌগ হলুদ কালিযুক্ত শিখায় জ্বলে কেন?</summary><p>কার্বনের শতকরা পরিমাণ বেশি — অসম্পূর্ণ দহনে কার্বন কণা (কালি) তৈরি হয় ও হলুদ আলো দেয়।</p></details>
     </div>
   </div>
 </div>
@@ -297,200 +257,105 @@ table.rt th{color:var(--text-muted);font-size:12.5px}
 <div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 <script>
 const $=id=>document.getElementById(id);
-const CH={na2co3:{n:'Na₂CO₃ (সোডিয়াম কার্বনেট)',s:'Na₂CO₃',mw:106,nf:2},oxa:{n:'অক্সালিক এসিড (H₂C₂O₄·2H₂O)',s:'H₂C₂O₄·2H₂O',mw:126,nf:2}};
-const MW=[['NaOH',40],['KOH',56],['HCl',36.5],['H₂SO₄',98],['HNO₃',63],['CH₃COOH',60],['Na₂CO₃',106],['NaHCO₃',84],['H₂C₂O₄·2H₂O',126],['NaCl',58.5],['KMnO₄',158],['K₂Cr₂O₇',294],['CuSO₄·5H₂O',250],['AgNO₃',170],['CaCO₃',100],['Na₂SO₄',142]];
-const TOL={100:.08,250:.12,500:.2};
-const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
-const f=(x,d=2)=>bn((+x).toFixed(d));
-let S;
-function init(keep){
-  S=Object.assign({step:1,chem:'na2co3',V:250,M:0.1,tries:0,calcOk:false,pw:0,tare:false,bw:0,stir:0,dis:false,rin:0,trans:false,vol:0,mixed:0,done:false,restarts:0,peeked:false},keep||{});
-  S.step=1;render();
-}
-const Mw=()=>CH[S.chem].mw;
-const need=()=>S.M*Mw()*S.V/1000;
-const needH=()=>Math.round(need()*100);
-function live(t){$('live').innerHTML=t}
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
-function ob(label,on,fn,id){return `<button class="ob ${on?'on':''}" data-a="${id}">${label}</button>`}
-function scene(){
-  const st=S.step;
-  $('sBal').style.display=st<=3?'':'none';
-  $('sBkr').style.display=st==4?'':'none';
-  $('sFl').style.display=st>=5?'':'none';
-  $('boat').style.display=st==3?'':'none';
-  $('spat').style.display=st==3?'':'none';
-  $('stageTag').textContent=st<=3?'ব্যালেন্স':st==4?'বিকার':'ভলিউমেট্রিক ফ্লাস্ক';
-  $('prog').style.width=((st-1)/7*100+(st==8?14:0))+'%';
-  $('stepTag').textContent=bn(Math.min(st,7))+' / ৭';
-  $('hGoal').textContent=f(S.M,2)+' M · '+bn(S.V)+' mL';
-  // balance
-  const pan=S.step==3?(2.35+S.pw/100):0;
-  const read=S.tare?S.pw/100:pan;
-  $('balTxt').textContent=read.toFixed(2);
-  const h=Math.min(24,S.pw/Math.max(1,needH())*20);
-  $('pile').innerHTML=S.pw>0?`<path d="M180 262 Q200 ${262-h-4} 220 262 Z" fill="#fff" stroke="#cbd5e1"/>`:'';
-  if(st==3)$('hNow').textContent=f(S.pw/100)+' g';
-  // beaker
-  const bh=Math.min(180,S.bw*1.2);
-  $('bkW').setAttribute('y',336-bh);$('bkW').setAttribute('height',bh);
-  let tk='';for(let i=1;i<=4;i++){const y=336-i*40;tk+=`<line x1="110" x2="${i%2?128:138}" y1="${y}" y2="${y}" stroke="var(--tick)" stroke-width="1.5"/>`}
-  $('bkTicks').innerHTML=tk;
-  const prem=Math.max(0,1-S.stir/4);
-  let pp='';if(st==4&&!S.dis){for(let i=0;i<14;i++)pp+=`<circle cx="${150+(i*37%100)}" cy="${326-(i%3)*3}" r="3.5" fill="#fff" opacity="${prem*0.95}"/>`}
-  $('bkP').innerHTML=pp;
-  if(st==4)$('hNow').textContent=bn(S.bw)+' mL পানি';
-  // flask
-  const V=S.V,v=S.vol;
-  let y;
-  if(v<=.88*V)y=395-v/(.88*V)*185;else y=210-(v-.88*V)/(.12*V)*92.5;
-  y=Math.max(46,y);
-  $('flLiq').setAttribute('y',y);$('flLiq').setAttribute('height',Math.max(0,400-y));
-  const dev=v-V,k=Math.max(5,200/V*3),Y=111-Math.max(-3.5,Math.min(3.5,dev))*k*0.9;
-  $('zLiq').setAttribute('y',Y+4);$('zLiq').setAttribute('height',200);
-  $('zMen').setAttribute('d',`M262 ${Y} Q320 ${Y+18} 378 ${Y}`);
-  $('zT').textContent=v>0?(Math.abs(dev)<TOL[V]*0.99?'✔ ঠিক দাগে':dev>0?'দাগ ছাড়িয়েছে!':'দাগের নিচে'):'';
-  $('flLbl').textContent=bn(V)+' mL ভলিউমেট্রিক ফ্লাস্ক';
-  $('stop').style.display=S.mixed>0?'':'none';
-  if(st>=5)$('hNow').textContent=f(S.vol,2)+' mL';
-}
-function nextBtn(label,en,go){return `<div class="row"><button class="btn" id="nx" ${en?'':'disabled'}>${label}</button></div>`}
+const CP=[
+ {id:'hex',n:'হেক্সেন',f:'C₆H₁₄',g:'alk',easy:1},{id:'che',n:'সাইক্লোহেক্সিন',f:'C₆H₁₀',g:'ene',easy:1},
+ {id:'eth',n:'ইথানল',f:'C₂H₅OH',g:'oh',easy:1},{id:'ace',n:'অ্যাসিটিক এসিড',f:'CH₃COOH',g:'acid',easy:1},
+ {id:'ald',n:'অ্যাসিটালডিহাইড',f:'CH₃CHO',g:'ald',easy:1},{id:'ket',n:'অ্যাসিটোন',f:'CH₃COCH₃',g:'ket'},
+ {id:'phe',n:'ফেনল',f:'C₆H₅OH',g:'phe',easy:1},{id:'est',n:'ইথাইল অ্যাসিটেট',f:'CH₃COOC₂H₅',g:'est'},
+ {id:'glu',n:'গ্লুকোজ',f:'C₆H₁₂O₆',g:'sug'}];
+const GR={alk:'অ্যালকেন (সম্পৃক্ত)',ene:'অ্যালকিন (অসম্পৃক্ত, C=C)',oh:'অ্যালকোহল (–OH)',acid:'কার্বক্সিলিক এসিড (–COOH)',ald:'অ্যালডিহাইড (–CHO)',ket:'কিটোন (>C=O)',phe:'ফেনল (বেনজিন রিংয়ে –OH)',est:'এস্টার (–COO–)',sug:'শর্করা (পলিহাইড্রক্সি অ্যালডিহাইড)'};
+const CL='rgba(190,220,255,.2)',OR='rgba(249,115,22,.55)',PU='rgba(168,40,200,.6)',BL='rgba(60,90,230,.55)',YE='rgba(230,200,60,.5)',CU='rgba(40,120,255,.6)',DN='rgba(255,170,50,.4)',BR='rgba(150,90,40,.5)';
+const N=()=>null;
+// each: [k,text,vis] in order hex,che,eth,ace,ald,ket,phe,est,glu
+const TS=[
+ {id:'smell',n:'👃 গন্ধ',base:CL,d:[
+  ['পেট্রোলের মতো','হালকা পেট্রোলের মতো গন্ধ।'],['মিষ্টি-ঝাঁঝালো','মিষ্টি ঝাঁঝালো হাইড্রোকার্বন গন্ধ।'],['মিষ্টি, অ্যালকোহলীয়','পরিচিত মিষ্টি অ্যালকোহলীয় গন্ধ।'],['ভিনেগারের ঝাঁঝ','তীব্র ঝাঁঝালো ভিনেগারের গন্ধ।'],['তীব্র ফলের মতো','ঝাঁঝালো-ফলের মতো তীব্র গন্ধ।'],['নেইলপলিশ রিমুভার','নেইলপলিশ রিমুভারের গন্ধ।'],['কার্বলিক/ওষুধের গন্ধ','ওষুধ/কার্বলিক সাবানের মতো গন্ধ।'],['মিষ্টি ফলের গন্ধ','মিষ্টি ফলের মতো সুগন্ধ।'],['গন্ধহীন','কোনো গন্ধ নেই।']]},
+ {id:'solub',n:'💧 পানিতে দ্রবণীয়তা',base:CL,d:[
+  ['অদ্রবণীয় (স্তর)','পানির সাথে মেশে না — আলাদা স্তর।',{y:1}],['অদ্রবণীয় (স্তর)','পানির সাথে মেশে না — আলাদা স্তর।',{y:1}],['মিশ্রণীয়','পানির সাথে সম্পূর্ণ মিশে গেল।'],['মিশ্রণীয়','পানির সাথে সম্পূর্ণ মিশে গেল।'],['মিশ্রণীয়','পানির সাথে সম্পূর্ণ মিশে গেল।'],['মিশ্রণীয়','পানির সাথে সম্পূর্ণ মিশে গেল।'],['সামান্য দ্রবণীয় (ঘোলা)','ঘোলা হলো — সামান্য দ্রবণীয়।',{l:'rgba(235,235,235,.45)'}],['অল্প দ্রবণীয় (স্তর)','অল্প দ্রবণীয়, উপরে পাতলা স্তর।',{y:1}],['দ্রবণীয়','দ্রবীভূত হলো।']]},
+ {id:'flame',n:'🔥 জ্বালানো',base:CL,d:[
+  ['নীল, কালিহীন','নীল শিখা, কালি নেই — সম্পৃক্ত যৌগের লক্ষণ।',{f:'b',s:0}],['হলুদ, কালিযুক্ত','হলুদ শিখা ও কালি — অসম্পৃক্ত যৌগের লক্ষণ।',{f:'y',s:.9}],['ফ্যাকাশে নীল','ফ্যাকাশে নীল শিখা।',{f:'b',s:0}],['কষ্টে নীলাভ','কষ্টে নীলাভ শিখায় জ্বলে।',{f:'b',s:0}],['নীলাভ','নীলাভ শিখায় জ্বলে।',{f:'b',s:0}],['হলুদাভ, সামান্য কালি','উজ্জ্বল হলুদাভ-নীল শিখা।',{f:'y',s:.35}],['উজ্জ্বল, প্রচুর কালি','উজ্জ্বল হলুদ শিখা ও প্রচুর কালি — অ্যারোমেটিক লক্ষণ।',{f:'y',s:1}],['হলুদ, ধোঁয়াটে','হলুদ ধোঁয়াটে শিখা।',{f:'y',s:.55}],['পোড়ে না, ক্যারামেল','গলে ক্যারামেলের গন্ধ — শিখা দেয় না।',{f:'n',s:.3}]]},
+ {id:'br2',n:'🟠 ব্রোমিন পানি',base:OR,d:[
+  ['লাল-বাদামি থাকে','রং অপরিবর্তিত।',{l:OR}],['বিবর্ণ (দ্রুত)','লাল-বাদামি রং দ্রুত বিবর্ণ — সংযোজন হয়েছে।',{l:CL}],['লাল-বাদামি থাকে','রং অপরিবর্তিত।',{l:OR}],['লাল-বাদামি থাকে','রং অপরিবর্তিত।',{l:OR}],['ধীরে ফিকে','ধীরে ধীরে ফিকে (জারণ)।',{l:'rgba(250,180,100,.3)'}],['লাল-বাদামি থাকে','রং অপরিবর্তিত।',{l:OR}],['বিবর্ণ + সাদা অধঃক্ষেপ','বিবর্ণ ও সাদা ২,৪,৬-ট্রাইব্রোমোফেনল অধঃক্ষেপ।',{l:CL,p:'#f8fafc'}],['লাল-বাদামি থাকে','রং অপরিবর্তিত।',{l:OR}],['ধীরে ফিকে (দুর্বল)','ধীরে খুব সামান্য ফিকে।',{l:'rgba(250,170,90,.4)'}]]},
+ {id:'kmno4',n:'🟣 KMnO₄ (ঠান্ডা, ক্ষারীয়)',base:PU,d:[
+  ['বেগুনি থাকে','রং অপরিবর্তিত।',{l:PU}],['বিবর্ণ + বাদামি MnO₂','বেগুনি রং বিবর্ণ, বাদামি MnO₂ জমল।',{l:'rgba(250,250,250,.15)',p:'#7c2d12'}],['বেগুনি থাকে (ঠান্ডায়)','ঠান্ডায় পরিবর্তন নেই।',{l:PU}],['বেগুনি থাকে','রং অপরিবর্তিত।',{l:PU}],['বিবর্ণ (বাদামি)','বিবর্ণ হয়ে বাদামি হলো (জারণ)।',{l:'rgba(180,120,100,.35)'}],['বেগুনি থাকে','রং অপরিবর্তিত।',{l:PU}],['ধীরে ফিকে বেগুনি','ধীরে ধীরে ফিকে হলো।',{l:'rgba(168,80,190,.35)'}],['বেগুনি থাকে','রং অপরিবর্তিত।',{l:PU}],['ধীরে বিবর্ণ','ধীরে ধীরে বিবর্ণ।',{l:'rgba(170,100,150,.3)'}]]},
+ {id:'litmus',n:'🔵 নীল লিটমাস',base:BL,d:[
+  ['নীল থাকে','রং বদলায়নি।'],['নীল থাকে','রং বদলায়নি।'],['নীল থাকে','রং বদলায়নি।'],['লাল হয়','নীল → লাল — অম্লীয়!',{l:'rgba(239,68,68,.6)'}],['নীল থাকে','রং বদলায়নি।'],['নীল থাকে','রং বদলায়নি।'],['নীল থাকে (প্রায়)','প্রায় বদলায়নি — ফেনল খুব দুর্বল অম্ল।'],['নীল থাকে','রং বদলায়নি।'],['নীল থাকে','রং বদলায়নি।']].map((a,i)=>a.length<3?[a[0],a[1],{l:BL}]:a)},
+ {id:'nahco3',n:'🫧 NaHCO₃ দ্রবণ',base:CL,d:[
+  ['পরিবর্তন নেই','কোনো বুদবুদ নেই।'],['পরিবর্তন নেই','কোনো বুদবুদ নেই।'],['পরিবর্তন নেই','কোনো বুদবুদ নেই।'],['CO₂ বুদবুদ','তীব্র বুদবুদ — CO₂ মুক্ত হচ্ছে।',{b:7}],['পরিবর্তন নেই','কোনো বুদবুদ নেই।'],['পরিবর্তন নেই','কোনো বুদবুদ নেই।'],['পরিবর্তন নেই','ফেনল NaHCO₃ থেকে CO₂ দেয় না।'],['পরিবর্তন নেই','কোনো বুদবুদ নেই।'],['পরিবর্তন নেই','কোনো বুদবুদ নেই।']]},
+ {id:'fecl3',n:'🟡 নিরপেক্ষ FeCl₃',base:YE,d:[
+  ['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}],['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}],['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}],['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}],['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}],['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}],['বেগুনি রং','গাঢ় বেগুনি — ফেনলের বৈশিষ্ট্য!',{l:'rgba(120,40,190,.7)'}],['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}],['হলুদ থাকে','রং অপরিবর্তিত।',{l:YE}]]},
+ {id:'na',n:'⚪ সোডিয়াম ধাতু',base:CL,d:[
+  ['পরিবর্তন নেই','বুদবুদ নেই।'],['পরিবর্তন নেই','বুদবুদ নেই।'],['ধীরে H₂ বুদবুদ','ধীরে ধীরে H₂ গ্যাস বের হলো।',{b:3}],['জোরালো H₂','জোরালোভাবে H₂ বের হচ্ছে।',{b:7}],['পরিবর্তন নেই','বুদবুদ নেই।'],['পরিবর্তন নেই','বুদবুদ নেই।'],['H₂ বুদবুদ','H₂ বের হচ্ছে (–OH আছে)।',{b:5}],['পরিবর্তন নেই','বুদবুদ নেই।'],['পরিবর্তন নেই (জলীয় অবস্থায় নয়)','এখানে বুদবুদ নেই।']]},
+ {id:'tollens',n:'🪞 টলেন্স বিকারক',base:CL,d:[
+  ['পরিবর্তন নেই','কোনো পরিবর্তন নেই।'],['পরিবর্তন নেই','কোনো পরিবর্তন নেই।'],['পরিবর্তন নেই','কোনো পরিবর্তন নেই।'],['পরিবর্তন নেই','কোনো পরিবর্তন নেই।'],['রুপালি দর্পণ','টিউবের গায়ে রুপালি দর্পণ জমল — –CHO!',{m:1}],['পরিবর্তন নেই','কোনো পরিবর্তন নেই।'],['পরিবর্তন নেই','কোনো পরিবর্তন নেই।'],['পরিবর্তন নেই','কোনো পরিবর্তন নেই।'],['রুপালি দর্পণ','টিউবে রুপালি দর্পণ — বিজারক শর্করা।',{m:1}]]},
+ {id:'fehling',n:'🔴 ফেলিং / বেনেডিক্ট',base:CU,d:[
+  ['নীল থাকে','নীল রং অপরিবর্তিত।',{l:CU}],['নীল থাকে','নীল রং অপরিবর্তিত।',{l:CU}],['নীল থাকে','নীল রং অপরিবর্তিত।',{l:CU}],['নীল থাকে','নীল রং অপরিবর্তিত।',{l:CU}],['লাল অধঃক্ষেপ (Cu₂O)','ইটের মতো লাল Cu₂O অধঃক্ষেপ।',{l:'rgba(70,130,220,.35)',p:'#dc2626'}],['নীল থাকে','নীল রং অপরিবর্তিত।',{l:CU}],['নীল থাকে','নীল রং অপরিবর্তিত।',{l:CU}],['নীল থাকে','নীল রং অপরিবর্তিত।',{l:CU}],['লাল অধঃক্ষেপ (Cu₂O)','লাল Cu₂O অধঃক্ষেপ — বিজারক শর্করা।',{l:'rgba(70,130,220,.35)',p:'#ea580c'}]]},
+ {id:'dnph',n:'🟨 2,4-DNPH',base:DN,d:[
+  ['পরিবর্তন নেই','কোনো অধঃক্ষেপ নেই।',{l:DN}],['পরিবর্তন নেই','কোনো অধঃক্ষেপ নেই।',{l:DN}],['পরিবর্তন নেই','কোনো অধঃক্ষেপ নেই।',{l:DN}],['পরিবর্তন নেই','কোনো অধঃক্ষেপ নেই।',{l:DN}],['কমলা-হলুদ অধঃক্ষেপ','কমলা-হলুদ অধঃক্ষেপ — কার্বনিল (>C=O) আছে।',{l:DN,p:'#f59e0b'}],['কমলা-হলুদ অধঃক্ষেপ','হলুদ-কমলা অধঃক্ষেপ — কার্বনিল (>C=O) আছে।',{l:DN,p:'#fbbf24'}],['পরিবর্তন নেই','কোনো অধঃক্ষেপ নেই।',{l:DN}],['পরিবর্তন নেই','কোনো অধঃক্ষেপ নেই।',{l:DN}],['পরিবর্তন নেই','কোনো অধঃক্ষেপ নেই।',{l:DN}]]},
+ {id:'iodo',n:'🟡 আয়োডোফর্ম (I₂/NaOH)',base:BR,d:[
+  ['বাদামি থাকে','রং অপরিবর্তিত।',{l:BR}],['বাদামি থাকে','রং অপরিবর্তিত।',{l:BR}],['হলুদ অধঃক্ষেপ + গন্ধ','হলুদ CHI₃ অধঃক্ষেপ ও আয়োডোফর্মের গন্ধ।',{l:'rgba(250,240,200,.3)',p:'#fde047'}],['বাদামি থাকে','রং অপরিবর্তিত।',{l:BR}],['হলুদ অধঃক্ষেপ + গন্ধ','হলুদ CHI₃ অধঃক্ষেপ ও আয়োডোফর্মের গন্ধ।',{l:'rgba(250,240,200,.3)',p:'#fde047'}],['হলুদ অধঃক্ষেপ + গন্ধ','হলুদ CHI₃ অধঃক্ষেপ ও আয়োডোফর্মের গন্ধ।',{l:'rgba(250,240,200,.3)',p:'#fde047'}],['বাদামি থাকে','রং অপরিবর্তিত।',{l:BR}],['বাদামি থাকে','রং অপরিবর্তিত।',{l:BR}],['বাদামি থাকে','রং অপরিবর্তিত।',{l:BR}]]},
+ {id:'ester',n:'🍎 এস্টারিফিকেশন (গরম + H₂SO₄)',base:CL,d:[
+  ['পরিবর্তন নেই','বিক্রিয়া হয়নি।'],['পরিবর্তন নেই','বিক্রিয়া হয়নি।'],['ফলের মতো গন্ধ','CH₃COOH-র সাথে মিশিয়ে গরমে মিষ্টি ফলের গন্ধ — এস্টার!'],['ফলের মতো গন্ধ','ইথানলের সাথে গরমে মিষ্টি ফলের গন্ধ — এস্টার!'],['পরিবর্তন নেই','বিক্রিয়া হয়নি।'],['পরিবর্তন নেই','বিক্রিয়া হয়নি।'],['পরিবর্তন নেই','বিক্রিয়া হয়নি।'],['পরিবর্তন নেই','বিক্রিয়া হয়নি।'],['পরিবর্তন নেই','বিক্রিয়া হয়নি।']]}
+];
+TS.forEach(t=>{t.r={};CP.forEach((c,i)=>t.r[c.id]=t.d[i])});
+let lvl='easy',pool=[],S=null;
+function newS(){pool=CP.filter(c=>lvl=='full'||c.easy);S={c:pool[Math.floor(Math.random()*pool.length)],log:[],done:{},wrong:0,hint:0,solved:false};
+  $('sampT').textContent='নমুনা '+String.fromCharCode(65+Math.floor(Math.random()*8));$('res').innerHTML='';$('obs').innerHTML='';
+  $('live').textContent='একটি পরীক্ষা বেছে নাও।';resetTube();render();
+  $('selC').innerHTML='<option value="">— যৌগ বেছে নাও —</option>'+pool.map(c=>`<option value="${c.id}">${c.n} (${c.f})</option>`).join('');
+  $('selG').innerHTML='<option value="">— শ্রেণি —</option>'+[...new Set(pool.map(c=>c.g))].map(g=>`<option value="${g}">${GR[g]}</option>`).join('');
+  $('lvl').textContent=lvl=='easy'?'সহজ':'পূর্ণ'}
+function resetTube(){$('gTube').style.display='';$('gFlame').style.display='none';$('liq').setAttribute('fill',CL);$('ppt').setAttribute('height',0);$('lay').setAttribute('opacity',0);$('mir').setAttribute('opacity',0);$('bub').innerHTML='';$('tubeT').textContent=''}
+function bubs(k){let s='';for(let i=0;i<k;i++)s+=`<circle class="bub" cx="${178+i%5*11}" cy="${300-(i%3)*6}" r="${2+i%3}" fill="#e2e8f0" style="animation-delay:${(i*.21).toFixed(2)}s;animation-duration:1.6s"/>`;$('bub').innerHTML=s}
+function candidates(){return pool.filter(c=>S.log.every(l=>TS.find(t=>t.id==l.t).r[c.id][0]==l.k))}
 function render(){
-  scene();
-  const p=$('panel'),st=S.step,c=CH[S.chem];
-  let h='';
-  if(st==1){
-    live('ধাপ ১: কোন রাসায়নিক, কত আয়তন আর কত মোলারিটির দ্রবণ বানাবে ঠিক করো।');
-    h=`<div class="pst"><h3>১. দ্রবণের পরিকল্পনা</h3>
-    <div class="lbl">প্রাথমিক প্রমাণ পদার্থ</div><div class="opts">${Object.keys(CH).map(k=>ob(CH[k].s,S.chem==k,0,'c-'+k)).join('')}</div>
-    <div class="lbl">ভলিউমেট্রিক ফ্লাস্কের আয়তন</div><div class="opts">${[100,250,500].map(v=>ob(bn(v)+' mL',S.V==v,0,'v-'+v)).join('')}</div>
-    <div class="lbl">লক্ষ্য মোলারিটি</div><div class="opts">${[0.05,0.1,0.2].map(m=>ob(f(m)+' M',S.M==m,0,'m-'+m)).join('')}</div>
-    <p>${c.n} — আণবিক ভর <b>${bn(c.mw)}</b> g/mol। এটি কেন প্রাথমিক প্রমাণ? বিশুদ্ধ, স্থিতিশীল ও আর্দ্রতা টানে না।</p>
-    ${nextBtn('হিসাব শুরু করি →',true)}</div>`;
-  }else if(st==2){
-    live('ধাপ ২: কত গ্রাম লাগবে হিসাব করো — w = M × Mw × V / ১০০০');
-    h=`<div class="pst"><h3>২. ওজনের হিসাব</h3>
-    <p><b>${f(S.M)} M</b> ${c.s}-এর <b>${bn(S.V)} mL</b> বানাতে কত গ্রাম লাগবে? (Mw = ${bn(c.mw)})</p>
-    <div class="row"><input class="num" id="ans" inputmode="decimal" placeholder="যেমন 2.65" ${S.calcOk?'disabled':''}><button class="btn" id="chk" ${S.calcOk?'disabled':''}>যাচাই করো</button><button class="btn ghost" id="hint">💡 সূত্র দেখো</button></div>
-    <div id="m2">${S.calcOk?`<div class="msg ok">✔ ঠিক! w = ${f(S.M,2)} × ${bn(c.mw)} × ${bn(S.V)} / ১০০০ = <b>${f(need(),3)} g</b> ≈ ${f(needH()/100)} g</div>`:''}</div>
-    ${nextBtn('ওজন মাপতে যাই →',S.calcOk)}</div>`;
-  }else if(st==3){
-    const diff=S.pw-needH();
-    live(S.tare?'ওজন-বোটে রাসায়নিক যোগ/কমাও। ব্যালেন্সের রিডিং লক্ষ্যের সমান করো।':'ওজন-বোটসহ ব্যালেন্সে ওজন দেখাচ্ছে। আগে TARE করে ০.০০ করো।');
-    h=`<div class="pst"><h3>৩. ওজন নেওয়া</h3>
-    <p>লক্ষ্য ভর: <b>${f(needH()/100)} g</b> ${c.s}</p>
-    <div class="row"><button class="btn ghost" id="tare" ${S.tare?'disabled':''}>⚖️ TARE (বোটের ওজন শূন্য)</button></div>
-    <div class="lbl">স্প্যাচুলা দিয়ে যোগ / কমাও</div>
-    <div class="row">${[[100,'+১ g'],[10,'+০.১ g'],[1,'+০.০১ g'],[-10,'−০.১ g'],[-1,'−০.০১ g']].map(a=>`<button class="btn ghost" data-w="${a[0]}" ${S.tare?'':'disabled'}>${a[1]}</button>`).join('')}</div>
-    <div class="msg ${S.tare&&Math.abs(diff)<=1?'ok':''}">${!S.tare?'প্রথমে TARE চাপো।':diff==0?'✔ একদম নিখুঁত ওজন!':Math.abs(diff)<=1?'✔ প্রায় নিখুঁত (±০.০১ g)।':diff<0?'আরও '+f(-diff/100)+' g লাগবে।':'বেশি হয়ে গেছে '+f(diff/100)+' g — কিছুটা কমাও।'}</div>
-    ${nextBtn('বিকারে দ্রবীভূত করি →',S.tare&&S.pw>0)}</div>`;
-  }else if(st==4){
-    live(S.dis?'✔ সম্পূর্ণ দ্রবীভূত! এবার ফ্লাস্কে স্থানান্তর করো।':'ধাপ ৪: বিকারে ফ্লাস্কের আয়তনের প্রায় ⅓ অংশ পাতিত পানি নাও, রাসায়নিক ঢালো, কাচদণ্ডে নাড়ো।');
-    const ideal=[Math.round(S.V*.2),Math.round(S.V*.5)];
-    h=`<div class="pst"><h3>৪. দ্রবীভূতকরণ</h3>
-    <p>বিকারে এখন <b>${bn(S.bw)} mL</b> পানি আছে। আদর্শ: প্রায় ${bn(Math.round(S.V/3))} mL (${bn(ideal[0])}–${bn(ideal[1])} mL)।</p>
-    <div class="row">${[[10,'+১০ mL'],[5,'+৫ mL'],[-5,'−৫ mL']].map(a=>`<button class="btn ghost" data-b="${a[0]}" ${S.dis?'disabled':''}>${a[1]}</button>`).join('')}</div>
-    <div class="row"><button class="btn" id="stir" ${S.dis?'disabled':''}>🥄 কাচদণ্ডে নাড়ো (${bn(S.stir)}/৪)</button></div>
-    <div class="msg ${S.dis?'ok':''}" id="m4">${S.dis?'পুরো দ্রব মিশে গেছে।':S.bw<S.V*.15?'পানি খুব কম — দ্রব পুরোপুরি গলবে না। আরও পানি দাও।':S.bw>S.V*.6?'⚠ অনেক বেশি পানি! পরে ধোয়ার জন্য ফ্লাস্কে জায়গা থাকবে না।':'পানি ঠিক আছে, নাড়তে থাকো।'}</div>
-    ${nextBtn('ফ্লাস্কে ঢালি →',S.dis)}</div>`;
-  }else if(st==5){
-    live(S.trans?`বিকার ও ফানেল ধুয়ে ধোয়া পানি ফ্লাস্কে ঢালো (এখন ${bn(S.rin)}/৩ বার)।`:'ফানেল দিয়ে ধীরে ধীরে দ্রবণ ফ্লাস্কে ঢালো।');
-    h=`<div class="pst"><h3>৫. পরিমাণগত স্থানান্তর</h3>
-    <div class="row"><button class="btn" id="pour" ${S.trans?'disabled':''}>🫗 ফানেল দিয়ে ফ্লাস্কে ঢালো</button></div>
-    <div class="row"><button class="btn ghost" id="rinse" ${S.trans?'':'disabled'}>💧 পাতিত পানিতে বিকার ধুয়ে ঢালো (+১০ mL) · ${bn(S.rin)}/৩</button></div>
-    <div class="msg ${S.rin>=3?'ok':''}">${!S.trans?'বিকারে দ্রবণ আছে, ফ্লাস্কে ঢালো।':S.rin<3?'বিকারের গায়ে লেগে থাকা দ্রবও ফ্লাস্কে আনতে হবে — কমপক্ষে ৩ বার ধোও।':'✔ ৩ বার ধোয়া হয়েছে। ফ্লাস্কে এখন '+f(S.vol,1)+' mL।'}</div>
-    ${nextBtn('মার্ক পর্যন্ত পূরণ →',S.trans)}</div>`;
-  }else if(st==6){
-    const dev=S.vol-S.V;
-    live(dev>S.V*0.001+TOL[S.V]?'⚠ মার্ক ছাড়িয়ে গেছে! ঘনমাত্রা কমে গেল। চাইলে আবার শুরু করো।':'ধাপ ৬: মার্কের ১–২ cm নিচ পর্যন্ত দ্রুত পানি দাও, তারপর ড্রপারে ফোঁটা ফোঁটা — মেনিস্কাসের নিচ দাগে মিলাও (ডান পাশের ক্লোজ-আপ দেখো)।');
-    h=`<div class="pst"><h3>৬. মার্ক পর্যন্ত পূরণ</h3>
-    <p>আয়তন: <b>${f(S.vol,2)} mL</b> / ${bn(S.V)} mL ${Math.abs(dev)<=TOL[S.V]?'✔':dev>0?'(বেশি '+f(dev,2)+' mL)':'(বাকি '+f(-dev,2)+' mL)'}</p>
-    <div class="row">${[[10,'+১০ mL'],[1,'+১ mL'],[.25,'+০.২৫ mL'],[.05,'১ ফোঁটা (০.০৫ mL)']].map(a=>`<button class="btn ghost" data-f="${a[0]}">${a[1]}</button>`).join('')}</div>
-    <div class="row"><button class="btn ghost" id="redo">🔁 ফেলে আবার শুরু করি</button></div>
-    ${nextBtn('ছিপি দিয়ে মেশাই →',S.vol>=S.V*.9)}</div>`;
-  }else if(st==7){
-    live(S.mixed>=10?'✔ ভালোভাবে মিশেছে! রিপোর্ট দেখো।':'ধাপ ৭: ছিপি লাগিয়ে ফ্লাস্ক ১০ বার উল্টে-পাল্টে মেশাও।');
-    h=`<div class="pst"><h3>৭. মেশানো</h3>
-    <div class="row"><button class="btn" id="inv">🔄 ছিপি দিয়ে উল্টাও (${bn(S.mixed)}/১০)</button></div>
-    ${nextBtn('রিপোর্ট দেখি →',S.mixed>=10)}</div>`;
-  }else if(st==8){
-    live('পরীক্ষা শেষ! রিপোর্ট দেখো।');
-    h=`<div class="pst"><h3>🎉 প্রমাণ দ্রবণ তৈরি</h3><p>নিচের রিপোর্টে তোমার ঘনমাত্রা যাচাই করো।</p><div class="row"><button class="btn" id="again">🔁 আবার করি</button></div></div>`;
-  }
-  p.innerHTML=h;bind();
-  $('repCard').style.display=st==8?'':'none';
-  if(st==8)report();
+  $('tests').innerHTML=TS.map(t=>`<button class="ob ${S.done[t.id]?'on':''}" data-t="${t.id}">${t.n}</button>`).join('');
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>run(b.dataset.t));
+  $('logT').innerHTML='<tr><th>পরীক্ষা</th><th>পর্যবেক্ষণ</th></tr>'+(S.log.length?S.log.map(l=>`<tr><td>${TS.find(t=>t.id==l.t).n}</td><td>${l.k}</td></tr>`).join(''):'<tr><td colspan="2" style="color:var(--text-muted)">এখনো কোনো পরীক্ষা করোনি।</td></tr>');
+  $('hN').textContent=S.log.length;$('hC').textContent=S.log.length?candidates().length+' / '+pool.length:'—';
 }
-function bind(){
-  const nx=$('nx');if(nx)nx.onclick=()=>{S.step++;render()};
-  document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a;if(a[0]=='c')S.chem=a.slice(2);else if(a[0]=='v')S.V=+a.slice(2);else S.M=+a.slice(2);S.calcOk=false;S.tries=0;render()});
-  if(S.step==2){
-    $('chk').onclick=()=>{const v=parseFloat($('ans').value.replace(',','.'));const n=need();S.tries++;
-      if(isNaN(v)){$('m2').innerHTML='<div class="msg bad">একটি সংখ্যা লেখো।</div>';return}
-      if(Math.abs(v-n)<=Math.max(0.006,n*0.006)){S.calcOk=true;render()}
-      else $('m2').innerHTML=`<div class="msg bad">ঠিক হয়নি। মোল = M × V(L) = ${f(S.M,2)} × ${f(S.V/1000,3)} = ${f(S.M*S.V/1000,4)} mol; ভর = মোল × Mw।${S.tries>=3?` <b>উত্তর: ${f(n,3)} g</b>`:''}</div>`};
-    $('hint').onclick=()=>{S.peeked=true;$('m2').innerHTML='<div class="msg">w = M × Mw × V / ১০০০ (V mL-এ)। যেমন ০.১ M Na₂CO₃, ২৫০ mL → ০.১×১০৬×২৫০/১০০০ = ২.৬৫ g।</div>'};
-    if(S.tries>=3&&!S.calcOk){const n=need();S.calcOk=true;S.revealed=true;render()}
+function run(id){
+  if(S.solved){toast('নতুন নমুনা নাও');return}
+  const t=TS.find(x=>x.id==id),r=t.r[S.c.id],v=r[2]||{};
+  resetTube();$('tubeT').textContent=t.n.replace(/^\S+ /,'');
+  if(id=='flame'){
+    $('gTube').style.display='none';$('gFlame').style.display='';
+    const col=v.f=='y'?'#fbbf24':v.f=='n'?'#a16207':'#60a5fa';$('fl').setAttribute('fill',col);
+    $('fl2').setAttribute('opacity',v.f=='n'?.2:.9);
+    setTimeout(()=>$('smoke').setAttribute('opacity',v.s*.85),50);$('smoke').setAttribute('opacity',0);
+  }else{
+    $('liq').setAttribute('fill',t.base);
+    if(v.y)$('lay').setAttribute('opacity',1);
+    setTimeout(()=>{
+      if(v.l)$('liq').setAttribute('fill',v.l);
+      if(v.p){$('ppt').setAttribute('fill',v.p);$('ppt').setAttribute('y',262);$('ppt').setAttribute('height',56)}
+      if(v.m)$('mir').setAttribute('opacity',.75);
+      if(v.b)bubs(v.b);
+    },500);
   }
-  if(S.step==3){
-    $('tare')&&($('tare').onclick=()=>{S.tare=true;render()});
-    document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{S.pw=Math.max(0,S.pw+ +b.dataset.w);render()});
-  }
-  if(S.step==4){
-    document.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{S.bw=Math.max(0,S.bw+ +b.dataset.b);S.stir=0;render()});
-    $('stir').onclick=()=>{if(S.bw<S.V*.15){toast('আগে পানি দাও');return}S.stir++;const r=$('rod');r.classList.remove('stirring');void r.getBoundingClientRect();r.classList.add('stirring');if(S.stir>=4)S.dis=true;render()};
-  }
-  if(S.step==5){
-    $('pour').onclick=()=>{S.trans=true;S.vol=S.bw;render()};
-    $('rinse').onclick=()=>{S.rin++;S.vol+=10;render()};
-  }
-  if(S.step==6){
-    document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{S.vol=Math.round((S.vol+ +b.dataset.f)*100)/100;render()});
-    $('redo').onclick=()=>{S.restarts++;Object.assign(S,{step:3,pw:0,tare:false,bw:0,stir:0,dis:false,rin:0,trans:false,vol:0,mixed:0});render()};
-  }
-  if(S.step==7){
-    $('inv').onclick=()=>{S.mixed++;const g=$('flaskG');g.classList.remove('inv');void g.getBoundingClientRect();g.classList.add('inv');render()};
-  }
-  if(S.step==8)$('again').onclick=()=>init({chem:S.chem,V:S.V,M:S.M,calcOk:true});
+  if(!S.done[id]){S.done[id]=1;S.log.push({t:id,k:r[0]})}
+  $('obs').innerHTML=`<div class="msg ${r[0].match(/নেই|থাকে|হলুদ থাকে/)?'':'ok'}"><b>${t.n}:</b> ${r[1]}</div>`;
+  $('live').textContent=r[0];render();
 }
-function report(){
-  const mw=Mw(),loss=0.04*Math.pow(0.12,S.rin),m=S.pw/100;
-  const mol=m*(1-loss)/mw,Ma=mol/(S.vol/1000),err=(Ma-S.M)/S.M*100,ae=Math.abs(err);
-  const star=ae<=1?3:ae<=2.5?2:ae<=5?1:0;
-  const tips=[];
-  if(S.pw!=needH())tips.push(`ওজন লক্ষ্য ${f(needH()/100)} g থেকে ${f(Math.abs(S.pw-needH())/100)} g ${S.pw>needH()?'বেশি':'কম'} ছিল।`);
-  if(S.rin<3)tips.push(`বিকার ${bn(S.rin)} বার ধোয়া হয়েছে — অন্তত ৩ বার ধুতে হবে (প্রায় ${f(loss*100,2)}% দ্রব রয়ে গেছে)।`);
-  if(Math.abs(S.vol-S.V)>TOL[S.V])tips.push(`আয়তন ${f(S.vol,2)} mL — মার্ক (${bn(S.V)} mL) থেকে ${f(Math.abs(S.vol-S.V),2)} mL ${S.vol>S.V?'বেশি':'কম'}।`);
-  if(S.restarts)tips.push(`${bn(S.restarts)} বার নতুন করে শুরু করতে হয়েছে।`);
-  if(S.revealed)tips.push('ওজনের হিসাব নিজে মেলেনি — সূত্রটা আবার অনুশীলন করো।');
-  if(!tips.length)tips.push('কোনো ভুল ছিল না। চমৎকার!');
-  $('report').innerHTML=`<div class="stars">${'⭐'.repeat(star)}${'☆'.repeat(3-star)}</div>
-  <div class="scroll"><table class="rt"><tr><th>বিবরণ</th><th>মান</th></tr>
-  <tr><td>রাসায়নিক</td><td>${CH[S.chem].s} (Mw ${bn(mw)})</td></tr>
-  <tr><td>লক্ষ্য মোলারিটি</td><td>${f(S.M,3)} M</td></tr>
-  <tr><td>ওজন (ব্যালেন্সে)</td><td>${f(m)} g</td></tr>
-  <tr><td>ফ্লাস্কে মোট আয়তন</td><td>${f(S.vol,2)} mL</td></tr>
-  <tr><td><b>প্রকৃত মোলারিটি</b></td><td><b>${f(Ma,4)} M</b></td></tr>
-  <tr><td>ত্রুটি</td><td>${err>=0?'+':'−'}${f(ae,2)}%</td></tr>
-  <tr><td>নরমালিটি (N = M × ${bn(CH[S.chem].nf)})</td><td>${f(Ma*CH[S.chem].nf,4)} N</td></tr>
-  <tr><td>ঘনমাত্রা (g/L)</td><td>${f(Ma*mw,3)} g/L</td></tr></table></div>
-  <div class="res"><b>হিসাব:</b> M = (${f(m*(1-loss),3)} / ${bn(mw)}) × (১০০০ / ${f(S.vol,2)}) = ${f(Ma,4)} M</div>
-  <div class="msg ${star==3?'ok':star?'':'bad'}">${tips.join('<br>')}</div>`;
-}
-// calculators
-const opt=MW.map(a=>`<option value="${a[1]}">${a[0]} (${bn(a[1])})</option>`).join('');
-['c1chem','c2chem','c4chem'].forEach(i=>{$(i).innerHTML=opt;$(i).value='106'});
-const num=id=>parseFloat($(id).value.replace(',','.'));
-$('c1go').onclick=()=>{const m=num('c1m'),v=num('c1v'),w=+$('c1chem').value;if(!(m>0&&v>0)){$('c1out').innerHTML='<div class="msg bad">সঠিক সংখ্যা দাও।</div>';return}const M=m/w*1000/v;$('c1out').innerHTML=`<div class="res">মোল = ${f(m,3)} / ${bn(w)} = ${f(m/w,4)} mol<br>M = ${f(m/w,4)} × (১০০০/${bn(v)}) = <b>${f(M,4)} M</b></div>`};
-$('c2go').onclick=()=>{const M=num('c2m'),v=num('c2v'),w=+$('c2chem').value;if(!(M>0&&v>0)){$('c2out').innerHTML='<div class="msg bad">সঠিক সংখ্যা দাও।</div>';return}$('c2out').innerHTML=`<div class="res">w = ${f(M,3)} × ${bn(w)} × ${bn(v)} / ১০০০ = <b>${f(M*w*v/1000,3)} g</b></div>`};
-$('c3go').onclick=()=>{const a=num('c3a'),b=num('c3b'),v=num('c3v');if(!(a>0&&b>0&&v>0)){$('c3out').innerHTML='<div class="msg bad">সঠিক সংখ্যা দাও।</div>';return}if(b>a){$('c3out').innerHTML='<div class="msg bad">M₂ ছোট হতে হবে (ডাইলুশনে ঘনমাত্রা কমে)।</div>';return}const v1=b*v/a;$('c3out').innerHTML=`<div class="res">V₁ = M₂V₂/M₁ = ${f(b,3)}×${bn(v)}/${f(a,3)} = <b>${f(v1,2)} mL</b> গাঢ় দ্রবণ নিয়ে মোট ${bn(v)} mL-এ পাতলা করো (পানি ${f(v-v1,2)} mL)।</div>`};
-$('c4go').onclick=()=>{const M=num('c4m'),w=+$('c4chem').value;if(!(M>0)){$('c4out').innerHTML='<div class="msg bad">সঠিক সংখ্যা দাও।</div>';return}$('c4out').innerHTML=`<div class="res">${f(M*w,3)} g/L · ${f(M*w/10,3)} % (w/v) · ${f(M*1000,1)} mmol/L · ${f(M*w*1000,0)} ppm (প্রায়)</div>`};
-// tabs
-document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x==b));$('labMode').style.display=b.dataset.m=='lab'?'':'none';$('calcMode').style.display=b.dataset.m=='calc'?'':'none'});
+$('hint').onclick=()=>{if(S.solved)return;const cands=candidates();S.hint++;
+  if(cands.length==1){$('res').innerHTML='<div class="msg ok">শুধু একটি যৌগ বাকি — জমা দিতে পারো!</div>';return}
+  let best=null,bs=-1;TS.forEach(t=>{if(S.done[t.id])return;const g={};cands.forEach(c=>{const k=t.r[c.id][0];g[k]=(g[k]||0)+1});const sc=Object.keys(g).length;if(sc>bs){bs=sc;best=t}});
+  $('res').innerHTML=`<div class="msg">এখনো ${cands.length}টি সম্ভাব্য যৌগ। চেষ্টা করো: <b>${best?best.n:'—'}</b></div>`};
+$('sub').onclick=()=>{if(S.solved)return;const c=$('selC').value,g=$('selG').value;if(!c||!g){toast('যৌগ ও শ্রেণি দুটোই বাছো');return}
+  if(S.log.length<2){toast('আগে কমপক্ষে ২টি পরীক্ষা করো');return}
+  const okC=c==S.c.id,okG=g==S.c.g;
+  if(okC&&okG){S.solved=true;let st=3;if(S.log.length>9)st--;if(S.hint||S.wrong>=2)st--;if(S.wrong>=4)st--;st=Math.max(1,st);
+    $('res').innerHTML=`<div class="msg ok"><div class="stars">${'⭐'.repeat(st)}${'☆'.repeat(3-st)}</div>🎉 ঠিক! এটি <b>${S.c.n} (${S.c.f})</b> — ${GR[S.c.g]}।<br>${S.log.length}টি পরীক্ষা করেছো${S.hint?`, ${S.hint}বার ইঙ্গিত নিয়েছো`:''}${S.wrong?`, ${S.wrong}বার ভুল করেছো`:''}।</div>`}
+  else{S.wrong++;$('res').innerHTML=`<div class="msg bad">${okG?'মূলক ঠিক, কিন্তু যৌগ ভুল।':okC?'যৌগ ঠিক, কিন্তু শ্রেণি ভুল।':'দুটোই ভুল।'} আরও পরীক্ষা করো।</div>`}};
+$('newS').onclick=newS;
+$('lvE').onclick=()=>{lvl='easy';$('lvE').classList.add('on');$('lvF').classList.remove('on');newS()};
+$('lvF').onclick=()=>{lvl='full';$('lvF').classList.add('on');$('lvE').classList.remove('on');newS()};
+// matrix
+$('mat').innerHTML='<tr><th>পরীক্ষা</th>'+CP.map(c=>`<th>${c.n}</th>`).join('')+'</tr>'+TS.map(t=>`<tr><td><b>${t.n}</b></td>${CP.map(c=>`<td>${t.r[c.id][0]}</td>`).join('')}</tr>`).join('');
 document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
-$('mwT').innerHTML='<tr><th>যৌগ</th><th>Mw (g/mol)</th></tr>'+MW.map(a=>`<tr><td>${a[0]}</td><td>${bn(a[1])}</td></tr>`).join('');
 $('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
-init();
+newS();
 </script>
 </body>
 </html>
