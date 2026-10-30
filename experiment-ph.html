@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>সার্বজনীন নির্দেশক ও pH ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.prog{height:8px;border-radius:8px;background:var(--card-solid);border:1px solid var(--border-color);overflow:hidden;margin-bottom:14px}.prog i{display:block;height:100%;width:0;background:var(--gradient-primary);transition:width .4s}
+.tagx{float:right;font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.35)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.scroll{overflow-x:auto}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.ob.on{border-color:#a855f7;background:rgba(168,85,247,.18);box-shadow:0 0 14px rgba(168,85,247,.35)}
+.ob:hover{transform:translateY(-1px)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.pst h3{margin:0 0 6px;font-size:17px}.pst p{margin:6px 0;line-height:1.8;font-size:14.5px}
+.pst .lbl{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:10px}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.msg.ok{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4)}.msg.bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4)}
+table.rt{width:100%;border-collapse:collapse;font-size:14px}table.rt td,table.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}
+table.rt th{color:var(--text-muted);font-size:12.5px}
+.stars{font-size:26px;letter-spacing:4px}
+.res{margin-top:10px;padding:10px 13px;border-radius:12px;background:var(--card-solid);border:1px dashed var(--border-color);font-size:14px;line-height:1.8}
+@keyframes inv{0%{transform:rotate(0)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}
+.inv{animation:inv .7s ease}
+@keyframes stir{0%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}100%{transform:rotate(-7deg)}}
+.stirring{animation:stir .45s ease 2}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Digital Lab</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="digitallab.html">← <span class="long">ল্যাব হাবে ফিরে যান</span></a>
+    </div>
+  </header>
+  <section class="hero">
+    <span class="pill">🌈 এসিড-ক্ষার · প্র্যাক্টিক্যাল</span>
+    <h1><span class="em">🌈</span> সার্বজনীন নির্দেশক ও pH ল্যাব</h1>
+    <p>নির্দেশকের ফোঁটা দিয়ে রং দেখো, রঙের স্কেল মিলিয়ে pH আন্দাজ করো, তারপর পিএইচ মিটারে যাচাই করো। ঘরের জিনিস থেকে শুরু করে এসিড-ক্ষারের পাতলা করার রহস্য পর্যন্ত!</p>
+  </section>
+  <div class="tabs" style="margin-top:0">
+    <button class="tab on" data-m="free">🧴 মুক্ত পরীক্ষা</button>
+    <button class="tab" data-m="myst">❓ রহস্যময় নমুনা</button>
+    <button class="tab" data-m="dil">💧 পাতলা করা</button>
+  </div>
+  <div class="lab">
+    <section class="card stage">
+      <h2>🔬 পরীক্ষার টেবিল <span class="tagx" id="sTag">—</span></h2>
+      <svg id="svg" viewBox="0 0 400 400" role="img" aria-label="টেস্ট টিউব ও pH স্কেল">
+        <defs>
+          <linearGradient id="glassG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".3" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".3"/></linearGradient>
+          <clipPath id="clipT"><path d="M95 40 V200 Q95 230 125 230 Q155 230 155 200 V40 Z"/></clipPath>
+        </defs>
+        <rect x="14" y="250" width="372" height="10" rx="5" fill="var(--stand)" stroke="var(--border-color)"/>
+        <!-- dropper -->
+        <g id="drp" style="transition:transform .5s;transform:translateY(0)"><rect x="118" y="-28" width="14" height="58" rx="5" fill="#64748b"/><path d="M121 30 L129 30 L125 48 Z" fill="#94a3b8"/><circle id="dd" cx="125" cy="52" r="0" fill="#fff"/></g>
+        <g clip-path="url(#clipT)"><rect id="liq" x="80" y="120" width="90" height="120" fill="rgba(190,220,255,.2)" style="transition:fill 1s"/></g>
+        <path d="M95 40 V200 Q95 230 125 230 Q155 230 155 200 V40" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2.5"/>
+        <ellipse cx="125" cy="40" rx="30" ry="4" fill="none" stroke="var(--glass)" stroke-width="2"/>
+        <text id="tT" x="125" y="246" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-muted)" font-family="inherit"></text>
+        <!-- paper strips -->
+        <g id="strips">
+          <rect id="st1" x="215" y="60" width="26" height="150" rx="2" fill="#f5f0dc" stroke="#cbd5e1"/>
+          <rect id="st2" x="255" y="60" width="26" height="150" rx="2" fill="#f5f0dc" stroke="#cbd5e1" style="display:none"/>
+          <text id="stT" x="228" y="226" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="inherit"></text>
+        </g>
+        <text id="meterT" x="300" y="110" font-size="10" fill="var(--text-muted)" font-family="inherit"></text>
+        <g id="meter" style="display:none"><rect x="300" y="120" width="76" height="46" rx="8" fill="#0b1220" stroke="#334155"/><text id="mV" x="338" y="152" text-anchor="middle" font-size="22" font-weight="800" fill="#4ade80" font-family="ui-monospace,monospace">0.0</text><text x="338" y="116" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="inherit">pH মিটার</text></g>
+        <!-- scale -->
+        <g id="scale"></g>
+        <g id="mk" style="display:none;transition:transform .5s"><path d="M0 300 L-7 290 L7 290 Z" fill="#f8fafc" stroke="#0f172a"/><text id="mkT" x="0" y="284" text-anchor="middle" font-size="12" font-weight="800" fill="var(--text-color)" font-family="inherit"></text></g>
+        <text x="30" y="388" font-size="11" font-weight="700" fill="#f87171" font-family="inherit">অম্ল</text>
+        <text x="200" y="388" text-anchor="middle" font-size="11" font-weight="700" fill="#4ade80" font-family="inherit">প্রশম</text>
+        <text x="372" y="388" text-anchor="end" font-size="11" font-weight="700" fill="#a78bfa" font-family="inherit">ক্ষার</text>
+      </svg>
+      <div class="live" id="live">একটি দ্রবণ বেছে নাও।</div>
+      <div class="hud"><div class="box"><small id="h1l">দ্রবণ</small><b id="h1">—</b></div><div class="box"><small id="h2l">নির্দেশক</small><b id="h2">—</b></div></div>
+    </section>
+
+    <section>
+      <div id="pFree" class="card"><h2>🧴 দ্রবণ বেছে নাও</h2><div class="opts" id="sols"></div></div>
+      <div id="pMyst" class="card" style="display:none"><h2>❓ রহস্যময় নমুনা <span class="tagx" id="mN">নমুনা ?</span></h2>
+        <p style="font-size:14px;line-height:1.8;margin:0">নমুনার নাম অজানা। নির্দেশক দিয়ে রং দেখে pH আন্দাজ করো, তারপর জমা দাও।</p></div>
+      <div id="pDil" class="card" style="display:none"><h2>💧 পাতলা করার পরীক্ষা</h2>
+        <div class="opts" id="dilS"></div>
+        <div class="row"><button class="btn" id="dilGo">💧 ১০ গুণ পাতলা করো</button><button class="btn ghost" id="dilRes">🔁 শুরু থেকে</button></div>
+        <div id="dilOut"></div>
+        <div class="scroll"><table class="rt" id="dilT"><tr><th>ধাপ</th><th>ঘনমাত্রা</th><th>pH</th></tr></table></div>
+      </div>
+
+      <div id="indP" class="card" style="margin-top:22px"><h2>🧫 নির্দেশক / যন্ত্র</h2>
+        <div class="opts" id="inds"></div>
+        <div class="row"><button class="btn" id="addI">💧 ফোঁটা দাও</button><button class="btn ghost" id="clr">🧽 পরিষ্কার করো</button></div>
+        <div id="obs"></div>
+      </div>
+      <div id="logP" class="card" style="margin-top:22px"><h2>📒 লগবুক</h2>
+        <div class="scroll"><table class="rt" id="logT"><tr><th>দ্রবণ</th><th>নির্দেশক</th><th>রং</th></tr></table></div>
+      </div>
+      <div id="guessP" class="card" style="margin-top:22px;display:none"><h2>🎯 তোমার অনুমান</h2>
+        <div class="row" style="margin-top:0"><label>pH: <b id="gv">7.0</b><br><input type="range" id="gs" min="0" max="14" step="0.5" value="7" style="width:200px"></label>
+        <label>ধরন<br><select class="sel" id="gc"></select></label></div>
+        <div class="row"><button class="btn" id="gsub">✔ জমা দাও</button><button class="btn ghost" id="gnew">🎲 নতুন নমুনা</button></div><div id="gres"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-p="p1">📘 pH ও নির্দেশক</button>
+    <button class="tab" data-p="p2">📋 নির্দেশক ছক</button>
+    <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
+    <button class="tab" data-p="p4">🎓 ভাইভা</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1">
+      <h3>pH কী?</h3>
+      <span class="formula">pH = −log₁₀[H⁺]</span>
+      <p>pH স্কেল ০–১৪। pH &lt; ৭ অম্লীয়, = ৭ প্রশম, &gt; ৭ ক্ষারীয় (২৫°C)। প্রতি এক একক pH মানে H⁺ ঘনমাত্রা ১০ গুণ পরিবর্তন।</p>
+      <p>pH + pOH = ১৪, [H⁺][OH⁻] = ১০⁻¹⁴ (Kw)।</p>
+      <h3>সার্বজনীন নির্দেশক</h3>
+      <p>একাধিক নির্দেশকের মিশ্রণ — pH অনুযায়ী লাল → কমলা → হলুদ → সবুজ → নীল → বেগুনি। তাই এক পরীক্ষাতেই pH প্রায় আন্দাজ করা যায়।</p>
+      <h3>পাতলা করলে pH কেমন বদলায়?</h3>
+      <ul><li>সবল এসিড ১০ গুণ পাতলা করলে pH ১ বাড়ে (০.১ M HCl: pH ১ → ০.০১ M: pH ২)।</li><li>অনেক পাতলা করলেও এসিড কখনো ক্ষারীয় হয় না — pH ৭-এর দিকে যায়, কারণ পানির নিজস্ব আয়ন।</li><li>দুর্বল এসিড পাতলা করলে আয়নন বাড়ে, তাই pH কম বদলায়।</li></ul>
+    </div>
+    <div class="pane" id="p2"><h3>নির্দেশকের pH পরিসর ও রং</h3><div class="scroll"><table class="rt" style="min-width:560px" id="indT"></table></div></div>
+    <div class="pane" id="p3">
+      <h3>সতর্কতা</h3>
+      <ul><li>HCl, NaOH, ব্লিচ ও অ্যামোনিয়া ক্ষয়কারী — গগলস ও দস্তানা পরো।</li><li>এসিড ও ক্ষার কখনো মুখে বা নাকে নিয়ে পরীক্ষা করবে না; পানিতে এসিড ঢালতে হয় (উল্টোটা নয়)।</li><li>ব্লিচ ও অ্যামোনিয়া একসাথে মেশাবে না — বিষাক্ত গ্যাস তৈরি হয়।</li><li>পিএইচ মিটার ব্যবহারের আগে বাফারে ক্যালিব্রেট করো ও প্রতি বার পাতিত পানিতে ধুয়ে নাও।</li><li>pH পেপার ভেজা হাতে ধরবে না, রঙের স্কেলের সাথে দ্রুত মিলিয়ে নাও।</li></ul>
+    </div>
+    <div class="pane" id="p4">
+      <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>pH স্কেল ০–১৪ কেন?</summary><p>২৫°C-এ Kw = ১০⁻¹⁴, তাই [H⁺] ১ M থেকে ১০⁻¹⁴ M পর্যন্ত (সাধারণ দ্রবণে) pH ০–১৪। খুব গাঢ় দ্রবণে এর বাইরেও যেতে পারে।</p></details>
+      <details class="qa"><summary>ফেনোলফথেলিন কখন গোলাপি হয়?</summary><p>pH ৮.২–১০ পরিসরে বর্ণহীন থেকে গোলাপি; ক্ষারীয় দ্রবণে গাঢ় গোলাপি/ম্যাজেন্টা। অম্লীয় ও প্রশমে বর্ণহীন।</p></details>
+      <details class="qa"><summary>মিথাইল অরেঞ্জ কেন দুর্বল এসিড–ক্ষার টাইট্রেশনে ব্যবহার হয় না?</summary><p>এর পরিসর ৩.১–৪.৪ (অম্লীয় দিকে), তাই দুর্বল এসিডের তুল্যতা বিন্দু (pH > ৭)-এর জন্য উপযুক্ত নয়।</p></details>
+      <details class="qa"><summary>১০⁻⁸ M HCl-এর pH ৮ নয় কেন?</summary><p>এত পাতলা হলে পানির নিজস্ব H⁺ (১০⁻⁷ M) উপেক্ষা করা যায় না। সঠিক হিসাবে pH ≈ ৬.৯৮।</p></details>
+      <details class="qa"><summary>সবল ও দুর্বল এসিডের পার্থক্য কী?</summary><p>সবল এসিড (HCl) প্রায় সম্পূর্ণ আয়নিত; দুর্বল এসিড (CH₃COOH) আংশিক। একই ঘনমাত্রায় সবল এসিডের pH কম।</p></details>
+      <details class="qa"><summary>লিটমাস ও সার্বজনীন নির্দেশকের পার্থক্য কী?</summary><p>লিটমাস শুধু অম্ল/ক্ষার বলে (দুই রং); সার্বজনীন নির্দেশক pH-এর মান প্রায় আন্দাজ করতে দেয়।</p></details>
+      <details class="qa"><summary>পাকস্থলীর রস ও দাঁতের ক্ষয়ে pH-এর ভূমিকা কী?</summary><p>পাকস্থলীর রসের pH ≈ ১.৫–২ — খাদ্য হজমে সাহায্য করে। মুখের pH ৫.৫-এর নিচে নামলে দাঁতের এনামেল ক্ষয় হয়।</p></details>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const f=(x,d=1)=>bn((+x).toFixed(d));
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
+const SOL=[
+ {id:'hcl',n:'০.১ M HCl',ph:1.0,note:'সবল এসিড'},{id:'stom',n:'পাকস্থলীর রস',ph:1.6,note:'হজমের এসিড'},{id:'lem',n:'লেবুর রস',ph:2.2,note:'সাইট্রিক এসিড'},
+ {id:'vin',n:'ভিনেগার',ph:2.9,note:'অ্যাসিটিক এসিড'},{id:'tom',n:'টমেটোর রস',ph:4.4,note:'দুর্বল জৈব এসিড'},{id:'rain',n:'বৃষ্টির পানি',ph:5.6,note:'দ্রবীভূত CO₂'},
+ {id:'milk',n:'দুধ',ph:6.6,note:'সামান্য অম্লীয়'},{id:'dw',n:'বিশুদ্ধ পানি',ph:7.0,note:'প্রশম'},{id:'sea',n:'সমুদ্রের পানি',ph:8.1,note:'সামান্য ক্ষারীয়'},
+ {id:'bak',n:'বেকিং সোডা দ্রবণ',ph:8.4,note:'NaHCO₃'},{id:'soap',n:'সাবানের পানি',ph:10.0,note:'দুর্বল ক্ষার'},{id:'amm',n:'অ্যামোনিয়া দ্রবণ',ph:11.6,note:'NH₄OH'},
+ {id:'ble',n:'ব্লিচ',ph:12.5,note:'NaOCl, ক্ষারীয়'},{id:'naoh',n:'০.১ M NaOH',ph:13.0,note:'সবল ক্ষার'}];
+const CATS={sa:'সবল অম্ল',wa:'দুর্বল অম্ল',ne:'প্রশম',wb:'দুর্বল ক্ষার',sb:'সবল ক্ষার'};
+const catOf=p=>p<3?'sa':p<6.5?'wa':p<=7.5?'ne':p<=11?'wb':'sb';
+// colour tools
+const UNI=[[0,[220,20,40]],[1,[230,25,40]],[2,[240,50,35]],[3,[245,95,30]],[4,[250,150,30]],[5,[250,205,40]],[6,[190,215,50]],[7,[60,175,80]],[8,[30,160,150]],[9,[40,110,200]],[10,[70,70,190]],[11,[110,55,170]],[12,[135,45,160]],[13,[150,40,150]],[14,[160,40,140]]];
+function lerp(st,x){x=Math.max(st[0][0],Math.min(st[st.length-1][0],x));for(let i=0;i<st.length-1;i++){const a=st[i],b=st[i+1];if(x<=b[0]){const t=(x-a[0])/(b[0]-a[0]);return a[1].map((v,j)=>Math.round(v+(b[1][j]-v)*t))}}return st[st.length-1][1]}
+const rgb=(c,a=1)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const IND=[
+ {id:'uni',n:'সার্বজনীন নির্দেশক',type:'liq',col:p=>rgb(lerp(UNI,p),.85),name:p=>p<2?'গাঢ় লাল':p<3.5?'লাল-কমলা':p<4.5?'কমলা':p<5.5?'হলুদ':p<6.5?'হলুদাভ সবুজ':p<7.5?'সবুজ':p<8.5?'নীলাভ সবুজ':p<9.5?'নীল':p<10.5?'নীল-বেগুনি':p<12?'বেগুনি':'গাঢ় বেগুনি',range:'১–১৪',rc:'লাল → কমলা → হলুদ → সবুজ → নীল → বেগুনি'},
+ {id:'paper',n:'pH পেপার',type:'strip',col:p=>rgb(lerp(UNI,p).map(v=>Math.round(v*0.9+25)),1),name:null,range:'১–১৪',rc:'লাল → সবুজ → বেগুনি (রঙের স্কেল)'},
+ {id:'lit',n:'লিটমাস (লাল ও নীল)',type:'lit',col:null,name:null,range:'৪.৫–৮.৩',rc:'লাল ⇌ নীল'},
+ {id:'phph',n:'ফেনোলফথেলিন',type:'liq',col:p=>p<8.2?'rgba(190,220,255,.2)':p<10?`rgba(236,72,153,${.15+(p-8.2)/1.8*.5})`:'rgba(219,39,119,.8)',name:p=>p<8.2?'বর্ণহীন':p<10?'ফিকে গোলাপি':'গাঢ় গোলাপি',range:'৮.২–১০',rc:'বর্ণহীন → গোলাপি'},
+ {id:'mo',n:'মিথাইল অরেঞ্জ',type:'liq',col:p=>p<3.1?'rgba(239,68,68,.8)':p<4.4?'rgba(249,130,40,.8)':'rgba(250,204,21,.8)',name:p=>p<3.1?'লাল':p<4.4?'কমলা':'হলুদ',range:'৩.১–৪.৪',rc:'লাল → হলুদ'},
+ {id:'btb',n:'ব্রোমোথাইমল ব্লু',type:'liq',col:p=>p<6?'rgba(250,204,21,.8)':p<7.6?'rgba(74,180,90,.8)':'rgba(59,100,230,.85)',name:p=>p<6?'হলুদ':p<7.6?'সবুজ':'নীল',range:'৬.০–৭.৬',rc:'হলুদ → সবুজ → নীল'},
+ {id:'meter',n:'পিএইচ মিটার',type:'meter',col:null,name:null,range:'০–১৪',rc:'সংখ্যায় pH'}];
+const L=id=>IND.find(i=>i.id==id);
+function litName(p){return p<4.5?'নীল → লাল':p>8.3?'লাল → নীল':'দুটোই মাঝামাঝি/বেগুনি'}
+let mode='free',cur=SOL[7],ind='uni',myst=null,log=[],added=false,dil={s:'hcl',k:0},meterOn=false;
+// scale
+(function(){let s='';for(let i=0;i<=14;i++)s+=`<rect x="${30+i*24.5}" y="300" width="24.5" height="46" fill="${rgb(lerp(UNI,i))}"/><text x="${42+i*24.5}" y="362" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text-color)" font-family="inherit">${bn(i)}</text>`;$('scale').innerHTML=s})();
+function mkr(p){const g=$('mk');if(p==null){g.style.display='none';return}g.style.display='';g.style.transform=`translateX(${42+p*24.5}px)`;$('mkT').textContent=f(p,1)}
+function truePH(){return mode=='myst'?myst.ph:mode=='dil'?dilPH():cur.ph}
+// dilution engine
+const DS={hcl:{n:'০.১ M HCl (সবল এসিড)',C0:.1,t:'sa'},naoh:{n:'০.১ M NaOH (সবল ক্ষার)',C0:.1,t:'sb'},ace:{n:'০.১ M CH₃COOH (দুর্বল এসিড)',C0:.1,t:'wa',Ka:1.8e-5}};
+const Kw=1e-14;
+function dilC(){return DS[dil.s].C0/Math.pow(10,dil.k)}
+function dilPH(){const d=DS[dil.s],C=dilC();let h;
+  if(d.t=='sa')h=(C+Math.sqrt(C*C+4*Kw))/2;
+  else if(d.t=='sb'){const o=(C+Math.sqrt(C*C+4*Kw))/2;h=Kw/o}
+  else{let lo=1e-14,hi=1;for(let i=0;i<200;i++){const m=Math.sqrt(lo*hi);const v=m-Kw/m-d.Ka*C/(d.Ka+m);if(v>0)hi=m;else lo=m}h=Math.sqrt(lo*hi)}
+  return -Math.log10(h)}
+function currentName(){return mode=='myst'?'নমুনা ?':mode=='dil'?DS[dil.s].n+(dil.k?' (১০'+bn(dil.k)+' গুণ পাতলা)':''):cur.n}
+// draw
+function draw(){
+  const I=L(ind),p=truePH();
+  $('pFree').style.display=mode=='free'?'':'none';$('pMyst').style.display=mode=='myst'?'':'none';$('pDil').style.display=mode=='dil'?'':'none';
+  $('guessP').style.display=mode=='myst'?'':'none';$('logP').style.display=mode=='free'?'':'none';
+  $('sTag').textContent=mode=='free'?'মুক্ত':mode=='myst'?'রহস্য':'ডাইলুশন';
+  $('h1').textContent=currentName();$('h2').textContent=I.n;
+  $('tT').textContent=currentName();
+  // liquid
+  let lc='rgba(190,220,255,.2)';
+  if(added&&I.type=='liq')lc=I.col(p);
+  $('liq').setAttribute('fill',lc);
+  // strips
+  const s1=$('st1'),s2=$('st2');s1.setAttribute('fill','#f5f0dc');s2.style.display='none';$('stT').textContent='';
+  if(added&&I.type=='strip'){s1.setAttribute('fill',I.col(p));$('stT').textContent='pH পেপার'}
+  if(added&&I.type=='lit'){s2.style.display='';const red=p<8.3?(p<4.5?'#dc2626':'#a855f7'):'#a855f7';
+    s1.setAttribute('fill',p<4.5?'#dc2626':p>8.3?'#2563eb':'#9333ea');s2.setAttribute('fill',p>8.3?'#2563eb':p<4.5?'#dc2626':'#7c3aed');
+    s1.setAttribute('fill',p<4.5?'#dc2626':p<8.3?'#d946a8':'#2563eb');s2.setAttribute('fill',p<4.5?'#dc2626':p<8.3?'#6d5de0':'#2563eb');
+    $('stT').textContent='লাল ও নীল লিটমাস'}
+  $('meter').style.display=added&&I.type=='meter'?'':'none';
+  if(added&&I.type=='meter')$('mV').textContent=f(p+(((p*7.3)%1)-.5)*.04,1);
+  // marker
+  mkr(added&&(I.id=='uni'||I.id=='paper'||I.id=='meter')&&(mode!='myst'||I.id=='meter'&&myst.rev)?p:null);
+  $('inds').innerHTML=IND.filter(i=>mode!='myst'||i.id!='meter'||myst.rev).map(i=>`<button class="ob ${i.id==ind?'on':''}" data-i="${i.id}">${i.n}</button>`).join('');
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{ind=b.dataset.i;added=false;$('obs').innerHTML='';draw()});
+  $('h1l').textContent='দ্রবণ';
+}
+$('addI').onclick=()=>{
+  if(mode=='free'&&!cur){toast('আগে দ্রবণ বেছে নাও');return}
+  const I=L(ind),p=truePH();added=true;
+  const d=$('dd'),dr=$('drp');d.setAttribute('r',4);dr.style.transform='translateY(0)';setTimeout(()=>{d.setAttribute('r',0)},700);
+  let nm;
+  if(I.type=='liq')nm=I.name(p);else if(I.type=='strip')nm='pH পেপারের রং বদলাল — নিচের স্কেলের সাথে মিলাও';else if(I.type=='lit')nm=litName(p);else nm='pH = '+f(p+(((p*7.3)%1)-.5)*.04,1);
+  let msg='';
+  if(I.id=='uni')msg=mode=='myst'?`রং: <b>${nm}</b> — নিচের pH স্কেলের সাথে মিলাও।`:`রং: <b>${nm}</b> → pH প্রায় <b>${f(p,0)}</b>।`;
+  else if(I.id=='lit')msg=`<b>${nm}</b>${p<4.5?' → অম্লীয়।':p>8.3?' → ক্ষারীয়।':' → ৪.৫–৮.৩ পরিসরে, স্পষ্ট নয়।'}`;
+  else if(I.id=='phph')msg=`রং: <b>${nm}</b> ${p>=8.2?'→ pH ৮.২-এর বেশি।':'→ pH ৮.২-এর কম।'}`;
+  else if(I.id=='mo')msg=`রং: <b>${nm}</b> ${p<3.1?'→ pH ৩.১-এর কম।':p<4.4?'→ pH ৩.১–৪.৪।':'→ pH ৪.৪-এর বেশি।'}`;
+  else if(I.id=='btb')msg=`রং: <b>${nm}</b> ${p<6?'→ pH ৬-এর কম (অম্ল)।':p<7.6?'→ pH ৬–৭.৬ (প্রায় প্রশম)।':'→ pH ৭.৬-এর বেশি (ক্ষার)।'}`;
+  else if(I.id=='paper')msg=`<b>${nm}</b>`;
+  else msg=`<b>${nm}</b>`;
+  $('obs').innerHTML=`<div class="msg ok">${msg}</div>`;$('live').innerHTML=msg;
+  if(mode=='free'){log.push({s:cur.n,i:I.n,c:I.type=='meter'?nm.replace('pH = ','pH '):I.type=='strip'?'স্কেলের সাথে মিলাও':nm});if(log.length>12)log.shift();drawLog()}
+  if(mode=='dil')dilOut();
+  draw();
+};
+$('clr').onclick=()=>{added=false;$('obs').innerHTML='';draw()};
+function drawLog(){$('logT').innerHTML='<tr><th>দ্রবণ</th><th>নির্দেশক</th><th>রং</th></tr>'+log.map(l=>`<tr><td>${l.s}</td><td>${l.i}</td><td>${l.c}</td></tr>`).join('')}
+// free
+function drawSols(){$('sols').innerHTML=SOL.map(s=>`<button class="ob ${cur&&cur.id==s.id?'on':''}" data-s="${s.id}">${s.n}</button>`).join('');
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{cur=SOL.find(x=>x.id==b.dataset.s);added=false;$('obs').innerHTML='';$('live').textContent=cur.n+' ('+cur.note+') — নির্দেশক বেছে ফোঁটা দাও।';drawSols();draw()})}
+// mystery
+function newMyst(){const pool=SOL.filter(s=>s.id!='dw'||Math.random()<.5);myst=Object.assign({rev:false,tries:0},pool[Math.floor(Math.random()*pool.length)]);added=false;ind='uni';
+  $('gres').innerHTML='';$('gs').value=7;$('gv').textContent='৭.০';$('gc').value='';$('mN').textContent='নমুনা '+String.fromCharCode(65+Math.floor(Math.random()*8));$('obs').innerHTML='';$('live').textContent='নির্দেশক দিয়ে নমুনা পরীক্ষা করো।'}
+$('gc').innerHTML='<option value="">— ধরন —</option>'+Object.keys(CATS).map(k=>`<option value="${k}">${CATS[k]}</option>`).join('');
+$('gs').oninput=()=>{$('gv').textContent=f($('gs').value,1)};
+$('gsub').onclick=()=>{if(myst.rev){toast('নতুন নমুনা নাও');return}const g=+$('gs').value,c=$('gc').value;if(!c){toast('ধরন বাছো');return}
+  const d=Math.abs(g-myst.ph),okc=c==catOf(myst.ph);let st=d<=.5?3:d<=1?2:d<=2?1:0;if(!okc)st=Math.max(0,st-1);
+  myst.rev=true;added=true;ind='meter';draw();$('addI').click();
+  $('gres').innerHTML=`<div class="msg ${st>=2?'ok':'bad'}"><div class="stars">${'⭐'.repeat(st)}${'☆'.repeat(3-st)}</div>নমুনা: <b>${myst.n}</b> (${myst.note}), আসল pH = <b>${f(myst.ph,1)}</b>। তোমার অনুমান ${f(g,1)} (পার্থক্য ${f(d,1)})। ধরন: ${CATS[catOf(myst.ph)]} ${okc?'✔':'✖'}</div>`};
+$('gnew').onclick=()=>{newMyst();draw()};
+// dilution
+function drawDil(){$('dilS').innerHTML=Object.keys(DS).map(k=>`<button class="ob ${dil.s==k?'on':''}" data-d="${k}">${DS[k].n}</button>`).join('');
+  document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{dil={s:b.dataset.d,k:0,hist:[]};added=false;ind='uni';$('addI').click();drawDil()});
+  const h=dil.hist||[];$('dilT').innerHTML='<tr><th>ধাপ</th><th>ঘনমাত্রা</th><th>pH</th></tr>'+h.map(r=>`<tr><td>${r.k?'১০'+bn(r.k)+' গুণ':'মূল'}</td><td>${bn(r.c.toExponential(1).replace('e-','×১০⁻').replace('e+','×১০'))} M</td><td>${f(r.p,2)}</td></tr>`).join('')}
+function rec(){dil.hist=dil.hist||[];dil.hist.push({k:dil.k,c:dilC(),p:dilPH()})}
+function dilOut(){const p=dilPH(),C=dilC(),d=DS[dil.s];let m=`ঘনমাত্রা ${bn(C.toExponential(1).replace('e-','×১০⁻'))} M → pH = <b>${f(p,2)}</b>`;
+  if(C<1e-6&&d.t!='wa')m+=`<br>⚠ খুব পাতলা — পানির নিজস্ব আয়ন ধরলে pH ৭-এর দিকেই যায়; ${d.t=='sa'?'এসিড কখনো ক্ষারীয় হয় না!':'ক্ষার কখনো অম্লীয় হয় না!'}`;
+  if(d.t=='wa')m+=`<br>দুর্বল এসিডে প্রতি ১০ গুণ পাতলায় pH প্রায় ০.৫ বাড়ে (আয়নন বাড়ে)।`;
+  $('dilOut').innerHTML=`<div class="msg">${m}</div>`}
+$('dilGo').onclick=()=>{if(dil.k>=10){toast('আর পাতলা করা যাবে না');return}dil.k++;rec();added=true;ind='uni';draw();dilOut();drawDil();$('live').textContent=''};
+$('dilRes').onclick=()=>{dil={s:dil.s,k:0,hist:[]};rec();added=false;ind='uni';$('dilOut').innerHTML='';draw();drawDil()};
+// tabs
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x==b));added=false;ind='uni';$('obs').innerHTML='';
+  if(mode=='myst'&&!myst)newMyst();if(mode=='dil'&&!dil.hist){dil.hist=[];rec();drawDil()}
+  $('live').textContent=mode=='free'?'একটি দ্রবণ বেছে নাও।':mode=='myst'?'নির্দেশক দিয়ে নমুনা পরীক্ষা করো।':'১০ গুণ পাতলা করো ও pH দেখো।';draw();if(mode=='dil')drawDil()});
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
+$('indT').innerHTML='<tr><th>নির্দেশক</th><th>pH পরিসর</th><th>রং পরিবর্তন</th></tr>'+IND.map(i=>`<tr><td>${i.n}</td><td>${i.range}</td><td>${i.rc}</td></tr>`).join('');
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+drawSols();drawLog();draw();
+</script>
+</body>
+</html>

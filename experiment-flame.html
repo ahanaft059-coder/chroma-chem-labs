@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>শিখা পরীক্ষা (Flame Test) ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.prog{height:8px;border-radius:8px;background:var(--card-solid);border:1px solid var(--border-color);overflow:hidden;margin-bottom:14px}.prog i{display:block;height:100%;width:0;background:var(--gradient-primary);transition:width .4s}
+.tagx{float:right;font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.35)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.scroll{overflow-x:auto}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.ob.on{border-color:#a855f7;background:rgba(168,85,247,.18);box-shadow:0 0 14px rgba(168,85,247,.35)}
+.ob:hover{transform:translateY(-1px)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.pst h3{margin:0 0 6px;font-size:17px}.pst p{margin:6px 0;line-height:1.8;font-size:14.5px}
+.pst .lbl{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:10px}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.msg.ok{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4)}.msg.bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4)}
+table.rt{width:100%;border-collapse:collapse;font-size:14px}table.rt td,table.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}
+table.rt th{color:var(--text-muted);font-size:12.5px}
+.stars{font-size:26px;letter-spacing:4px}
+.res{margin-top:10px;padding:10px 13px;border-radius:12px;background:var(--card-solid);border:1px dashed var(--border-color);font-size:14px;line-height:1.8}
+@keyframes inv{0%{transform:rotate(0)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}
+.inv{animation:inv .7s ease}
+@keyframes stir{0%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}100%{transform:rotate(-7deg)}}
+.stirring{animation:stir .45s ease 2}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Digital Lab</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="digitallab.html">← <span class="long">ল্যাব হাবে ফিরে যান</span></a>
+    </div>
+  </header>
+  <section class="hero">
+    <span class="pill">🔥 মৌলিক বিশ্লেষণ · শুষ্ক পরীক্ষা</span>
+    <h1><span class="em">🔥</span> শিখা পরীক্ষা ল্যাব</h1>
+    <p>প্ল্যাটিনাম/নিক্রোম তারে লবণ নিয়ে বুনসেন শিখায় ধরো, শিখার রং দেখে ধাতব আয়ন শনাক্ত করো। তার পরিষ্কার না করলে বা সোডিয়ামের দূষণ থাকলে কী হয়, তাও নিজের চোখে দেখো!</p>
+  </section>
+  <div class="tabs" style="margin-top:0">
+    <button class="tab on" data-m="prac">🧪 অনুশীলন</button>
+    <button class="tab" data-m="id">❓ অজানা নমুনা শনাক্ত</button>
+  </div>
+  <div class="lab">
+    <section class="card stage">
+      <h2>🔬 পরীক্ষার টেবিল <span class="tagx" id="vTag">শিখা</span></h2>
+      <svg id="svg" viewBox="0 0 400 400" role="img" aria-label="বুনসেন বার্নার ও শিখা">
+        <defs>
+          <radialGradient id="halo"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+          <linearGradient id="spG" x1="0" x2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset=".13" stop-color="#4338ca"/><stop offset=".26" stop-color="#0ea5e9"/><stop offset=".42" stop-color="#22c55e"/><stop offset=".55" stop-color="#eab308"/><stop offset=".68" stop-color="#f97316"/><stop offset=".82" stop-color="#dc2626"/><stop offset="1" stop-color="#7f1d1d"/></linearGradient>
+        </defs>
+        <rect x="14" y="368" width="372" height="12" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
+        <g id="gFlame">
+          <circle id="hal" cx="200" cy="170" r="110" fill="url(#halo)" opacity="0" style="transition:opacity .6s"/>
+          <path id="fl" d="M200 70 C162 140 166 250 200 330 C234 250 238 140 200 70 Z" fill="#60a5fa" opacity=".6" style="transition:fill .6s,opacity .6s"/>
+          <path id="fl2" d="M200 210 C186 250 190 300 200 330 C210 300 214 250 200 210 Z" fill="#bfdbfe" opacity=".9"/>
+          <!-- burner -->
+          <rect x="188" y="330" width="24" height="26" rx="3" fill="#64748b"/>
+          <rect x="176" y="340" width="48" height="10" rx="3" fill="#475569"/>
+          <ellipse cx="200" cy="362" rx="46" ry="8" fill="#334155" stroke="#64748b"/>
+          <!-- wire -->
+          <g id="wire"><path d="M335 170 H210" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/><circle id="loop" cx="205" cy="170" r="6" fill="none" stroke="#e2e8f0" stroke-width="2.5"/><circle id="bead" cx="205" cy="170" r="5" fill="#fff" opacity="0"/></g>
+          <text x="338" y="168" font-size="10" fill="var(--text-muted)" font-family="inherit">তার</text>
+          <rect id="glass" x="95" y="50" width="210" height="290" rx="14" fill="rgba(30,64,220,.5)" stroke="#1e3a8a" stroke-width="3" style="display:none"/>
+          <text id="glassT" x="200" y="66" text-anchor="middle" font-size="11" font-weight="800" fill="#bfdbfe" font-family="inherit" style="display:none">কোবাল্ট নীল কাচ</text>
+          <text id="flT" x="200" y="392" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-muted)" font-family="inherit"></text>
+        </g>
+        <g id="gSpec" style="display:none">
+          <text x="200" y="60" text-anchor="middle" font-size="12" font-weight="800" fill="var(--text-color)" font-family="inherit">স্পেকট্রোস্কোপে রেখা বর্ণালি</text>
+          <rect x="20" y="90" width="360" height="120" fill="#000" stroke="#475569"/>
+          <rect x="20" y="90" width="360" height="120" fill="url(#spG)" opacity=".12"/>
+          <g id="lines"></g>
+          <g id="ticks"></g>
+          <text id="spT" x="200" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-muted)" font-family="inherit"></text>
+        </g>
+      </svg>
+      <div class="live" id="live">ধাপ ১: তার পরিষ্কার করো, তারপর নমুনা ছোঁয়াও।</div>
+      <div class="row" style="margin-top:8px"><button class="ob on" id="vF">🔥 শিখা</button><button class="ob" id="vS">🌈 স্পেকট্রোস্কোপ</button><button class="ob" id="gl">🔷 কোবাল্ট কাচ</button></div>
+      <div class="hud"><div class="box"><small>তারে এখন</small><b id="hW">—</b></div><div class="box"><small>পরীক্ষা করা হয়েছে</small><b id="hN">০</b></div></div>
+    </section>
+    <section>
+      <div class="card"><h2>🧫 নমুনা ও ধাপ <span class="tagx" id="lvl">অনুশীলন</span></h2>
+        <div id="lvRow" class="row" style="margin-top:0;display:none"><button class="ob on" id="lvE">🌱 সহজ (৬টি আয়ন)</button><button class="ob" id="lvF">🔥 পূর্ণ (৯টি)</button><button class="btn ghost" id="newU">🎲 নতুন নমুনা</button></div>
+        <div class="lbl" style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:8px">১. তার পরিষ্কার</div>
+        <div class="row" style="margin-top:6px"><button class="btn ghost" id="cln">🧪 conc HCl-এ ডুবিয়ে শিখায় ধরো</button></div>
+        <div class="lbl" style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:10px">২. নমুনা নাও (HCl দিয়ে ভিজিয়ে)</div>
+        <div class="opts" id="samps"></div>
+        <div class="lbl" style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:10px">৩. শিখায় ধরো</div>
+        <div class="row" style="margin-top:6px"><button class="btn" id="hold">🔥 শিখায় ধরো</button></div>
+        <div id="obs"></div>
+      </div>
+      <div class="card" style="margin-top:22px"><h2>📒 লগবুক</h2>
+        <div class="scroll"><table class="rt" id="logT"><tr><th>নমুনা</th><th>কাচ</th><th>শিখার রং</th></tr></table></div>
+      </div>
+      <div class="card" id="idCard" style="margin-top:22px;display:none"><h2>🎯 শনাক্তকরণ</h2>
+        <div class="row" style="margin-top:0"><label>ধাতব আয়ন<br><select class="sel" id="selI"></select></label></div>
+        <div class="row"><button class="btn" id="sub">✔ জমা দাও</button><button class="btn ghost" id="hint">💡 ইঙ্গিত</button></div><div id="res"></div>
+      </div>
+    </section>
+  </div>
+  <div class="tabs">
+    <button class="tab on" data-p="p1">📘 তত্ত্ব</button>
+    <button class="tab" data-p="p2">🎨 রঙের ছক</button>
+    <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
+    <button class="tab" data-p="p4">🎓 ভাইভা</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1">
+      <h3>শিখা পরীক্ষা কেন রং দেয়?</h3>
+      <p>শিখার তাপে ধাতব আয়নের ইলেকট্রন উচ্চ শক্তিস্তরে উঠে (উত্তেজিত হয়)। আবার নিচের স্তরে নামার সময় নির্দিষ্ট শক্তির আলো (ফোটন) বের করে — প্রতিটি ধাতুর শক্তিস্তর আলাদা, তাই রংও আলাদা।</p>
+      <span class="formula">E = hν = hc / λ</span>
+      <h3>পদ্ধতি</h3>
+      <ol><li>নিক্রোম/প্ল্যাটিনাম তার conc HCl-এ ডুবিয়ে বুনসেন শিখায় ধরো — যতক্ষণ না কোনো রং আসে (পরিষ্কার)।</li><li>তার আবার HCl-এ ভিজিয়ে লবণে ছোঁয়াও (HCl-এ ক্লোরাইড উদ্বায়ী, ভালো রং দেয়)।</li><li>তার শিখার <b>বাইরের নীল অংশের প্রান্তে</b> (সবচেয়ে গরম অংশ) ধরে রং লক্ষ করো।</li><li>প্রতি নমুনার আগে তার আবার পরিষ্কার করো।</li></ol>
+      <h3>Na-এর দূষণ ও কোবাল্ট কাচ</h3>
+      <p>Na-এর হলুদ রং এত তীব্র যে সামান্য Na-ও অন্য রং ঢেকে দেয়। কোবাল্ট নীল কাচ হলুদ আলো শুষে নেয়, তাই K-এর বেগুনি/লাল-গোলাপি রং দেখা যায়।</p>
+    </div>
+    <div class="pane" id="p2"><h3>ধাতব আয়ন ও শিখার রং</h3><div class="scroll"><table class="rt" id="cT" style="min-width:560px"></table></div></div>
+    <div class="pane" id="p3">
+      <h3>সতর্কতা</h3>
+      <ul><li>conc HCl ক্ষয়কারী ও ধোঁয়া ছাড়ে — গগলস পরো, ফিউম হুডে কাজ করো।</li><li>শিখার খুব কাছে ঝুঁকে দেখবে না; চুল বেঁধে রাখো।</li><li>বেরিয়াম ও তামার লবণ বিষাক্ত — হাত ধুয়ে নাও।</li><li>গরম তার ঠান্ডা হওয়ার আগে ধরবে না।</li><li>প্রতি নমুনার আগে তার ভালোভাবে পরিষ্কার করো, নইলে ভুল রং পাবে।</li></ul>
+    </div>
+    <div class="pane" id="p4">
+      <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>শিখা পরীক্ষায় ক্লোরাইড লবণ ভালো কেন?</summary><p>ক্লোরাইড লবণ শিখায় সহজে উদ্বায়ী হয়ে বাষ্প হয় — আয়ন বেশি উত্তেজিত হয়, রং উজ্জ্বল হয়। সালফেট বা কার্বনেট কম উদ্বায়ী।</p></details>
+      <details class="qa"><summary>নমুনা HCl দিয়ে ভিজিয়ে নেওয়া হয় কেন?</summary><p>HCl ধাতব লবণকে উদ্বায়ী ক্লোরাইডে রূপান্তর করে এবং তার পরিষ্কার রাখে।</p></details>
+      <details class="qa"><summary>কোবাল্ট কাচ কেন ব্যবহার করা হয়?</summary><p>Na-এর হলুদ আলো কোবাল্ট নীল কাচে শোষিত হয়, ফলে K-এর বেগুনি আলো দেখা যায়।</p></details>
+      <details class="qa"><summary>Ca, Sr ও Li-এর লাল রং কীভাবে আলাদা করবে?</summary><p>Ca: ইট-লাল/কমলা-লাল; Sr: উজ্জ্বল গাঢ় লাল (স্কারলেট); Li: গাঢ় ক্রিমসন/গোলাপি-লাল। আরও নিশ্চিত হতে স্পেকট্রোস্কোপ ব্যবহার করো।</p></details>
+      <details class="qa"><summary>Mg²⁺ ও Zn²⁺-এ শিখা পরীক্ষা কেন কাজ করে না?</summary><p>এদের উত্তেজনা শক্তি শিখার তাপের তুলনায় বেশি বা উপযুক্ত দৃশ্যমান আলো দেয় না — তাই শিখায় দৃশ্যমান রং পাওয়া যায় না।</p></details>
+      <details class="qa"><summary>বিভিন্ন ধাতুর রং আলাদা কেন?</summary><p>প্রতিটি পরমাণুর ইলেকট্রন শক্তিস্তর নির্দিষ্ট ও আলাদা, তাই নিঃসৃত আলোর তরঙ্গদৈর্ঘ্য (রং) আলাদা — এটি পরমাণুর "আঙুলের ছাপ"।</p></details>
+      <details class="qa"><summary>আতশবাজিতে রং কীভাবে আসে?</summary><p>একই নীতিতে — Sr লাল, Ba সবুজ, Cu নীল, Na হলুদ, Ca কমলা লবণ আতশবাজির মিশ্রণে দেওয়া হয়।</p></details>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $=id=>document.getElementById(id);
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const ION={
+ li:{s:'Li⁺',salt:'LiCl',n:'লিথিয়াম',col:'#e11d48',nm:'গাঢ় লাল (ক্রিমসন)',lum:2.2,gf:.6,easy:1,sp:[[671,1],[610,.4]],tip:'গোলাপি-লাল, দ্রুত ম্লান হয়'},
+ na:{s:'Na⁺',salt:'NaCl',n:'সোডিয়াম',col:'#fbbf24',nm:'সোনালি হলুদ',lum:6,gf:.03,easy:1,sp:[[589,1],[589.6,1]],tip:'তীব্র হলুদ, অনেকক্ষণ থাকে'},
+ k:{s:'K⁺',salt:'KCl',n:'পটাশিয়াম',col:'#c084fc',nm:'লিলাক / হালকা বেগুনি',lum:1.2,gf:1,easy:1,sp:[[404,.5],[766,1]],tip:'ফ্যাকাশে বেগুনি, কাচ ছাড়া Na ঢেকে দেয়',gcol:'#e11d48',gnm:'লাল-গোলাপি (কোবাল্ট কাচে)'},
+ ca:{s:'Ca²⁺',salt:'CaCl₂',n:'ক্যালসিয়াম',col:'#ea580c',nm:'ইট-লাল (কমলা-লাল)',lum:2,gf:.5,easy:1,sp:[[423,.5],[554,.5],[622,1]],tip:'কমলাভ ইট-লাল'},
+ sr:{s:'Sr²⁺',salt:'SrCl₂',n:'স্ট্রনশিয়াম',col:'#dc2626',nm:'উজ্জ্বল লাল (স্কারলেট)',lum:2.2,gf:.6,sp:[[461,.8],[606,.5],[650,1]],tip:'গাঢ় উজ্জ্বল লাল'},
+ ba:{s:'Ba²⁺',salt:'BaCl₂',n:'বেরিয়াম',col:'#a3e635',nm:'আপেল সবুজ',lum:1.6,gf:.5,easy:1,sp:[[455,.5],[514,.8],[524,1],[553,1],[614,.5]],tip:'হলদে সবুজ'},
+ cu:{s:'Cu²⁺',salt:'CuCl₂',n:'কপার',col:'#22d3a0',nm:'নীলচে সবুজ',lum:1.8,gf:.5,easy:1,sp:[[505,.6],[515,.8],[525,1],[540,.6]],tip:'নীলচে সবুজ'},
+ mg:{s:'Mg²⁺',salt:'MgCl₂',n:'ম্যাগনেসিয়াম',col:null,nm:'কোনো রং নেই',lum:0,gf:0,sp:[],tip:'দৃশ্যমান রং নেই'},
+ nh4:{s:'NH₄⁺',salt:'NH₄Cl',n:'অ্যামোনিয়াম',col:null,nm:'কোনো রং নেই',lum:0,gf:0,sp:[],tip:'দৃশ্যমান রং নেই'}};
+const ORD=['li','na','k','ca','sr','ba','cu','mg','nh4'];
+let mode='prac',lvl='easy',pool=[],unk=null,samp=null,wire={na:.35},glass=false,view='F',log=[],holds=0,hint=0,wrong=0,solved=false,last=null,dipLabel='—';
+function newU(){pool=ORD.filter(k=>lvl=='full'||ION[k].easy);unk=pool[Math.floor(Math.random()*pool.length)];wire={na:.35};samp=null;log=[];holds=0;hint=0;wrong=0;solved=false;last=null;dipLabel='—';$('res').innerHTML='';$('obs').innerHTML='';
+  $('selI').innerHTML='<option value="">— আয়ন বেছে নাও —</option>'+pool.map(k=>`<option value="${k}">${ION[k].s} (${ION[k].n})</option>`).join('')+'<option value="none">দৃশ্যমান রং নেই (Mg²⁺/NH₄⁺ ইত্যাদি)</option>';draw();drawSamps();drawLog()}
+function drawSamps(){let h='';
+  if(mode=='id')h+=`<button class="ob ${samp=='unk'?'on':''}" data-s="unk">❓ অজানা নমুনা</button>`;
+  const lst=mode=='id'?pool:ORD;
+  h+=lst.map(k=>`<button class="ob ${samp==k?'on':''}" data-s="${k}">${ION[k].salt}</button>`).join('');
+  $('samps').innerHTML=h;
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{samp=b.dataset.s;const k=samp=='unk'?unk:samp;wire[k]=(wire[k]||0)+1;dipLabel=samp=='unk'?'অজানা':ION[samp].salt;
+    $('live').textContent=(samp=='unk'?'অজানা নমুনা':ION[samp].salt)+' তারে লাগলো। এবার শিখায় ধরো।';toast('তারে নমুনা লাগানো হলো');drawSamps();draw()})}
+function draw(){
+  $('hW').textContent=Object.keys(wire).filter(k=>wire[k]>.02).map(k=>ION[k].s+(wire[k]>.5?'':'(সামান্য)')).join(', ')||'পরিষ্কার';
+  $('hN').textContent=bn(holds);
+  $('vTag').textContent=view=='F'?'শিখা':'স্পেকট্রাম';
+  $('gFlame').style.display=view=='F'?'':'none';$('gSpec').style.display=view=='S'?'':'none';
+  $('vF').classList.toggle('on',view=='F');$('vS').classList.toggle('on',view=='S');$('gl').classList.toggle('on',glass);
+  $('glass').style.display=$('glassT').style.display=glass?'':'none';
+  $('lvl').textContent=mode=='prac'?'অনুশীলন':lvl=='easy'?'সহজ':'পূর্ণ';
+  $('lvRow').style.display=mode=='id'?'flex':'none';$('idCard').style.display=mode=='id'?'':'none';
+}
+// compute what you'd see
+function see(){let it=Object.keys(wire).map(k=>({k,v:wire[k]*ION[k].lum*(glass?ION[k].gf:1)})).filter(x=>x.v>0.05).sort((a,b)=>b.v-a.v);return it}
+function colOf(k){return glass&&ION[k].gcol?ION[k].gcol:ION[k].col}
+function mix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));const A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
+$('hold').onclick=()=>{
+  if(view=='S'){view='F';draw()}
+  const it=see();holds++;
+  let col=null,name='',warn='';
+  if(!it.length){name='কোনো রং নেই — শিখা ফ্যাকাশে নীল';}
+  else{const d=it[0];col=colOf(d.k);name=glass&&ION[d.k].gnm?ION[d.k].gnm:ION[d.k].nm;
+    if(it[1]&&it[1].v>d.v*.5){col=mix(col,colOf(it[1].k),.4);name='মিশ্র রং — '+name+' প্রধান'}
+    if(d.k=='na'&&samp!='na'&&!(samp=='unk'&&unk=='na')&&!glass)warn='⚠ হলুদ প্রাধান্য পাচ্ছে — তারে Na-এর দূষণ থাকতে পারে। তার পরিষ্কার করো বা কোবাল্ট কাচ ব্যবহার করো।';
+    if(it[1]&&it[1].k!=d.k&&it.length>1&&wire[it[1].k]>.3&&!warn&&it[1].k!='na')warn='⚠ আগের নমুনার দূষণ মিশে গেছে — তার ঠিকমতো পরিষ্কার করা হয়নি।'}
+  const fl=$('fl'),hl=$('hal');
+  fl.setAttribute('fill',col||'#60a5fa');fl.setAttribute('opacity',col?.95:.6);hl.setAttribute('opacity',col?1:0);hl.querySelector?0:0;
+  $('halo').firstElementChild.setAttribute('stop-color',col||'#fff');
+  $('bead').setAttribute('opacity',col?.9:0);$('bead').setAttribute('fill',col||'#fff');
+  $('flT').textContent=name;
+  last={samp,wire:Object.assign({},wire)};
+  // burn off
+  Object.keys(wire).forEach(k=>wire[k]*=.8);
+  const lbl=samp=='unk'?'অজানা':samp?ION[samp].salt:'(তার)';
+  log.push({s:dipLabel,g:glass,c:name});if(log.length>14)log.shift();
+  $('obs').innerHTML=`<div class="msg ${col?'ok':''}"><b>${name}</b>${mode=='prac'&&samp&&samp!='unk'?`<br><small>${ION[samp].s} (${ION[samp].n}): ${ION[samp].nm} — ${ION[samp].tip}</small>`:''}${warn?`<br>${warn}`:''}</div>`;
+  $('live').textContent=name;
+  drawSpec();drawLog();draw();
+  setTimeout(()=>{if(!(wire&&Object.keys(wire).some(k=>wire[k]>.25)||false)){}},0);
+  setTimeout(()=>{$('fl').setAttribute('fill','#60a5fa');$('fl').setAttribute('opacity',.6);$('hal').setAttribute('opacity',0);$('bead').setAttribute('opacity',0)},2600);
+};
+$('cln').onclick=()=>{Object.keys(wire).forEach(k=>wire[k]*=.2);dipLabel='(পরিষ্কার)';samp=null;
+  const left=Object.keys(wire).filter(k=>wire[k]>.04).map(k=>ION[k].s);
+  $('obs').innerHTML=`<div class="msg ${left.length?'':'ok'}">${left.length?'তারে এখনো '+left.join(', ')+'-এর চিহ্ন আছে — আবার পরিষ্কার করো।':'✔ তার পরিষ্কার — শিখায় আর রং আসবে না।'}</div>`;
+  $('live').textContent=left.length?'আরও একবার পরিষ্কার করো।':'তার পরিষ্কার।';drawSamps();draw()};
+function drawLog(){$('logT').innerHTML='<tr><th>নমুনা</th><th>কাচ</th><th>শিখার রং</th></tr>'+(log.length?log.map(l=>`<tr><td>${l.s}</td><td>${l.g?'হ্যাঁ':'না'}</td><td>${l.c}</td></tr>`).join(''):'<tr><td colspan="3" style="color:var(--text-muted)">এখনো কিছু পরীক্ষা করোনি।</td></tr>')}
+// spectrum
+const X=w=>20+(w-400)/(780-400)*360;
+function wl(w){const st=[[400,270],[450,240],[490,190],[530,120],[580,55],[620,25],[700,0],[780,0]];for(let i=0;i<st.length-1;i++){if(w<=st[i+1][0]){const t=(w-st[i][0])/(st[i+1][0]-st[i][0]);return st[i][1]+(st[i+1][1]-st[i][1])*t}}return 0}
+(function(){let t='';for(let w=400;w<=780;w+=50)t+=`<line x1="${X(w)}" x2="${X(w)}" y1="210" y2="218" stroke="var(--text-muted)"/><text x="${X(w)}" y="232" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="inherit">${bn(w)}</text>`;t+=`<text x="380" y="248" text-anchor="end" font-size="10" fill="var(--text-muted)" font-family="inherit">তরঙ্গদৈর্ঘ্য (nm)</text>`;$('ticks').innerHTML=t})();
+function drawSpec(){let h='',names=[];
+  const src=last?Object.keys(last.wire).filter(k=>last.wire[k]*ION[k].lum>.3):[];
+  src.forEach(k=>{const a=Math.min(1,last.wire[k]*ION[k].lum/2);names.push(ION[k].s);ION[k].sp.forEach(([w,i])=>{h+=`<rect x="${X(w)-1.2}" y="95" width="2.4" height="110" fill="hsl(${wl(w)},100%,${50+i*10}%)" opacity="${Math.max(.3,i*a)}"/>`})});
+  $('lines').innerHTML=h;$('spT').textContent=names.length?'রেখা: '+names.join(' + '):(last?'দৃশ্যমান রেখা নেই':'আগে শিখা পরীক্ষা করো')}
+$('vF').onclick=()=>{view='F';draw()};$('vS').onclick=()=>{view='S';drawSpec();draw()};
+$('gl').onclick=()=>{glass=!glass;draw()};
+// id mode
+$('hint').onclick=()=>{if(solved)return;hint++;const names=pool.map(k=>ION[k].s+': '+ION[k].nm);$('res').innerHTML=`<div class="msg">সম্ভাব্য রং: <br>${pool.map(k=>`<b>${ION[k].s}</b> — ${ION[k].tip}`).join('<br>')}</div>`};
+$('sub').onclick=()=>{if(solved)return;const v=$('selI').value;if(!v){toast('আয়ন বাছো');return}if(!log.some(l=>l.s=='অজানা')){toast('আগে অজানা নমুনা শিখায় ধরো');return}
+  const truth=ION[unk].col?unk:'none';
+  if(v==truth||v==unk){solved=true;let st=3;if(holds>10)st--;if(hint||wrong>=1)st--;if(wrong>=3)st--;st=Math.max(1,st);
+    $('res').innerHTML=`<div class="msg ok"><div class="stars">${'⭐'.repeat(st)}${'☆'.repeat(3-st)}</div>🎉 ঠিক! নমুনা: <b>${ION[unk].salt}</b> — ${ION[unk].s} (${ION[unk].n}), শিখা: ${ION[unk].nm}।<br>${bn(holds)}বার শিখায় ধরেছো${hint?', ইঙ্গিত নিয়েছো':''}${wrong?', '+bn(wrong)+'বার ভুল করেছো':''}।</div>`}
+  else{wrong++;$('res').innerHTML=`<div class="msg bad">ঠিক হয়নি। আবার পর্যবেক্ষণ করো — তার পরিষ্কার ছিল তো? কোবাল্ট কাচ ও স্পেকট্রোস্কোপ কাজে লাগাও।</div>`}};
+$('newU').onclick=()=>{newU()};
+$('lvE').onclick=()=>{lvl='easy';$('lvE').classList.add('on');$('lvF').classList.remove('on');newU()};
+$('lvF').onclick=()=>{lvl='full';$('lvF').classList.add('on');$('lvE').classList.remove('on');newU()};
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x==b));samp=null;log=[];holds=0;wire={na:.35};$('obs').innerHTML='';$('res').innerHTML='';last=null;dipLabel='—';
+  if(mode=='id')newU();else{pool=ORD;drawSamps();drawLog();draw()}});
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
+$('cT').innerHTML='<tr><th>আয়ন</th><th>লবণ</th><th>শিখার রং</th><th>বৈশিষ্ট্য</th></tr>'+ORD.map(k=>`<tr><td><b>${ION[k].s}</b> (${ION[k].n})</td><td>${ION[k].salt}</td><td>${ION[k].col?`<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${ION[k].col};margin-right:6px;vertical-align:middle"></span>`:''}${ION[k].nm}</td><td>${ION[k].tip}</td></tr>`).join('');
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+pool=ORD;drawSamps();drawLog();draw();
+</script>
+</body>
+</html>
