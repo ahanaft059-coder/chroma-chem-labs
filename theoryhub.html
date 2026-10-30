@@ -1,722 +1,259 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chemistry Theory Hub - রসায়ন তত্ত্ব ভাণ্ডার</title>
-    
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-
-    <style>
-        :root {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --shadow: rgba(15, 23, 42, 0.08);
-            --primary: #8b5cf6;
-            --primary-gradient: linear-gradient(135deg, #a855f7, #3b82f6);
-        }
-        [data-theme="dark"] {
-            --bg-color: #0b0f19;
-            --card-bg: #111827;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #1f2937;
-            --shadow: rgba(0, 0, 0, 0.5);
-        }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 30px 20px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        .hub-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            padding: 25px 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px var(--shadow);
-            margin-bottom: 30px;
-        }
-        .back-btn {
-            background: var(--primary-gradient);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-        .back-btn:hover { opacity: 0.9; transform: scale(1.02); }
-
-        /* Search Bar */
-        .search-bar {
-            margin-bottom: 25px;
-            display: flex;
-            gap: 15px;
-        }
-        .search-input {
-            flex: 1;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            color: var(--text-color);
-            padding: 14px 20px;
-            border-radius: 14px;
-            font-size: 15px;
-            outline: none;
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-        .search-input:focus { border-color: #a855f7; }
-
-        /* Theory Grid Layout */
-        .theory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .theory-card {
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 25px var(--shadow);
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .theory-card:hover {
-            transform: translateY(-5px);
-            border-color: #a855f7;
-        }
-
-        .card-icon {
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-        .card-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--text-color);
-        }
-        .card-desc {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .formula-box {
-            background: var(--bg-color);
-            border: 1px dashed var(--border-color);
-            padding: 12px 15px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 14px;
-            font-weight: bold;
-            color: #a855f7;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .details-btn {
-            background: transparent;
-            border: 2px solid #a855f7;
-            color: #a855f7;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-        }
-        .details-btn:hover {
-            background: #a855f7;
-            color: white;
-        }
-
-        /* Modal Popup Styling */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.3s ease;
-            z-index: 1000;
-            padding: 20px;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-box {
-            background: var(--card-bg);
-            border: 2px solid #a855f7;
-            width: 100%;
-            max-width: 650px;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            transform: scale(0.9);
-            transition: 0.3s ease;
-            position: relative;
-        }
-        .modal-overlay.active .modal-box {
-            transform: scale(1);
-        }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.2s;
-        }
-        .modal-close:hover { background: #a855f7; color: white; border-color: #a855f7; }
-        .modal-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .modal-body {
-            font-size: 15px;
-            color: var(--text-muted);
-            line-height: 1.7;
-            max-height: 420px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-        .modal-body h4 {
-            color: var(--text-color);
-            margin: 15px 0 5px 0;
-            font-size: 16px;
-        }
-        .modal-body ul {
-            padding-left: 20px;
-            margin-top: 5px;
-        }
-        .modal-body li {
-            margin-bottom: 6px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>Chemistry Theory Hub - রসায়ন তত্ত্ব ভাণ্ডার | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--accent:#7c3aed;--good:#059669;--gold:#d97706}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--accent:#a78bfa;--good:#34d399;--gold:#fbbf24}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+body.lock{overflow:hidden}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:30px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:26px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(2rem,5vw,3.1rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:600px;font-size:16px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.prog{max-width:420px;margin:18px auto 0}
+.prog div{height:10px;border-radius:10px;background:var(--border-color);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gradient-primary);transition:width .5s}
+.prog small{display:block;margin-top:6px;font-size:13px;font-weight:700;color:var(--text-muted)}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:10px}
+.search{flex:1 1 260px;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-bg);border:1.5px solid var(--border-color);outline:none;backdrop-filter:blur(12px);transition:border-color .25s,box-shadow .25s}
+.search:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:transform .2s,color .2s,border-color .2s}
+.chip:hover{color:var(--text-color);border-color:rgba(168,85,247,.55);transform:translateY(-2px)}
+.chip.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.count{margin:10px 4px 0;font-size:13px;font-weight:600;color:var(--text-muted)}
+.section-title{display:flex;align-items:center;gap:10px;margin:34px 0 18px;padding-bottom:12px;font-size:22px;font-weight:800;border-bottom:2px dashed var(--section-border)}
+.section-title span{margin-left:auto;font-size:13px;color:var(--text-muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:24px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .3s,border-color .3s,box-shadow .3s;animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.card::before{content:'';position:absolute;top:-80px;right:-60px;width:200px;height:200px;pointer-events:none;background:radial-gradient(circle,var(--gradient-glow),transparent 70%)}
+.card>*{position:relative}
+.card:hover{transform:translateY(-6px);border-color:rgba(168,85,247,.7);box-shadow:0 24px 44px -16px var(--gradient-glow)}
+.card.read{border-color:rgba(16,185,129,.45)}
+.tick{position:absolute;top:14px;right:16px;display:none;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:800;color:var(--good);background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.4)}
+.card.read .tick{display:block}
+.icon{width:54px;height:54px;margin-bottom:12px;border-radius:18px;font-size:27px;display:flex;align-items:center;justify-content:center;background:var(--card-solid);border:1px solid var(--border-color)}
+.card h3{margin:0 0 8px;font-size:18.5px;font-weight:800;line-height:1.4}
+.card p{margin:0;font-size:14px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.fm{margin-top:14px;padding:11px 12px;border-radius:14px;text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;font-weight:700;line-height:1.6;color:var(--accent);background:var(--card-solid);border:1px dashed var(--border-color);word-break:break-word}
+.more{display:block;width:100%;padding:12px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;color:#fff;background:var(--gradient-primary);border:0;border-radius:14px;transition:transform .25s,box-shadow .25s}
+.more:hover{transform:translateY(-2px);box-shadow:0 10px 22px var(--gradient-glow)}
+.empty{display:none;margin:40px 0;padding:30px;text-align:center;border-radius:20px;font-weight:600;color:var(--text-muted);background:var(--card-bg);border:1px dashed var(--border-color)}
+.empty.show{display:block}
+.ov{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,6,15,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.ov.on{opacity:1;visibility:visible}
+.md{position:relative;width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;border-radius:26px;background:var(--card-solid);border:2px solid var(--section-border);box-shadow:0 30px 60px rgba(0,0,0,.45);transform:scale(.94);transition:transform .25s}
+.ov.on .md{transform:none}
+.mh{display:flex;align-items:center;gap:14px;padding:20px 24px 14px}
+.mh .icon{margin:0;flex-shrink:0}
+.mh h2{margin:0;flex:1;font-size:20px;font-weight:800;line-height:1.4}
+.x{width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer;color:var(--text-color);background:var(--bg-color);border:1px solid var(--border-color);transition:all .2s}
+.x:hover{color:#fff;background:#a855f7;border-color:#a855f7}
+.mb{padding:4px 24px 18px;overflow-y:auto;font-size:15px;line-height:1.8;color:var(--text-muted)}
+.mb .sum{margin:0 0 12px;font-weight:700;color:var(--text-color)}
+.mb .fm{margin:0 0 6px;font-size:15px}
+.mb h4{margin:18px 0 6px;font-size:16px;color:var(--text-color)}
+.mb p{margin:0 0 6px}
+.mb ul{margin:4px 0 0;padding-left:22px}.mb li{margin-bottom:6px}
+.mf{display:flex;align-items:center;gap:8px;padding:12px 18px;border-top:1px solid var(--border-color)}
+.mf .nav{flex:0 0 auto;min-height:40px;padding:0 14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;color:var(--text-color);background:var(--bg-color);border:1px solid var(--border-color);border-radius:12px}
+.mf .nav:hover:not(:disabled){border-color:#a855f7}
+.mf .nav:disabled{opacity:.4;cursor:default}
+.mf .rd{flex:1;min-height:40px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;color:var(--good);background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.4);border-radius:12px}
+.mf .rd.on{color:#fff;background:var(--good)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
 
-    <div class="container">
-        <!-- Header -->
-        <div class="hub-header">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div style="font-size: 36px;">📖</div>
-                <div>
-                    <h2 style="margin: 0; font-size: 22px;">Chemistry Theory Hub</h2>
-                    <span style="font-size: 13px; color: #a855f7; font-weight: 600;">রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত হ্যান্ডবুক</span>
-                </div>
-            </div>
-            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> ড্যাশবোর্ডে ফিরুন</a>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" id="brandLink" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Theory Hub</small></span></a>
+        <div class="top-right">
+            <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="back-btn" id="backBtn" href="dashboard.html">← <span class="long">ড্যাশবোর্ডে ফিরুন</span></a>
         </div>
+    </header>
 
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <input type="text" id="searchInput" class="search-input" placeholder="যেকোনো তত্ত্ব বা সূত্র সার্চ করুন..." onkeyup="filterTheories()">
-        </div>
+    <section class="hero">
+        <span class="pill">📖 সূত্র ও তত্ত্বের হ্যান্ডবুক</span>
+        <h1>Chemistry Theory Hub</h1>
+        <p>রসায়নের মূল সূত্র ও তত্ত্বের বিস্তারিত হ্যান্ডবুক। কার্ডে চাপ দিয়ে বিস্তারিত পড়ো, পড়া শেষ হলে চিহ্ন দিয়ে রাখো।</p>
+        <div class="prog"><div><i id="progBar"></i></div><small id="progTxt"></small></div>
+    </section>
 
-        <!-- Theory Cards Grid -->
-        <div class="theory-grid" id="theoryGrid">
-            
-            <!-- Card 1 -->
-            <div class="theory-card" data-name="বয়েলের সূত্র boyle law">
-                <div>
-                    <div class="card-icon">🎈</div>
-                    <div class="card-title">বয়েলের সূত্র (Boyle's Law)</div>
-                    <div class="card-desc">স্থির তাপমাত্রায় নির্দিষ্ট ভরের গ্যাসের আয়তন প্রযুক্ত চাপের ব্যস্তানুপাতিক।</div>
-                    <div class="formula-box">P ∝ 1/V  =>  P₁V₁ = P₂V₂</div>
-                </div>
-                <button class="details-btn" onclick="openModal('বয়েলের সূত্র (Boyle\'s Law)', '🎈', 'রবার্ট বয়েল ১৬৬২ সালে এই বিখ্যাত গ্যাসীয় সূত্রটি আবিষ্কার করেন।', '<h4>মূল ধারণা:</h4><p>স্থির তাপমাত্রায় নির্দিষ্ট ভরের কোনো গ্যাসের আয়তন (V) তার ওপর প্রযুক্ত চাপের (P) ব্যস্তানুপাতিক। অর্থাৎ চাপ বাড়ালে আয়তন কমে যায়।</p><h4>গাণিতিক রূপ:</h4><p>PV = k (ধ্রুবক)। দুটি ভিন্ন অবস্থার জন্য: P₁V₁ = P₂V₂</p><h4>বাস্তব প্রয়োগ ও উদাহরণ:</h4><ul><li>শ্বাস-প্রশ্বাসের সময় ফুসফুসের ভেতরের বায়ুর চাপ ও আয়তনের পরিবর্তন।</li><li>গভীর পানির নিচে থাকা মাছের বুদ্বুদ যখন পানির উপরে আসে, তখন চাপ কমে যাওয়ায় তার আয়তন বৃদ্ধি পায়।</li><li>সাইকেলের পাম্পে বাতাস ভরার সময় সিলিন্ডারের ভেতরের চাপ বৃদ্ধি পাওয়া।</li></ul>')">বিস্তারিত জানুন</button>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="theory-card" data-name="চার্লসের সূত্র charles law">
-                <div>
-                    <div class="card-icon">🌡️</div>
-                    <div class="card-title">চার্লসের সূত্র (Charles's Law)</div>
-                    <div class="card-desc">স্থির চাপে নির্দিষ্ট ভরের গ্যাসের তাপমাত্রা পরিবর্তনে আয়তন পরিবর্তিত হয়।</div>
-                    <div class="formula-box">V ∝ T  =>  V₁/T₁ = V₂/T₂</div>
-                </div>
-                <button class="details-btn" onclick="openModal('চার্লসের সূত্র (Charles\'s Law)', '🌡️', 'ফরাসি বিজ্ঞানী জাক চার্লস ১৭৮৭ সালে এই সূত্রটি উপস্থাপন করেন (পরবর্তীতে জোসেফ লুই গে-লুসাক এটি পরিমার্জন করেন)।', '<h4>মূল ধারণা:</h4><p>স্থির চাপে নির্দিষ্ট ভরের কোনো গ্যাসের তাপমাত্রা ১°C বাড়ালে বা কমালে এর 0°C তাপমাত্রার যে আয়তন থাকে, তার ১/২৭৩ অংশ যথাক্রমে বৃদ্ধি বা হ্রাস পায়। তাপমাত্রা বাড়লে গ্যাসের আয়তন সমানুপাতিক হারে বাড়ে।</p><h4>গাণিতিক রূপ:</h4><p>V ∝ T (যেখানে T হলো পরম তাপমাত্রা বা কেলভিন স্কেল, T = °C + 273)। সুতরাং, V/T = k বা V₁/T₁ = V₂/T₂</p><h4>বাস্তব প্রয়োগ ও উদাহরণ:</h4><ul><li>গরমের দিনে গাড়ির টায়ার অনেক সময় বেশি চাপে ফেটে যাওয়া (তাপমাত্রা বাড়ায় ভেতরের বায়ুর আয়তন প্রসারণের চেষ্টা)।</li><li>হট এয়ার বেলুন (Hot Air Balloon)-এর ভেতরে বাতাস গরম করলে আয়তন বেড়ে বেলুন হালকা হয়ে আকাশে ওড়ে।</li></ul>')">বিস্তারিত জানুন</button>
-            </div>
-
-<div class="theory-card" data-name="হাইবার্গের অনিশ্চয়তা নীতি heisenberg uncertainty principle">
-    <div>
-        <div class="card-icon">🌀</div>
-        <div class="card-title">হাইবার্গের অনিশ্চয়তা নীতি (Uncertainty Principle)</div>
-        <div class="card-desc">কোনো ক্ষুদ্র কণার অবস্থান ও ভরবেগ একই সাথে নিখুঁতভাবে নির্ধারণ করা অসম্ভব।</div>
-        <div class="formula-box">Δx · Δp ≥ h / (4π)</div>
+    <div class="tools">
+        <input class="search" id="q" type="search" placeholder="যেকোনো তত্ত্ব বা সূত্র সার্চ করুন… (যেমন: বয়েল, entropy, নার্নস্ট)" aria-label="তত্ত্ব খোঁজো" autocomplete="off">
+        <div class="chips" id="chips" role="group" aria-label="বিভাগ"></div>
     </div>
-    <button class="details-btn" onclick="openModal('হাইবার্গের অনিশ্চয়তা নীতি', '🌀', 'জার্মান পদার্থবিদ ভার্নার হাইবার্গ ১৯২৭ সালে কোয়ান্টাম মেকানিক্সে এই বিখ্যাত নীতি প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>ইলেকট্রনের মতো অত্যন্ত ক্ষুদ্র গতিশীল কণার একই সাথে সঠিক অবস্থান (Position) এবং সঠিক ভরবেগ বা বেগ (Momentum) এক মুহূর্তেই নিখুঁতভাবে মাপা সম্ভব নয়। একটির নিখুঁত মাপ নিতে গেলে অন্যটিতে অনিশ্চয়তা চলে আসে।</p><h4>গাণিতিক রূপ:</h4><p>$\\Delta x \\cdot \\Delta p \\ge h / (4\\pi)$ (যেখানে $\\Delta x$ হলো অবস্থানের অনিশ্চয়তা এবং $\\Delta p$ হলো ভরবেগের অনিশ্চয়তা)।</p>')">বিস্তারিত জানুন</button>
+    <div class="count" id="count" aria-live="polite"></div>
+
+    <div id="sections"></div>
+    <div class="empty" id="empty">কোনো তত্ত্ব পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজে দেখো।</div>
 </div>
 
-            <!-- Card 3 -->
-            <div class="theory-card" data-name="রাদারফোর্ড পরমাণু মডেল rutherford model">
-                <div>
-                    <div class="card-icon">⚛️</div>
-                    <div class="card-title">রাদারফোর্ড পরমাণু মডেল</div>
-                    <div class="card-desc">পরমাণুর কেন্দ্রে ধনাত্মক চার্জযুক্ত ভারী নিউক্লিয়াস থাকে এবং ইলেকট্রন ঘোরে।</div>
-                    <div class="formula-box">নিউক্লিয়াস + ঘূর্ণনশীল ইলেকট্রন</div>
-                </div>
-                <button class="details-btn" onclick="openModal('রাদারফোর্ড পরমাণু মডেল (Rutherford Model)', '⚛️', 'বিজ্ঞানী আর্নেস্ট রাদারফোর্ড ১৯১১ সালে তাঁর বিখ্যাত আলফা কণা বিচ্ছুরণ পরীক্ষার মাধ্যমে এই মডেল প্রকাশ করেন।', '<h4>প্রধান বৈশিষ্ট্যসমূহ:</h4><ul><li>পরমাণুর কেন্দ্রস্থলে একটি ক্ষুদ্র ও ধনাত্মক চার্জযুক্ত ভারী অংশ থাকে, যার নাম নিউক্লিয়াস। পরমাণুর সমস্ত ভর এই নিউক্লিয়াসে পুঞ্জীভূত থাকে।</li><li>পরমাণুর বেশিরভাগ স্থানই ফাঁকা।</li><li>সৌরজগতের গ্রহগুলোর মতো ইলেকট্রনগুলো নিউক্লিয়াসকে কেন্দ্র করে নির্দিষ্ট বৃত্তাকার পথে চারদিকে ঘুরছে।</li></ul><h4>প্রধান সীমাবদ্ধতা বা ত্রুটি:</h4><p>ম্যাক্সওয়েলের তড়িৎ-চুম্বকীয় তত্ত্ব অনুযায়ী, ঘূর্ণনশীল ইলেকট্রন অবিরাম শক্তি বিকিরণ করতে করতে শেষ পর্যন্ত নিউক্লিয়াসে গিয়ে পড়ার কথা, যার ফলে পরমাণু ধ্বংস হয়ে যাওয়ার কথা। কিন্তু বাস্তবে পরমাণু স্থায়ী। রাদারফোর্ড এই স্থায়িত্বের কোনো ব্যাখ্যা দিতে পারেননি।</p>')">বিস্তারিত জানুন</button>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="theory-card" data-name="বোর পরমাণু মডেল bohr model">
-                <div>
-                    <div class="card-icon">🌀</div>
-                    <div class="card-title">বোর পরমাণু মডেল (Bohr's Model)</div>
-                    <div class="card-desc">ইলেকট্রনগুলো নির্দিষ্ট শক্তিস্তর বা অরবিটালে থেকে নিউক্লিয়াসকে প্রদক্ষিণ করে।</div>
-                    <div class="formula-box">mvr = nh / 2π</div>
-                </div>
-                <button class="details-btn" onclick="openModal('বোর পরমাণু মডেল (Bohr\'s Model)', '🌀', 'ড্যানিশ পদার্থবিদ নিলস বোর ১৯১৩ সালে ম্যাক্স প্ল্যাঙ্কের কোয়ান্টাম তত্ত্বের ওপর ভিত্তি করে রাদারফোর্ড মডেলের ত্রুটি সংশোধন করে এই মডেল দেন।', '<h4>প্রধান বৈশিষ্ট্যসমূহ:</h4><ul><li>ইলেকট্রনগুলো যেকোনো ব্যাসার্ধের পথে না ঘুরে কেবল নিউক্লিয়াসকে কেন্দ্র করে নির্দিষ্ট কিছু অনুমোদিত বৃত্তাকার কক্ষপথে (Orbit বা Energy Level) ঘোরে।</li><li>এই নির্দিষ্ট শক্তিস্তরে ঘূর্ণনের সময় ইলেকট্রনগুলো কোনো শক্তি শোষণ বা বিকিরণ করে না (স্থায়ী কক্ষপথ বা Stationary Orbit)।</li><li>ইলেকট্রন যখন উচ্চ শক্তিস্তর থেকে নিম্ন শক্তিস্তরে নামে, তখন শক্তি বিকিরণ করে; আর নিম্ন থেকে উচ্চ স্তরে গেলে শক্তি শোষণ করে ($\Delta E = h\nu$)।</li></ul><h4>কোয়ান্টাম শর্ত:</h4><p>কক্ষপথগুলোর কৌণিক ভরবেগ ($mvr$) সবসময় $h / 2\pi$-এর সরল গুণিতক হয় ($\text{mvr} = nh/2\pi$)।</p>')">বিস্তারিত জানুন</button>
-            </div>
-
-<div class="theory-card" data-name="পলঙ্কের কোয়ান্টাম তত্ত্ব planck quantum theory energy">
-    <div>
-        <div class="card-icon">💡</div>
-        <div class="card-title">পলঙ্কের কোয়ান্টাম তত্ত্ব (Planck's Theory)</div>
-        <div class="card-desc">শক্তি অবিচ্ছিন্নভাবে নয়, বরং শক্তি প্যাকেটে বা কোয়ান্টা আকারে নির্গত বা শোষিত হয়।</div>
-        <div class="formula-box">E = hν  (হেমল্টজ ও ম্যাক্স প্ল্যাঙ্ক)</div>
+<div class="ov" id="ov" aria-hidden="true">
+    <div class="md" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+        <div class="mh"><div class="icon" id="mIcon" aria-hidden="true"></div><h2 id="mTitle"></h2><button type="button" class="x" id="mClose" aria-label="বন্ধ করো">✕</button></div>
+        <div class="mb" id="mBody"></div>
+        <div class="mf"><button type="button" class="nav" id="mPrev">← আগেরটি</button><button type="button" class="rd" id="mRead">✔ পড়া শেষ</button><button type="button" class="nav" id="mNext">পরেরটি →</button></div>
     </div>
-    <button class="details-btn" onclick="openModal('পলঙ্কের কোয়ান্টাম তত্ত্ব', '💡', 'জার্মান পদার্থবিদ ম্যাক্স প্ল্যাঙ্ক ১৯০০ সালে আলো ও শক্তির বিকিরণ ব্যাখ্যা করতে এই কোয়ান্টাম তত্ত্ব প্রবর্তন করেন।', '<h4>মূল ধারণা:</h4><p>যেকোনো উৎস থেকে শক্তি অবিচ্ছিন্ন বা ধারাবাহিক তরঙ্গ হিসেবে নির্গত হয় না, বরং ক্ষুদ্র ক্ষুদ্র শক্তির প্যাকেট বা পিন্ড হিসেবে শোষিত বা নির্গত হয়। এই শক্তির একক বা প্যাকেটকে কোয়ান্টাম (Quantum) বা ফোটন বলে।</p><h4>গাণিতিক রূপ:</h4><p>E = hν (যেখানে E হলো শক্তির পরিমাণ, h হলো প্ল্যাঙ্কের ধ্রুবক এবং ν হলো আলোর কম্পাঙ্ক)।</p>')">বিস্তারিত জানুন</button>
 </div>
 
-            <!-- Card 5 -->
-            <div class="theory-card" data-name="এসিড ক্ষার arrhenius bronsted lewis acid base">
-                <div>
-                    <div class="card-icon">⚗️</div>
-                    <div class="card-title">এসিড-ক্ষার থিওরি (Acid-Base)</div>
-                    <div class="card-desc">আরহেনিয়াস, ব্রনস্টেড-লাউরি এবং লুইসের এসিড-ক্ষার সম্পর্কিত আধুনিক তত্ত্ব।</div>
-                    <div class="formula-box">H⁺ (Acid) & OH⁻ (Base)</div>
-                </div>
-                <button class="details-btn" onclick="openModal('এসিড-ক্ষার তত্ত্বসমূহ (Acid-Base)', '⚗️', 'রসায়নে এসিড ও ক্ষার শনাক্তকরণ এবং তাদের আচরণ ব্যা의 করার জন্য প্রধানত ৩টি যুগান্তকারী তত্ত্ব রয়েছে:', '<ul><li><b>আরহেনিয়াস তত্ত্ব (১৮৮৪):</b> যে সকল যৌগ জলীয় দ্রবণে হাইড্রোজেন আয়ন ($H^+$) উৎপন্ন করে তারা এসিড, এবং যারা হাইড্রোক্সাইড আয়ন ($OH^-$) উৎপন্ন করে তারা ক্ষার।</li><li><b>ব্রনস্টেড-লাউরি প্রোটনীয় তত্ত্ব (১৯২৩):</b> যে সকল প্রজাতি প্রোটন ($H^+$) দান করতে পারে তারা এসিড এবং যারা প্রোটন গ্রহণ করতে পারে তারা ক্ষারক।</li><li><b>লুইস ইলেকট্রনীয় তত্ত্ব (১৯২৩):</b> যে সকল যৌগ বা আয়ন একজোড়া ইলেকট্রন গ্রহণ করতে পারে তারা লুইস এসিড, এবং যারা একজোড়া ইলেকট্রন দান করতে পারে তারা লুইস ক্ষার।</li></ul>')">বিস্তারিত জানুন</button>
-            </div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 
-<div class="theory-card" data-name="পানির আয়নিক গুণফল ionic product water kw ph">
-    <div>
-        <div class="card-icon">💧</div>
-        <div class="card-title">পানির আয়নিক গুণফল (Ionic Product)</div>
-        <div class="card-desc">নির্দিষ্ট তাপমাত্রায় বিশুদ্ধ পানিতে হাইড্রোজেন ও হাইড্রোক্সাইড আয়নের মোলার ঘনমাত্রার গুণফল ধ্রুব থাকে।</div>
-        <div class="formula-box">K_w = [H⁺][OH⁻] = 10⁻¹⁴ (25°C এ)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('পানির আয়নিক গুণফল', '💧', 'বিশুদ্ধ পানির স্বতঃ-আয়নিকরণ প্রক্রিয়ার ওপর ভিত্তি করে এই ধ্রুবক নির্ধারিত হয়।', '<h4>মূল ধারণা:</h4><p>নির্দিষ্ট তাপমাত্রায় বিশুদ্ধ পানিতে আংশিক বিয়োজিত হয়ে হাইড্রোজেন আয়ন ($H^+$) এবং হাইড্রোক্সাইড আয়ন ($OH^-$) উৎপন্ন করে। ২৫° সেলসিয়াস তাপমাত্রায় এদের ঘনমাত্রার গুণফল সবসময় $1.0 \\times 10^{-14}$ হয়।</p><h4>পিএইচ (pH) স্কেলের ভিত্তি:</h4><p>এই ধ্রুবকটি থেকেই মূলত দ্রবণ অম্লীয়, ক্ষারীয় নাকি প্রমশ তা নির্ধারণকারী pH স্কেলের গাণিতিক ভিত্তি তৈরি হয়েছে।</p>')">বিস্তারিত জানুন</button>
-</div>
+<script>
+/* ফিরে যাওয়ার পেজ বদলাতে চাইলে শুধু এই লাইনটি বদলাও */
+const BACK_URL = 'dashboard.html';
+const CATS = ['🎈 গ্যাস ও দ্রবণ', '⚛️ পরমাণু ও কোয়ান্টাম', '⚗️ অম্ল-ক্ষারক ও সাম্য', '🔥 তাপ ও গতিবিদ্যা', '🔋 তড়িৎ রসায়ন', '🔗 বন্ধন, গঠন ও ভরের সূত্র'];
+/* নতুন তত্ত্ব যোগ করতে শুধু এখানে একটি এন্ট্রি যোগ করো:
+   [বিভাগ(০-৫), আইকন, শিরোনাম, ইংরেজি সার্চ শব্দ, সংক্ষিপ্ত বিবরণ, সূত্র, কে/কবে, [[শিরোনাম, লেখা বা তালিকা], ...]] */
+const RAW = [
+ /* ০. গ্যাস ও দ্রবণ */
+ [0,'🎈',"বয়েলের সূত্র (Boyle's Law)",'boyle law pressure volume','স্থির তাপমাত্রায় নির্দিষ্ট ভরের গ্যাসের আয়তন প্রযুক্ত চাপের ব্যস্তানুপাতিক।','P ∝ 1/V  ⇒  P₁V₁ = P₂V₂','রবার্ট বয়েল ১৬৬২ সালে এই বিখ্যাত গ্যাসীয় সূত্রটি আবিষ্কার করেন।',[['মূল ধারণা','স্থির তাপমাত্রায় নির্দিষ্ট ভরের কোনো গ্যাসের আয়তন (V) তার ওপর প্রযুক্ত চাপের (P) ব্যস্তানুপাতিক। অর্থাৎ চাপ বাড়ালে আয়তন কমে যায়।'],['গাণিতিক রূপ','PV = k (ধ্রুবক)। দুটি ভিন্ন অবস্থার জন্য: P₁V₁ = P₂V₂'],['একটি অঙ্ক','২ atm চাপে ৬ L গ্যাসের চাপ ৩ atm করলে আয়তন হবে (২ × ৬) ÷ ৩ = ৪ L।'],['বাস্তব প্রয়োগ ও উদাহরণ',['শ্বাস-প্রশ্বাসের সময় ফুসফুসের ভেতরের বায়ুর চাপ ও আয়তনের পরিবর্তন।','গভীর পানির নিচের মাছের বুদ্বুদ ওপরে উঠলে চাপ কমে যাওয়ায় তার আয়তন বাড়ে।','সাইকেলের পাম্পে বাতাস ভরার সময় সিলিন্ডারের ভেতরের চাপ বাড়ে।']]]],
+ [0,'🌡️',"চার্লসের সূত্র (Charles's Law)",'charles law temperature volume','স্থির চাপে নির্দিষ্ট ভরের গ্যাসের তাপমাত্রা পরিবর্তনে আয়তন পরিবর্তিত হয়।','V ∝ T  ⇒  V₁/T₁ = V₂/T₂','ফরাসি বিজ্ঞানী জাক চার্লস ১৭৮৭ সালে এই সূত্র উপস্থাপন করেন; পরে গে-লুসাক এটি পরিমার্জন করেন।',[['মূল ধারণা','স্থির চাপে নির্দিষ্ট ভরের গ্যাসের তাপমাত্রা ১°C বাড়ালে বা কমালে 0°C তাপমাত্রার আয়তনের ১/২৭৩ অংশ যথাক্রমে বাড়ে বা কমে। অর্থাৎ পরম তাপমাত্রা বাড়লে আয়তন সমানুপাতিক হারে বাড়ে।'],['গাণিতিক রূপ','V ∝ T (T = পরম তাপমাত্রা বা কেলভিন, T = °C + 273)। সুতরাং V/T = k বা V₁/T₁ = V₂/T₂'],['একটি অঙ্ক','৩০০ K-এ ৬ L গ্যাসকে স্থির চাপে ৬০০ K-এ গরম করলে আয়তন হবে ৬ × (৬০০ ÷ ৩০০) = ১২ L।'],['বাস্তব প্রয়োগ ও উদাহরণ',['হট এয়ার বেলুনে বাতাস গরম করলে আয়তন বেড়ে বেলুন হালকা হয়ে আকাশে ওড়ে।','গরমের দিনে গাড়ির টায়ারের ভেতরের বায়ুর প্রসারণের চেষ্টা।']]]],
+ [0,'📈','গে-লুসাকের চাপীয় সূত্র (Gay-Lussac)','gay lussac pressure temperature','স্থির আয়তনে নির্দিষ্ট ভরের গ্যাসের চাপ পরম তাপমাত্রার সমানুপাতিক।','P ∝ T  ⇒  P₁/T₁ = P₂/T₂','জোসেফ লুই গে-লুসাক ১৮০২ সালে এই সম্পর্ক প্রকাশ করেন।',[['মূল ধারণা','বন্ধ ও শক্ত পাত্রে গ্যাস গরম করলে অণুগুলো দ্রুত ছোটে ও দেয়ালে বেশি জোরে ধাক্কা দেয়, তাই চাপ বাড়ে।'],['একটি অঙ্ক','২৭°C (৩০০ K) এ ১ atm চাপের গ্যাসকে ৬০০ K-এ গরম করলে চাপ হবে ২ atm।'],['বাস্তব প্রয়োগ',['বন্ধ অ্যারোসল ক্যান আগুনের কাছে রাখা বিপজ্জনক, কারণ চাপ বেড়ে ফেটে যেতে পারে।','প্রেশার কুকারে চাপ ও তাপমাত্রা একসাথে বাড়ে।']]]],
+ [0,'🧮','আদর্শ গ্যাস সমীকরণ (Ideal Gas Equation)','ideal gas equation pv nrt','বয়েল, চার্লস ও অ্যাভোগাদ্রোর সূত্র একত্র করে আদর্শ গ্যাসের অবস্থার সমীকরণ।','PV = nRT','বেনোয়া ক্ল্যাপেইরন ১৮৩৪ সালে এই রূপে সূত্রগুলো একত্র করেন।',[['মূল ধারণা','P = চাপ, V = আয়তন, n = মোল সংখ্যা, T = পরম তাপমাত্রা, R = সার্বজনীন গ্যাস ধ্রুবক।'],['R এর মান',['০.০৮২১ L·atm/(mol·K)','৮.৩১৪ J/(mol·K)']],['একটি অঙ্ক','২ atm চাপ ও ৩০০ K-এ ১ mol গ্যাসের আয়তন V = nRT ÷ P = (১ × ০.০৮২১ × ৩০০) ÷ ২ ≈ ১২.৩ L।'],['STP-তে','০°C ও ১ atm-এ যেকোনো আদর্শ গ্যাসের ১ mol-এর আয়তন প্রায় ২২.৪ L।']]],
+ [0,'📦',"অ্যাভোগাদ্রোর সূত্র (Avogadro's Law)",'avogadro law mole','সমান তাপমাত্রা ও চাপে সম আয়তনের সকল গ্যাসে সমান সংখ্যক অণু থাকে।','V ∝ n   (N_A = 6.023 × 10²³)','ইতালীয় বিজ্ঞানী আমেদেও অ্যাভোগাদ্রো ১৮১১ সালে এই সূত্র প্রদান করেন।',[['মূল ধারণা','একই তাপমাত্রা ও চাপে সম আয়তনের সকল গ্যাসে সমান সংখ্যক অণু থাকে। অর্থাৎ গ্যাসের আয়তন তার অণুর সংখ্যার (মোল সংখ্যার) সমানুপাতিক।'],['গাণিতিক রূপ','V ∝ n (যখন T ও P স্থির)।'],['অ্যাভোগাদ্রো ধ্রুবক (N_A)','যেকোনো পদার্থের ১ মোলে ৬.০২৩ × ১০²³ টি কণা থাকে। রসায়নের পরিমাণগত হিসাব বা স্টয়কিওমেট্রিতে এটি অপরিহার্য।']]],
+ [0,'💨',"গ্রাহামের ব্যাপন সূত্র (Graham's Law)",'graham law diffusion effusion','স্থির তাপমাত্রা ও চাপে গ্যাসের ব্যাপনের হার তার ঘনত্বের বর্গমূলের ব্যস্তানুপাতিক।','r ∝ 1/√d  ⇒  r₁/r₂ = √(M₂/M₁)','স্কটিশ রসায়নবিদ থমাস গ্রাহাম ১৮২৯ সালে এই সূত্র আবিষ্কার করেন।',[['মূল ধারণা','হালকা গ্যাস ভারী গ্যাসের চেয়ে দ্রুত ছড়ায়।'],['গাণিতিক রূপ','r₁ / r₂ = √(M₂ / M₁) (M = মোলার ভর)।'],['একটি অঙ্ক','হাইড্রোজেন (M = ২) ও অক্সিজেনের (M = ৩২) ব্যাপন হারের অনুপাত = √(৩২ ÷ ২) = ৪ : ১।'],['বাস্তব উদাহরণ',['ঘরের এক কোণে সেন্টের বোতল খুললে অন্য কোণে গন্ধ পৌঁছানো।','হাইড্রোজেন হিলিয়াম বা অক্সিজেনের চেয়ে দ্রুত ব্যাপিত হয়।']]]],
+ [0,'🔵',"ডালটনের আংশিক চাপ সূত্র (Dalton's Law)",'dalton law partial pressure','পরস্পর বিক্রিয়াহীন গ্যাস মিশ্রণের মোট চাপ প্রতিটি গ্যাসের আংশিক চাপের সমষ্টির সমান।','P_total = P₁ + P₂ + P₃ + …','জন ডালটন ১৮০১ সালে গ্যাস মিশ্রণের চাপ নিয়ে এই সূত্র দেন।',[['মূল ধারণা','স্থির তাপমাত্রায় পরস্পর বিক্রিয়া করে না এমন গ্যাস মিশ্রিত করলে মোট চাপ প্রতিটি গ্যাসের আংশিক চাপের যোগফলের সমান হয়। কোনো গ্যাসের আংশিক চাপ = তার মোল ভগ্নাংশ × মোট চাপ।'],['বাস্তব প্রয়োগ',['পানির ওপর গ্যাস সংগ্রহ করলে মোট চাপ থেকে জলীয় বাষ্পের চাপ বাদ দিয়ে শুষ্ক গ্যাসের চাপ পাওয়া যায়।','বায়ুমণ্ডলে বিভিন্ন গ্যাসের আংশিক চাপের হিসাব।']]]],
+ [0,'🌀','গ্যাসের গতীয় তত্ত্ব ও গড় বর্গবেগ','kinetic theory rms velocity','গ্যাসের অণুগুলোর গড় গতিশক্তি পরম তাপমাত্রার সরাসরি সমানুপাতিক।','v_rms = √(3RT / M)','ম্যাক্সওয়েল ও বোল্টজম্যান গ্যাসের অণুর গতিবিধি ব্যাখ্যা করতে এই তত্ত্ব দেন।',[['মূল ধারণা','মোল প্রতি গড় গতিশক্তি KE = (৩/২)RT। তাই তাপমাত্রা বাড়লে অণুর গতি বাড়ে।'],['গড় বর্গবেগ (v_rms)','v_rms = √(3RT / M), এখানে M মোলার ভর kg/mol এককে নিতে হয়। ভারী অণুর বেগ কম, হালকা অণুর বেগ বেশি।']]],
+ [0,'📊','বাষ্প ঘনত্ব ও আণবিক ভর (Vapour Density)','vapour density molecular mass','সমআয়তন হাইড্রোজেনের ভরের তুলনায় কোনো গ্যাসের ভর যত গুণ, সেটি তার বাষ্প ঘনত্ব।','M = 2 × VD','গ্যাসের আণবিক ভর নির্ণয়ের ধ্রুপদী সূত্র।',[['মূল ধারণা','একই তাপমাত্রা ও চাপে সমআয়তন হাইড্রোজেন গ্যাসের ভরের তুলনায় কোনো গ্যাসের ভর যত গুণ ভারী, সেটি ওই গ্যাসের বাষ্প ঘনত্ব (VD)। আণবিক ভর সবসময় বাষ্প ঘনত্বের দ্বিগুণ।'],['একটি অঙ্ক','CO₂ এর আণবিক ভর ৪৪, তাই VD = ৪৪ ÷ ২ = ২২।']]],
+ [0,'🥤',"হেনরির সূত্র (Henry's Law)",'henry law gas solubility','স্থির তাপমাত্রায় তরলে গ্যাসের দ্রাব্যতা গ্যাসটির আংশিক চাপের সমানুপাতিক।','S ∝ P  (S = k_H · P)','ইংরেজ রসায়নবিদ উইলিয়াম হেনরি ১৮০৩ সালে এই সূত্র দেন।',[['মূল ধারণা','স্থির তাপমাত্রায় নির্দিষ্ট তরলে কোনো গ্যাসের দ্রাব্যতা দ্রবণের ওপরের গ্যাসটির আংশিক চাপের সমানুপাতিক।'],['বাস্তব উদাহরণ',['কোল্ড ড্রিংকসের বোতলে উচ্চ চাপে CO₂ দ্রবীভূত থাকে। ছিপি খুললে চাপ কমে বুদবুদ হয়ে গ্যাস বেরিয়ে আসে।','ডুবুরিরা দ্রুত ওপরে উঠলে রক্তে দ্রবীভূত নাইট্রোজেন বুদবুদ হয়ে সমস্যা করে।']]]],
+ [0,'🧪',"রাউল্টের সূত্র (Raoult's Law)",'raoult law vapor pressure lowering','অনুদ্বায়ী দ্রব যুক্ত দ্রবণের বাষ্পচাপের আপেক্ষিক অবনমন দ্রবের মোল ভগ্নাংশের সমান।','(P° − P) / P° = x₂','ফরাসি রসায়নবিদ ফ্রাঁসোয়া-মারি রাউল্ট ১৮৮৭ সালে এই সূত্র আবিষ্কার করেন।',[['মূল ধারণা','কোনো তাপমাত্রায় অনুদ্বায়ী (non-volatile) দ্রব দ্রাবকে দ্রবীভূত করলে দ্রবণের বাষ্পচাপের আপেক্ষিক অবনমন দ্রবের মোল ভগ্নাংশের সমান।'],['গাণিতিক রূপ','বিশুদ্ধ দ্রাবকের বাষ্পচাপ P°, দ্রবণের বাষ্পচাপ P হলে (P° − P) ÷ P° = n ÷ (n + N), এখানে n = দ্রবের মোল ও N = দ্রাবকের মোল।']]],
+ [0,'🌊',"ভ্যান্ট হফ অভিস্রবণ চাপ সূত্র (Osmotic Pressure)",'vant hoff osmotic pressure','লঘু দ্রবণের অভিস্রবণ চাপ গ্যাসীয় চাপের মতো সমীকরণ মেনে চলে।','π V = nRT  (π = CRT)','ডাচ বিজ্ঞানী ইয়াকোবাস ভ্যান্ট হফ ১৮৮৬ সালে এই সূত্র দেন।',[['মূল ধারণা','লঘু দ্রবণের অভিস্রবণ চাপ (π) নির্দিষ্ট তাপমাত্রায় দ্রবণের মোলার ঘনমাত্রা (C) ও পরম তাপমাত্রার (T) সমানুপাতিক: π = CRT।'],['গুরুত্ব','জীবকোষে পানি শোষণ ও অভিস্রবণ নিয়ন্ত্রণ বোঝা এবং অজানা দ্রবের আণবিক ভর নির্ণয়ে এটি কাজে লাগে।']]],
+ [0,'🔦','বিয়ার-ল্যামবার্ট সূত্র (Beer-Lambert Law)','beer lambert absorbance spectroscopy','রঙিন দ্রবণে আলোর শোষণ দ্রবণের ঘনমাত্রা ও আলোর পথের দৈর্ঘ্যের সমানুপাতিক।','A = ε · c · l','বর্ণালিমিতি (স্পেকট্রোস্কোপি)-র মৌলিক সূত্র।',[['মূল ধারণা','রঙিন দ্রবণের ভেতর দিয়ে আলো গেলে শোষণ (A) দ্রবণের ঘনমাত্রা (c) এবং পথের দৈর্ঘ্যের (l) ওপর নির্ভর করে। ε হলো মোলার শোষণ গুণাঙ্ক।'],['ব্যবহার','রসায়নাগারে অজানা দ্রবণের ঘনমাত্রা নির্ণয়ে এই সূত্র বহুল ব্যবহৃত হয়।']]],
+ [0,'🧲','ফ্রুন্ডলিক শোষণ সমীকরণ (Adsorption Isotherm)','freundlich adsorption isotherm','স্থির তাপমাত্রায় চাপের সাথে কঠিন পৃষ্ঠে গ্যাসের শোষিত হওয়ার পরিমাণের সম্পর্ক।','x / m = k · P^(1/n)','হার্বার্ট ফ্রুন্ডলিক ১৯০৬ সালের কাছাকাছি সময়ে এই সমীকরণ দেন।',[['মূল ধারণা','স্থির তাপমাত্রায় নির্দিষ্ট ভরের শোষকে (m) শোষিত গ্যাসের পরিমাণ (x) গ্যাসের চাপের (P) ওপর কীভাবে নির্ভর করে, তা এই সমীকরণ দেখায়।'],['প্রয়োগ','গ্যাস মাস্ক, সক্রিয় কার্বন দিয়ে পানি পরিশোধন ও অনুঘটক প্রযুক্তিতে এর ব্যবহার রয়েছে।']]],
+ /* ১. পরমাণু ও কোয়ান্টাম */
+ [1,'⚛️','রাদারফোর্ড পরমাণু মডেল (Rutherford Model)','rutherford atomic model nucleus','পরমাণুর কেন্দ্রে ধনাত্মক চার্জযুক্ত ভারী নিউক্লিয়াস থাকে এবং ইলেকট্রন ঘোরে।','নিউক্লিয়াস + ঘূর্ণনশীল ইলেকট্রন','আর্নেস্ট রাদারফোর্ড ১৯১১ সালে আলফা কণা বিচ্ছুরণ পরীক্ষার মাধ্যমে এই মডেল প্রকাশ করেন।',[['প্রধান বৈশিষ্ট্য',['পরমাণুর কেন্দ্রে ক্ষুদ্র ও ধনাত্মক চার্জযুক্ত ভারী অংশ নিউক্লিয়াস থাকে এবং প্রায় সমস্ত ভর সেখানে পুঞ্জীভূত।','পরমাণুর বেশিরভাগ স্থানই ফাঁকা।','সৌরজগতের গ্রহের মতো ইলেকট্রনগুলো নিউক্লিয়াসকে ঘিরে বৃত্তাকার পথে ঘোরে।']],['সীমাবদ্ধতা','ম্যাক্সওয়েলের তত্ত্ব অনুযায়ী ঘূর্ণনশীল ইলেকট্রন শক্তি বিকিরণ করে শেষে নিউক্লিয়াসে পড়ার কথা, অথচ পরমাণু স্থায়ী। রাদারফোর্ড এই স্থায়িত্বের ব্যাখ্যা দিতে পারেননি।']]],
+ [1,'🌀',"বোর পরমাণু মডেল (Bohr's Model)",'bohr atomic model energy level','ইলেকট্রনগুলো নির্দিষ্ট শক্তিস্তরে থেকে নিউক্লিয়াসকে প্রদক্ষিণ করে।','mvr = nh / 2π','ডেনিশ পদার্থবিদ নিলস বোর ১৯১৩ সালে প্ল্যাঙ্কের কোয়ান্টাম তত্ত্বের ওপর ভিত্তি করে রাদারফোর্ড মডেলের ত্রুটি সংশোধন করেন।',[['প্রধান বৈশিষ্ট্য',['ইলেকট্রন কেবল নির্দিষ্ট কিছু অনুমোদিত কক্ষপথে (শক্তিস্তরে) ঘোরে।','এই স্থায়ী কক্ষপথে ঘোরার সময় ইলেকট্রন শক্তি শোষণ বা বিকিরণ করে না।','উচ্চ শক্তিস্তর থেকে নিম্ন স্তরে নামলে শক্তি বিকিরণ করে, নিম্ন থেকে উচ্চ স্তরে গেলে শোষণ করে (ΔE = hν)।']],['কোয়ান্টাম শর্ত','কক্ষপথের কৌণিক ভরবেগ mvr সবসময় h/2π এর পূর্ণসংখ্যার গুণিতক: mvr = nh/2π।'],['সীমাবদ্ধতা','মডেলটি কেবল হাইড্রোজেনের মতো এক-ইলেকট্রনীয় প্রজাতির বর্ণালি ভালোভাবে ব্যাখ্যা করে।']]],
+ [1,'💡',"প্ল্যাঙ্কের কোয়ান্টাম তত্ত্ব (Planck's Theory)",'planck quantum theory energy photon','শক্তি অবিচ্ছিন্ন নয়, কোয়ান্টা নামের ক্ষুদ্র প্যাকেট আকারে নির্গত বা শোষিত হয়।','E = hν','জার্মান পদার্থবিদ ম্যাক্স প্ল্যাঙ্ক ১৯০০ সালে কৃষ্ণবস্তুর বিকিরণ ব্যাখ্যা করতে এই তত্ত্ব দেন।',[['মূল ধারণা','শক্তি ধারাবাহিক তরঙ্গ হিসেবে নয়, ক্ষুদ্র শক্তির প্যাকেট (কোয়ান্টাম বা ফোটন) হিসেবে শোষিত বা নির্গত হয়।'],['গাণিতিক রূপ','E = hν (E = শক্তি, h = প্ল্যাঙ্কের ধ্রুবক ≈ ৬.৬২৬ × ১০⁻³⁴ J·s, ν = কম্পাঙ্ক)।']]],
+ [1,'🌫️','হাইজেনবার্গের অনিশ্চয়তা নীতি (Uncertainty Principle)','heisenberg uncertainty principle position momentum','ক্ষুদ্র কণার অবস্থান ও ভরবেগ একই সাথে নিখুঁতভাবে নির্ধারণ করা অসম্ভব।','Δx · Δp ≥ h / 4π','জার্মান পদার্থবিদ ভার্নার হাইজেনবার্গ ১৯২৭ সালে এই নীতি প্রদান করেন।',[['মূল ধারণা','ইলেকট্রনের মতো ক্ষুদ্র কণার সঠিক অবস্থান ও সঠিক ভরবেগ একই মুহূর্তে মাপা যায় না। একটির নিখুঁত মাপ নিতে গেলে অন্যটিতে অনিশ্চয়তা বাড়ে।'],['গাণিতিক রূপ','Δx · Δp ≥ h/(4π), এখানে Δx অবস্থানের ও Δp ভরবেগের অনিশ্চয়তা।'],['তাৎপর্য','এই নীতির কারণেই বোরের নির্দিষ্ট কক্ষপথ বাদ দিয়ে অরবিটাল (সম্ভাবনার অঞ্চল) ধারণা এসেছে।']]],
+ [1,'〰️','ডি ব্রগলির তরঙ্গ-কণা দ্বৈততা (de Broglie)','de broglie wave particle duality','প্রতিটি গতিশীল কণার সাথে একটি তরঙ্গ জড়িত থাকে।','λ = h / mv','ফরাসি পদার্থবিদ লুই দ্য ব্রগলি ১৯২৪ সালে এই ধারণা দেন।',[['মূল ধারণা','আলো যেমন কণা ও তরঙ্গ দুই রূপে আচরণ করে, ইলেকট্রনের মতো পদার্থ-কণাও তরঙ্গের মতো আচরণ করে। তরঙ্গদৈর্ঘ্য λ = h/mv।'],['গুরুত্ব','এই ধারণা থেকেই শ্রোডিঙ্গারের তরঙ্গ সমীকরণ ও আধুনিক অরবিটাল তত্ত্ব গড়ে ওঠে। বড় বস্তুর ভর বেশি বলে তাদের λ এত ছোট যে চোখে পড়ে না।']]],
+ [1,'🛡️','পলির বর্জন নীতি (Pauli Exclusion Principle)','pauli exclusion principle quantum numbers','একটি পরমাণুতে দুটি ইলেকট্রনের চারটি কোয়ান্টাম সংখ্যার মান পুরোপুরি এক হতে পারে না।','n, l, m, s সব এক হতে পারে না','অস্ট্রীয় পদার্থবিদ ভোলফগাং পাউলি ১৯২৫ সালে এই নীতি আবিষ্কার করেন এবং ১৯৪৫ সালে নোবেল পান।',[['মূল ধারণা','একই পরমাণুর যেকোনো দুটি ইলেকট্রনের জন্য প্রধান (n), সহকারী (l), চৌম্বকীয় (m) ও স্পিন (s) কোয়ান্টাম সংখ্যার মান সম্পূর্ণ এক হতে পারে না।'],['ফল','একটি অরবিটালে সর্বোচ্চ দুটি ইলেকট্রন থাকতে পারে এবং তাদের স্পিন বিপরীত (+½ ও −½) হতে হয়।']]],
+ [1,'📊','আউফবাউ নীতি (Aufbau Principle)','aufbau principle electron configuration','ইলেকট্রন কম শক্তির অরবিটাল আগে পূর্ণ করে ক্রমে উচ্চ শক্তির অরবিটালে প্রবেশ করে।','(n + l) নিয়ম অনুযায়ী পূরণ','"আউফবাউ" কোনো বিজ্ঞানীর নাম নয়, এটি একটি জার্মান শব্দ (Aufbau) যার অর্থ "গড়ে তোলা" বা ধাপে ধাপে সাজানো।',[['মূল ধারণা','পরমাণুর ইলেকট্রন বিন্যাসে অরবিটালগুলোর শক্তির ক্রম মানতে হয়: আগে কম শক্তির অরবিটাল পূর্ণ হয়, তারপর পরের উচ্চ শক্তির অরবিটাল।'],['(n + l) নিয়ম',['যে অরবিটালের n + l এর যোগফল কম, তার শক্তি কম এবং তাতে ইলেকট্রন আগে প্রবেশ করে।','যোগফল সমান হলে যেটির n কম, সেটি আগে পূর্ণ হয়।']],['ক্রম','1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d …']]],
+ [1,'⚡',"হুন্ডের নীতি (Hund's Rule)",'hund rule maximum multiplicity unpaired electrons','সমশক্তির অরবিটালগুলোতে ইলেকট্রন সর্বাধিক অযুগ্ম অবস্থায় প্রবেশ করে।','সর্বোচ্চ অযুগ্ম ইলেকট্রন বিন্যাস','জার্মান পদার্থবিদ ফ্রিডরিখ হুন্ড ১৯২৫-২৭ সালের মধ্যে এই নীতি প্রদান করেন।',[['মূল ধারণা','সমশক্তির একাধিক অরবিটালে (যেমন pₓ, p_y, p_z) ইলেকট্রন প্রবেশের সময় আগে প্রতিটি অরবিটালে একটি করে ইলেকট্রন একই স্পিনে ঢোকে। প্রতিটিতে একটি করে ভরে গেলে তারপর জোড় বাঁধা শুরু হয়।'],['গুরুত্ব','এতে ইলেকট্রন বিন্যাস সবচেয়ে স্থিতিশীল হয় এবং পরমাণুর চৌম্বক ধর্ম (প্যারাম্যাগনেটিক বা ডায়াম্যাগনেটিক) ব্যাখ্যা করা যায়।'],['উদাহরণ','নাইট্রোজেনের 2p³ বিন্যাসে তিনটি অরবিটালে একটি করে অযুগ্ম ইলেকট্রন থাকে।']]],
+ /* ২. অম্ল-ক্ষারক ও সাম্য */
+ [2,'⚗️','এসিড-ক্ষার তত্ত্ব (Acid-Base)','arrhenius bronsted lowry lewis acid base','আরহেনিয়াস, ব্রনস্টেড-লাউরি ও লুইসের এসিড-ক্ষার সম্পর্কিত তিনটি তত্ত্ব।','H⁺ (এসিড) · OH⁻ (ক্ষার) · e⁻ জোড়া','রসায়নে এসিড ও ক্ষারের আচরণ ব্যাখ্যা করতে প্রধানত তিনটি তত্ত্ব রয়েছে।',[['তত্ত্বসমূহ',['আরহেনিয়াস (১৮৮৪): জলীয় দ্রবণে H⁺ দেয় যা তা এসিড, OH⁻ দেয় যা তা ক্ষার।','ব্রনস্টেড-লাউরি (১৯২৩): প্রোটন (H⁺) দাতা হলো এসিড, প্রোটন গ্রহীতা হলো ক্ষারক।','লুইস (১৯২৩): এক জোড়া ইলেকট্রন গ্রহণ করতে পারে যা তা লুইস এসিড, দান করতে পারে যা তা লুইস ক্ষারক।']],['উদাহরণ','NH₃ + H₂O ⇌ NH₄⁺ + OH⁻ বিক্রিয়ায় ব্রনস্টেড-লাউরি মতে NH₃ ক্ষারক (প্রোটন নেয়) এবং H₂O এসিড (প্রোটন দেয়)।']]],
+ [2,'💧','পানির আয়নিক গুণফল (Ionic Product of Water)','ionic product water kw ph','নির্দিষ্ট তাপমাত্রায় বিশুদ্ধ পানিতে H⁺ ও OH⁻ আয়নের ঘনমাত্রার গুণফল ধ্রুব।','K_w = [H⁺][OH⁻] = 10⁻¹⁴  (25°C এ)','বিশুদ্ধ পানির স্বতঃ-আয়নিকরণের ওপর ভিত্তি করে এই ধ্রুবক নির্ধারিত।',[['মূল ধারণা','পানি আংশিক বিয়োজিত হয়ে H⁺ ও OH⁻ আয়ন দেয়। ২৫°C তাপমাত্রায় এদের ঘনমাত্রার গুণফল সবসময় ১.০ × ১০⁻¹⁴।'],['pH স্কেলের ভিত্তি','এই ধ্রুবক থেকেই pH ও pOH স্কেল তৈরি: pH + pOH = ১৪ (২৫°C এ)। দ্রবণ অম্লীয়, ক্ষারীয় না প্রশম তা এ থেকে নির্ধারণ করা যায়।']]],
+ [2,'🧴','বাফার দ্রবণ ও হ্যান্ডারসন সমীকরণ','buffer solution henderson hasselbalch','অল্প এসিড বা ক্ষার যোগ করলেও যে দ্রবণ তার pH প্রায় অপরিবর্তিত রাখে।','pH = pKa + log([লবণ] / [এসিড])','জীবদেহ ও ল্যাবরেটরিতে pH স্থির রাখতে বাফারের ভূমিকা অপরিসীম।',[['মূল ধারণা','দুর্বল এসিড ও তার লবণ (অথবা দুর্বল ক্ষারক ও তার লবণ) মেশানো দ্রবণ অল্প পরিমাণ তীব্র এসিড বা ক্ষার যোগ করলেও pH-এর বড় কোনো পরিবর্তন হতে দেয় না।'],['হ্যান্ডারসন-হ্যাসেলবাখ সমীকরণ','অম্লীয় বাফারের জন্য pH = pKa + log([লবণ] ÷ [এসিড])। লবণ ও এসিডের ঘনমাত্রা সমান হলে pH = pKa।'],['উদাহরণ','মানবদেহের রক্ত একটি প্রাকৃতিক বাফার সিস্টেম, যার pH প্রায় ৭.৪।']]],
+ [2,'💧','ওসওয়াল্ড লঘুকরণ সূত্র (Ostwald Dilution Law)','ostwald dilution law weak electrolyte degree of dissociation','দুর্বল তড়িৎ বিশ্লেষ্যের বিয়োজন মাত্রা লঘুকরণের সাথে বাড়ে।','K_a = Cα² / (1 − α) ≈ Cα²  ⇒  α = √(K_a / C)','বিজ্ঞানী ভিলহেল্ম ওসওয়াল্ড দুর্বল এসিড ও ক্ষারের বিয়োজন মাত্রা নিয়ে এই সূত্র দেন।',[['মূল ধারণা','দ্রবণ যত লঘু করা হয় (ঘনমাত্রা C কমে), দুর্বল এসিড বা ক্ষারের বিয়োজন মাত্রা (α) তত বাড়ে। α অনেক ছোট হলে α ≈ √(K_a/C)।']]],
+ [2,'⚖️','ভরক্রিয়া সূত্র (Law of Mass Action)','law of mass action equilibrium constant kc kp','কোনো তাপমাত্রায় বিক্রিয়ার হার বিক্রিয়কগুলোর সক্রিয় ভরের (ঘনমাত্রার) সমানুপাতিক।','K_c = [উৎপাদ] / [বিক্রিয়ক]  (সহগ ঘাত হিসেবে)','নরওয়েজীয় বিজ্ঞানী গুলডবার্গ ও ওয়াগে ১৮৬৪ সালে এই সূত্র দেন।',[['মূল ধারণা','aA + bB ⇌ cC + dD বিক্রিয়ায় সাম্যাবস্থায় K_c = [C]ᶜ[D]ᵈ ÷ ([A]ᵃ[B]ᵇ)। সহগ ঘাত হিসেবে বসে।'],['গুরুত্ব','K_c বড় হলে সাম্যাবস্থায় উৎপাদ বেশি, ছোট হলে বিক্রিয়ক বেশি থাকে। গ্যাসীয় বিক্রিয়ায় চাপ দিয়েও K_p হিসাব করা হয়।']]],
+ [2,'↔️',"লি শাতেলিয়ে নীতি (Le Chatelier's Principle)",'le chatelier principle equilibrium shift','সাম্যাবস্থায় কোনো পরিবর্তন ঘটালে সাম্য সেই পরিবর্তনের প্রভাব প্রশমনের দিকে সরে যায়।','সাম্যাবস্থার শিফট','ফরাসি রসায়নবিদ অঁরি লি শাতেলিয়ে ১৮৮৪ সালে এই নীতি প্রকাশ করেন।',[['মূল ধারণা','সাম্যাবস্থায় থাকা বিক্রিয়ায় তাপমাত্রা, চাপ বা ঘনমাত্রা পরিবর্তন করলে সাম্য এমন দিকে সরে যায় যাতে পরিবর্তনের প্রভাব কমে।'],['কী ঘটে',['ঘনমাত্রা বাড়ালে যে পদার্থ বাড়ানো হলো তা খরচ হওয়ার দিকে সাম্য সরে।','চাপ বাড়ালে অণুর মোট সংখ্যা কমার দিকে সাম্য সরে।','তাপ বাড়ালে তাপহারী দিকে সাম্য সরে।','অনুঘটক সাম্যের অবস্থান বদলায় না।']],['শিল্পে গুরুত্ব','হেবার পদ্ধতিতে অ্যামোনিয়া বা স্পর্শ পদ্ধতিতে সালফিউরিক এসিড উৎপাদনে সর্বোচ্চ ফলনের জন্য অনুকূল চাপ ও তাপমাত্রা ঠিক করতে এই নীতি ব্যবহৃত হয়।']]],
+ /* ৩. তাপ ও গতিবিদ্যা */
+ [3,'🔋','তাপগতিবিদ্যার প্রথম সূত্র (First Law)','first law thermodynamics internal energy','মহাবিশ্বের মোট শক্তি অপরিবর্তনীয়, শক্তি কেবল এক রূপ থেকে অন্য রূপে রূপান্তরিত হয়।','ΔU = q + w','এটি শক্তির সংরক্ষণশীলতা নীতিরই তাপগতীয় রূপ।',[['মূল ধারণা','শক্তি সৃষ্টি বা ধ্বংস করা যায় না। সিস্টেমের অভ্যন্তরীণ শক্তির পরিবর্তন (ΔU) = সিস্টেমে যোগ হওয়া তাপ (q) + সিস্টেমের ওপর কৃত কাজ (w)।'],['চিহ্নের নিয়ম','কিছু বইয়ে ΔU = q − w লেখা হয়, সেখানে w হলো সিস্টেম কর্তৃক সম্পাদিত কাজ। তোমার বইয়ের নিয়ম অনুসরণ করো।'],['গুরুত্ব','রাসায়নিক বিক্রিয়ায় তাপ বিনিময় ও এনথালপি বোঝার ভিত্তি।']]],
+ [3,'🔄','এন্ট্রপি ও তাপগতিবিদ্যার ২য় সূত্র (Entropy)','entropy second law thermodynamics disorder','স্বতঃস্ফূর্ত প্রক্রিয়ায় মহাবিশ্বের মোট এন্ট্রপি (বিশৃঙ্খলা) বাড়ে।','ΔS_universe > 0','রুডলফ ক্লসিয়াস ও উইলিয়াম থমসন (লর্ড কেলভিন) এই সূত্র প্রদান করেন।',[['মূল ধারণা','এন্ট্রপি (S) হলো সিস্টেমের অণুগুলোর বিশৃঙ্খলার মাপকাঠি। প্রকৃতির যেকোনো স্বতঃস্ফূর্ত পরিবর্তনে মহাবিশ্বের মোট এন্ট্রপি বাড়ে।'],['উদাহরণ','বরফ গলে পানি হলে অণুগুলোর স্বাধীনতা ও বিশৃঙ্খলা বাড়ে, অর্থাৎ এন্ট্রপি বাড়ে।']]],
+ [3,'🧭','গিবস মুক্ত শক্তি (Gibbs Free Energy)','gibbs free energy spontaneity delta g','এনথালপি ও এন্ট্রপি মিলিয়ে বিক্রিয়া স্বতঃস্ফূর্ত কিনা তা বলে দেয়।','ΔG = ΔH − TΔS','জে. উইলার্ড গিবস ১৮৭০-এর দশকে এই ধারণা প্রবর্তন করেন।',[['মূল ধারণা',['ΔG < 0: বিক্রিয়া স্বতঃস্ফূর্ত।','ΔG = 0: সাম্যাবস্থা।','ΔG > 0: স্বতঃস্ফূর্ত নয়।']],['কখন কী','ΔH ঋণাত্মক ও ΔS ধনাত্মক হলে বিক্রিয়া সব তাপমাত্রায় স্বতঃস্ফূর্ত। অন্য ক্ষেত্রে তাপমাত্রা (T) নির্ধারণ করে ΔG-এর চিহ্ন।']]],
+ [3,'🔥',"হেসের সূত্র (Hess's Law)",'hess law enthalpy change','বিক্রিয়া এক ধাপে হোক বা একাধিক ধাপে, মোট এনথালপি পরিবর্তন সমান থাকে।','ΔH = ΔH₁ + ΔH₂ + …','সুইজারল্যান্ডে জন্ম নেওয়া রুশ রসায়নবিদ জার্মেইন হেস ১৮৪০ সালে এই সূত্র প্রদান করেন।',[['মূল ধারণা','কোনো রাসায়নিক বিক্রিয়া এক ধাপে সম্পন্ন হোক বা একাধিক ধাপে, মোট এনথালপি পরিবর্তন (ΔH) সবসময় সমান থাকে। এটি শক্তির সংরক্ষণশীলতারই ফল।'],['ব্যবহার','যেসব বিক্রিয়ার তাপ সরাসরি মাপা কঠিন, হেসের সূত্রে অন্য জানা বিক্রিয়ার ΔH যোগ-বিয়োগ করে তা নির্ণয় করা যায়।']]],
+ [3,'📈','আরহেনিয়াসের হার সমীকরণ (Arrhenius Equation)','arrhenius equation activation energy rate constant','তাপমাত্রার সাথে বিক্রিয়ার বেগ ধ্রুবকের পরিবর্তনের গাণিতিক সম্পর্ক।','k = A · e^(−Ea / RT)','সান্তে আরহেনিয়াস ১৮৮৯ সালে বিক্রিয়ার হার ও সক্রিয়ণ শক্তির সম্পর্ক স্থাপন করেন।',[['মূল ধারণা','তাপমাত্রা বাড়ালে বেগ ধ্রুবক k দ্রুত বাড়ে। সমীকরণ থেকে সক্রিয়ণ শক্তি (Ea) ও কম্পাঙ্ক ফ্যাক্টর (A) নির্ণয় করা যায়।'],['লগারিদমিক রূপ','ln(k₂/k₁) = (Ea/R) × (1/T₁ − 1/T₂)। এর সাহায্যে দুটি ভিন্ন তাপমাত্রায় বিক্রিয়ার হার তুলনা করা যায়।']]],
+ [3,'🚀','অনুঘটক ও সক্রিয়ণ শক্তি','catalyst activation energy alternative pathway','অনুঘটক বিক্রিয়ার সক্রিয়ণ শক্তি কমিয়ে সহজ বিকল্প পথ তৈরি করে।','Ea (অনুঘটকসহ) < Ea (অনুঘটক ছাড়া)','রাসায়নিক গতিবিদ্যায় অনুঘটকের কার্যপদ্ধতির মূল তত্ত্ব।',[['মূল ধারণা','ধনাত্মক অনুঘটক কম শক্তির একটি বিকল্প পথ দেয়, ফলে কম তাপমাত্রাতেই দ্রুত বিক্রিয়া হয়।'],['কী বদলায় না','অনুঘটক বিক্রিয়ার ΔH বদলায় না, সাম্যাবস্থার অবস্থানও বদলায় না, শুধু সাম্যে পৌঁছানোর গতি বাড়ায়।']]],
+ [3,'🌡️','ডুলং ও পেটিটের সূত্র (Dulong-Petit Law)','dulong petit law specific heat atomic mass','বেশিরভাগ কঠিন মৌলের পারমাণবিক ভর ও আপেক্ষিক তাপের গুণফল প্রায় ধ্রুবক।','পারমাণবিক ভর × আপেক্ষিক তাপ ≈ ৬.৪ cal/(mol·°C)','পিয়ের লুই ডুলং ও অ্যালেক্সিস পেটিট ১৮১৯ সালে এই সূত্র দেন।',[['মূল ধারণা','কঠিন মৌলের মোলার তাপধারণ ক্ষমতা প্রায় সব ক্ষেত্রেই কাছাকাছি, ঐতিহ্যগতভাবে বইয়ে মান ধরা হয় প্রায় ৬.৪ cal/(mol·°C) (সূক্ষ্মভাবে এটি 3R ≈ ৬.০ cal/(mol·°C))।'],['ব্যবহার','অজানা কঠিন মৌলের আপেক্ষিক তাপ মেপে তার আনুমানিক পারমাণবিক ভর বের করা যায়: পারমাণবিক ভর ≈ ৬.৪ ÷ আপেক্ষিক তাপ।']]],
+ /* ৪. তড়িৎ রসায়ন */
+ [4,'⚡',"ফ্যারাডের তড়িৎ বিশ্লেষণ সূত্র (Faraday's Law)",'faraday law electrolysis','তড়িৎ বিশ্লেষণে জমা হওয়া পদার্থের পরিমাণ বিদ্যুতের পরিমাণের সমানুপাতিক।','W = Z · I · t','মাইকেল ফ্যারাডে ১৮৩৩-৩৪ সালে তড়িৎ রসায়নের দুটি মৌলিক সূত্র প্রদান করেন।',[['প্রথম সূত্র','তড়িৎ বিশ্লেষণে ইলেকট্রোডে জমা বা দ্রবীভূত পদার্থের ভর (W) মোট প্রবাহিত বিদ্যুতের পরিমাণের (Q = It) সমানুপাতিক।'],['দ্বিতীয় সূত্র','ভিন্ন তড়িৎ বিশ্লেষ্যের মধ্য দিয়ে একই পরিমাণ বিদ্যুৎ গেলে জমাকৃত পদার্থের ভর তাদের রাসায়নিক তুল্যাঙ্কের সমানুপাতিক।']]],
+ [4,'🔌','তড়িৎ রাসায়নিক সমতুল্যাঙ্ক (Z)','electrochemical equivalent z faraday constant','১ কুলম্ব চার্জ প্রবাহিত করলে যে ভর জমা হয়, সেটি ওই পদার্থের Z।','W = Z · Q (Q = It),  Z = M / nF','তড়িৎ বিশ্লেষণের গাণিতিক সমস্যায় ফ্যারাডের সূত্রের এই রূপ ব্যবহৃত হয়।',[['মূল ধারণা','১ অ্যাম্পিয়ার বিদ্যুৎ ১ সেকেন্ড (মোট ১ কুলম্ব চার্জ) চালালে ইলেকট্রোডে জমা পদার্থের ভরকে ওই পদার্থের তড়িৎ রাসায়নিক সমতুল্যাঙ্ক Z বলে।'],['সূত্র','Z = M ÷ (nF), এখানে M = মোলার ভর, n = আয়নের চার্জ সংখ্যা, F = ফ্যারাডে ধ্রুবক ≈ ৯৬৫০০ C/mol।']]],
+ [4,'📶','তড়িৎ রাসায়নিক শ্রেণি (Electrochemical Series)','electrochemical series reduction potential','ধাতুগুলোর প্রমাণ বিজারণ বিভবের ক্রমে সাজানো শ্রেণি, যা জারণ-বিজারণ ক্ষমতা নির্দেশ করে।','E° এর মান ও বিজারক/জারক ক্ষমতা','প্রমাণ বিজারণ বিভব (E°) এর ওপর ভিত্তি করে এই শ্রেণি তৈরি।',[['মূল ধারণা','যে ধাতুর E° যত বেশি ঋণাত্মক, সে তত সহজে ইলেকট্রন ছাড়ে এবং তত শক্তিশালী বিজারক। লিথিয়াম (Li) তালিকার সবচেয়ে ওপরের দিকের ধাতু।'],['প্রয়োগ',['কোন ধাতু কোন লবণ দ্রবণ থেকে অন্য ধাতুকে প্রতিস্থাপন করতে পারবে তা নির্ধারণ করা যায়।','গ্যালভানিক কোষের বিভব E°কোষ = E°ক্যাথোড − E°অ্যানোড হিসাব করতে এটি লাগে।']]]],
+ [4,'🔋','নার্নস্ট সমীকরণ (Nernst Equation)','nernst equation electrode potential cell emf','যেকোনো তাপমাত্রা ও ঘনমাত্রায় তড়িৎদ্বার বা কোষ বিভব গণনার সমীকরণ।','E = E° − (RT / nF) ln Q','জার্মান রসায়নবিদ ভাল্টার নার্নস্ট ১৮৮৯ সালে এই সমীকরণ দেন।',[['মূল ধারণা','প্রমাণ অবস্থার বাইরে ভিন্ন ঘনমাত্রা ও তাপমাত্রায় কোষ বা তড়িৎদ্বারের বিভব কত হবে, তা এই সমীকরণ দিয়ে হিসাব করা যায়।'],['২৫°C এ সরল রূপ','E = E° − (০.০৫৯২ ÷ n) log Q'],['গুরুত্ব','ব্যাটারি ডিজাইন ও জারণ-বিজারণ বিক্রিয়ার কার্যকারিতা বোঝার জন্য এটি অপরিহার্য।']]],
+ [4,'💡',"কোলরাশের সূত্র (Kohlrausch's Law)",'kohlrausch law molar conductivity infinite dilution','অসীম লঘুতায় তড়িৎ বিশ্লেষ্যের মোলার পরিবাহিতা ক্যাটায়ন ও অ্যানায়নের স্বাধীন পরিবাহিতার যোগফল।','Λ°m = ν₊λ°₊ + ν₋λ°₋','জার্মান বিজ্ঞানী ফ্রেডরিখ কোলরাশ ১৮৭০-এর দশকে এই সূত্র দেন।',[['মূল ধারণা','অসীম লঘুতায় প্রতিটি আয়ন অন্যদের থেকে স্বাধীনভাবে পরিবাহিতায় অবদান রাখে, তাই মোলার পরিবাহিতা আয়নগুলোর অবদানের যোগফল।'],['প্রয়োগ','অ্যাসিটিক এসিডের মতো দুর্বল তড়িৎ বিশ্লেষ্যের অসীম লঘুতায় মোলার পরিবাহিতা ও বিয়োজন মাত্রা নির্ণয়ে এটি ব্যাপকভাবে ব্যবহৃত হয়।']]],
+ /* ৫. বন্ধন, গঠন ও ভরের সূত্র */
+ [5,'🔗',"ফাজানের নীতি (Fajans' Rules)",'fajans rules polarization covalent character ionic','আয়নিক যৌগে সমযোজী বৈশিষ্ট্য কখন বাড়ে তা পোলারায়নের নিয়ম দিয়ে বোঝা যায়।','ছোট ও বেশি চার্জের ক্যাটায়ন + বড় অ্যানায়ন ⇒ বেশি সমযোজী বৈশিষ্ট্য','পোলিশ বিজ্ঞানী কাজিমির ফাজান ১৯২৩ সালে এই নিয়মগুলো দেন।',[['মূল ধারণা','ক্যাটায়ন যখন অ্যানায়নের ইলেকট্রন মেঘকে নিজের দিকে টেনে বিকৃত করে, তাকে পোলারায়ন বলে। পোলারায়ন যত বেশি, যৌগে সমযোজী বৈশিষ্ট্য তত বেশি।'],['শর্তসমূহ',['ক্যাটায়নের আকার ছোট ও চার্জ বেশি হলে পোলারায়ন ক্ষমতা বাড়ে।','অ্যানায়নের আকার বড় ও চার্জ বেশি হলে সহজে পোলারিত হয়, তাই সমযোজী বৈশিষ্ট্য বাড়ে।','নিষ্ক্রিয় গ্যাসের মতো ইলেকট্রন বিন্যাসযুক্ত ক্যাটায়নের চেয়ে d-অরবিটালে ইলেকট্রনযুক্ত ক্যাটায়নের পোলারায়ন ক্ষমতা বেশি।']]]],
+ [5,'🧿','অরবিটাল সংকরণ তত্ত্ব (Hybridization)','hybridization sp3 sp2 sp orbital geometry','প্রায় সমান শক্তির অরবিটাল মিশে সমশক্তির নতুন সংকর অরবিটাল তৈরি করে।','sp, sp², sp³, sp³d, sp³d²','লাইনাস পাউলিং ১৯৩১ সালে যৌগের জ্যামিতিক আকৃতি ব্যাখ্যা করতে এই তত্ত্ব দেন।',[['মূল ধারণা','কেন্দ্রীয় পরমাণুর কাছাকাছি শক্তির দুটি বা বেশি অরবিটাল মিশে সমসংখ্যক নতুন ও সমতুল্য সংকর অরবিটাল গঠন করে।'],['উদাহরণ',['sp³: মিথেন (CH₄), চতুস্তলকীয়, ১০৯.৫°','sp²: ইথিন (C₂H₄), সমতলীয় ত্রিকোণ, ১২০°','sp: ইথাইন (C₂H₂), সরলরৈখিক, ১৮০°']]]],
+ [5,'📐','VSEPR তত্ত্ব (অণুর আকৃতি)','vsepr theory molecular shape electron pair repulsion','কেন্দ্রীয় পরমাণুর ইলেকট্রন জোড়াগুলো পরস্পরকে বিকর্ষণ করে যতটা সম্ভব দূরে থাকে, তাতেই অণুর আকৃতি ঠিক হয়।','বন্ধন জোড় + নিঃসঙ্গ জোড় ⇒ জ্যামিতি','রোনাল্ড গিলেস্পি ও রোনাল্ড নাইহোম ১৯৫৭ সালে এই তত্ত্ব জনপ্রিয় করেন।',[['মূল ধারণা','ইলেকট্রন জোড়ের বিকর্ষণ কমাতে তারা সর্বোচ্চ দূরত্বে সাজায়। নিঃসঙ্গ জোড় বন্ধন জোড়ের চেয়ে বেশি বিকর্ষণ করে, তাই বন্ধন কোণ কমে যায়।'],['উদাহরণ',['BeCl₂: সরলরৈখিক, ১৮০°','BF₃: সমতলীয় ত্রিকোণ, ১২০°','CH₄: চতুস্তলকীয়, ১০৯.৫°','NH₃: ত্রিকোণীয় পিরামিড, প্রায় ১০৭°','H₂O: বাঁকা (কৌণিক), প্রায় ১০৪.৫°']]]],
+ [5,'⚖️','ভরের নিত্যতা সূত্র (Conservation of Mass)','lavoisier law conservation of mass','রাসায়নিক বিক্রিয়ায় বিক্রিয়কের মোট ভর ও উৎপাদের মোট ভর সমান।','Σ m(বিক্রিয়ক) = Σ m(উৎপাদ)','অ্যান্টোইন ল্যাভয়সিয়ে ১৭৮৯ সালে এই সূত্র সুস্পষ্টভাবে প্রতিষ্ঠা করেন।',[['মূল ধারণা','রাসায়নিক বিক্রিয়ায় পদার্থ সৃষ্টি বা ধ্বংস হয় না, শুধু পরমাণুগুলো নতুনভাবে সাজায়। তাই বন্ধ পাত্রে বিক্রিয়ার আগে ও পরে মোট ভর অপরিবর্তিত থাকে।'],['উদাহরণ','২ g H₂ ও ১৬ g O₂ বিক্রিয়া করলে ১৮ g H₂O পাওয়া যায়।'],['গুরুত্ব','রাসায়নিক সমীকরণ সমতাকরণের মূল ভিত্তি।']]],
+ [5,'🧱','স্থির অনুপাত ও গুণিতক অনুপাতের সূত্র','law of definite proportions multiple proportions proust dalton','কোনো যৌগে মৌলগুলো সবসময় নির্দিষ্ট ভর অনুপাতে থাকে, আর একই দুই মৌল একাধিক যৌগ গড়লে অনুপাতগুলো সরল পূর্ণসংখ্যার হয়।','স্থির অনুপাত (প্রুস্ত) · গুণিতক অনুপাত (ডালটন)','জোসেফ প্রুস্ত ১৭৯৯ সালে স্থির অনুপাতের সূত্র এবং জন ডালটন ১৮০৩ সালের কাছাকাছি গুণিতক অনুপাতের সূত্র দেন।',[['স্থির অনুপাত','বিশুদ্ধ পানি যেখান থেকেই নেওয়া হোক না কেন, তাতে হাইড্রোজেন ও অক্সিজেন সবসময় ১ : ৮ ভর অনুপাতে থাকে।'],['গুণিতক অনুপাত','কার্বন মনোক্সাইড (CO) ও কার্বন ডাই-অক্সাইডে (CO₂) ১২ g কার্বনের সাথে অক্সিজেন যথাক্রমে ১৬ g ও ৩২ g, অর্থাৎ অক্সিজেনের অনুপাত ১ : ২।']]]
+];
+const TH = RAW.map(([cat, icon, title, en, desc, fm, who, secs], i) => ({ id: i, cat, icon, title, en, desc, fm, who, secs }));
 
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+$('brandLink').href = BACK_URL; $('backBtn').href = BACK_URL;
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
+let read = new Set(); try { read = new Set(JSON.parse(localStorage.getItem('theory_read') || '[]')); } catch (e) {}
+const saveRead = () => { try { localStorage.setItem('theory_read', JSON.stringify([...read])); } catch (e) {} };
+let cat = 'all', list = [], openIdx = -1, opener = null;
 
-
-            <!-- Card 6 -->
-            <div class="theory-card" data-name="অ্যাভোগাদ্রোর সূত্র avogadro law mole">
-                <div>
-                    <div class="card-icon">📦</div>
-                    <div class="card-title">অ্যাভোগাদ্রোর সূত্র (Avogadro's Law)</div>
-                    <div class="card-desc">সমান তাপমাত্রা ও চাপে সম আয়তনের সকল গ্যাসে সমান সংখ্যক অণু থাকে।</div>
-                    <div class="formula-box">V ∝ n  (N_A = 6.023 × 10²³)</div>
-                </div>
-                <button class="details-btn" onclick="openModal('অ্যাভোগাদ্রোর সূত্র (Avogadro\'s Law)', '📦', 'ইতালীয় বিজ্ঞানী আমেদেও অ্যাভোগাড্রো ১৮১১ সালে এই সূত্র প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>সকল গ্যাসীয় পদার্থের ক্ষেত্রে একই তাপমাত্রা ও চাপে সমআয়তনে সমান সংখ্যক অণু বিদ্যমান থাকে। অর্থাৎ গ্যাসের আয়তন সরাসরি তার অণুর সংখ্যার (বা মোলের সংখ্যার) সমানুপাতিক।</p><h4>গাণিতিক রূপ:</h4><p>V ∝ n (যখন তাপমাত্রা T ও চাপ P স্থির থাকে)।</p><h4>অ্যাভোগাড্রো ধ্রুবক ($N_A$):</h4><p>যেকোনো পদার্থের ১ মোলে নির্দিষ্ট সংখ্যক কণা বা অণু থাকে, যার মান $6.023 \times 10^{23}$। রসায়নের যেকোনো পরিমাণগত হিসাব বা স্টয়কিওমেট্রিতে এই সূত্রটি অপরিহার্য।</p>')">বিস্তারিত জানুন</button>
-            </div>
-
-<div class="theory-card" data-name="গ্রাহামের ব্যাপন সূত্র graham law diffusion">
-    <div>
-        <div class="card-icon">💨</div>
-        <div class="card-title">গ্রাহামের ব্যাপন সূত্র (Graham's Law)</div>
-        <div class="card-desc">স্থির তাপমাত্রা ও চাপে যেকোনো গ্যাসের ব্যাপনের হার তার ঘনত্বের বর্গমূলের ব্যস্তানুপাতিক।</div>
-        <div class="formula-box">r ∝ 1/√d  =>  r₁/r₂ = √(d₂/d₁)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('গ্রাহামের গ্যাসের ব্যাপন সূত্র', '💨', 'স্কটিশ রসায়নবিদ থমাস গ্রাহাম ১৮২৯ সালে গ্যাসীয় পদার্থের ব্যাপন হারের ওপর এই সূত্র আবিষ্কার করেন।', '<h4>মূল ধারণা:</h4><p>স্থির তাপমাত্রা ও চাপে কোনো গ্যাসের ব্যাপন হার (Diffusion Rate) তার ঘনত্বের বর্গমূলের ব্যস্তানুপাতিক। অর্থাৎ হালকা গ্যাস ভারী গ্যাসের চেয়ে দ্রুত ছড়ায়।</p><h4>গাণিতিক রূপ:</h4><p>r₁ / r₂ = √(M₂ / M₁) (যেখানে M হলো মোলার ভর)।</p><h4>বাস্তব প্রয়োগ ও উদাহরণ:</h4><ul><li>রুমের এক কোণে সেন্টের বোতল খুললে অন্য কোণে গন্ধ পৌঁছানো।</li><li>হাইড্রোজেন গ্যাস হিলিয়াম বা অন্যান্য গ্যাসের চেয়ে দ্রুত ব্যাপিত হয়।</li></ul>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ডালটনের আংশিক চাপ সূত্র dalton law partial pressure">
-    <div>
-        <div class="card-icon">🔵</div>
-        <div class="card-title">ডালটনের আংশিক চাপ সূত্র (Dalton's Law)</div>
-        <div class="card-desc">পরস্পর রাসায়নিকভাবে নিষ্ক্রিয় একাধিক গ্যাসের মিশ্রণের মোট চাপ তাদের আংশিক চাপগুলোর সমষ্টির সমান।</div>
-        <div class="formula-box">P_total = P₁ + P₂ + P₃ + ...</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ডালটনের আংশিক চাপ সূত্র', '🔵', 'বিখ্যাত বিজ্ঞানী জন ডালটন ১৮০১ সালে গ্যাস মিশ্রণের চাপের ওপর এই সূত্র প্রবর্তন করেন।', '<h4>মূল ধারণা:</h4><p>স্থির তাপমাত্রায় পরস্পর বিক্রিয়া করে না এমন দুই বা ততোধিক গ্যাস মিশ্রিত করলে মিশ্রণের মোট চাপ প্রতিটি পৃথক গ্যাসের আংশিক চাপের যোগফলের সমান হয়।</p><h4>বাস্তব প্রয়োগ ও উদাহরণ:</h4><ul><li>পানির উপর গ্যাস সংগ্রহ করার সময় গ্যাসীয় মিশ্রণের মোট চাপ থেকে জলীয় বাষ্পের চাপ বাদ দিয়ে শুষ্ক গ্যাসের চাপ নির্ণয় করা।</li><li>বায়ুমণ্ডলে বিভিন্ন গ্যাসের আংশিক চাপের হিসাব।</li></ul>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ফ্যারাডের সূত্র faraday electrolysis law">
-    <div>
-        <div class="card-icon">⚡</div>
-        <div class="card-title">ফ্যারাডের তড়িৎ বিশ্লেষণ সূত্র (Faraday's Law)</div>
-        <div class="card-desc">তড়িৎ বিশ্লেষণের সময় তড়িৎ পরিমাণে আনুপাতিক হারে পদার্থ জমা হয়।</div>
-        <div class="formula-box">W = ZIt  (বা W = EIt / F)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ফ্যারাডের তড়িৎ বিশ্লেষণ সূত্র', '⚡', 'বিজ্ঞানী মাইকেল ফ্যারাডে ১৮৩৪ সালে তড়িৎ রসায়নের ওপর দুটি মৌলিক সূত্র প্রদান করেন।', '<h4>প্রথম সূত্র:</h4><p>তড়িৎ বিশ্লেষণের সময় তড়িৎ বিশ্লেষ্য পদার্থের মধ্য দিয়ে বিদ্যুৎ চালনা করলে ইলেকট্রোডে যে পরিমাণ পদার্থ জমা বা দ্রবীভূত হয় ($W$), তা মোট প্রবাহিত বিদ্যুতের পরিমাণের ($Q = It$) সমানুপাতিক ($W \propto Q$)।</p><h4>দ্বিতীয় সূত্র:</h4><p>ভিন্ন ভিন্ন তড়িৎ বিশ্লেষ্যের মধ্য দিয়ে একই পরিমাণ বিদ্যুৎ প্রবাহিত করলে বিভিন্ন ইলেকট্রোডে জমাকৃত পদার্থের ভর তাদের রাসায়নিক তুল্যাঙ্কের (Chemical Equivalent) সমানুপাতিক হয়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ফাজানের নীতি fajans rules covalent ionic">
-    <div>
-        <div class="card-icon">🔗</div>
-        <div class="card-title">ফাজানের নীতি (Fajans' Rules)</div>
-        <div class="card-desc">আয়নিক যৌগে সমযোজী প্রকৃতির শতকরা হার নির্ণয়ের জন্য ব্যবহৃত পোলারায়ন সংক্রান্ত নীতি।</div>
-        <div class="formula-box">পোলারায়ন ∝ অ্যানায়নের আকার ∝ ক্যাটায়নের চার্জ</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ফাজানের নীতি', '🔗', 'বিজ্ঞানী কাজিমিয়ের্জ ফাজান ১৯২৩ সালে আয়নিক যৌগে সমযোজী বৈশিষ্ট্য ব্যাখ্যা করার জন্য এই নিয়মগুলো দেন।', '<h4>মূল ধারণা:</h4><p>কোনো আয়নিক যৌগে ক্যাটায়ন কর্তৃক অ্যানায়নকে নিজের দিকে আকর্ষণ করে ইলেকট্রন মেঘ বিকৃত করার ঘটনাকে পোলারায়ন (Polarization) বলে। পোলারায়ন যত বেশি হয়, যৌগটিতে সমযোজী বৈশিষ্ট্য তত বাড়ে।</p><h4>শর্তসমূহ:</h4><ul><li>ক্যাটায়নের আকার ছোট এবং আধান বেশি হলে পোলারায়ন বাড়ে।</li><li>অ্যানায়নের আকার বড় এবং আধান বেশি হলে সমযোজী বৈশিষ্ট্য বৃদ্ধি পায়।</li><li>ক্যাটায়নের নিষ্ক্রিয় গ্যাসের বহিঃস্থ কাঠামোর চেয়ে ডি-অরবিটালে ইলেকট্রন থাকলে পোলারায়ন বেশি হয়।</li></ul>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="আউফবাউ নীতি aufbau principle electron configuration">
-    <div>
-        <div class="card-icon">📊</div>
-        <div class="card-title">আউফবাউ নীতি (Aufbau Principle)</div>
-        <div class="card-desc">ইলেকট্রনগুলো কম শক্তির অরবিটাল পূর্ণ করে ক্রমানুসারে উচ্চ শক্তির অরবিটালে প্রবেশ করে।</div>
-        <div class="formula-box">(n + l) নিয়ম অনুযায়ী শক্তিস্তর পূরণ</div>
-    </div>
-    <button class="details-btn" onclick="openModal('আউফবাউ নীতি (Aufbau Principle)', '📊', 'আউফবাউ কোনো বিজ্ঞানীর নাম নয়, এটি একটি জার্মান শব্দ (Aufbau) যার অর্থ হলো 'নির্মাণ করা' বা 'ধাপে ধাপে সাজানো'।', '<h4>মূল ধারণা:</h4><p>পরমাণুতে ইলেকট্রন বিন্যাসের ক্ষেত্রে অরবিটালগুলোর শক্তির ক্রমবর্ধমান হার মেনে চলতে হয়। অর্থাৎ প্রথমে কম শক্তির অরবিটালে ইলেকট্রন প্রবেশ করবে এবং তা পূর্ণ হওয়ার পরেই ক্রমানুসারে উচ্চ শক্তির অরবিটালে যাবে।</p><h4>(n + l) এর নিয়ম:</h4><ul><li>যে অরবিটালের জন্য প্রধান কোয়ান্টাম সংখ্যা ($n$) এবং সহকারী কোয়ান্টাম সংখ্যা ($l$)-এর যোগফল ($n + l$) কম, সেটির শক্তি কম এবং তাতে আগে ইলেকট্রন প্রবেশ করে।</li><li>যোগফল সমান হলে যেটির $n$-এর মান কম, সেটি আগে পূর্ণ হয়।</li></ul>')">বিস্তারিত জানুন</button>
-</div>
-
-            <!-- Card 7 -->
-            <div class="theory-card" data-name="হুন্ডের নীতি hunds rule">
-                <div>
-                    <div class="card-icon">⚡</div>
-                    <div class="card-title">হুন্ডের নীতি (Hund's Rule)</div>
-                    <div class="card-desc">সমশক্তি সম্পন্ন অরবিটালগুলোতে ইলেকট্রন সর্বাধিক অযুগ্ম অবস্থায় প্রবেশ করে।</div>
-                    <div class="formula-box">সর্বোচ্চ অযুগ্ম ইলেকট্রন বিন্যাস</div>
-                </div>
-                <button class="details-btn" onclick="openModal('হুন্ডের নীতি (Hund\'s Rule)', '⚡', 'জার্মান পদার্থবিদ ও রসায়নবিদ ফ্রিডরিখ হুন্ড ১৯২৫ সালে এই নীতি প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>সমশক্তি সম্পন্ন বিভিন্ন অরবিটালে (যেমন p-অরবিটালের তিনটি সাব-অরবিটাল $p_x, p_y, p_z$) ইলেকট্রনগুলো প্রবেশের সময় প্রথমে প্রতিটি অরবিটালে একটি করে ইলেকট্রন একই স্পিনে (Spin) প্রবেশ করবে। যখন প্রতিটি অরবিটালে একটি করে ইলেকট্রন পূর্ণ হয়ে যাবে, কেবল তখনই জোড় বাঁধা বা paired হওয়া শুরু হবে।</p><h4>গুরুত্ব:</h4><p>এই নীতির কারণে পরমাণুর ইলেকট্রন বিন্যাস সবচেয়ে স্থিতিশীল হয় এবং পরমাণুর চুম্বক ধর্ম (Paramagnetism বা Diamagnetism) নিখুঁতভাবে ব্যাখ্যা করা যায়।</p>')">বিস্তারিত জানুন</button>
-            </div>
-
-<div class="theory-card" data-name="হেনরির সূত্র henry law solubility gas liquid">
-    <div>
-        <div class="card-icon">🥤</div>
-        <div class="card-title">হেনরির সূত্র (Henry's Law)</div>
-        <div class="card-desc">স্থির তাপমাত্রায় তরলে গ্যাসের দ্রাব্যতা গ্যাসটির আংশিক চাপের সমানুপাতিক।</div>
-        <div class="formula-box">P = K_H · x  (বা S ∝ P)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('হেনরির সূত্র (Henry\'s Law)', '🥤', 'ইংলিশ পদার্থ ও রসায়নবিদ উইলিয়াম হেনরি ১৮০৩ সালে তরলে গ্যাসের দ্রবণীয়তা সম্পর্কিত এই সূত্র দেন।', '<h4>মূল ধারণা:</h4><p>স্থির তাপমাত্রায় নির্দিষ্ট পরিমাণ তরল দ্রাবকে কোনো গ্যাসের দ্রবণীয়তা (Solubility) দ্রবণের উপরে থাকা গ্যাসটির সাম্যাবস্থার আংশিক চাপের সমানুপাতিক।</p><h4>বাস্তব প্রয়োগ ও উদাহরণ:</h4><ul><li>কোমল পানীয় বা কোল্ড ড্রিংকসের বোতলে উচ্চ চাপে কার্বন ডাই-অক্সাইড গ্যাস দ্রবীভূত করে রাখা হয়। বোতলের ছিপি খুললে চাপ কমে যাওয়ায় বুদবুদ আকারে গ্যাস বের হয়ে আসে।</li><li>গভীর সমুদ্রের ডুবুরিরা পানির নিচে বেশি চাপে অক্সিজেন ও নাইট্রোজেনের মিশ্রণ ব্যবহার করেন।</li></ul>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="রাউল্টের সূত্র raoult law vapor pressure">
-    <div>
-        <div class="card-icon">🧪</div>
-        <div class="card-title">রাউল্টের সূত্র (Raoult's Law)</div>
-        <div class="card-desc">নির্দিষ্ট তাপমাত্রায় অদ্বায়ী solutes যুক্ত দ্রবণের বাষ্পচাপের আপেক্ষিক অবনমন দ্রবণের মোল ভগ্নাংশের সমান।</div>
-        <div class="formula-box">(P° - P) / P° = x_2</div>
-    </div>
-    <button class="details-btn" onclick="openModal('রাউল্টের সূত্র (Raoult\'s Law)', '🧪', 'ফরাসি রসায়নবিদ ফ্রাঁসোয়া-মারি রাউল্ট ১৯৮৭ সালে দ্রবণ সম্পর্কিত এই বাষ্পচাপের সূত্র আবিষ্কার করেন।', '<h4>মূল ধারণা:</h4><p>কোনো নির্দিষ্ট তাপমাত্রায় অদ্বায়ী ও অনুদ্বায়ী (Non-volatile) কঠিন পদার্থ কোনো দ্রাবকে দ্রবীভূত করলে প্রাপ্ত দ্রবণের বাষ্পচাপের আপেক্ষিক অবনমন দ্রাবণে উপস্থিত দ্রবের মোল ভগ্নাংশের (Mole Fraction) সমান হয়।</p><h4>গাণিতিক ব্যাখ্যা:</h4><p>বিশুদ্ধ দ্রাবকের বাষ্পচাপ $P^\circ$ এবং দ্রবণের বাষ্পচাপ $P$ হলে, আপেক্ষিক অবনমন $\frac{P^\circ - P}{P^\circ} = n / (n + N)$।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="কোলরাশের সূত্র kohlrausch law conductivity">
-    <div>
-        <div class="card-icon">💡</div>
-        <div class="card-title">কোলরাশের সূত্র (Kohlrausch's Law)</div>
-        <div class="card-desc">অসীম লঘুতায় কোনো তড়িৎ বিশ্লেষ্যের মোলার পরিবাহিতা তার ক্যাটায়ন ও অ্যানায়নের স্বাধীন পরিবাহিতার সমষ্টির সমান।</div>
-        <div class="formula-box">Λ°m = ν₊λ°₊ + ν₋λ°₋</div>
-    </div>
-    <button class="details-btn" onclick="openModal('কোলরাশের সূত্র (Kohlrausch\'s Law)', '💡', 'জার্মান বিজ্ঞানী ফ্রেডরিখ কোলরাশ ১৮৭৫ সালে দুর্বল তড়িৎ বিশ্লেষ্যের পরিবাহিতা মাপার এই সূত্র দেন।', '<h4>মূল ধারণা:</h4><p>অসীম লঘুতায় (Infinite Dilution) কোনো তড়িৎ বিশ্লেষ্য লবণের তুল্য বা মোলার পরিবাহিতা ওই লবণের ক্যাটায়ন ও অ্যানায়নের স্বতন্ত্র বা স্বাধীন মোলার পরিবাহিতাগুলোর যোগফলের সমান হয়।</p><h4>প্রয়োগ:</h4><p>দুর্বল তড়িৎ বিশ্লেষ্য (যেমন অ্যাসিটিক এসিড বা $\text{CH}_3\text{COOH}$)-এর অসীম লঘুতায় মোলার পরিবাহিতা ও বিয়োজন মাত্রা নির্ণয় করতে এই সূত্র ব্যাপকভাবে ব্যবহৃত হয়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-            <!-- Card 8 -->
-            <div class="theory-card" data-name="পলির বর্জন নীতি pauli exclusion principle">
-                <div>
-                    <div class="card-icon">🛡️</div>
-                    <div class="card-title">পলির বর্জন নীতি (Pauli Exclusion)</div>
-                    <div class="card-desc">একটি পরমাণুতে দুটি ইলেকট্রনের চারটি কোয়ান্টাম সংখ্যার মান এক হতে পারে না।</div>
-                    <div class="formula-box">n, l, m, s are never all identical</div>
-                </div>
-                <button class="details-btn" onclick="openModal('পলির বর্জন নীতি (Pauli Exclusion Principle)', '🛡️', 'অর্র্র্র্র্র্সীয় পদার্থবিদ ওলফগ্যাং পলি ১৯২৫ সালে এই নীতি আবিষ্কার করেন, যার জন্য তিনি নোবেল পুরস্কার পান।', '<h4>মূল ধারণা:</h4><p>একটি পরমাণুতে অবস্থিত যেকোনো দুটি ইলেকট্রনের জন্য চারটি কোয়ান্টাম সংখ্যা—প্রধান কোয়ান্টাম সংখ্যা ($n$), সহকারী কোয়ান্টাম সংখ্যা ($l$), চুম্বকীয় কোয়ান্টাম সংখ্যা ($m$) এবং স্পিন কোয়ান্টাম সংখ্যা ($s$)-এর মান কখনো সম্পূর্ণ এক হতে পারে না।</p><h4>উপসংহার:</h4><p>এই নীতির ফলে একটি অরবিটালে সর্বোচ্চ দুটি ইলেকট্রন থাকতে পারে এবং তাদের স্পিনের দিক অবশ্যই বিপরীতমুখী ($+1/2$ এবং $-1/2$) হতে হয়।</p>')">বিস্তারিত জানুন</button>
-            </div>
-
-            <!-- Card 9 -->
-            <div class="theory-card" data-name="হেসের সূত্র hess law">
-                <div>
-                    <div class="card-icon">🔥</div>
-                    <div class="card-title">হেসের সূত্র (Hess's Law)</div>
-                    <div class="card-desc">বিক্রিয়া এক বা একাধিক ধাপে হোক, মোট এনথালপি পরিবর্তন সর্বদা সমান থাকে।</div>
-                    <div class="formula-box">ΔH = ΔH₁ + ΔH₂ + ...</div>
-                </div>
-                <button class="details-btn" onclick="openModal('হেসের সূত্র (Hess\'s Law)', '🔥', 'সুইশ বংশোদ্ভূত রুশ রসায়নবিদ জার্মেন হেস ১৮৪০ সালে তাপ রসায়নের ওপর এই সূত্র প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>কোনো রাসায়নিক বিক্রিয়া সরাসরি এক ধাপে সম্পন্ন হোক কিংবা একাধিক ভিন্ন ধাপে সম্পন্ন হোক না কেন, বিক্রিয়াটির মোট এনথালপি পরিবর্তন ($\Delta H$) সর্বদা সমান থাকে। এটি মূলত শক্তির সংরক্ষণশীলতা নীতিরই রূপান্তর।</p><h4>ব্যবহারিক প্রয়োগ:</h4><p>পরীক্ষাগারে সরাসরি যে সমস্ত বিক্রিয়ার তাপ পরিবর্তন বা এনথালপি সহজে মাপা যায় না, হেসের সূত্র ব্যবহার করে গাণিতिकভাবে খুব সহজেই তা নির্ণয় করা সম্ভব।</p>')">বিস্তারিত জানুন</button>
-            </div>
-
-<div class="theory-card" data-name="বাফার দ্রবণ buffer solution henderson equation">
-    <div>
-        <div class="card-icon">🧪</div>
-        <div class="card-title">বাফার দ্রবণ ও হ্যান্ডারসন সমীকরণ</div>
-        <div class="card-desc">বাইরের থেকে সামান্য এসিড বা ক্ষার যোগ করলেও যে দ্রবণ তার pH মান অপরিবর্তিত রাখে।</div>
-        <div class="formula-box">pH = pKa + log([Salt]/[Acid])</div>
-    </div>
-    <button class="details-btn" onclick="openModal('বাফার দ্রবণ ও হ্যান্ডারসন সমীকরণ', '🧪', 'ল্যাবরেটরি ও জীবদেহে pH এর মান স্থির রাখতে বাফার দ্রবণের ভূমিকা অপরিসীম।', '<h4>মূল ধারণা:</h4><p>যে দ্রবণ মৃদু এসিড ও তার শক্তিশালী লবণের অথবা মৃদু ক্ষার ও তার শক্তিশালী লবণের মিশ্রণে তৈরি হয় এবং সামান্য পরিমাণ তীব্র এসিড বা ক্ষার যোগ করলেও pH-এর কোনো পরিবর্তন হতে দেয় না, তাকে বাফার দ্রবণ বলে।</p><h4>হ্যান্ডারসন-হ্যাসেলবাখ সমীকরণ:</h4><p>এসিডীয় বাফারের ক্ষেত্রে pH গণনার সমীকরণটি হলো: $\\text{pH} = \\text{p}K_a + \\log(\\frac{\\text{[লবণ]}}{\\text{[এসিড]}})$। মানবদেহের রক্ত একটি প্রাকৃতিক বাফার সিস্টেম।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="থার্মোডাইনামিক্স প্রথম সূত্র first law thermodynamics energy conservation">
-    <div>
-        <div class="card-icon">⚡</div>
-        <div class="card-title">তাপগতিবিদ্যার প্রথম সূত্র (First Law)</div>
-        <div class="card-desc">মহাবিশ্বের মোট শক্তির পরিমাণ নির্দিষ্ট ও অপরিবর্তনীয়; শক্তি কেবল রূপান্তর ঘটে।</div>
-        <div class="formula-box">ΔU = q + w</div>
-    </div>
-    <button class="details-btn" onclick="openModal('তাপগতিবিদ্যার প্রথম সূত্র', '⚡', 'এটি মূলত শক্তি সংরক্ষণশীলতা নীতিমালারই তাপগতিীয় রূপ।', '<h4>মূল ধারণা:</h4><p>শক্তি সৃষ্টি বা ধ্বংস করা যায় না; শক্তি কেবল এক রূপ থেকে অন্য রূপে রূপান্তরিত হতে পারে। সিস্টেমকে প্রদত্ত তাপশক্তি ($\\q$) তার অভ্যন্তরীণ শক্তি বৃদ্ধি ($\\Delta U$) এবং সিস্টেম কর্তৃক সম্পাদিত কাজে ($w$) ব্যয় হয়।</p><h4>গাণিতিক রূপ:</h4><p>$\\Delta U = q - w$ (সিস্টেমের অভ্যন্তরীণ শক্তি পরিবর্তন)। রসায়নে রাসায়নিক বিক্রিয়ার তাপ বিনিময় বুঝতে এই সূত্রটি ভিত্তি হিসেবে কাজ করে।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="আরহেনিয়াস সমীকরণ arrhenius equation activation energy">
-    <div>
-        <div class="card-icon">📈</div>
-        <div class="card-title">আরহেনিয়াসের হার সমীকরণ (Arrhenius Equation)</div>
-        <div class="card-desc">তাপমাত্রার সাথে রাসায়নিক বিক্রিয়ার বেগ ধ্রুবকের পরিবর্তনের গাণিতিক সম্পর্ক।</div>
-        <div class="formula-box">k = A · e^(-Ea / RT)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('আরহেনিয়াসের হার সমীকরণ', '📈', 'সান্তে আরহেনিয়াস ১৮৮৯ সালে বিক্রিয়ার হার এবং সক্রিয়ণ শক্তির মধ্যকার এই সম্পর্ক স্থাপন করেন।', '<h4>মূল ধারণা:</h4><p>তাপমাত্রা বৃদ্ধি করলে বিক্রিয়ার বেগ ধ্রুবক ($k$) দ্রুত বৃদ্ধি পায়। এই সমীকরণের মাধ্যমে বিক্রিয়া ঘটার জন্য প্রয়োজনীয় ন্যূনতম শক্তি বা 'সক্রিয়ণ শক্তি' ($E_a$) এবং কম্পাঙ্ক ফ্যাক্টর ($A$) নির্ণয় করা যায়।</p><h4>লগারিদমিক রূপ:</h4><p>$\\ln(k_2 / k_1) = \\frac{E_a}{R} (\\frac{T_2 - T_1}{T_1 T_2})$ — যার সাহায্যে দুটি ভিন্ন তাপমাত্রায় বিক্রিয়ার হার খুব সহজে হিসাব করা হয়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ভরক্রিয়া সূত্র law of mass action chemical equilibrium">
-    <div>
-        <div class="card-icon">⚖️</div>
-        <div class="card-title">ভরক্রিয়া সূত্র (Law of Mass Action)</div>
-        <div class="card-desc">নির্ধারিত তাপমাত্রায় কোনো রাসায়নিক বিক্রিয়ার হার বিক্রিয়কগুলোর সক্রিয় ভরের সমানুপাতিক।</div>
-        <div class="formula-box">K_c = [Products] / [Reactants]</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ভরক্রিয়া সূত্র', '⚖️', 'নরওয়েজীয় রসায়নবিদ ক্যাটো ম্যাক্সিমিলিয়ান গুলডবার্গ এবং পেটার ওয়াগে ১৮৬৪ সালে এই সূত্র দেন।', '<h4>মূল ধারণা:</h4><p>কোনো নির্দিষ্ট তাপমাত্রায় রাসায়নিক বিক্রিয়ার হার বিক্রিয়ায় অংশগ্রহণকারী প্রতিটি বিক্রিয়কের সক্রিয় ভর বা মোলার ঘনমাত্রার সমানুপাতিক এবং একাধিক অণু থাকলে তা ঘাত (Power) হিসেবে যুক্ত হয়।</p><h4>সাম্য ধ্রুবক ($K_c$ ও $K_p$):</h4><p>এই সূত্রের ওপর ভিত্তি করেই কোনো বিক্রিয়া কতটা উৎপাদ তৈরি করবে তা বোঝার জন্য সাম্যধ্রুবক হিসাব করা হয়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="এন্ট্রপি দ্বিতীয় সূত্র entropy second law thermodynamics">
-    <div>
-        <div class="card-icon">🔄</div>
-        <div class="card-title">এন্ট্রপি ও তাপগতিবিদ্যার ২য় সূত্র (Entropy)</div>
-        <div class="card-desc">স্বতঃস্ফূর্ত প্রক্রিয়ায় মহাবিশ্বের মোট এন্ট্রপি বা বিশৃঙ্খলার পরিমাণ সর্বদা বৃদ্ধি পায়।</div>
-        <div class="formula-box">ΔS_universe > 0</div>
-    </div>
-    <button class="details-btn" onclick="openModal('এন্ট্রপি ও তাপগতিবিদ্যার দ্বিতীয় সূত্র', '🔄', 'রুডলফ ক্লসিয়াস ও উইলিয়াম থমসন তাপগতিবিদ্যার এই অন্তিম দিকনির্দেশক সূত্র প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>এন্ট্রপি ($S$) হলো সিস্টেমের অণুগুলোর বিশৃঙ্খলা বা অনিয়মের মাপকাঠি। প্রকৃতির যেকোনো স্বতঃস্ফূর্ত পরিবর্তন বা প্রক্রিয়া এমনভাবে ঘটতে চায় যাতে মহাবিশ্বের মোট বিশৃঙ্খলা বা এন্ট্রপি ক্রমান্বয়ে বাড়তে থাকে।</p><h4>বাস্তব উদাহরণ:</h4><p>বরফ গলে পানিতে পরিণত হলে অণুগুলোর স্বাধীনতা ও বিশৃঙ্খলা (এন্ট্রপি) বৃদ্ধি পায়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="তড়িৎ রাসায়নিক শ্রেণি electrochemical series reduction potential">
-    <div>
-        <div class="card-icon">🔋</div>
-        <div class="card-title">তড়িৎ রাসায়নিক শ্রেণি (Electrochemical Series)</div>
-        <div class="card-desc">ধাতুগুলোর প্রমাণ বিজারণ বিভবের ক্রমানুসারে সাজানো শৃঙ্খল যা জারণ-বিজারণ ক্ষমতা নির্দেশ করে।</div>
-        <div class="formula-box">E° values & Reducing/Oxidizing Strength</div>
-    </div>
-    <button class="details-btn" onclick="openModal('তড়িৎ রাসায়নিক শ্রেণি', '🔋', 'বিভিন্ন মৌলের প্রমাণ বিজারণ বিভবের ($E^\\circ$) মানের ওপর ভিত্তি করে এই সিরিজ তৈরি করা হয়েছে।', '<h4>মূল ধারণা:</h4><p>যে সকল ধাতুর প্রমাণ বিজারণ বিভবের মান যত বেশি ঋণাত্মক, তারা তত দ্রুত ইলেকট্রন ত্যাগ করতে পারে এবং তারা শক্তিশালী বিজারক। যেমন—লিথিয়াম ($Li$) তালিকার শীর্ষে থাকে।</p><h4>প্রয়োগ:</h4><ul><li>কোন ধাতু কোন লবণের দ্রবণ থেকে অন্য ধাতুকে প্রতিস্থাপন করতে পারবে তা এই শ্রেণি দেখে নির্ধারণ করা যায়।</li><li>গ্যালভানিক বা ভোল্টীয় কোষের বিভব ($E_{cell}$) হিসাব করতে এটি ব্যবহৃত হয়।</li></ul>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ডুলং ও পেটিটের সূত্র dulong petit law molar heat capacity">
-    <div>
-        <div class="card-icon">🌡️</div>
-        <div class="card-title">ডুলং ও পেটিটের সূত্র (Dulong-Petit Law)</div>
-        <div class="card-desc">বেশিরভাগ কঠিন মৌলের পারমাণবিক ভর ও আপেক্ষিক তাপের গুণফল প্রায় ধ্রুবক হয়।</div>
-        <div class="formula-box">Atomic Mass × Specific Heat ≈ 6.4 cal/(mol·°C)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ডুলং ও পেটিটের সূত্র', '🌡️', 'ফরাসি বিজ্ঞানী পিয়ের লুই ডুলং এবং অঁক্সি প্রোসপার পেটিট ১৮১৯ সালে কঠিন পদার্থের তাপীয় ধারকত্ব সম্পর্কিত এই সূত্র দেন।', '<h4>মূল ধারণা:</h4><p>কঠিন মৌলিক পদার্থের মোলার তাপ ধারণক্ষমতা (Heat Capacity) প্রায় সব ক্ষেত্রেই সমান এবং এর মান প্রায় ৬.৪ ক্যালরি প্রতি মোল প্রতি ডিগ্রি সেলসিয়াস। এর সাহায্যে কোনো অজানা মৌলের আনুমানিক পারমাণবিক ভর খুব সহজে নির্ণয় করা যায়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="নার্নস্ট সমীকরণ nernst equation electrode potential cell">
-    <div>
-        <div class="card-icon">🔋</div>
-        <div class="card-title">নার্নস্ট সমীকরণ (Nernst Equation)</div>
-        <div class="card-desc">যেকোনো তাপমাত্রায় ও ঘনমাত্রায় তড়িৎদ্বার বিভব বা কোষ বিভব গণনার গাণিতিক রূপ।</div>
-        <div class="formula-box">E = E° - (RT/nF) ln([Product]/[Reactant])</div>
-    </div>
-    <button class="details-btn" onclick="openModal('নার্নস্ট সমীকরণ', '🔋', 'জার্মান রসায়নবিদ ভাল্টার নার্নস্ট গ্যালভানিক কোষের তড়িৎচালক বল এবং দ্রবণের ঘনমাত্রার মধ্যকার এই সম্পর্ক স্থাপন করেন।', '<h4>মূল ধারণা:</h4><p>প্রমাণ অবস্থা ছাড়াও যেকোনো ঘনমাত্রা ও তাপমাত্রায় তড়িৎদ্বারের বিভব কেমন হবে তা নার্নস্ট সমীকরণের মাধ্যমে নিখুঁতভাবে হিসাব করা যায়। ব্যাটারি ডিজাইন এবং জারণ-বিজারণ বিক্রিয়ার কার্যকারিতা বুঝতে এটি অপরিহার্য।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ওসওয়াল্ড লঘুকরণ সূত্র ostwald dilution law weak electrolyte">
-    <div>
-        <div class="card-icon">💧</div>
-        <div class="card-title">ওসওয়াল্ড লঘুকরণ সূত্র (Ostwald's Dilution Law)</div>
-        <div class="card-desc">দুর্বল তড়িৎ বিশ্লেষ্যের বিয়োজন মাত্রা লঘুকরণের (আয়তন বৃদ্ধির) সাথে সাথে বৃদ্ধি পায়।</div>
-        <div class="formula-box">K_a = α² / V(1 - α)  বা  α = √(K_a / C)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ওসওয়াল্ড লঘুকরণ সূত্র', '💧', 'বিজ্ঞানী ভিলহেল্ম ওসওয়াল্ড দুর্বল এসিড ও ক্ষারের বিয়োজন মাত্রা এবং দ্রবণের লঘুতাসম্পর্কিত এই সূত্র প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>দ্রবণের লঘূকরণ যত বেশি করা হয় (অর্থাৎ দ্রাবক বাড়ানো হয়), দুর্বল এসিড বা ক্ষারের আয়নিত হওয়ার মাত্রা বা ডিগ্রি অফ ডিসোসিয়েশন ($\alpha$) তত বেশি বাড়তে থাকে।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ফ্রুন্ডলিক শোষণ আইসোথার্ম freundlich adsorption isotherm">
-    <div>
-        <div class="card-icon">🧲</div>
-        <div class="card-title">ফ্রুন্ডলিক শোষণ সমীকরণ (Adsorption Isotherm)</div>
-        <div class="card-desc">স্থির তাপমাত্রায় চাপের সাথে কঠিন পৃষ্ঠে গ্যাসের শোষিত হওয়ার পরিমাণের সম্পর্ক।</div>
-        <div class="formula-box">x / m = k · P^(1/n)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ফ্রুন্ডলিক শোষণ সমীকরণ', '🧲', 'হার্বার্ট ফ্রুন্ডলিক ১৯০৬ সালে কঠিন শোষকে গ্যাসের শোষণের মাত্রা নির্ধারণের জন্য এই সমীকরণ দেন।', '<h4>মূল ধারণা:</h4><p>স্থির তাপমাত্রায় নির্দিষ্ট ভরের শোষক পদার্থে শোষিত গ্যাসের পরিমাণ ($x/m$) গ্যাসটির চাপের ($P$) ওপর কীভাবে নির্ভর করে তা এই সমীকরণ দ্বারা প্রকাশ করা হয়। গ্যাস মাস্ক এবং শিল্প কারখানার অনুঘটক প্রযুক্তিতে এর ব্যাপক ব্যবহার রয়েছে।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ল্যামবার্ট বিয়ার সূত্র beer lambert law spectroscopy">
-    <div>
-        <div class="card-icon">📊</div>
-        <div class="card-title">ল্যামবার্ট-বিয়ার সূত্র (Beer-Lambert Law)</div>
-        <div class="card-desc">বর্ণময় দ্রবণের মধ্য দিয়ে আলোকরশ্মি গেলে আলোর শোষণ দ্রবণের ঘনত্ব ও পথের দূরত্বের সমানুপাতিক।</div>
-        <div class="formula-box">A = ε · c · l  (বা I = I₀e^(-kc))</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ল্যামবার্ট-বিয়ার সূত্র', '📊', 'স্পেকট্রোস্কোপি বা বর্ণালিমিতি বিজ্ঞানে আলোর শোষণ মাত্রা নির্ণয়ের এটি মৌলিক সূত্র।', '<h4>মূল ধারণা:</h4><p>কোনো রঙিন দ্রবণের ভেতর দিয়ে আলো প্রবাহিত করলে আলোর তীব্রতা হ্রাসের পরিমাণ দ্রবণের ঘনমাত্রা ($c$) এবং দ্রবণ ভেদ করে যাওয়া আলোর পথের দৈর্ঘ্যের ($l$) ওপর নির্ভর করে। রসায়নাগারে দ্রবণের সঠিক ঘনমাত্রা নির্ণয়ে এটি বহুল ব্যবহৃত হয়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="সক্রিয়ণ শক্তি ও অনুঘটক প্রভাব activation energy catalyst">
-    <div>
-        <div class="card-icon">🔥</div>
-        <div class="card-title">অনুঘটক ও সক্রিয়ণ শক্তির পথ পরিবর্তন</div>
-        <div class="card-desc">অনুঘটক বিক্রিয়ার সক্রিয়ণ শক্তির মান কমিয়ে নতুন ও সহজ বিকল্প পথ তৈরি করে।</div>
-        <div class="formula-box">E_a (with catalyst) < E_a (without catalyst)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('অনুঘটক ও সক্রিয়ণ শক্তি', '🔥', 'রাসায়নিক গতিবিদ্যায় অনুঘটকের নিখুঁত কার্যপদ্ধতি ব্যাখ্যার মূল তত্ত্ব।', '<h4>মূল ধারণা:</h4><p>ধনাত্মক অনুঘটক বিক্রিয়কগুলোকে কম শক্তির একটি বিকল্প সক্রিয়ন পথ বা এনার্জি ব্যারিয়ার প্রদান করে, যার ফলে অল্প তাপমাত্রাতেই দ্রুত বিক্রিয়া সম্পন্ন হতে পারে। এতে মূল বিক্রিয়ার তাপ বা এনথালপির কোনো পরিবর্তন ঘটে না।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ভ্যান্ট হফ সমীকরণ vant hoff equation osmotic pressure">
-    <div>
-        <div class="card-icon">🌊</div>
-        <div class="card-title">ভ্যান্ট হফ অভিস্রবণ চাপ সূত্র (Osmotic Pressure)</div>
-        <div class="card-descDil">লঘু দ্রবণের ক্ষেত্রে অভিস্রবণ চাপ গ্যাসীয় চাপের মতো আচরণের সমীকরণ মেনে চলে।</div>
-        <div class="formula-box">πV = nRT  (বা π = CRT)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('ভ্যান্ট হফ অভিস্রবণ চাপ সূত্র', '🌊', 'ডাচ বিজ্ঞানী ইয়াকোবাস হেনরিকাস ভ্যান্ট হফ দ্রবণের অণুগুলোর ধর্ম নিয়ে এই বিখ্যাত সূত্র দেন।', '<h4>মূল ধারণা:</h4><p>লঘু দ্রবণের ক্ষেত্রে অভিস্রবণ চাপ ($\pi$) গ্যাসীয় চাপের ($P$) সমতুল্য আচরণ করে। অর্থাৎ নির্দিষ্ট তাপমাত্রায় অভিস্রবণ চাপ দ্রবণের মোলার ঘনমাত্রা ($C$) এবং পরম তাপমাত্রার ($T$) সমানুপাতিক ($\pi = CRT$)। জীবকোষে পানি শোষণ ও অভিস্রবণ নিয়ন্ত্রণে এটি প্রধান সূত্র।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="গ্যাসের গতীয় তত্ত্ব kinetic theory of gases root mean square velocity">
-    <div>
-        <div class="card-icon">🎈</div>
-        <div class="card-title">গ্যাসের গতীয় তত্ত্ব ও গড় বর্গবেগ (RMS Velocity)</div>
-        <div class="card-desc">গ্যাসের অণুগুলোর গতিশক্তি পরম তাপমাত্রার সরাসরি সমানুপাতিক।</div>
-        <div class="formula-box">v_rms = √(3RT / M)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('গ্যাসের গতীয় তত্ত্ব ও RMS বেগ', '🎈', 'ম্যাক্সওয়েল ও বোল্টজম্যান গ্যাসের অণুগুলোর গতিবিধি ব্যাখ্যা করতে এই গতীয় তত্ত্ব প্রদান করেন।', '<h4>মূল ধারণা:</h4><p>গ্যাসের অণুগুলোর গতিশক্তি শুধুমাত্র তাদের পরম তাপমাত্রার ওপর নির্ভর করে ($KE = \frac{3}{2}RT$)। অণুগুলোর গতিবেগ পরিমাপের জন্য মূল গড় বর্গবেগ ($v_{rms}$) ব্যবহৃত হয়, যা মোলার ভরের বর্গমূলের ব্যস্তানুপাতিক।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="ফ্যারাডে ও কুলম্ব সূত্র faraday coulomb electrochemistry">
-    <div>
-        <div class="card-icon">⚡</div>
-        <div class="card-title">তড়িৎ রাসায়নিক সমতুল্যাঙ্ক (Electrochemical Equivalent - Z)</div>
-        <div class="card-desc">এক কুলম্ব চার্জ প্রবাহিত করলে যে পরিমাণ পদার্থ জমা হয় তাকে ওই মৌলের Z বলে।</div>
-        <div class="formula-box">W = Z · Q  (যেখানে Q = It)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('তড়িৎ রাসায়নিক সমতুল্যাঙ্ক (Z)', '⚡', 'তড়িৎ বিশ্লেষণের গাণিতিক সমস্যার সমাধানের জন্য ফ্যারাডে ও কুলম্বের সমীকরণের এই রূপটি ব্যবহার করা হয়।', '<h4>মূল ধারণা:</h4><p>কোনো তড়িৎ বিশ্লেষ্য দ্রবণের মধ্য দিয়ে ১ অ্যাম্পিয়ার বিদ্যুৎ ১ সেকেন্ড বা মোট ১ কুলম্ব চার্জ চালনা করলে ক্যাথোডে বা অ্যানোডে যে ভরের ($W$) পদার্থ সঞ্চিত হয়, তাকে উক্ত পদার্থের তড়িৎ রাসায়নিক সমতুল্যাঙ্ক ($Z$) বলা হয়। ($Z = M / nF$)।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="সংকরণ hybridization theory sp3 sp2 sp orbital">
-    <div>
-        <div class="card-icon">🔗</div>
-        <div class="card-title">অরবিটাল সংকরণ তত্ত্ব (Hybridization)</div>
-        <div class="card-desc">প্রায় সমান শক্তির পরমাণুর বিভিন্ন অরবিটাল মিশ্রিত হয়ে সমশক্তি সম্পন্ন নতুন অরবিটাল তৈরি করে।</div>
-        <div class="formula-box">sp³, sp², sp, sp³d, sp³d² hybridization</div>
-    </div>
-    <button class="details-btn" onclick="openModal('অরবিটাল সংকরণ (Hybridization)', '🔗', 'লিনাস পোলিং যৌগের সুনির্দিষ্ট জ্যামিতিক আকৃতি ($sp^3, sp^2, sp$ ইত্যাদি) ব্যাখ্যা করতে এই তত্ত্ব দেন।', '<h4>মূল ধারণা:</h4><p>কোনো পরমাণুর কেন্দ্রস্থলের কাছাকাছি শক্তির দুটি বা ততোধিক ভিন্ন অরবিটালস आपस में মিলিত হয়ে সমসংখ্যক নতুন সমতুল্য অরবিটাল গঠন করে, যাকে সংকর অরবিটাল বলা হয়। এর মাধ্যমে মিথেনের চতুস্তলকীয় বা পানির কৌণিক আকৃতি নিখুঁতভাবে ব্যাখ্যা করা যায়।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-<div class="theory-card" data-name="বাষ্প ঘনত্ব vapour density molecular mass relationship">
-    <div>
-        <div class="card-icon">📊</div>
-        <div class="card-title">বাষ্প ঘনত্ব ও আণবিক ভর (Vapour Density)</div>
-        <div class="card-desc">নির্দিষ্ট আয়তনের গ্যাসের ভর সমায়তন হাইড্রোজেন গ্যাসের ভরের দ্বিগুণ হলো তার আণবিক ভর।</div>
-        <div class="formula-box">Molecular Mass (M) = 2 × Vapour Density (VD)</div>
-    </div>
-    <button class="details-btn" onclick="openModal('বাষ্প ঘনত্ব ও আণবিক ভর', '📊', 'গ্যাসের ভর পরিমাপের এই ধ্রুপদী সূত্রটি স্টয়কিওমেট্রিক গণনায় বহুল ব্যবহৃত হয়।', '<h4>মূল ধারণা:</h4><p>নির্দিষ্ট তাপমাত্রা ও চাপে সমআয়তন হাইড্রোজেন গ্যাসের ভরের তুলনায় কোনো গ্যাসের ভর যত গুণ ভারী, তাকে ওই গ্যাসের বাষ্প ঘনত্ব ($VD$) বলে। আণবিক ভর সবসময় বাষ্প ঘনত্বের দ্বিগুণ হয়ে থাকে ($M = 2 \times VD$)।</p>')">বিস্তারিত জানুন</button>
-</div>
-
-
-            <!-- Card 10 -->
-            <div class="theory-card" data-name="লি শাতেলিয়ে নীতি le chatelier principle">
-                <div>
-                    <div class="card-icon">⚖️</div>
-                    <div class="card-title">লি শাতেলিয়ে নীতি (Le Chatelier's Principle)</div>
-                    <div class="card-desc">সাম্যাবস্থায় থাকা বিক্রিয়ায় কোনো পরিবর্তন করলে তা প্রশমিত হওয়ার দিকে সরে যায়।</div>
-                    <div class="formula-box">সাম্যাবস্থার শিফট (Shift in Equilibrium)</div>
-                </div>
-                <button class="details-btn" onclick="openModal('লি শাতেলিয়ে নীতি (Le Chatelier\'s Principle)', '⚖️', 'ফরাসি রসায়নবিদ অঁরি ল্য শাতেলিয়ে ১৮৮৪ সালে এই নীতি প্রকাশ করেন।', '<h4>মূল ধারণা:</h4><p>রাসায়নিক সাম্যাবস্থায় থাকা কোনো বিক্রিয়ায় যদি বাহ্যিকভাবে তাপমাত্রা, চাপ বা ঘনমাত্রার কোনো পরিবর্তন ঘটানো হয়, তবে সাম্যাবস্থা এমন দিকে সরে যাবে যাতে এই পরিবর্তনের ফলাফল বা প্রভাব প্রশমিত হতে পারে।</p><h4>শিল্প কারখানায় এর গুরুত্ব:</h4><p>শিল্প উৎপাদনে (যেমন: হেবার পদ্ধতিতে অ্যামোনিয়া উৎপাদন বা কন্টাক্ট পদ্ধতিতে সালফিউরিক এসিড তৈরি) সর্বোচ্চ ফলন বা উৎপাদন পাওয়ার জন্য অনুকূল চাপ ও তাপমাত্রা নির্ধারণে এই নীতি ব্যাপকভাবে ব্যবহৃত হয়।</p>')">বিস্তারিত জানুন</button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Modal Popup Structure -->
-    <div class="modal-overlay" id="theoryModal" onclick="closeModalOutside(event)">
-        <div class="modal-box">
-            <div class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></div>
-            <div class="modal-title" id="modalTitle"><span></span></div>
-            <div class="modal-body" id="modalBody">
-                <!-- Details content will load here -->
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openModal(title, icon, summary, detailsHtml) {
-            const modal = document.getElementById('theoryModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalBody = document.getElementById('modalBody');
-
-            modalTitle.innerHTML = `<span style="font-size: 28px;">${icon}</span> ${title}`;
-            modalBody.innerHTML = `
-                <p style="font-weight: 600; color: var(--text-color); margin-bottom: 15px; font-size: 16px;">${summary}</p>
-                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
-                <div>${detailsHtml}</div>
-            `;
-
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('theoryModal');
-            modal.classList.remove('active');
-        }
-
-        function closeModalOutside(event) {
-            const modal = document.getElementById('theoryModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
-        function filterTheories() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.theory-card');
-
-            cards.forEach(card => {
-                const name = card.getAttribute('data-name');
-                if (name.includes(input)) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        }
-    </script>
+function paintProg() { const n = TH.filter(t => read.has(t.id)).length; $('progBar').style.width = n / TH.length * 100 + '%'; $('progTxt').textContent = '📚 ' + bn(n) + ' / ' + bn(TH.length) + 'টি তত্ত্ব পড়া হয়েছে'; }
+function renderChips() { const c = $('chips'); c.replaceChildren(); [['all', 'সব']].concat(CATS.map((n, i) => [String(i), n])).forEach(([k, n]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (cat === k ? ' on' : ''); b.textContent = n; b.setAttribute('aria-pressed', String(cat === k)); b.addEventListener('click', () => { cat = k; render(); }); c.appendChild(b); }); }
+function card(t, n) {
+    const el = document.createElement('article'); el.className = 'card' + (read.has(t.id) ? ' read' : ''); el.dataset.id = t.id; el.style.animationDelay = Math.min(n, 9) * 45 + 'ms';
+    const tk = document.createElement('span'); tk.className = 'tick'; tk.textContent = '✔ পড়া হয়েছে';
+    const top = document.createElement('div'); const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = t.icon; ic.setAttribute('aria-hidden', 'true');
+    const h = document.createElement('h3'); h.textContent = t.title; const p = document.createElement('p'); p.textContent = t.desc; const f = document.createElement('div'); f.className = 'fm'; f.textContent = t.fm; top.append(ic, h, p, f);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'more'; b.textContent = 'বিস্তারিত জানুন'; b.setAttribute('aria-label', t.title + ' বিস্তারিত জানুন'); b.addEventListener('click', () => open(t.id, b));
+    el.append(tk, top, b); return el;
+}
+function render() {
+    renderChips(); const q = $('q').value.trim().toLowerCase();
+    list = TH.filter(t => (cat === 'all' || t.cat === +cat) && (!q || (t.title + ' ' + t.en + ' ' + t.desc + ' ' + t.fm + ' ' + t.who).toLowerCase().includes(q)));
+    const root = $('sections'); root.replaceChildren(); let n = 0;
+    CATS.forEach((name, ci) => { const part = list.filter(t => t.cat === ci); if (!part.length) return;
+        const w = document.createElement('div'), h = document.createElement('h2'); h.className = 'section-title'; h.textContent = name; const s = document.createElement('span'); s.textContent = bn(part.length) + 'টি'; h.appendChild(s);
+        const g = document.createElement('div'); g.className = 'grid'; part.forEach(t => g.appendChild(card(t, n++))); w.append(h, g); root.appendChild(w); });
+    $('empty').classList.toggle('show', !list.length); $('count').textContent = bn(list.length) + 'টি তত্ত্ব দেখানো হচ্ছে'; paintProg();
+}
+function fillModal() {
+    const t = list[openIdx]; if (!t) return; $('mIcon').textContent = t.icon; $('mTitle').textContent = t.title;
+    const b = $('mBody'); b.replaceChildren(); b.scrollTop = 0;
+    const s = document.createElement('p'); s.className = 'sum'; s.textContent = t.who; const f = document.createElement('div'); f.className = 'fm'; f.textContent = t.fm; b.append(s, f);
+    t.secs.forEach(([h, c]) => { const e = document.createElement('h4'); e.textContent = h; b.appendChild(e);
+        if (Array.isArray(c)) { const ul = document.createElement('ul'); c.forEach(x => { const li = document.createElement('li'); li.textContent = x; ul.appendChild(li); }); b.appendChild(ul); } else { const p = document.createElement('p'); p.textContent = c; b.appendChild(p); } });
+    $('mPrev').disabled = openIdx <= 0; $('mNext').disabled = openIdx >= list.length - 1; paintRead();
+}
+function paintRead() { const t = list[openIdx], on = t && read.has(t.id); $('mRead').classList.toggle('on', !!on); $('mRead').textContent = on ? '✔ পড়া হয়েছে (বাতিল করতে চাপো)' : '✔ পড়া শেষ, চিহ্ন দাও'; }
+function open(id, btn) { openIdx = list.findIndex(t => t.id === id); if (openIdx < 0) return; opener = btn || null; fillModal(); $('ov').classList.add('on'); $('ov').setAttribute('aria-hidden', 'false'); document.body.classList.add('lock'); $('mClose').focus(); }
+function close() { $('ov').classList.remove('on'); $('ov').setAttribute('aria-hidden', 'true'); document.body.classList.remove('lock'); if (opener && document.contains(opener)) opener.focus(); }
+$('mClose').addEventListener('click', close);
+$('ov').addEventListener('click', e => { if (e.target === $('ov')) close(); });
+$('mPrev').addEventListener('click', () => { if (openIdx > 0) { openIdx--; fillModal(); } });
+$('mNext').addEventListener('click', () => { if (openIdx < list.length - 1) { openIdx++; fillModal(); } });
+$('mRead').addEventListener('click', () => { const t = list[openIdx]; if (!t) return; if (read.has(t.id)) read.delete(t.id); else read.add(t.id); saveRead(); paintRead(); const c = document.querySelector('.card[data-id="' + t.id + '"]'); if (c) c.classList.toggle('read', read.has(t.id)); paintProg(); });
+document.addEventListener('keydown', e => { if (!$('ov').classList.contains('on')) return; if (e.key === 'Escape') close(); else if (e.key === 'ArrowLeft') $('mPrev').click(); else if (e.key === 'ArrowRight') $('mNext').click(); });
+$('q').addEventListener('input', render);
+render();
+</script>
 </body>
 </html>
