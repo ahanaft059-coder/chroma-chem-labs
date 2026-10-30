@@ -205,4 +205,198 @@ table.rt th{color:var(--text-muted);font-size:12.5px}
         <rect id="dep" x="132" y="205" width="8" height="0" rx="2" fill="#c2410c" opacity=".95"/>
         <rect id="depL" x="152" y="205" width="4" height="0" rx="2" fill="#c2410c" opacity=".95"/>
         <text x="146" y="92" text-anchor="middle" font-size="11" font-weight="800" fill="#f87171" font-family="inherit" id="lblL">ক্যাথোড (−)</text>
-    
+        <text x="254" y="92" text-anchor="middle" font-size="11" font-weight="800" fill="#60a5fa" font-family="inherit" id="lblR">অ্যানোড (+)</text>
+        <g id="bubL"></g><g id="bubR"></g>
+        <text id="beakT" x="200" y="388" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
+      </svg>
+      <div class="live" id="live">একটি তরল বেছে নিয়ে সুইচ অন করো।</div>
+      <div class="hud"><div class="box"><small id="h1l">তরল</small><b id="h1">—</b></div><div class="box"><small id="h2l">বাল্ব</small><b id="h2">—</b></div></div>
+    </section>
+
+    <section>
+      <div id="condP" class="card"><h2>💡 তরল বেছে নিয়ে পরীক্ষা করো</h2>
+        <div class="opts" id="liqs"></div>
+        <div class="row"><button class="btn" id="sw">🔘 সুইচ অন করো</button></div>
+        <div id="cmsg"></div>
+      </div>
+      <div id="condLog" class="card" style="margin-top:22px"><h2>📒 লগবুক <span class="tagx" id="logN">০ টি</span></h2>
+        <div class="scroll"><table class="rt" id="logT"><tr><th>তরল</th><th>বাল্ব</th><th>তোমার শ্রেণি</th><th></th></tr></table></div>
+        <div class="row"><button class="btn" id="chkAll">✔ সব শ্রেণি যাচাই করো</button></div><div id="logM"></div>
+      </div>
+
+      <div id="elecP" class="card" style="display:none"><h2>🔋 CuSO₄ তড়িৎ বিশ্লেষণ সেটআপ</h2>
+        <div class="lbl" style="font-size:12.5px;font-weight:800;color:var(--text-muted)">ইলেকট্রোড</div>
+        <div class="opts" id="eType"></div>
+        <div class="lbl" style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:8px">ভোল্টেজ</div>
+        <div class="opts" id="eV"></div>
+        <div class="row"><button class="btn" id="eStart">▶ সুইচ অন</button><button class="btn ghost" id="eAdd1">⏩ +৬০ s</button><button class="btn ghost" id="eAdd2">⏩⏩ +৩০০ s</button><button class="btn ghost" id="eReset">🔁 নতুন করে</button></div>
+        <div class="msg" id="eMsg">ইলেকট্রোড ও ভোল্টেজ বেছে সুইচ অন করো। সময় দ্রুত চালাতে ⏩ বাটন চাপো।</div>
+        <div class="lbl" style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:12px">ক্যাথোডের ভর (শুকিয়ে ওজন)</div>
+        <div class="row"><button class="btn ghost" id="eW">⚖️ ক্যাথোড ওজন করো</button></div>
+        <div class="row"><label>তোমার হিসাব: জমা Cu (g)<br><input class="num" id="ePred" inputmode="decimal" placeholder="যেমন 0.118"></label><button class="btn" id="eCheck">যাচাই করো</button></div>
+        <div id="eOut"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-p="p1">📘 তত্ত্ব</button>
+    <button class="tab" data-p="p2">⚗️ বিক্রিয়া</button>
+    <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
+    <button class="tab" data-p="p4">🎓 ভাইভা</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1">
+      <h3>তড়িৎ বিশ্লেষ্য ও অবিশ্লেষ্য</h3>
+      <p>যে পদার্থ গলিত বা দ্রবণ অবস্থায় বিদ্যুৎ পরিবহন করে ও রাসায়নিক পরিবর্তন ঘটে তাকে <b>তড়িৎ বিশ্লেষ্য (electrolyte)</b> বলে। বিদ্যুৎ বহন করে <b>আয়ন</b> (দ্রবণে মুক্ত ধনাত্মক ও ঋণাত্মক আধান)।</p>
+      <ul><li><b>সবল তড়িৎ বিশ্লেষ্য:</b> প্রায় সম্পূর্ণ আয়নিত — NaCl, HCl, H₂SO₄, NaOH, CuSO₄ → বাল্ব উজ্জ্বল।</li>
+      <li><b>দুর্বল তড়িৎ বিশ্লেষ্য:</b> আংশিক আয়নিত — CH₃COOH, NH₄OH → বাল্ব ম্লান।</li>
+      <li><b>অতড়িৎ বিশ্লেষ্য:</b> আয়ন নেই — চিনি, গ্লুকোজ, ইথানল, কেরোসিন, বিশুদ্ধ পানি → বাল্ব জ্বলে না।</li></ul>
+      <p>কঠিন NaCl-এ আয়ন আছে কিন্তু গতিশীল নয় (জালকে আবদ্ধ), তাই কঠিন অবস্থায় পরিবাহী নয়; গলালে বা পানিতে গুললে আয়ন মুক্ত হয়।</p>
+      <h3>ফ্যারাডের প্রথম সূত্র</h3>
+      <span class="formula">m = (M × I × t) / (n × F)</span>
+      <ul><li>M = পারমাণবিক ভর (Cu = ৬৩.৫), I = প্রবাহ (A), t = সময় (s)</li><li>n = ইলেকট্রন সংখ্যা (Cu²⁺ → Cu: n = ২), F = ৯৬৫০০ C/mol</li></ul>
+      <p>উদাহরণ: ০.৬ A, ৬০০ s → m = ৬৩.৫ × ০.৬ × ৬০০ / (২ × ৯৬৫০০) = <b>০.১১৮ g</b>।</p>
+    </div>
+    <div class="pane" id="p2">
+      <h3>CuSO₄ দ্রবণের তড়িৎ বিশ্লেষণ</h3>
+      <div class="scroll"><table class="rt" style="min-width:480px"><tr><th></th><th>নিষ্ক্রিয় (গ্রাফাইট/Pt)</th><th>সক্রিয় (Cu)</th></tr>
+      <tr><td>ক্যাথোড (−)</td><td>Cu²⁺ + 2e⁻ → Cu (লাল-বাদামি জমা)</td><td>Cu²⁺ + 2e⁻ → Cu</td></tr>
+      <tr><td>অ্যানোড (+)</td><td>2H₂O → O₂ + 4H⁺ + 4e⁻ (বুদবুদ)</td><td>Cu → Cu²⁺ + 2e⁻ (অ্যানোড ক্ষয়)</td></tr>
+      <tr><td>দ্রবণের রং</td><td>ফিকে হয় (Cu²⁺ কমে), অম্লীয় হয়</td><td>অপরিবর্তিত নীল</td></tr>
+      <tr><td>ব্যবহার</td><td>—</td><td>তামার পরিশোধন, তড়িৎ-প্রলেপন</td></tr></table></div>
+      <h3>অন্যান্য দ্রবণ (পরিবাহিতা ট্যাবে দেখা)</h3>
+      <ul><li>লঘু H₂SO₄: ক্যাথোডে H₂, অ্যানোডে O₂ (আয়তন ২:১)</li><li>NaCl দ্রবণ: ক্যাথোডে H₂, অ্যানোডে Cl₂, দ্রবণে NaOH</li><li>HCl: ক্যাথোডে H₂, অ্যানোডে Cl₂</li></ul>
+    </div>
+    <div class="pane" id="p3">
+      <h3>সতর্কতা</h3>
+      <ul><li>ভেজা হাতে বা তারের খোলা অংশ ধরে সুইচ চালাবে না।</li><li>ইলেকট্রোড একে অপরকে স্পর্শ করলে শর্ট সার্কিট হয় — দূরত্ব রাখো।</li><li>অ্যানোডে Cl₂ (বিষাক্ত) তৈরি হয়, তাই ফিউম হুডে বা খোলা বাতাসে করো।</li><li>ক্যাথোড ওজনের আগে পাতিত পানিতে ধুয়ে ও অ্যালকোহল/বাতাসে শুকাও, নইলে ভর ভুল আসবে।</li><li>CuSO₄ বিষাক্ত — চোখে বা মুখে লাগাবে না।</li></ul>
+    </div>
+    <div class="pane" id="p4">
+      <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>কঠিন NaCl বিদ্যুৎ পরিবহন করে না কেন?</summary><p>আয়নগুলো স্ফটিক জালকে আটকে থাকে, মুক্তভাবে চলতে পারে না। গলালে বা পানিতে গুললে আয়ন মুক্ত হয় ও পরিবহন করে।</p></details>
+      <details class="qa"><summary>বিশুদ্ধ পানি বিদ্যুৎ পরিবহন করে না কেন, কিন্তু ট্যাপের পানি করে?</summary><p>বিশুদ্ধ পানিতে আয়ন (H⁺, OH⁻) খুবই কম (≈১০⁻⁷ M)। ট্যাপের পানিতে দ্রবীভূত খনিজ লবণের আয়ন থাকায় সামান্য পরিবাহী।</p></details>
+      <details class="qa"><summary>ধাতুর পরিবাহিতা ও তড়িৎ বিশ্লেষ্যের পরিবাহিতার পার্থক্য কী?</summary><p>ধাতুতে মুক্ত ইলেকট্রন বিদ্যুৎ বহন করে, রাসায়নিক পরিবর্তন হয় না। তড়িৎ বিশ্লেষ্যে আয়ন বহন করে ও ইলেকট্রোডে রাসায়নিক বিক্রিয়া ঘটে।</p></details>
+      <details class="qa"><summary>অ্যাসিটিক এসিডের বাল্ব ম্লান কেন?</summary><p>এটি দুর্বল এসিড — অল্প অংশই আয়নিত হয় (CH₃COOH ⇌ CH₃COO⁻ + H⁺), আয়নের সংখ্যা কম বলে প্রবাহ কম।</p></details>
+      <details class="qa"><summary>Cu অ্যানোড ব্যবহার করলে দ্রবণের রং ফিকে হয় না কেন?</summary><p>ক্যাথোডে যত Cu²⁺ জমা হয়, অ্যানোড থেকে ততটাই Cu²⁺ দ্রবণে আসে — Cu²⁺-এর পরিমাণ স্থির থাকে।</p></details>
+      <details class="qa"><summary>তড়িৎ-প্রলেপনে কোনটা ক্যাথোড?</summary><p>যে বস্তুতে প্রলেপ দেওয়া হবে সেটি ক্যাথোড; প্রলেপের ধাতু অ্যানোড; দ্রবণ হলো প্রলেপের ধাতুর লবণ।</p></details>
+      <details class="qa"><summary>ফ্যারাডের সূত্র কী বলে?</summary><p>ইলেকট্রোডে জমা বা মুক্ত পদার্থের ভর বিদ্যুৎ প্রবাহের পরিমাণ (Q = It)-এর সমানুপাতিক।</p></details>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const f=(x,d=2)=>bn((+x).toFixed(d));
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2200)}
+const LIQ=[
+ {id:'dw',n:'বিশুদ্ধ পানি',t:'n',b:0,why:'বিশুদ্ধ পানিতে আয়ন প্রায় নেই (≈১০⁻⁷ M), তাই বাল্ব জ্বলে না।'},
+ {id:'sug',n:'চিনির দ্রবণ',t:'n',b:0,why:'চিনি (সুক্রোজ) অণু হিসেবে দ্রবীভূত হয়, আয়ন তৈরি করে না — অতড়িৎ বিশ্লেষ্য।'},
+ {id:'eth',n:'ইথানল',t:'n',b:0,why:'ইথানল সমযোজী যৌগ, আয়ন নেই।'},
+ {id:'ker',n:'কেরোসিন',t:'n',b:0,why:'অধ্রুবীয় সমযোজী তরল — আয়ন নেই, পরিবাহী নয়।'},
+ {id:'nas',n:'কঠিন NaCl (শুকনো)',t:'n',b:0,why:'কঠিন NaCl-এ আয়ন আছে কিন্তু জালকে আবদ্ধ — চলতে পারে না, তাই বাল্ব জ্বলে না। (পানিতে গুললে আয়ন মুক্ত হয়!)'},
+ {id:'nacl',n:'NaCl দ্রবণ',t:'s',b:.9,gl:'H₂',gr:'Cl₂',why:'NaCl → Na⁺ + Cl⁻ (সম্পূর্ণ আয়নিত)। ক্যাথোডে H₂, অ্যানোডে Cl₂ তৈরি হয়।'},
+ {id:'hcl',n:'লঘু HCl',t:'s',b:1,gl:'H₂',gr:'Cl₂',why:'সবল এসিড — সম্পূর্ণ আয়নিত (H⁺ ও Cl⁻)। বাল্ব খুব উজ্জ্বল।'},
+ {id:'h2so4',n:'লঘু H₂SO₄',t:'s',b:1,gl:'H₂',gr:'O₂',why:'সবল এসিড — H⁺ ও SO₄²⁻। ক্যাথোডে H₂, অ্যানোডে O₂ (২:১)।'},
+ {id:'naoh',n:'NaOH দ্রবণ',t:'s',b:.95,gl:'H₂',gr:'O₂',why:'সবল ক্ষার — Na⁺ ও OH⁻ সম্পূর্ণ আয়নিত।'},
+ {id:'cuso4',n:'CuSO₄ দ্রবণ',t:'s',b:.85,gl:'Cu',gr:'O₂',col:'rgba(40,125,255,.5)',why:'Cu²⁺ ও SO₄²⁻। ক্যাথোডে Cu জমে, অ্যানোডে O₂।'},
+ {id:'ace',n:'CH₃COOH (অ্যাসিটিক এসিড)',t:'w',b:.25,gl:'H₂',gr:'O₂',weak:1,why:'দুর্বল এসিড — অল্প আয়নিত (CH₃COOH ⇌ CH₃COO⁻ + H⁺), তাই বাল্ব ম্লান।'},
+ {id:'nh4',n:'NH₄OH (অ্যামোনিয়া দ্রবণ)',t:'w',b:.2,gl:'H₂',gr:'O₂',weak:1,why:'দুর্বল ক্ষার — অল্প আয়নিত (NH₄OH ⇌ NH₄⁺ + OH⁻)।'}
+];
+const GC={'H₂':'#e2e8f0','Cl₂':'#bef264','O₂':'#e2e8f0'};
+const CT={s:'সবল',w:'দুর্বল',n:'অতড়িৎ'};
+let mode='cond',cur=LIQ[0],on=false,log={};
+let E=null;
+function newE(keep){E=Object.assign({type:'gr',V:6,on:false,t:0,m0:+(5+Math.random()*.4).toFixed(3),eta:.97+Math.random()*.022,weighed:false,checked:false},keep||{})}
+newE();
+// bubbles
+function mkBub(g,x){let s='';for(let i=0;i<7;i++)s+=`<circle class="bub" cx="${x+(i%3-1)*4}" cy="296" r="${2+(i%3)}" style="animation-delay:${(i*0.23).toFixed(2)}s"/>`;$(g).innerHTML=s}
+mkBub('bubL',146);mkBub('bubR',254);
+function bubbles(g,k,col,dur){const c=$(g).children;for(let i=0;i<c.length;i++){c[i].style.display=i<k?'':'none';c[i].style.fill=col;c[i].style.animationDuration=dur+'s'}}
+function draw(){
+  const isC=mode=='cond';
+  $('bulbG').style.display=isC?'':'none';$('ammG').style.display=isC?'none':'';
+  $('batT').textContent=bn(isC?6:E.V)+' V';
+  $('stageTag').textContent=isC?'বাল্ব সার্কিট':'তড়িৎ বিশ্লেষণ';
+  $('condP').style.display=$('condLog').style.display=isC?'':'none';$('elecP').style.display=isC?'none':'';
+  let L=0,kL=0,kR=0,gl='',gr='',depW=0,liqCol='rgba(160,200,255,.28)',eLf='#334155',eRf='#334155',eRw=12;
+  if(isC){
+    const lq=cur;L=on?lq.b:0;liqCol=lq.col||liqCol;
+    if(on&&lq.gl){const k=lq.weak?2:7;kL=lq.gl=='Cu'?0:k;kR=k;gl=lq.gl;gr=lq.gr;if(lq.gl=='Cu')depW=3}
+    $('bulbF').setAttribute('opacity',L);$('halo').setAttribute('opacity',L*.9);
+    $('h1l').textContent='তরল';$('h1').textContent=lq.n;$('h2l').textContent='বাল্ব';
+    $('h2').textContent=!on?'বন্ধ':L>.7?'উজ্জ্বল 💡':L>0?'ম্লান 🔅':'জ্বলছে না';
+    $('beakT').textContent=lq.n;
+    $('lblL').textContent='ক্যাথোড (−)';$('lblR').textContent='অ্যানোড (+)';
+    $('sw').textContent=on?'🔘 সুইচ অফ করো':'🔘 সুইচ অন করো';
+  }else{
+    const I=0.1*E.V,Q=I*E.t,dm=E.eta*63.5*Q/(2*96500);
+    $('ammT').textContent=E.on?I.toFixed(2):'0.00';
+    if(E.type=='cu'){eLf='#9a3412';eRf='#c2410c';eRw=Math.max(7,12-dm*25)}
+    if(E.on){kL=0;kR=E.type=='gr'?Math.min(7,Math.round(E.V)):0;gr='O₂'}
+    depW=E.t>0?Math.min(9,1+dm*60):0;
+    const fade=E.type=='gr'?Math.min(1,Q/2500):0;liqCol=`rgba(40,125,255,${(.5-.3*fade).toFixed(2)})`;
+    $('h1l').textContent='প্রবাহ I';$('h1').textContent=(E.on?I.toFixed(2):'0.00')+' A';$('h2l').textContent='সময় t';$('h2').textContent=bn(E.t)+' s';
+    $('beakT').textContent='CuSO₄ দ্রবণ · '+(E.type=='gr'?'গ্রাফাইট ইলেকট্রোড':'তামার ইলেকট্রোড');
+    $('lblL').textContent='ক্যাথোড (−)';$('lblR').textContent='অ্যানোড (+)';
+    $('eStart').textContent=E.on?'⏸ সুইচ অফ':'▶ সুইচ অন';
+  }
+  $('liq').setAttribute('fill',liqCol);
+  $('eL').setAttribute('fill',eLf);$('eR').setAttribute('fill',eRf);
+  $('eR').setAttribute('width',eRw);$('eR').setAttribute('x',248+(12-eRw)/2);
+  $('dep').setAttribute('height',depW>0?95:0);$('dep').setAttribute('width',depW);$('dep').setAttribute('x',140-depW);
+  $('depL').setAttribute('height',depW>0?95:0);$('depL').setAttribute('width',Math.min(depW,4));
+  bubbles('bubL',kL,GC[gl]||'#fff',1.5);bubbles('bubR',kR,GC[gr]||'#fff',1.5);
+}
+// condution mode
+function drawLiqs(){$('liqs').innerHTML=LIQ.map(l=>`<button class="ob ${l==cur?'on':''}" data-l="${l.id}">${l.n}</button>`).join('');
+  document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{cur=LIQ.find(l=>l.id==b.dataset.l);on=false;$('cmsg').innerHTML='';$('live').textContent=cur.n+' বেছে নিয়েছো। সুইচ অন করো।';drawLiqs();draw()})}
+function drawLog(){const ks=Object.keys(log);$('logN').textContent=bn(ks.length)+' টি';
+  $('logT').innerHTML='<tr><th>তরল</th><th>বাল্ব</th><th>তোমার শ্রেণি</th><th></th></tr>'+ks.map(k=>{const l=LIQ.find(x=>x.id==k),r=log[k];
+   return `<tr><td>${l.n}</td><td>${l.b>.7?'উজ্জ্বল':l.b>0?'ম্লান':'নেই'}</td><td><select class="sel" data-c="${k}"><option value="">—</option>${['s','w','n'].map(t=>`<option value="${t}" ${r.c==t?'selected':''}>${CT[t]}</option>`).join('')}</select></td><td>${r.ok===true?'✔':r.ok===false?'✖':''}</td></tr>`}).join('');
+  document.querySelectorAll('[data-c]').forEach(s=>s.onchange=()=>{log[s.dataset.c].c=s.value;log[s.dataset.c].ok=undefined})}
+$('sw').onclick=()=>{on=!on;
+  if(on){log[cur.id]=log[cur.id]||{};
+    $('cmsg').innerHTML=`<div class="msg ${cur.b>0?'ok':''}"><b>${cur.b>.7?'বাল্ব উজ্জ্বলভাবে জ্বলছে!':cur.b>0?'বাল্ব ম্লানভাবে জ্বলছে।':'বাল্ব জ্বলছে না।'}</b></div>`;
+    $('live').textContent=cur.b>.7?'💡 প্রবাহ জোরালো — আয়ন অনেক।':cur.b>0?'🔅 অল্প প্রবাহ।':'কোনো প্রবাহ নেই।';
+  }else{$('cmsg').innerHTML='';$('live').textContent='সুইচ অফ।'}
+  drawLog();draw()};
+$('chkAll').onclick=()=>{const ks=Object.keys(log);if(!ks.length){toast('আগে অন্তত একটি তরল পরীক্ষা করো');return}
+  let ok=0,miss=0;ks.forEach(k=>{const r=log[k],l=LIQ.find(x=>x.id==k);if(!r.c){miss++;return}r.ok=r.c==l.t;if(r.ok)ok++});drawLog();
+  $('logM').innerHTML=`<div class="msg ${ok==ks.length?'ok':'bad'}">${bn(ok)}/${bn(ks.length)} ঠিক।${miss?` ${bn(miss)}টির শ্রেণি দাওনি।`:''}</div>`+ks.filter(k=>log[k].ok===false).map(k=>{const l=LIQ.find(x=>x.id==k);return `<div class="res"><b>${l.n}</b> → ${CT[l.t]}: ${l.why}</div>`}).join('')+(ks.length<LIQ.length?`<div class="msg">এখনো ${bn(LIQ.length-ks.length)}টি তরল বাকি।</div>`:'<div class="msg ok">🎉 সব তরল পরীক্ষা করেছো!</div>')};
+// electrolysis
+function drawE(){
+  $('eType').innerHTML=[['gr','গ্রাফাইট (নিষ্ক্রিয়)'],['cu','তামা Cu (সক্রিয়)']].map(a=>`<button class="ob ${E.type==a[0]?'on':''}" data-t="${a[0]}">${a[1]}</button>`).join('');
+  $('eV').innerHTML=[2,4,6].map(v=>`<button class="ob ${E.V==v?'on':''}" data-v="${v}">${bn(v)} V</button>`).join('');
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{if(E.t>0){toast('আগে "নতুন করে" চাপো');return}E.type=b.dataset.t;drawE();draw()});
+  document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(E.t>0){toast('আগে "নতুন করে" চাপো');return}E.V=+b.dataset.v;drawE();draw()});
+}
+const I_=()=>0.1*E.V,dmT=()=>63.5*I_()*E.t/(2*96500),dmA=()=>E.eta*dmT();
+function eMsg(){const Q=I_()*E.t;let m;
+  if(!E.on&&E.t==0)m='ইলেকট্রোড ও ভোল্টেজ বেছে সুইচ অন করো। সময় দ্রুত চালাতে ⏩ বাটন চাপো।';
+  else if(E.type=='gr')m=`ক্যাথোডে লালচে-বাদামি Cu জমছে। অ্যানোডে O₂ বুদবুদ। দ্রবণের নীল রং ফিকে হচ্ছে (Cu²⁺ কমছে, H⁺ বাড়ছে)। Q = I×t = ${f(Q,0)} C।`;
+  else m=`ক্যাথোডে Cu জমছে, অ্যানোড (Cu) ক্ষয় হচ্ছে — দ্রবণের রং অপরিবর্তিত। Q = ${f(Q,0)} C।`;
+  $('eMsg').innerHTML=m;$('live').textContent=E.on?'⚡ তড়িৎ বিশ্লেষণ চলছে… I = '+f(I_(),2)+' A, t = '+bn(E.t)+' s':'সুইচ অফ।'}
+$('eStart').onclick=()=>{E.on=!E.on;eMsg();draw()};
+function adv(s){if(!E.on){toast('আগে সুইচ অন করো');return}E.t+=s;E.weighed=false;eMsg();draw()}
+$('eAdd1').onclick=()=>adv(60);$('eAdd2').onclick=()=>adv(300);
+$('eReset').onclick=()=>{newE();$('eOut').innerHTML='';$('ePred').value='';drawE();eMsg();draw()};
+$('eW').onclick=()=>{if(E.t==0){toast('এখনো সময় চলেনি');return}E.weighed=true;const m1=E.m0+dmA();
+  $('eOut').innerHTML=`<div class="res">শুরুর ভর = <b>${f(E.m0,3)} g</b> · এখনকার ভর = <b>${f(m1,3)} g</b><br>ভর বৃদ্ধি Δm = <b>${f(dmA(),3)} g</b> (I = ${f(I_(),2)} A, t = ${bn(E.t)} s)</div>`};
+$('eCheck').onclick=()=>{const v=parseFloat($('ePred').value.replace(',','.'));if(isNaN(v)){toast('তোমার হিসাবের সংখ্যা লেখো');return}
+  if(E.t==0){toast('আগে বিদ্যুৎ চালাও');return}
+  const th=dmT(),ok=Math.abs(v-th)<=th*.03+0.0005;const eff=dmA()/th*100;
+  $('eOut').innerHTML=(E.weighed?`<div class="res">শুরুর ভর = ${f(E.m0,3)} g · এখনকার ভর = ${f(E.m0+dmA(),3)} g · Δm = <b>${f(dmA(),3)} g</b></div>`:'')+
+  `<div class="msg ${ok?'ok':'bad'}">${ok?'✔ ঠিক হিসাব!':'✖ মেলেনি।'} ফ্যারাডের সূত্রে: m = ৬৩.৫ × ${f(I_(),2)} × ${bn(E.t)} / (২ × ৯৬৫০০) = <b>${f(th,4)} g</b></div>`+
+  (E.weighed?`<div class="res">প্রয়োগিক Δm / তাত্ত্বিক = <b>${f(eff,1)}%</b> (সামান্য কম — ক্যাথোড থেকে ছোট ছোট ফ্লেক খসে পড়া ও শুকানোর ত্রুটির কারণে)।</div>`:'<div class="msg">ক্যাথোড ওজন করে প্রয়োগিক মানের সাথে তুলনা করতে পারো।</div>')+
+  (E.type=='gr'?`<div class="res">অ্যানোডে O₂-এর আয়তন (STP) ≈ Q/(4F) × ২২.৪ L = <b>${f(I_()*E.t/(4*96500)*22400,1)} mL</b></div>`:`<div class="res">অ্যানোড (Cu) ক্ষয় ≈ <b>${f(th,4)} g</b> — ক্যাথোডে যা জমে প্রায় ততটাই।</div>`)};
+// tabs
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x==b));on=false;$('cmsg').innerHTML='';$('live').textContent=mode=='cond'?'একটি তরল বেছে নিয়ে সুইচ অন করো।':'ইলেকট্রোড ও ভোল্টেজ বেছে সুইচ অন করো।';draw()});
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+drawLiqs();drawLog();drawE();draw();
+</script>
+</body>
+</html>
