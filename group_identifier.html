@@ -1,341 +1,302 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Periodic Table & Group Finder - ChromaChem</title>
-    <style>
-        :root { 
-            --bg-color: #030712; 
-            --card-color: #0b0f19;
-            --text-color: #f8fafc; 
-            --accent-color: #38bdf8;
-            --purple-glow: #c084fc;
-            --border-color: #1e293b;
-        }
-        
-        * { box-sizing: border-box; }
-
-        body { 
-            background: var(--bg-color); 
-            color: var(--text-color); 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            padding: 20px; 
-            margin: 0;
-            min-height: 100vh;
-            background-image: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-                              radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
-        }
-
-        .back-btn { 
-            position: fixed; top: 15px; left: 15px; 
-            background: #1e293b; color: #94a3b8; 
-            padding: 8px 16px; border-radius: 10px; 
-            text-decoration: none; font-weight: 600; 
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease; z-index: 100;
-        }
-        .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
-
-        .header-section { max-width: 1440px; margin: 40px auto 15px auto; text-align: center; }
-        h1 {
-            font-size: 2.2rem; font-weight: 800; margin: 0 0 8px 0;
-            background: linear-gradient(135deg, var(--accent-color), #a855f7, #ec4899);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        p.subtitle { color: #94a3b8; margin: 0 0 15px 0; font-size: 1rem; }
-
-        /* Search Box Style */
-        .search-box-container {
-            max-width: 450px; margin: 0 auto 20px auto; position: relative;
-        }
-        .search-box {
-            width: 100%; padding: 12px 20px; border-radius: 12px;
-            background: #0f172a; border: 1px solid var(--border-color);
-            color: #f8fafc; font-size: 1rem; outline: none;
-            transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .search-box:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-        }
-
-        /* Workspace Layout */
-        .workspace {
-            display: flex; gap: 20px; max-width: 1440px; margin: auto; align-items: flex-start;
-        }
-
-        @media (max-width: 1100px) {
-            .workspace { flex-direction: column; }
-        }
-
-        .left-side { flex: 1.4; width: 100%; }
-
-        /* Group Buttons Grid */
-        .selector-container {
-            background: var(--card-color); padding: 12px; border-radius: 16px;
-            border: 1px solid var(--border-color); margin-bottom: 15px;
-            display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        @media (max-width: 700px) { .selector-container { grid-template-columns: repeat(6, 1fr); } }
-
-        .group-btn {
-            background: #1e293b; border: 1px solid var(--border-color);
-            color: #94a3b8; padding: 8px 4px; border-radius: 8px;
-            font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;
-            text-align: center;
-        }
-        .group-btn:hover, .group-btn.active {
-            background: linear-gradient(135deg, #0ea5e9, #6366f1); color: #ffffff;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); border-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        /* Periodic Grid 18-Column */
-        .grid-wrapper { overflow-x: auto; padding-bottom: 10px; }
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(18, minmax(40px, 1fr)); 
-            gap: 4px; 
-            background: #050b14; 
-            padding: 12px; 
-            border-radius: 16px; 
-            border: 1px solid var(--border-color);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            min-width: 750px;
-        }
-        
-        .cell { 
-            aspect-ratio: 1; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; border-radius: 6px; 
-            border: 1px solid #1e293b; font-weight: 700; 
-            background: #0f172a; color: #94a3b8; transition: all 0.25s ease;
-            opacity: 0.4; cursor: pointer; user-select: none;
-            position: relative;
-        }
-        
-        .cell .num { font-size: 0.6rem; color: #64748b; position: absolute; top: 2px; left: 3px; }
-        .cell .sym { font-size: 0.85rem; margin-top: 4px; }
-
-        .space-p1 { grid-column: span 16; }
-        .space-p2 { grid-column: span 10; }
-        .f-block-gap { grid-column: span 18; height: 12px; }
-
-        /* Cell Highlighting */
-        .cell.highlight {
-            opacity: 1 !important; 
-            transform: scale(1.15);
-            box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
-            border-color: var(--accent-color) !important; 
-            color: #ffffff !important;
-            z-index: 10; 
-            background: linear-gradient(135deg, #1e293b, #0284c7);
-        }
-        .cell.highlight .num { color: #e2e8f0; }
-
-        /* Right Side Info Panel */
-        .right-side { 
-            flex: 0.9; background: var(--card-color); border: 1px solid var(--border-color);
-            border-radius: 16px; padding: 22px; min-height: 480px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7); position: sticky; top: 20px;
-            box-sizing: border-box; backdrop-filter: blur(10px); width: 100%;
-        }
-
-        .info-box h2 {
-            margin-top: 0; font-size: 1.4rem; font-weight: 800; color: var(--accent-color);
-            border-bottom: 2px solid #1e293b; padding-bottom: 10px; line-height: 1.3;
-        }
-        
-        .meta-pills { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
-        .pill { 
-            background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3);
-            color: var(--accent-color); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
-        }
-
-        .info-section { margin-top: 15px; margin-bottom: 15px; }
-        .info-section h3 { 
-            font-size: 1rem; color: var(--purple-glow); margin-bottom: 8px; font-weight: 700;
-        }
-        .info-section ul { padding-left: 18px; margin: 0; }
-        .info-section li { color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin-bottom: 6px; }
-        
-        .trick-card {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(56, 189, 248, 0.04));
-            border-left: 4px solid #a855f7; border: 1px solid rgba(168, 85, 247, 0.2);
-            padding: 12px 15px; border-radius: 10px; font-size: 0.9rem;
-        }
-        .trick-card strong { color: #f43f5e; font-weight: 700; }
-        .moulo-list { color: var(--accent-color); margin-top: 5px; font-weight: 600; font-size: 0.85rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>স্মার্ট পর্যায় সারণি ও গ্রুপ আইডেন্টিফায়ার | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.gwrap>*{min-width:0}
+.gwrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(34px,1fr));gap:4px;min-width:720px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}.ob.on{border-color:#a855f7;background:rgba(168,85,247,.18)}
+</style>
 </head>
 <body>
-
-<a href="visualizations.html" class="back-btn">← ফিরে যান</a>
-
-<div class="header-section">
-    <h1>স্মার্ট পর্যায় সারণি ও গ্রুপ আইডেন্টিফায়ার</h1>
-    <p class="subtitle">গ্রুপ বাটন অথবা সার্চ বার ব্যবহার করে মুহূর্তেই যেকোনো গ্রুপের বৈশিষ্ট্য ও ছন্দ জানুন</p>
-    
-    <div class="search-box-container">
-        <input type="text" id="searchInput" class="search-box" placeholder="মৌলের প্রতীক, নাম বা পারমাণবিক সংখ্যা লিখুন (যেমন: Na, 11)..." oninput="searchElement()">
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Group Finder</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="dashboard.html">← <span class="long">ড্যাশবোর্ড</span></a>
     </div>
+  </header>
+  <section class="hero">
+    <span class="pill">⚛️ পর্যায় সারণি · গ্রুপ শেখা</span>
+    <h1><span class="em">🧩</span> স্মার্ট পর্যায় সারণি ও গ্রুপ আইডেন্টিফায়ার</h1>
+    <p>গ্রুপ বাটন, সারণির যেকোনো ঘর বা সার্চ — যেটাতেই ক্লিক করো, পুরো গ্রুপ জ্বলে উঠবে। সাথে বৈশিষ্ট্য ও মনে রাখার ম্যাজিক ছন্দ!</p>
+  </section>
+  <div class="search">
+    <input id="q" type="text" autocomplete="off" placeholder="প্রতীক, নাম (বাংলা/English) বা পারমাণবিক সংখ্যা — যেমন Na, সোডিয়াম, 11" aria-label="মৌল খোঁজো">
+    <div class="sug" id="sug"></div>
+  </div>
+  <div class="gwrap">
+    <section>
+      <div class="gbtns" id="gbtns"></div>
+      <div class="gw"><div class="pg" id="pg"></div></div>
+      <div class="legend"><button class="ob" id="tBlk">🎨 ব্লক অনুযায়ী রং</button><button class="ob" id="tNm">🔤 নাম দেখাও</button><button class="ob" id="tClr">✖ নির্বাচন মুছো</button>
+        <span style="font-size:12px;color:var(--text-muted);font-weight:700"><i class="sw" style="background:#38bdf8"></i>s <i class="sw" style="background:#a855f7;margin-left:6px"></i>p <i class="sw" style="background:#f59e0b;margin-left:6px"></i>d <i class="sw" style="background:#10b981;margin-left:6px"></i>f</span>
+        <span style="font-size:12px;color:var(--text-muted)">⌨ ← → দিয়ে গ্রুপ বদলাও</span></div>
+    </section>
+    <aside class="card panel" id="panel"><div class="empty">উপরের যেকোনো গ্রুপ বাটনে বা সারণির ঘরে ক্লিক করো, অথবা সার্চ করো — পুরো গ্রুপের বৈশিষ্ট্য ও মনে রাখার ম্যাজিক ট্রিকস এখানে দেখাবে।</div></aside>
+  </div>
 </div>
-
-<div class="workspace">
-    <div class="left-side">
-        <!-- Group Selection Buttons -->
-        <div class="selector-container">
-            <script>
-                for(let i=1; i<=18; i++) {
-                    document.write(`<button class="group-btn" id="btn-g${i}" onclick="highlightGroup(${i}, this)">G-${i}</button>`);
-                }
-            </script>
-        </div>
-
-        <div class="grid-wrapper">
-            <div class="grid" id="periodicGrid">
-                <!-- Data populated dynamically via JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <div class="right-side" id="info-panel">
-        <div class="info-box">
-            <h2>গ্রুপ নির্বাচন করুন</h2>
-            <p style="color: #94a3b8; text-align: center; margin-top: 120px; font-size: 1rem; line-height: 1.6;">
-                উপরের যেকোনো গ্রুপ বাটনে ক্লিক করুন অথবা সার্চ বক্সে মৌলের প্রতীক টাইপ করে পুরো গ্রুপের চমকপ্রদ তথ্য ও মনে রাখার ম্যাজিক ট্রিকস দেখে নিন।
-            </p>
-        </div>
-    </div>
-</div>
-
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 <script>
-    // Complete Element Data Array with Atomic Numbers
-    const elementsData = [
-        // Period 1
-        { n: 1, s: 'H', g: 1, p: 1 }, { n: 2, s: 'He', g: 18, p: 1 },
-        // Period 2
-        { n: 3, s: 'Li', g: 1, p: 2 }, { n: 4, s: 'Be', g: 2, p: 2 },
-        { n: 5, s: 'B', g: 13, p: 2 }, { n: 6, s: 'C', g: 14, p: 2 }, { n: 7, s: 'N', g: 15, p: 2 }, { n: 8, s: 'O', g: 16, p: 2 }, { n: 9, s: 'F', g: 17, p: 2 }, { n: 10, s: 'Ne', g: 18, p: 2 },
-        // Period 3
-        { n: 11, s: 'Na', g: 1, p: 3 }, { n: 12, s: 'Mg', g: 2, p: 3 },
-        { n: 13, s: 'Al', g: 13, p: 3 }, { n: 14, s: 'Si', g: 14, p: 3 }, { n: 15, s: 'P', g: 15, p: 3 }, { n: 16, s: 'S', g: 16, p: 3 }, { n: 17, s: 'Cl', g: 17, p: 3 }, { n: 18, s: 'Ar', g: 18, p: 3 },
-        // Period 4
-        { n: 19, s: 'K', g: 1, p: 4 }, { n: 20, s: 'Ca', g: 2, p: 4 }, { n: 21, s: 'Sc', g: 3, p: 4 }, { n: 22, s: 'Ti', g: 4, p: 4 }, { n: 23, s: 'V', g: 5, p: 4 }, { n: 24, s: 'Cr', g: 6, p: 4 }, { n: 25, s: 'Mn', g: 7, p: 4 }, { n: 26, s: 'Fe', g: 8, p: 4 }, { n: 27, s: 'Co', g: 9, p: 4 }, { n: 28, s: 'Ni', g: 10, p: 4 }, { n: 29, s: 'Cu', g: 11, p: 4 }, { n: 30, s: 'Zn', g: 12, p: 4 }, { n: 31, s: 'Ga', g: 13, p: 4 }, { n: 32, s: 'Ge', g: 14, p: 4 }, { n: 33, s: 'As', g: 15, p: 4 }, { n: 34, s: 'Se', g: 16, p: 4 }, { n: 35, s: 'Br', g: 17, p: 4 }, { n: 36, s: 'Kr', g: 18, p: 4 },
-        // Period 5
-        { n: 37, s: 'Rb', g: 1, p: 5 }, { n: 38, s: 'Sr', g: 2, p: 5 }, { n: 39, s: 'Y', g: 3, p: 5 }, { n: 40, s: 'Zr', g: 4, p: 5 }, { n: 41, s: 'Nb', g: 5, p: 5 }, { n: 42, s: 'Mo', g: 6, p: 5 }, { n: 43, s: 'Tc', g: 7, p: 5 }, { n: 44, s: 'Ru', g: 8, p: 5 }, { n: 45, s: 'Rh', g: 9, p: 5 }, { n: 46, s: 'Pd', g: 10, p: 5 }, { n: 47, s: 'Ag', g: 11, p: 5 }, { n: 48, s: 'Cd', g: 12, p: 5 }, { n: 49, s: 'In', g: 13, p: 5 }, { n: 50, s: 'Sn', g: 14, p: 5 }, { n: 51, s: 'Sb', g: 15, p: 5 }, { n: 52, s: 'Te', g: 16, p: 5 }, { n: 53, s: 'I', g: 17, p: 5 }, { n: 54, s: 'Xe', g: 18, p: 5 },
-        // Period 6
-        { n: 55, s: 'Cs', g: 1, p: 6 }, { n: 56, s: 'Ba', g: 2, p: 6 }, { n: 57, s: 'La*', g: 3, p: 6 }, { n: 72, s: 'Hf', g: 4, p: 6 }, { n: 73, s: 'Ta', g: 5, p: 6 }, { n: 74, s: 'W', g: 6, p: 6 }, { n: 75, s: 'Re', g: 7, p: 6 }, { n: 76, s: 'Os', g: 8, p: 6 }, { n: 77, s: 'Ir', g: 9, p: 6 }, { n: 78, s: 'Pt', g: 10, p: 6 }, { n: 79, s: 'Au', g: 11, p: 6 }, { n: 80, s: 'Hg', g: 12, p: 6 }, { n: 81, s: 'Tl', g: 13, p: 6 }, { n: 82, s: 'Pb', g: 14, p: 6 }, { n: 83, s: 'Bi', g: 15, p: 6 }, { n: 84, s: 'Po', g: 16, p: 6 }, { n: 85, s: 'At', g: 17, p: 6 }, { n: 86, s: 'Rn', g: 18, p: 6 },
-        // Period 7
-        { n: 87, s: 'Fr', g: 1, p: 7 }, { n: 88, s: 'Ra', g: 2, p: 7 }, { n: 89, s: 'Ac*', g: 3, p: 7 }, { n: 104, s: 'Rf', g: 4, p: 7 }, { n: 105, s: 'Db', g: 5, p: 7 }, { n: 106, s: 'Sg', g: 6, p: 7 }, { n: 107, s: 'Bh', g: 7, p: 7 }, { n: 108, s: 'Hs', g: 8, p: 7 }, { n: 109, s: 'Mt', g: 9, p: 7 }, { n: 110, s: 'Ds', g: 10, p: 7 }, { n: 111, s: 'Rg', g: 11, p: 7 }, { n: 112, s: 'Cn', g: 12, p: 7 }, { n: 113, s: 'Nh', g: 13, p: 7 }, { n: 114, s: 'Fl', g: 14, p: 7 }, { n: 115, s: 'Mc', g: 15, p: 7 }, { n: 116, s: 'Lv', g: 16, p: 7 }, { n: 117, s: 'Ts', g: 17, p: 7 }, { n: 118, s: 'Og', g: 18, p: 7 }
-    ];
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const RAW=[[1,"H","হাইড্রোজেন","Hydrogen",1.008,1,1,"s","1s1"],[2,"He","হিলিয়াম","Helium",4.003,1,18,"s","1s2"],[3,"Li","লিথিয়াম","Lithium",6.94,2,1,"s","1s2 2s1"],[4,"Be","বেরিলিয়াম","Beryllium",9.012,2,2,"s","1s2 2s2"],[5,"B","বোরন","Boron",10.81,2,13,"p","1s2 2s2 2p1"],[6,"C","কার্বন","Carbon",12.011,2,14,"p","1s2 2s2 2p2"],[7,"N","নাইট্রোজেন","Nitrogen",14.007,2,15,"p","1s2 2s2 2p3"],[8,"O","অক্সিজেন","Oxygen",15.999,2,16,"p","1s2 2s2 2p4"],[9,"F","ফ্লোরিন","Fluorine",18.998,2,17,"p","1s2 2s2 2p5"],[10,"Ne","নিয়ন","Neon",20.18,2,18,"p","1s2 2s2 2p6"],[11,"Na","সোডিয়াম","Sodium",22.99,3,1,"s","1s2 2s2 2p6 3s1"],[12,"Mg","ম্যাগনেসিয়াম","Magnesium",24.305,3,2,"s","1s2 2s2 2p6 3s2"],[13,"Al","অ্যালুমিনিয়াম","Aluminium",26.982,3,13,"p","1s2 2s2 2p6 3s2 3p1"],[14,"Si","সিলিকন","Silicon",28.085,3,14,"p","1s2 2s2 2p6 3s2 3p2"],[15,"P","ফসফরাস","Phosphorus",30.974,3,15,"p","1s2 2s2 2p6 3s2 3p3"],[16,"S","সালফার","Sulfur",32.06,3,16,"p","1s2 2s2 2p6 3s2 3p4"],[17,"Cl","ক্লোরিন","Chlorine",35.45,3,17,"p","1s2 2s2 2p6 3s2 3p5"],[18,"Ar","আর্গন","Argon",39.948,3,18,"p","1s2 2s2 2p6 3s2 3p6"],[19,"K","পটাশিয়াম","Potassium",39.098,4,1,"s","1s2 2s2 2p6 3s2 3p6 4s1"],[20,"Ca","ক্যালসিয়াম","Calcium",40.078,4,2,"s","1s2 2s2 2p6 3s2 3p6 4s2"],[21,"Sc","স্ক্যান্ডিয়াম","Scandium",44.956,4,3,"d","1s2 2s2 2p6 3s2 3p6 3d1 4s2"],[22,"Ti","টাইটানিয়াম","Titanium",47.867,4,4,"d","1s2 2s2 2p6 3s2 3p6 3d2 4s2"],[23,"V","ভ্যানাডিয়াম","Vanadium",50.942,4,5,"d","1s2 2s2 2p6 3s2 3p6 3d3 4s2"],[24,"Cr","ক্রোমিয়াম","Chromium",51.996,4,6,"d","1s2 2s2 2p6 3s2 3p6 3d5 4s1"],[25,"Mn","ম্যাঙ্গানিজ","Manganese",54.938,4,7,"d","1s2 2s2 2p6 3s2 3p6 3d5 4s2"],[26,"Fe","আয়রন","Iron",55.845,4,8,"d","1s2 2s2 2p6 3s2 3p6 3d6 4s2"],[27,"Co","কোবাল্ট","Cobalt",58.933,4,9,"d","1s2 2s2 2p6 3s2 3p6 3d7 4s2"],[28,"Ni","নিকেল","Nickel",58.693,4,10,"d","1s2 2s2 2p6 3s2 3p6 3d8 4s2"],[29,"Cu","কপার","Copper",63.546,4,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s1"],[30,"Zn","জিঙ্ক","Zinc",65.382,4,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2"],[31,"Ga","গ্যালিয়াম","Gallium",69.723,4,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p1"],[32,"Ge","জার্মেনিয়াম","Germanium",72.631,4,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p2"],[33,"As","আর্সেনিক","Arsenic",74.922,4,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p3"],[34,"Se","সিলেনিয়াম","Selenium",78.972,4,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p4"],[35,"Br","ব্রোমিন","Bromine",79.904,4,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p5"],[36,"Kr","ক্রিপ্টন","Krypton",83.798,4,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6"],[37,"Rb","রুবিডিয়াম","Rubidium",85.468,5,1,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s1"],[38,"Sr","স্ট্রনশিয়াম","Strontium",87.621,5,2,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s2"],[39,"Y","ইট্রিয়াম","Yttrium",88.906,5,3,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d1 5s2"],[40,"Zr","জিরকোনিয়াম","Zirconium",91.224,5,4,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d2 5s2"],[41,"Nb","নিওবিয়াম","Niobium",92.906,5,5,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d4 5s1"],[42,"Mo","মলিবডেনাম","Molybdenum",95.951,5,6,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s1"],[43,"Tc","টেকনেশিয়াম","Technetium",98,5,7,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s2"],[44,"Ru","রুথেনিয়াম","Ruthenium",101.072,5,8,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d7 5s1"],[45,"Rh","রোডিয়াম","Rhodium",102.906,5,9,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d8 5s1"],[46,"Pd","প্যালেডিয়াম","Palladium",106.421,5,10,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10"],[47,"Ag","সিলভার","Silver",107.868,5,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s1"],[48,"Cd","ক্যাডমিয়াম","Cadmium",112.414,5,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2"],[49,"In","ইন্ডিয়াম","Indium",114.818,5,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p1"],[50,"Sn","টিন","Tin",118.711,5,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p2"],[51,"Sb","অ্যান্টিমনি","Antimony",121.76,5,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p3"],[52,"Te","টেলুরিয়াম","Tellurium",127.603,5,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p4"],[53,"I","আয়োডিন","Iodine",126.904,5,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p5"],[54,"Xe","জেনন","Xenon",131.294,5,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6"],[55,"Cs","সিজিয়াম","Cesium",132.905,6,1,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s1"],[56,"Ba","বেরিয়াম","Barium",137.328,6,2,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s2"],[57,"La","ল্যান্থানাম","Lanthanum",138.905,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 5d1 6s2"],[58,"Ce","সেরিয়াম","Cerium",140.116,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f1 5d1 6s2"],[59,"Pr","প্রাসিওডিমিয়াম","Praseodymium",140.908,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f3 6s2"],[60,"Nd","নিওডিমিয়াম","Neodymium",144.242,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f4 6s2"],[61,"Pm","প্রমিথিয়াম","Promethium",145,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f5 6s2"],[62,"Sm","সামারিয়াম","Samarium",150.362,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f6 6s2"],[63,"Eu","ইউরোপিয়াম","Europium",151.964,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f7 6s2"],[64,"Gd","গ্যাডোলিনিয়াম","Gadolinium",157.253,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f7 5d1 6s2"],[65,"Tb","টার্বিয়াম","Terbium",158.925,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f9 6s2"],[66,"Dy","ডিসপ্রোসিয়াম","Dysprosium",162.5,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f10 6s2"],[67,"Ho","হোলমিয়াম","Holmium",164.93,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f11 6s2"],[68,"Er","আরবিয়াম","Erbium",167.259,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f12 6s2"],[69,"Tm","থুলিয়াম","Thulium",168.934,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f13 6s2"],[70,"Yb","ইটারবিয়াম","Ytterbium",173.045,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 6s2"],[71,"Lu","লুটিশিয়াম","Lutetium",174.967,6,3,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d1 6s2"],[72,"Hf","হাফনিয়াম","Hafnium",178.492,6,4,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d2 6s2"],[73,"Ta","ট্যান্টালাম","Tantalum",180.948,6,5,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d3 6s2"],[74,"W","টাংস্টেন","Tungsten",183.841,6,6,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d4 6s2"],[75,"Re","রেনিয়াম","Rhenium",186.207,6,7,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d5 6s2"],[76,"Os","অসমিয়াম","Osmium",190.233,6,8,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d6 6s2"],[77,"Ir","ইরিডিয়াম","Iridium",192.217,6,9,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d7 6s2"],[78,"Pt","প্ল্যাটিনাম","Platinum",195.085,6,10,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d9 6s1"],[79,"Au","সোনা","Gold",196.967,6,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s1"],[80,"Hg","পারদ","Mercury",200.592,6,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2"],[81,"Tl","থ্যালিয়াম","Thallium",204.38,6,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p1"],[82,"Pb","সীসা","Lead",207.21,6,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p2"],[83,"Bi","বিস্মাথ","Bismuth",208.98,6,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p3"],[84,"Po","পোলোনিয়াম","Polonium",209,6,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p4"],[85,"At","অ্যাস্টাটাইন","Astatine",210,6,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p5"],[86,"Rn","রেডন","Radon",222,6,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6"],[87,"Fr","ফ্রান্সিয়াম","Francium",223,7,1,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 7s1"],[88,"Ra","রেডিয়াম","Radium",226,7,2,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 7s2"],[89,"Ac","অ্যাক্টিনিয়াম","Actinium",227,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 6d1 7s2"],[90,"Th","থোরিয়াম","Thorium",232.038,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 6d2 7s2"],[91,"Pa","প্রোট্যাক্টিনিয়াম","Protactinium",231.036,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f2 6d1 7s2"],[92,"U","ইউরেনিয়াম","Uranium",238.029,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f3 6d1 7s2"],[93,"Np","নেপচুনিয়াম","Neptunium",237,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f4 6d1 7s2"],[94,"Pu","প্লুটোনিয়াম","Plutonium",244,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f6 7s2"],[95,"Am","অ্যামেরিসিয়াম","Americium",243,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f7 7s2"],[96,"Cm","কিউরিয়াম","Curium",247,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f7 6d1 7s2"],[97,"Bk","বার্কেলিয়াম","Berkelium",247,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f9 7s2"],[98,"Cf","ক্যালিফোর্নিয়াম","Californium",251,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f10 7s2"],[99,"Es","আইনস্টাইনিয়াম","Einsteinium",252,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f11 7s2"],[100,"Fm","ফার্মিয়াম","Fermium",257,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f12 7s2"],[101,"Md","মেন্ডেলিভিয়াম","Mendelevium",258,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f13 7s2"],[102,"No","নোবেলিয়াম","Nobelium",259,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 7s2"],[103,"Lr","লরেনসিয়াম","Lawrencium",266,7,3,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 7s2 7p1"],[104,"Rf","রাদারফোর্ডিয়াম","Rutherfordium",267,7,4,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d2 7s2"],[105,"Db","ডুবনিয়াম","Dubnium",268,7,5,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d3 7s2"],[106,"Sg","সি বোর্জিয়াম","Seaborgium",269,7,6,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d4 7s2"],[107,"Bh","বোহরিয়াম","Bohrium",270,7,7,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d5 7s2"],[108,"Hs","হাসিয়াম","Hassium",269,7,8,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d6 7s2"],[109,"Mt","মেইটনেরিয়াম","Meitnerium",278,7,9,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d7 7s2"],[110,"Ds","ডামস্টাটিয়াম","Darmstadtium",281,7,10,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d9 7s1"],[111,"Rg","রন্টজেনিয়াম","Roentgenium",282,7,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s1"],[112,"Cn","কপারনিশিয়াম","Copernicium",285,7,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2"],[113,"Nh","নিহোনিয়াম","Nihonium",286,7,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p1"],[114,"Fl","ফ্লেরোভিয়াম","Flerovium",289,7,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p2"],[115,"Mc","মস্কোভিয়াম","Moscovium",289,7,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p3"],[116,"Lv","লিভারমোরিয়াম","Livermorium",293,7,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p4"],[117,"Ts","টেনেসিন","Tennessine",294,7,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p5"],[118,"Og","ওগানেসন","Oganesson",294,7,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p6"]];
 
-    const groupData = {
-        1: { title: "গ্রুপ ১ - ক্ষার ধাতু (Alkali Metals)", block: "s-block", config: "ns¹", features: ["এরা অত্যন্ত নরম ধাতু এবং পানির সাথে বিক্রিয়ায় শক্তিশালী ক্ষার ও H₂ গ্যাস তৈরি করে।", "যোজনী স্তরে ১টি ইলেকট্রন থাকায় এরা অত্যন্ত তীব্র ধনাত্মক (electropositive)।", "বাতাসের অক্সিজেনে দ্রুত জারিত হয় বলে এদের কেরোসিনে ডুবিয়ে রাখা হয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> লি না কে রুবি ছেঁচে ফেলেছে।<div class='moulo-list'>Li, Na, K, Rb, Cs, Fr</div>" },
-        2: { title: "গ্রুপ ২ - মৃৎক্ষার ধাতু (Alkaline Earth Metals)", block: "s-block", config: "ns²", features: ["এদের মাটিতে বিভিন্ন আকরিক ও কার্বনেট যৌগ হিসেবে পাওয়া যায়।", "এদের যোজনী ২ এবং এরা দ্বি-ধনাত্মক ক্যাটায়ন (M²⁺) গঠন করে।", "গ্রুপ ১-এর তুলনায় এরা সামান্য কম সক্রিয় হলেও ক্ষার তৈরি করে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> বিরিয়ানি মোগলাই কাবাব সরিয়ে বাটিতে রাখো।<div class='moulo-list'>Be, Mg, Ca, Sr, Ba, Ra</div>" },
-        3: { title: "গ্রুপ ৩ - স্ক্যান্ডিয়াম ও f-ব্লক পরিবার", block: "d-block / f-block", config: "(n-1)d¹ ns²", features: ["এরা অবস্থান্তর ধাতু এবং এর মধ্যে ল্যান্থানাইড ও অ্যাক্টিনাইড সারি অন্তর্ভুক্ত।", "এদের যৌগসমূহ সাধারণ প্যারাচৌম্বকীয় ধর্ম প্রদর্শন করে।"], trick: "<strong>মনে রাখার উপায়:</strong> Sc, Y, La, Ac" },
-        4: { title: "গ্রুপ ৪ - টাইটানিয়াম গ্রুপ", block: "d-block", config: "(n-1)d² ns²", features: ["উচ্চ গলনাঙ্ক বিশিষ্ট এবং অত্যন্ত শক্তিশালী ক্ষয়রোধকারী ধাতু।", "টাইটানিয়াম মহাকাশযান ও কৃত্রিম হাড়ের জয়েন্ট তৈরিতে বহুল ব্যবহৃত।"], trick: "<strong>মনে রাখার উপায়:</strong> Ti, Zr, Hf, Rf" },
-        5: { title: "গ্রুপ ৫ - ভ্যানাডিয়াম গ্রুপ", block: "d-block", config: "(n-1)d³ ns²", features: ["এরা বিভিন্ন পরিবর্তনশীল জারণ অবস্থা (Oxidation State) প্রদর্শন করে।", "ইস্পাতকে অতিরিক্ত শক্তিশালী করতে ভ্যানাডিয়াম অ্যালয় ব্যবহৃত হয়।"], trick: "<strong>মনে রাখার উপায়:</strong> V, Nb, Ta, Db" },
-        6: { title: "গ্রুপ ৬ - ক্রোমিয়াম গ্রুপ", block: "d-block", config: "(n-1)d⁵ ns¹", features: ["ক্রোমিয়াম স্টেইনলেস স্টিলে মরিচারোধক উপাদান হিসেবে ব্যবহৃত হয়।", "টাংস্টেন (W)-এর গলনাঙ্ক সকল ধাতুর মধ্যে সর্বোচ্চ (প্রায় ৩৪২২°C)।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ক্রোমিয়াম মলি টাংস্টেন।<div class='moulo-list'>Cr, Mo, W, Sg</div>" },
-        7: { title: "গ্রুপ ৭ - ম্যাঙ্গানিজ গ্রুপ", block: "d-block", config: "(n-1)d⁵ ns²", features: ["এরা ড্রাই সেল ব্যাটারি ও বিভিন্ন শিল্পকারখানায় ক্যাটালিস্ট হিসেবে ব্যবহৃত হয়।", "টেকনেশিয়াম (Tc) হলো প্রথম মানবসৃষ্ট কৃত্রিম তেজস্ক্রিয় মৌল।"], trick: "<strong>মনে রাখার উপায়:</strong> Mn, Tc, Re, Bh" },
-        8: { title: "গ্রুপ ৮ - আয়রন গ্রুপ", block: "d-block", config: "(n-1)d⁶ ns²", features: ["আয়রন (Fe) পৃথিবীর ভূত্বকের অন্যতম প্রধান ফেরোচৌম্বকীয় ধাতু।", "রক্তের হিমোগ্লোবিনের কেন্দ্রবিন্দুতে আয়রন ক্যাটায়ন বিদ্যমান।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ফেলে রুটি ওড়াও।<div class='moulo-list'>Fe, Ru, Os, Hs</div>" },
-        9: { title: "গ্রুপ ৯ - কোবাল্ট গ্রুপ", block: "d-block", config: "(n-1)d⁷ ns²", features: ["কোবাল্ট ভিটামিন B₁₂-এর অপরিহার্য উপাদান।", "উচ্চ তাপমাত্রাসহনশীল শক্তিশালী স্থায়ী চুম্বক তৈরিতে এরা ব্যবহৃত হয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> কোবাল্ট রড ইরিন।<div class='moulo-list'>Co, Rh, Ir, Mt</div>" },
-        10: { title: "গ্রুপ ১০ - নিকেল গ্রুপ", block: "d-block", config: "(n-1)d⁸ ns²", features: ["নিকেল ও প্লাটিনাম বিভিন্ন জৈব বিক্রিয়ায় শক্তিশালী অনুঘটক।", "এদের ক্ষয়রোধ ক্ষমতা দুর্দান্ত হওয়ায় অলঙ্কারে প্লেটিং করা হয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> নিকেলের পোড়া প্লাটিনাম।<div class='moulo-list'>Ni, Pd, Pt, Ds</div>" },
-        11: { title: "গ্রুপ ১১ - মুদ্রা ধাতু (Coinage Metals)", block: "d-block", config: "(n-1)d¹⁰ ns¹", features: ["প্রাচীনকাল থেকে মুদ্রা ও গয়না তৈরিতে এরা ব্যবহৃত হয়ে আসছে।", "কপার (Cu) এবং সিলভার (Ag) বিদ্যুতের উৎকৃষ্ট পরিবাহী।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> তামা রূপা সোনা।<div class='moulo-list'>Cu, Ag, Au, Rg</div>" },
-        12: { title: "গ্রুপ ১২ - জিংক গ্রুপ", block: "d-block", config: "(n-1)d¹⁰ ns²", features: ["এদের গলনাঙ্ক অন্যান্য ট্রানজিশন धातুর চেয়ে বেশ কম।", "পারদ (Hg) কক্ষ তাপমাত্রায় একমাত্র তরল ধাতু।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> জিংক ক্যাডমিয়াম পারদ।<div class='moulo-list'>Zn, Cd, Hg, Cn</div>" },
-        13: { title: "গ্রুপ ১৩ - বোরন পরিবার", block: "p-block", config: "ns² np¹", features: ["বোরন একটি অপধাতু এবং অ্যালুমিনিয়াম অত্যন্ত জনপ্রিয় হালকা ধাতু।", "এদের যোজনী ইলেকট্রন ৩টি এবং সাধারণ যোজনী ৩।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> বলগা গেল ইন্ডিয়া ও থাইল্যান্ড।<div class='moulo-list'>B, Al, Ga, In, Tl, Nh</div>" },
-        14: { title: "গ্রুপ ১৪ - কার্বন পরিবার", block: "p-block", config: "ns² np²", features: ["কার্বন ক্যাটিনেশন ধর্মের মাধ্যমে কোটি কোটি জৈব যৌগ তৈরি করে।", "সিলিকন (Si) ও জার্মেনিয়াম (Ge) আধুনিক আইসি ও সেমিকন্ডাক্টরের প্রাণ।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> কাল শুনলে সিনিয়র পাপ্পু কাঁদবে।<div class='moulo-list'>C, Si, Ge, Sn, Pb, Fl</div>" },
-        15: { title: "গ্রুপ ১৫ - নিকটোজেন (Pnictogens)", block: "p-block", config: "ns² np³", features: ["নিকটোজেন মানে দমবন্ধকর গ্যাস। নাইট্রোজেন বায়ুমণ্ডলে ৭৮% থাকে।", "ফসফরাস (P) উদ্ভিদের বিকাশ ও ম্যাচের কাঠি তৈরিতে লাগে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> নাগমা পাশা আজকে সব বেচবে।<div class='moulo-list'>N, P, As, Sb, Bi, Mc</div>" },
-        16: { title: "গ্রুপ ১৬ - চালকোজেন (Chalcogens)", block: "p-block", config: "ns² np⁴", features: ["চালকোজেন মানে আকরিক গঠনকারী মৌল।", "অক্সিজেন শ্বসনে এবং সালফার সালফিউরিক এসিড উৎপাদনে ব্যবহৃত হয়।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ও এস এস সিতে পড়ে।<div class='moulo-list'>O, S, Se, Te, Po, Lv</div>" },
-        17: { title: "গ্রুপ ১৭ - হ্যালোজেন গ্রুপ (Halogens)", block: "p-block", config: "ns² np⁵", features: ["হ্যালোজেন মানে সামুদ্রিক লবণ প্রস্তুতকারী তীব্র অধাতু।", "এদের যোজনী স্তরে ৭টি ইলেকট্রন থাকে এবং এরা একক ঋণাত্মক আয়ন (X⁻) গঠন করে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> ফেলে কাল বাজারে এল আতর।<div class='moulo-list'>F, Cl, Br, I, At, Ts</div>" },
-        18: { title: "গ্রুপ ১৮ - নিষ্ক্রিয় গ্যাস (Noble Gases)", block: "p-block", config: "ns² np⁶", features: ["অষ্টক পূর্ণ থাকায় এরা রাসায়নিকভাবে সম্পূর্ণ নিষ্ক্রিয় ও আসক্তিহীন।", "এরা সাধারণ তাপমাত্রায় একপরমাণুক গ্যাস হিসেবে থাকে।"], trick: "<strong>ম্যাজিক ছন্দ:</strong> হেলিনা আর করিমা জেগে রইল।<div class='moulo-list'>He, Ne, Ar, Kr, Xe, Rn, Og</div>" }
-    };
+const GD={
+1:{t:"গ্রুপ ১ - ক্ষার ধাতু (Alkali Metals)",b:"s-block",c:"ns¹",v:"১",f:["এরা অত্যন্ত নরম ধাতু এবং পানির সাথে বিক্রিয়ায় শক্তিশালী ক্ষার ও H₂ গ্যাস তৈরি করে।","যোজনী স্তরে ১টি ইলেকট্রন থাকায় এরা অত্যন্ত তীব্র ধনাত্মক (electropositive)।","বাতাসের অক্সিজেনে দ্রুত জারিত হয় বলে এদের কেরোসিনে ডুবিয়ে রাখা হয়।"],k:"<strong>ম্যাজিক ছন্দ:</strong> লি না কে রুবি ছেঁচে ফেলেছে।",m:"Li, Na, K, Rb, Cs, Fr"},
+2:{t:"গ্রুপ ২ - মৃৎক্ষার ধাতু (Alkaline Earth Metals)",b:"s-block",c:"ns²",v:"২",f:["এদের মাটিতে বিভিন্ন আকরিক ও কার্বনেট যৌগ হিসেবে পাওয়া যায়।","এদের যোজনী ২ এবং এরা দ্বি-ধনাত্মক ক্যাটায়ন (M²⁺) গঠন করে।","গ্রুপ ১-এর তুলনায় এরা সামান্য কম সক্রিয় হলেও ক্ষার তৈরি করে।"],k:"<strong>ম্যাজিক ছন্দ:</strong> বিরিয়ানি মোগলাই কাবাব সরিয়ে বাটিতে রাখো।",m:"Be, Mg, Ca, Sr, Ba, Ra"},
+3:{t:"গ্রুপ ৩ - স্ক্যান্ডিয়াম ও f-ব্লক পরিবার",b:"d-block / f-block",c:"(n-1)d¹ ns²",v:"৩ (d¹s²)",f:["এরা অবস্থান্তর ধাতু; এদের নিচে ল্যান্থানাইড ও অ্যাক্টিনাইড সারি আছে (নিচের বাটন দেখো)।","এদের যৌগসমূহ সাধারণ প্যারাচৌম্বকীয় ধর্ম প্রদর্শন করে।"],k:"<strong>মনে রাখার উপায়:</strong> স্ক্যান্ডিয়াম, ইট্রিয়াম, ল্যান্থানাম, অ্যাক্টিনিয়াম",m:"Sc, Y, La, Ac"},
+4:{t:"গ্রুপ ৪ - টাইটানিয়াম গ্রুপ",b:"d-block",c:"(n-1)d² ns²",v:"৪ (d²s²)",f:["উচ্চ গলনাঙ্ক বিশিষ্ট এবং অত্যন্ত শক্তিশালী ক্ষয়রোধকারী ধাতু।","টাইটানিয়াম মহাকাশযান ও কৃত্রিম হাড়ের জয়েন্ট তৈরিতে বহুল ব্যবহৃত।"],k:"<strong>মনে রাখার উপায়:</strong> Ti, Zr, Hf, Rf",m:"Ti, Zr, Hf, Rf"},
+5:{t:"গ্রুপ ৫ - ভ্যানাডিয়াম গ্রুপ",b:"d-block",c:"(n-1)d³ ns²",v:"৫ (d³s²)",f:["এরা বিভিন্ন পরিবর্তনশীল জারণ অবস্থা (Oxidation State) প্রদর্শন করে।","ইস্পাতকে অতিরিক্ত শক্তিশালী করতে ভ্যানাডিয়াম অ্যালয় ব্যবহৃত হয়।"],k:"<strong>মনে রাখার উপায়:</strong> V, Nb, Ta, Db",m:"V, Nb, Ta, Db"},
+6:{t:"গ্রুপ ৬ - ক্রোমিয়াম গ্রুপ",b:"d-block",c:"(n-1)d⁵ ns¹",v:"৬ (d⁵s¹)",f:["ক্রোমিয়াম স্টেইনলেস স্টিলে মরিচারোধক উপাদান হিসেবে ব্যবহৃত হয়।","টাংস্টেন (W)-এর গলনাঙ্ক সকল ধাতুর মধ্যে সর্বোচ্চ (প্রায় ৩৪২২°C)।"],k:"<strong>ম্যাজিক ছন্দ:</strong> ক্রোমিয়াম মলি টাংস্টেন।",m:"Cr, Mo, W, Sg"},
+7:{t:"গ্রুপ ৭ - ম্যাঙ্গানিজ গ্রুপ",b:"d-block",c:"(n-1)d⁵ ns²",v:"৭ (d⁵s²)",f:["এরা ড্রাই সেল ব্যাটারি ও বিভিন্ন শিল্পকারখানায় ক্যাটালিস্ট হিসেবে ব্যবহৃত হয়।","টেকনেশিয়াম (Tc) হলো প্রথম মানবসৃষ্ট কৃত্রিম তেজস্ক্রিয় মৌল।"],k:"<strong>মনে রাখার উপায়:</strong> Mn, Tc, Re, Bh",m:"Mn, Tc, Re, Bh"},
+8:{t:"গ্রুপ ৮ - আয়রন গ্রুপ",b:"d-block",c:"(n-1)d⁶ ns²",v:"৮ (d⁶s²)",f:["আয়রন (Fe) পৃথিবীর ভূত্বকের অন্যতম প্রধান ফেরোচৌম্বকীয় ধাতু।","রক্তের হিমোগ্লোবিনের কেন্দ্রবিন্দুতে আয়রন ক্যাটায়ন বিদ্যমান।"],k:"<strong>ম্যাজিক ছন্দ:</strong> ফেলে রুটি ওড়াও।",m:"Fe, Ru, Os, Hs"},
+9:{t:"গ্রুপ ৯ - কোবাল্ট গ্রুপ",b:"d-block",c:"(n-1)d⁷ ns²",v:"৯ (d⁷s²)",f:["কোবাল্ট ভিটামিন B₁₂-এর অপরিহার্য উপাদান।","উচ্চ তাপমাত্রাসহনশীল শক্তিশালী স্থায়ী চুম্বক তৈরিতে এরা ব্যবহৃত হয়।"],k:"<strong>ম্যাজিক ছন্দ:</strong> কোবাল্ট রড ইরিন।",m:"Co, Rh, Ir, Mt"},
+10:{t:"গ্রুপ ১০ - নিকেল গ্রুপ",b:"d-block",c:"(n-1)d⁸ ns²",v:"১০ (d⁸s²)",f:["নিকেল ও প্লাটিনাম বিভিন্ন জৈব বিক্রিয়ায় শক্তিশালী অনুঘটক।","এদের ক্ষয়রোধ ক্ষমতা দুর্দান্ত হওয়ায় অলঙ্কারে প্লেটিং করা হয়।"],k:"<strong>ম্যাজিক ছন্দ:</strong> নিকেলের পোড়া প্লাটিনাম।",m:"Ni, Pd, Pt, Ds"},
+11:{t:"গ্রুপ ১১ - মুদ্রা ধাতু (Coinage Metals)",b:"d-block",c:"(n-1)d¹⁰ ns¹",v:"১১ (d¹⁰s¹)",f:["প্রাচীনকাল থেকে মুদ্রা ও গয়না তৈরিতে এরা ব্যবহৃত হয়ে আসছে।","কপার (Cu) এবং সিলভার (Ag) বিদ্যুতের উৎকৃষ্ট পরিবাহী।"],k:"<strong>ম্যাজিক ছন্দ:</strong> তামা রূপা সোনা।",m:"Cu, Ag, Au, Rg"},
+12:{t:"গ্রুপ ১২ - জিংক গ্রুপ",b:"d-block",c:"(n-1)d¹⁰ ns²",v:"১২ (d¹⁰s²)",f:["এদের গলনাঙ্ক অন্যান্য ট্রানজিশন ধাতুর চেয়ে বেশ কম।","পারদ (Hg) কক্ষ তাপমাত্রায় একমাত্র তরল ধাতু।"],k:"<strong>ম্যাজিক ছন্দ:</strong> জিংক ক্যাডমিয়াম পারদ।",m:"Zn, Cd, Hg, Cn"},
+13:{t:"গ্রুপ ১৩ - বোরন পরিবার",b:"p-block",c:"ns² np¹",v:"৩",f:["বোরন একটি অপধাতু এবং অ্যালুমিনিয়াম অত্যন্ত জনপ্রিয় হালকা ধাতু।","এদের যোজনী ইলেকট্রন ৩টি এবং সাধারণ যোজনী ৩।"],k:"<strong>ম্যাজিক ছন্দ:</strong> বলগা গেল ইন্ডিয়া ও থাইল্যান্ড।",m:"B, Al, Ga, In, Tl, Nh"},
+14:{t:"গ্রুপ ১৪ - কার্বন পরিবার",b:"p-block",c:"ns² np²",v:"৪",f:["কার্বন ক্যাটিনেশন ধর্মের মাধ্যমে কোটি কোটি জৈব যৌগ তৈরি করে।","সিলিকন (Si) ও জার্মেনিয়াম (Ge) আধুনিক আইসি ও সেমিকন্ডাক্টরের প্রাণ।"],k:"<strong>ম্যাজিক ছন্দ:</strong> কাল শুনলে সিনিয়র পাপ্পু কাঁদবে।",m:"C, Si, Ge, Sn, Pb, Fl"},
+15:{t:"গ্রুপ ১৫ - নিকটোজেন (Pnictogens)",b:"p-block",c:"ns² np³",v:"৫",f:["নিকটোজেন মানে দমবন্ধকর গ্যাস। নাইট্রোজেন বায়ুমণ্ডলে ৭৮% থাকে।","ফসফরাস (P) উদ্ভিদের বিকাশ ও ম্যাচের কাঠি তৈরিতে লাগে।"],k:"<strong>ম্যাজিক ছন্দ:</strong> নাগমা পাশা আজকে সব বেচবে।",m:"N, P, As, Sb, Bi, Mc"},
+16:{t:"গ্রুপ ১৬ - চালকোজেন (Chalcogens)",b:"p-block",c:"ns² np⁴",v:"৬",f:["চালকোজেন মানে আকরিক গঠনকারী মৌল।","অক্সিজেন শ্বসনে এবং সালফার সালফিউরিক এসিড উৎপাদনে ব্যবহৃত হয়।"],k:"<strong>ম্যাজিক ছন্দ:</strong> ও এস এস সিতে পড়ে।",m:"O, S, Se, Te, Po, Lv"},
+17:{t:"গ্রুপ ১৭ - হ্যালোজেন গ্রুপ (Halogens)",b:"p-block",c:"ns² np⁵",v:"৭",f:["হ্যালোজেন মানে সামুদ্রিক লবণ প্রস্তুতকারী তীব্র অধাতু।","এদের যোজনী স্তরে ৭টি ইলেকট্রন থাকে এবং এরা একক ঋণাত্মক আয়ন (X⁻) গঠন করে।"],k:"<strong>ম্যাজিক ছন্দ:</strong> ফেলে কাল বাজারে এল আতর।",m:"F, Cl, Br, I, At, Ts"},
+18:{t:"গ্রুপ ১৮ - নিষ্ক্রিয় গ্যাস (Noble Gases)",b:"p-block",c:"ns² np⁶",v:"৮ (He: ২)",f:["অষ্টক পূর্ণ থাকায় এরা রাসায়নিকভাবে সম্পূর্ণ নিষ্ক্রিয় ও আসক্তিহীন।","এরা সাধারণ তাপমাত্রায় একপরমাণুক গ্যাস হিসেবে থাকে।"],k:"<strong>ম্যাজিক ছন্দ:</strong> হেলিনা আর করিমা জেগে রইল।",m:"He, Ne, Ar, Kr, Xe, Rn, Og"},
+Ln:{t:"ল্যান্থানাইড (Ce – Lu) — 4f সারি",b:"f-block",c:"4fⁿ 6s²",v:"—",f:["৪f উপস্তর ক্রমে ভরাট হয়; রাসায়নিক ধর্ম প্রায় একই রকম, তাই পৃথক করা কঠিন।","এদের বিরল মৃত্তিকা ধাতু (Rare Earth) বলে; নিওডিমিয়াম (Nd) শক্তিশালী স্থায়ী চুম্বকে ব্যবহৃত হয়।","ল্যান্থানাইড সংকোচন: পারমাণবিক সংখ্যা বাড়ার সাথে আয়নের আকার ক্রমশ ছোট হয়।"],k:"<strong>ক্রম:</strong> সেরিয়াম থেকে লুটিশিয়াম — ১৪টি মৌল।",m:"Ce, Pr, Nd, Pm, Sm, Eu, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu"},
+An:{t:"অ্যাক্টিনাইড (Th – Lr) — 5f সারি",b:"f-block",c:"5fⁿ 7s²",v:"—",f:["সবগুলোই তেজস্ক্রিয়; ইউরেনিয়াম (U) ও প্লুটোনিয়াম (Pu) পারমাণবিক জ্বালানি ও অস্ত্রে ব্যবহৃত।","থোরিয়াম (Th) ভবিষ্যতের সম্ভাব্য পারমাণবিক জ্বালানি; ইউরেনিয়ামের পরের বেশিরভাগ মৌল কৃত্রিম।"],k:"<strong>ক্রম:</strong> থোরিয়াম থেকে লরেনসিয়াম — ১৪টি মৌল।",m:"Th, Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, No, Lr"}
+};
 
-    // Render Grid Elements Dynamically
-    function buildGrid() {
-        const grid = document.getElementById('periodicGrid');
-        grid.innerHTML = '';
-
-        let currentPeriod = 1;
-        
-        elementsData.forEach((el, index) => {
-            // Spacer adjustments for authentic periodic table shape
-            if(el.p === 1 && el.g === 18) {
-                grid.innerHTML += `<div class="space-p1"></div>`;
-            } else if((el.p === 2 || el.p === 3) && el.g === 13) {
-                grid.innerHTML += `<div class="space-p2"></div>`;
-            }
-
-            grid.innerHTML += `
-                <div class="cell" data-group="${el.g}" data-symbol="${el.s.toLowerCase()}" data-num="${el.n}" onclick="highlightGroup(${el.g})">
-                    <span class="num">${el.n}</span>
-                    <span class="sym">${el.s}</span>
-                </div>
-            `;
-        });
-    }
-
-    // Highlight Group Function
-    function highlightGroup(groupNum, btnElement = null) {
-        // Highlight active button
-        document.querySelectorAll('.group-btn').forEach(btn => btn.classList.remove('active'));
-        const targetBtn = btnElement || document.getElementById(`btn-g${groupNum}`);
-        if(targetBtn) targetBtn.classList.add('active');
-
-        // Highlight cells
-        document.querySelectorAll('.cell').forEach(cell => {
-            if (cell.getAttribute('data-group') == groupNum) {
-                cell.classList.add('highlight');
-            } else {
-                cell.classList.remove('highlight');
-            }
-        });
-
-        // Load Details in Right Panel
-        const data = groupData[groupNum];
-        if(!data) return;
-
-        const infoPanel = document.getElementById('info-panel');
-        let featuresHTML = '';
-        data.features.forEach(f => { featuresHTML += `<li>${f}</li>`; });
-
-        infoPanel.innerHTML = `
-            <div class="info-box">
-                <h2>${data.title}</h2>
-                <div class="meta-pills">
-                    <span class="pill">ব্লক: ${data.block}</span>
-                    <span class="pill">ইলেকট্রন বিন্যাস: ${data.config}</span>
-                </div>
-                <div class="info-section">
-                    <h3>📢 প্রধান বৈশিষ্ট্যসমূহ:</h3>
-                    <ul>${featuresHTML}</ul>
-                </div>
-                <div class="info-section">
-                    <h3>💡 মনে রাখার ম্যাজিক ট্রিকস:</h3>
-                    <div class="trick-card">${data.trick}</div>
-                </div>
-            </div>
-        `;
-    }
-
-    // Search Feature
-    function searchElement() {
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        if(!query) return;
-
-        const matched = elementsData.find(el => 
-            el.s.toLowerCase() === query || el.n.toString() === query
-        );
-
-        if(matched) {
-            highlightGroup(matched.g);
-        }
-    }
-
-    // Initialize Grid on Page Load
-    buildGrid();
+// element list in the page's own layout: f-row = z58-71 & 90-103 ; La/Ac stay in group 3
+const ELS=RAW.map(r=>{const z=r[0];let g=r[6],row=r[5]+1,col=g+1,fk=null;
+  if(z>=58&&z<=71){fk='Ln';row=10;col=z-58+3;g=null}
+  else if(z>=90&&z<=103){fk='An';row=11;col=z-90+3;g=null}
+  else if(z==57||z==89){g=3;col=4}
+  return {z,s:r[1],bn:r[2],en:r[3],m:r[4],p:r[5],g,b:z>=57&&z<=71||z>=89&&z<=103?'f':r[7],ec:r[8],row,col,fk}});
+const BYZ={};ELS.forEach(e=>BYZ[e.z]=e);
+const sup=t=>t?t.replace(/([spdf])(\d+)/g,(m,a,n)=>a+n.replace(/\d/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[d])):'—';
+const pg=$('pg');let sel=null,grp=null,showNm=true;
+function build(){
+  let h='<div class="pl"></div>';
+  for(let g=1;g<=18;g++)h+=`<div class="gl" style="grid-row:1;grid-column:${g+1}">${bn(g)}</div>`;
+  for(let p=1;p<=7;p++)h+=`<div class="pl" style="grid-row:${p+1};grid-column:1">${bn(p)}</div>`;
+  h+=`<div style="grid-row:9;height:6px;grid-column:1/-1"></div><div class="fl" style="grid-row:10">ল্যান্থা-<br>নাইড</div><div class="fl" style="grid-row:11">অ্যাক্টি-<br>নাইড</div>`;
+  ELS.forEach(e=>{const lab=e.z==57?'La*':e.z==89?'Ac*':e.s;h+=`<div class="ce" tabindex="0" role="button" aria-label="${e.bn}" data-z="${e.z}" data-b="${e.b}" style="grid-row:${e.row+ (e.fk?0:0)};grid-column:${e.col}"><span class="z">${bn(e.z)}</span><span class="s">${lab}</span><span class="nm">${e.bn}</span></div>`});
+  pg.innerHTML=h;
+  // fix rows: main period p -> grid-row p+1 (f rows already 10/11)
+  pg.querySelectorAll('.ce').forEach(c=>{const e=BYZ[+c.dataset.z];if(!e.fk)c.style.gridRow=e.p+1;else c.style.gridRow=e.row});
+  pg.querySelectorAll('.ce').forEach(c=>{c.onclick=()=>pickEl(+c.dataset.z);c.onkeydown=ev=>{if(ev.key=='Enter'||ev.key==' '){ev.preventDefault();pickEl(+c.dataset.z)}}});
+  let b='';for(let g=1;g<=18;g++)b+=`<button class="gb" data-g="${g}">${bn(g)}</button>`;b+=`<button class="gb" data-g="Ln">Ln</button><button class="gb" data-g="An">An</button>`;
+  $('gbtns').innerHTML=b;$('gbtns').querySelectorAll('.gb').forEach(x=>x.onclick=()=>pickG(x.dataset.g));
+  $('gbtns').querySelectorAll('.gb').forEach(x=>{const g=x.dataset.g;x.title=GD[g].t});
+}
+function key(e){return e.fk||e.g}
+function pickG(g,noHash){g=isNaN(g)?g:+g;grp=g;sel=null;paint();render();if(!noHash)history.replaceState(null,'','#g'+g)}
+function pickEl(z){const e=BYZ[z];sel=z;grp=key(e);paint();render();history.replaceState(null,'','#'+e.s.replace('*',''))}
+function paint(){
+  pg.classList.toggle('has',grp!=null);
+  pg.querySelectorAll('.ce').forEach(c=>{const e=BYZ[+c.dataset.z];c.classList.toggle('hl',grp!=null&&key(e)==grp);c.classList.toggle('sel',sel==e.z)});
+  document.querySelectorAll('.gb').forEach(b=>b.classList.toggle('on',String(b.dataset.g)==String(grp)));
+}
+function render(){
+  const d=GD[grp];if(!d){return}
+  const mem=ELS.filter(e=>key(e)==grp);
+  let el='';
+  if(sel){const e=BYZ[sel];el=`<div class="ecard"><h4>${e.bn} <small style="color:var(--text-muted)">(${e.en})</small></h4><table><tr><td>প্রতীক</td><td><b>${e.s}</b> · Z = ${bn(e.z)}</td></tr><tr><td>পারমাণবিক ভর</td><td>${bn(e.m.toFixed(3).replace(/\.?0+$/,''))}</td></tr><tr><td>পর্যায় / গ্রুপ</td><td>${bn(e.p)} / ${e.g?bn(e.g):(e.fk=='Ln'?'ল্যান্থানাইড':'অ্যাক্টিনাইড')}</td></tr><tr><td>ব্লক</td><td>${e.b}-block</td></tr><tr><td>ইলেকট্রন বিন্যাস</td><td>${sup(e.ec)}</td></tr></table><a href="ptable.html#${e.s}">🔎 বিস্তারিত দেখো (পর্যায় সারণি পেজে) →</a></div>`}
+  $('panel').innerHTML=`<h2>${d.t}</h2>
+  <div class="pills"><span class="pl2">ব্লক: ${d.b}</span><span class="pl2">বিন্যাস: ${d.c}</span><span class="pl2">যোজ্যতা e⁻: ${d.v}</span><span class="pl2">${bn(mem.length)}টি মৌল</span></div>
+  <div class="sec"><h3>📢 প্রধান বৈশিষ্ট্যসমূহ</h3><ul>${d.f.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+  <div class="sec"><h3>💡 মনে রাখার ম্যাজিক ট্রিকস</h3><div class="trick">${d.k}<div class="ml">${d.m}</div></div></div>
+  <div class="sec"><h3>🧪 এই গ্রুপের মৌল</h3><div class="chips">${mem.map(e=>`<button class="chip" data-z="${e.z}">${e.s.replace('*','')} · ${e.bn}</button>`).join('')}</div></div>${el}`;
+  $('panel').querySelectorAll('.chip').forEach(c=>c.onclick=()=>pickEl(+c.dataset.z));
+}
+// search
+const q=$('q'),sg=$('sug');let items=[],si=-1;
+function search(){const v=q.value.trim().toLowerCase();si=-1;if(!v){sg.style.display='none';return}
+  items=ELS.filter(e=>e.s.toLowerCase().replace('*','')==v||String(e.z)==v||e.en.toLowerCase().startsWith(v)||e.bn.startsWith(q.value.trim())||e.s.toLowerCase().startsWith(v)).slice(0,7);
+  items.sort((a,b)=>(a.s.toLowerCase()==v||String(a.z)==v?-1:0)-(b.s.toLowerCase()==v||String(b.z)==v?-1:0));
+  sg.innerHTML=items.map((e,i)=>`<button data-i="${i}"><b>${e.s.replace('*','')}</b>${e.bn} · ${e.en} <span style="margin-left:auto;color:var(--text-muted)">${bn(e.z)}</span></button>`).join('');
+  sg.style.display=items.length?'block':'none';sg.querySelectorAll('button').forEach(b=>b.onclick=()=>choose(+b.dataset.i))}
+function choose(i){if(!items[i])return;pickEl(items[i].z);sg.style.display='none';q.value='';q.blur()}
+q.oninput=search;
+q.onkeydown=e=>{const bs=[...sg.querySelectorAll('button')];if(e.key=='ArrowDown'){si=Math.min(bs.length-1,si+1)}else if(e.key=='ArrowUp'){si=Math.max(0,si-1)}else if(e.key=='Enter'){choose(si<0?0:si);return}else return;e.preventDefault();bs.forEach((b,i)=>b.classList.toggle('on',i==si))};
+document.addEventListener('click',e=>{if(!e.target.closest('.search'))sg.style.display='none'});
+// toggles
+$('tBlk').onclick=()=>{pg.classList.toggle('blk');$('tBlk').classList.toggle('on')};
+$('tNm').onclick=()=>{showNm=!showNm;pg.querySelectorAll('.nm').forEach(n=>n.style.display=showNm?'':'none');$('tNm').classList.toggle('on',showNm)};$('tNm').classList.add('on');
+$('tClr').onclick=()=>{grp=null;sel=null;paint();$('panel').innerHTML='<div class="empty">কিছু নির্বাচন করা নেই। গ্রুপ বাটন, সারণির ঘর বা সার্চ ব্যবহার করো।</div>';history.replaceState(null,'',location.pathname)};
+// keyboard
+const ORD=[...Array(18).keys()].map(i=>i+1).concat(['Ln','An']);
+document.addEventListener('keydown',e=>{if(e.target.tagName=='INPUT')return;if(e.key!='ArrowRight'&&e.key!='ArrowLeft')return;const i=ORD.findIndex(x=>String(x)==String(grp));const n=e.key=='ArrowRight'?(i<0?0:(i+1)%ORD.length):(i<=0?ORD.length-1:i-1);pickG(ORD[n]);e.preventDefault()});
+$('themeBtn').onclick=()=>{const n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';try{localStorage.setItem('theme',n)}catch(e){}document.documentElement.setAttribute('data-theme',n)};
+build();
+(function(){const h=decodeURIComponent(location.hash.slice(1));if(!h)return;if(/^g(\d+|Ln|An)$/.test(h))pickG(h.slice(1),1);else{const e=ELS.find(x=>x.s.replace('*','').toLowerCase()==h.toLowerCase());if(e)pickEl(e.z)}})();
 </script>
-
 </body>
 </html>
