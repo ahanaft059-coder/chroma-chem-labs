@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>পানির কাঠিন্য ও সাবান পরীক্ষা ল্যাব | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.prog{height:8px;border-radius:8px;background:var(--card-solid);border:1px solid var(--border-color);overflow:hidden;margin-bottom:14px}.prog i{display:block;height:100%;width:0;background:var(--gradient-primary);transition:width .4s}
+.tagx{float:right;font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.35)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.scroll{overflow-x:auto}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.ob.on{border-color:#a855f7;background:rgba(168,85,247,.18);box-shadow:0 0 14px rgba(168,85,247,.35)}
+.ob:hover{transform:translateY(-1px)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.pst h3{margin:0 0 6px;font-size:17px}.pst p{margin:6px 0;line-height:1.8;font-size:14.5px}
+.pst .lbl{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-top:10px}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.msg.ok{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4)}.msg.bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4)}
+table.rt{width:100%;border-collapse:collapse;font-size:14px}table.rt td,table.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}
+table.rt th{color:var(--text-muted);font-size:12.5px}
+.stars{font-size:26px;letter-spacing:4px}
+.res{margin-top:10px;padding:10px 13px;border-radius:12px;background:var(--card-solid);border:1px dashed var(--border-color);font-size:14px;line-height:1.8}
+@keyframes inv{0%{transform:rotate(0)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}
+.inv{animation:inv .7s ease}
+@keyframes stir{0%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}100%{transform:rotate(-7deg)}}
+.stirring{animation:stir .45s ease 2}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Digital Lab</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="digitallab.html">← <span class="long">ল্যাব হাবে ফিরে যান</span></a>
+    </div>
+  </header>
+  <section class="hero">
+    <span class="pill">💦 পরিমাণগত রসায়ন · পানির গুণাগুণ</span>
+    <h1><span class="em">💦</span> পানির কাঠিন্য ও সাবান পরীক্ষা ল্যাব</h1>
+    <p>সাবান দ্রবণ ফোঁটা ফোঁটা করে দিয়ে কত সাবান লাগে দেখো — যত বেশি, তত কঠিন পানি! তারপর ফুটিয়ে, ওয়াশিং সোডা বা আয়ন-বিনিময় দিয়ে কাঠিন্য দূর করো।</p>
+  </section>
+  <div class="tabs" style="margin-top:0">
+    <button class="tab on" data-m="soap">🧼 সাবান পরীক্ষা</button>
+    <button class="tab" data-m="treat">🧪 কাঠিন্য দূরীকরণ</button>
+  </div>
+  <div class="lab">
+    <section class="card stage">
+      <h2>🔬 পরীক্ষার টেবিল <span class="tagx" id="stageTag">নমুনা</span></h2>
+      <svg id="svg" viewBox="0 0 400 400" role="img" aria-label="নমুনা পানির বোতল">
+        <defs>
+          <linearGradient id="glassG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".3" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".3"/></linearGradient>
+          <clipPath id="clipBt"><path d="M150 120 V150 Q110 170 110 215 V320 Q110 345 135 345 H265 Q290 345 290 320 V215 Q290 170 250 150 V120 Z"/></clipPath>
+        </defs>
+        <rect x="14" y="360" width="372" height="12" rx="6" fill="var(--stand)" stroke="var(--border-color)"/>
+        <g id="drp" style="transform-origin:200px 30px"><rect x="193" y="10" width="14" height="60" rx="5" fill="#64748b"/><path d="M196 70 L204 70 L200 90 Z" fill="#94a3b8"/><circle id="dd" cx="200" cy="95" r="0" fill="#e2e8f0"/></g>
+        <g clip-path="url(#clipBt)">
+          <rect id="wat" x="100" y="190" width="200" height="160" fill="rgba(160,210,255,.3)" style="transition:fill .8s"/>
+          <rect id="scum" x="100" y="190" width="200" height="160" fill="#f1f5f9" opacity="0" style="transition:opacity .8s"/>
+          <g id="flakes"></g>
+          <g id="foam"></g>
+        </g>
+        <path d="M150 120 V150 Q110 170 110 215 V320 Q110 345 135 345 H265 Q290 345 290 320 V215 Q290 170 250 150 V120" fill="url(#glassG)" stroke="var(--glass)" stroke-width="2.5"/>
+        <rect x="146" y="104" width="108" height="16" rx="4" fill="#7c3aed" opacity=".85"/>
+        <text id="bT" x="200" y="272" text-anchor="middle" font-size="12" font-weight="800" fill="var(--text-color)" font-family="inherit"></text>
+        <text id="cT" x="200" y="388" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-family="inherit"></text>
+        <g id="bEmoji"></g>
+      </svg>
+      <div class="live" id="live">একটি পানির নমুনা বেছে নাও।</div>
+      <div class="hud"><div class="box"><small id="h1l">নমুনা</small><b id="h1">—</b></div><div class="box"><small id="h2l">সাবান দ্রবণ</small><b id="h2">০.০ mL</b></div></div>
+    </section>
+    <section>
+      <div class="card"><h2>💧 পানির নমুনা</h2><div class="opts" id="samps"></div></div>
+
+      <div id="soapP" class="card" style="margin-top:22px"><h2>🧼 সাবান দ্রবণ দিয়ে টাইট্রেশন</h2>
+        <p style="font-size:14px;line-height:1.8;margin:0">৫০ mL নমুনায় প্রমিত সাবান দ্রবণ ফোঁটা ফোঁটা করে দাও (১ mL ≈ ১ mg CaCO₃)। প্রতিবার ঝাঁকিয়ে দেখো — <b>৫ মিনিট স্থায়ী ফেনা</b> হলে শেষ বিন্দু।</p>
+        <div class="row"><button class="btn ghost" data-s="2">+২ mL</button><button class="btn ghost" data-s="0.5">+০.৫ mL</button><button class="btn ghost" data-s="0.1">+০.১ mL</button><button class="btn ghost" id="rst">🔁 শুরু থেকে</button></div>
+        <div class="row"><button class="btn" id="shake">🫨 ঝাঁকাও ও ফেনা দেখো</button><button class="btn" id="rec">📝 স্থায়ী ফেনা — রিডিং নাও</button></div>
+        <div id="smsg"></div>
+        <div id="calc" style="display:none">
+          <div class="res"><b>সূত্র:</b> কঠিন্য (ppm CaCO₃) = (V − ০.৩) × ২০ &nbsp;<small>(০.৩ mL = ফেনা তৈরির ব্ল্যাংক)</small></div>
+          <div class="row"><label>তোমার হিসাব (ppm)<br><input class="num" id="ans" inputmode="decimal" placeholder="যেমন 150"></label><button class="btn" id="chk">যাচাই</button></div><div id="cres"></div>
+        </div>
+      </div>
+
+      <div id="treatP" class="card" style="margin-top:22px;display:none"><h2>🧪 কাঠিন্য দূর করো</h2>
+        <div class="row" style="margin-top:0"><button class="btn ghost" id="tTest">🧼 সাবান পরীক্ষা (দ্রুত)</button><button class="btn ghost" id="tBoil">🔥 ফুটাও</button><button class="btn ghost" id="tLime">🪨 চুন (Ca(OH)₂)</button><button class="btn ghost" id="tIon">♻ আয়ন-বিনিময় রেজিন</button></div>
+        <div class="row"><label>ওয়াশিং সোডা Na₂CO₃ (g/L)<br><input class="num" id="dose" inputmode="decimal" value="0.5"></label><button class="btn ghost" id="tSoda">🧂 ওয়াশিং সোডা দাও</button><button class="btn ghost" id="tNew">🔁 নমুনা পুনরায়</button></div>
+        <div id="tmsg"></div>
+        <div class="scroll"><table class="rt" id="tbl"><tr><th>ধাপ</th><th>সাবান (mL)</th><th>কঠিন্য (ppm)</th><th>অবশিষ্ট</th></tr></table></div>
+      </div>
+    </section>
+  </div>
+  <div class="tabs">
+    <button class="tab on" data-p="p1">📘 তত্ত্ব</button>
+    <button class="tab" data-p="p2">⚗️ বিক্রিয়া</button>
+    <button class="tab" data-p="p3">⚠️ সতর্কতা</button>
+    <button class="tab" data-p="p4">🎓 ভাইভা</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1">
+      <h3>পানির কাঠিন্য কী?</h3>
+      <p>পানিতে দ্রবীভূত Ca²⁺ ও Mg²⁺ আয়ন (বাইকার্বনেট, ক্লোরাইড ও সালফেট রূপে) থাকলে সাবান ফেনা দেয় না, বরং সাদা দই-সদৃশ অধঃক্ষেপ (scum) তৈরি করে — একে কঠিন পানি বলে।</p>
+      <div class="scroll"><table class="rt" style="min-width:420px"><tr><th>মোট কঠিন্য (ppm CaCO₃)</th><th>শ্রেণি</th></tr><tr><td>০–৬০</td><td>নরম</td></tr><tr><td>৬০–১২০</td><td>মাঝারি কঠিন</td></tr><tr><td>১২০–১৮০</td><td>কঠিন</td></tr><tr><td>১৮০+</td><td>খুব কঠিন</td></tr></table></div>
+      <h3>অস্থায়ী ও স্থায়ী কাঠিন্য</h3>
+      <ul><li><b>অস্থায়ী:</b> Ca(HCO₃)₂ ও Mg(HCO₃)₂-এর কারণে। ফুটালে দূর হয়।</li><li><b>স্থায়ী:</b> Ca/Mg-এর ক্লোরাইড ও সালফেটের কারণে (CaSO₄, MgCl₂)। ফুটালে যায় না — ওয়াশিং সোডা বা আয়ন-বিনিময় লাগে।</li></ul>
+      <h3>সাবান পরীক্ষার নীতি</h3>
+      <p>Ca²⁺/Mg²⁺ সব সাবানের সাথে বিক্রিয়া শেষ না হওয়া পর্যন্ত ফেনা হয় না। যত বেশি সাবান লাগে, তত বেশি Ca²⁺/Mg²⁺।</p>
+    </div>
+    <div class="pane" id="p2">
+      <h3>প্রধান বিক্রিয়া</h3>
+      <ul><li>সাবানের সাথে: 2C₁₇H₃₅COONa + Ca²⁺ → (C₁₇H₃₅COO)₂Ca↓ + 2Na⁺</li><li>ফুটালে: Ca(HCO₃)₂ →(তাপ) CaCO₃↓ + H₂O + CO₂</li><li>ওয়াশিং সোডা: Ca²⁺ + Na₂CO₃ → CaCO₃↓ + 2Na⁺ (স্থায়ী কাঠিন্যের জন্য)</li><li>চুন (ক্লার্ক পদ্ধতি): Ca(HCO₃)₂ + Ca(OH)₂ → 2CaCO₃↓ + 2H₂O</li><li>আয়ন-বিনিময় রেজিন (পারমুটিট): Ca²⁺ + 2Na-রেজিন → Ca-রেজিন + 2Na⁺</li></ul>
+      <p>১ mg CaCO₃ ≡ ১.০৬ mg Na₂CO₃ (Mw ১০৬ : ১০০)।</p>
+    </div>
+    <div class="pane" id="p3">
+      <h3>সতর্কতা</h3>
+      <ul><li>সাবান দ্রবণ দেওয়ার পর প্রতিবার বোতল ঝাঁকাতে হবে, ফেনা অন্তত ৫ মিনিট স্থায়ী কি না দেখতে হবে।</li><li>চুন ও ওয়াশিং সোডা ত্বকে জ্বালা করে — গ্লাভস পরো।</li><li>ওয়াশিং সোডা বেশি দিলে পানি ক্ষারীয় হয়ে যায় — মাপমতো দাও।</li><li>ফুটন্ত পানি সাবধানে ধরো।</li></ul>
+    </div>
+    <div class="pane" id="p4">
+      <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>কঠিন পানিতে সাবান ফেনা দেয় না কেন?</summary><p>Ca²⁺/Mg²⁺ সাবানের সাথে অদ্রবণীয় ক্যালসিয়াম/ম্যাগনেসিয়াম স্টিয়ারেট তৈরি করে, ফলে সাবান নষ্ট হয়।</p></details>
+      <details class="qa"><summary>ফুটালে স্থায়ী কাঠিন্য যায় না কেন?</summary><p>CaSO₄/CaCl₂ তাপে ভাঙে না, তাই দ্রবণে থেকেই যায়।</p></details>
+      <details class="qa"><summary>ডিটারজেন্ট কঠিন পানিতেও কাজ করে কেন?</summary><p>ডিটারজেন্টের Ca/Mg লবণ দ্রবণীয়, তাই অধঃক্ষেপ হয় না।</p></details>
+      <details class="qa"><summary>কঠিন পানি বয়লারে কী ক্ষতি করে?</summary><p>CaCO₃ ও CaSO₄ জমে স্কেল তৈরি করে — তাপ পরিবহন কমে, জ্বালানি বেশি লাগে, বিস্ফোরণের ঝুঁকি।</p></details>
+      <details class="qa"><summary>ওয়াশিং সোডা কীভাবে কাজ করে?</summary><p>CO₃²⁻ Ca²⁺/Mg²⁺-কে CaCO₃/MgCO₃ অধঃক্ষেপ হিসেবে সরিয়ে দেয়।</p></details>
+      <details class="qa"><summary>ক্লার্ক পদ্ধতিতে কী করা হয়?</summary><p>পরিমিত চুন-পানি দিয়ে অস্থায়ী কাঠিন্য দূর করা হয় — বেশি দিলে নতুন Ca²⁺ ঢুকে কাঠিন্য বাড়ে।</p></details>
+      <details class="qa"><summary>পারমুটিট প্রক্রিয়া কী?</summary><p>সোডিয়াম জিওলাইট রেজিনে Ca²⁺/Mg²⁺ আটকে Na⁺ ছেড়ে দেয় — সব ধরনের কাঠিন্য দূর হয়।</p></details>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const f=(x,d=1)=>bn((+x).toFixed(d));
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2300)}
+const SA=[
+ {id:'dw',n:'বিশুদ্ধ পানি',T:0,P:0,note:'পাতিত'},{id:'rain',n:'বৃষ্টির পানি',T:4,P:0,note:'প্রায় নরম'},
+ {id:'river',n:'নদীর পানি',T:90,P:20,note:'অধিকাংশ বাইকার্বনেট'},{id:'well',n:'নলকূপের পানি (চুনাপাথর এলাকা)',T:160,P:30,note:'Ca(HCO₃)₂'},
+ {id:'gyp',n:'জিপসাম মেশানো পানি',T:10,P:220,note:'CaSO₄'},{id:'mg',n:'MgCl₂/MgSO₄ যুক্ত পানি',T:20,P:180,note:'Mg লবণ'},
+ {id:'mix',n:'মিশ্র কঠিন পানি',T:140,P:140,note:'অস্থায়ী + স্থায়ী'}];
+let mode='soap',cur=null,W={T:0,P:0},soap=0,found=false,solved=false,hist=[],soda=0,alk=false;
+const H=()=>W.T+W.P;
+const Vs=()=>0.3+H()*0.05;
+function cls(h){return h<60?'নরম':h<120?'মাঝারি কঠিন':h<180?'কঠিন':'খুব কঠিন'}
+function pick(id){cur=SA.find(s=>s.id==id);W={T:cur.T,P:cur.P};soap=0;found=false;solved=false;hist=[];alk=false;$('smsg').innerHTML='';$('calc').style.display='none';$('cres').innerHTML='';$('tmsg').innerHTML='';
+  $('live').textContent=cur.n+' — সাবান দ্রবণ দিতে থাকো।';drawSamps();draw();tbl()}
+function drawSamps(){$('samps').innerHTML=SA.map(s=>`<button class="ob ${cur&&cur.id==s.id?'on':''}" data-id="${s.id}">${s.n}</button>`).join('');document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>pick(b.dataset.id))}
+function foamH(){return Math.max(0,soap-Vs())}
+function draw(){
+  $('soapP').style.display=mode=='soap'?'':'none';$('treatP').style.display=mode=='treat'?'':'none';$('stageTag').textContent=mode=='soap'?'সাবান টাইট্রেশন':'কাঠিন্য দূরীকরণ';
+  $('h1').textContent=cur?cur.n:'—';$('h2').textContent=bn(soap.toFixed(1))+' mL';
+  const sc=cur?Math.min(1,soap/Vs())*Math.min(1,H()/60+.15)*0.9:0;
+  $('scum').setAttribute('opacity',soap>0&&H()>2?Math.min(.8,sc):0);
+  let fl='';const n=Math.round(Math.min(1,soap/Vs())*Math.min(26,H()/8));for(let i=0;i<n;i++)fl+=`<circle cx="${120+i*7%170+ (i%3)*3}" cy="${210+i*17%130}" r="${2+i%3}" fill="#f8fafc" opacity=".8"/>`;$('flakes').innerHTML=fl;
+  const fh=foamH(),show=found||fh>0.2?Math.min(40,fh*8+8):0;let fo='';if(fh>0.05||found){const c=Math.min(28,Math.round(fh*6)+4);for(let i=0;i<c;i++)fo+=`<circle cx="${112+i*13%176}" cy="${188-((i*7)%Math.max(4,Math.round(show)))}" r="${5+i%4}" fill="#fff" opacity=".92" stroke="#cbd5e1"/>`}$('foam').innerHTML=fo;
+  $('wat').setAttribute('fill',alk?'rgba(190,150,255,.35)':'rgba(160,210,255,.3)');
+  $('bT').textContent=cur?(cur.id=='dw'?'':bn(H().toFixed(0))+' ppm'):'';$('bT').textContent='';
+  $('cT').textContent=cur?'৫০ mL নমুনা':'';
+}
+// soap test (manual)
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{if(!cur){toast('আগে নমুনা বেছে নাও');return}if(found){toast('রিডিং নেওয়া হয়েছে — শুরু থেকে করো');return}
+  soap=Math.round((soap+ +b.dataset.s)*10)/10;const d=$('dd');d.setAttribute('r',4);setTimeout(()=>d.setAttribute('r',0),600);
+  $('smsg').innerHTML='<div class="msg">সাবান দেওয়া হলো — ঝাঁকিয়ে ফেনা দেখো।</div>';draw();$('h2').textContent=bn(soap.toFixed(1))+' mL'});
+$('shake').onclick=()=>{if(!cur){toast('নমুনা বেছে নাও');return}if(soap==0){toast('আগে সাবান দাও');return}
+  const fh=foamH();
+  $('smsg').innerHTML=fh<=0?`<div class="msg bad">ফেনা নেই — সাদা অধঃক্ষেপ (scum) হচ্ছে। সাবান ${soap<Vs()-3?'বেশি':'আরও অল্প'} দিতে থাকো।</div>`:fh<.15?`<div class="msg">সামান্য ফেনা, কিছুক্ষণেই মিলিয়ে গেল — আরেকটু সাবান দাও।</div>`:`<div class="msg ok">🫧 ঘন ফেনা! ৫ মিনিট পরেও স্থায়ী — এটাই শেষ বিন্দু।</div>`;
+  const e=document.getElementById('svg');e.style.transition='transform .1s';let k=0;const id=setInterval(()=>{e.style.transform=`rotate(${k%2?-1:1}deg)`;k++;if(k>6){clearInterval(id);e.style.transform=''}},70);draw()};
+$('rec').onclick=()=>{if(!cur){toast('নমুনা বেছে নাও');return}if(foamH()<.15){toast('স্থায়ী ফেনা এখনো হয়নি — আরও সাবান দাও');return}
+  found=true;$('calc').style.display='';$('smsg').innerHTML=`<div class="msg ok">সাবান লেগেছে <b>${f(soap,1)} mL</b>। এখন কঠিন্য হিসাব করো।</div>`;$('h2').textContent=f(soap,1)+' mL'};
+$('rst').onclick=()=>{soap=0;found=false;$('smsg').innerHTML='';$('calc').style.display='none';draw()};
+$('chk').onclick=()=>{const v=parseFloat($('ans').value.replace(',','.'));if(isNaN(v)){toast('সংখ্যা লেখো');return}
+  const calc=(soap-0.3)*20,tr=H(),ok=Math.abs(v-calc)<=Math.max(5,calc*.08);
+  $('cres').innerHTML=ok?`<div class="msg ok">✔ ঠিক! কঠিন্য ≈ <b>${f(calc,0)} ppm</b> → <b>${cls(calc)}</b> পানি।<br>আসল মোট কঠিন্য: ${f(tr,0)} ppm (অস্থায়ী ${f(W.T,0)} + স্থায়ী ${f(W.P,0)})। ${W.T>2*W.P?'অধিকাংশই অস্থায়ী — ফুটালেই কমবে।':W.P>2*W.T?'অধিকাংশ স্থায়ী — ফুটিয়ে লাভ নেই, ওয়াশিং সোডা বা রেজিন লাগবে।':'অস্থায়ী ও স্থায়ী প্রায় সমান।'}</div>`:`<div class="msg bad">মেলেনি। কঠিন্য = (${f(soap,1)} − ০.৩) × ২০ = ? আবার হিসাব করো।</div>`};
+// treatment
+function addH(step,extra){hist.push({s:step,v:Vs(),h:H(),r:'অস্থায়ী '+f(W.T,0)+' · স্থায়ী '+f(W.P,0)+(extra||'')});tbl()}
+function tbl(){$('tbl').innerHTML='<tr><th>ধাপ</th><th>সাবান (mL)</th><th>কঠিন্য (ppm)</th><th>অবশিষ্ট</th></tr>'+hist.map(r=>`<tr><td>${r.s}</td><td>${f(r.v,1)}</td><td>${f(r.h,0)}</td><td>${r.r}</td></tr>`).join('')}
+function need(){if(!cur){toast('আগে নমুনা বেছে নাও');return false}return true}
+$('tTest').onclick=()=>{if(!need())return;soap=Vs();found=true;draw();addH('সাবান পরীক্ষা');$('tmsg').innerHTML=`<div class="msg">সাবান লেগেছে ${f(Vs(),1)} mL → কঠিন্য ${f(H(),0)} ppm (${cls(H())})।</div>`};
+$('tBoil').onclick=()=>{if(!need())return;const r=W.T;W.T=W.T*.04;alk=false;addH('ফুটানো');$('tmsg').innerHTML=`<div class="msg ${r>0?'ok':''}">${r>0?`Ca(HCO₃)₂ → CaCO₃↓ + H₂O + CO₂ — অস্থায়ী কাঠিন্য ${f(r,0)} → ${f(W.T,0)} ppm। স্থায়ী কাঠিন্য অপরিবর্তিত (${f(W.P,0)})।`:'এই পানিতে অস্থায়ী কাঠিন্য নেই — কিছু বদলাল না।'}</div>`;draw()};
+$('tLime').onclick=()=>{if(!need())return;const r=W.T;W.T=W.T*.05;addH('চুন (ক্লার্ক)');$('tmsg').innerHTML=`<div class="msg ${r>0?'ok':''}">${r>0?`পরিমিত চুন দিয়ে অস্থায়ী কাঠিন্য ${f(r,0)} → ${f(W.T,0)} ppm। স্থায়ী কাঠিন্য থেকে যায়।`:'অস্থায়ী কাঠিন্য নেই — চুন অকারণে দিলে কাঠিন্য বাড়ত!'}</div>`;draw()};
+$('tSoda').onclick=()=>{if(!need())return;const d=parseFloat($('dose').value.replace(',','.'));if(isNaN(d)||d<0){toast('ঠিক ডোজ লেখো');return}
+  const nd=H()*1.06/1000;// g/L Na2CO3 needed
+  if(nd==0){$('tmsg').innerHTML='<div class="msg">কাঠিন্য নেই — ওয়াশিং সোডা দরকার নেই।</div>';return}
+  const frac=Math.min(1,d/nd);const t0=H();W.T*=(1-frac);W.P*=(1-frac);alk=d>nd*1.25;
+  addH('ওয়াশিং সোডা '+f(d,2)+' g/L');
+  $('tmsg').innerHTML=`<div class="msg ${frac>=.97?'ok':alk?'bad':''}">প্রয়োজন ছিল ≈ <b>${f(nd,2)} g/L</b> Na₂CO₃ (১ mg CaCO₃ ≡ ১.০৬ mg Na₂CO₃)। ${frac<.97?'ডোজ কম — কাঠিন্য কিছুটা বাকি।':alk?'⚠ বেশি দেওয়ায় পানি ক্ষারীয় হয়েছে।':'✔ প্রায় সম্পূর্ণ কাঠিন্য দূর হয়েছে।'}</div>`;draw()};
+$('tIon').onclick=()=>{if(!need())return;W.T=0;W.P=0;alk=false;addH('আয়ন-বিনিময় রেজিন');$('tmsg').innerHTML='<div class="msg ok">Ca²⁺/Mg²⁺ রেজিনে আটকে গেল, Na⁺ বেরিয়ে এল — অস্থায়ী ও স্থায়ী সব কাঠিন্য দূর (নরম পানি)।</div>';draw()};
+$('tNew').onclick=()=>{if(!need())return;pick(cur.id);$('tmsg').innerHTML='<div class="msg">নমুনা আবার আগের মতো।</div>'};
+document.querySelectorAll('.tab[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('.tab[data-m]').forEach(x=>x.classList.toggle('on',x==b));soap=0;found=false;$('smsg').innerHTML='';if(cur){W={T:cur.T,P:cur.P}}draw()});
+document.querySelectorAll('.tab[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+drawSamps();draw();
+</script>
+</body>
+</html>
