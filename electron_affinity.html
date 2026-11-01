@@ -1,286 +1,402 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electron Affinity Explorer - Premium Edition</title>
-    <style>
-        :root { 
-            --bg-color: #000000; 
-            --card-color: #0b0f17;
-            --text-color: #f8fafc; 
-            --accent-color: #10b981; /* Premium Emerald Green Glow */
-            --border-color: #1e293b;
-        }
-
-        * { box-sizing: border-box; }
-        
-        body { 
-            background: var(--bg-color); 
-            color: var(--text-color); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding: 30px 15px; 
-            margin: 0;
-            min-height: 100vh;
-        }
-        
-        .container { 
-            max-width: 650px; 
-            margin: 40px auto; 
-            width: 100%;
-        }
-
-        .back-btn { 
-            position: fixed; top: 15px; left: 15px; 
-            background: #1e293b; color: #94a3b8; 
-            padding: 8px 16px; border-radius: 10px; 
-            text-decoration: none; font-weight: 600; font-size: 0.9rem;
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease; z-index: 50; 
-        }
-        .back-btn:hover { background: #334155; color: #f8fafc; transform: translateX(-3px); }
-
-        h1 {
-            font-size: 1.6rem; 
-            font-weight: 800;
-            margin-bottom: 15px;
-            background: linear-gradient(to right, #10b981, #059669);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-        }
-        
-        .info-banner { 
-            background: linear-gradient(135deg, rgba(11, 15, 23, 0.9), rgba(16, 185, 129, 0.05));
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            padding: 16px 20px; 
-            margin-bottom: 25px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(16, 185, 129, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        .info-banner::before {
-            content: '';
-            position: absolute; left: 0; top: 0; height: 100%; width: 4px;
-            background: linear-gradient(to bottom, #10b981, #059669);
-        }
-        .info-desc {
-            color: #94a3b8; font-size: 0.88rem; line-height: 1.6; margin: 0;
-        }
-        .info-desc strong { color: #f8fafc; font-weight: 600; }
-        
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(8, 1fr); 
-            gap: 8px; 
-            margin-bottom: 25px;
-        }
-        
-        .cell { 
-            aspect-ratio: 1; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 10px; 
-            border: 1px solid var(--border-color); 
-            font-weight: 850; 
-            font-size: 1.05rem; 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            position: relative;
-        }
-        
-        .cell:hover, .cell.highlight { 
-            transform: scale(1.15); 
-            z-index: 10; 
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.7); 
-            border-color: var(--accent-color) !important;
-        }
-        
-        .empty-cell {
-            grid-column: span 6;
-        }
-        
-        .val { 
-            font-size: 0.58rem; 
-            font-weight: 700; 
-            margin-top: 2px; 
-            letter-spacing: 0.3px;
-        }
-
-        /* Search Box Placed at Bottom */
-        .search-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .search-box {
-            width: 100%; max-width: 350px; padding: 12px 18px;
-            background: var(--card-color); border: 1px solid var(--border-color);
-            color: #f8fafc; border-radius: 12px; font-size: 0.95rem; outline: none;
-            transition: all 0.3s ease; text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        .search-box:focus { border-color: var(--accent-color); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-
-        /* Popup Modal Style */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-            z-index: 100;
-        }
-        .modal-overlay.active {
-            opacity: 1; pointer-events: auto;
-        }
-        .modal-card {
-            background: var(--card-color); border: 1px solid var(--accent-color);
-            padding: 25px; border-radius: 20px; width: 90%; max-width: 320px;
-            text-align: center; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
-            transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .modal-overlay.active .modal-card {
-            transform: translateY(0);
-        }
-        .modal-symbol {
-            font-size: 2.5rem; font-weight: 800; color: var(--accent-color);
-            margin-bottom: 5px;
-        }
-        .modal-name {
-            font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;
-        }
-        .modal-radius {
-            background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 10px; border-radius: 10px; font-size: 1rem; color: #34d399;
-            font-weight: 600; margin-bottom: 20px;
-        }
-        .close-btn {
-            background: linear-gradient(135deg, #10b981, #059669); color: #fff;
-            border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600;
-            cursor: pointer; transition: opacity 0.2s;
-        }
-        .close-btn:hover { opacity: 0.9; }
-
-        @media (max-width: 480px) {
-            body { padding: 20px 10px; }
-            h1 { font-size: 1.3rem; }
-            .grid { gap: 5px; }
-            .cell { font-size: 0.85rem; border-radius: 8px; }
-            .val { font-size: 0.5rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>ইলেকট্রন আসক্তি | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+portant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,#334155,hsl(160,70%,18%),hsl(160,80%,50%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#059669,#34d399);}
+.scroll{overflow-x:auto}
+</style>
 </head>
 <body>
-
-<a href="properties_page.html" class="back-btn">← ফিরে যান</a>
-
-<div class="container">
-    <h1>ইলেকট্রন আসক্তি (Electron Affinity)</h1>
-    
-    <div class="info-banner">
-        <p class="info-desc">
-            পর্যায় সারণীতে সাধারণত <strong>বাম থেকে ডানে</strong> গেলে ইলেকট্রন আসক্তি বৃদ্ধি পায়, আর ওপর থেকে নিচে গেলে হ্রাস পায়। যেকোনো মৌলে ক্লিক করে মান ও পপ-আপ কার্ড দেখুন। (একক: kJ/mol)
-        </p>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Electron Affinity</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="properties_page.html">← <span class="long">ধর্ম হাব</span></a>
     </div>
+  </header>
+  <section class="hero">
+    <span class="pill">⚡ পর্যায়বৃত্ত ধর্ম · ইলেকট্রন আসক্তি</span>
+    <h1><span class="em">🔋</span> ইলেকট্রন আসক্তি (Electron Affinity)</h1>
+    <p>১১৮টি মৌলের ইলেকট্রন আসক্তির তাপ-মানচিত্র, পর্যায় ও গ্রুপের ট্রেন্ড, র‍্যাংকিং এবং ব্যতিক্রমের ব্যাখ্যা। একক: kJ/mol।</p>
+  </section>
 
-    <div class="grid" id="grid">
-        <!-- H & He statically rendered -->
-        <div class="cell" data-symbol="h" onclick="showModal('হাইড্রোজেন', 'H', '73 kJ/mol')" style="background-color: hsl(150, 70%, 15%); color: #f8fafc; border-color: rgba(16, 185, 129, 0.25);">
-            H<div class="val" style="color: #a7f3d0;">73</div>
-        </div>
-        <div class="empty-cell"></div>
-        <div class="cell" data-symbol="he" onclick="showModal('হিলিয়াম', 'He', '0 kJ/mol')" style="background-color: hsl(150, 70%, 8%); color: #64748b; border-color: rgba(16, 185, 129, 0.1);">
-            He<div class="val" style="color: #475569;">0</div>
-        </div>
-        
-        <script>
-            const elements = [
-                {s: 'Li', n: 'লিথিয়াম', v: 60}, {s: 'Be', n: 'বেরিলিয়াম', v: 0}, {s: 'B', n: 'বোরন', v: 27}, {s: 'C', n: 'কার্বন', v: 122}, {s: 'N', n: 'নাইট্রোজেন', v: 0}, {s: 'O', n: 'অক্সিজেন', v: 141}, {s: 'F', n: 'ফ্লোরিন', v: 328}, {s: 'Ne', n: 'নিয়ন', v: 0},
-                {s: 'Na', n: 'সোডিয়াম', v: 53}, {s: 'Mg', n: 'ম্যাগনেসিয়াম', v: 0}, {s: 'Al', n: 'অ্যালুমিনিয়াম', v: 42}, {s: 'Si', n: 'সিলিকন', v: 134}, {s: 'P', n: 'ফসফরাস', v: 72}, {s: 'S', n: 'সালফার', v: 200}, {s: 'Cl', n: 'ক্লোরিন', v: 349}, {s: 'Ar', n: 'আর্গন', v: 0},
-                {s: 'K', n: 'পটাশিয়াম', v: 48}, {s: 'Ca', n: 'ক্যালসিয়াম', v: 2}, {s: 'Ga', n: 'গ্যালিয়াম', v: 29}, {s: 'Ge', n: 'জার্মানিয়াম', v: 119}, {s: 'As', n: 'আর্সেনিক', v: 78}, {s: 'Se', n: 'সেলেনিয়াম', v: 195}, {s: 'Br', n: 'ব্রোমিন', v: 325}, {s: 'Kr', n: 'ক্রিপ্টন', v: 0},
-                {s: 'Rb', n: 'রুবিডিয়াম', v: 47}, {s: 'Sr', n: 'স্ট্রনশিয়াম', v: 5}, {s: 'In', n: 'ইনডিয়াম', v: 29}, {s: 'Sn', n: 'টিন', v: 107}, {s: 'Sb', n: 'অ্যান্টিমনি', v: 101}, {s: 'Te', n: 'টেলুরিয়াম', v: 190}, {s: 'I', n: 'আয়োডিন', v: 295}, {s: 'Xe', n: 'জেনন', v: 0}
-            ];
+  <div class="tabs" id="modes">
+    <button class="tab on" data-m="map">🗺️ তাপ-মানচিত্র</button>
+    <button class="tab" data-m="per">📈 পর্যায় ধরে</button>
+    <button class="tab" data-m="grp">📊 গ্রুপ ধরে</button>
+    <button class="tab" data-m="rank">🏆 র‍্যাংকিং</button>
+  </div>
 
-            const grid = document.getElementById('grid');
-            elements.forEach(e => {
-                let lightness;
-                let textColor;
-                let subTextColor;
+  <div class="gwrap" style="margin-top:14px">
+    <section class="card" style="min-width:0">
+      <div id="vmap" class="mv on">
+        <div class="search" style="margin:0 0 12px;max-width:none"><input id="q" placeholder="🔍 প্রতীক, নাম বা Z (যেমন Cl, ফ্লোরিন, 17)" autocomplete="off"></div>
+        <div class="gw"><div class="pg" id="pg"></div></div>
+        <div class="scalebar"><span>ঋণাত্মক/শূন্য</span><i></i><span>৩৪৯ kJ/mol (Cl, সর্বোচ্চ)</span></div>
+        <div class="hint">⬜ ধূসর = তথ্য নেই/অনুমানভিত্তিক শূন্যের কাছাকাছি। ঘরে ক্লিক করলে ডানের প্যানেলে ব্যাখ্যা আসবে। ←/→ কী দিয়ে মৌল বদলাও।</div>
+      </div>
+      <div id="vper" class="mv"><div class="lb2">কোন পর্যায়গুলো দেখবে?</div><div class="chips" id="pch"></div><div class="sc"><svg id="svp" style="display:block;width:100%;min-width:620px"></svg></div><div class="hint">বিন্দুতে ক্লিক করলে মৌল নির্বাচিত হবে। ফাঁক = তথ্য নেই।</div></div>
+      <div id="vgrp" class="mv"><div class="lb2">কোন গ্রুপ?</div><div class="chips" id="gch"></div><div class="sc"><svg id="svg" style="display:block;width:100%;min-width:480px"></svg></div></div>
+      <div id="vrank" class="mv"><div class="lb2">সর্বোচ্চ ১৫টি মৌল (ইলেকট্রন গ্রহণে সবচেয়ে বেশি শক্তি নির্গত)</div><div id="rk"></div></div>
+    </section>
+    <section class="card stickyc" style="min-width:0"><h2>🔬 মৌল বিশ্লেষণ</h2><div id="det"></div></section>
+  </div>
 
-                if (e.v === 0) {
-                    lightness = 8;
-                    textColor = '#64748b';
-                    subTextColor = '#475569';
-                } else {
-                    lightness = 10 + (e.v / 9); 
-                    textColor = lightness > 55 ? '#000000' : '#f8fafc';
-                    subTextColor = lightness > 55 ? 'rgba(0,0,0,0.8)' : '#34d399';
-                }
-                
-                grid.innerHTML += `
-                    <div class="cell" data-symbol="${e.s.toLowerCase()}" onclick="showModal('${e.n}', '${e.s}', '${e.v} kJ/mol')" style="background-color: hsl(150, 70%, ${lightness}%); color: ${textColor}; border-color: rgba(16, 185, 129, 0.2);">
-                        ${e.s}<div class="val" style="color: ${subTextColor}">${e.v}</div>
-                    </div>`;
-            });
-        </script>
-    </div>
-
-    <!-- Search Box Placed at Bottom -->
-    <div class="search-container">
-        <input type="text" id="elementSearch" class="search-box" placeholder="🔍 মৌল খুঁজুন (যেমন: Cl, F, Na)..." onkeyup="filterElement()">
-    </div>
+  <div class="tabs" style="margin-top:22px">
+    <button class="tab on" data-p="p1">📘 নিয়ম ও ট্রেন্ড</button>
+    <button class="tab" data-p="p2">⚠️ ব্যতিক্রম</button>
+    <button class="tab" data-p="p3">🎓 ভাইভা</button>
+  </div>
+  <div class="card pane on" id="p1">
+    <h3>ইলেকট্রন আসক্তি কী?</h3>
+    <p style="line-height:1.9">গ্যাসীয় নিরপেক্ষ পরমাণু একটি ইলেকট্রন গ্রহণ করে ঋণাত্মক আয়ন হলে যে শক্তি নির্গত হয়: <b>X(g) + e⁻ → X⁻(g) + শক্তি</b>। শক্তি যত বেশি নির্গত হয়, ইলেকট্রন আসক্তি তত বেশি।</p>
+    <ul>
+      <li><b>পর্যায়ে বাম→ডান:</b> সাধারণত বাড়ে (Zeff বাড়ে, আকার কমে) — হ্যালোজেনে সর্বোচ্চ।</li>
+      <li><b>গ্রুপে উপর→নিচ:</b> সাধারণত কমে (আকার বাড়ে, আকর্ষণ কমে)।</li>
+      <li><b>সর্বোচ্চ:</b> ক্লোরিন (৩৪৯ kJ/mol) — ফ্লোরিন নয়!</li>
+      <li><b>চিহ্ন:</b> ধনাত্মক মান = শক্তি নির্গত; ঋণাত্মক = ইলেকট্রন যোগ করতে শক্তি লাগে (যেমন নিষ্ক্রিয় গ্যাস, Be, Mg)।</li>
+    </ul>
+  </div>
+  <div class="card pane" id="p2">
+    <h3>ব্যতিক্রমগুলো কেন?</h3>
+    <ul>
+      <li><b>F < Cl:</b> F-এর ক্ষুদ্র 2p উপস্তরে ইলেকট্রন ঘনত্ব বেশি, ফলে আগত ইলেকট্রনের সাথে বিকর্ষণ প্রবল; Cl-এর বড় 3p উপস্তরে বিকর্ষণ কম। এ কারণে Cl-এর মান বেশি। (O < S এবং N < P প্রবণতাও একই)</li>
+      <li><b>গ্রুপ ২ (Be, Mg):</b> পূর্ণ ns² — নতুন ইলেকট্রনকে উচ্চশক্তির np উপস্তরে ঢুকতে হয়, তাই প্রায় শূন্য/ঋণাত্মক।</li>
+      <li><b>গ্রুপ ১৫ (N):</b> অর্ধপূর্ণ np³ স্থিতিশীল; নতুন ইলেকট্রন জোড় বাঁধতে বিকর্ষণ — তাই N-এর মান অনেক কম (≈ −৭)।</li>
+      <li><b>গ্রুপ ১৮:</b> পূর্ণ খোলস; নতুন ইলেকট্রন পরবর্তী খোলসে যেতে হয় — ঋণাত্মক/অস্থির আয়ন।</li>
+      <li><b>২য় ইলেকট্রন আসক্তি:</b> সর্বদাই ঋণাত্মক (O⁻ + e⁻ → O²⁻ এ শক্তি লাগে, ≈ −৭৪১ kJ/mol); তবু O²⁻ আয়নিক কেলাসে থাকে কারণ জালক শক্তি এটি পূরণ করে।</li>
+    </ul>
+    <p class="msg">ঋণাত্মক মান আসলে পরীক্ষায় সরাসরি মাপা নয়, তাত্ত্বিক হিসাব বা অনুমান; তাই এই পেজে সেগুলো ধূসর/ম্লান দেখানো হয়েছে।</p>
+  </div>
+  <div class="card pane" id="p3">
+    <details class="qa"><summary>ইলেকট্রন আসক্তি ও তড়িৎ ঋণাত্মকতার পার্থক্য কী?</summary><div>ইলেকট্রন আসক্তি একক পরমাণুর (গ্যাস) পরিমাপযোগ্য শক্তি; ঋণাত্মকতা বন্ধনে ইলেকট্রন টানার আপেক্ষিক ক্ষমতা (এককহীন স্কেল)।</div></details>
+    <details class="qa"><summary>ফ্লোরিনের চেয়ে ক্লোরিনের ইলেকট্রন আসক্তি বেশি কেন?</summary><div>F-এর ছোট 2p কক্ষে ইলেকট্রন-ইলেকট্রন বিকর্ষণ বেশি, Cl-এর বড় 3p কক্ষে কম।</div></details>
+    <details class="qa"><summary>নাইট্রোজেনের ইলেকট্রন আসক্তি এত কম কেন?</summary><div>অর্ধপূর্ণ 2p³ স্থিতিশীল; নতুন ইলেকট্রন জোড় বাঁধলে বিকর্ষণ হয়।</div></details>
+    <details class="qa"><summary>নিষ্ক্রিয় গ্যাসের ইলেকট্রন আসক্তি ঋণাত্মক কেন?</summary><div>খোলস পূর্ণ; নতুন ইলেকট্রনকে উচ্চ শক্তিস্তরে যেতে হয়।</div></details>
+    <details class="qa"><summary>গ্রুপ ১৭-এ সবচেয়ে বেশি আসক্তি কেন?</summary><div>ns²np⁵ — মাত্র ১টি ইলেকট্রন পেলেই অষ্টক পূর্ণ, আর Zeff বেশি।</div></details>
+  </div>
 </div>
-
-<!-- Popup Modal Structure -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-    <div class="modal-card" onclick="event.stopPropagation()">
-        <div class="modal-symbol" id="modalSymbol">H</div>
-        <div class="modal-name" id="modalName">হাইড্রোজেন</div>
-        <div class="modal-radius" id="modalRadius">ইলেকট্রন আসক্তি: 73 kJ/mol</div>
-        <button class="close-btn" onclick="closeModalDirect()">বন্ধ করুন</button>
-    </div>
-</div>
-
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 <script>
-    function showModal(name, symbol, value) {
-        document.getElementById('modalSymbol').innerText = symbol;
-        document.getElementById('modalName').innerText = name;
-        document.getElementById('modalRadius').innerText = `ইলেকট্রন আসক্তি: ${value}`;
-        document.getElementById('modalOverlay').classList.add('active');
-    }
-
-    function closeModal(event) {
-        document.getElementById('modalOverlay').classList.remove('active');
-    }
-
-    function closeModalDirect() {
-        document.getElementById('modalOverlay').classList.remove('active');
-    }
-
-    function filterElement() {
-        let query = document.getElementById('elementSearch').value.toLowerCase().trim();
-        let cells = document.querySelectorAll('.grid .cell');
-
-        cells.forEach(cell => {
-            let symbol = cell.getAttribute('data-symbol');
-            if (query === "" || symbol.includes(query)) {
-                cell.style.opacity = "1";
-                if(query !== "" && symbol === query) {
-                    cell.classList.add('highlight');
-                } else {
-                    cell.classList.remove('highlight');
-                }
-            } else {
-                cell.style.opacity = "0.2";
-                cell.classList.remove('highlight');
-            }
-        });
-    }
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const SUPD='⁰¹²³⁴⁵⁶⁷⁸⁹';const sup=n=>String(n).replace(/\d/g,d=>SUPD[d]);
+const V=[[1,"H","হাইড্রোজেন","Hydrogen",1,1,"s","nonmetal",53,32,1312,null,2.2,72.769,13.99,20.271,0.00008988],[2,"He","হিলিয়াম","Helium",1,18,"s","noble",31,46,2372.3,5250.5,null,-48,0.95,4.222,0.0001786],[3,"Li","লিথিয়াম","Lithium",2,1,"s","alkali",167,133,520.2,7298.1,0.98,59.6326,453.65,1603,0.534],[4,"Be","বেরিলিয়াম","Beryllium",2,2,"s","alkaline",112,102,899.5,1757.1,1.57,-48,1560,2742,1.85],[5,"B","বোরন","Boron",2,13,"p","metalloid",87,85,800.6,2427.1,2.04,26.989,2349,4200,2.08],[6,"C","কার্বন","Carbon",2,14,"p","nonmetal",67,75,1086.5,2352.6,2.55,121.7763,4600,null,1.821],[7,"N","নাইট্রোজেন","Nitrogen",2,15,"p","nonmetal",56,71,1402.3,2856,3.04,-6.8,63.15,77.355,0.001251],[8,"O","অক্সিজেন","Oxygen",2,16,"p","nonmetal",48,63,1313.9,3388.3,3.44,140.976,54.36,90.188,0.001429],[9,"F","ফ্লোরিন","Fluorine",2,17,"p","halogen",42,64,1681,3374.2,3.98,328.1649,53.48,85.03,0.001696],[10,"Ne","নিয়ন","Neon",2,18,"p","noble",38,67,2080.7,3952.3,null,-116,24.56,27.104,0.0009002],[11,"Na","সোডিয়াম","Sodium",3,1,"s","alkali",190,155,495.8,4562,0.93,52.867,370.944,1156.09,0.968],[12,"Mg","ম্যাগনেসিয়াম","Magnesium",3,2,"s","alkaline",145,139,737.7,1450.7,1.31,-40,923,1363,1.738],[13,"Al","অ্যালুমিনিয়াম","Aluminium",3,13,"p","post",118,126,577.5,1816.7,1.61,41.762,933.47,2743,2.7],[14,"Si","সিলিকন","Silicon",3,14,"p","metalloid",111,116,786.5,1577.1,1.9,134.0684,1687,3538,2.329],[15,"P","ফসফরাস","Phosphorus",3,15,"p","nonmetal",98,111,1011.8,1907,2.19,72.037,317.3,null,1.823],[16,"S","সালফার","Sulfur",3,16,"p","nonmetal",88,103,999.6,2252,2.58,200.4101,388.36,717.8,2.07],[17,"Cl","ক্লোরিন","Chlorine",3,17,"p","halogen",79,99,1251.2,2298,3.16,348.575,171.6,239.11,0.0032],[18,"Ar","আর্গন","Argon",3,18,"p","noble",71,96,1520.6,2665.8,null,-96,83.81,87.302,0.001784],[19,"K","পটাশিয়াম","Potassium",4,1,"s","alkali",243,196,418.8,3052,0.82,48.383,336.7,1032,0.862],[20,"Ca","ক্যালসিয়াম","Calcium",4,2,"s","alkaline",194,171,589.8,1145.4,1,2.37,1115,1757,1.55],[21,"Sc","স্ক্যান্ডিয়াম","Scandium",4,3,"d","transition",184,148,633.1,1235,1.36,18,1814,3109,2.985],[22,"Ti","টাইটানিয়াম","Titanium",4,4,"d","transition",176,136,658.8,1309.8,1.54,7.289,1941,3560,4.506],[23,"V","ভ্যানাডিয়াম","Vanadium",4,5,"d","transition",171,134,650.9,1414,1.63,50.911,2183,3680,6],[24,"Cr","ক্রোমিয়াম","Chromium",4,6,"d","transition",166,122,652.9,1590.6,1.66,65.21,2180,2944,7.19],[25,"Mn","ম্যাঙ্গানিজ","Manganese",4,7,"d","transition",161,119,717.3,1509,1.55,-50,1519,2334,7.21],[26,"Fe","আয়রন","Iron",4,8,"d","transition",156,116,762.5,1561.9,1.83,14.785,1811,3134,7.874],[27,"Co","কোবাল্ট","Cobalt",4,9,"d","transition",152,111,760.4,1648,1.88,63.898,1768,3200,8.9],[28,"Ni","নিকেল","Nickel",4,10,"d","transition",149,110,737.1,1753,1.91,111.65,1728,3003,8.908],[29,"Cu","কপার","Copper",4,11,"d","transition",145,112,745.5,1957.9,1.9,119.235,1357.77,2835,8.96],[30,"Zn","জিঙ্ক","Zinc",4,12,"d","transition",142,118,906.4,1733.3,1.65,-58,692.68,1180,7.14],[31,"Ga","গ্যালিয়াম","Gallium",4,13,"p","post",136,124,578.8,1979.3,1.81,41,302.9146,2673,5.91],[32,"Ge","জার্মেনিয়াম","Germanium",4,14,"p","metalloid",125,121,762,1537.5,2.01,118.9352,1211.4,3106,5.323],[33,"As","আর্সেনিক","Arsenic",4,15,"p","metalloid",114,121,947,1798,2.18,77.65,1090,null,5.727],[34,"Se","সিলেনিয়াম","Selenium",4,16,"p","nonmetal",103,116,941,2045,2.55,194.9587,494,958,4.81],[35,"Br","ব্রোমিন","Bromine",4,17,"p","halogen",94,114,1139.9,2103,2.96,324.537,265.8,332,3.1028],[36,"Kr","ক্রিপ্টন","Krypton",4,18,"p","noble",88,117,1350.8,2350.4,3,-96,115.78,119.93,0.003749],[37,"Rb","রুবিডিয়াম","Rubidium",5,1,"s","alkali",265,210,403,2633,0.82,46.884,312.45,961,1.532],[38,"Sr","স্ট্রনশিয়াম","Strontium",5,2,"s","alkaline",219,185,549.5,1064.2,0.95,5.023,1050,1650,2.64],[39,"Y","ইট্রিয়াম","Yttrium",5,3,"d","transition",212,163,600,1180,1.22,29.6,1799,3203,4.472],[40,"Zr","জিরকোনিয়াম","Zirconium",5,4,"d","transition",206,154,640.1,1270,1.33,41.806,2128,4650,6.52],[41,"Nb","নিওবিয়াম","Niobium",5,5,"d","transition",198,147,652.1,1380,1.6,88.516,2750,5017,8.57],[42,"Mo","মলিবডেনাম","Molybdenum",5,6,"d","transition",190,138,684.3,1560,2.16,72.1,2896,4912,10.28],[43,"Tc","টেকনেশিয়াম","Technetium",5,7,"d","transition",183,128,702,1470,1.9,53,2430,4538,11],[44,"Ru","রুথেনিয়াম","Ruthenium",5,8,"d","transition",178,125,710.2,1620,2.2,100.96,2607,4423,12.45],[45,"Rh","রোডিয়াম","Rhodium",5,9,"d","transition",173,125,719.7,1740,2.28,110.27,2237,3968,12.41],[46,"Pd","প্যালেডিয়াম","Palladium",5,10,"d","transition",169,120,804.4,1870,2.2,54.24,1828.05,3236,12.023],[47,"Ag","সিলভার","Silver",5,11,"d","transition",165,128,731,2070,1.93,125.862,1234.93,2435,10.49],[48,"Cd","ক্যাডমিয়াম","Cadmium",5,12,"d","transition",161,136,867.8,1631.4,1.69,-68,594.22,1040,8.65],[49,"In","ইন্ডিয়াম","Indium",5,13,"p","post",156,142,558.3,1820.7,1.78,37.043,429.7485,2345,7.31],[50,"Sn","টিন","Tin",5,14,"p","post",145,140,708.6,1411.8,1.96,107.2984,505.08,2875,7.365],[51,"Sb","অ্যান্টিমনি","Antimony",5,15,"p","metalloid",133,140,834,1594.9,2.05,101.059,903.78,1908,6.697],[52,"Te","টেলুরিয়াম","Tellurium",5,16,"p","metalloid",123,136,869.3,1790,2.1,190.161,722.66,1261,6.24],[53,"I","আয়োডিন","Iodine",5,17,"p","halogen",115,133,1008.4,1845.9,2.66,295.1531,386.85,457.4,4.933],[54,"Xe","জেনন","Xenon",5,18,"p","noble",108,131,1170.4,2046.4,2.6,-77,161.4,165.051,0.005894],[55,"Cs","সিজিয়াম","Cesium",6,1,"s","alkali",298,232,375.7,2234.3,0.79,45.505,301.7,944,1.93],[56,"Ba","বেরিয়াম","Barium",6,2,"s","alkaline",253,196,502.9,965.2,0.89,13.954,1000,2118,3.51],[57,"La","ল্যান্থানাম","Lanthanum",6,3,"f","lanthanide",226,180,538.1,1067,1.1,53,1193,3737,6.162],[58,"Ce","সেরিয়াম","Cerium",6,3,"f","lanthanide",210,163,534.4,1050,1.12,55,1068,3716,6.77],[59,"Pr","প্রাসিওডিমিয়াম","Praseodymium",6,3,"f","lanthanide",247,176,527,1020,1.13,93,1208,3403,6.77],[60,"Nd","নিওডিমিয়াম","Neodymium",6,3,"f","lanthanide",206,174,533.1,1040,1.14,184.87,1297,3347,7.01],[61,"Pm","প্রমিথিয়াম","Promethium",6,3,"f","lanthanide",205,173,540,1050,1.13,12.45,1315,3273,7.26],[62,"Sm","সামারিয়াম","Samarium",6,3,"f","lanthanide",238,172,544.5,1070,1.17,15.63,1345,2173,7.52],[63,"Eu","ইউরোপিয়াম","Europium",6,3,"f","lanthanide",231,168,547.1,1085,1.2,11.2,1099,1802,5.264],[64,"Gd","গ্যাডোলিনিয়াম","Gadolinium",6,3,"f","lanthanide",233,169,593.4,1170,1.2,13.22,1585,3273,7.9],[65,"Tb","টার্বিয়াম","Terbium",6,3,"f","lanthanide",225,168,565.8,1110,1.1,112.4,1629,3396,8.23],[66,"Dy","ডিসপ্রোসিয়াম","Dysprosium",6,3,"f","lanthanide",228,167,573,1130,1.22,33.96,1680,2840,8.54],[67,"Ho","হোলমিয়াম","Holmium",6,3,"f","lanthanide",226,166,581,1140,1.23,32.61,1734,2873,8.79],[68,"Er","আরবিয়াম","Erbium",6,3,"f","lanthanide",226,165,589.3,1150,1.24,30.1,1802,3141,9.066],[69,"Tm","থুলিয়াম","Thulium",6,3,"f","lanthanide",222,164,596.7,1160,1.25,99,1818,2223,9.32],[70,"Yb","ইটারবিয়াম","Ytterbium",6,3,"f","lanthanide",222,170,603.4,1174.8,1.1,-1.93,1097,1469,6.9],[71,"Lu","লুটিশিয়াম","Lutetium",6,3,"d","lanthanide",217,162,523.5,1340,1.27,33.4,1925,3675,9.841],[72,"Hf","হাফনিয়াম","Hafnium",6,4,"d","transition",208,152,658.5,1440,1.3,17.18,2506,4876,13.31],[73,"Ta","ট্যান্টালাম","Tantalum",6,5,"d","transition",200,146,761,1500,1.5,31,3290,5731,16.69],[74,"W","টাংস্টেন","Tungsten",6,6,"d","transition",193,137,770,1700,2.36,78.76,3695,6203,19.25],[75,"Re","রেনিয়াম","Rhenium",6,7,"d","transition",188,131,760,1260,1.9,5.8273,3459,5869,21.02],[76,"Os","অসমিয়াম","Osmium",6,8,"d","transition",185,129,840,1600,2.2,103.99,3306,5285,22.59],[77,"Ir","ইরিডিয়াম","Iridium",6,9,"d","transition",180,122,880,1600,2.2,150.94,2719,4403,22.56],[78,"Pt","প্ল্যাটিনাম","Platinum",6,10,"d","transition",177,123,870,1791,2.28,205.041,2041.4,4098,21.45],[79,"Au","সোনা","Gold",6,11,"d","transition",174,124,890.1,1980,2.54,222.747,1337.33,3243,19.3],[80,"Hg","পারদ","Mercury",6,12,"d","transition",171,133,1007.1,1810,2,-48,234.321,629.88,13.534],[81,"Tl","থ্যালিয়াম","Thallium",6,13,"p","post",156,144,589.4,1971,1.62,36.4,577,1746,11.85],[82,"Pb","সীসা","Lead",6,14,"p","post",154,144,715.6,1450.5,1.87,34.4204,600.61,2022,11.34],[83,"Bi","বিস্মাথ","Bismuth",6,15,"p","post",143,151,703,1610,2.02,90.924,544.7,1837,9.78],[84,"Po","পোলোনিয়াম","Polonium",6,16,"p","post",135,145,812.1,null,2,136,527,1235,9.196],[85,"At","অ্যাস্টাটাইন","Astatine",6,17,"p","halogen",127,147,899.003,null,2.2,233,575,610,6.35],[86,"Rn","রেডন","Radon",6,18,"p","noble",120,142,1037,null,2.2,-68,202,211.5,0.00973],[87,"Fr","ফ্রান্সিয়াম","Francium",7,1,"s","alkali",null,null,380,null,0.79,46.89,300,950,1.87],[88,"Ra","রেডিয়াম","Radium",7,2,"s","alkaline",null,201,509.3,979,0.9,9.6485,1233,2010,5.5],[89,"Ac","অ্যাক্টিনিয়াম","Actinium",7,3,"f","actinide",null,186,499,1170,1.1,33.77,1500,3500,10],[90,"Th","থোরিয়াম","Thorium",7,3,"f","actinide",null,175,587,1110,1.3,112.72,2023,5061,11.724],[91,"Pa","প্রোট্যাক্টিনিয়াম","Protactinium",7,3,"f","actinide",null,169,568,null,1.5,53.03,1841,4300,15.37],[92,"U","ইউরেনিয়াম","Uranium",7,3,"f","actinide",null,170,597.6,1420,1.38,50.94,1405.3,4404,19.1],[93,"Np","নেপচুনিয়াম","Neptunium",7,3,"f","actinide",null,171,604.5,null,1.36,45.85,912,4447,20.45],[94,"Pu","প্লুটোনিয়াম","Plutonium",7,3,"f","actinide",null,172,584.7,null,1.28,-48.33,912.5,3505,19.816],[95,"Am","অ্যামেরিসিয়াম","Americium",7,3,"f","actinide",null,166,578,null,1.13,9.93,1449,2880,12],[96,"Cm","কিউরিয়াম","Curium",7,3,"f","actinide",null,166,581,null,1.28,27.17,1613,3383,13.51],[97,"Bk","বার্কেলিয়াম","Berkelium",7,3,"f","actinide",null,null,601,null,1.3,-165.24,1259,2900,14.78],[98,"Cf","ক্যালিফোর্নিয়াম","Californium",7,3,"f","actinide",null,null,608,null,1.3,-97.31,1173,1743,15.1],[99,"Es","আইনস্টাইনিয়াম","Einsteinium",7,3,"f","actinide",null,null,619,null,1.3,-28.6,1133,1269,8.84],[100,"Fm","ফার্মিয়াম","Fermium",7,3,"f","actinide",null,null,627,null,1.3,33.96,1800,null,null],[101,"Md","মেন্ডেলিভিয়াম","Mendelevium",7,3,"f","actinide",null,null,635,null,1.3,93.91,1100,null,null],[102,"No","নোবেলিয়াম","Nobelium",7,3,"f","actinide",null,null,642,null,1.3,-223.22,1100,null,null],[103,"Lr","লরেনসিয়াম","Lawrencium",7,3,"d","actinide",null,null,470,null,1.3,-30.04,1900,null,null],[104,"Rf","রাদারফোর্ডিয়াম","Rutherfordium",7,4,"d","transition",null,null,580,null,null,null,2400,5800,23.2],[105,"Db","ডুবনিয়াম","Dubnium",7,5,"d","transition",null,null,null,null,null,null,null,null,29.3],[106,"Sg","সি বোর্জিয়াম","Seaborgium",7,6,"d","transition",null,null,null,null,null,null,null,null,35],[107,"Bh","বোহরিয়াম","Bohrium",7,7,"d","transition",null,null,null,null,null,null,null,null,37.1],[108,"Hs","হাসিয়াম","Hassium",7,8,"d","transition",null,null,null,null,null,null,null,null,40.7],[109,"Mt","মেইটনেরিয়াম","Meitnerium",7,9,"d","transition",null,null,null,null,null,null,null,null,37.4],[110,"Ds","ডামস্টাটিয়াম","Darmstadtium",7,10,"d","transition",null,null,null,null,null,null,null,null,34.8],[111,"Rg","রন্টজেনিয়াম","Roentgenium",7,11,"d","transition",null,null,null,null,null,151,null,null,28.7],[112,"Cn","কপারনিশিয়াম","Copernicium",7,12,"d","transition",null,null,null,null,null,null,283,340,14],[113,"Nh","নিহোনিয়াম","Nihonium",7,13,"p","post",null,null,null,null,null,66.6,700,1430,16],[114,"Fl","ফ্লেরোভিয়াম","Flerovium",7,14,"p","post",null,null,null,null,null,null,340,420,14],[115,"Mc","মস্কোভিয়াম","Moscovium",7,15,"p","post",null,null,null,null,null,35.3,670,1400,13.5],[116,"Lv","লিভারমোরিয়াম","Livermorium",7,16,"p","post",null,null,null,null,null,74.9,709,1085,12.9],[117,"Ts","টেনেসিন","Tennessine",7,17,"p","halogen",null,null,null,null,null,165.9,723,883,7.17],[118,"Og","ওগানেসন","Oganesson",7,18,"p","noble",null,null,null,null,null,5.40318,null,350,4.95]],GF=[[1,"H","হাইড্রোজেন","Hydrogen",1.008,1,1,"s","1s1"],[2,"He","হিলিয়াম","Helium",4.003,1,18,"s","1s2"],[3,"Li","লিথিয়াম","Lithium",6.94,2,1,"s","1s2 2s1"],[4,"Be","বেরিলিয়াম","Beryllium",9.012,2,2,"s","1s2 2s2"],[5,"B","বোরন","Boron",10.81,2,13,"p","1s2 2s2 2p1"],[6,"C","কার্বন","Carbon",12.011,2,14,"p","1s2 2s2 2p2"],[7,"N","নাইট্রোজেন","Nitrogen",14.007,2,15,"p","1s2 2s2 2p3"],[8,"O","অক্সিজেন","Oxygen",15.999,2,16,"p","1s2 2s2 2p4"],[9,"F","ফ্লোরিন","Fluorine",18.998,2,17,"p","1s2 2s2 2p5"],[10,"Ne","নিয়ন","Neon",20.18,2,18,"p","1s2 2s2 2p6"],[11,"Na","সোডিয়াম","Sodium",22.99,3,1,"s","1s2 2s2 2p6 3s1"],[12,"Mg","ম্যাগনেসিয়াম","Magnesium",24.305,3,2,"s","1s2 2s2 2p6 3s2"],[13,"Al","অ্যালুমিনিয়াম","Aluminium",26.982,3,13,"p","1s2 2s2 2p6 3s2 3p1"],[14,"Si","সিলিকন","Silicon",28.085,3,14,"p","1s2 2s2 2p6 3s2 3p2"],[15,"P","ফসফরাস","Phosphorus",30.974,3,15,"p","1s2 2s2 2p6 3s2 3p3"],[16,"S","সালফার","Sulfur",32.06,3,16,"p","1s2 2s2 2p6 3s2 3p4"],[17,"Cl","ক্লোরিন","Chlorine",35.45,3,17,"p","1s2 2s2 2p6 3s2 3p5"],[18,"Ar","আর্গন","Argon",39.948,3,18,"p","1s2 2s2 2p6 3s2 3p6"],[19,"K","পটাশিয়াম","Potassium",39.098,4,1,"s","1s2 2s2 2p6 3s2 3p6 4s1"],[20,"Ca","ক্যালসিয়াম","Calcium",40.078,4,2,"s","1s2 2s2 2p6 3s2 3p6 4s2"],[21,"Sc","স্ক্যান্ডিয়াম","Scandium",44.956,4,3,"d","1s2 2s2 2p6 3s2 3p6 3d1 4s2"],[22,"Ti","টাইটানিয়াম","Titanium",47.867,4,4,"d","1s2 2s2 2p6 3s2 3p6 3d2 4s2"],[23,"V","ভ্যানাডিয়াম","Vanadium",50.942,4,5,"d","1s2 2s2 2p6 3s2 3p6 3d3 4s2"],[24,"Cr","ক্রোমিয়াম","Chromium",51.996,4,6,"d","1s2 2s2 2p6 3s2 3p6 3d5 4s1"],[25,"Mn","ম্যাঙ্গানিজ","Manganese",54.938,4,7,"d","1s2 2s2 2p6 3s2 3p6 3d5 4s2"],[26,"Fe","আয়রন","Iron",55.845,4,8,"d","1s2 2s2 2p6 3s2 3p6 3d6 4s2"],[27,"Co","কোবাল্ট","Cobalt",58.933,4,9,"d","1s2 2s2 2p6 3s2 3p6 3d7 4s2"],[28,"Ni","নিকেল","Nickel",58.693,4,10,"d","1s2 2s2 2p6 3s2 3p6 3d8 4s2"],[29,"Cu","কপার","Copper",63.546,4,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s1"],[30,"Zn","জিঙ্ক","Zinc",65.382,4,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2"],[31,"Ga","গ্যালিয়াম","Gallium",69.723,4,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p1"],[32,"Ge","জার্মেনিয়াম","Germanium",72.631,4,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p2"],[33,"As","আর্সেনিক","Arsenic",74.922,4,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p3"],[34,"Se","সিলেনিয়াম","Selenium",78.972,4,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p4"],[35,"Br","ব্রোমিন","Bromine",79.904,4,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p5"],[36,"Kr","ক্রিপ্টন","Krypton",83.798,4,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6"],[37,"Rb","রুবিডিয়াম","Rubidium",85.468,5,1,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s1"],[38,"Sr","স্ট্রনশিয়াম","Strontium",87.621,5,2,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s2"],[39,"Y","ইট্রিয়াম","Yttrium",88.906,5,3,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d1 5s2"],[40,"Zr","জিরকোনিয়াম","Zirconium",91.224,5,4,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d2 5s2"],[41,"Nb","নিওবিয়াম","Niobium",92.906,5,5,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d4 5s1"],[42,"Mo","মলিবডেনাম","Molybdenum",95.951,5,6,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s1"],[43,"Tc","টেকনেশিয়াম","Technetium",98,5,7,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s2"],[44,"Ru","রুথেনিয়াম","Ruthenium",101.072,5,8,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d7 5s1"],[45,"Rh","রোডিয়াম","Rhodium",102.906,5,9,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d8 5s1"],[46,"Pd","প্যালেডিয়াম","Palladium",106.421,5,10,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10"],[47,"Ag","সিলভার","Silver",107.868,5,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s1"],[48,"Cd","ক্যাডমিয়াম","Cadmium",112.414,5,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2"],[49,"In","ইন্ডিয়াম","Indium",114.818,5,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p1"],[50,"Sn","টিন","Tin",118.711,5,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p2"],[51,"Sb","অ্যান্টিমনি","Antimony",121.76,5,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p3"],[52,"Te","টেলুরিয়াম","Tellurium",127.603,5,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p4"],[53,"I","আয়োডিন","Iodine",126.904,5,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p5"],[54,"Xe","জেনন","Xenon",131.294,5,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6"],[55,"Cs","সিজিয়াম","Cesium",132.905,6,1,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s1"],[56,"Ba","বেরিয়াম","Barium",137.328,6,2,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s2"],[57,"La","ল্যান্থানাম","Lanthanum",138.905,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 5d1 6s2"],[58,"Ce","সেরিয়াম","Cerium",140.116,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f1 5d1 6s2"],[59,"Pr","প্রাসিওডিমিয়াম","Praseodymium",140.908,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f3 6s2"],[60,"Nd","নিওডিমিয়াম","Neodymium",144.242,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f4 6s2"],[61,"Pm","প্রমিথিয়াম","Promethium",145,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f5 6s2"],[62,"Sm","সামারিয়াম","Samarium",150.362,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f6 6s2"],[63,"Eu","ইউরোপিয়াম","Europium",151.964,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f7 6s2"],[64,"Gd","গ্যাডোলিনিয়াম","Gadolinium",157.253,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f7 5d1 6s2"],[65,"Tb","টার্বিয়াম","Terbium",158.925,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f9 6s2"],[66,"Dy","ডিসপ্রোসিয়াম","Dysprosium",162.5,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f10 6s2"],[67,"Ho","হোলমিয়াম","Holmium",164.93,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f11 6s2"],[68,"Er","আরবিয়াম","Erbium",167.259,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f12 6s2"],[69,"Tm","থুলিয়াম","Thulium",168.934,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f13 6s2"],[70,"Yb","ইটারবিয়াম","Ytterbium",173.045,6,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 6s2"],[71,"Lu","লুটিশিয়াম","Lutetium",174.967,6,3,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d1 6s2"],[72,"Hf","হাফনিয়াম","Hafnium",178.492,6,4,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d2 6s2"],[73,"Ta","ট্যান্টালাম","Tantalum",180.948,6,5,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d3 6s2"],[74,"W","টাংস্টেন","Tungsten",183.841,6,6,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d4 6s2"],[75,"Re","রেনিয়াম","Rhenium",186.207,6,7,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d5 6s2"],[76,"Os","অসমিয়াম","Osmium",190.233,6,8,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d6 6s2"],[77,"Ir","ইরিডিয়াম","Iridium",192.217,6,9,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d7 6s2"],[78,"Pt","প্ল্যাটিনাম","Platinum",195.085,6,10,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d9 6s1"],[79,"Au","সোনা","Gold",196.967,6,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s1"],[80,"Hg","পারদ","Mercury",200.592,6,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2"],[81,"Tl","থ্যালিয়াম","Thallium",204.38,6,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p1"],[82,"Pb","সীসা","Lead",207.21,6,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p2"],[83,"Bi","বিস্মাথ","Bismuth",208.98,6,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p3"],[84,"Po","পোলোনিয়াম","Polonium",209,6,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p4"],[85,"At","অ্যাস্টাটাইন","Astatine",210,6,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p5"],[86,"Rn","রেডন","Radon",222,6,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6"],[87,"Fr","ফ্রান্সিয়াম","Francium",223,7,1,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 7s1"],[88,"Ra","রেডিয়াম","Radium",226,7,2,"s","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 7s2"],[89,"Ac","অ্যাক্টিনিয়াম","Actinium",227,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 6d1 7s2"],[90,"Th","থোরিয়াম","Thorium",232.038,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 6d2 7s2"],[91,"Pa","প্রোট্যাক্টিনিয়াম","Protactinium",231.036,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f2 6d1 7s2"],[92,"U","ইউরেনিয়াম","Uranium",238.029,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f3 6d1 7s2"],[93,"Np","নেপচুনিয়াম","Neptunium",237,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f4 6d1 7s2"],[94,"Pu","প্লুটোনিয়াম","Plutonium",244,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f6 7s2"],[95,"Am","অ্যামেরিসিয়াম","Americium",243,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f7 7s2"],[96,"Cm","কিউরিয়াম","Curium",247,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f7 6d1 7s2"],[97,"Bk","বার্কেলিয়াম","Berkelium",247,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f9 7s2"],[98,"Cf","ক্যালিফোর্নিয়াম","Californium",251,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f10 7s2"],[99,"Es","আইনস্টাইনিয়াম","Einsteinium",252,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f11 7s2"],[100,"Fm","ফার্মিয়াম","Fermium",257,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f12 7s2"],[101,"Md","মেন্ডেলিভিয়াম","Mendelevium",258,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f13 7s2"],[102,"No","নোবেলিয়াম","Nobelium",259,7,3,"f","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 7s2"],[103,"Lr","লরেনসিয়াম","Lawrencium",266,7,3,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 7s2 7p1"],[104,"Rf","রাদারফোর্ডিয়াম","Rutherfordium",267,7,4,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d2 7s2"],[105,"Db","ডুবনিয়াম","Dubnium",268,7,5,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d3 7s2"],[106,"Sg","সি বোর্জিয়াম","Seaborgium",269,7,6,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d4 7s2"],[107,"Bh","বোহরিয়াম","Bohrium",270,7,7,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d5 7s2"],[108,"Hs","হাসিয়াম","Hassium",269,7,8,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d6 7s2"],[109,"Mt","মেইটনেরিয়াম","Meitnerium",278,7,9,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d7 7s2"],[110,"Ds","ডামস্টাটিয়াম","Darmstadtium",281,7,10,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d9 7s1"],[111,"Rg","রন্টজেনিয়াম","Roentgenium",282,7,11,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s1"],[112,"Cn","কপারনিশিয়াম","Copernicium",285,7,12,"d","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2"],[113,"Nh","নিহোনিয়াম","Nihonium",286,7,13,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p1"],[114,"Fl","ফ্লেরোভিয়াম","Flerovium",289,7,14,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p2"],[115,"Mc","মস্কোভিয়াম","Moscovium",289,7,15,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p3"],[116,"Lv","লিভারমোরিয়াম","Livermorium",293,7,16,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p4"],[117,"Ts","টেনেসিন","Tennessine",294,7,17,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p5"],[118,"Og","ওগানেসন","Oganesson",294,7,18,"p","1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 4f14 5d10 6s2 6p6 5f14 6d10 7s2 7p6"]];
+const EL=V.map((r,i)=>({z:r[0],s:r[1],bn:r[2],en:r[3],p:r[4],g:r[5],b:r[6],ea:r[13],x:r[12],ie:r[10],ec:GF[i][8]}));
+EL.forEach(e=>{if(e.z>=58&&e.z<=71){e.fk=1;e.row=10;e.col=4+(e.z-58)}else if(e.z>=90&&e.z<=103){e.fk=1;e.row=11;e.col=4+(e.z-90)}else{e.row=e.p+1;e.col=e.g+1}});
+const MAXV=Math.max(...EL.map(e=>e.ea||0));
+const fmt=v=>{if(v==null)return 'তথ্য নেই';const s=Math.abs(v)>=100?v.toFixed(0):v.toFixed(1).replace(/\.0$/,'');return bn(s.replace('-','−'))};
+const sgn=v=>v==null?'':v<0?'−'+fmt(-v):fmt(v);
+function colorOf(v){if(v==null)return {bg:'var(--card-solid)',fg:'var(--text-muted)'};if(v<=0)return {bg:v<-30?'hsl(0,35%,16%)':'hsl(215,18%,16%)',fg:'var(--text-muted)'};const t=Math.sqrt(v/MAXV);const l=12+t*40;return {bg:`hsl(160,${60+t*25}%,${l}%)`,fg:l>38?'#04130d':'#e8fff6'}}
+let S={z:17,mode:'map',pers:[2,3,4],grp:17};
+// table
+(function(){let h='<div class="pl"></div>';for(let g=1;g<=18;g++)h+=`<div class="gl" style="grid-row:1;grid-column:${g+1}">${bn(g)}</div>`;for(let p=1;p<=7;p++)h+=`<div class="pl" style="grid-row:${p+1};grid-column:1">${bn(p)}</div>`;
+ h+=`<div style="grid-row:9;height:6px;grid-column:1/-1"></div>`;
+ EL.forEach(e=>{const c=colorOf(e.ea);const lab=e.z==57?'La*':e.z==89?'Ac*':e.s;h+=`<div class="ce" tabindex="0" role="button" aria-label="${e.bn}" data-z="${e.z}" style="grid-row:${e.row};grid-column:${e.col};background:${c.bg};color:${c.fg}"><span class="z" style="color:${c.fg};opacity:.7">${bn(e.z)}</span><span class="s">${lab}</span><span class="ev">${e.ea==null?'–':sgn(Math.round(e.ea))}</span></div>`});
+ $('pg').innerHTML=h;$('pg').querySelectorAll('.ce').forEach(c=>{c.onclick=()=>pick(+c.dataset.z);c.onkeydown=ev=>{if(ev.key=='Enter'||ev.key==' '){ev.preventDefault();pick(+c.dataset.z)}}})})();
+function paintSel(){document.querySelectorAll('.ce').forEach(c=>{const on=+c.dataset.z==S.z;c.style.outline=on?'2.5px solid #a855f7':'';c.style.zIndex=on?5:'';c.style.boxShadow=on?'0 0 16px rgba(168,85,247,.7)':''})}
+function rankOf(e){const a=EL.filter(x=>x.ea!=null).sort((x,y)=>y.ea-x.ea);const i=a.findIndex(x=>x.z==e.z);return i<0?null:[i+1,a.length]}
+function explain(e){const g=e.g,out=[];
+ if(e.ea==null)return 'এই মৌলের ইলেকট্রন আসক্তির নির্ভরযোগ্য তথ্য নেই (অত্যন্ত তেজস্ক্রিয়/অস্থির)।';
+ if(g==18)return 'নিষ্ক্রিয় গ্যাস — পূর্ণ যোজ্যতা খোলস। নতুন ইলেকট্রন পরবর্তী উচ্চ শক্তিস্তরে যেতে হয়, তাই আয়ন অস্থির; মান ঋণাত্মক/শূন্য।';
+ if(g==17)return `হ্যালোজেন — ns²np⁵; ১টি ইলেকট্রন পেলে অষ্টক পূর্ণ (X⁻), তাই খুব বেশি শক্তি নির্গত হয়।${e.z==9?' তবে F-এর ছোট 2p কক্ষে বিকর্ষণ বেশি বলে মান Cl-এর চেয়ে কম।':e.z==17?' এটিই সর্বোচ্চ!':''}`;
+ if(g==2)return 'গ্রুপ ২ — পূর্ণ ns²। নতুন ইলেকট্রনকে উচ্চশক্তির np-তে যেতে হয়, তাই প্রায় শূন্য/ঋণাত্মক।';
+ if(g==15&&e.p==2)return 'গ্রুপ ১৫ (N) — অর্ধপূর্ণ 2p³ স্থিতিশীল। নতুন ইলেকট্রন জোড় বাঁধলে বিকর্ষণ হয়, তাই মান খুব কম।';
+ if(g==15)return 'গ্রুপ ১৫ — অর্ধপূর্ণ np³ স্থিতিশীলতার কারণে ধারা-র তুলনায় মান কম।';
+ if(g==16)return 'গ্রুপ ১৬ — np⁴ → np⁵; অষ্টকের কাছাকাছি, তাই মান বেশ বেশি। ২য় ইলেকট্রনে (X²⁻) অবশ্য শক্তি লাগে।';
+ if(g==1)return 'ক্ষার ধাতু — ns¹ → ns²; পূর্ণ উপস্তর হয় বলে অল্প শক্তি নির্গত, কিন্তু ইলেকট্রন ছেড়ে দেওয়াই পছন্দ।';
+ if(g>=3&&g<=12)return 'ট্রানজিশন ধাতু — (n−1)d ও ns শক্তি কাছাকাছি, তাই মান অনিয়মিত ও সাধারণত কম/মাঝারি।';
+ return 'পর্যায়ে ডানে গেলে Zeff বাড়ে ও আকার কমে বলে ইলেকট্রন আসক্তি সাধারণত বাড়ে।'}
+function det(){const e=EL[S.z-1];const r=rankOf(e);const c=colorOf(e.ea);
+ const gp=EL.filter(x=>x.g==e.g&&!x.fk&&x.z<=103&&!(x.z>=57&&x.z<=71)),pp=EL.filter(x=>x.p==e.p&&!x.fk);
+ const sib=a=>a.filter(x=>x.ea!=null).map(x=>`${x.s}: ${sgn(Math.round(x.ea))}`).join(' · ');
+ $('det').innerHTML=`<div class="insr" style="border-left:4px solid ${e.ea>0?'#22d3b0':'#64748b'}"><b style="font-size:19px">${e.s} — ${e.bn}</b> <small>(${e.en})</small><br><small>Z=${bn(e.z)} · পর্যায় ${bn(e.p)} · ${e.fk||(e.z==57||e.z==89)?'f-ব্লক':'গ্রুপ '+bn(e.g)}</small></div>
+ <div style="margin:6px 0 10px"><div class="big">${e.ea==null?'—':sgn(e.ea>=100?Math.round(e.ea):+e.ea.toFixed(1))} <small style="font-size:14px;color:var(--text-muted)">kJ/mol</small></div>
+ <small style="color:var(--text-muted)">${e.ea==null?'':e.ea>0?`X + e⁻ → X⁻ + ${fmt(Math.round(e.ea))} kJ (শক্তি নির্গত)`:'ইলেকট্রন যোগে শক্তি লাগে — আয়ন অস্থির (অনুমান)'}</small></div>
+ <div class="kv"><span>র‍্যাংক</span><b>${r?bn(r[0])+' / '+bn(r[1]):'—'}</b></div>
+ <div class="kv"><span>তড়িৎ ঋণাত্মকতা</span><b>${e.x==null?'তথ্য নেই':bn(e.x)}</b></div>
+ <div class="kv"><span>১ম আয়নিকরণ শক্তি</span><b>${e.ie==null?'তথ্য নেই':bn(Math.round(e.ie))+' kJ/mol'}</b></div>
+ <div class="kv"><span>ইলেকট্রন বিন্যাস</span><b style="font-family:monospace;font-size:12.5px">${e.ec.split(' ').slice(-4).map(t=>t.replace(/(\d[spdf])(\d+)/,(m,a,b)=>a+sup(b))).join(' ')}</b></div>
+ <div class="insr" style="margin-top:10px">💡 ${explain(e)}</div>
+ ${!e.fk&&e.g&&e.g<=18&&e.z<=86?`<div class="insr" style="font-size:12.5px"><b>গ্রুপ ${bn(e.g)}:</b> ${sib(gp.slice(0,6))}<br><b>পর্যায় ${bn(e.p)}:</b> ${sib(pp).slice(0,160)}</div>`:''}
+ <div class="hrow" style="display:flex;gap:8px"><button class="ob" id="pv" aria-label="আগের">◀</button><button class="ob" id="nx" aria-label="পরের">▶</button></div>`;
+ $('pv').onclick=()=>pick(S.z-1);$('nx').onclick=()=>pick(S.z+1)}
+function pick(z){S.z=Math.max(1,Math.min(118,z));paintSel();det();if(S.mode=='per')drawPer();if(S.mode=='grp')drawGrp();history.replaceState(null,'','#'+EL[S.z-1].s)}
+// chart helpers
+function nice(lo,hi){const st=hi-lo>300?100:hi-lo>150?50:hi-lo>60?20:10;const a=Math.floor(lo/st)*st,b=Math.ceil(hi/st)*st,t=[];for(let v=a;v<=b;v+=st)t.push(v);return {a,b,t}}
+const PC=['#f43f5e','#fb923c','#fbbf24','#34d399','#60a5fa','#a855f7','#f472b6'];
+function drawPer(){const W=680,H=340,L=54,R=16,T=16,B=44;const P=S.pers;const vals=[];P.forEach(p=>EL.filter(e=>e.p==p&&!e.fk&&e.g&&!(e.z==57||e.z==89)).forEach(e=>{if(e.ea!=null)vals.push(e.ea)}));
+ const sc=nice(Math.min(0,...vals,-60),Math.max(...vals,10));const X=g=>L+(g-1)/17*(W-L-R),Y=v=>T+(H-T-B)*(1-(v-sc.a)/(sc.b-sc.a));
+ let s=`<svg></svg>`;let o='';sc.t.forEach(t=>o+=`<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--border-color)" opacity=".6"/><text x="${L-6}" y="${Y(t)+4}" text-anchor="end" font-size="11" font-weight="700" fill="var(--text-muted)">${bn(t<0?'−'+(-t):t)}</text>`);
+ o+=`<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--text-muted)"/>`;
+ for(let g=1;g<=18;g++)o+=`<text x="${X(g)}" y="${H-B+18}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-muted)">${bn(g)}</text>`;
+ o+=`<text x="${(L+W-R)/2}" y="${H-6}" text-anchor="middle" font-size="12" font-weight="800" fill="var(--text-color)">গ্রুপ নম্বর →</text>`;
+ P.forEach(p=>{const col=PC[p-1];const pts=EL.filter(e=>e.p==p&&!e.fk&&e.g&&!(e.z==57||e.z==89)&&e.ea!=null).sort((a,b)=>a.g-b.g);
+  o+=`<path d="${pts.map((e,i)=>(i?'L':'M')+X(e.g)+' '+Y(e.ea)).join('')}" fill="none" stroke="${col}" stroke-width="2.4" opacity=".9"/>`;
+  pts.forEach(e=>{o+=`<circle cx="${X(e.g)}" cy="${Y(e.ea)}" r="${e.z==S.z?7:4.5}" fill="${col}" stroke="${e.z==S.z?'#fff':'var(--card-solid)'}" stroke-width="2" style="cursor:pointer" onclick="pick(${e.z})"><title>${e.s}: ${sgn(Math.round(e.ea))} kJ/mol</title></circle>`;if(e.ea>180||e.z==S.z)o+=`<text x="${X(e.g)}" y="${Y(e.ea)-9}" text-anchor="middle" font-size="11" font-weight="800" fill="var(--text-color)">${e.s}</text>`})});
+ o+=P.map((p,i)=>`<g transform="translate(${L+i*80},${12})"><rect width="12" height="12" rx="3" fill="${PC[p-1]}"/><text x="17" y="10" font-size="11" font-weight="700" fill="var(--text-color)">পর্যায় ${bn(p)}</text></g>`).join('');
+ $('svp').setAttribute('viewBox',`0 0 ${W} ${H}`);$('svp').innerHTML=o}
+function drawGrp(){const m=EL.filter(e=>e.g==S.grp&&!e.fk&&!(e.z==57||e.z==89)&&e.z<=103);const W=Math.max(480,m.length*76+90),H=330,L=54,T=26,B=46;const vals=m.map(e=>e.ea).filter(v=>v!=null);const sc=nice(Math.min(0,...vals),Math.max(...vals,10));const Y=v=>T+(H-T-B)*(1-(v-sc.a)/(sc.b-sc.a));let o='';
+ sc.t.forEach(t=>o+=`<line x1="${L}" x2="${W-12}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--border-color)" opacity=".6"/><text x="${L-6}" y="${Y(t)+4}" text-anchor="end" font-size="11" font-weight="700" fill="var(--text-muted)">${bn(t<0?'−'+(-t):t)}</text>`);
+ o+=`<line x1="${L}" x2="${W-12}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--text-muted)"/>`;const sl=(W-L-12)/m.length,bw=Math.min(40,sl*.62);
+ m.forEach((e,i)=>{const cx=L+sl*(i+.5);if(e.ea!=null){const y0=Y(0),y1=Y(e.ea);o+=`<rect x="${cx-bw/2}" y="${Math.min(y0,y1)}" width="${bw}" height="${Math.max(2,Math.abs(y1-y0))}" rx="5" fill="${e.ea>0?'#34d399':'#64748b'}" stroke="${e.z==S.z?'#a855f7':'var(--card-solid)'}" stroke-width="${e.z==S.z?3:2}" style="cursor:pointer" onclick="pick(${e.z})"><title>${e.bn}: ${sgn(Math.round(e.ea))} kJ/mol</title></rect><text x="${cx}" y="${e.ea>=0?Y(e.ea)-6:Y(e.ea)+14}" text-anchor="middle" font-size="11" font-weight="800" fill="var(--text-color)">${sgn(Math.round(e.ea))}</text>`}else o+=`<text x="${cx}" y="${Y(0)-6}" text-anchor="middle" fill="var(--text-muted)">–</text>`;
+  o+=`<text x="${cx}" y="${H-B+18}" text-anchor="middle" font-size="12" font-weight="800" fill="var(--text-color)">${e.s}</text><text x="${cx}" y="${H-B+33}" text-anchor="middle" font-size="10" fill="var(--text-muted)">${bn(e.z)}</text>`});
+ $('svg').setAttribute('viewBox',`0 0 ${W} ${H}`);$('svg').style.minWidth=W+'px';$('svg').innerHTML=o}
+function rank(){const a=EL.filter(e=>e.ea!=null).sort((x,y)=>y.ea-x.ea).slice(0,15);$('rk').innerHTML=a.map((e,i)=>`<div class="rkr" data-z="${e.z}"><b>${bn(i+1)}</b><div><div class="bar" style="width:${e.ea/MAXV*100}%"></div><small style="color:var(--text-muted)">${e.s} · ${e.bn}</small></div><b>${fmt(Math.round(e.ea))}</b></div>`).join('');$('rk').querySelectorAll('.rkr').forEach(r=>r.onclick=()=>pick(+r.dataset.z))}
+$('pch').innerHTML=[2,3,4,5,6].map(p=>`<button class="chip" data-p="${p}" style="--c:${PC[p-1]}"><i></i>পর্যায় ${bn(p)}</button>`).join('');
+$('pch').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const p=+b.dataset.p;const i=S.pers.indexOf(p);if(i>=0){if(S.pers.length>1)S.pers.splice(i,1)}else S.pers.push(p);syncChips();drawPer()});
+$('gch').innerHTML=[...Array(18)].map((_,i)=>`<button class="chip" data-g="${i+1}" style="--c:#34d399"><i></i>${bn(i+1)}</button>`).join('');
+$('gch').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{S.grp=+b.dataset.g;syncChips();drawGrp()});
+function syncChips(){$('pch').querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',S.pers.includes(+b.dataset.p)));$('gch').querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',+b.dataset.g==S.grp))}
+document.querySelectorAll('#modes .tab').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;document.querySelectorAll('#modes .tab').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.mv').forEach(v=>v.classList.toggle('on',v.id=='v'+S.mode));syncChips();if(S.mode=='per')drawPer();if(S.mode=='grp'){const e=EL[S.z-1];if(e.g&&!e.fk)S.grp=e.g;syncChips();drawGrp()}if(S.mode=='rank')rank()});
+document.querySelectorAll('.tab[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
+$('q').onkeydown=ev=>{if(ev.key!='Enter')return;const v=$('q').value.trim().toLowerCase();if(!v)return;const f=EL.find(e=>e.s.toLowerCase()==v||String(e.z)==v||e.en.toLowerCase()==v||e.bn==$('q').value.trim())||EL.find(e=>e.en.toLowerCase().startsWith(v)||e.bn.startsWith($('q').value.trim()));if(f){pick(f.z);$('q').value=''}else toast('মৌল পাওয়া যায়নি')};
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2000)}
+document.addEventListener('keydown',e=>{if(e.target.tagName=='INPUT')return;if(e.key=='ArrowRight')pick(S.z+1);if(e.key=='ArrowLeft')pick(S.z-1)});
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+const h0=decodeURIComponent(location.hash.slice(1));if(h0){const f=EL.find(e=>e.s.toLowerCase()==h0.toLowerCase());if(f)S.z=f.z}
+syncChips();pick(S.z);
 </script>
-
 </body>
 </html>
