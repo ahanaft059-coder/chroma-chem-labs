@@ -1,289 +1,224 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>জৈব যৌগের তথ্য ও পরিচিতি</title>
-    
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#06130e">
+<title>জৈব যৌগের তথ্য ও পরিচিতি | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--g1:#34d399;--g2:#a3e635}
 
-    <style>
-        :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --border-color: #cbd5e1;
-            --info-color: #10b981;
-            --shadow: rgba(15, 23, 42, 0.05);
-        }
-        [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --border-color: #334155;
-            --shadow: rgba(0, 0, 0, 0.4);
-        }
+:root{--bg:#eefaf3;--card:rgba(255,255,255,.78);--solid:#fff;--text:#0b2a1f;--muted:#4f6f62;--line:rgba(6,78,59,.16);--shadow:0 10px 30px -8px rgba(6,78,59,.18);--grad:linear-gradient(135deg,var(--g1),var(--g2));--glow:color-mix(in srgb,var(--g1) 30%,transparent);--blob:.28;--soft:rgba(6,78,59,.06);--good:#059669;--bad:#e11d48}
+[data-theme="dark"]{--bg:#06130e;--card:rgba(12,32,24,.72);--solid:#0a1f17;--text:#ecfdf5;--muted:#8fb5a3;--line:rgba(167,243,208,.14);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--blob:.4;--soft:rgba(167,243,208,.06);--good:#34d399;--bad:#fb7185}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:16px 16px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;animation:pg .6s ease both}
+@keyframes pg{from{opacity:0}}
+.fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.fx i{position:absolute;border-radius:50%;filter:blur(100px);opacity:var(--blob)}
+.fx .a{width:520px;height:520px;background:var(--g1);top:-160px;left:-140px}.fx .b{width:600px;height:600px;background:var(--g2);bottom:-240px;right:-170px;opacity:calc(var(--blob) * .8)}
+.fx .hex{position:absolute;inset:0;border-radius:0;filter:none;opacity:1;-webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 25%,transparent 80%);mask-image:radial-gradient(ellipse at 50% 30%,#000 25%,transparent 80%)}
+[data-theme="dark"] .hex{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0 0v34' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1.4'/%3E%3Cpath d='M28 0v34L0 50v34l28 16 28-16V50L28 34' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1.4'/%3E%3C/svg%3E")}
+[data-theme="light"] .hex{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0 0v34' fill='none' stroke='%23065f46' stroke-opacity='.09' stroke-width='1.4'/%3E%3Cpath d='M28 0v34L0 50v34l28 16 28-16V50L28 34' fill='none' stroke='%23065f46' stroke-opacity='.09' stroke-width='1.4'/%3E%3C/svg%3E")}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--g1);outline-offset:2px}
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 18px;margin-bottom:26px;border-radius:22px;background:var(--card);border:1.5px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,var(--g1) 55%,var(--g2));box-shadow:0 0 18px var(--g1),0 0 34px var(--glow)}
+.brand b{display:block;font-size:17px;font-weight:800;line-height:1.2}.brand small{display:block;font-size:12px;font-weight:700;color:var(--g1)}
+.tr{display:flex;align-items:center;gap:10px}
+.ib{width:40px;height:40px;border-radius:13px;cursor:pointer;font-size:16px;color:var(--text);background:var(--solid);border:1px solid var(--line);transition:transform .3s}
+.ib:hover{transform:rotate(180deg)}
+.bk{display:inline-flex;align-items:center;padding:10px 16px;border-radius:13px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text);background:var(--solid);border:1px solid var(--line);transition:transform .25s,border-color .25s}
+.bk:hover{transform:translateX(-3px);border-color:var(--g1)}
+.hero{text-align:center;margin-bottom:24px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:var(--g1);background:var(--soft);border:1px solid var(--line)}
+h1{margin:14px 0 8px;font-size:clamp(1.8rem,5vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.3;background:var(--grad);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sh 7s linear infinite}
+@keyframes sh{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:620px;font-size:16px;line-height:1.7;color:var(--muted)}
+.glass{background:var(--card);border:1.5px solid var(--line);border-radius:26px;box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.sel{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.sb{display:flex;align-items:center;gap:8px;padding:11px 14px;font:inherit;font-size:14.5px;font-weight:700;text-align:left;cursor:pointer;color:var(--text);background:var(--card);border:1.5px solid var(--line);border-radius:16px;transition:transform .2s,border-color .2s,background .2s}
+.sb span{font-size:20px}
+.sb:hover{transform:translateY(-3px);border-color:var(--g1)}
+.sb.on{color:#06130e;border-color:transparent;background:var(--grad);box-shadow:0 8px 22px var(--glow)}
+.fm{display:inline-block;padding:4px 12px;border-radius:10px;font-family:ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;font-size:15px;font-weight:700;color:var(--g1);background:var(--soft);border:1px dashed var(--line);word-break:break-word}
+[data-theme="light"] .fm{color:#047857}
+.tag{display:inline-block;padding:2px 11px;border-radius:20px;font-size:12px;font-weight:800;color:var(--g1);background:var(--soft);border:1px solid var(--line)}
+.cb{padding:6px 12px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--muted);background:var(--solid);border:1px solid var(--line);border-radius:10px}
+.cb:hover{color:var(--text);border-color:var(--g1)}
+.credit{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:60;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(3,15,10,.82);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit{background:rgba(255,255,255,.9);color:#475569;border-top-color:rgba(6,78,59,.12)}
+.credit span{margin-left:5px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(max-width:640px){.bk .long{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 25px 40px;
-            transition: background 0.3s, color 0.3s;
-        }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+.dt{padding:26px;margin-bottom:24px;animation:rs .4s ease both}
+@keyframes rs{from{opacity:0;transform:translateY(12px)}}
+.dh{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px dashed var(--line)}
+.dh .ic{width:62px;height:62px;border-radius:20px;font-size:32px;display:flex;align-items:center;justify-content:center;background:var(--solid);border:1px solid var(--line)}
+.dh h2{margin:0;flex:1;min-width:200px;font-size:clamp(1.3rem,3.6vw,1.7rem);font-weight:800;line-height:1.35}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0}
+.tl{padding:13px 15px;border-radius:16px;background:var(--soft);border:1px solid var(--line)}
+.tl small{display:block;margin-bottom:6px;font-size:12px;font-weight:800;letter-spacing:.3px;color:var(--muted)}
+.tl b{font-size:15px;line-height:1.6}
+.intro{margin:0 0 6px;font-size:15.5px;line-height:1.85;color:var(--muted)}
+.sec{margin-top:20px}
+.sec h3{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:16.5px;font-weight:800}
+.sec ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.sec li{position:relative;padding:9px 14px 9px 36px;font-size:14.5px;line-height:1.75;color:var(--muted);background:var(--soft);border-radius:12px}
+.sec li::before{content:'';position:absolute;left:14px;top:17px;width:9px;height:9px;border-radius:50%;background:var(--grad)}
+.mem{display:flex;flex-wrap:wrap;gap:8px}
+.mem div{padding:8px 12px;border-radius:14px;font-size:13.5px;font-weight:700;background:var(--solid);border:1px solid var(--line)}
+.mem div .fm{display:block;margin-top:4px;padding:2px 8px;font-size:13.5px}
+.nv{display:flex;gap:10px;margin-top:22px}
+.nv button{flex:1;min-height:44px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;color:var(--text);background:var(--solid);border:1px solid var(--line);border-radius:14px}
+.nv button:hover{border-color:var(--g1)}
+.cmp{overflow-x:auto;border-radius:22px}
+.cmp table{width:100%;min-width:640px;border-collapse:collapse;font-size:14px}
+.cmp th,.cmp td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.cmp th{font-size:12.5px;font-weight:800;color:var(--muted);background:var(--soft)}
+.cmp tr:last-child td{border-bottom:0}
+.cmp tbody tr{cursor:pointer;transition:background .2s}
+.cmp tbody tr:hover{background:var(--soft)}
+.cmp td:first-child{font-weight:800;white-space:nowrap}
+.st{display:flex;align-items:center;gap:10px;margin:30px 0 14px;padding-bottom:10px;font-size:20px;font-weight:800;border-bottom:2px dashed var(--line)}
 
-        .top-action-bar {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .back-home-btn {
-            display: inline-flex;
-            align-items: center;
-            background: #10b981;
-            color: white !important;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 15px;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
-        }
-
-        .hub-header-section {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .hub-main-title {
-            font-size: 36px;
-            font-weight: 800;
-            color: #d97706;
-            margin: 0 0 12px 0;
-        }
-        [data-theme="dark"] .hub-main-title { color: #f59e0b; }
-
-        .hub-subtitle {
-            font-size: 16px;
-            color: #475569;
-            margin: 0;
-        }
-        [data-theme="dark"] .hub-subtitle { color: #94a3b8; }
-
-        /* স্ক্রোলযোগ্য বাটন লাইন */
-        .organic-menu-line {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--border-color);
-        }
-        .organic-menu-line::-webkit-scrollbar { height: 6px; }
-        .organic-menu-line::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-
-        .menu-opt-btn {
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 12px 22px;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 15px;
-            white-space: nowrap;
-            transition: 0.2s ease;
-            box-shadow: 0 4px 10px var(--shadow);
-        }
-        .menu-opt-btn:hover, .menu-opt-btn.active {
-            background: #10b981;
-            color: white;
-            border-color: transparent;
-            transform: translateY(-2px);
-        }
-
-        /* তথ্য দেখানোর কার্ড বক্স */
-        .info-card-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 35px;
-            box-shadow: 0 10px 30px var(--shadow);
-            min-height: 250px;
-            line-height: 1.7;
-        }
-
-        .formula-style {
-            font-family: 'Courier New', Courier, monospace;
-            background: rgba(16, 185, 129, 0.08);
-            color: #10b981;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            display: inline-block;
-        }
-        [data-theme="dark"] .formula-style { background: rgba(255,255,255,0.1); color: #f8fafc; }
-        
-        .placeholder-text {
-            text-align: center;
-            opacity: 0.6;
-            padding: 50px 0;
-        }
-
-        code {
-            font-family: Consolas, monospace;
-            background: rgba(217, 119, 6, 0.1);
-            color: #d97706;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 20px; }
-            .hub-main-title { font-size: 28px; }
-        }
-    </style>
+</style>
 </head>
 <body>
-
-    <div class="container">
-        <div class="top-action-bar">
-            <a href="organic.html" class="back-home-btn">← ফিরে যান</a>
+<div class="fx"><i class="a"></i><i class="b"></i><i class="hex"></i></div>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" id="brandLink" href="organic.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Organic · Info</small></span></a>
+        <div class="tr">
+            <button class="ib" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="bk" id="backBtn" href="organic.html">← <span class="long">জৈব রসায়ন হাব</span></a>
         </div>
+    </header>
+    <section class="hero"><span class="pill">ℹ️ শ্রেণি, মূলক ও বৈশিষ্ট্য</span><h1>জৈব যৌগের তথ্য ও পরিচিতি</h1><p>যেকোনো হাইড্রোকার্বন বা যৌগের শ্রেণি বেছে নিয়ে তার সংকেত, মূলক, ধর্ম, শনাক্তকরণ ও ব্যবহার দেখে নাও। ← → কী দিয়েও শ্রেণি বদলানো যায়।</p></section>
 
-        <div class="hub-header-section">
-            <h1 class="hub-main-title">ℹ️ জৈব যৌগের তথ্য ও পরিচিতি</h1>
-            <p class="hub-subtitle">যেকোনো হাইড্রোকার্বন বা যৌগ সিলেক্ট করে তার সংকেত, মূলক ও বৈশিষ্ট্য দেখে নাও।</p>
-        </div>
+    <div class="sel" id="sel" role="group" aria-label="যৌগের শ্রেণী"></div>
+    <article class="glass dt" id="dt" aria-live="polite"></article>
+    <h2 class="st">📊 শ্রেণিগুলোর তুলনা এক নজরে</h2>
+    <div class="glass cmp"><table id="cmp"><thead><tr><th>শ্রেণি</th><th>সাধারণ সংকেত</th><th>কার্যকরী মূলক</th><th>IUPAC প্রত্যয়/উপসর্গ</th><th>প্রথম সদস্য</th></tr></thead><tbody></tbody></table></div>
 
-        <div class="organic-menu-line">
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'alkane')">⛽ অ্যালকেন</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'alkene')">🧪 অ্যালকিন</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'alkyne')">🔥 অ্যালকাইন</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'alcohol')">💧 অ্যালকোহল</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'aldehyde')">🍏 অ্যালডিহাইড</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'acid')">🍋 জৈব এসিড</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'ketone')">🍭 কিটোন</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'ether')">☁️ ইথার</button>
-    <button class="menu-opt-btn" onclick="loadInfo(this, 'ester')">🌸 এস্টার</button>
 </div>
+<div class="credit">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const BACK_URL = 'organic.html';
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+$('brandLink').href = BACK_URL; $('backBtn').href = BACK_URL;
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
 
-        <div class="info-card-box" id="info-display-box">
-            <div class="placeholder-text">
-                <h2>☝️ ওপরের মেনু থেকে যেকোনো একটি যৌগ সিলেক্ট করো!</h2>
-            </div>
-        </div>
-    </div>
+/* নতুন শ্রেণি যোগ করতে CL তালিকায় একটি অবজেক্ট যোগ করো */
+const CL = [
+ { id:'alkane', icon:'⛽', name:'অ্যালকেন (Alkane)', gen:'CₙH₂ₙ₊₂', grp:'C–C একক বন্ধন (সম্পৃক্ত)', suf:'–েন (-ane)', first:'মিথেন (CH₄)',
+   intro:'কার্বন-কার্বন একক বন্ধনযুক্ত সম্পৃক্ত হাইড্রোকার্বন। এদের "প্যারাফিন" বলা হয় (ল্যাটিন parum affinis = কম আসক্তি), কারণ সাধারণ অবস্থায় এসিড, ক্ষার বা জারকের সাথে এরা প্রায় বিক্রিয়াই করে না।',
+   props:['ভৌত: C₁–C₄ গ্যাস, C₅–C₁₇ তরল, C₁₈ থেকে কঠিন। পানিতে অদ্রবণীয় ও পানির চেয়ে হালকা।','রাসায়নিক: প্রধানত প্রতিস্থাপন বিক্রিয়া (UV আলোতে হ্যালোজেনের সাথে) ও দহন।','C₄ থেকে শুরু করে শৃঙ্খল সমাণুতা দেখা যায় (বিউটেন ও আইসোবিউটেন)।'],
+   tests:['ব্রোমিন পানি ও ক্ষারীয় KMnO₄ বিবর্ণ করে না, তাই এটি অসম্পৃক্ত নয় বোঝা যায়।'],
+   uses:['মিথেন: প্রাকৃতিক গ্যাস, বায়োগ্যাস ও রান্নার জ্বালানি।','প্রোপেন ও বিউটেন: এলপিজি (LPG)।','পেট্রোল, ডিজেল ও প্যারাফিন মোম।'],
+   mem:[['মিথেন','CH₄'],['ইথেন','C₂H₆'],['প্রোপেন','C₃H₈'],['বিউটেন','C₄H₁₀'],['পেন্টেন','C₅H₁₂']] },
+ { id:'alkene', icon:'🧪', name:'অ্যালকিন (Alkene)', gen:'CₙH₂ₙ', grp:'C=C দ্বিবন্ধন (অসম্পৃক্ত)', suf:'–ইন (-ene)', first:'ইথিন (C₂H₄)',
+   intro:'কার্বন-কার্বন দ্বিবন্ধনযুক্ত অসম্পৃক্ত হাইড্রোকার্বন। এদের "অলেফিন" বলা হয়, কারণ ক্লোরিনের সাথে বিক্রিয়ায় তৈলাক্ত পদার্থ তৈরি হয় (olefiant gas = তেল-উৎপাদক গ্যাস)।',
+   props:['ভৌত: C₂–C₄ গ্যাস, C₅ থেকে তরল। পানিতে অদ্রবণীয়।','রাসায়নিক: সংযোজন বিক্রিয়া (H₂, Br₂, HBr, H₂O) ও পলিমারকরণ করে।','C₄ থেকে অবস্থান সমাণুতা দেখা যায় (বিউট-১-ইন ও বিউট-২-ইন)।'],
+   tests:['ব্রোমিন পানির বাদামি রং বিবর্ণ হয়।','ক্ষারীয় KMnO₄ (বেয়ার বিকারক) এর গোলাপি রং বিবর্ণ হয়।'],
+   uses:['ইথিন: পলিথিন তৈরি এবং ফল পাকানো (ইথিন একটি উদ্ভিদ হরমোন)।','প্রোপিন: পলিপ্রোপিলিন প্লাস্টিক।','ইথানল ও ইথিলিন গ্লাইকলের কাঁচামাল।'],
+   mem:[['ইথিন','C₂H₄'],['প্রোপিন','C₃H₆'],['বিউট-১-ইন','C₄H₈'],['পেন্ট-১-ইন','C₅H₁₀']] },
+ { id:'alkyne', icon:'🔥', name:'অ্যালকাইন (Alkyne)', gen:'CₙH₂ₙ₋₂', grp:'C≡C ত্রিবন্ধন (অসম্পৃক্ত)', suf:'–আইন (-yne)', first:'ইথাইন (C₂H₂)',
+   intro:'কার্বন-কার্বন ত্রিবন্ধনযুক্ত অসম্পৃক্ত হাইড্রোকার্বন। প্রথম সদস্য ইথাইন, যার প্রচলিত নাম অ্যাসিটিলিন।',
+   props:['ভৌত: C₂–C₄ গ্যাস। ইথাইন পানিতে সামান্য দ্রবণীয়।','রাসায়নিক: দুই ধাপে সংযোজন বিক্রিয়া করে।','প্রান্তীয় ত্রিবন্ধনযুক্ত অ্যালকাইনের হাইড্রোজেন সামান্য অম্লীয়, তাই ধাতব লবণ তৈরি করে।'],
+   tests:['ব্রোমিন পানি ও ক্ষারীয় KMnO₄ বিবর্ণ করে।','অ্যামোনিয়াকাল AgNO₃ দ্রবণে সাদা অধঃক্ষেপ ও অ্যামোনিয়াকাল Cu₂Cl₂ দ্রবণে লাল অধঃক্ষেপ (শুধু প্রান্তীয় ত্রিবন্ধনে)।'],
+   uses:['অক্সি-অ্যাসিটিলিন শিখা (প্রায় ৩০০০°C-এর বেশি) দিয়ে ধাতু কাটা ও ঝালাই।','পিভিসি ও অন্যান্য রাসায়নিকের কাঁচামাল।'],
+   mem:[['ইথাইন','C₂H₂'],['প্রোপাইন','C₃H₄'],['বিউট-১-আইন','C₄H₆']] },
+ { id:'alcohol', icon:'💧', name:'অ্যালকোহল (Alcohol)', gen:'CₙH₂ₙ₊₁OH  (R–OH)', grp:'–OH (হাইড্রোক্সিল)', suf:'–অল (-ol)', first:'মিথানল (CH₃OH)',
+   intro:'হাইড্রোকার্বনের একটি হাইড্রোজেন পরমাণু –OH মূলক দ্বারা প্রতিস্থাপিত হলে অ্যালকোহল পাওয়া যায়।',
+   props:['ভৌত: হাইড্রোজেন বন্ধনের কারণে ফুটনাঙ্ক সমান ভরের হাইড্রোকার্বনের চেয়ে অনেক বেশি; নিম্ন সদস্যরা পানিতে মেশে।','প্রকারভেদ: –OH যে কার্বনে আছে সেই কার্বনে কয়টি অন্য কার্বন যুক্ত তার ভিত্তিতে প্রাইমারি (১°), সেকেন্ডারি (২°) ও টারশিয়ারি (৩°)।','রাসায়নিক: সোডিয়ামের সাথে H₂ দেয়, এসিডের সাথে এস্টার তৈরি করে, ১° অ্যালকোহল জারিত হয়ে অ্যালডিহাইড ও পরে এসিড দেয়।'],
+   tests:['সোডিয়াম ধাতু যোগ করলে হাইড্রোজেনের বুদবুদ ওঠে।','অম্লীয় K₂Cr₂O₇ (কমলা) জারণে সবুজ হয়ে যায়।'],
+   uses:['ইথানল: হ্যান্ড স্যানিটাইজার, পারফিউম, দ্রাবক ও জ্বালানি-মিশ্রণ।','মিথানল: দ্রাবক ও জ্বালানি, তবে বিষাক্ত: পান করলে অন্ধত্ব বা মৃত্যু হতে পারে।'],
+   mem:[['মিথানল','CH₃OH'],['ইথানল','C₂H₅OH'],['প্রোপান-১-অল','CH₃CH₂CH₂OH'],['প্রোপান-২-অল','CH₃CH(OH)CH₃']] },
+ { id:'aldehyde', icon:'🍏', name:'অ্যালডিহাইড (Aldehyde)', gen:'CₙH₂ₙO  (R–CHO)', grp:'–CHO (অ্যালডিহাইড মূলক)', suf:'–আল (-al)', first:'মিথান্যাল (HCHO)',
+   intro:'কার্বনিল মূলকের (C=O) কার্বনের একপাশে হাইড্রোজেন থাকে (–CHO)। মিথান্যালের (ফরমালডিহাইড) ৪০% জলীয় দ্রবণকে ফরমালিন বলে, যা জীবদেহের নমুনা সংরক্ষণে ব্যবহৃত হয়।',
+   props:['ভৌত: মিথান্যাল গ্যাস, বাকিরা উদ্বায়ী তরল। নিম্ন সদস্যরা পানিতে মেশে।','রাসায়নিক: সহজেই জারিত হয়ে এসিড দেয় (তাই বিজারক) এবং সংযোজন বিক্রিয়া করে।'],
+   tests:['টলেন্স বিকারক: রুপালি আয়না (Ag)।','ফেহলিং দ্রবণ (গরম করে): লাল অধঃক্ষেপ (Cu₂O)।'],
+   uses:['ফরমালিন: নমুনা সংরক্ষণ ও বেকেলাইট প্লাস্টিক তৈরি।','ইথান্যাল: ইথানয়িক এসিডসহ অন্যান্য রাসায়নিকের কাঁচামাল।'],
+   mem:[['মিথান্যাল','HCHO'],['ইথান্যাল','CH₃CHO'],['প্রোপান্যাল','CH₃CH₂CHO']] },
+ { id:'acid', icon:'🍋', name:'জৈব এসিড (Carboxylic Acid)', gen:'CₙH₂ₙO₂  (R–COOH)', grp:'–COOH (কার্বক্সিল)', suf:'–ানয়িক এসিড (-oic acid)', first:'মিথানয়িক এসিড (HCOOH)',
+   intro:'কার্বক্সিল মূলক (–COOH) যুক্ত যৌগ। ইথানয়িক এসিডের ৪–১০% জলীয় দ্রবণ ভিনেগার।',
+   props:['ভৌত: নিম্ন সদস্যরা ঝাঁঝালো গন্ধযুক্ত তরল। হাইড্রোজেন বন্ধনের কারণে ফুটনাঙ্ক বেশি।','রাসায়নিক: দুর্বল এসিড; ক্ষার ও কার্বনেটের সাথে বিক্রিয়া করে লবণ দেয়; অ্যালকোহলের সাথে এস্টার তৈরি করে।'],
+   tests:['NaHCO₃ দ্রবণে CO₂ গ্যাসের বুদবুদ ওঠে।','নীল লিটমাস কাগজ লাল হয়।'],
+   uses:['ভিনেগার: আচার ও খাদ্য সংরক্ষণ।','মিথানয়িক এসিড: পিঁপড়া ও মৌমাছির হুলে থাকে; রবার ও চামড়া শিল্পে ব্যবহৃত।'],
+   mem:[['মিথানয়িক এসিড','HCOOH'],['ইথানয়িক এসিড','CH₃COOH'],['প্রোপানয়িক এসিড','CH₃CH₂COOH']] },
+ { id:'ketone', icon:'🍭', name:'কিটোন (Ketone)', gen:'CₙH₂ₙO  (R–CO–R′, n ≥ ৩)', grp:'>C=O (কার্বনিল/কিটো)', suf:'–ওন (-one)', first:'প্রোপানন / অ্যাসিটোন (CH₃COCH₃)',
+   intro:'কার্বনিল মূলকের দুই পাশেই অ্যালকাইল মূলক থাকে। প্রথম সদস্য প্রোপানন (অ্যাসিটোন), তাই ন্যূনতম তিনটি কার্বন লাগে।',
+   props:['ভৌত: নিম্ন সদস্যরা উদ্বায়ী, পানিতে মেশে ও মিষ্টি গন্ধযুক্ত।','রাসায়নিক: সংযোজন বিক্রিয়া করে, কিন্তু সহজে জারিত হয় না।','অ্যালডিহাইডের সাথে ফাংশনাল সমাণু (C₃H₆O: প্রোপানন ও প্রোপান্যাল)।'],
+   tests:['টলেন্স বিকারক ও ফেহলিং দ্রবণে কোনো সাড়া দেয় না (অ্যালডিহাইড থেকে আলাদা করার উপায়)।','CH₃CO– মূলকযুক্ত কিটোন আয়োডোফর্ম পরীক্ষায় হলুদ অধঃক্ষেপ দেয়।'],
+   uses:['অ্যাসিটোন: নেইল পলিশ রিমুভার ও শিল্প দ্রাবক।'],
+   mem:[['প্রোপানন (অ্যাসিটোন)','CH₃COCH₃'],['বিউটানন','CH₃COCH₂CH₃']] },
+ { id:'ether', icon:'☁️', name:'ইথার (Ether)', gen:'CₙH₂ₙ₊₂O  (R–O–R′)', grp:'–O– (ইথারীয় বন্ধন)', suf:'অ্যালকক্সি-অ্যালকেন (alkoxyalkane)', first:'ডাই-মিথাইল ইথার (CH₃OCH₃)',
+   intro:'অক্সিজেন পরমাণুর দুই পাশে দুটি অ্যালকাইল মূলক যুক্ত থাকে। অ্যালকোহলের সাথে ফাংশনাল সমাণুতা দেখায় (C₂H₆O: ইথানল ও ডাই-মিথাইল ইথার)।',
+   props:['ভৌত: –OH নেই বলে হাইড্রোজেন বন্ধন গঠন করে না, তাই ফুটনাঙ্ক অ্যালকোহলের চেয়ে অনেক কম। খুব উদ্বায়ী ও দাহ্য।','রাসায়নিক: তুলনামূলক নিষ্ক্রিয়, তাই ভালো দ্রাবক।'],
+   tests:['সোডিয়াম ধাতুর সাথে বিক্রিয়া করে না (অ্যালকোহল থেকে আলাদা করার উপায়)।'],
+   uses:['ডাই-ইথাইল ইথার: শিল্প দ্রাবক; একসময় চেতনানাশক হিসেবে ব্যবহৃত হতো (এখন আধুনিক ওষুধ ব্যবহৃত হয়)।'],
+   mem:[['ডাই-মিথাইল ইথার','CH₃OCH₃'],['ডাই-ইথাইল ইথার','C₂H₅OC₂H₅'],['ইথাইল মিথাইল ইথার','CH₃OC₂H₅']] },
+ { id:'ester', icon:'🌸', name:'এস্টার (Ester)', gen:'CₙH₂ₙO₂  (R–COO–R′)', grp:'–COO– (এস্টার মূলক)', suf:'অ্যালকাইল …ানয়েট (alkyl -oate)', first:'মিথাইল মিথানয়েট (HCOOCH₃)',
+   intro:'জৈব এসিড ও অ্যালকোহলের বিক্রিয়ায় এস্টার ও পানি উৎপন্ন হয়। ফল ও ফুলের মিষ্টি গন্ধের উৎস।',
+   props:['ভৌত: মিষ্টি ফলের মতো সুগন্ধ; পানিতে কম দ্রবণীয়।','রাসায়নিক: ক্ষারীয় আর্দ্রবিশ্লেষণে অ্যালকোহল ও এসিডের লবণ (সাবান) তৈরি হয়, যাকে সাবানীকরণ বলে।','অ্যালকাইল গ্রুপ এসিডের চেয়ে আগে লেখা হয় (ইথাইল ইথানয়েট)।'],
+   tests:['মিষ্টি ফলের মতো সুগন্ধ থেকে চেনা যায়।'],
+   uses:['কৃত্রিম এসেন্স ও ফ্লেভার (যেমন কমলার সুবাসে অক্টাইল অ্যাসিটেট)।','ইথাইল ইথানয়েট: দ্রাবক।','চর্বি ও তেল আসলে গ্লিসারলের এস্টার।'],
+   mem:[['মিথাইল মিথানয়েট','HCOOCH₃'],['ইথাইল ইথানয়েট','CH₃COOC₂H₅'],['মিথাইল ইথানয়েট','CH₃COOCH₃']] },
+ { id:'halo', icon:'🧫', name:'হ্যালো অ্যালকেন (Haloalkane)', gen:'CₙH₂ₙ₊₁X  (R–X)', grp:'–X (F, Cl, Br, I)', suf:'ক্লোরো-/ব্রোমো- (উপসর্গ)', first:'ক্লোরোমিথেন (CH₃Cl)',
+   intro:'অ্যালকেনের হাইড্রোজেন হ্যালোজেন পরমাণু (X) দ্বারা প্রতিস্থাপিত হলে হ্যালো অ্যালকেন (অ্যালকাইল হ্যালাইড) পাওয়া যায়।',
+   props:['ভৌত: পানিতে অদ্রবণীয়; ফুটনাঙ্ক অনুরূপ অ্যালকেনের চেয়ে বেশি।','রাসায়নিক: প্রতিস্থাপন (জলীয় NaOH-এ অ্যালকোহল) ও বিলোপ (অ্যালকোহলীয় KOH-এ অ্যালকিন) বিক্রিয়া করে।'],
+   tests:['অ্যালকোহলীয় AgNO₃ যোগে AgX অধঃক্ষেপ: ক্লোরাইডে সাদা, ব্রোমাইডে হালকা হলুদ, আয়োডাইডে হলুদ।'],
+   uses:['দ্রাবক ও জৈব সংশ্লেষণের মধ্যবর্তী পদার্থ।','ক্লোরোফর্ম (CHCl₃) একসময় চেতনানাশক ছিল। CCl₄ ছিল অগ্নিনির্বাপক।','CFC যৌগ ওজোন স্তরের ক্ষতি করে বলে এখন নিষিদ্ধপ্রায়।'],
+   mem:[['ক্লোরোমিথেন','CH₃Cl'],['ক্লোরোইথেন','C₂H₅Cl'],['ব্রোমোইথেন','C₂H₅Br'],['ট্রাইক্লোরোমিথেন (ক্লোরোফর্ম)','CHCl₃']] },
+ { id:'amine', icon:'🐟', name:'অ্যামিন (Amine)', gen:'CₙH₂ₙ₊₃N  (R–NH₂)', grp:'–NH₂ (অ্যামিনো)', suf:'–অ্যামিন (-amine)', first:'মিথানামিন (CH₃NH₂)',
+   intro:'অ্যামোনিয়ার (NH₃) হাইড্রোজেন অ্যালকাইল মূলক দ্বারা প্রতিস্থাপিত হলে অ্যামিন পাওয়া যায়।',
+   props:['ভৌত: নিম্ন সদস্যরা গ্যাস বা উদ্বায়ী তরল, মাছের মতো গন্ধ, পানিতে মেশে।','রাসায়নিক: অ্যামোনিয়ার মতো ক্ষারীয়; এসিডের সাথে লবণ তৈরি করে।'],
+   tests:['জলীয় দ্রবণ লাল লিটমাসকে নীল করে।'],
+   uses:['রঞ্জক, ওষুধ ও কীটনাশকের কাঁচামাল।','অ্যানিলিন (C₆H₅NH₂) রং শিল্পে গুরুত্বপূর্ণ।'],
+   mem:[['মিথানামিন','CH₃NH₂'],['ইথানামিন','C₂H₅NH₂'],['অ্যানিলিন','C₆H₅NH₂']] },
+ { id:'benzene', icon:'⬡', name:'বেনজিন (Aromatic)', gen:'C₆H₆ (আরোমেটিক)', grp:'ষড়ভুজ রিং (অনুরণন)', suf:'বেনজিন-ভিত্তিক', first:'বেনজিন (C₆H₆)',
+   intro:'ছয় কার্বনের ষড়ভুজাকার সমতলীয় রিং, যার সবগুলো C–C বন্ধনের দৈর্ঘ্য সমান। কেকুলে ১৮৬৫ সালে এই গঠন প্রস্তাব করেন এবং আধুনিক ব্যাখ্যা অনুরণন (resonance)।',
+   props:['ভৌত: বর্ণহীন, দাহ্য, বিশেষ গন্ধযুক্ত তরল; পানিতে অদ্রবণীয়। বিষাক্ত ও ক্যান্সার সৃষ্টিকারী।','রাসায়নিক: সংযোজনের চেয়ে প্রতিস্থাপন (নাইট্রেশন, হ্যালোজেনেশন, সালফোনেশন, ফ্রিডেল-ক্র্যাফটস) সহজ, কারণ রিংয়ের স্থিতিশীলতা বজায় থাকে।'],
+   tests:['জ্বালালে কালো ধোঁয়াসহ শিখায় পোড়ে (কার্বনের শতকরা পরিমাণ বেশি বলে)।'],
+   uses:['স্টাইরিন, ফেনল, অ্যানিলিন, রং, ওষুধ ও প্লাস্টিকের কাঁচামাল।'],
+   mem:[['বেনজিন','C₆H₆'],['টলুইন','C₆H₅CH₃'],['ফেনল','C₆H₅OH'],['অ্যানিলিন','C₆H₅NH₂']] }
+];
+let cur = 0;
+function mk(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+function buildSel() { const s = $('sel'); s.replaceChildren(); CL.forEach((c, i) => { const b = mk('button', 'sb'); b.type = 'button'; b.dataset.i = i; b.append(mk('span', '', c.icon), document.createTextNode(c.name.split(' (')[0])); b.addEventListener('click', () => show(i, true)); s.appendChild(b); }); }
+function list(title, icon, arr) { const s = mk('div', 'sec'); const h = mk('h3'); h.textContent = icon + ' ' + title; const ul = mk('ul'); arr.forEach(t => ul.appendChild(mk('li', '', t))); s.append(h, ul); return s; }
+function tile(l, v, isFm) { const t = mk('div', 'tl'); t.appendChild(mk('small', '', l)); const b = mk('b'); if (isFm) b.appendChild(mk('span', 'fm', v)); else b.textContent = v; t.appendChild(b); return t; }
+function show(i, push) {
+    cur = (i + CL.length) % CL.length; const c = CL[cur]; if (push) { try { history.replaceState(null, '', '#' + c.id); } catch (e) {} }
+    document.querySelectorAll('#sel .sb').forEach((b, k) => { b.classList.toggle('on', k === cur); b.setAttribute('aria-pressed', String(k === cur)); });
+    const d = $('dt'); d.replaceChildren(); d.style.animation = 'none'; void d.offsetWidth; d.style.animation = '';
+    const h = mk('div', 'dh'); h.append(mk('div', 'ic', c.icon), mk('h2', '', c.name), mk('span', 'tag', 'শ্রেণি ' + bn(cur + 1) + '/' + bn(CL.length))); d.appendChild(h);
+    const t = mk('div', 'tiles'); t.append(tile('সাধারণ সংকেত', c.gen, true), tile('কার্যকরী মূলক', c.grp), tile('IUPAC প্রত্যয়/উপসর্গ', c.suf), tile('প্রথম সদস্য', c.first)); d.appendChild(t);
+    d.appendChild(mk('p', 'intro', c.intro)); d.appendChild(list('ধর্ম ও বৈশিষ্ট্য', '🔹', c.props)); d.appendChild(list('শনাক্তকরণ', '🔎', c.tests)); d.appendChild(list('ব্যবহার', '🛠️', c.uses));
+    const m = mk('div', 'sec'); const mh = mk('h3', '', '🧬 কয়েকটি সদস্য'); const mm = mk('div', 'mem'); c.mem.forEach(([n, f]) => { const x = mk('div', '', n); x.appendChild(mk('span', 'fm', f)); mm.appendChild(x); }); m.append(mh, mm); d.appendChild(m);
+    const nv = mk('div', 'nv'); const p = mk('button', '', '← ' + CL[(cur + CL.length - 1) % CL.length].name.split(' (')[0]), n = mk('button', '', CL[(cur + 1) % CL.length].name.split(' (')[0] + ' →'); p.type = n.type = 'button'; p.addEventListener('click', () => show(cur - 1, true)); n.addEventListener('click', () => show(cur + 1, true)); nv.append(p, n); d.appendChild(nv);
+}
+(function cmp() { const tb = $('cmp').tBodies[0]; CL.forEach((c, i) => { const tr = document.createElement('tr'); [c.icon + ' ' + c.name.split(' (')[0], c.gen, c.grp, c.suf, c.first].forEach((x, k) => { const td = document.createElement('td'); td.textContent = x; if (k === 1) td.className = 'fm'; tr.appendChild(td); }); tr.addEventListener('click', () => { show(i, true); window.scrollTo({ top: 0, behavior: 'smooth' }); }); tb.appendChild(tr); }); })();
+buildSel(); const h0 = CL.findIndex(c => c.id === location.hash.replace('#', '')); show(h0 >= 0 ? h0 : 0, false);
+addEventListener('keydown', e => { if (e.target.tagName === 'INPUT' || e.ctrlKey || e.metaKey) return; if (e.key === 'ArrowRight') show(cur + 1, true); else if (e.key === 'ArrowLeft') show(cur - 1, true); });
 
-    <script>
-        const infoDb = {
-            alkane: {
-                name: "⛽ অ্যালকেন (Alkane)",
-                details: `
-                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">C_nH_{2n+2}</span></p>
-                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-C-C- (কার্বন-কার্বন একক বন্ধন)</code></p>
-                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> অ্যালকেনসমূহকে <strong>'প্যারাফিন'</strong> বলা হয়। প্যারাফিন শব্দের অর্থ হলো আসক্তিহীন। এরা রাসায়নিকভাবে বেশ নিষ্ক্রিয় হওয়ায় সাধারণ অবস্থায় এসিড, ক্ষার বা জারকের সাথে কোনো বিক্রিয়া করতে চায় না।</p>
-                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথেন (<span class="formula-style">CH_4</span>), ইথেন (<span class="formula-style">C_2H_6</span>)</p>
-                `
-            },
-            alkene: {
-                name: "🧪 অ্যালকিন (Alkene)",
-                details: `
-                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">C_nH_{2n}</span></p>
-                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-C=C- (কার্বন-কার্বন দ্বিবন্ধন)</code></p>
-                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> এরা অসম্পৃক্ত হাইড্রোকার্বন। এদের প্রথম সদস্যদের হ্যালোজেনের সাথে বিক্রিয়ায় তৈলাক্ত পদার্থ উৎপন্ন হওয়ার কারণে এদের <strong>'অলেফিন'</strong> (তৈল উৎপাদনকারী) বলা হয়। ব্রোমিন পানি পরীক্ষা দিয়ে সহজেই এদের সনাক্ত করা যায়।</p>
-                    <p><strong>🔹 প্রধান উদাহরণ:</strong> ইথিন (<span class="formula-style">C_2H_4</span>), প্রোপিন (<span class="formula-style">C_3H_6</span>)</p>
-                `
-            },
-            alkyne: {
-                name: "🔥 অ্যালকাইন (Alkyne)",
-                details: `
-                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">C_nH_{2n-2}</span></p>
-                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-C≡C- (কার্বন-কার্বন ত্রিবন্ধন)</code></p>
-                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> এরাও অত্যন্ত অসম্পৃক্ত হাইড্রোকার্বন। প্রথম সদস্য ইথাইন (অ্যাসিটিলিন) গ্যাস সিলিন্ডারে ভরে উচ্চ তাপমাত্রার অক্সি-অ্যাসিটিলিন শিখা তৈরি করে মেটাল বা লোহা কাটার ও ঝালাইয়ের কাজে ব্যবহার করা হয়।</p>
-                    <p><strong>🔹 প্রধান উদাহরণ:</strong> ইথাইন (<span class="formula-style">C_2H_2</span>)</p>
-                `
-            },
-            alcohol: {
-                name: "💧 অ্যালকোহল (Alcohol)",
-                details: `
-                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-OH</span> বা <span class="formula-style">C_nH_{2n+1}OH</span></p>
-                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-OH (হাইড্রোক্সিল মূলক)</code></p>
-                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> হাইড্রোকার্বনের হাইড্রোজেন পরমাণু হাইড্রোক্সিল গ্রুপ দ্বারা প্রতিস্থাপিত হলে অ্যালকোহল তৈরি হয়। ইথানল পারফিউম শিল্প, কসমেটিকস ও হ্যান্ড স্যানিটাইজার তৈরিতে ব্যাপক ব্যবহৃত হয়।</p>
-                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথানল (<span class="formula-style">CH_3OH</span>), ইথানল (<span class="formula-style">C_2H_5OH</span>)</p>
-                `
-            },
-            aldehyde: {
-                name: "🍏 অ্যালডিহাইড (Aldehyde)",
-                details: `
-                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-CHO</span></p>
-                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-CHO (অ্যালডিহাইড মূলক)</code></p>
-                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> মিথান্যালের (ফরমালডিহাইড) ৪০% জলীয় দ্রবণকে <strong>ফরমালিন</strong> বলা হয়, যা ল্যাবরেটরিতে ও মেডিকেল গবেষণাগারে মৃত জীবদেহ ও নমুনা পচন ছাড়াই দীর্ঘ বছর সংরক্ষণ করতে অত্যন্ত প্রয়োজনীয়।</p>
-                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথান্যাল (<span class="formula-style">HCHO</span>), ইথান্যাল (<span class="formula-style">CH_3CHO</span>)</p>
-                `
-            },
-            acid: {
-                name: "🍋 জৈব এসিড (Organic Carboxylic Acid)",
-                details: `
-                    <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-COOH</span></p>
-                    <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-COOH (কার্বক্সিলিক মূলক)</code></p>
-                    <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> ইথানয়িক এসিডের ৪-১০% জলীয় দ্রবণকে <strong>ভিনেগার</strong> বলা হয়। এটি একটি মৃদু এসিড যা বিভিন্ন আচার, চাটনি এবং খাদ্যদ্রব্য প্রিজারভেটিভ হিসেবে ব্যাকটেরিয়ার হাত থেকে দীর্ঘদিনের জন্য ভালো রাখে।</p>
-                    <p><strong>🔹 প্রধান উদাহরণ:</strong> মিথানয়িক এসিড (<span class="formula-style">HCOOH</span>), ইথানয়িক এসিড (<span class="formula-style">CH_3COOH</span>)</p>
-                `
-            },
-             ketone: {
-        name: "🍭 কিটোন (Ketone)",
-        details: `
-            <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-CO-R'</span> বা <span class="formula-style">C_nH_{2n}O</span> (যেখানে n ≥ 3)</p>
-            <p><strong>🔹 কার্যকরী মূলক:</strong> <code>&gt;C=O (কার্বনিল বা কিটো মূলক)</code></p>
-            <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> কার্বনিল মূলকের উভয় পাশে অ্যালকাইল মূলক যুক্ত থাকলে তাকে কিটোন বলে। এর প্রথম সদস্য প্রোপানন বা <strong>অ্যাসিটোন</strong>, যা ল্যাবরেটরিতে দ্রাবক হিসেবে এবং সাধারণত মেয়েরা নেইল পলিশ রিমুভার হিসেবে ব্যবহার করে।</p>
-            <p><strong>🔹 প্রধান উদাহরণ:</strong> প্রোপানন / অ্যাসিটোন (<span class="formula-style">CH_3COCH_3</span>)</p>
-        `
-    },
-    ether: {
-        name: "☁️ ইথার (Ether)",
-        details: `
-            <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-O-R'</span></p>
-            <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-O- (ইথারীয় লিংকেজ)</code></p>
-            <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> একটি অক্সিজেন পরমাণুর দুই পাশে দুটি অ্যালকাইল মূলক যুক্ত থাকলে তাকে ইথার বলা হয়। ইথার অত্যন্ত উদ্বায়ী (উড়ে যায় এমন) এবং দাহ্য তরল। চিকিৎসা বিজ্ঞানে ডাই-ইথাইল ইথার একসময় চেতনা নাশক বা অজ্ঞান করার কাজে ব্যাপক ব্যবহৃত হতো।</p>
-            <p><strong>🔹 প্রধান উদাহরণ:</strong> ডাই-মিথাইল ইথার (<span class="formula-style">CH_3-O-CH_3</span>), ডাই-ইথাইল ইথার (<span class="formula-style">C_2H_5-O-C_2H_5</span>)</p>
-        `
-    },
-    ester: {
-        name: "🌸 এস্টার (Ester)",
-        details: `
-            <p><strong>🔹 সাধারণ সংকেত:</strong> <span class="formula-style">R-COO-R'</span></p>
-            <p><strong>🔹 কার্যকরী মূলক:</strong> <code>-COO- (এস্টার মূলক)</code></p>
-            <p><strong>🔹 পরিচিতি ও ধর্ম:</strong> জৈব এসিড ও অ্যালকোহলের বিক্রিয়ায় এস্টার ও পানি উৎপন্ন হয়। এস্টারসমূহের চমৎকার মিষ্টি ফলের মতো সুগন্ধ থাকে। বিভিন্ন কৃত্রিম পারফিউম, এসেন্স এবং পাকা ফলের সুবাস (যেমন কমলার সুবাসে অক্টাইল অ্যাসিটেট) তৈরিতে এর ভূমিকা প্রধান।</p>
-            <p><strong>🔹 প্রধান উদাহরণ:</strong> ইথাইল ইথানয়েট (<span class="formula-style">CH_3COOC_2H_5</span>)</p>
-        `
-    }
-        };
-
-        function loadInfo(btn, key) {
-            document.querySelectorAll('.menu-opt-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const compound = infoDb[key];
-            document.getElementById('info-display-box').innerHTML = `
-                <h2 style="margin-top:0; color:#d97706; font-size: 26px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">${compound.name}</h2>
-                <div style="margin-top: 20px;">${compound.details}</div>
-            `;
-        }
-    </script>
+</script>
 </body>
 </html>
