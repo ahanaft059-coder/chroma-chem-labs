@@ -206,4 +206,233 @@ details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:1
   </section>
 
   <div class="grid2" style="margin-top:22px">
-    <secti
+    <section class="card"><h2>🔬 মৌলের ধর্মসমূহ</h2>
+      <div class="hrow"><button class="ob" id="pv">◀</button><select class="sel" id="sel" style="flex:1;min-width:140px;font-size:14px"></select><button class="ob" id="nx">▶</button></div>
+      <div class="row"><input class="num" id="q" style="width:100%" placeholder="প্রতীক, নাম বা Z লিখে Enter (যেমন Cl, সোডিয়াম, 26)" autocomplete="off"></div>
+      <div class="hrow" style="margin:10px 0 12px"><label style="font-size:12.5px;font-weight:700;color:var(--text-muted)">তুলনা করো:</label><select class="sel" id="cmp" style="flex:1;min-width:140px;font-size:14px"></select></div>
+      <div id="eh"></div>
+      <table class="dtb" id="dtb"></table>
+      <div class="hint">সারিতে ক্লিক করলে সেই ধর্মের গ্রাফ খুলবে। র‍্যাংক ১ = সবচেয়ে বেশি মান।</div>
+    </section>
+    <section class="card"><h2>🧠 ট্রেন্ড বিশ্লেষণ</h2>
+      <div id="ins"></div>
+    </section>
+  </div>
+
+  <div class="tabs" style="margin-top:22px">
+    <button class="tab on" data-p="p1">📘 প্রবণতার নিয়ম</button><button class="tab" data-p="p2">⚠️ ব্যতিক্রম</button><button class="tab" data-p="p3">🎓 ভাইভা</button><button class="tab" data-p="p4">📋 ডেটা টেবিল</button>
+  </div>
+  <div class="card th">
+    <div class="pane on" id="p1">
+      <h3>কেন ধর্মগুলো পর্যায়বৃত্ত?</h3>
+      <p>মূল কারণ দুটি: <b>কার্যকর নিউক্লিয়ার চার্জ (Z<sub>eff</sub>)</b> ও <b>শেল সংখ্যা</b>। একই পর্যায়ে বাম থেকে ডানে গেলে প্রোটন বাড়ে কিন্তু ইলেকট্রন একই শেলে বসে — তাই বাইরের ইলেকট্রন শক্তভাবে আকৃষ্ট হয়। একই গ্রুপে উপরে থেকে নিচে গেলে নতুন শেল যুক্ত হয়, ভেতরের শেলের <b>আবরণ (shielding)</b> বাড়ে ও দূরত্ব বাড়ে।</p>
+      <table class="rt"><tr><th>ধর্ম</th><th>পর্যায়ে বাম→ডান</th><th>গ্রুপে উপর→নিচ</th></tr>
+      <tr><td>পারমাণবিক ব্যাসার্ধ</td><td>↓ কমে</td><td>↑ বাড়ে</td></tr>
+      <tr><td>আয়নিকরণ শক্তি</td><td>↑ বাড়ে</td><td>↓ কমে</td></tr>
+      <tr><td>তড়িৎ ঋণাত্মকতা</td><td>↑ বাড়ে</td><td>↓ কমে</td></tr>
+      <tr><td>ইলেকট্রন আসক্তি</td><td>↑ (মোটামুটি) বাড়ে</td><td>↓ (মোটামুটি) কমে</td></tr>
+      <tr><td>ধাতব ধর্ম</td><td>↓ কমে</td><td>↑ বাড়ে</td></tr></table>
+      <span class="formula">Z<sub>eff</sub> = Z − S (আবরণ ধ্রুবক)</span>
+      <p>মনে রাখার সহজ কৌশল: ডানে-উপরে (F-এর দিকে) আকর্ষণ সবচেয়ে বেশি — তাই F-এর ঋণাত্মকতা সর্বোচ্চ; বামে-নিচে (Cs/Fr-এর দিকে) ইলেকট্রন সবচেয়ে সহজে বের হয়।</p>
+    </div>
+    <div class="pane" id="p2">
+      <h3>গ্রাফে যে ব্যতিক্রমগুলো চোখে পড়বে</h3>
+      <ul>
+        <li><b>আয়নিকরণ শক্তি — Be &gt; B ও Mg &gt; Al:</b> p ইলেকট্রন s-এর চেয়ে বেশি শক্তিস্তরে ও কম আকৃষ্ট, তাই সহজে বের হয়।</li>
+        <li><b>আয়নিকরণ শক্তি — N &gt; O ও P &gt; S:</b> N-এর p³ অর্ধপূর্ণ (স্থিতিশীল); O-তে জোড় বাঁধা ইলেকট্রনের বিকর্ষণ একটিকে সহজে ছাড়ায়।</li>
+        <li><b>ইলেকট্রন আসক্তি — Cl &gt; F:</b> F-এর ছোট 2p কক্ষে ইলেকট্রনের ভিড় (বিকর্ষণ) বেশি, তাই Cl-এর মান বেশি।</li>
+        <li><b>ইলেকট্রন আসক্তি — Be, N, নিষ্ক্রিয় গ্যাস:</b> পূর্ণ/অর্ধপূর্ণ বিন্যাসের কারণে ইলেকট্রন যোগে শক্তি ছাড়ে না — মান শূন্য বা ঋণাত্মক।</li>
+        <li><b>ব্যাসার্ধ — ট্রানজিশন ধাতু:</b> Sc→Zn-এ ব্যাসার্ধ খুব ধীরে কমে (d ইলেকট্রনের আবরণ)। ল্যান্থানাইড সংকোচনের ফলে Hf ≈ Zr।</li>
+        <li><b>গলনাঙ্ক — অনিয়মিত:</b> C (হীরা/গ্রাফাইট), W ও Re-এর মতো সমযোজী/শক্ত ধাতব বন্ধনে সর্বোচ্চ; Hg, Ga, He-তে খুব কম।</li>
+        <li><b>নিষ্ক্রিয় গ্যাসের তড়িৎ ঋণাত্মকতা:</b> He, Ne, Ar-এর মান নির্ধারিত নয় — তাই গ্রাফে ফাঁক রাখা হয়েছে (০ নয়)।</li>
+      </ul>
+    </div>
+    <div class="pane" id="p3">
+      <h3>ভাইভায় যা জিজ্ঞেস করতে পারে</h3>
+      <details class="qa"><summary>পর্যায়ে বাম থেকে ডানে পারমাণবিক ব্যাসার্ধ কমে কেন?</summary><p>প্রোটন সংখ্যা (নিউক্লিয়ার চার্জ) বাড়ে কিন্তু নতুন শেল যুক্ত হয় না, আবরণ প্রভাব প্রায় একই থাকে। তাই Z<sub>eff</sub> বাড়ে ও ইলেকট্রন মেঘ নিউক্লিয়াসের দিকে সংকুচিত হয়।</p></details>
+      <details class="qa"><summary>Na-এর আয়নিকরণ শক্তি Ne-এর চেয়ে এত কম কেন?</summary><p>Na-তে নতুন শেল (3s) শুরু — বাইরের ১টি ইলেকট্রন নিউক্লিয়াস থেকে দূরে ও ভেতরের ১০টি ইলেকট্রনের আবরণে ঢাকা; তাই সহজে বের হয়। Ne-এর বিন্যাস পূর্ণ ও স্থিতিশীল।</p></details>
+      <details class="qa"><summary>Be-এর আয়নিকরণ শক্তি B-এর চেয়ে বেশি কেন?</summary><p>Be-এর বাইরের ইলেকট্রন পূর্ণ 2s-এ, আর B-এর বাইরের ইলেকট্রন তুলনামূলক উচ্চ শক্তির 2p-তে — যা 2s ইলেকট্রনের আবরণে ঢাকা বলে সহজে বের হয়।</p></details>
+      <details class="qa"><summary>ইলেকট্রন আসক্তি ও তড়িৎ ঋণাত্মকতার পার্থক্য কী?</summary><p>ইলেকট্রন আসক্তি = বিচ্ছিন্ন গ্যাসীয় পরমাণু ১টি ইলেকট্রন গ্রহণে যে শক্তি ছাড়ে (kJ/mol); তড়িৎ ঋণাত্মকতা = বন্ধনে থাকা পরমাণুর ইলেকট্রন জোড়কে নিজের দিকে টানার ক্ষমতা (মাত্রাহীন, পলিং স্কেল)।</p></details>
+      <details class="qa"><summary>সবচেয়ে বেশি তড়িৎ ঋণাত্মক মৌল কোনটি?</summary><p>ফ্লোরিন (F) = ৩.৯৮ (পলিং স্কেল)।</p></details>
+      <details class="qa"><summary>ল্যান্থানাইড সংকোচন কী?</summary><p>4f ইলেকট্রন নিউক্লিয়াসের আকর্ষণ থেকে অন্যদের খুব কম আবরণ দেয়, তাই La→Lu-তে ব্যাসার্ধ ধীরে ধীরে কমে। ফলে ৫ম ও ৬ষ্ঠ পর্যায়ের ট্রানজিশন ধাতুর আকার প্রায় সমান (Zr ≈ Hf)।</p></details>
+      <details class="qa"><summary>কেন নিষ্ক্রিয় গ্যাসের আয়নিকরণ শক্তি পর্যায়ে সর্বোচ্চ?</summary><p>পূর্ণ বহিঃস্থ শেল (ns² np⁶) অত্যন্ত স্থিতিশীল; তাছাড়া ওই পর্যায়ে Z<sub>eff</sub> সর্বোচ্চ — ইলেকট্রন সরাতে সবচেয়ে বেশি শক্তি লাগে।</p></details>
+    </div>
+    <div class="pane" id="p4">
+      <h3>ডেটা টেবিল</h3>
+      <p style="font-size:13px;color:var(--text-muted)">গ্রাফে বর্তমানে নির্বাচিত সীমার মৌলগুলো। কলামের শিরোনামে ক্লিক করলে সেই ধর্ম অনুযায়ী সাজাবে; সারিতে ক্লিক করলে মৌল নির্বাচিত হবে।</p>
+      <div class="tabtbl"><table id="tbl"></table></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const RAW=[[1,"H","হাইড্রোজেন","Hydrogen",1,1,"s","nonmetal",53,32,1312,null,2.2,72.769,13.99,20.271,0.00008988],[2,"He","হিলিয়াম","Helium",1,18,"s","noble",31,46,2372.3,5250.5,null,-48,0.95,4.222,0.0001786],[3,"Li","লিথিয়াম","Lithium",2,1,"s","alkali",167,133,520.2,7298.1,0.98,59.6326,453.65,1603,0.534],[4,"Be","বেরিলিয়াম","Beryllium",2,2,"s","alkaline",112,102,899.5,1757.1,1.57,-48,1560,2742,1.85],[5,"B","বোরন","Boron",2,13,"p","metalloid",87,85,800.6,2427.1,2.04,26.989,2349,4200,2.08],[6,"C","কার্বন","Carbon",2,14,"p","nonmetal",67,75,1086.5,2352.6,2.55,121.7763,4600,null,1.821],[7,"N","নাইট্রোজেন","Nitrogen",2,15,"p","nonmetal",56,71,1402.3,2856,3.04,-6.8,63.15,77.355,0.001251],[8,"O","অক্সিজেন","Oxygen",2,16,"p","nonmetal",48,63,1313.9,3388.3,3.44,140.976,54.36,90.188,0.001429],[9,"F","ফ্লোরিন","Fluorine",2,17,"p","halogen",42,64,1681,3374.2,3.98,328.1649,53.48,85.03,0.001696],[10,"Ne","নিয়ন","Neon",2,18,"p","noble",38,67,2080.7,3952.3,null,-116,24.56,27.104,0.0009002],[11,"Na","সোডিয়াম","Sodium",3,1,"s","alkali",190,155,495.8,4562,0.93,52.867,370.944,1156.09,0.968],[12,"Mg","ম্যাগনেসিয়াম","Magnesium",3,2,"s","alkaline",145,139,737.7,1450.7,1.31,-40,923,1363,1.738],[13,"Al","অ্যালুমিনিয়াম","Aluminium",3,13,"p","post",118,126,577.5,1816.7,1.61,41.762,933.47,2743,2.7],[14,"Si","সিলিকন","Silicon",3,14,"p","metalloid",111,116,786.5,1577.1,1.9,134.0684,1687,3538,2.329],[15,"P","ফসফরাস","Phosphorus",3,15,"p","nonmetal",98,111,1011.8,1907,2.19,72.037,317.3,null,1.823],[16,"S","সালফার","Sulfur",3,16,"p","nonmetal",88,103,999.6,2252,2.58,200.4101,388.36,717.8,2.07],[17,"Cl","ক্লোরিন","Chlorine",3,17,"p","halogen",79,99,1251.2,2298,3.16,348.575,171.6,239.11,0.0032],[18,"Ar","আর্গন","Argon",3,18,"p","noble",71,96,1520.6,2665.8,null,-96,83.81,87.302,0.001784],[19,"K","পটাশিয়াম","Potassium",4,1,"s","alkali",243,196,418.8,3052,0.82,48.383,336.7,1032,0.862],[20,"Ca","ক্যালসিয়াম","Calcium",4,2,"s","alkaline",194,171,589.8,1145.4,1,2.37,1115,1757,1.55],[21,"Sc","স্ক্যান্ডিয়াম","Scandium",4,3,"d","transition",184,148,633.1,1235,1.36,18,1814,3109,2.985],[22,"Ti","টাইটানিয়াম","Titanium",4,4,"d","transition",176,136,658.8,1309.8,1.54,7.289,1941,3560,4.506],[23,"V","ভ্যানাডিয়াম","Vanadium",4,5,"d","transition",171,134,650.9,1414,1.63,50.911,2183,3680,6],[24,"Cr","ক্রোমিয়াম","Chromium",4,6,"d","transition",166,122,652.9,1590.6,1.66,65.21,2180,2944,7.19],[25,"Mn","ম্যাঙ্গানিজ","Manganese",4,7,"d","transition",161,119,717.3,1509,1.55,-50,1519,2334,7.21],[26,"Fe","আয়রন","Iron",4,8,"d","transition",156,116,762.5,1561.9,1.83,14.785,1811,3134,7.874],[27,"Co","কোবাল্ট","Cobalt",4,9,"d","transition",152,111,760.4,1648,1.88,63.898,1768,3200,8.9],[28,"Ni","নিকেল","Nickel",4,10,"d","transition",149,110,737.1,1753,1.91,111.65,1728,3003,8.908],[29,"Cu","কপার","Copper",4,11,"d","transition",145,112,745.5,1957.9,1.9,119.235,1357.77,2835,8.96],[30,"Zn","জিঙ্ক","Zinc",4,12,"d","transition",142,118,906.4,1733.3,1.65,-58,692.68,1180,7.14],[31,"Ga","গ্যালিয়াম","Gallium",4,13,"p","post",136,124,578.8,1979.3,1.81,41,302.9146,2673,5.91],[32,"Ge","জার্মেনিয়াম","Germanium",4,14,"p","metalloid",125,121,762,1537.5,2.01,118.9352,1211.4,3106,5.323],[33,"As","আর্সেনিক","Arsenic",4,15,"p","metalloid",114,121,947,1798,2.18,77.65,1090,null,5.727],[34,"Se","সিলেনিয়াম","Selenium",4,16,"p","nonmetal",103,116,941,2045,2.55,194.9587,494,958,4.81],[35,"Br","ব্রোমিন","Bromine",4,17,"p","halogen",94,114,1139.9,2103,2.96,324.537,265.8,332,3.1028],[36,"Kr","ক্রিপ্টন","Krypton",4,18,"p","noble",88,117,1350.8,2350.4,3,-96,115.78,119.93,0.003749],[37,"Rb","রুবিডিয়াম","Rubidium",5,1,"s","alkali",265,210,403,2633,0.82,46.884,312.45,961,1.532],[38,"Sr","স্ট্রনশিয়াম","Strontium",5,2,"s","alkaline",219,185,549.5,1064.2,0.95,5.023,1050,1650,2.64],[39,"Y","ইট্রিয়াম","Yttrium",5,3,"d","transition",212,163,600,1180,1.22,29.6,1799,3203,4.472],[40,"Zr","জিরকোনিয়াম","Zirconium",5,4,"d","transition",206,154,640.1,1270,1.33,41.806,2128,4650,6.52],[41,"Nb","নিওবিয়াম","Niobium",5,5,"d","transition",198,147,652.1,1380,1.6,88.516,2750,5017,8.57],[42,"Mo","মলিবডেনাম","Molybdenum",5,6,"d","transition",190,138,684.3,1560,2.16,72.1,2896,4912,10.28],[43,"Tc","টেকনেশিয়াম","Technetium",5,7,"d","transition",183,128,702,1470,1.9,53,2430,4538,11],[44,"Ru","রুথেনিয়াম","Ruthenium",5,8,"d","transition",178,125,710.2,1620,2.2,100.96,2607,4423,12.45],[45,"Rh","রোডিয়াম","Rhodium",5,9,"d","transition",173,125,719.7,1740,2.28,110.27,2237,3968,12.41],[46,"Pd","প্যালেডিয়াম","Palladium",5,10,"d","transition",169,120,804.4,1870,2.2,54.24,1828.05,3236,12.023],[47,"Ag","সিলভার","Silver",5,11,"d","transition",165,128,731,2070,1.93,125.862,1234.93,2435,10.49],[48,"Cd","ক্যাডমিয়াম","Cadmium",5,12,"d","transition",161,136,867.8,1631.4,1.69,-68,594.22,1040,8.65],[49,"In","ইন্ডিয়াম","Indium",5,13,"p","post",156,142,558.3,1820.7,1.78,37.043,429.7485,2345,7.31],[50,"Sn","টিন","Tin",5,14,"p","post",145,140,708.6,1411.8,1.96,107.2984,505.08,2875,7.365],[51,"Sb","অ্যান্টিমনি","Antimony",5,15,"p","metalloid",133,140,834,1594.9,2.05,101.059,903.78,1908,6.697],[52,"Te","টেলুরিয়াম","Tellurium",5,16,"p","metalloid",123,136,869.3,1790,2.1,190.161,722.66,1261,6.24],[53,"I","আয়োডিন","Iodine",5,17,"p","halogen",115,133,1008.4,1845.9,2.66,295.1531,386.85,457.4,4.933],[54,"Xe","জেনন","Xenon",5,18,"p","noble",108,131,1170.4,2046.4,2.6,-77,161.4,165.051,0.005894],[55,"Cs","সিজিয়াম","Cesium",6,1,"s","alkali",298,232,375.7,2234.3,0.79,45.505,301.7,944,1.93],[56,"Ba","বেরিয়াম","Barium",6,2,"s","alkaline",253,196,502.9,965.2,0.89,13.954,1000,2118,3.51],[57,"La","ল্যান্থানাম","Lanthanum",6,3,"f","lanthanide",226,180,538.1,1067,1.1,53,1193,3737,6.162],[58,"Ce","সেরিয়াম","Cerium",6,3,"f","lanthanide",210,163,534.4,1050,1.12,55,1068,3716,6.77],[59,"Pr","প্রাসিওডিমিয়াম","Praseodymium",6,3,"f","lanthanide",247,176,527,1020,1.13,93,1208,3403,6.77],[60,"Nd","নিওডিমিয়াম","Neodymium",6,3,"f","lanthanide",206,174,533.1,1040,1.14,184.87,1297,3347,7.01],[61,"Pm","প্রমিথিয়াম","Promethium",6,3,"f","lanthanide",205,173,540,1050,1.13,12.45,1315,3273,7.26],[62,"Sm","সামারিয়াম","Samarium",6,3,"f","lanthanide",238,172,544.5,1070,1.17,15.63,1345,2173,7.52],[63,"Eu","ইউরোপিয়াম","Europium",6,3,"f","lanthanide",231,168,547.1,1085,1.2,11.2,1099,1802,5.264],[64,"Gd","গ্যাডোলিনিয়াম","Gadolinium",6,3,"f","lanthanide",233,169,593.4,1170,1.2,13.22,1585,3273,7.9],[65,"Tb","টার্বিয়াম","Terbium",6,3,"f","lanthanide",225,168,565.8,1110,1.1,112.4,1629,3396,8.23],[66,"Dy","ডিসপ্রোসিয়াম","Dysprosium",6,3,"f","lanthanide",228,167,573,1130,1.22,33.96,1680,2840,8.54],[67,"Ho","হোলমিয়াম","Holmium",6,3,"f","lanthanide",226,166,581,1140,1.23,32.61,1734,2873,8.79],[68,"Er","আরবিয়াম","Erbium",6,3,"f","lanthanide",226,165,589.3,1150,1.24,30.1,1802,3141,9.066],[69,"Tm","থুলিয়াম","Thulium",6,3,"f","lanthanide",222,164,596.7,1160,1.25,99,1818,2223,9.32],[70,"Yb","ইটারবিয়াম","Ytterbium",6,3,"f","lanthanide",222,170,603.4,1174.8,1.1,-1.93,1097,1469,6.9],[71,"Lu","লুটিশিয়াম","Lutetium",6,3,"d","lanthanide",217,162,523.5,1340,1.27,33.4,1925,3675,9.841],[72,"Hf","হাফনিয়াম","Hafnium",6,4,"d","transition",208,152,658.5,1440,1.3,17.18,2506,4876,13.31],[73,"Ta","ট্যান্টালাম","Tantalum",6,5,"d","transition",200,146,761,1500,1.5,31,3290,5731,16.69],[74,"W","টাংস্টেন","Tungsten",6,6,"d","transition",193,137,770,1700,2.36,78.76,3695,6203,19.25],[75,"Re","রেনিয়াম","Rhenium",6,7,"d","transition",188,131,760,1260,1.9,5.8273,3459,5869,21.02],[76,"Os","অসমিয়াম","Osmium",6,8,"d","transition",185,129,840,1600,2.2,103.99,3306,5285,22.59],[77,"Ir","ইরিডিয়াম","Iridium",6,9,"d","transition",180,122,880,1600,2.2,150.94,2719,4403,22.56],[78,"Pt","প্ল্যাটিনাম","Platinum",6,10,"d","transition",177,123,870,1791,2.28,205.041,2041.4,4098,21.45],[79,"Au","সোনা","Gold",6,11,"d","transition",174,124,890.1,1980,2.54,222.747,1337.33,3243,19.3],[80,"Hg","পারদ","Mercury",6,12,"d","transition",171,133,1007.1,1810,2,-48,234.321,629.88,13.534],[81,"Tl","থ্যালিয়াম","Thallium",6,13,"p","post",156,144,589.4,1971,1.62,36.4,577,1746,11.85],[82,"Pb","সীসা","Lead",6,14,"p","post",154,144,715.6,1450.5,1.87,34.4204,600.61,2022,11.34],[83,"Bi","বিস্মাথ","Bismuth",6,15,"p","post",143,151,703,1610,2.02,90.924,544.7,1837,9.78],[84,"Po","পোলোনিয়াম","Polonium",6,16,"p","post",135,145,812.1,null,2,136,527,1235,9.196],[85,"At","অ্যাস্টাটাইন","Astatine",6,17,"p","halogen",127,147,899.003,null,2.2,233,575,610,6.35],[86,"Rn","রেডন","Radon",6,18,"p","noble",120,142,1037,null,2.2,-68,202,211.5,0.00973],[87,"Fr","ফ্রান্সিয়াম","Francium",7,1,"s","alkali",null,null,380,null,0.79,46.89,300,950,1.87],[88,"Ra","রেডিয়াম","Radium",7,2,"s","alkaline",null,201,509.3,979,0.9,9.6485,1233,2010,5.5],[89,"Ac","অ্যাক্টিনিয়াম","Actinium",7,3,"f","actinide",null,186,499,1170,1.1,33.77,1500,3500,10],[90,"Th","থোরিয়াম","Thorium",7,3,"f","actinide",null,175,587,1110,1.3,112.72,2023,5061,11.724],[91,"Pa","প্রোট্যাক্টিনিয়াম","Protactinium",7,3,"f","actinide",null,169,568,null,1.5,53.03,1841,4300,15.37],[92,"U","ইউরেনিয়াম","Uranium",7,3,"f","actinide",null,170,597.6,1420,1.38,50.94,1405.3,4404,19.1],[93,"Np","নেপচুনিয়াম","Neptunium",7,3,"f","actinide",null,171,604.5,null,1.36,45.85,912,4447,20.45],[94,"Pu","প্লুটোনিয়াম","Plutonium",7,3,"f","actinide",null,172,584.7,null,1.28,-48.33,912.5,3505,19.816],[95,"Am","অ্যামেরিসিয়াম","Americium",7,3,"f","actinide",null,166,578,null,1.13,9.93,1449,2880,12],[96,"Cm","কিউরিয়াম","Curium",7,3,"f","actinide",null,166,581,null,1.28,27.17,1613,3383,13.51],[97,"Bk","বার্কেলিয়াম","Berkelium",7,3,"f","actinide",null,null,601,null,1.3,-165.24,1259,2900,14.78],[98,"Cf","ক্যালিফোর্নিয়াম","Californium",7,3,"f","actinide",null,null,608,null,1.3,-97.31,1173,1743,15.1],[99,"Es","আইনস্টাইনিয়াম","Einsteinium",7,3,"f","actinide",null,null,619,null,1.3,-28.6,1133,1269,8.84],[100,"Fm","ফার্মিয়াম","Fermium",7,3,"f","actinide",null,null,627,null,1.3,33.96,1800,null,null],[101,"Md","মেন্ডেলিভিয়াম","Mendelevium",7,3,"f","actinide",null,null,635,null,1.3,93.91,1100,null,null],[102,"No","নোবেলিয়াম","Nobelium",7,3,"f","actinide",null,null,642,null,1.3,-223.22,1100,null,null],[103,"Lr","লরেনসিয়াম","Lawrencium",7,3,"d","actinide",null,null,470,null,1.3,-30.04,1900,null,null],[104,"Rf","রাদারফোর্ডিয়াম","Rutherfordium",7,4,"d","transition",null,null,580,null,null,null,2400,5800,23.2],[105,"Db","ডুবনিয়াম","Dubnium",7,5,"d","transition",null,null,null,null,null,null,null,null,29.3],[106,"Sg","সি বোর্জিয়াম","Seaborgium",7,6,"d","transition",null,null,null,null,null,null,null,null,35],[107,"Bh","বোহরিয়াম","Bohrium",7,7,"d","transition",null,null,null,null,null,null,null,null,37.1],[108,"Hs","হাসিয়াম","Hassium",7,8,"d","transition",null,null,null,null,null,null,null,null,40.7],[109,"Mt","মেইটনেরিয়াম","Meitnerium",7,9,"d","transition",null,null,null,null,null,null,null,null,37.4],[110,"Ds","ডামস্টাটিয়াম","Darmstadtium",7,10,"d","transition",null,null,null,null,null,null,null,null,34.8],[111,"Rg","রন্টজেনিয়াম","Roentgenium",7,11,"d","transition",null,null,null,null,null,151,null,null,28.7],[112,"Cn","কপারনিশিয়াম","Copernicium",7,12,"d","transition",null,null,null,null,null,null,283,340,14],[113,"Nh","নিহোনিয়াম","Nihonium",7,13,"p","post",null,null,null,null,null,66.6,700,1430,16],[114,"Fl","ফ্লেরোভিয়াম","Flerovium",7,14,"p","post",null,null,null,null,null,null,340,420,14],[115,"Mc","মস্কোভিয়াম","Moscovium",7,15,"p","post",null,null,null,null,null,35.3,670,1400,13.5],[116,"Lv","লিভারমোরিয়াম","Livermorium",7,16,"p","post",null,null,null,null,null,74.9,709,1085,12.9],[117,"Ts","টেনেসিন","Tennessine",7,17,"p","halogen",null,null,null,null,null,165.9,723,883,7.17],[118,"Og","ওগানেসন","Oganesson",7,18,"p","noble",null,null,null,null,null,5.40318,null,350,4.95]];
+const EL=RAW.map(r=>({z:r[0],s:r[1],bn:r[2],en:r[3],p:r[4],g:r[5],b:r[6],c:r[7],rad:r[8],cov:r[9],ie1:r[10],ie2:r[11],x:r[12],ea:r[13],mp:r[14],bp:r[15],d:r[16]}));
+const CAT={alkali:['ক্ষার ধাতু','#f43f5e'],alkaline:['মৃৎক্ষার ধাতু','#fb923c'],transition:['ট্রানজিশন ধাতু','#3b82f6'],post:['অন্যান্য ধাতু','#94a3b8'],metalloid:['অর্ধধাতু','#14b8a6'],nonmetal:['অধাতু','#22c55e'],halogen:['হ্যালোজেন','#eab308'],noble:['নিষ্ক্রিয় গ্যাস','#22d3ee'],lanthanide:['ল্যান্থানাইড','#f472b6'],actinide:['অ্যাক্টিনাইড','#c084fc']};
+const PR=[
+ {k:'rad',n:'পারমাণবিক ব্যাসার্ধ',u:'pm',c:'#38bdf8',dec:0,pt:'পর্যায়ে বাম→ডান: কমে (Z<sub>eff</sub> বাড়ে)',gt:'গ্রুপে উপর→নিচ: বাড়ে (নতুন শেল)',note:'গণনাকৃত (calculated) ব্যাসার্ধ; Z ≤ ৮৬ পর্যন্ত তথ্য আছে।'},
+ {k:'cov',n:'সমযোজী ব্যাসার্ধ',u:'pm',c:'#818cf8',dec:0,pt:'পর্যায়ে বাম→ডান: কমে',gt:'গ্রুপে উপর→নিচ: বাড়ে',note:'একক বন্ধনের সমযোজী ব্যাসার্ধ।'},
+ {k:'ie1',n:'১ম আয়নিকরণ শক্তি',u:'kJ/mol',c:'#4ade80',dec:0,pt:'পর্যায়ে বাম→ডান: মোটামুটি বাড়ে (Be>B, N>O ব্যতিক্রম)',gt:'গ্রুপে উপর→নিচ: কমে',note:'গ্যাসীয় পরমাণু থেকে ১ম ইলেকট্রন সরাতে প্রয়োজনীয় শক্তি।'},
+ {k:'ie2',n:'২য় আয়নিকরণ শক্তি',u:'kJ/mol',c:'#a3e635',dec:0,pt:'ক্ষার ধাতুতে সর্বোচ্চ — M⁺ থেকে নিষ্ক্রিয় গ্যাসের মতো পূর্ণ শেল ভাঙতে হয়',gt:'গ্রুপে উপর→নিচ: কমে',note:'M⁺ থেকে ২য় ইলেকট্রন সরানোর শক্তি। সবসময় ১ম IE-র চেয়ে বেশি।'},
+ {k:'x',n:'তড়িৎ ঋণাত্মকতা',u:'পলিং স্কেল',c:'#f87171',dec:2,pt:'পর্যায়ে বাম→ডান: বাড়ে',gt:'গ্রুপে উপর→নিচ: কমে',note:'He, Ne, Ar-এর মান নির্ধারিত নয়; গ্রাফে ফাঁক রাখা হয়েছে (০ নয়)।'},
+ {k:'ea',n:'ইলেকট্রন আসক্তি',u:'kJ/mol',c:'#fbbf24',dec:1,pt:'পর্যায়ে বাম→ডান: মোটামুটি বাড়ে (হ্যালোজেনে শীর্ষ)',gt:'গ্রুপে উপর→নিচ: মোটামুটি কমে (F &lt; Cl ব্যতিক্রম)',note:'ধনাত্মক = ইলেকট্রন গ্রহণে শক্তি ছাড়ে; ঋণাত্মক/শূন্য = শক্তি লাগে (Be, N, নিষ্ক্রিয় গ্যাস)।'},
+ {k:'mp',n:'গলনাঙ্ক',u:'K',c:'#fb923c',dec:0,pt:'অনিয়মিত — মধ্য গ্রুপে (C, W) সর্বোচ্চ',gt:'ক্ষার ধাতুতে কমে, ট্রানজিশনে বাড়ে',note:'কেলভিনে (K = °C + ২৭৩)।'},
+ {k:'bp',n:'স্ফুটনাঙ্ক',u:'K',c:'#f472b6',dec:0,pt:'অনিয়মিত — ধাতব/সমযোজী বন্ধন শক্তির উপর নির্ভর',gt:'নিষ্ক্রিয় গ্যাসে বাড়ে; ক্ষার ধাতুতে কমে',note:'কেলভিনে। কিছু মৌলের (C, P, As ইত্যাদি) মান উৎপাদ্য/অনিশ্চিত বলে নেই।'},
+ {k:'d',n:'ঘনত্ব',u:'g/cm³',c:'#c084fc',dec:3,pt:'পর্যায়ে মাঝের দিকে ট্রানজিশন ধাতুতে সর্বোচ্চ',gt:'গ্রুপে উপর→নিচ: বাড়ে (Os ≈ ২২.৬ সর্বোচ্চ)',note:'কঠিন/তরল STP ঘনত্ব; গ্যাসের ঘনত্ব অনেক কম।'}];
+const PI={};PR.forEach((p,i)=>PI[p.k]=i);
+const PER_COL=['#94a3b8','#22d3ee','#a855f7','#f59e0b','#22c55e','#f472b6','#60a5fa'];
+const gcol=g=>`hsl(${(g*137.5)%360},72%,62%)`;
+const MODES=[['z','📈 Z অনুযায়ী (ক্রমিক)'],['p','↔️ পর্যায় ধরে (গ্রুপ ১→১৮)'],['g','↕️ গ্রুপ ধরে (পর্যায় ১→৭)']];
+const RANGES=[[1,10],[1,18],[1,36],[1,54],[1,86],[1,118]];
+const BOUND=[2,10,18,36,54,86,118];
+const S={p:'rad',mode:'z',r:[1,36],pers:[2,3,4],grps:[1,2,17,18],z:11,cmp:0};
+function fv(P,v){if(v==null)return 'তথ্য নেই';let s=P.k=='d'&&v<1?v.toPrecision(3):v.toFixed(P.dec);if(s.includes('.'))s=s.replace(/\.?0+$/,'');return bn(s)}
+function fvu(P,v){return v==null?'তথ্য নেই':fv(P,v)+' '+P.u}
+const el=z=>EL[z-1];
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2000)}
+// ===== controls
+function chipsBuild(){
+  $('props').innerHTML=PR.map(p=>`<button class="chip ${p.k==S.p?'on':''}" style="--c:${p.c}" data-k="${p.k}"><i></i>${p.n}</button>`).join('');
+  $('modes').innerHTML=MODES.map(m=>`<button class="chip ${m[0]==S.mode?'on':''}" data-m="${m[0]}">${m[1]}</button>`).join('');
+  $('ranges').innerHTML=RANGES.map((r,i)=>`<button class="chip ${r[0]==S.r[0]&&r[1]==S.r[1]?'on':''}" data-r="${i}">${bn(r[0])}–${bn(r[1])}</button>`).join('');
+  $('pers').innerHTML=[1,2,3,4,5,6,7].map(n=>`<button class="chip ${S.pers.includes(n)?'on':''}" style="--c:${PER_COL[n-1]}" data-pe="${n}"><i></i>পর্যায় ${bn(n)}</button>`).join('');
+  $('grps').innerHTML=Array.from({length:18},(_,i)=>i+1).map(g=>`<button class="chip ${S.grps.includes(g)?'on':''}" style="--c:${gcol(g)}" data-gr="${g}"><i></i>গ্রুপ ${bn(g)}</button>`).join('');
+  $('rRow').style.display=S.mode=='z'?'':'none';$('pRow').style.display=S.mode=='p'?'':'none';$('gRow').style.display=S.mode=='g'?'':'none';
+}
+document.addEventListener('click',ev=>{const b=ev.target.closest('.chip');if(!b)return;
+  if(b.dataset.k){S.p=b.dataset.k}
+  else if(b.dataset.m){S.mode=b.dataset.m}
+  else if(b.dataset.r!==undefined){S.r=RANGES[+b.dataset.r]}
+  else if(b.dataset.pe){const n=+b.dataset.pe,i=S.pers.indexOf(n);if(i>=0){if(S.pers.length==1)return toast('কমপক্ষে ১টি পর্যায় রাখো');S.pers.splice(i,1)}else S.pers.push(n);S.pers.sort()}
+  else if(b.dataset.gr){const n=+b.dataset.gr,i=S.grps.indexOf(n);if(i>=0){if(S.grps.length==1)return toast('কমপক্ষে ১টি গ্রুপ রাখো');S.grps.splice(i,1)}else{if(S.grps.length>=6)return toast('সর্বোচ্চ ৬টি গ্রুপ');S.grps.push(n)}S.grps.sort((a,b)=>a-b)}
+  chipsBuild();render();details();insights();table()});
+// ===== data for chart
+const isMain=e=>!(e.c=='lanthanide'||e.c=='actinide')||e.z==57||e.z==89;
+function build(){
+  const P=PR[PI[S.p]];let slots,labels=[],series=[],bands=[];
+  if(S.mode=='z'){const els=EL.slice(S.r[0]-1,S.r[1]);slots=els.length;labels=els.map(e=>e.s);
+    series=[{name:P.n,color:P.c,pts:els.map((e,i)=>({i,e,v:e[P.k]}))}];
+    let st=0;for(let i=1;i<=els.length;i++){if(i==els.length||els[i].p!=els[st].p){bands.push([st,i-1,els[st].p]);st=i}}}
+  else if(S.mode=='p'){slots=18;labels=Array.from({length:18},(_,i)=>bn(i+1));
+    S.pers.forEach(pd=>{const pts=[];for(let g=1;g<=18;g++){const e=EL.find(x=>x.p==pd&&x.g==g&&isMain(x));if(e)pts.push({i:g-1,e,v:e[P.k]})}series.push({name:'পর্যায় '+bn(pd),color:PER_COL[pd-1],pts})})}
+  else{slots=7;labels=[1,2,3,4,5,6,7].map(bn);
+    S.grps.forEach(g=>{const pts=[];for(let pd=1;pd<=7;pd++){const e=EL.find(x=>x.p==pd&&x.g==g&&isMain(x));if(e)pts.push({i:pd-1,e,v:e[P.k]})}series.push({name:'গ্রুপ '+bn(g),color:gcol(g),pts})})}
+  return {P,slots,labels,series,bands};
+}
+function nice(lo,hi,cnt){if(hi<=lo)hi=lo+1;const raw=(hi-lo)/cnt,mag=Math.pow(10,Math.floor(Math.log10(raw))),r=raw/mag,st=(r<1.5?1:r<3?2:r<7?5:10)*mag;const a=Math.floor(lo/st+1e-9)*st,b=Math.ceil(hi/st-1e-9)*st,t=[];for(let v=a;v<=b+st/2;v+=st)t.push(+v.toPrecision(12));return {a,b,t,st}}
+let G=null;
+function render(){
+  const D=build(),{P,slots,labels,series,bands}=D;
+  const vals=[];series.forEach(s=>s.pts.forEach(p=>{if(p.v!=null)vals.push(p.v)}));
+  const lo=Math.min(0,...(vals.length?vals:[0])),hi=Math.max(...(vals.length?vals:[1]));const Y=nice(lo,hi,5);
+  const Wv=S.mode=='z'?Math.max(760,slots*18+96):760,H=400,L=64,R=S.mode=='z'?16:70,T=bands.length?34:18,B=48;
+  const pw=Wv-L-R,ph=H-T-B;const X=i=>L+(i+.5)*pw/slots,Yp=v=>T+ph-(v-Y.a)/(Y.b-Y.a)*ph;
+  G={Wv,H,L,R,T,B,pw,ph,slots,X,Yp,D,Y};
+  let s=`<rect x="${L}" y="${T}" width="${pw}" height="${ph}" fill="none"/>`;
+  // grid
+  Y.t.forEach(v=>{const y=Yp(v);s+=`<line class="gl" x1="${L}" x2="${L+pw}" y1="${y}" y2="${y}" ${v==0&&Y.a<0?'style="opacity:1;stroke:var(--text-muted)"':''}/><text class="ax" x="${L-8}" y="${y+4}" text-anchor="end">${fv({k:'',dec:Y.st<1?(Y.st<.1?2:1):0},v)}</text>`});
+  // bands
+  bands.forEach(([a,b,pd],idx)=>{const x1=L+a*pw/slots,x2=L+(b+1)*pw/slots;if(idx%2==0)s+=`<rect x="${x1}" y="${T}" width="${x2-x1}" height="${ph}" fill="rgba(168,85,247,.06)"/>`;if(b-a>=0)s+=`<text class="ax" x="${(x1+x2)/2}" y="${T-10}" text-anchor="middle" style="font-size:${x2-x1>40?11:9}px">${x2-x1>40?'পর্যায় ':'P'}${bn(pd)}</text>`});
+  // x labels
+  labels.forEach((t,i)=>{s+=`<text class="ax" x="${X(i)}" y="${T+ph+17}" text-anchor="middle" style="font-size:${S.mode=='z'&&slots>60?9:11}px">${t}</text>`});
+  s+=`<text class="axt" x="${L+pw/2}" y="${H-8}" text-anchor="middle">${S.mode=='z'?'মৌলের প্রতীক (পারমাণবিক সংখ্যা '+bn(S.r[0])+'–'+bn(S.r[1])+')':S.mode=='p'?'গ্রুপ নম্বর':'পর্যায় নম্বর'}</text>`;
+  s+=`<text class="axt" transform="translate(16 ${T+ph/2}) rotate(-90)" text-anchor="middle">${P.n} (${P.u})</text>`;
+  // series
+  series.forEach(se=>{let d='',pen=false,last=null;
+    for(let i=0;i<slots;i++){const pt=se.pts.find(p=>p.i==i);if(pt&&pt.v!=null){d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Yp(pt.v).toFixed(1);pen=true;last=pt}else{pen=false}}
+    s+=`<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="${S.mode=='z'?.85:1}"/>`;
+    se.pts.forEach(p=>{if(p.v==null){s+=`<text class="ax" x="${X(p.i)}" y="${T+ph-6}" text-anchor="middle" style="opacity:.55;font-size:10px">×</text>`;return}
+      const col=S.mode=='z'?CAT[p.e.c][1]:se.color;const sel=p.e.z==S.z,cm=p.e.z==S.cmp;
+      s+=`<circle cx="${X(p.i)}" cy="${Yp(p.v)}" r="${sel||cm?6.5:(slots>60?3.2:4.2)}" fill="${col}" stroke="${sel?'#fff':cm?'#fbbf24':'var(--card-solid)'}" stroke-width="${sel||cm?2.2:1.5}"/>`});
+    if(S.mode!='z'&&last)s+=`<text x="${X(last.i)+10}" y="${Yp(last.v)+4}" style="font-size:11.5px;font-weight:800;fill:${se.color}">${se.name}</text>`});
+  s+=`<line id="xh" x1="0" x2="0" y1="${T}" y2="${T+ph}" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="4 4" style="display:none"/>`;
+  $('ch').setAttribute('viewBox',`0 0 ${Wv} ${H}`);$('ch').style.minWidth=Wv+'px';$('ch').innerHTML=s;
+  // legend
+  $('legend').innerHTML=S.mode=='z'?Object.entries(CAT).map(([k,v])=>`<span><i style="background:${v[1]}"></i>${v[0]}</span>`).join('')+'<span>× = তথ্য নেই</span>':'<span>প্রতিটি রেখার শেষে নাম লেখা আছে · × = তথ্য নেই</span>';
+  // note
+  const miss=[];series.forEach(se=>se.pts.forEach(p=>{if(p.v==null)miss.push(p.e.s)}));
+  let nt=`💡 <b>${P.n}</b>: ${P.pt} · ${P.gt}`;
+  nt+=`<br><small>ℹ️ ${P.note}${miss.length?` এই ভিউতে ${bn(miss.length)}টি মৌলের তথ্য নেই (${[...new Set(miss)].slice(0,12).join(', ')}${miss.length>12?'…':''}) — গ্রাফে ফাঁক ও × দিয়ে দেখানো হয়েছে, ০ ধরা হয়নি।`:''}</small>`;
+  if(S.mode!='z')nt+='<br><small>f-ব্লক (ল্যান্থানাইড/অ্যাক্টিনাইড) বাদ; গ্রুপ ৩-এ La ও Ac ধরা হয়েছে।</small>';
+  $('note').innerHTML=nt;
+  $('hint').scrollTop=0;
+  $('sc').scrollLeft=S.mode=='z'?Math.max(0,(S.z-S.r[0]+.5)/slots*Wv-$('sc').clientWidth/2):0;
+}
+// ===== hover/tip
+function vx(ev){const r=$('ch').getBoundingClientRect();return {x:(ev.clientX-r.left)*G.Wv/r.width,y:(ev.clientY-r.top)*G.H/r.height,r}}
+function slotAt(ev){const p=vx(ev);let i=Math.floor((p.x-G.L)/G.pw*G.slots);return {i:Math.max(0,Math.min(G.slots-1,i)),p}}
+function showTip(ev,i){
+  const {D}=G,P=D.P,tip=$('tip');let h='';
+  const pts=D.series.map(se=>({se,pt:se.pts.find(p=>p.i==i)})).filter(o=>o.pt);
+  if(!pts.length){tip.classList.remove('on');return}
+  if(S.mode=='z'){const e=pts[0].pt.e,c=CAT[e.c];h=`<b>${e.s} · ${e.bn}</b> <small>Z=${bn(e.z)}</small><br><span class="dt" style="background:${c[1]}"></span>${c[0]} · পর্যায় ${bn(e.p)}${e.g?' · গ্রুপ '+bn(e.g):''}<br>${P.n}: <b>${fvu(P,pts[0].pt.v)}</b>`}
+  else{h=`<b>${S.mode=='p'?'গ্রুপ '+bn(i+1):'পর্যায় '+bn(i+1)}</b> — ${P.n}`;pts.forEach(o=>{h+=`<br><span class="dt" style="background:${o.se.color}"></span>${o.pt.e.s} <small>(${o.se.name})</small>: <b>${fvu(P,o.pt.v)}</b>`})}
+  tip.innerHTML=h;
+  const cr=$('cw').getBoundingClientRect(),px=ev.clientX-cr.left,py=ev.clientY-cr.top;
+  const tw=tip.offsetWidth,th=tip.offsetHeight;let lx=px+16;if(lx+tw>cr.width)lx=px-tw-16;if(lx<0)lx=4;let ly=py-th-10;if(ly<4)ly=py+16;
+  tip.style.left=lx+'px';tip.style.top=ly+'px';tip.classList.add('on');
+  const xh=$('xh');xh.setAttribute('x1',G.X(i));xh.setAttribute('x2',G.X(i));xh.style.display='';
+}
+$('ch').addEventListener('pointermove',ev=>{if(!G)return;const {i}=slotAt(ev);showTip(ev,i)});
+$('ch').addEventListener('pointerleave',()=>{$('tip').classList.remove('on');const xh=$('xh');if(xh)xh.style.display='none'});
+$('ch').addEventListener('click',ev=>{if(!G)return;const {i,p}=slotAt(ev);const c=[];G.D.series.forEach(se=>{const pt=se.pts.find(q=>q.i==i);if(pt)c.push(pt)});if(!c.length)return;
+  let best=c[0],bd=1e9;c.forEach(pt=>{const d=pt.v==null?1e8:Math.abs(G.Yp(pt.v)-p.y);if(d<bd){bd=d;best=pt}});setSel(best.e.z)});
+// ===== selection & detail
+const sel=$('sel'),cmp=$('cmp');
+EL.forEach(e=>{const o=document.createElement('option');o.value=e.z;o.textContent=`Z=${e.z} · ${e.s} · ${e.bn}`;sel.appendChild(o)});
+cmp.innerHTML='<option value="0">— কোনোটি নয় —</option>'+EL.map(e=>`<option value="${e.z}">Z=${e.z} · ${e.s} · ${e.bn}</option>`).join('');
+function setSel(z){S.z=Math.max(1,Math.min(118,z));sel.value=S.z;render();details();insights();table()}
+function rank(P,e){const a=EL.filter(x=>x[P.k]!=null).sort((x,y)=>y[P.k]-x[P.k]);const i=a.findIndex(x=>x.z==e.z);return i<0?null:[i+1,a.length]}
+function details(){
+  const e=el(S.z),c=CAT[e.c],c2=S.cmp?el(S.cmp):null;
+  $('eh').innerHTML=`<div class="ebig"><div class="esym" style="background:${c[1]}">${e.s}</div><div><h3>${e.bn} <small style="display:inline">(${e.en})</small></h3><small>Z = ${bn(e.z)} · ${c[0]} · পর্যায় ${bn(e.p)} · ${e.g?'গ্রুপ '+bn(e.g):'f-ব্লক'} · ${e.b}-ব্লক</small></div></div>`;
+  const mx={};PR.forEach(P=>mx[P.k]=Math.max(...EL.map(x=>x[P.k]).filter(v=>v!=null)));
+  let h=`<tr><th>ধর্ম</th><th>${e.s}</th>${c2?`<th>${c2.s}</th>`:''}</tr>`;
+  PR.forEach(P=>{const v=e[P.k],rk=rank(P,e);const bar=v==null||v<0?'':`<span class="pbar"><i style="width:${Math.min(100,v/mx[P.k]*100)}%;background:${P.c}"></i></span>`;
+    let cell2='';if(c2){const v2=c2[P.k];const win=v!=null&&v2!=null?(v2>v?' ▲':v2<v?' ▼':''):'';cell2=`<td>${fv(P,v2)}${v2!=null?'<small style="color:var(--text-muted)"> '+P.u+'</small>':''}${win}</td>`}
+    h+=`<tr data-k="${P.k}" class="${P.k==S.p?'sel':''}"><td>${P.n}</td><td><b>${fv(P,v)}</b>${v!=null?'<small style="color:var(--text-muted)"> '+P.u+'</small>':''}${bar}${rk?`<br><small style="color:var(--text-muted)">র‍্যাংক ${bn(rk[0])}/${bn(rk[1])}</small>`:''}</td>${cell2}</tr>`});
+  $('dtb').innerHTML=h;if(c2)$('dtb').insertAdjacentHTML('afterend','');
+}
+$('dtb').addEventListener('click',ev=>{const tr=ev.target.closest('tr[data-k]');if(!tr)return;S.p=tr.dataset.k;chipsBuild();render();details();insights();table()});
+sel.onchange=()=>setSel(+sel.value);$('pv').onclick=()=>setSel(S.z-1);$('nx').onclick=()=>setSel(S.z+1);
+cmp.onchange=()=>{S.cmp=+cmp.value;render();details()};
+$('q').onkeydown=ev=>{if(ev.key!='Enter')return;const raw=$('q').value.trim(),v=raw.toLowerCase();if(!v)return;const f=EL.find(e=>e.s.toLowerCase()==v||String(e.z)==v||e.en.toLowerCase()==v||e.bn==raw)||EL.find(e=>e.en.toLowerCase().startsWith(v)||e.bn.startsWith(raw));if(f){if(S.mode=='z'&&(f.z<S.r[0]||f.z>S.r[1]))S.r=[1,Math.max(f.z,36)>54?(f.z>86?118:86):(f.z>36?54:36)],chipsBuild();setSel(f.z);$('q').value=''}else toast('মৌল পাওয়া যায়নি')};
+// ===== insights
+function trend(pts){const v=pts.filter(p=>p.v!=null);if(v.length<2)return null;let up=0,dn=0;for(let i=1;i<v.length;i++){if(v[i].v>v[i-1].v)up++;else if(v[i].v<v[i-1].v)dn++}
+  const kind=up>=dn*2?['up','↑ বৃদ্ধি']:dn>=up*2?['dn','↓ হ্রাস']:['mx','↕ অনিয়মিত'];
+  let pk=v[0],lw=v[0];v.forEach(p=>{if(p.v>pk.v)pk=p;if(p.v<lw.v)lw=p});return {a:v[0],b:v[v.length-1],kind,pk,lw}}
+function insights(){
+  const D=build(),P=D.P;let rows=[];
+  let groups=[];
+  if(S.mode=='z'){const by={};D.series[0].pts.forEach(p=>{(by[p.e.p]=by[p.e.p]||[]).push(p)});Object.keys(by).forEach(pd=>groups.push(['পর্যায় '+bn(pd),by[pd]]))}
+  else D.series.forEach(se=>groups.push([se.name,se.pts]));
+  groups.forEach(([nm,pts])=>{const t=trend(pts);if(!t)return;
+    const pct=t.a.v?Math.round((t.b.v-t.a.v)/Math.abs(t.a.v)*100):null;
+    rows.push(`<div class="insrow"><b>${nm}</b>: ${t.a.e.s} <i>(${fv(P,t.a.v)})</i> → ${t.b.e.s} <i>(${fv(P,t.b.v)})</i> <span class="tr ${t.kind[0]}">${t.kind[1]}${pct!=null&&Math.abs(pct)<100000?' '+bn(Math.abs(pct))+'%':''}</span><br><small style="color:var(--text-muted)">সর্বোচ্চ: ${t.pk.e.s} (${fv(P,t.pk.v)}) · সর্বনিম্ন: ${t.lw.e.s} (${fv(P,t.lw.v)})</small></div>`)});
+  const all=[];D.series.forEach(se=>se.pts.forEach(p=>{if(p.v!=null)all.push(p)}));
+  let head='';if(all.length){const mx=all.reduce((a,b)=>b.v>a.v?b:a),mn=all.reduce((a,b)=>b.v<a.v?b:a);
+    head=`<div class="msg" style="margin-top:0">🔝 এই ভিউয়ে <b>${P.n}</b> সর্বোচ্চ: <b>${mx.e.bn} (${mx.e.s})</b> = ${fvu(P,mx.v)}<br>🔻 সর্বনিম্ন: <b>${mn.e.bn} (${mn.e.s})</b> = ${fvu(P,mn.v)}</div>`}
+  $('ins').innerHTML=head+(rows.length?'<div style="margin-top:8px">'+rows.join('')+'</div>':'<div class="empty">যথেষ্ট তথ্য নেই</div>')+`<div class="msg" style="margin-top:12px">📌 <b>সাধারণ নিয়ম</b><br>• ${P.pt}<br>• ${P.gt}</div>`;
+}
+// ===== table
+let tsort=null;
+function table(){
+  const els=EL.slice(S.r[0]-1,S.r[1]);let list=els.slice();
+  if(tsort){const k=tsort;list.sort((a,b)=>(b[k]==null?-1e18:b[k])-(a[k]==null?-1e18:a[k]))}
+  let h='<tr><th>Z</th><th>প্রতীক</th><th>নাম</th>'+PR.map(P=>`<th data-k="${P.k}" class="${P.k==S.p?'cp':''}">${P.n}<br><small>${P.u}</small>${tsort==P.k?' ▼':''}</th>`).join('')+'</tr>';
+  list.forEach(e=>{h+=`<tr data-z="${e.z}" class="${e.z==S.z?'sel':''}"><td>${bn(e.z)}</td><td><b>${e.s}</b></td><td>${e.bn}</td>`+PR.map(P=>`<td class="${P.k==S.p?'cp':''}">${fv(P,e[P.k])}</td>`).join('')+'</tr>'});
+  $('tbl').innerHTML=h;
+}
+$('tbl').addEventListener('click',ev=>{const th=ev.target.closest('th[data-k]');if(th){tsort=tsort==th.dataset.k?null:th.dataset.k;table();return}const tr=ev.target.closest('tr[data-z]');if(tr)setSel(+tr.dataset.z)});
+// ===== tabs, theme
+document.querySelectorAll('.tab[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+document.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key=='ArrowRight')setSel(S.z+1);if(e.key=='ArrowLeft')setSel(S.z-1)});
+const h0=decodeURIComponent(location.hash.slice(1));if(h0){const f=EL.find(e=>e.s.toLowerCase()==h0.toLowerCase()||String(e.z)==h0);if(f){S.z=f.z;if(f.z>36)S.r=f.z>86?[1,118]:f.z>54?[1,86]:[1,54]}else if(PI[h0]!==undefined)S.p=h0}
+sel.value=S.z;chipsBuild();render();details();insights();table();
+</script>
+</body>
+</html>
