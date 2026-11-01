@@ -1,295 +1,362 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পেজ ২: সর্বমোট গ্রুপভিত্তিক ধর্মের তুলনা</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --border-color: #cbd5e1;
-            --shadow: rgba(15, 23, 42, 0.08);
-        }
-        [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --border-color: #334155;
-            --shadow: rgba(0, 0, 0, 0.4);
-        }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 30px 15px;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: background 0.3s, color 0.3s;
-        }
-        .container { width: 100%; max-width: 950px; }
-        
-        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
-        .back-btn {
-            text-decoration: none; color: var(--text-color); font-weight: bold; background: var(--card-bg);
-            padding: 10px 18px; border-radius: 14px; border: 1px solid var(--border-color);
-            box-shadow: 0 4px 10px var(--shadow); transition: all 0.2s; cursor: pointer;
-        }
-        .back-btn:hover { transform: translateX(-3px); }
-
-        header h2 {
-            font-size: 28px;
-            margin: 0 0 5px 0;
-            background: linear-gradient(45deg, #e67e22, #9b59b6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-        }
-        header p { margin-bottom: 30px; opacity: 0.8; font-size: 15px; text-align: center; }
-
-        /* Multi-row Responsive Menu */
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 25px;
-            width: 100%;
-        }
-        .btn-toggle {
-            padding: 14px;
-            font-size: 14px;
-            font-weight: bold;
-            border: 3px solid var(--border-color);
-            border-radius: 12px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px var(--shadow);
-        }
-        
-        /* Distinct Group button colors when active */
-        .g1-act.active { background: #e67e22 !important; border-color: #d35400 !important; color: white !important; }
-        .g2-act.active { background: #2ecc71 !important; border-color: #27ae60 !important; color: white !important; }
-        .g17-act.active { background: #9b59b6 !important; border-color: #8e44ad !important; color: white !important; }
-        .g18-act.active { background: #1abc9c !important; border-color: #16a085 !important; color: white !important; }
-
-        .chart-box {
-            background: var(--card-bg);
-            border: 3px solid var(--border-color);
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 10px 30px var(--shadow);
-            position: relative;
-            margin-bottom: 25px;
-            transition: border-color 0.3s ease;
-        }
-
-        /* Physical State Badge Row */
-        .state-panel {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
-        .state-badge {
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            color: white;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        /* State Card Colors */
-        .solid { background: #d35400; }  /* কঠিন = গাঢ় কমলা */
-        .liquid { background: #2980b9; } /* তরল = নীল */
-        .gas { background: #7f8c8d; }    /* গ্যাস = ধূসর */
-
-        .analysis-text {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            font-size: 14.5px;
-            line-height: 1.6;
-            text-align: left;
-            box-shadow: 0 5px 15px var(--shadow);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>গ্রুপভিত্তিক ধর্মের তুলনা | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+</style>
 </head>
 <body>
-
-    <div class="container">
-        <div class="top-nav">
-            <a href="visualizations.html" class="back-btn">← ভিজ্যুয়ালাইজেশন হাবে ফিরুন</a>
-        </div>
-
-        <header>
-            <h2>📊 গ্রুপভিত্তিক ধর্মের মেগা তুলনা (Group Properties Panel)</h2>
-            <p>গ্রুপ ১, ২, ১৭ এবং ১৮ এর মৌলসমূহের গলনাঙ্ক, স্ফুটনাঙ্ক ও ভৌত অবস্থার ইন্টারঅ্যাক্টিভ চার্ট</p>
-        </header>
-
-        <div class="controls-grid">
-            <button id="g1Btn" class="btn-toggle g1-act active" onclick="switchMegaGroup('g1')">গ্রুপ ১: ক্ষার ধাতু 🟠</button>
-            <button id="g2Btn" class="btn-toggle g2-act" onclick="switchMegaGroup('g2')">গ্রুপ ২: মৃৎক্ষার ধাতু 🟢</button>
-            <button id="g17Btn" class="btn-toggle g17-act" onclick="switchMegaGroup('g17')">গ্রুপ ১৭: হ্যালোজেন 🟣</button>
-            <button id="g18Btn" class="btn-toggle g18-act" onclick="switchMegaGroup('g18')">গ্রুপ ১৮: নিষ্ক্রিয় গ্যাস 🔵</button>
-        </div>
-
-        <div class="state-panel" id="badgeContainer">
-            </div>
-
-        <div class="chart-box" id="graphBorder">
-            <canvas id="megaGroupChart" style="width: 100%; height: 420px;"></canvas>
-        </div>
-
-        <div class="analysis-text" id="megaAnalysisBox">
-            </div>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Group Trends</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="visualizations.html">← <span class="long">ভিজ্যুয়ালাইজেশন হাব</span></a>
     </div>
+  </header>
+  <section class="hero">
+    <span class="pill">📊 গ্রুপভিত্তিক ধর্ম · মেগা তুলনা</span>
+    <h1><span class="em">🧪</span> গ্রুপভিত্তিক ধর্মের তুলনা</h1>
+    <p>১৮টি গ্রুপের যেকোনোটি বেছে নাও — গলনাঙ্ক, স্ফুটনাঙ্ক, ব্যাসার্ধ, আয়নিকরণ শক্তি, ঋণাত্মকতা, ঘনত্ব ও ভৌত অবস্থার ট্রেন্ড উপর→নিচে দেখো।</p>
+  </section>
 
-    <script>
-        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+  <section class="card">
+    <h2>🎛️ গ্রাফ নিয়ন্ত্রণ</h2>
+    <div class="ctl">
+      <div><div class="lb2">১) গ্রুপ বেছে নাও</div><div class="chips" id="grps"></div></div>
+      <div><div class="lb2">২) কোন ধর্ম?</div><div class="chips" id="props"></div></div>
+      <div class="chips"><button class="chip" id="unit"><i></i>একক: °C</button><button class="chip" id="allg"><i style="--c:#22d3b0"></i>সব গ্রুপের গড় তুলনা</button></div>
+    </div>
+    <div class="gtitle" id="gt"></div>
+    <div class="legendc" id="legend"></div>
+    <div class="chartwrap" id="cw">
+      <div class="sc" id="sc"><svg id="ch" role="img" aria-label="গ্রুপভিত্তিক ধর্মের গ্রাফ"></svg></div>
+      <div class="tip" id="tip"></div>
+    </div>
+    <div class="hint">বারের উপর মাউস/আঙুল রাখলে বিস্তারিত দেখাবে। ক্লিক করলে মৌল নির্বাচিত হবে।</div>
+    <div class="state-panel" id="states"></div>
+    <div class="msg" id="note"></div>
+  </section>
 
-        // Mega Pool Dataset with Highly Contrasting Bar Colors
-        // Melting = #f1c40f (উজ্জ্বল হলুদ), Boiling = #2980b9 (রয়্যাল ব্লু)
-        const database = {
-            g1: {
-                labels: ['Li (৩)', 'Na (১১)', 'K (১৯)', 'Rb (৩৭)', 'Cs (৫৫)'],
-                melting: [180.5, 97.8, 63.5, 39.3, 28.4],
-                boiling: [1342, 883, 759, 688, 671],
-                borderTheme: '#e67e22',
-                states: [
-                    {m: 'Li', s: 'কঠিন', c: 'solid'}, {m: 'Na', s: 'কঠিন', c: 'solid'},
-                    {m: 'K', s: 'কঠিন', c: 'solid'}, {m: 'Rb', s: 'কঠิน', c: 'solid'},
-                    {m: 'Cs', s: 'কঠিন', c: 'solid'}
-                ],
-                desc: `<strong>💡 গ্রুপ-১ (ক্ষার ধাতু) ট্রেন্ড বিশ্লেষণ:</strong><br>• উপর থেকে নিচে নামলে পারমাণবিক ব্যাসার্ধ বড় হওয়ায় ধাতব বন্ধন দুর্বল হয়ে পড়ে। ফলে গলনাঙ্ক ও স্ফুটনাঙ্ক ক্রমান্বয়ে **কমতে থাকে**। এই গ্রুপের সব ধাতুই নরম ও কম গলনাঙ্ক বিশিষ্ট হয়।`
-            },
-            g2: {
-                labels: ['Be (৪)', 'Mg (১২)', 'Ca (২০)', 'Sr (৩৮)', 'Ba (৫৬)'],
-                melting: [1287, 650, 842, 777, 727],
-                boiling: [2471, 1090, 1484, 1382, 1897],
-                borderTheme: '#2ecc71',
-                states: [
-                    {m: 'Be', s: 'কঠিন', c: 'solid'}, {m: 'Mg', s: 'কঠিন', c: 'solid'},
-                    {m: 'Ca', s: 'কঠিন', c: 'solid'}, {m: 'Sr', s: 'কঠিন', c: 'solid'},
-                    {m: 'Ba', s: 'কঠিন', c: 'solid'}
-                ],
-                desc: `<strong>💡 গ্রুপ-২ (মৃৎক্ষার ধাতু) ট্রেন্ড বিশ্লেষণ:</strong><br>• গ্রুপ-১ এর চেয়ে এদের ধাতব বন্ধন তুলনামূলক শক্তিশালী, তাই এদের গলনাঙ্ক-স্ফুটনাঙ্ক ক্ষার ধাতুর চেয়ে **অনেক বেশি** হয়। উপর থেকে নিচে নামলে গলনাঙ্ক কমলেও এদের ভেতর কিছু অনিয়মিত পরিবর্তন বা ব্যতিক্রম দেখা যায়।`
-            },
-            g17: {
-                labels: ['F (৯)', 'Cl (১৭)', 'Br (৩৫)', 'I (৫৩)'],
-                melting: [-219.6, -101.5, -7.2, 113.7],
-                boiling: [-188.1, -34.0, 58.8, 184.3],
-                borderTheme: '#9b59b6',
-                states: [
-                    {m: 'F', s: 'গ্যাস', c: 'gas'}, {m: 'Cl', s: 'গ্যাস', c: 'gas'},
-                    {m: 'Br', s: 'তরল', c: 'liquid'}, {m: 'I', s: 'কঠিন', c: 'solid'}
-                ],
-                desc: `<strong>💡 গ্রুপ-১৭ (হ্যালোজেন অধাতু) ট্রেন্ড বিশ্লেষণ:</strong><br>• অধাতুর ক্ষেত্রে উপর থেকে নিচে নামলে অণুর ভর ও আকার বাড়ে, যার ফলে আকর্ষণ বল বা **ভ্যান ডার ওয়ালস বল** বৃদ্ধি পায়।<br>• তাই উপর থেকে নিচে গলনাঙ্ক ও স্ফুটনাঙ্ক ক্রমান্বয়ে **বৃদ্ধি পায়**! এজন্যই ফ্লোরিন-ক্লোরিন গ্যাস হলেও ব্রোমিন তরল এবং আয়োডিন একটি কঠিন পদার্থ।`
-            },
-            g18: {
-                labels: ['He (২)', 'Ne (১০)', 'Ar (১৮)', 'Kr (৩৬)'],
-                melting: [-272.2, -248.5, -189.3, -157.3],
-                boiling: [-268.9, -246.0, -185.8, -153.2],
-                borderTheme: '#1abc9c',
-                states: [
-                    {m: 'He', s: 'গ্যাস', c: 'gas'}, {m: 'Ne', s: 'গ্যাস', c: 'gas'},
-                    {m: 'Ar', s: 'গ্যাস', c: 'gas'}, {m: 'Kr', s: 'গ্যাস', c: 'gas'}
-                ],
-                desc: `<strong>💡 গ্রুপ-১৮ (নিষ্ক্রিয় গ্যাস) ট্রেন্ড বিশ্লেষণ:</strong><br>• এরা একক পরমাণু বিশিষ্ট নিষ্ক্রিয় গ্যাস। এদের মধ্যকার আন্তঃআণবিক আকর্ষণ বল সর্বনিম্ন হওয়ায় এদের গলনাঙ্ক ও স্ফুটনাঙ্ক মাইনাস (-) ডিগ্রির অনেক নিচে, অর্থাৎ পরম শূন্য তাপমাত্রার কাছাকাছি। উপর থেকে নিচে নামলে এদের ভর বৃদ্ধি পাওয়ায় ফুটনাঙ্ক সামান্য **বাড়ে**।`
-            }
-        };
+  <div class="grid2" style="margin-top:22px">
+    <section class="card"><h2>🔬 নির্বাচিত মৌল</h2><div id="det"></div></section>
+    <section class="card"><h2>🧠 ট্রেন্ড বিশ্লেষণ</h2><div id="ins"></div></section>
+  </div>
 
-        let currentChartInstance = null;
-
-        function drawMegaChart(targetGroup) {
-            const ctx = document.getElementById('megaGroupChart').getContext('2d');
-            if (currentChartInstance) { currentChartInstance.destroy(); }
-
-            let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            let gridColor = isDark ? '#334155' : '#cbd5e1';
-            let textColor = isDark ? '#f8fafc' : '#0f172a';
-
-            let currentData = database[targetGroup];
-
-            // Change chart container border dynamically based on group theme color
-            document.getElementById('graphBorder').style.borderColor = currentData.borderTheme;
-
-            currentChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: currentData.labels,
-                    datasets: [
-                        {
-                            label: 'গলনাঙ্ক (Melting Point °C) 🟡',
-                            data: currentData.melting,
-                            backgroundColor: '#f1c40f', // উজ্জ্বল হলুদ
-                            borderColor: '#d4ac0d',
-                            borderWidth: 1.5,
-                            borderRadius: 6
-                        },
-                        {
-                            label: 'স্ফুটনাঙ্ক (Boiling Point °C) 🔵',
-                            data: currentData.boiling,
-                            backgroundColor: '#2980b9', // রয়্যাল ব্লু
-                            borderColor: '#1f618d',
-                            borderWidth: 1.5,
-                            borderRadius: 6
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: textColor, font: { size: 14, weight: 'bold' } } }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: gridColor },
-                            ticks: { color: textColor, font: { weight: 'bold', size: 13 } },
-                            title: { display: true, text: 'মৌলের প্রতীক (পারমাণবিক সংখ্যা)', color: textColor, font: { weight: 'bold' } }
-                        },
-                        y: {
-                            grid: { color: gridColor },
-                            ticks: { color: textColor, font: { weight: 'bold' } },
-                            title: { display: true, text: 'তাপমাত্রা (°C)', color: textColor, font: { weight: 'bold' } }
-                        }
-                    }
-                }
-            });
-
-            renderBadgesAndTexts(currentData);
-        }
-
-        function renderBadgesAndTexts(dataObj) {
-            let badgeBox = document.getElementById('badgeContainer');
-            badgeBox.innerHTML = "<span style='font-size:14px; font-weight:bold; margin-right:5px;'>ভৌত অবস্থা (25°C):</span>";
-            
-            dataObj.states.forEach(item => {
-                badgeBox.innerHTML += `<div class="state-badge ${item.c}">${item.m}: ${item.s}</div>`;
-            });
-
-            document.getElementById('megaAnalysisBox').innerHTML = dataObj.desc;
-        }
-
-        function switchMegaGroup(groupKey) {
-            const buttons = ['g1', 'g2', 'g17', 'g18'];
-            buttons.forEach(b => {
-                document.getElementById(b + 'Btn').classList.remove('active');
-            });
-
-            document.getElementById(groupKey + 'Btn').classList.add('active');
-            drawMegaChart(groupKey);
-        }
-
-        drawMegaChart('g1');
-    </script>
+  <div class="tabs" style="margin-top:22px">
+    <button class="tab on" data-p="p1">📘 গ্রুপের বৈশিষ্ট্য</button>
+    <button class="tab" data-p="p2">⚠️ ব্যতিক্রম</button>
+    <button class="tab" data-p="p3">🎓 ভাইভা</button>
+    <button class="tab" data-p="p4">📋 ডেটা টেবিল</button>
+  </div>
+  <div class="card pane on" id="p1"><div id="gInfo"></div></div>
+  <div class="card pane" id="p2">
+    <h3>গ্রুপ-ভিত্তিক ধর্মের ব্যতিক্রম</h3>
+    <ul>
+      <li><b>গ্রুপ ২:</b> Mg-এর গলনাঙ্ক (৬৫০°C) Ca-এর (৮৪২°C) চেয়ে কম — কেলাস গঠনের পার্থক্যের কারণে ধারা অনিয়মিত। Be-এর গলনাঙ্ক সবচেয়ে বেশি।</li>
+      <li><b>গ্রুপ ১৪:</b> কার্বন (হীরা/গ্রাফাইট) ও Si-এর গলনাঙ্ক অতি উচ্চ (সমযোজী জালক), কিন্তু Sn, Pb ধাতু বলে নিচে নেমে যায় — ধারা ভেঙে যায়।</li>
+      <li><b>গ্রুপ ১৫:</b> N₂ গ্যাস, কিন্তু নিচের P, As কঠিন — অণুর গঠন (N₂ ত্রিবন্ধন, P₄) ভিন্ন।</li>
+      <li><b>গ্রুপ ১৭:</b> F → I উপর থেকে নিচে গলনাঙ্ক বাড়ে (অধাতু)। Br একমাত্র তরল অধাতু।</li>
+      <li><b>গ্রুপ ১২:</b> Hg ঘরের তাপমাত্রায় তরল ধাতু — গলনাঙ্ক −৩৮.৮°C!</li>
+      <li><b>গ্রুপ ১৬ ও ১৮:</b> ধারা প্রায় নিয়মিত; ১৮-তে van der Waals বল খুব দুর্বল বলে গলনাঙ্ক পরম শূন্যের কাছাকাছি।</li>
+      <li><b>পারমাণবিক ব্যাসার্ধ:</b> d-ব্লকে (গ্রুপ ৪→৫) ল্যান্থানাইড সংকোচনের কারণে ৫ম ও ৬ষ্ঠ পর্যায়ের ব্যাসার্ধ প্রায় সমান।</li>
+    </ul>
+  </div>
+  <div class="card pane" id="p3">
+    <details class="qa"><summary>ক্ষার ধাতুর গলনাঙ্ক নিচে নামলে কমে কেন?</summary><div>পরমাণু বড় হলে ধাতব বন্ধন দুর্বল হয় (ভ্যালেন্স ইলেকট্রন নিউক্লিয়াস থেকে দূরে)।</div></details>
+    <details class="qa"><summary>হ্যালোজেনের গলনাঙ্ক নিচে নামলে বাড়ে কেন?</summary><div>অণুর ভর ও ইলেকট্রন সংখ্যা বাড়ায় van der Waals (লন্ডন) বল বাড়ে।</div></details>
+    <details class="qa"><summary>ঘরের তাপমাত্রায় তরল দুটি মৌল কী কী?</summary><div>ব্রোমিন (অধাতু) ও পারদ (ধাতু)। (গ্যালিয়াম ও সিজিয়াম ~২৯°C এ গলে।)</div></details>
+    <details class="qa"><summary>নিষ্ক্রিয় গ্যাসের স্ফুটনাঙ্ক এত কম কেন?</summary><div>এরা একপরমাণুক, পরমাণুর মধ্যে কেবল দুর্বল ডিসপারশন বল।</div></details>
+    <details class="qa"><summary>একই গ্রুপে ব্যাসার্ধ নিচে কেন বাড়ে?</summary><div>প্রতি ধাপে একটি নতুন ইলেকট্রন খোলস যুক্ত হয়।</div></details>
+    <details class="qa"><summary>গ্রুপে নিচে গেলে আয়নিকরণ শক্তি কমে কেন?</summary><div>দূরত্ব ও আবরণ ক্রিয়া বাড়ে, তাই বাইরের ইলেকট্রন সহজে বের হয়।</div></details>
+  </div>
+  <div class="card pane" id="p4"><div class="scroll" id="tbl"></div></div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const RAW=[[1,"H","হাইড্রোজেন","Hydrogen",1,1,"s","nonmetal",53,32,1312,null,2.2,72.769,13.99,20.271,0.00008988],[2,"He","হিলিয়াম","Helium",1,18,"s","noble",31,46,2372.3,5250.5,null,-48,0.95,4.222,0.0001786],[3,"Li","লিথিয়াম","Lithium",2,1,"s","alkali",167,133,520.2,7298.1,0.98,59.6326,453.65,1603,0.534],[4,"Be","বেরিলিয়াম","Beryllium",2,2,"s","alkaline",112,102,899.5,1757.1,1.57,-48,1560,2742,1.85],[5,"B","বোরন","Boron",2,13,"p","metalloid",87,85,800.6,2427.1,2.04,26.989,2349,4200,2.08],[6,"C","কার্বন","Carbon",2,14,"p","nonmetal",67,75,1086.5,2352.6,2.55,121.7763,4600,null,1.821],[7,"N","নাইট্রোজেন","Nitrogen",2,15,"p","nonmetal",56,71,1402.3,2856,3.04,-6.8,63.15,77.355,0.001251],[8,"O","অক্সিজেন","Oxygen",2,16,"p","nonmetal",48,63,1313.9,3388.3,3.44,140.976,54.36,90.188,0.001429],[9,"F","ফ্লোরিন","Fluorine",2,17,"p","halogen",42,64,1681,3374.2,3.98,328.1649,53.48,85.03,0.001696],[10,"Ne","নিয়ন","Neon",2,18,"p","noble",38,67,2080.7,3952.3,null,-116,24.56,27.104,0.0009002],[11,"Na","সোডিয়াম","Sodium",3,1,"s","alkali",190,155,495.8,4562,0.93,52.867,370.944,1156.09,0.968],[12,"Mg","ম্যাগনেসিয়াম","Magnesium",3,2,"s","alkaline",145,139,737.7,1450.7,1.31,-40,923,1363,1.738],[13,"Al","অ্যালুমিনিয়াম","Aluminium",3,13,"p","post",118,126,577.5,1816.7,1.61,41.762,933.47,2743,2.7],[14,"Si","সিলিকন","Silicon",3,14,"p","metalloid",111,116,786.5,1577.1,1.9,134.0684,1687,3538,2.329],[15,"P","ফসফরাস","Phosphorus",3,15,"p","nonmetal",98,111,1011.8,1907,2.19,72.037,317.3,null,1.823],[16,"S","সালফার","Sulfur",3,16,"p","nonmetal",88,103,999.6,2252,2.58,200.4101,388.36,717.8,2.07],[17,"Cl","ক্লোরিন","Chlorine",3,17,"p","halogen",79,99,1251.2,2298,3.16,348.575,171.6,239.11,0.0032],[18,"Ar","আর্গন","Argon",3,18,"p","noble",71,96,1520.6,2665.8,null,-96,83.81,87.302,0.001784],[19,"K","পটাশিয়াম","Potassium",4,1,"s","alkali",243,196,418.8,3052,0.82,48.383,336.7,1032,0.862],[20,"Ca","ক্যালসিয়াম","Calcium",4,2,"s","alkaline",194,171,589.8,1145.4,1,2.37,1115,1757,1.55],[21,"Sc","স্ক্যান্ডিয়াম","Scandium",4,3,"d","transition",184,148,633.1,1235,1.36,18,1814,3109,2.985],[22,"Ti","টাইটানিয়াম","Titanium",4,4,"d","transition",176,136,658.8,1309.8,1.54,7.289,1941,3560,4.506],[23,"V","ভ্যানাডিয়াম","Vanadium",4,5,"d","transition",171,134,650.9,1414,1.63,50.911,2183,3680,6],[24,"Cr","ক্রোমিয়াম","Chromium",4,6,"d","transition",166,122,652.9,1590.6,1.66,65.21,2180,2944,7.19],[25,"Mn","ম্যাঙ্গানিজ","Manganese",4,7,"d","transition",161,119,717.3,1509,1.55,-50,1519,2334,7.21],[26,"Fe","আয়রন","Iron",4,8,"d","transition",156,116,762.5,1561.9,1.83,14.785,1811,3134,7.874],[27,"Co","কোবাল্ট","Cobalt",4,9,"d","transition",152,111,760.4,1648,1.88,63.898,1768,3200,8.9],[28,"Ni","নিকেল","Nickel",4,10,"d","transition",149,110,737.1,1753,1.91,111.65,1728,3003,8.908],[29,"Cu","কপার","Copper",4,11,"d","transition",145,112,745.5,1957.9,1.9,119.235,1357.77,2835,8.96],[30,"Zn","জিঙ্ক","Zinc",4,12,"d","transition",142,118,906.4,1733.3,1.65,-58,692.68,1180,7.14],[31,"Ga","গ্যালিয়াম","Gallium",4,13,"p","post",136,124,578.8,1979.3,1.81,41,302.9146,2673,5.91],[32,"Ge","জার্মেনিয়াম","Germanium",4,14,"p","metalloid",125,121,762,1537.5,2.01,118.9352,1211.4,3106,5.323],[33,"As","আর্সেনিক","Arsenic",4,15,"p","metalloid",114,121,947,1798,2.18,77.65,1090,null,5.727],[34,"Se","সিলেনিয়াম","Selenium",4,16,"p","nonmetal",103,116,941,2045,2.55,194.9587,494,958,4.81],[35,"Br","ব্রোমিন","Bromine",4,17,"p","halogen",94,114,1139.9,2103,2.96,324.537,265.8,332,3.1028],[36,"Kr","ক্রিপ্টন","Krypton",4,18,"p","noble",88,117,1350.8,2350.4,3,-96,115.78,119.93,0.003749],[37,"Rb","রুবিডিয়াম","Rubidium",5,1,"s","alkali",265,210,403,2633,0.82,46.884,312.45,961,1.532],[38,"Sr","স্ট্রনশিয়াম","Strontium",5,2,"s","alkaline",219,185,549.5,1064.2,0.95,5.023,1050,1650,2.64],[39,"Y","ইট্রিয়াম","Yttrium",5,3,"d","transition",212,163,600,1180,1.22,29.6,1799,3203,4.472],[40,"Zr","জিরকোনিয়াম","Zirconium",5,4,"d","transition",206,154,640.1,1270,1.33,41.806,2128,4650,6.52],[41,"Nb","নিওবিয়াম","Niobium",5,5,"d","transition",198,147,652.1,1380,1.6,88.516,2750,5017,8.57],[42,"Mo","মলিবডেনাম","Molybdenum",5,6,"d","transition",190,138,684.3,1560,2.16,72.1,2896,4912,10.28],[43,"Tc","টেকনেশিয়াম","Technetium",5,7,"d","transition",183,128,702,1470,1.9,53,2430,4538,11],[44,"Ru","রুথেনিয়াম","Ruthenium",5,8,"d","transition",178,125,710.2,1620,2.2,100.96,2607,4423,12.45],[45,"Rh","রোডিয়াম","Rhodium",5,9,"d","transition",173,125,719.7,1740,2.28,110.27,2237,3968,12.41],[46,"Pd","প্যালেডিয়াম","Palladium",5,10,"d","transition",169,120,804.4,1870,2.2,54.24,1828.05,3236,12.023],[47,"Ag","সিলভার","Silver",5,11,"d","transition",165,128,731,2070,1.93,125.862,1234.93,2435,10.49],[48,"Cd","ক্যাডমিয়াম","Cadmium",5,12,"d","transition",161,136,867.8,1631.4,1.69,-68,594.22,1040,8.65],[49,"In","ইন্ডিয়াম","Indium",5,13,"p","post",156,142,558.3,1820.7,1.78,37.043,429.7485,2345,7.31],[50,"Sn","টিন","Tin",5,14,"p","post",145,140,708.6,1411.8,1.96,107.2984,505.08,2875,7.365],[51,"Sb","অ্যান্টিমনি","Antimony",5,15,"p","metalloid",133,140,834,1594.9,2.05,101.059,903.78,1908,6.697],[52,"Te","টেলুরিয়াম","Tellurium",5,16,"p","metalloid",123,136,869.3,1790,2.1,190.161,722.66,1261,6.24],[53,"I","আয়োডিন","Iodine",5,17,"p","halogen",115,133,1008.4,1845.9,2.66,295.1531,386.85,457.4,4.933],[54,"Xe","জেনন","Xenon",5,18,"p","noble",108,131,1170.4,2046.4,2.6,-77,161.4,165.051,0.005894],[55,"Cs","সিজিয়াম","Cesium",6,1,"s","alkali",298,232,375.7,2234.3,0.79,45.505,301.7,944,1.93],[56,"Ba","বেরিয়াম","Barium",6,2,"s","alkaline",253,196,502.9,965.2,0.89,13.954,1000,2118,3.51],[57,"La","ল্যান্থানাম","Lanthanum",6,3,"f","lanthanide",226,180,538.1,1067,1.1,53,1193,3737,6.162],[58,"Ce","সেরিয়াম","Cerium",6,3,"f","lanthanide",210,163,534.4,1050,1.12,55,1068,3716,6.77],[59,"Pr","প্রাসিওডিমিয়াম","Praseodymium",6,3,"f","lanthanide",247,176,527,1020,1.13,93,1208,3403,6.77],[60,"Nd","নিওডিমিয়াম","Neodymium",6,3,"f","lanthanide",206,174,533.1,1040,1.14,184.87,1297,3347,7.01],[61,"Pm","প্রমিথিয়াম","Promethium",6,3,"f","lanthanide",205,173,540,1050,1.13,12.45,1315,3273,7.26],[62,"Sm","সামারিয়াম","Samarium",6,3,"f","lanthanide",238,172,544.5,1070,1.17,15.63,1345,2173,7.52],[63,"Eu","ইউরোপিয়াম","Europium",6,3,"f","lanthanide",231,168,547.1,1085,1.2,11.2,1099,1802,5.264],[64,"Gd","গ্যাডোলিনিয়াম","Gadolinium",6,3,"f","lanthanide",233,169,593.4,1170,1.2,13.22,1585,3273,7.9],[65,"Tb","টার্বিয়াম","Terbium",6,3,"f","lanthanide",225,168,565.8,1110,1.1,112.4,1629,3396,8.23],[66,"Dy","ডিসপ্রোসিয়াম","Dysprosium",6,3,"f","lanthanide",228,167,573,1130,1.22,33.96,1680,2840,8.54],[67,"Ho","হোলমিয়াম","Holmium",6,3,"f","lanthanide",226,166,581,1140,1.23,32.61,1734,2873,8.79],[68,"Er","আরবিয়াম","Erbium",6,3,"f","lanthanide",226,165,589.3,1150,1.24,30.1,1802,3141,9.066],[69,"Tm","থুলিয়াম","Thulium",6,3,"f","lanthanide",222,164,596.7,1160,1.25,99,1818,2223,9.32],[70,"Yb","ইটারবিয়াম","Ytterbium",6,3,"f","lanthanide",222,170,603.4,1174.8,1.1,-1.93,1097,1469,6.9],[71,"Lu","লুটিশিয়াম","Lutetium",6,3,"d","lanthanide",217,162,523.5,1340,1.27,33.4,1925,3675,9.841],[72,"Hf","হাফনিয়াম","Hafnium",6,4,"d","transition",208,152,658.5,1440,1.3,17.18,2506,4876,13.31],[73,"Ta","ট্যান্টালাম","Tantalum",6,5,"d","transition",200,146,761,1500,1.5,31,3290,5731,16.69],[74,"W","টাংস্টেন","Tungsten",6,6,"d","transition",193,137,770,1700,2.36,78.76,3695,6203,19.25],[75,"Re","রেনিয়াম","Rhenium",6,7,"d","transition",188,131,760,1260,1.9,5.8273,3459,5869,21.02],[76,"Os","অসমিয়াম","Osmium",6,8,"d","transition",185,129,840,1600,2.2,103.99,3306,5285,22.59],[77,"Ir","ইরিডিয়াম","Iridium",6,9,"d","transition",180,122,880,1600,2.2,150.94,2719,4403,22.56],[78,"Pt","প্ল্যাটিনাম","Platinum",6,10,"d","transition",177,123,870,1791,2.28,205.041,2041.4,4098,21.45],[79,"Au","সোনা","Gold",6,11,"d","transition",174,124,890.1,1980,2.54,222.747,1337.33,3243,19.3],[80,"Hg","পারদ","Mercury",6,12,"d","transition",171,133,1007.1,1810,2,-48,234.321,629.88,13.534],[81,"Tl","থ্যালিয়াম","Thallium",6,13,"p","post",156,144,589.4,1971,1.62,36.4,577,1746,11.85],[82,"Pb","সীসা","Lead",6,14,"p","post",154,144,715.6,1450.5,1.87,34.4204,600.61,2022,11.34],[83,"Bi","বিস্মাথ","Bismuth",6,15,"p","post",143,151,703,1610,2.02,90.924,544.7,1837,9.78],[84,"Po","পোলোনিয়াম","Polonium",6,16,"p","post",135,145,812.1,null,2,136,527,1235,9.196],[85,"At","অ্যাস্টাটাইন","Astatine",6,17,"p","halogen",127,147,899.003,null,2.2,233,575,610,6.35],[86,"Rn","রেডন","Radon",6,18,"p","noble",120,142,1037,null,2.2,-68,202,211.5,0.00973],[87,"Fr","ফ্রান্সিয়াম","Francium",7,1,"s","alkali",null,null,380,null,0.79,46.89,300,950,1.87],[88,"Ra","রেডিয়াম","Radium",7,2,"s","alkaline",null,201,509.3,979,0.9,9.6485,1233,2010,5.5],[89,"Ac","অ্যাক্টিনিয়াম","Actinium",7,3,"f","actinide",null,186,499,1170,1.1,33.77,1500,3500,10],[90,"Th","থোরিয়াম","Thorium",7,3,"f","actinide",null,175,587,1110,1.3,112.72,2023,5061,11.724],[91,"Pa","প্রোট্যাক্টিনিয়াম","Protactinium",7,3,"f","actinide",null,169,568,null,1.5,53.03,1841,4300,15.37],[92,"U","ইউরেনিয়াম","Uranium",7,3,"f","actinide",null,170,597.6,1420,1.38,50.94,1405.3,4404,19.1],[93,"Np","নেপচুনিয়াম","Neptunium",7,3,"f","actinide",null,171,604.5,null,1.36,45.85,912,4447,20.45],[94,"Pu","প্লুটোনিয়াম","Plutonium",7,3,"f","actinide",null,172,584.7,null,1.28,-48.33,912.5,3505,19.816],[95,"Am","অ্যামেরিসিয়াম","Americium",7,3,"f","actinide",null,166,578,null,1.13,9.93,1449,2880,12],[96,"Cm","কিউরিয়াম","Curium",7,3,"f","actinide",null,166,581,null,1.28,27.17,1613,3383,13.51],[97,"Bk","বার্কেলিয়াম","Berkelium",7,3,"f","actinide",null,null,601,null,1.3,-165.24,1259,2900,14.78],[98,"Cf","ক্যালিফোর্নিয়াম","Californium",7,3,"f","actinide",null,null,608,null,1.3,-97.31,1173,1743,15.1],[99,"Es","আইনস্টাইনিয়াম","Einsteinium",7,3,"f","actinide",null,null,619,null,1.3,-28.6,1133,1269,8.84],[100,"Fm","ফার্মিয়াম","Fermium",7,3,"f","actinide",null,null,627,null,1.3,33.96,1800,null,null],[101,"Md","মেন্ডেলিভিয়াম","Mendelevium",7,3,"f","actinide",null,null,635,null,1.3,93.91,1100,null,null],[102,"No","নোবেলিয়াম","Nobelium",7,3,"f","actinide",null,null,642,null,1.3,-223.22,1100,null,null],[103,"Lr","লরেনসিয়াম","Lawrencium",7,3,"d","actinide",null,null,470,null,1.3,-30.04,1900,null,null],[104,"Rf","রাদারফোর্ডিয়াম","Rutherfordium",7,4,"d","transition",null,null,580,null,null,null,2400,5800,23.2],[105,"Db","ডুবনিয়াম","Dubnium",7,5,"d","transition",null,null,null,null,null,null,null,null,29.3],[106,"Sg","সি বোর্জিয়াম","Seaborgium",7,6,"d","transition",null,null,null,null,null,null,null,null,35],[107,"Bh","বোহরিয়াম","Bohrium",7,7,"d","transition",null,null,null,null,null,null,null,null,37.1],[108,"Hs","হাসিয়াম","Hassium",7,8,"d","transition",null,null,null,null,null,null,null,null,40.7],[109,"Mt","মেইটনেরিয়াম","Meitnerium",7,9,"d","transition",null,null,null,null,null,null,null,null,37.4],[110,"Ds","ডামস্টাটিয়াম","Darmstadtium",7,10,"d","transition",null,null,null,null,null,null,null,null,34.8],[111,"Rg","রন্টজেনিয়াম","Roentgenium",7,11,"d","transition",null,null,null,null,null,151,null,null,28.7],[112,"Cn","কপারনিশিয়াম","Copernicium",7,12,"d","transition",null,null,null,null,null,null,283,340,14],[113,"Nh","নিহোনিয়াম","Nihonium",7,13,"p","post",null,null,null,null,null,66.6,700,1430,16],[114,"Fl","ফ্লেরোভিয়াম","Flerovium",7,14,"p","post",null,null,null,null,null,null,340,420,14],[115,"Mc","মস্কোভিয়াম","Moscovium",7,15,"p","post",null,null,null,null,null,35.3,670,1400,13.5],[116,"Lv","লিভারমোরিয়াম","Livermorium",7,16,"p","post",null,null,null,null,null,74.9,709,1085,12.9],[117,"Ts","টেনেসিন","Tennessine",7,17,"p","halogen",null,null,null,null,null,165.9,723,883,7.17],[118,"Og","ওগানেসন","Oganesson",7,18,"p","noble",null,null,null,null,null,5.40318,null,350,4.95]];
+const EL=RAW.map(r=>({z:r[0],s:r[1],bn:r[2],en:r[3],p:r[4],g:r[5],b:r[6],c:r[7],r:r[8],rc:r[9],ie1:r[10],x:r[12],ea:r[13],mp:r[14],bp:r[15],d:r[16]}));
+const CATC={alkali:'#f43f5e',alkaline:'#fb923c',transition:'#60a5fa',post:'#94a3b8',metalloid:'#2dd4bf',nonmetal:'#4ade80',halogen:'#fbbf24',noble:'#22d3ee',lanthanide:'#f472b6',actinide:'#c084fc'};
+const catc=e=>CATC[e.c]||'#a855f7';
+const GN={1:'ক্ষার ধাতু (H সহ)',2:'মৃৎক্ষার ধাতু',3:'স্ক্যান্ডিয়াম গ্রুপ',4:'টাইটানিয়াম গ্রুপ',5:'ভ্যানাডিয়াম গ্রুপ',6:'ক্রোমিয়াম গ্রুপ',7:'ম্যাঙ্গানিজ গ্রুপ',8:'আয়রন গ্রুপ',9:'কোবাল্ট গ্রুপ',10:'নিকেল গ্রুপ',11:'কয়েন ধাতু',12:'জিঙ্ক গ্রুপ',13:'বোরন গ্রুপ',14:'কার্বন গ্রুপ',15:'নাইট্রোজেন গ্রুপ (নিকটোজেন)',16:'অক্সিজেন গ্রুপ (চ্যালকোজেন)',17:'হ্যালোজেন',18:'নিষ্ক্রিয় গ্যাস'};
+const GI={1:'১টি যোজ্যতা ইলেকট্রন (ns¹); অত্যন্ত সক্রিয় নরম ধাতু (H বাদে), পানির সাথে তীব্র বিক্রিয়া, M⁺ আয়ন গঠন করে।',2:'ns²; ক্ষার ধাতুর চেয়ে শক্ত ও উচ্চ গলনাঙ্ক, M²⁺ আয়ন, ক্ষারীয় অক্সাইড।',3:'d-ব্লকের শুরু; সাধারণত +৩ জারণ অবস্থা।',4:'Ti, Zr, Hf — শক্ত, ক্ষয়রোধী, +৪ জারণ অবস্থা।',5:'V, Nb, Ta — উচ্চ গলনাঙ্ক, একাধিক জারণ অবস্থা।',6:'Cr, Mo, W — অতি উচ্চ গলনাঙ্ক (W ধাতুর মধ্যে সর্বোচ্চ ~৩৪২২°C)।',7:'Mn, Tc, Re — বহু জারণ অবস্থা (Mn: +২ থেকে +৭, KMnO₄)।',8:'Fe, Ru, Os — Fe চৌম্বক ও শিল্পের মূল ধাতু।',9:'Co, Rh, Ir — Co চৌম্বক ধাতু, অনুঘটক।',10:'Ni, Pd, Pt — অনুঘটক ও ক্ষয়রোধী।',11:'Cu, Ag, Au — উত্তম পরিবাহী, নিষ্ক্রিয়, d¹⁰.',12:'Zn, Cd, Hg — পূর্ণ d¹⁰ তাই গলনাঙ্ক কম; Hg তরল।',13:'ns² np¹; B অর্ধধাতু, Al প্রধান ধাতু।',14:'C অধাতু, Si/Ge অর্ধধাতু, Sn/Pb ধাতু — ধর্ম নাটকীয়ভাবে বদলায়।',15:'N, P অধাতু; As, Sb অর্ধধাতু; Bi ধাতু।',16:'O, S, Se অধাতু; যোজনী ২; অক্সিজেন পানির উপাদান।',17:'ns² np⁵; সবচেয়ে সক্রিয় অধাতু, X⁻ আয়ন, দ্বিপরমাণুক অণু।',18:'পূর্ণ যোজ্যতা খোলস; একপরমাণুক গ্যাস, অতি নিষ্ক্রিয়।'};
+const PR=[
+ {k:'mpbp',n:'গলনাঙ্ক ও স্ফুটনাঙ্ক',c:'#f1c40f',u:'°C',two:true},
+ {k:'r',n:'পারমাণবিক ব্যাসার্ধ',u:'pm',c:'#3b82f6',dec:0},
+ {k:'ie1',n:'১ম আয়নিকরণ শক্তি',u:'kJ/mol',c:'#4ade80',dec:0},
+ {k:'x',n:'তড়িৎ ঋণাত্মকতা',u:'',c:'#f43f5e',dec:2},
+ {k:'ea',n:'ইলেকট্রন আসক্তি',u:'kJ/mol',c:'#fbbf24',dec:1},
+ {k:'d',n:'ঘনত্ব',u:'g/cm³',c:'#a855f7',dec:3}];
+const S={g:1,pk:'mpbp',K:false,all:false,z:11};
+const T=(P,e,kind)=>{const v=e[kind];return v==null?null:(kind=='mp'||kind=='bp')&&!S.K?v-273.15:v};
+const grp=g=>EL.filter(e=>e.g==g&&!(e.c=='lanthanide'||e.c=='actinide'));
+function f(v,dec){if(v==null)return 'তথ্য নেই';let s=Math.abs(v)<1&&v!=0&&dec>=3?v.toPrecision(3):v.toFixed(dec);if(s.includes('.'))s=s.replace(/\.?0+$/,'');return bn(s)}
+function state(e){if(e.mp==null||e.bp==null)return ['u','অজানা'];const t=298.15;return e.mp>t?['s','কঠিন']:e.bp<t?['g','গ্যাস']:['l','তরল']}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2000)}
+// chips
+$('grps').innerHTML=[...Array(18)].map((_,i)=>`<button class="chip" data-g="${i+1}" style="--c:${catc(grp(i+1)[0]||{})}"><i></i>${bn(i+1)}</button>`).join('');
+$('props').innerHTML=PR.map(p=>`<button class="chip" data-k="${p.k}" style="--c:${p.c}"><i></i>${p.n}</button>`).join('');
+function sync(){document.querySelectorAll('#grps .chip').forEach(b=>b.classList.toggle('on',!S.all&&+b.dataset.g==S.g));document.querySelectorAll('#props .chip').forEach(b=>b.classList.toggle('on',b.dataset.k==S.pk));$('allg').classList.toggle('on',S.all);$('unit').textContent='একক: '+(S.K?'K':'°C');$('unit').style.display=S.pk=='mpbp'?'':'none'}
+document.querySelectorAll('#grps .chip').forEach(b=>b.onclick=()=>{S.g=+b.dataset.g;S.all=false;full()});
+document.querySelectorAll('#props .chip').forEach(b=>b.onclick=()=>{S.pk=b.dataset.k;full()});
+$('unit').onclick=()=>{S.K=!S.K;full()};
+$('allg').onclick=()=>{S.all=!S.all;if(S.all&&S.pk=='mpbp')S.pk='r';full()};
+// series
+function series(){
+  const P=PR.find(p=>p.k==S.pk);
+  if(S.all){const out=[];for(let g=1;g<=18;g++){const m=grp(g);const mk=P.two?'mp':S.pk;const vs=m.map(e=>T(P,e,mk)).filter(v=>v!=null);out.push({e:null,lab:bn(g),vals:[vs.length?vs.reduce((a,b)=>a+b)/vs.length:null],g,n:vs.length})}return {P,items:out,names:[P.two?'গড় গলনাঙ্ক':'গড় '+P.n]}}
+  const m=grp(S.g);
+  if(P.two)return {P,items:m.map(e=>({e,lab:e.s,vals:[T(P,e,'mp'),T(P,e,'bp')]})),names:['গলনাঙ্ক','স্ফুটনাঙ্ক'],cols:['#f1c40f','#3b82f6']};
+  return {P,items:m.map(e=>({e,lab:e.s,vals:[T(P,e,S.pk)]})),names:[P.n],cols:[P.c]};
+}
+let G={};
+function render(){
+  sync();const D=series();const P=D.P;const items=D.items;
+  const cols=D.cols||[P.c];
+  const unit=P.two?(S.K?'K':'°C'):P.u;
+  $('gt').textContent=S.all?`সব গ্রুপের গড় — ${P.two?'গলনাঙ্ক':P.n} ${unit?'('+unit+')':''}`:`গ্রুপ ${bn(S.g)} — ${GN[S.g]} · ${P.n} ${unit?'('+unit+')':''}`;
+  $('legend').innerHTML=D.names.map((n,i)=>`<span><i style="background:${cols[i]}"></i>${n}</span>`).join('')+'<span style="margin-left:auto">কঠিন/তরল/গ্যাস: ২৫°C-এ</span>';
+  const n=items.length,ns=D.names.length;const W=Math.max(560,n*(ns==2?72:58)+90),H=380,L=64,R=14,Tp=22,B=52;const pw=W-L-R,ph=H-Tp-B;
+  let all=[];items.forEach(it=>it.vals.forEach(v=>{if(v!=null)all.push(v)}));
+  let lo=Math.min(0,...all),hi=Math.max(0,...all);if(hi==lo)hi=lo+1;
+  const pad=(hi-lo)*.08;if(hi>0)hi+=pad;if(lo<0)lo-=pad;
+  const st=nice(lo,hi,5);lo=st.a;hi=st.b;
+  const Y=v=>Tp+ph*(1-(v-lo)/(hi-lo));
+  let s=`<rect x="0" y="0" width="${W}" height="${H}" fill="none"/>`;
+  st.t.forEach(t=>{s+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}"/><text class="ax" x="${L-8}" y="${Y(t)+4}" text-anchor="end">${bn(+t.toFixed(3))}</text>`});
+  s+=`<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--text-muted)" stroke-width="1.3"/>`;
+  const sl=pw/n,bw=Math.min(34,(sl*.7)/ns);
+  G={W,H,L,sl,n,items,D,cols,unit,P,Tp,ph};
+  items.forEach((it,i)=>{const cx=L+sl*(i+.5);
+    it.vals.forEach((v,j)=>{if(v==null){s+=`<text class="ax" x="${cx+(j-(ns-1)/2)*(bw+2)}" y="${Y(0)-6}" text-anchor="middle">–</text>`;return}
+      const x=cx+(j-(ns-1)/2)*(bw+2)-bw/2,y0=Y(0),y1=Y(v);const top=Math.min(y0,y1),h=Math.max(2,Math.abs(y1-y0));
+      const c=S.all?CATC[(grp(it.g)[0]||{}).c]||cols[0]:cols[j];
+      s+=`<rect class="bar" data-i="${i}" x="${x}" y="${top}" width="${bw}" height="${h}" rx="5" fill="${c}" stroke="var(--card-solid)" stroke-width="2"/>`;
+      if(n<=10)s+=`<text class="ax" x="${x+bw/2}" y="${v>=0?top-5:top+h+13}" text-anchor="middle" style="font-size:10px">${f(v,P.dec==null?0:P.dec)}</text>`});
+    s+=`<text class="axt" x="${cx}" y="${H-B+22}" text-anchor="middle">${it.lab}</text>`;
+    if(it.e)s+=`<text class="ax" x="${cx}" y="${H-B+37}" text-anchor="middle">${bn(it.e.z)}</text>`;
+    s+=`<rect class="hit" data-i="${i}" x="${L+sl*i}" y="${Tp}" width="${sl}" height="${ph+B-10}" fill="transparent"/>`});
+  if(!S.all&&G.items.some(it=>it.e&&it.e.z==S.z)){const i=items.findIndex(it=>it.e&&it.e.z==S.z);s+=`<rect x="${L+sl*i+2}" y="${Tp}" width="${sl-4}" height="${ph}" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="5 4" rx="8"/>`}
+  const svg=$('ch');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.style.minWidth=W+'px';svg.innerHTML=s;
+  svg.querySelectorAll('.hit').forEach(r=>{r.onpointermove=ev=>tip(ev,+r.dataset.i);r.onpointerleave=()=>{$('tip').classList.remove('on');$('tip').style.left='0'};r.onclick=()=>{const it=G.items[+r.dataset.i];if(it.e){S.z=it.e.z;render();details()}else{S.g=it.g;S.all=false;full()}}});
+  // states
+  $('states').innerHTML=S.all?'':'<b style="font-size:13px">ভৌত অবস্থা (২৫°C):</b>'+grp(S.g).map(e=>{const [c,t]=state(e);return `<span class="sb ${c}">${e.s}: ${t}</span>`}).join('');
+  note(D);
+}
+function tip(ev,i){const it=G.items[i],t=$('tip'),P=G.P;let h='';
+  if(it.e){h=`<b>${it.e.bn} (${it.e.s})</b> · Z=${bn(it.e.z)}<br>`;G.D.names.forEach((nm,j)=>{h+=`<span class="dt" style="background:${G.cols[j]}"></span>${nm}: <b>${f(it.vals[j],P.dec==null?1:P.dec)} ${G.unit}</b><br>`});const [c,tt]=state(it.e);h+=`অবস্থা (২৫°C): ${tt}`}
+  else h=`<b>গ্রুপ ${bn(it.g)}</b> · ${GN[it.g]}<br>গড় ${P.n}: <b>${f(it.vals[0],P.dec==null?1:P.dec)} ${G.unit}</b><br>(${bn(it.n)}টি মৌলের তথ্য) · ক্লিক করে গ্রুপ দেখো`;
+  t.innerHTML=h;t.classList.add('on');const r=$('cw').getBoundingClientRect();let x=ev.clientX-r.left+14,y=ev.clientY-r.top+14;if(x>r.width-270)x=ev.clientX-r.left-250;t.style.left=Math.max(0,x)+'px';t.style.top=y+'px'}
+function nice(lo,hi,cnt){if(hi<=lo)hi=lo+1;const raw=(hi-lo)/cnt,mag=Math.pow(10,Math.floor(Math.log10(raw))),r=raw/mag,st=(r<1.5?1:r<3?2:r<7?5:10)*mag;const a=Math.floor(lo/st+1e-9)*st,b=Math.ceil(hi/st-1e-9)*st,t=[];for(let v=a;v<=b+st/2;v+=st)t.push(+v.toPrecision(12));return {a,b,t,st}}
+// trend
+function trendOf(m,k){const v=m.map(e=>({e,v:e[k]})).filter(x=>x.v!=null);if(v.length<2)return null;let up=0,dn=0;for(let i=1;i<v.length;i++){if(v[i].v>v[i-1].v)up++;else if(v[i].v<v[i-1].v)dn++}
+  const a=v[0],b=v[v.length-1];const mono=dn==0?'up':up==0?'dn':'mix';return {a,b,mono,v,pct:(b.v-a.v)/Math.abs(a.v||1)*100}}
+function note(D){
+  if(S.all){$('note').innerHTML='💡 প্রতিটি বার একটি গ্রুপের গড়। বারে ক্লিক করলে ওই গ্রুপের বিস্তারিত গ্রাফ খুলবে।';return}
+  const m=grp(S.g),P=D.P;const k=P.two?'bp':S.pk;const t=trendOf(m,k);
+  if(!t){$('note').textContent='এই গ্রুপে এই ধর্মের যথেষ্ট তথ্য নেই।';return}
+  const dir={up:'উপর→নিচে <span class="up">ক্রমাগত বাড়ে ↑</span>',dn:'উপর→নিচে <span class="dn">ক্রমাগত কমে ↓</span>',mix:'উপর→নিচে <b>অনিয়মিত</b> (ওঠানামা করে)'}[t.mono];
+  $('note').innerHTML=`💡 <b>${P.two?'স্ফুটনাঙ্ক':P.n}:</b> ${dir} — ${t.a.e.s} (${f(t.a.v,P.dec==null?0:P.dec)}) → ${t.b.e.s} (${f(t.b.v,P.dec==null?0:P.dec)}), মোট পরিবর্তন ${bn(Math.abs(t.pct).toFixed(0))}%।`}
+// details
+function details(){const e=EL[S.z-1];const [c,t]=state(e);const cc=v=>v==null?'তথ্য নেই':f(S.K?v:v-273.15,1)+(S.K?' K':' °C');
+  $('det').innerHTML=`<div class="insr" style="border-left:4px solid ${catc(e)}"><b style="font-size:17px">${e.s} — ${e.bn}</b> (${e.en})<br><small>Z=${bn(e.z)} · পর্যায় ${bn(e.p)} · ${e.g?'গ্রুপ '+bn(e.g):'f-ব্লক'} · <span class="sb ${c}" style="padding:1px 8px">${t}</span></small></div>
+  <div class="kv"><span>গলনাঙ্ক</span><b>${cc(e.mp)}</b></div><div class="kv"><span>স্ফুটনাঙ্ক</span><b>${cc(e.bp)}</b></div>
+  <div class="kv"><span>পারমাণবিক ব্যাসার্ধ</span><b>${e.r==null?'তথ্য নেই':f(e.r,0)+' pm'}</b></div>
+  <div class="kv"><span>১ম আয়নিকরণ শক্তি</span><b>${e.ie1==null?'তথ্য নেই':f(e.ie1,0)+' kJ/mol'}</b></div>
+  <div class="kv"><span>তড়িৎ ঋণাত্মকতা</span><b>${e.x==null?'তথ্য নেই':f(e.x,2)}</b></div>
+  <div class="kv"><span>ঘনত্ব</span><b>${e.d==null?'তথ্য নেই':f(e.d,3)+' g/cm³'}</b></div>
+  <div class="row" style="margin-top:10px;display:flex;gap:8px"><button class="btn ghost" onclick="S.g=EL[S.z-1].g||S.g;S.all=false;full()">এই মৌলের গ্রুপ দেখো</button></div>`}
+function insights(){
+  let h='';const rows=[['mp','গলনাঙ্ক'],['r','ব্যাসার্ধ'],['ie1','আয়নিকরণ শক্তি'],['x','ঋণাত্মকতা'],['d','ঘনত্ব']];
+  const m=grp(S.g);rows.forEach(([k,n])=>{const t=trendOf(m,k);if(!t)return;const ic=t.mono=='up'?'<span class="up">↑ বাড়ে</span>':t.mono=='dn'?'<span class="dn">↓ কমে</span>':'<b>↕ অনিয়মিত</b>';h+=`<div class="insr"><b>${n}:</b> ${ic}<br><small style="color:var(--text-muted)">${t.a.e.s} → ${t.b.e.s}</small></div>`});
+  $('ins').innerHTML=`<div class="insr" style="border-left:4px solid #a855f7"><b>গ্রুপ ${bn(S.g)} — ${GN[S.g]}</b><br>${GI[S.g]}</div>`+h;
+  $('gInfo').innerHTML=`<h3>গ্রুপ ${bn(S.g)}: ${GN[S.g]}</h3><p style="line-height:1.9">${GI[S.g]}</p><p style="line-height:1.9"><b>সাধারণ নিয়ম:</b> গ্রুপে উপর→নিচে: ব্যাসার্ধ ↑ (নতুন খোলস), আয়নিকরণ শক্তি ↓, ঋণাত্মকতা ↓, ধাতব ধর্ম ↑। গলনাঙ্ক ধাতুর ক্ষেত্রে সাধারণত কমে (ক্ষার ধাতু), অধাতুর ক্ষেত্রে বাড়ে (হ্যালোজেন)।</p><p style="color:var(--text-muted)">উপরের চিপ থেকে অন্য গ্রুপ বেছে নাও।</p>`;
+  let t='<table class="dtb"><tr><th>মৌল</th><th>Z</th><th>গলনাঙ্ক °C</th><th>স্ফুটনাঙ্ক °C</th><th>ব্যাসার্ধ pm</th><th>IE₁</th><th>EN</th><th>ঘনত্ব</th><th>অবস্থা</th></tr>';
+  m.forEach(e=>{const [c,tt]=state(e);t+=`<tr><td style="color:${catc(e)};font-weight:800">${e.s} ${e.bn}</td><td>${bn(e.z)}</td><td>${e.mp==null?'–':f(e.mp-273.15,1)}</td><td>${e.bp==null?'–':f(e.bp-273.15,1)}</td><td>${e.r==null?'–':f(e.r,0)}</td><td>${e.ie1==null?'–':f(e.ie1,0)}</td><td>${e.x==null?'–':f(e.x,2)}</td><td>${e.d==null?'–':f(e.d,3)}</td><td>${tt}</td></tr>`});$('tbl').innerHTML=t+'</table>'}
+function full(){render();details();insights()}
+document.querySelectorAll('.tab[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab[data-p]').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==b.dataset.p))});
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+const h0=parseInt(location.hash.slice(2));if(location.hash.startsWith('#g')&&h0>=1&&h0<=18)S.g=h0;
+full();
+</script>
 </body>
 </html>
