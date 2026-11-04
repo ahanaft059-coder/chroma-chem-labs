@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>রসায়নের ধারণা | এক্সাম জোন | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,hsl(200,60%,11%),hsl(200,70%,30%),hsl(200,80%,55%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#0369a1,#38bdf8);}
+.scroll{overflow-x:auto}
+.badge2{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:800}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px;align-items:center}.kv span:first-child{color:var(--text-muted)}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.gwrap{grid-template-columns:minmax(0,1fr) minmax(300px,1fr)}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.mode{display:none}.mode.on{display:block}.scroll{overflow-x:auto}
+.rc{background:var(--card-solid);border:1px solid var(--border-color);border-radius:14px;padding:14px;text-align:center}.rc small{color:var(--text-muted);font-weight:700}.rc strong{display:block;font-size:34px;color:#22d3b0;margin-top:4px}
+.pc{border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);border-radius:6px;font-size:11px;font-weight:800;padding:5px 0;cursor:pointer;border-bottom:3px solid var(--c)}.pc.on{background:var(--c);color:#0b1020;box-shadow:0 0 12px var(--c);transform:scale(1.15);z-index:2}
+.orb-t{padding:2px 6px;border-radius:6px;display:inline-block;margin:2px 1px;font-weight:700}
+.wrap{max-width:860px}
+.ex-hero{display:flex;gap:18px;align-items:center;padding:28px 0 12px}.ex-ic{font-size:54px;width:92px;height:92px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:26px;background:var(--card-solid);border:1px solid var(--border-color);box-shadow:0 0 30px rgba(34,211,176,.2)}
+.ex-hero h1{margin:8px 0 6px;font-size:clamp(24px,4.4vw,36px);line-height:1.3;background:linear-gradient(90deg,#22d3b0,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}.ex-sub{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.ex-stats .card{padding:14px;text-align:center;display:flex;flex-direction:column;gap:2px}.ex-stats b{font-size:24px;color:#22d3b0}.ex-stats span{font-size:12px;color:var(--text-muted)}
+.ex-opts{padding:14px 16px;margin-bottom:14px}.ex-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}.ex-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.ex-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ex-mode{text-align:left;cursor:pointer;padding:18px;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--c);transition:.25s}.ex-mode:hover{transform:translateY(-4px);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 28%,transparent)}.ex-mode .mi{font-size:30px}.ex-mode b{font-size:17px}.ex-mode small{color:var(--text-muted);line-height:1.6;font-size:12.5px}.ex-mode em{font-style:normal;font-weight:800;color:var(--c);margin-top:auto;padding-top:6px}.ex-mode.dis{opacity:.5;cursor:not-allowed}
+.ex-foot{text-align:center;color:var(--text-muted);font-size:13px;margin:18px 0 60px}
+.ex-hud{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}.ex-x{width:38px;height:38px;border-radius:12px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font-size:16px}
+.ex-prog{flex:1;min-width:150px;font-size:13px;font-weight:800}.ex-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:5px}.ex-bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3b0,#a855f7);transition:width .4s}
+.ex-pill{padding:7px 12px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13px;white-space:nowrap}
+.ex-q{padding:22px;margin-bottom:14px}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tg.b{background:rgba(251,191,36,.16);color:#fbbf24}.tg.m{background:rgba(251,113,133,.16);color:#fb7185}
+.ex-qt{font-size:19px;line-height:1.85;font-weight:700;margin-bottom:16px}
+.ex-os{display:grid;gap:10px}.ex-opt{display:flex;gap:12px;align-items:center;text-align:left;padding:13px 15px;border-radius:14px;border:1.5px solid var(--border-color);background:var(--card-solid);color:var(--text);font:inherit;font-size:15.5px;cursor:pointer;transition:.18s;line-height:1.6}.ex-opt i{font-style:normal;flex:0 0 32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;background:rgba(255,255,255,.07)}
+.ex-opt:hover{border-color:#a855f7;transform:translateX(3px)}.ex-opt.sel{border-color:#a855f7;background:rgba(168,85,247,.16)}.ex-opt.sel i{background:#a855f7;color:#0b1020}
+.ex-opt.right{border-color:#22d3b0;background:rgba(34,211,176,.16);animation:pop .35s}.ex-opt.right i{background:#22d3b0;color:#0b1020}.ex-opt.wrong{border-color:#fb7185;background:rgba(251,113,133,.15);animation:shk .35s}.ex-opt.wrong i{background:#fb7185;color:#0b1020}.ex-opt.dim{opacity:.5;pointer-events:none}.ex-opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes pop{50%{box-shadow:0 0 22px rgba(34,211,176,.55)}}@keyframes shk{25%{translate:-5px 0}75%{translate:5px 0}}
+.ex-fb{margin-top:14px;padding:13px 15px;border-radius:14px;line-height:1.8;font-size:14.5px}.ex-fb.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-fb.bad{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5)}.ex-fb .xp{color:#fbbf24;font-weight:800;font-size:13px}.ex-exp{margin-top:6px;color:var(--text-muted)}
+.ex-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn.ghost{background:var(--card-solid)!important;color:var(--text)!important;border:1px solid var(--border-color)!important;box-shadow:none!important}.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ex-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px;margin-bottom:60px}.ex-pal button{height:38px;border-radius:10px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font:inherit;font-weight:800}.ex-pal .ans{background:rgba(34,211,176,.2);border-color:#22d3b0}.ex-pal .mk{box-shadow:inset 0 -3px #fb7185}.ex-pal .cur{outline:2px solid #a855f7}
+.ex-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}.ex-modal .card{max-width:380px;width:100%;padding:22px}
+.ex-res{padding:22px;margin:18px 0 14px}.ex-rh{display:flex;gap:18px;align-items:center;padding:16px;border-radius:18px;margin-bottom:12px}.ex-rh.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-rh.bad{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.5)}.ex-rh h2{margin:0 0 4px;font-size:21px}.ex-rh p{margin:0;color:var(--text-muted)}
+.ex-score{display:flex;align-items:baseline;gap:4px}.ex-score b{font-size:46px;color:#22d3b0}.ex-score span{color:var(--text-muted);font-size:18px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span{color:var(--text-muted)}
+details.qa{margin-top:8px}
+@media(max-width:700px){.ex-stats{grid-template-columns:1fr 1fr}.ex-modes{grid-template-columns:1fr}.ex-hero{flex-direction:column;align-items:flex-start}.ex-qt{font-size:17px}}
+</style>
+</head>
+
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>SSC · রসায়নের ধারণা</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="exam.html">← <span class="long">এক্সাম জোন</span></a>
+    </div>
+  </header>
+  <main id="app"><div class="msg">লোড হচ্ছে…</div></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script src="exam-engine.js"></script>
+<script>
+CH={id:'ssc-01',exam:'ssc',paper:0,no:1,title:'রসায়নের ধারণা',icon:'🧫',
+ bank:[
+  B(1,'আধুনিক রসায়নের জনক কে?','অ্যান্তোয়ান ল্যাভয়সিয়ে',['জন ডাল্টন','দিমিত্রি মেন্ডেলিভ','আর্নেস্ট রাদারফোর্ড'],'দহন ও ভর সংরক্ষণ সূত্রের ব্যাখ্যা দিয়ে ল্যাভয়সিয়ে আধুনিক রসায়নের ভিত্তি গড়েন।'),
+  B(1,'নিচের কোনটি যৌগ?','পানি',['বায়ু','ব্রোঞ্জ','লবণাক্ত পানি'],'পানি (H₂O) হাইড্রোজেন ও অক্সিজেনের রাসায়নিক সংযোগে গঠিত; বাকিগুলো মিশ্রণ।'),
+  B(1,'নিচের কোনটি মৌলিক পদার্থ?','সালফার',['চিনি','খাবার লবণ','পানি'],'সালফার (S) শুধু এক ধরনের পরমাণু দিয়ে গঠিত।'),
+  B(1,'আয়োডিন ও বালির মিশ্রণ আলাদা করতে কোন পদ্ধতি ব্যবহৃত হয়?','ঊর্ধ্বপাতন',['পরিস্রাবণ','আংশিক পাতন','দ্রবীভূতকরণ'],'আয়োডিন তাপে সরাসরি বাষ্প হয় (ঊর্ধ্বপাতী); বালি হয় না।'),
+  B(1,'অপরিশোধিত পেট্রোলিয়াম থেকে বিভিন্ন উপাদান আলাদা করা হয় কোন পদ্ধতিতে?','আংশিক পাতন',['ঊর্ধ্বপাতন','পরিস্রাবণ','স্ফটিকীকরণ'],'উপাদানগুলোর স্ফুটনাঙ্ক ভিন্ন বলে আংশিক পাতনে আলাদা হয়।'),
+  B(1,'তেল ও পানির মিশ্রণ আলাদা করার যন্ত্র কোনটি?','আলাদাকরণ ফানেল',['ফিল্টার পেপার','বুনসেন বার্নার','কনিক্যাল ফ্লাস্ক'],'অমিশ্রণীয় দুটি তরল আলাদাকরণ ফানেলে ঘনত্বের পার্থক্যে আলাদা হয়।'),
+  B(1,'নিচের কোনটি রাসায়নিক পরিবর্তন?','লোহায় মরিচা পড়া',['বরফ গলা','কর্পূর উবে যাওয়া','পানির বাষ্পীভবন'],'মরিচায় নতুন পদার্থ (আয়রন অক্সাইড) তৈরি হয়।'),
+  B(1,'নিচের কোনটি ভৌত পরিবর্তন?','বরফ গলে পানি হওয়া',['দুধ থেকে দই হওয়া','কাঠ পুড়ে যাওয়া','লোহায় মরিচা পড়া'],'ভৌত পরিবর্তনে নতুন পদার্থ তৈরি হয় না, শুধু অবস্থা বদলায়।'),
+  B(1,'গাঢ় সালফিউরিক অ্যাসিড লঘু করার নিরাপদ নিয়ম কোনটি?','পানিতে ধীরে ধীরে অ্যাসিড ঢালা',['অ্যাসিডে দ্রুত পানি ঢালা','দুটো একসাথে দ্রুত মেশানো','অ্যাসিডে গরম পানি ঢালা'],'অ্যাসিডে পানি ঢাললে প্রচুর তাপে ছিটকে পড়তে পারে।'),
+  B(1,'পদার্থ কাকে বলে?','যার ভর আছে এবং যা জায়গা দখল করে',['যা শুধু চোখে দেখা যায়','যার শুধু ওজন আছে, আয়তন নেই','যা শক্তি হিসেবে প্রকাশ পায়'],'ভর ও স্থান দখল করাই পদার্থের মূল ধর্ম।'),
+  B(1,'নিচের কোনটি সমসত্ত্ব মিশ্রণ?','লবণের জলীয় দ্রবণ',['বালি ও পানি','তেল ও পানি','কাদা পানি'],'লবণের দ্রবণে উপাদান সুষমভাবে মিশে থাকে, তাই এটি সমসত্ত্ব।'),
+  B(1,'নিচের কোনটি অসমসত্ত্ব মিশ্রণ?','বালি ও পানি',['চিনির দ্রবণ','বায়ু','পিতল'],'বালি পানিতে সুষমভাবে মেশে না, আলাদা স্তর বোঝা যায়।'),
+  B(1,'কক্ষ তাপমাত্রায় তরল একমাত্র ধাতু কোনটি?','পারদ',['সোডিয়াম','ব্রোমিন','গ্যালিয়াম'],'পারদ (Hg) কক্ষ তাপমাত্রায় তরল ধাতু; ব্রোমিন তরল হলেও অধাতু।'),
+  B(1,'কক্ষ তাপমাত্রায় তরল একমাত্র অধাতু কোনটি?','ব্রোমিন',['পারদ','ক্লোরিন','আয়োডিন'],'ব্রোমিন (Br₂) কক্ষ তাপমাত্রায় লালচে-বাদামি তরল অধাতু।'),
+  B(1,'পিতল কী?','তামা ও দস্তার সংকর ধাতু',['তামা ও টিনের সংকর ধাতু','লোহা ও কার্বনের যৌগ','তামার যৌগ'],'পিতল Cu ও Zn-এর সমসত্ত্ব মিশ্রণ বা সংকর; ব্রোঞ্জ Cu ও Sn-এর।'),
+  B(1,'কাগজ বর্ণলেখন (ক্রোমাটোগ্রাফি) পদ্ধতিতে মিশ্রণের উপাদান আলাদা হয় কীসের ভিত্তিতে?','উপাদানগুলোর শোষণ/চলনের পার্থক্য',['স্ফুটনাঙ্কের পার্থক্য','চৌম্বক ধর্মের পার্থক্য','গলনাঙ্কের পার্থক্য'],'কাগজে বিভিন্ন উপাদান ভিন্ন গতিতে ওপরে ওঠে বলে আলাদা হয়।'),
+  B(1,'নিচের কোনটি ঊর্ধ্বপাতী পদার্থ?','নিশাদল (NH₄Cl)',['খাবার লবণ','চিনি','কপার সালফেট'],'NH₄Cl তাপে সরাসরি কঠিন থেকে বাষ্পে পরিণত হয়।'),
+  B(1,'ইথানল ও পানির মিশ্রণ আলাদা করতে কোন পদ্ধতি ব্যবহার করা হয়?','আংশিক পাতন',['পরিস্রাবণ','ঊর্ধ্বপাতন','চুম্বকীয় পৃথকীকরণ'],'দুটি মিশ্রণীয় তরলের স্ফুটনাঙ্ক ভিন্ন বলে আংশিক পাতন ব্যবহৃত হয়।'),
+  B(1,'কঠিন অদ্রবণীয় পদার্থকে তরল থেকে আলাদা করার সহজ পদ্ধতি কোনটি?','পরিস্রাবণ',['ঊর্ধ্বপাতন','আংশিক পাতন','বাষ্পীভবন'],'ফিল্টার পেপারে কঠিন কণা আটকে যায়।'),
+  B(1,'কপার সালফেটের পরিষ্কার স্ফটিক পাওয়ার জন্য কোন পদ্ধতি ব্যবহার হয়?','স্ফটিকীকরণ',['ঊর্ধ্বপাতন','পরিস্রাবণ','আংশিক পাতন'],'গরম সম্পৃক্ত দ্রবণ ঠান্ডা করলে স্ফটিক তৈরি হয়।'),
+  B(1,'ল্যাবরেটরিতে বৈদ্যুতিক আগুন নেভাতে কোনটি ব্যবহার করা উচিত নয়?','পানি',['কার্বন ডাইঅক্সাইড অগ্নিনির্বাপক','শুষ্ক রাসায়নিক পাউডার','বালি'],'পানি বিদ্যুৎ পরিবাহী, তাই বৈদ্যুতিক আগুনে বিপজ্জনক।'),
+  B(1,'ল্যাবরেটরিতে রাসায়নিক পদার্থ সম্পর্কে কোন আচরণ সঠিক?','রাসায়নিক স্বাদ বা গন্ধ সরাসরি নেওয়া যাবে না',['অচেনা রাসায়নিক স্বাদ নিয়ে চেনা যায়','রাসায়নিক হাতে ধরে পরীক্ষা করা ভালো','নাক লাগিয়ে গ্যাসের গন্ধ নেওয়া নিরাপদ'],'অজানা রাসায়নিক বিষাক্ত বা ক্ষতিকর হতে পারে।'),
+  B(1,'যে শাখায় কার্বন ঘটিত যৌগ নিয়ে আলোচনা করা হয় তাকে কী বলে?','জৈব রসায়ন',['অজৈব রসায়ন','ভৌত রসায়ন','বিশ্লেষণী রসায়ন'],'কার্বনের যৌগ (কয়েকটি ব্যতীত) জৈব রসায়নের আলোচ্য বিষয়।'),
+  B(1,'কোনো পদার্থে কী কী উপাদান আছে বা কী পরিমাণে আছে তা নির্ণয় করা রসায়নের কোন শাখার কাজ?','বিশ্লেষণী রসায়ন',['জৈব রসায়ন','শিল্প রসায়ন','নিউক্লিয় রসায়ন'],'গুণগত ও পরিমাণগত বিশ্লেষণ বিশ্লেষণী রসায়নের কাজ।'),
+  B(1,'জীবদেহের রাসায়নিক বিক্রিয়া নিয়ে আলোচনা করা হয় রসায়নের কোন শাখায়?','জৈব-রসায়ন (বায়োকেমিস্ট্রি)',['অজৈব রসায়ন','বিশ্লেষণী রসায়ন','তড়িৎ রসায়ন'],'প্রোটিন, এনজাইম, বিপাক ইত্যাদি জৈব-রসায়নের বিষয়।'),
+  B(1,'নিচের কোনটি রাসায়নিক পরিবর্তন নয়?','চিনি পানিতে দ্রবীভূত হওয়া',['দুধ ছানা হওয়া','কাগজ পোড়ানো','ফল পচে যাওয়া'],'চিনি দ্রবীভূত হলে নতুন পদার্থ তৈরি হয় না; এটি ভৌত পরিবর্তন।'),
+  B(1,'কর্পূর বাতাসে রেখে দিলে উবে যাওয়া কোন ধরনের পরিবর্তন?','ভৌত পরিবর্তন',['রাসায়নিক পরিবর্তন','নিউক্লিয় পরিবর্তন','অপরিবর্তনীয় রাসায়নিক পরিবর্তন'],'কর্পূর ঊর্ধ্বপাতিত হয়, নতুন পদার্থ তৈরি হয় না।'),
+  B(1,'আধুনিক পর্যায় সারণির আদি রূপ (১৮৬৯) কে প্রস্তাব করেন?','দিমিত্রি মেন্ডেলিভ',['হেনরি মোজলে','জন নিউল্যান্ডস','নীলস বোর'],'মেন্ডেলিভ পারমাণবিক ভর অনুযায়ী মৌল সাজিয়ে পর্যায় সারণি দেন।'),
+  B(1,'ইলেকট্রন আবিষ্কার করেন কে?','জে. জে. থমসন',['চ্যাডউইক','রাদারফোর্ড','ডাল্টন'],'থমসন ১৮৯৭ সালে ক্যাথোড রশ্মি পরীক্ষায় ইলেকট্রন আবিষ্কার করেন।'),
+  B(1,'নিউট্রন আবিষ্কার করেন কে?','জেমস চ্যাডউইক',['জে. জে. থমসন','নীলস বোর','গোল্ডস্টাইন'],'১৯৩২ সালে চ্যাডউইক নিউট্রন আবিষ্কার করেন।'),
+  B(1,'রসায়ন কাকে বলে?','পদার্থের গঠন, ধর্ম ও পরিবর্তন নিয়ে আলোচনাকারী বিজ্ঞান',['শুধু জীবের গঠন নিয়ে আলোচনা','শুধু গ্রহ-নক্ষত্র নিয়ে আলোচনা','শুধু বল ও গতি নিয়ে আলোচনা'],'রসায়ন পদার্থের গঠন, ধর্ম, বিক্রিয়া ও শক্তির পরিবর্তন নিয়ে আলোচনা করে।'),
+  B(1,'কৃষিতে ইউরিয়া সার কোন ক্ষেত্রে রসায়নের অবদানের উদাহরণ?','ফসল উৎপাদন বৃদ্ধি',['বিদ্যুৎ উৎপাদন','তথ্য সংরক্ষণ','পরিবহন'],'রাসায়নিক সার মাটিতে নাইট্রোজেনের জোগান দিয়ে ফলন বাড়ায়।'),
+  B(1,'অ্যাসিড বৃষ্টির জন্য প্রধানত দায়ী গ্যাস কোনটি?','SO₂',['N₂','He','H₂'],'সালফার ডাইঅক্সাইড বৃষ্টির পানির সাথে বিক্রিয়া করে অ্যাসিড তৈরি করে।'),
+  B(1,'গ্রিনহাউস প্রভাবের প্রধান গ্যাস কোনটি?','CO₂',['O₂','Ar','N₂'],'কার্বন ডাইঅক্সাইড তাপ ধরে রেখে পৃথিবীর তাপমাত্রা বাড়ায়।'),
+  B(2,'নিচের কোনটি বিশুদ্ধ পদার্থ?','চিনি',['বায়ু','সমুদ্রের পানি','পিতল'],'চিনি নির্দিষ্ট গঠনবিশিষ্ট যৌগ, তাই বিশুদ্ধ পদার্থ।'),
+  B(2,'মিশ্রণের বৈশিষ্ট্য কোনটি?','উপাদানগুলো নিজ নিজ ধর্ম বজায় রাখে',['উপাদানের অনুপাত নির্দিষ্ট','রাসায়নিক বন্ধনে আবদ্ধ থাকে','উপাদানের ধর্ম সম্পূর্ণ বদলে যায়'],'মিশ্রণে উপাদানগুলো রাসায়নিকভাবে যুক্ত হয় না, তাই নিজ ধর্ম অক্ষুণ্ণ থাকে।'),
+  B(2,'যৌগের বৈশিষ্ট্য কোনটি?','উপাদানগুলো নির্দিষ্ট ভর অনুপাতে যুক্ত থাকে',['যে কোনো অনুপাতে উপাদান মেশে','ভৌত পদ্ধতিতে উপাদান আলাদা করা যায়','উপাদানের ধর্ম অক্ষুণ্ণ থাকে'],'যৌগে উপাদানের অনুপাত নির্দিষ্ট এবং রাসায়নিক পদ্ধতিতে ভাঙা যায়।'),
+  B(2,'কেন পানি যৌগ কিন্তু বায়ু মিশ্রণ?','পানিতে উপাদান নির্দিষ্ট অনুপাতে রাসায়নিকভাবে যুক্ত, বায়ুতে নয়',['পানি গ্যাসীয়, বায়ু তরল','পানিতে একটি মাত্র মৌল আছে','বায়ুতে উপাদানের অনুপাত সবসময় একই'],'পানিতে H : O ভর অনুপাত নির্দিষ্ট; বায়ুর উপাদান ভৌতভাবে মেশানো।'),
+  B(2,'লবণ ও বালির মিশ্রণ থেকে লবণ আলাদা করার সঠিক ক্রম কোনটি?','পানিতে দ্রবীভূত করা → পরিস্রাবণ → বাষ্পীভবন',['ঊর্ধ্বপাতন → পরিস্রাবণ','আংশিক পাতন → চুম্বক','বাষ্পীভবন → ঊর্ধ্বপাতন'],'লবণ দ্রবীভূত হয়, বালি পরিস্রাবণে আটকায়, বাষ্পীভবনে লবণ ফিরে আসে।'),
+  B(2,'লোহার গুঁড়া ও সালফারের মিশ্রণ থেকে লোহা আলাদা করতে কী ব্যবহার করা হয়?','চুম্বক',['ফিল্টার পেপার','লিবিগ কনডেনসার','আলাদাকরণ ফানেল'],'লোহা চুম্বকে আকৃষ্ট হয়, সালফার হয় না।'),
+  B(2,'আংশিক পাতন কীসের পার্থক্যের ওপর নির্ভরশীল?','স্ফুটনাঙ্ক',['দ্রাব্যতা','ঘনত্ব','চৌম্বকত্ব'],'যার স্ফুটনাঙ্ক কম সে আগে বাষ্প হয়ে পৃথক হয়।'),
+  B(2,'রাসায়নিক পরিবর্তনের লক্ষণ নয় কোনটি?','শুধু আকার পরিবর্তন',['গ্যাস উৎপন্ন হওয়া','অধঃক্ষেপ পড়া','নতুন গন্ধ বা বর্ণ সৃষ্টি'],'শুধু আকার বদলালে নতুন পদার্থ হয় না, তাই এটি ভৌত পরিবর্তন।'),
+  B(2,'নিচের কোনটি অপরিবর্তনীয় বা স্থায়ী পরিবর্তন?','কাঠ পুড়ে ছাই হওয়া',['পানি জমে বরফ হওয়া','লবণের দ্রবণ থেকে স্ফটিক পাওয়া','মোম গলে যাওয়া'],'পোড়ানোতে নতুন পদার্থ তৈরি হয়, যা সহজে ফেরানো যায় না।'),
+  B(2,'শিল্প কারখানায় সাবান, প্লাস্টিক ও সার উৎপাদন নিয়ে আলোচনা করে রসায়নের কোন শাখা?','শিল্প রসায়ন',['বিশ্লেষণী রসায়ন','জৈব-রসায়ন','নিউক্লিয় রসায়ন'],'ব্যাপক হারে পণ্য উৎপাদন সংক্রান্ত রসায়ন শিল্প রসায়ন।'),
+  B(2,'ল্যাবরেটরিতে আয়তনমিতিক বিশ্লেষণে নির্দিষ্ট আয়তন তরল মাপতে কোনটি ব্যবহৃত হয়?','পিপেট',['বিকার','কনিক্যাল ফ্লাস্ক','টেস্টটিউব'],'পিপেট নির্দিষ্ট আয়তনের তরল সঠিকভাবে মাপে।'),
+  B(2,'ল্যাবে আগুন লাগলে প্রথম করণীয় কী?','শিক্ষককে জানিয়ে উপযুক্ত নির্বাপক ব্যবহার করা',['নিজে পানি ঢেলে সব আগুন নেভানো','কিছু না বলে পালিয়ে যাওয়া','দাহ্য পদার্থ আরও কাছে আনা'],'আগুনের ধরন অনুযায়ী উপযুক্ত নির্বাপক ব্যবহার করে শিক্ষককে জানাতে হয়।'),
+  B(2,'ল্যাবে চোখে অ্যাসিড ছিটকে পড়লে তাৎক্ষণিক করণীয় কী?','প্রচুর প্রবাহিত পানিতে চোখ ধোয়া',['চোখ কচলানো','তেল লাগানো','ক্ষার ঢেলে নিষ্ক্রিয় করা'],'প্রচুর পানিতে ধুলে অ্যাসিড লঘু হয় ও ক্ষতি কমে।'),
+  B(2,'ডাল্টনের পরমাণুবাদ অনুযায়ী পরমাণু—','রাসায়নিক বিক্রিয়ায় সৃষ্টি বা ধ্বংস হয় না',['আরও ক্ষুদ্র কণায় বিভাজ্য','একই মৌলের পরমাণু ভিন্ন ভর বিশিষ্ট','বিক্রিয়ায় ধ্বংস হয়'],'ডাল্টনের মতে পরমাণু অবিভাজ্য এবং বিক্রিয়ায় অপরিবর্তিত থাকে।'),
+  B(2,'ভর সংরক্ষণ সূত্র অনুযায়ী রাসায়নিক বিক্রিয়ায়—','মোট ভর অপরিবর্তিত থাকে',['ভর বেড়ে যায়','ভর কমে যায়','আয়তন সবসময় একই থাকে'],'বদ্ধ ব্যবস্থায় বিক্রিয়ক ও উৎপাদের মোট ভর সমান।'),
+  B(2,'নিচের i, ii, iii বিবৃতিগুলো লক্ষ্য করো:<br>i. যৌগে উপাদানগুলো রাসায়নিকভাবে যুক্ত<br>ii. মিশ্রণে উপাদানের অনুপাত নির্দিষ্ট<br>iii. মৌল রাসায়নিকভাবে আর ভাঙা যায় না<br>কোনটি সঠিক?','i ও iii',['i ও ii','ii ও iii','i, ii ও iii'],'মিশ্রণে অনুপাত নির্দিষ্ট নয়; (ii) ভুল।'),
+  B(3,'নিচের i, ii, iii বিবৃতিগুলো লক্ষ্য করো:<br>i. দুধ থেকে দই হওয়া রাসায়নিক পরিবর্তন<br>ii. পানির বাষ্পীভবন রাসায়নিক পরিবর্তন<br>iii. মোম জ্বলা রাসায়নিক পরিবর্তন<br>কোনটি সঠিক?','i ও iii',['i ও ii','ii ও iii','i, ii ও iii'],'বাষ্পীভবন ভৌত পরিবর্তন; দই হওয়া ও মোম জ্বলাতে নতুন পদার্থ তৈরি হয়।'),
+  B(3,'মোমবাতি জ্বলার সময় কোন কোন পরিবর্তন ঘটে?','ভৌত ও রাসায়নিক উভয়',['শুধু ভৌত','শুধু রাসায়নিক','কোনোটিই নয়'],'মোম গলা ভৌত; দহনে CO₂ ও পানি উৎপন্ন হওয়া রাসায়নিক।'),
+  B(3,'বালি, লবণ ও লোহার গুঁড়ার মিশ্রণ আলাদা করার সঠিক ক্রম কোনটি?','চুম্বক → পানিতে দ্রবীভূত ও পরিস্রাবণ → বাষ্পীভবন',['পানিতে দ্রবীভূত → চুম্বক → ঊর্ধ্বপাতন','ঊর্ধ্বপাতন → আংশিক পাতন','পরিস্রাবণ → চুম্বক'],'লোহা চুম্বকে, বালি পরিস্রাবণে এবং লবণ বাষ্পীভবনে আলাদা হয়।'),
+  B(3,'নিচের কোন জোড়ার মিশ্রণ আলাদা করতে আলাদাকরণ ফানেল ব্যবহার করা যায়?','কেরোসিন ও পানি',['ইথানল ও পানি','লবণ ও পানি','চিনি ও পানি'],'কেরোসিন-পানি অমিশ্রণীয় তরল; বাকিগুলো মিশে যায়।'),
+  B(3,'কোনটি সম্পর্কে বলা যায় যে এটি মৌল নয় এবং যৌগ নয়, বরং মিশ্রণ?','সংকর ধাতু ব্রোঞ্জ',['লোহা','কার্বন ডাইঅক্সাইড','হিলিয়াম'],'ব্রোঞ্জ তামা ও টিনের মিশ্রণ।'),
+  B(1,'কাঁচা আম পেকে হলুদ হয় কোন ধরনের প্রক্রিয়ায়?','জীবরাসায়নিক প্রক্রিয়ায়',['শুধু ভৌত প্রক্রিয়ায়','নিউক্লীয় বিক্রিয়ায়','সূর্যের আলোর বিকিরণে'],'পাকার সময় ফলে নতুন হলুদ বর্ণের যৌগ তৈরি হয়; এটি জীবরাসায়নিক পরিবর্তন।'),
+  B(1,'মরিচার সংকেত কোনটি?','Fe₂O₃·nH₂O',['Fe₃O₄','FeCl₃','FeCO₃'],'মরিচা হলো লোহার আর্দ্র অক্সাইড, যার সংকেত Fe₂O₃·nH₂O।'),
+  B(1,'লোহায় মরিচা ধরার জন্য অপরিহার্য কোনটি?','বায়ুর অক্সিজেন ও জলীয়বাষ্প',['শুধু নাইট্রোজেন','শুধু কার্বন ডাইঅক্সাইড','নিষ্ক্রিয় গ্যাস'],'অক্সিজেন ও জলীয়বাষ্পের উপস্থিতিতে লোহা জারিত হয়ে মরিচা তৈরি করে।'),
+  B(1,'ভারতবর্ষে কাপড়কে আকর্ষণীয় করতে রঙের ব্যবহার প্রায় কত বছর আগে শুরু হয়?','প্রায় ৫০০০ বছর আগে',['প্রায় ২০০০ বছর আগে','প্রায় ১০০ বছর আগে','প্রায় ১০০০ বছর আগে'],'পাঠ্যবইয়ে প্রায় ৫০০০ বছর পূর্বে রঞ্জকের ব্যবহারের কথা আছে।'),
+  B(1,'মিশরীয়রা কত খ্রিস্টপূর্বাব্দে স্বর্ণ আহরণ করত?','২৬০০ খ্রিস্টপূর্বাব্দে',['১০০০ খ্রিস্টপূর্বাব্দে','৫০০ খ্রিস্টপূর্বাব্দে','৩৫০০ খ্রিস্টপূর্বাব্দে'],'পাঠ্যবই অনুযায়ী খ্রিস্টপূর্ব ২৬০০ সালে মিশরীয়রা স্বর্ণ আহরণ করত।'),
+  B(1,'‘আল-কেমি’ শব্দটি কোন ভাষা থেকে এসেছে?','আরবি',['ইংরেজি','গ্রিক','হিন্দি'],'আরবি ‘আল-কিমিয়া’ থেকে আল-কেমি এসেছে।'),
+  B(1,'Chemistry শব্দটি কোন শব্দ থেকে উদ্ভূত?','Chemi',['Chromo','Physis','Bios'],'Chemi → Al-Chemia → Alchemy → Chemistry।'),
+  B(1,'ব্রোঞ্জ কোন দুটি ধাতুর সংকর?','তামা ও টিন',['তামা ও দস্তা','লোহা ও কার্বন','সোনা ও রুপা'],'ব্রোঞ্জে প্রায় ৯০% তামা (Cu) ও ১০% টিন (Sn) থাকে।'),
+  B(1,'মানুষের প্রথম ব্যবহৃত ধাতু দুটি কী কী?','সোনা ও ব্রোঞ্জ',['লোহা ও অ্যালুমিনিয়াম','রুপা ও দস্তা','সীসা ও পারদ'],'রসায়ন আবিষ্কারের আগেই মানুষ সোনা ও ব্রোঞ্জ ব্যবহার করত।'),
+  B(1,'মধ্যযুগে রসায়ন চর্চাকারীদের কী বলা হতো?','আল-কেমিস্ট',['ফিজিসিস্ট','বায়োলজিস্ট','মেটালার্জিস্ট'],'আল-কেমি চর্চাকারীরা আল-কেমিস্ট নামে পরিচিত ছিলেন।'),
+  B(1,'মোম জ্বালালে কোন কোন বস্তু উৎপন্ন হয়?','CO₂, H₂O ও তাপ-আলো',['শুধু CO','শুধু H₂','NO₂ ও SO₂'],'মোম (হাইড্রোকার্বন) দহনে CO₂, জলীয়বাষ্প, তাপ ও আলো পাওয়া যায়।'),
+  B(1,'প্রাকৃতিক গ্যাসের প্রধান উপাদান কোনটি?','মিথেন',['ইথিন','অক্সিজেন','কার্বন ডাইঅক্সাইড'],'প্রাকৃতিক গ্যাসের প্রধান উপাদান মিথেন (CH₄)।'),
+  B(1,'কেরোসিন কোন ধরনের যৌগ?','কার্বনঘটিত যৌগ (হাইড্রোকার্বন)',['অজৈব লবণ','ধাতব অক্সাইড','অ্যাসিডীয় অক্সাইড'],'কেরোসিন কার্বন ও হাইড্রোজেনের যৌগ।'),
+  B(1,'উদ্ভিদের খাদ্য উৎপাদন ও সঞ্চয় প্রক্রিয়াটির নাম কী?','সালোকসংশ্লেষণ',['শ্বসন','প্রস্বেদন','অভিস্রবণ'],'উদ্ভিদ সালোকসংশ্লেষণ প্রক্রিয়ায় খাদ্য (শ্বেতসার) তৈরি করে।'),
+  B(1,'শ্বেতসার, আমিষ ও চর্বি কোন ধরনের যৌগ?','জৈব যৌগ',['অজৈব যৌগ','খনিজ লবণ','ধাতব অক্সাইড'],'এগুলো কার্বনঘটিত জৈব যৌগ।'),
+  B(1,'নিচের কোনটি অজৈব যৌগ?','পানি',['শ্বেতসার','আমিষ','চর্বি'],'পানি (H₂O) একটি অজৈব যৌগ।'),
+  B(1,'কোন গ্যাস পৃথিবীর তাপমাত্রা বৃদ্ধিতে ভূমিকা রাখে?','কার্বন ডাইঅক্সাইড',['অক্সিজেন','নাইট্রোজেন','আর্গন'],'CO₂ গ্রিনহাউস গ্যাস; এটি বায়ুমণ্ডলে তাপ ধরে রাখে।'),
+  B(1,'কাঠ বা কয়লা অসম্পূর্ণ পুড়লে স্বাস্থ্যের জন্য কোন ক্ষতিকর গ্যাস উৎপন্ন হয়?','কার্বন মনোক্সাইড',['অক্সিজেন','হিলিয়াম','নাইট্রোজেন'],'অল্প বায়ুতে দহনে বিষাক্ত CO তৈরি হয়।'),
+  B(1,'রান্নার পাতিলের গায়ে যে কালি জমে তা কী?','কার্বন কণা (ভুসা)',['লোহার মরিচা','চুনের গুঁড়া','লবণ'],'অসম্পূর্ণ দহনে উৎপন্ন কার্বন কণাই কালি।'),
+  B(1,'কীটনাশক ব্যবহারের মূল উদ্দেশ্য কী?','পোকামাকড় থেকে ফসল রক্ষা',['মাটির উর্বরতা বাড়ানো','ফসলের রং পাল্টানো','ঘুম পাড়ানো'],'কীটনাশক শস্যহানি প্রতিরোধ করে।'),
+  B(1,'প্রিজারভেটিভ ব্যবহারের উদ্দেশ্য কী?','খাদ্যদ্রব্য দীর্ঘদিন সংরক্ষণ',['খাবারের রং বাড়ানো','খাবার ঠান্ডা করা','খাবারে সুগন্ধ দেওয়া'],'প্রিজারভেটিভ ব্যাকটেরিয়ার বৃদ্ধি রোধ করে খাদ্য সংরক্ষণ করে।'),
+  B(1,'আচার সংরক্ষণে কোনটি ব্যবহৃত হয়?','ভিনেগার',['ইথিলিন','ফরমালিন','অ্যাসিটিলিন'],'ভিনেগারের অ্যাসিটিক অ্যাসিড ব্যাকটেরিয়া মেরে আচার রক্ষা করে।'),
+  B(1,'স্বাস্থ্যরক্ষা ও সৌন্দর্যবর্ধনে ব্যবহৃত প্রাকৃতিক উপাদান কোনটি?','কাঁচা হলুদ',['কৃত্রিম রং','পলিথিন','সিমেন্ট'],'কাঁচা হলুদ ও মেহেদি প্রাকৃতিক সৌন্দর্যবর্ধক।'),
+  B(1,'নদী-নালা ও খালবিলের পানি দূষণের একটি কারণ কোনটি?','সাবান ও ডিটারজেন্টের অতিরিক্ত ব্যবহার',['অক্সিজেনের উপস্থিতি','বৃষ্টির পানি','সূর্যের আলো'],'সাবান, ডিটারজেন্ট, কীটনাশক ইত্যাদি পানিকে দূষিত করে।'),
+  B(1,'নিচের কোনটি প্রাণীর খাদ্যের যোগানদাতা হিসেবে প্রত্যক্ষ বা পরোক্ষভাবে বিবেচিত হয়?','উদ্ভিদ',['বালু','কয়লা','তামা'],'উদ্ভিদ খাদ্য তৈরি করে, তাই সব প্রাণীর খাদ্যের মূল উৎস।'),
+  B(1,'বৈদ্যুতিক তারের জন্য সাধারণত কোন ধাতু ব্যবহৃত হয়?','তামা (Cu)',['দস্তা (Zn)','প্লাটিনাম (Pt)','সোনা (Au)'],'তামা ভালো তড়িৎ পরিবাহী ও তুলনামূলক সস্তা, তাই বৈদ্যুতিক তারে ব্যবহৃত হয়।'),
+  B(1,'ল্যাবরেটরিতে নাক ও মুখ রক্ষার জন্য কী ব্যবহার করা হয়?','মাস্ক',['অ্যাপ্রোন','হ্যান্ডগ্লাভস','নিরাপদ চশমা'],'বিষাক্ত গ্যাস থেকে নাক-মুখ বাঁচাতে মাস্ক পরতে হয়।'),
+  B(1,'বিষাক্ত গ্যাস থেকে চোখ রক্ষায় ল্যাবরেটরিতে কী ব্যবহার করা উচিত?','নিরাপদ চশমা (গগলস)',['অ্যাপ্রোন','হ্যান্ডগ্লাভস','মাস্ক'],'চোখের সুরক্ষায় নিরাপদ চশমা পরতে হয়।'),
+  B(1,'ল্যাবরেটরিতে কাপড় ও শরীর রাসায়নিক থেকে বাঁচাতে কী পরা উচিত?','অ্যাপ্রোন',['ঢিলেঢালা পোশাক','মাফলার','সানগ্লাস'],'অ্যাপ্রোন পোশাক ও শরীরকে রাসায়নিক থেকে রক্ষা করে।'),
+  B(1,'রাসায়নিক পাত্রের গায়ে বিস্ফোরিত বোমা চিহ্ন কী নির্দেশ করে?','বিস্ফোরক দ্রব্য',['দাহ্য পদার্থ','পরিবেশের জন্য ক্ষতিকর','তেজস্ক্রিয় পদার্থ'],'বিস্ফোরিত বোমা চিহ্ন বিস্ফোরক পদার্থের সংকেত।'),
+  B(1,'আগুনের শিখা সংকেত চিহ্নটি কী বোঝায়?','সহজেই দাহ্য পদার্থ',['জারক পদার্থ','মারাত্মক বিষাক্ত পদার্থ','তেজস্ক্রিয় পদার্থ'],'আগুনের শিখা সহজে জ্বলে ওঠা দাহ্য পদার্থ নির্দেশ করে।'),
+  B(1,'বৃত্তের উপর আগুনের শিখা চিহ্ন কোন ধরনের পদার্থ নির্দেশ করে?','জারক পদার্থ',['বিস্ফোরক পদার্থ','দাহ্য পদার্থ','পরিবেশ-ক্ষতিকর পদার্থ'],'এ চিহ্ন অন্য পদার্থের দহনে সহায়ক জারক পদার্থ বোঝায়।'),
+  B(1,'মাথার খুলি ও আড়াআড়ি হাড় চিহ্ন কোন ধরনের রাসায়নিক পদার্থ নির্দেশ করে?','মারাত্মক বিষাক্ত পদার্থ',['দাহ্য পদার্থ','জারক পদার্থ','বিস্ফোরক পদার্থ'],'এটি তীব্র বিষাক্ত পদার্থের সংকেত।'),
+  B(1,'তেজস্ক্রিয় রশ্মি চিহ্নকে কী বলা হয়?','ট্রিফয়েল',['টেট্রাফয়েল','ডাইফয়েল','মনোফয়েল'],'তেজস্ক্রিয় বিকিরণ চিহ্নটি তিন পাপড়িযুক্ত, তাই এর নাম ট্রিফয়েল।'),
+  B(1,'কোনো রাসায়নিক দ্রব্য নিয়ে পরীক্ষার আগে কোন বিষয়ে প্রাথমিক জ্ঞান থাকা জরুরি?','এর কার্যকারিতা ও ঝুঁকি',['এর বাজারমূল্য','এর রং','এর প্যাকেটের আকার'],'ঝুঁকি ও কার্যকারিতা না জানলে ব্যবহার বিপজ্জনক হতে পারে।'),
+  B(2,'রাসায়নিক পাত্রের গায়ে সাংকেতিক চিহ্ন দেওয়ার উদ্দেশ্য কী?','পদার্থের ঝুঁকি ও ঝুঁকির মাত্রা সম্পর্কে ধারণা দেওয়া',['পদার্থের দাম জানানো','পদার্থের আণবিক গঠন বোঝানো','পাত্রকে সুন্দর দেখানো'],'চিহ্ন দেখে ব্যবহারকারী সতর্ক হতে পারে।'),
+  B(2,'রসায়নের হিসাব-নিকাশ ও সূত্র প্রণয়নে কোন বিজ্ঞানের সাহায্য নেওয়া হয়?','গণিত',['জীববিজ্ঞান','ভূগোল','কম্পিউটার বিজ্ঞান'],'রসায়নের তত্ত্ব, সূত্র ও গণনায় গণিত অপরিহার্য।'),
+  B(2,'রসায়নের বিভিন্ন পরীক্ষণ যন্ত্রের মূলনীতি কোন বিজ্ঞানের উপর প্রতিষ্ঠিত?','পদার্থবিজ্ঞান',['জীববিজ্ঞান','ভূগোল','ইতিহাস'],'যন্ত্রপাতির কার্যনীতি পদার্থবিজ্ঞানভিত্তিক।'),
+  B(2,'প্রোটিন, চর্বি ও DNA-এর আলোচনায় রসায়ন কোন বিজ্ঞানের সাথে সম্পর্কিত?','জীববিজ্ঞান',['পদার্থবিজ্ঞান','গণিত','বায়ুমণ্ডলীয় বিজ্ঞান'],'জীবদেহের অণুগুলোর রসায়ন জীববিজ্ঞানের সাথে যুক্ত।'),
+  B(2,'ওজোনস্তর ক্ষয়কারী গ্যাস শনাক্তকরণ কোন বিজ্ঞানের আলোচ্য?','বায়ুমণ্ডলীয় বিজ্ঞান',['জীববিজ্ঞান','গণিত','প্রাণিবিজ্ঞান'],'বায়ুমণ্ডলের গ্যাস নিয়ে কাজ করে বায়ুমণ্ডলীয় বিজ্ঞান।'),
+  B(2,'পরমাণুর গঠন ব্যাখ্যায় কোন তত্ত্ব রসায়নকে সাহায্য করে?','কোয়ান্টাম মেকানিক্স',['কেপলারের সূত্র','প্রাকৃতিক নির্বাচন','প্লেট টেকটোনিক্স'],'পরমাণুর ইলেকট্রন বিন্যাস কোয়ান্টাম মেকানিক্সের সাহায্যে ব্যাখ্যা করা হয়।'),
+  B(2,'কম্পিউটার ও ইলেকট্রনিক্স যন্ত্রাংশে সবচেয়ে বেশি ব্যবহৃত ধাতু কোনটি?','তামা',['লোহা','রুপা','সীসা'],'তামা তড়িৎ পরিবাহী ধাতু, তাই বৈদ্যুতিক ও ইলেকট্রনিক যন্ত্রে বেশি ব্যবহৃত হয়।'),
+  B(2,'উদ্ভিদ ও প্রাণীর মৃত্যুর পর দেহাবশেষ কীভাবে ভাঙন হয়?','অনুজীব প্রক্রিয়ায়',['শুধু বৃষ্টির মাধ্যমে','শুধু আলোর প্রভাবে','চুম্বকত্বের প্রভাবে'],'অনুজীব দেহাবশেষকে বিয়োজিত করে।'),
+  B(2,'বিদ্যুৎ উৎপাদনের জন্য তেল, গ্যাস ও কয়লা পোড়ালে কী ঘটে?','তাপ উৎপন্ন হয় ও রাসায়নিক বিক্রিয়া ঘটে',['কোনো বিক্রিয়া ঘটে না','শুধু আলো বের হয়','শুধু ভৌত পরিবর্তন হয়'],'জ্বালানি দহন একটি রাসায়নিক বিক্রিয়া যা তাপ উৎপন্ন করে।'),
+  B(2,'ফল পাকলে মিষ্টি লাগে কেন?','শ্বেতসার চিনিতে পরিণত হয়',['চিনি শ্বেতসারে পরিণত হয়','অ্যাসিড বেড়ে যায়','পানি কমে যায়'],'পাকা ফলে স্টার্চ চিনিতে রূপান্তরিত হয়।'),
+  B(2,'কাঁচা ফল সাধারণত টক লাগে কেন?','এতে জৈব এসিড থাকে',['এতে বেশি চিনি থাকে','এতে ক্ষার থাকে','এতে লবণ থাকে'],'কাঁচা ফলে ম্যালেয়িক, সাক্সিনিক ইত্যাদি জৈব এসিড থাকে।'),
+  B(2,'অনুসন্ধান ও গবেষণা প্রক্রিয়ার প্রথম ধাপ কোনটি?','বিষয়বস্তু নির্ধারণ',['ফলাফল প্রকাশ','তথ্য বিশ্লেষণ','পরীক্ষণ'],'প্রথমে গবেষণার বিষয় বা সমস্যা চিহ্নিত করা হয়।'),
+  B(2,'অনুসন্ধান ও গবেষণার দ্বিতীয় ধাপ কোনটি?','বিষয়বস্তু সম্পর্কে সম্যক জ্ঞানার্জন',['ফলাফলের আগাম ধারণা','পরীক্ষণ','তথ্য বিশ্লেষণ'],'বই ও পূর্ববর্তী গবেষণা থেকে বিষয়ের ধারণা নেওয়া হয় দ্বিতীয় ধাপে।'),
+  B(2,'পরীক্ষণ পদ্ধতির শেষ ধাপ কোনটি?','ফলাফল প্রকাশ',['সিদ্ধান্ত গ্রহণ','তথ্য সংগ্রহ','আগাম ধারণা'],'গবেষণার শেষ ধাপে ফলাফল নিয়ে আলোচনা ও প্রকাশ করা হয়।'),
+  B(2,'ফলাফল সম্পর্কে আগাম ধারণা থাকলে কী সুবিধা হয়?','কাজের পরিকল্পনা প্রণয়ন সহজ হয়',['পরীক্ষণ অপ্রয়োজনীয় হয়','তথ্য সংগ্রহ বন্ধ থাকে','ফলাফল বদলে যায়'],'আগাম ধারণা থাকলে কী কী পরীক্ষা করতে হবে ঠিক করা সহজ হয়।'),
+  B(2,'পৃথিবীর কোন সম্পদ আগামী কয়েক দশকে ফুরিয়ে যেতে পারে বলে আশঙ্কা করা হয়?','খনিজ জ্বালানি',['সূর্যের আলো','বাতাস','সমুদ্রের পানি'],'কয়লা, তেল ও গ্যাস সীমিত; তাই বিকল্প জ্বালানি নিয়ে গবেষণা গুরুত্বপূর্ণ।'),
+  B(2,'যে গবেষণা খনিজ জ্বালানির বিকল্প খোঁজে তার বিষয়বস্তু কী?','বিকল্প জ্বালানি',['কৃত্রিম রং','সুগন্ধি তৈরি','খেলনা তৈরি'],'খনিজ জ্বালানি ফুরিয়ে যাওয়ার আগে বিকল্প জ্বালানি আবিষ্কার জরুরি।'),
+  B(2,'‘রসায়ন মানেই ক্ষতিকারক’ — এই উক্তিটি সম্পর্কে কোনটি সঠিক?','উক্তিটি ঠিক নয়; পরিমিত ব্যবহারে রাসায়নিক উপকারী',['সব রাসায়নিক বিষ','সব রাসায়নিক দাহ্য','সব রাসায়নিক জীবাণু'],'পানি, লবণ, চিনিও রাসায়নিক পদার্থ; ব্যবহারের পরিমাণই নির্ধারণ করে উপকার না ক্ষতি।'),
+  B(2,'রান্নার মাধ্যমে খাবারের স্বাদের ভিন্নতা আনা কোন বিজ্ঞানের আলোচ্য?','রসায়ন',['ভূগোল','পদার্থবিজ্ঞান','গণিত'],'রান্নায় ঘটে রাসায়নিক পরিবর্তন, তাই এটি রসায়নের বিষয়।'),
+  B(2,'নিচের কোনটি প্রসাধনী বা সৌন্দর্যবর্ধক হিসেবে ব্যবহৃত কৃত্রিম রাসায়নিক পণ্য?','ক্রিম',['কাঁচা হলুদ','মেহেদি পাতা','নিমপাতা'],'ক্রিম কৃত্রিম কসমেটিকসের অন্তর্ভুক্ত।'),
+  B(3,'মোমের জ্বলনে কোন ধরনের পরিবর্তন ঘটে?','ভৌত ও রাসায়নিক উভয়',['শুধু ভৌত','শুধু রাসায়নিক','কোনোটিই নয়'],'মোম গলে ভৌত পরিবর্তন; বায়ুর O₂-এর সাথে বিক্রিয়া করে CO₂ ও জলীয়বাষ্প—রাসায়নিক পরিবর্তন।'),
+  B(3,'i. কাঁচা আম পেকে হলুদ হওয়া<br>ii. লোহায় মরিচা ধরা<br>iii. মোমের দহন<br>উপরের কোনগুলো রসায়নের উপস্থিতি নির্দেশ করে?','i, ii ও iii',['i ও ii','i ও iii','ii ও iii'],'তিনটিতেই নতুন পদার্থ উৎপন্ন হওয়ায় রাসায়নিক পরিবর্তন ঘটে।'),
+  B(3,'i. পরিমাণমতো ব্যবহার<br>ii. ফুটিয়ে যথাসম্ভব ত্যাগ করা<br>iii. সম্পূর্ণ বর্জন (ব্যবহার না করা)<br>প্রিজারভেটিভের ক্ষতিকর প্রভাব থেকে বাঁচতে কোনগুলো প্রযোজ্য?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'পরিমিত ব্যবহার ও ফুটিয়ে তা কমানো সম্ভব; সম্পূর্ণ বর্জন বাস্তবসম্মত নয়।'),
+  B(3,'ভিনেগার আচারকে কীভাবে সংরক্ষণ করে?','এর H⁺ আয়ন ব্যাকটেরিয়ার প্রোটিন ও চর্বি বিশ্লেষিত করে ব্যাকটেরিয়া মেরে ফেলে',['আচারে নতুন ব্যাকটেরিয়া তৈরি করে','আচারের পানি শুষে নেয়','আচারকে ঠান্ডা রাখে'],'ভিনেগারের অ্যাসিটিক অ্যাসিডের H⁺ আয়ন ব্যাকটেরিয়ার প্রোটিন ও চর্বি ভেঙে দেয়।'),
+  B(3,'ল্যাবরেটরিতে ঢিলেঢালা পোশাক পরা উচিত নয় কেন?','রাসায়নিক বা আগুনে সহজেই কাপড় ধরে দুর্ঘটনা ঘটতে পারে',['পোশাক নষ্ট হয় বলে','পরীক্ষণ ধীর হয়','দেখতে ভালো লাগে না'],'ঢিলেঢালা পোশাকে রাসায়নিক লাগা ও আগুন ধরার ঝুঁকি বেশি।')
+ ]
+};
+
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+ExamEngine.start(CH);
+</script>
+</body>
+</html>
