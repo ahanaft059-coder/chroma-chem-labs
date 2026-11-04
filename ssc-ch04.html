@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>পর্যায় সারণি | এক্সাম জোন | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,hsl(200,60%,11%),hsl(200,70%,30%),hsl(200,80%,55%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#0369a1,#38bdf8);}
+.scroll{overflow-x:auto}
+.badge2{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:800}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px;align-items:center}.kv span:first-child{color:var(--text-muted)}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.gwrap{grid-template-columns:minmax(0,1fr) minmax(300px,1fr)}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.mode{display:none}.mode.on{display:block}.scroll{overflow-x:auto}
+.rc{background:var(--card-solid);border:1px solid var(--border-color);border-radius:14px;padding:14px;text-align:center}.rc small{color:var(--text-muted);font-weight:700}.rc strong{display:block;font-size:34px;color:#22d3b0;margin-top:4px}
+.pc{border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);border-radius:6px;font-size:11px;font-weight:800;padding:5px 0;cursor:pointer;border-bottom:3px solid var(--c)}.pc.on{background:var(--c);color:#0b1020;box-shadow:0 0 12px var(--c);transform:scale(1.15);z-index:2}
+.orb-t{padding:2px 6px;border-radius:6px;display:inline-block;margin:2px 1px;font-weight:700}
+.wrap{max-width:860px}
+.ex-hero{display:flex;gap:18px;align-items:center;padding:28px 0 12px}.ex-ic{font-size:54px;width:92px;height:92px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:26px;background:var(--card-solid);border:1px solid var(--border-color);box-shadow:0 0 30px rgba(34,211,176,.2)}
+.ex-hero h1{margin:8px 0 6px;font-size:clamp(24px,4.4vw,36px);line-height:1.3;background:linear-gradient(90deg,#22d3b0,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}.ex-sub{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.ex-stats .card{padding:14px;text-align:center;display:flex;flex-direction:column;gap:2px}.ex-stats b{font-size:24px;color:#22d3b0}.ex-stats span{font-size:12px;color:var(--text-muted)}
+.ex-opts{padding:14px 16px;margin-bottom:14px}.ex-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}.ex-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.ex-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ex-mode{text-align:left;cursor:pointer;padding:18px;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--c);transition:.25s}.ex-mode:hover{transform:translateY(-4px);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 28%,transparent)}.ex-mode .mi{font-size:30px}.ex-mode b{font-size:17px}.ex-mode small{color:var(--text-muted);line-height:1.6;font-size:12.5px}.ex-mode em{font-style:normal;font-weight:800;color:var(--c);margin-top:auto;padding-top:6px}.ex-mode.dis{opacity:.5;cursor:not-allowed}
+.ex-foot{text-align:center;color:var(--text-muted);font-size:13px;margin:18px 0 60px}
+.ex-hud{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}.ex-x{width:38px;height:38px;border-radius:12px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font-size:16px}
+.ex-prog{flex:1;min-width:150px;font-size:13px;font-weight:800}.ex-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:5px}.ex-bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3b0,#a855f7);transition:width .4s}
+.ex-pill{padding:7px 12px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13px;white-space:nowrap}
+.ex-q{padding:22px;margin-bottom:14px}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tg.b{background:rgba(251,191,36,.16);color:#fbbf24}.tg.m{background:rgba(251,113,133,.16);color:#fb7185}
+.ex-qt{font-size:19px;line-height:1.85;font-weight:700;margin-bottom:16px}
+.ex-os{display:grid;gap:10px}.ex-opt{display:flex;gap:12px;align-items:center;text-align:left;padding:13px 15px;border-radius:14px;border:1.5px solid var(--border-color);background:var(--card-solid);color:var(--text);font:inherit;font-size:15.5px;cursor:pointer;transition:.18s;line-height:1.6}.ex-opt i{font-style:normal;flex:0 0 32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;background:rgba(255,255,255,.07)}
+.ex-opt:hover{border-color:#a855f7;transform:translateX(3px)}.ex-opt.sel{border-color:#a855f7;background:rgba(168,85,247,.16)}.ex-opt.sel i{background:#a855f7;color:#0b1020}
+.ex-opt.right{border-color:#22d3b0;background:rgba(34,211,176,.16);animation:pop .35s}.ex-opt.right i{background:#22d3b0;color:#0b1020}.ex-opt.wrong{border-color:#fb7185;background:rgba(251,113,133,.15);animation:shk .35s}.ex-opt.wrong i{background:#fb7185;color:#0b1020}.ex-opt.dim{opacity:.5;pointer-events:none}.ex-opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes pop{50%{box-shadow:0 0 22px rgba(34,211,176,.55)}}@keyframes shk{25%{translate:-5px 0}75%{translate:5px 0}}
+.ex-fb{margin-top:14px;padding:13px 15px;border-radius:14px;line-height:1.8;font-size:14.5px}.ex-fb.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-fb.bad{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5)}.ex-fb .xp{color:#fbbf24;font-weight:800;font-size:13px}.ex-exp{margin-top:6px;color:var(--text-muted)}
+.ex-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn.ghost{background:var(--card-solid)!important;color:var(--text)!important;border:1px solid var(--border-color)!important;box-shadow:none!important}.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ex-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px;margin-bottom:60px}.ex-pal button{height:38px;border-radius:10px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font:inherit;font-weight:800}.ex-pal .ans{background:rgba(34,211,176,.2);border-color:#22d3b0}.ex-pal .mk{box-shadow:inset 0 -3px #fb7185}.ex-pal .cur{outline:2px solid #a855f7}
+.ex-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}.ex-modal .card{max-width:380px;width:100%;padding:22px}
+.ex-res{padding:22px;margin:18px 0 14px}.ex-rh{display:flex;gap:18px;align-items:center;padding:16px;border-radius:18px;margin-bottom:12px}.ex-rh.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-rh.bad{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.5)}.ex-rh h2{margin:0 0 4px;font-size:21px}.ex-rh p{margin:0;color:var(--text-muted)}
+.ex-score{display:flex;align-items:baseline;gap:4px}.ex-score b{font-size:46px;color:#22d3b0}.ex-score span{color:var(--text-muted);font-size:18px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span{color:var(--text-muted)}
+details.qa{margin-top:8px}
+@media(max-width:700px){.ex-stats{grid-template-columns:1fr 1fr}.ex-modes{grid-template-columns:1fr}.ex-hero{flex-direction:column;align-items:flex-start}.ex-qt{font-size:17px}}
+</style>
+</head>
+
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>SSC · পর্যায় সারণি</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="exam.html">← <span class="long">এক্সাম জোন</span></a>
+    </div>
+  </header>
+  <main id="app"><div class="msg">লোড হচ্ছে…</div></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script src="exam-engine.js"></script>
+<script>
+CH={id:'ssc-04',exam:'ssc',paper:0,no:4,title:'পর্যায় সারণি',icon:'🧪',
+ bank:[
+  B(1,'আধুনিক পর্যায় সারণি কীসের ভিত্তিতে সাজানো হয়েছে?','পারমাণবিক সংখ্যা',['পারমাণবিক ভর','ঘনত্ব','গলনাঙ্ক'],'মোসলের গবেষণার পর পারমাণবিক সংখ্যাই পর্যায় সারণির ভিত্তি হয়।'),
+  B(1,'মেন্ডেলিভ তাঁর পর্যায় সারণি কীসের ভিত্তিতে সাজিয়েছিলেন?','পারমাণবিক ভর',['পারমাণবিক সংখ্যা','ইলেকট্রন বিন্যাস','নিউট্রন সংখ্যা'],'মেন্ডেলিভের সারণিতে মৌলগুলো ক্রমবর্ধমান পারমাণবিক ভর অনুযায়ী সাজানো ছিল।'),
+  B(1,'মৌলের ধর্ম পারমাণবিক সংখ্যার পর্যাবৃত্ত ফাংশন—এই আধুনিক পর্যায় সূত্র কার অবদান?','হেনরি মোসলে',['মেন্ডেলিভ','ডাল্টন','রাদারফোর্ড'],'মোসলে পারমাণবিক সংখ্যার ভিত্তিতে পর্যায় সূত্র প্রতিষ্ঠা করেন।'),
+  B(1,'আধুনিক পর্যায় সারণিতে গ্রুপ ও পর্যায়ের সংখ্যা যথাক্রমে কয়টি?','১৮টি ও ৭টি',['৮টি ও ৭টি','১৮টি ও ৮টি','১৬টি ও ৬টি'],'এতে ১৮টি খাড়া কলাম (গ্রুপ) ও ৭টি আনুভূমিক সারি (পর্যায়) আছে।'),
+  B(1,'পর্যায় সারণির আনুভূমিক সারিগুলোকে কী বলে?','পর্যায়',['গ্রুপ','ব্লক','শ্রেণি'],'আনুভূমিক সারি = পর্যায়; খাড়া কলাম = গ্রুপ।'),
+  B(1,'পর্যায় সারণির খাড়া কলামগুলোকে কী বলে?','গ্রুপ',['পর্যায়','ব্লক','অরবিটাল'],'খাড়া কলামকে গ্রুপ বলে।'),
+  B(1,'গ্রুপ ১-এর মৌলগুলো (হাইড্রোজেন বাদে) কী নামে পরিচিত?','ক্ষার ধাতু',['হ্যালোজেন','মৃৎক্ষার ধাতু','নিষ্ক্রিয় গ্যাস'],'Li, Na, K, Rb, Cs, Fr ক্ষার ধাতু।'),
+  B(1,'গ্রুপ ২-এর মৌলগুলোকে কী বলা হয়?','মৃৎক্ষার ধাতু',['ক্ষার ধাতু','হ্যালোজেন','ট্রানজিশন মৌল'],'Be, Mg, Ca, Sr, Ba, Ra মৃৎক্ষার ধাতু।'),
+  B(1,'হ্যালোজেন কোন গ্রুপের মৌল?','১৭',['১৬','১৮','১'],'F, Cl, Br, I, At গ্রুপ ১৭-এর মৌল।'),
+  B(1,'নিষ্ক্রিয় গ্যাস পর্যায় সারণির কোন গ্রুপে অবস্থিত?','১৮',['১৭','১৬','২'],'He, Ne, Ar, Kr, Xe, Rn গ্রুপ ১৮-এর মৌল।'),
+  B(1,'নিচের কোনটি ক্ষার ধাতু?','সোডিয়াম',['ম্যাগনেসিয়াম','ক্লোরিন','অ্যালুমিনিয়াম'],'Na গ্রুপ ১-এর ক্ষার ধাতু।'),
+  B(1,'নিচের কোনটি হ্যালোজেন?','ক্লোরিন',['সোডিয়াম','আর্গন','অক্সিজেন'],'Cl গ্রুপ ১৭-এর হ্যালোজেন।'),
+  B(1,'নিচের কোনটি ট্রানজিশন (অবস্থান্তর) মৌল?','আয়রন',['সোডিয়াম','ক্লোরিন','অ্যালুমিনিয়াম'],'Fe d-ব্লকের ট্রানজিশন মৌল।'),
+  B(1,'কক্ষ তাপমাত্রায় তরল ধাতু কোনটি?','পারদ',['সোডিয়াম','লোহা','ব্রোমিন'],'পারদ (Hg) একমাত্র সাধারণ তরল ধাতু; ব্রোমিন তরল অধাতু।'),
+  B(1,'কক্ষ তাপমাত্রায় তরল অধাতু কোনটি?','ব্রোমিন',['পারদ','আয়োডিন','ক্লোরিন'],'Br₂ কক্ষ তাপমাত্রায় লালচে-বাদামি তরল।'),
+  B(1,'নিষ্ক্রিয় গ্যাসের সাধারণ যোজনী কত?','০',['১','২','৮'],'বাইরের শক্তিস্তর পূর্ণ থাকায় এরা রাসায়নিক বিক্রিয়ায় নিষ্ক্রিয়।'),
+  B(1,'হিলিয়ামের বাইরের শেলে কয়টি ইলেকট্রন থাকে?','২টি',['৪টি','৮টি','১টি'],'He-এর বিন্যাস ১s²; K শেল পূর্ণ।'),
+  B(1,'আধুনিক পর্যায় সারণির প্রথম পর্যায়ে কয়টি মৌল আছে?','২টি',['৮টি','১টি','১৮টি'],'প্রথম পর্যায়ে শুধু H ও He আছে।'),
+  B(1,'আধুনিক পর্যায় সারণির ৪র্থ পর্যায়ে মৌলের সংখ্যা কত?','১৮টি',['৮টি','৩২টি','১০টি'],'পটাসিয়াম (১৯) থেকে ক্রিপটন (৩৬) পর্যন্ত ১৮টি মৌল।'),
+  B(1,'ল্যান্থানাইড ও অ্যাক্টিনাইড মৌলগুলো কোন ব্লকের অন্তর্ভুক্ত?','f-ব্লক',['s-ব্লক','p-ব্লক','d-ব্লক'],'এগুলো অন্তঃট্রানজিশন মৌল, f-ব্লকে অবস্থিত।'),
+  B(1,'একই পর্যায়ে বাম থেকে ডানে গেলে পরমাণুর আকার সাধারণত—','কমে',['বাড়ে','অপরিবর্তিত থাকে','প্রথমে কমে পরে বাড়ে'],'নিউক্লিয়াসের ধনাত্মক আধান বাড়ায় ইলেকট্রন বেশি আকৃষ্ট হয়।'),
+  B(1,'একই গ্রুপে উপর থেকে নিচে গেলে পরমাণুর আকার—','বাড়ে',['কমে','অপরিবর্তিত থাকে','শূন্য হয়'],'প্রতিটি পর্যায়ে নতুন শক্তিস্তর যুক্ত হয়।'),
+  B(1,'সবচেয়ে বেশি তড়িৎ ঋণাত্মক মৌল কোনটি?','ফ্লোরিন',['অক্সিজেন','ক্লোরিন','নাইট্রোজেন'],'ফ্লোরিনের তড়িৎ ঋণাত্মকতা সর্বোচ্চ।'),
+  B(2,'একই পর্যায়ে বাম থেকে ডানে গেলে ধাতব ধর্ম—','কমে',['বাড়ে','অপরিবর্তিত থাকে','দ্বিগুণ হয়'],'ডানে গেলে ইলেকট্রন ত্যাগের প্রবণতা কমে।'),
+  B(2,'একই গ্রুপে উপর থেকে নিচে গেলে ধাতব ধর্ম—','বাড়ে',['কমে','অপরিবর্তিত থাকে','প্রথমে কমে পরে বাড়ে'],'আকার বাড়ায় বাইরের ইলেকট্রন সহজে ত্যাগ করা যায়।'),
+  B(2,'গ্রুপ ১ এবং গ্রুপ ২ মৌলগুলো পর্যায় সারণির কোন ব্লকের?','s-ব্লক',['p-ব্লক','d-ব্লক','f-ব্লক'],'এদের শেষ ইলেকট্রন s উপস্তরে প্রবেশ করে।'),
+  B(2,'পটাসিয়াম (Z = ১৯) পর্যায় সারণির কোন ব্লকের মৌল?','s-ব্লক',['p-ব্লক','d-ব্লক','f-ব্লক'],'বিন্যাস [Ar] ৪s¹; শেষ ইলেকট্রন s উপস্তরে।'),
+  B(2,'ক্লোরিন (Z = ১৭) কোন ব্লকের মৌল?','p-ব্লক',['s-ব্লক','d-ব্লক','f-ব্লক'],'বিন্যাস ১s² ২s² ২p⁶ ৩s² ৩p⁵; শেষ ইলেকট্রন p উপস্তরে।'),
+  B(2,'আয়রনের (Z = ২৬) অবস্থান কোন ব্লকে?','d-ব্লক',['s-ব্লক','p-ব্লক','f-ব্লক'],'বিন্যাস [Ar] ৩d⁶ ৪s²; শেষ ইলেকট্রন d উপস্তরে।'),
+  B(2,'কোনো মৌলের ইলেকট্রন বিন্যাস ২, ৮, ৭। মৌলটি কোন গ্রুপ ও পর্যায়ের?','গ্রুপ ১৭, পর্যায় ৩',['গ্রুপ ৭, পর্যায় ৩','গ্রুপ ১৭, পর্যায় ২','গ্রুপ ১৬, পর্যায় ৩'],'৩টি শেল তাই পর্যায় ৩; বাইরের শেলে ৭টি ইলেকট্রন তাই গ্রুপ ১৭।'),
+  B(2,'সোডিয়ামের (Z = ১১) অবস্থান কোনটি?','গ্রুপ ১, পর্যায় ৩',['গ্রুপ ১, পর্যায় ২','গ্রুপ ২, পর্যায় ৩','গ্রুপ ১১, পর্যায় ১'],'বিন্যাস ২, ৮, ১ → ৩টি শেল, বাইরের শেলে ১টি ইলেকট্রন।'),
+  B(2,'ক্যালসিয়ামের (Z = ২০) অবস্থান কোনটি?','গ্রুপ ২, পর্যায় ৪',['গ্রুপ ২, পর্যায় ৩','গ্রুপ ১, পর্যায় ৪','গ্রুপ ১২, পর্যায় ২'],'বিন্যাস ২, ৮, ৮, ২ → চারটি শেল, যোজ্যতা ইলেকট্রন ২।'),
+  B(2,'সিলিকনের (Z = ১৪) অবস্থান কোনটি?','গ্রুপ ১৪, পর্যায় ৩',['গ্রুপ ৪, পর্যায় ২','গ্রুপ ১৪, পর্যায় ২','গ্রুপ ১৬, পর্যায় ৩'],'বিন্যাস ২, ৮, ৪ → তিনটি শেল, বাইরের শেলে ৪টি ইলেকট্রন।'),
+  B(2,'কোনো মৌলের পর্যায় সংখ্যা কীসের সমান?','ইলেকট্রন শেলের (সর্বোচ্চ শক্তিস্তরের) সংখ্যা',['যোজ্যতা ইলেকট্রন সংখ্যা','নিউট্রন সংখ্যা','ভর সংখ্যা'],'পর্যায় সংখ্যা = যে সর্বোচ্চ শক্তিস্তরে ইলেকট্রন আছে তার সংখ্যা।'),
+  B(2,'একই গ্রুপের মৌলগুলোর রাসায়নিক ধর্মে মিল থাকার কারণ—','যোজ্যতা ইলেকট্রন সংখ্যা সমান',['পারমাণবিক ভর সমান','শেলের সংখ্যা সমান','নিউট্রন সংখ্যা সমান'],'রাসায়নিক ধর্ম মূলত বাইরের শেলের ইলেকট্রন সংখ্যার ওপর নির্ভর করে।'),
+  B(2,'আয়নিকরণ শক্তি কাকে বলে?','গ্যাসীয় পরমাণু থেকে একটি ইলেকট্রন অপসারণে প্রয়োজনীয় শক্তি',['পরমাণুতে ইলেকট্রন যুক্ত হলে নির্গত শক্তি','পরমাণুকে গলাতে প্রয়োজনীয় শক্তি','দুই পরমাণুর বন্ধন ভাঙার শক্তি'],'বিচ্ছিন্ন গ্যাসীয় পরমাণু থেকে সবচেয়ে শিথিলভাবে আবদ্ধ ইলেকট্রন সরাতে যে শক্তি লাগে তা আয়নিকরণ শক্তি।'),
+  B(2,'একই গ্রুপে উপর থেকে নিচে গেলে আয়নিকরণ শক্তি সাধারণত—','কমে',['বাড়ে','অপরিবর্তিত থাকে','দ্বিগুণ হয়'],'আকার বাড়ায় বাইরের ইলেকট্রন নিউক্লিয়াস থেকে দূরে থাকে, সরানো সহজ হয়।'),
+  B(2,'একই পর্যায়ে বাম থেকে ডানে গেলে তড়িৎ ঋণাত্মকতা সাধারণত—','বাড়ে',['কমে','অপরিবর্তিত থাকে','প্রথমে বাড়ে পরে কমে শূন্য হয়'],'আকার কমে ও নিউক্লিয়াসের আকর্ষণ বাড়ে।'),
+  B(2,'Li, Na, K, Rb-এর মধ্যে কোনটি সবচেয়ে সক্রিয়?','Rb',['Li','Na','K'],'ক্ষার ধাতুর সক্রিয়তা গ্রুপে উপর থেকে নিচে বাড়ে।'),
+  B(2,'F, Cl, Br, I-এর মধ্যে সবচেয়ে সক্রিয় কোনটি?','F',['Cl','Br','I'],'হ্যালোজেনের সক্রিয়তা গ্রুপে উপর থেকে নিচে কমে।'),
+  B(2,'Na, Mg, Al, Si-এর মধ্যে পরমাণুর আকার সবচেয়ে বড় কোনটি?','Na',['Mg','Al','Si'],'একই পর্যায়ে বামে আকার বেশি; Na গ্রুপ ১-এ।'),
+  B(2,'নিচের কোনটির আকার Mg পরমাণুর চেয়ে ছোট?','Mg²⁺',['Cl⁻','Na','K'],'ক্যাটায়ন মূল পরমাণুর চেয়ে ছোট হয়, কারণ একটি শেল কমে যায় এবং প্রোটনের আকর্ষণ বাড়ে।'),
+  B(2,'পর্যায় ২-এর মৌলগুলোর মধ্যে সর্বোচ্চ আয়নিকরণ শক্তি কোনটির?','Ne',['Li','O','F'],'বাম থেকে ডানে আয়নিকরণ শক্তি সাধারণত বাড়ে; নিষ্ক্রিয় গ্যাসে সর্বোচ্চ।'),
+  B(2,'ক্ষার ধাতুকে কেরোসিনে ডুবিয়ে রাখা হয় কেন?','বায়ুর অক্সিজেন ও পানিবাষ্পের সঙ্গে দ্রুত বিক্রিয়া এড়াতে',['রং রক্ষার জন্য','গলনাঙ্ক বাড়ানোর জন্য','আকার ছোট রাখার জন্য'],'ক্ষার ধাতু অত্যন্ত সক্রিয়, তাই বায়ু ও আর্দ্রতা থেকে রক্ষা করা হয়।'),
+  B(2,'মেন্ডেলিভের সারণির একটি সীমাবদ্ধতা কোনটি?','আইসোটোপের স্থান নির্ধারণ করা যায়নি',['গ্রুপ ছিল ১৮টি','পারমাণবিক সংখ্যার ভিত্তিতে সাজানো ছিল','ইলেকট্রন বিন্যাস দেখানো ছিল'],'আইসোটোপের পারমাণবিক ভর ভিন্ন, ফলে ভরভিত্তিক সারণিতে তাদের স্থান নির্ধারণ কঠিন ছিল।'),
+  B(2,'মেন্ডেলিভ যে মৌলটিকে "ইকা-সিলিকন" নামে ভবিষ্যদ্বাণী করেছিলেন, সেটি পরে আবিষ্কৃত হয়—','জার্মেনিয়াম',['গ্যালিয়াম','স্ক্যান্ডিয়াম','আর্সেনিক'],'ইকা-সিলিকন = জার্মেনিয়াম (Ge)।'),
+  B(3,'কোনো মৌলের X²⁺ আয়নের ইলেকট্রন বিন্যাস ২, ৮, ৮। মৌল X পর্যায় সারণির কোথায় অবস্থিত?','গ্রুপ ২, পর্যায় ৪',['গ্রুপ ২, পর্যায় ৩','গ্রুপ ১৮, পর্যায় ৩','গ্রুপ ১৬, পর্যায় ৩'],'X-এর ইলেকট্রন = ১৮ + ২ = ২০ (Ca); বিন্যাস ২, ৮, ৮, ২।'),
+  B(3,'কোনো মৌলের ইলেকট্রন বিন্যাস ২, ৮, ১৮, ৬। মৌলটির অবস্থান কোথায়?','গ্রুপ ১৬, পর্যায় ৪',['গ্রুপ ৬, পর্যায় ৪','গ্রুপ ১৬, পর্যায় ৩','গ্রুপ ১৪, পর্যায় ৪'],'চারটি শেল, বাইরের শেলে ৬টি ইলেকট্রন (Z = ৩৪, Se)।'),
+  B(3,'কোনো মৌলের পারমাণবিক সংখ্যা ৩৮। মৌলটি কোন গ্রুপ ও পর্যায়ের?','গ্রুপ ২, পর্যায় ৫',['গ্রুপ ২, পর্যায় ৪','গ্রুপ ১৮, পর্যায় ৫','গ্রুপ ১২, পর্যায় ৫'],'Z = ৩৮ (Sr), বিন্যাস ২, ৮, ১৮, ৮, ২ → পাঁচটি শেল ও বাইরে ২টি ইলেকট্রন।'),
+  B(3,'পারমাণবিক সংখ্যা ৩, ১১, ১৯ মৌলগুলো সম্পর্কে:<br>i. এরা একই গ্রুপে অবস্থিত<br>ii. সক্রিয়তা ৩ থেকে ১৯-এ বাড়ে<br>iii. পরমাণুর আকার ৩ থেকে ১৯-এ কমে<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'এরা Li, Na, K—গ্রুপ ১; নিচে গেলে আকার বাড়ে, তাই iii ভুল।'),
+  B(3,'নিচের বিবৃতিগুলো লক্ষ করো:<br>i. পর্যায়ে বাম থেকে ডানে পরমাণুর আকার কমে<br>ii. গ্রুপে উপর থেকে নিচে আয়নিকরণ শক্তি কমে<br>iii. গ্রুপে উপর থেকে নিচে ধাতব ধর্ম কমে<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'গ্রুপে নিচে গেলে ধাতব ধর্ম বাড়ে, তাই iii ভুল।'),
+  B(3,'F⁻ ও Na⁺ আয়নের ইলেকট্রন সংখ্যা সমান (১০টি)। আকারের তুলনায় কোনটি সঠিক?','F⁻ > Na⁺',['F⁻ < Na⁺','F⁻ = Na⁺','তুলনা করা যায় না'],'সমান ইলেকট্রনে Na⁺-এর প্রোটন (১১) F⁻-এর প্রোটনের (৯) চেয়ে বেশি, তাই Na⁺ ছোট।'),
+  B(3,'A (Z = ১১) ও B (Z = ১৭) মৌল দুটি যুক্ত হলে কোন ধরনের যৌগ গঠন করবে?','আয়নিক যৌগ AB',['সমযোজী যৌগ AB','আয়নিক যৌগ A₂B','সমযোজী যৌগ AB₂'],'A ধাতু (১টি ইলেকট্রন ত্যাগ) ও B অধাতু (১টি গ্রহণ) → NaCl-জাতীয় আয়নিক যৌগ।'),
+  B(1,'আধুনিক পর্যায় সারণিতে কয়টি গ্রুপ আছে?','১৮টি',['৮টি','১৪টি','১৫টি'],'আধুনিক (IUPAC) পর্যায় সারণিতে ১৮টি গ্রুপ আছে।'),
+  B(1,'আধুনিক পর্যায় সারণিতে কয়টি পর্যায় আছে?','৭টি',['৫টি','৬টি','৮টি'],'সাতটি পর্যায় (১ থেকে ৭)।'),
+  B(1,'পর্যায় সারণির খাড়া স্তম্ভগুলোকে কী বলে?','গ্রুপ',['পর্যায়','সারি','উপসারি'],'ঊর্ধ্বাধর স্তম্ভ = গ্রুপ।'),
+  B(1,'কে সর্বপ্রথম মৌলিক পদার্থগুলোকে ধাতু ও অধাতু—এ দুই ভাগে ভাগ করেন?','ল্যাভয়সিয়ে',['ডোবেরাইনার','নিউল্যান্ড','ম্যান্ডেলিফ'],'১৭৮৯ সালে ল্যাভয়সিয়ে ধাতু-অধাতু ভাগ করেন।'),
+  B(1,'ত্রয়ীসূত্র (Law of Triads) কে প্রদান করেন?','ডোবেরাইনার',['নিউল্যান্ড','ম্যান্ডেলিফ','মোসলে'],'জার্মান বিজ্ঞানী ডোবেরাইনার সমধর্মী তিনটি মৌলের ত্রয়ী প্রস্তাব করেন।'),
+  B(1,'অষ্টক সূত্র (Law of Octaves) কে প্রদান করেন?','নিউল্যান্ড',['ডোবেরাইনার','লুথার মেয়র','ল্যাভয়সিয়ে'],'ইংরেজ বিজ্ঞানী নিউল্যান্ড প্রতি অষ্টম মৌলে ধর্মের মিল দেখান।'),
+  B(1,'নিউল্যান্ডের অষ্টক সূত্র অনুযায়ী ভিত্তি কী ছিল?','পারমাণবিক ভরের ক্রম অনুযায়ী প্রতি অষ্টম মৌলের মিল',['পারমাণবিক সংখ্যার ক্রম','মৌলের আকার','মৌলের রং'],'ভর অনুযায়ী সাজালে প্রতি অষ্টম মৌলের ধর্ম মিলে যায়।'),
+  B(1,'ম্যান্ডেলিফ কোন দেশের বিজ্ঞানী ছিলেন?','রাশিয়া',['জার্মানি','ফ্রান্স','ইংল্যান্ড'],'ম্যান্ডেলিফ ছিলেন রুশ বিজ্ঞানী।'),
+  B(1,'ম্যান্ডেলিফ কত সালে তাঁর পর্যায় সারণি প্রকাশ করেন?','১৮৬৯ সালে',['১৮২৯ সালে','১৮৪৯ সালে','১৮৮৯ সালে'],'১৮৬৯ সালে ম্যান্ডেলিফ পর্যায় সারণি প্রকাশ করেন।'),
+  B(1,'ম্যান্ডেলিফের পর্যায় সারণির ভিত্তি কী ছিল?','পারমাণবিক ভর',['পারমাণবিক সংখ্যা','মৌলের যোজনী','পরমাণুর আকার'],'ম্যান্ডেলিফ পারমাণবিক ভরের ক্রমবর্ধমান ক্রমে মৌল সাজান।'),
+  B(1,'আধুনিক পর্যায় সারণির ভিত্তি কোনটি?','পারমাণবিক সংখ্যা',['পারমাণবিক ভর','নিউট্রন সংখ্যা','ঘনত্ব'],'মোসলে পারমাণবিক সংখ্যার ক্রম অনুযায়ী সাজানোর প্রস্তাব দেন।'),
+  B(1,'পারমাণবিক সংখ্যা আবিষ্কার করেন কে?','মোসলে',['ম্যান্ডেলিফ','ডাল্টন','রাদারফোর্ড'],'ইংরেজ বিজ্ঞানী হেনরি মোসলে ১৯১৩ সালে পারমাণবিক সংখ্যা নির্ণয় করেন।'),
+  B(1,'IUPAC-এর পূর্ণরূপ কী?','International Union of Pure and Applied Chemistry',['International Unity of Pure and Applied Chemistry','International Union of Pan Asian Council','International Unit of Pacific Authority Commission'],'IUPAC রসায়নের নামকরণ ও মান নিয়ন্ত্রণ করে।'),
+  B(1,'বর্তমানে আবিষ্কৃত ও স্বীকৃত মোট মৌলের সংখ্যা কত?','১১৮টি',['১০৯টি','১২২টি','১৩৪টি'],'IUPAC ১১৮টি মৌল স্বীকৃতি দিয়েছে।'),
+  B(1,'পর্যায় সারণিতে প্রথম পর্যায়ে কয়টি মৌল আছে?','২টি',['১টি','৮টি','১৮টি'],'প্রথম পর্যায়ে শুধু H ও He।'),
+  B(1,'দ্বিতীয় ও তৃতীয় পর্যায়ে প্রতিটিতে কয়টি করে মৌল আছে?','৮টি',['২টি','১৮টি','৩২টি'],'দ্বিতীয় ও তৃতীয় পর্যায়কে ক্ষুদ্র পর্যায় বলে, প্রতিটিতে ৮টি মৌল।'),
+  B(1,'চতুর্থ ও পঞ্চম পর্যায়ে প্রতিটিতে কয়টি করে মৌল আছে?','১৮টি',['৮টি','২২টি','৩২টি'],'দীর্ঘ পর্যায়—প্রতিটিতে ১৮টি।'),
+  B(1,'ষষ্ঠ ও সপ্তম পর্যায়ে প্রতিটিতে কয়টি করে মৌল আছে (ল্যান্থানাইড/অ্যাক্টিনাইড সহ)?','৩২টি',['১৮টি','৮টি','১৪টি'],'অতি দীর্ঘ পর্যায়—৩২টি মৌল।'),
+  B(1,'পর্যায় ১-এ He কোন গ্রুপে অবস্থিত?','১৮',['২','৮','১২'],'হিলিয়াম নিষ্ক্রিয় গ্যাস, তাই গ্রুপ ১৮-তে।'),
+  B(1,'গ্রুপ ১-এর মৌলসমূহকে কী বলা হয়?','ক্ষার ধাতু',['মৃৎক্ষার ধাতু','হ্যালোজেন','নিষ্ক্রিয় গ্যাস'],'Li, Na, K, Rb, Cs, Fr—ক্ষার ধাতু।'),
+  B(1,'গ্রুপ ২-এর মৌলসমূহকে কী বলা হয়?','মৃৎক্ষার ধাতু',['ক্ষার ধাতু','হ্যালোজেন','অবস্থান্তর মৌল'],'Be, Mg, Ca, Sr, Ba, Ra—মৃৎক্ষার ধাতু।'),
+  B(1,'গ্রুপ ১৭-এর মৌলসমূহকে কী বলা হয়?','হ্যালোজেন',['ক্ষার ধাতু','নিষ্ক্রিয় গ্যাস','মুদ্রা ধাতু'],'F, Cl, Br, I, At—হ্যালোজেন (লবণ উৎপাদনকারী)।'),
+  B(1,'গ্রুপ ১৮-এর মৌলসমূহকে কী বলা হয়?','নিষ্ক্রিয় গ্যাস',['হ্যালোজেন','ক্ষার ধাতু','মুদ্রা ধাতু'],'He, Ne, Ar, Kr, Xe, Rn—নিষ্ক্রিয় বা মহৎ গ্যাস।'),
+  B(1,'গ্রুপ ১১-এর মৌলসমূহকে কী বলা হয়?','মুদ্রা ধাতু',['ক্ষার ধাতু','হ্যালোজেন','মৃৎক্ষার ধাতু'],'Cu, Ag, Au—মুদ্রা ধাতু।'),
+  B(1,'কোনটি মুদ্রা ধাতু?','Cu, Ag, Au',['Na, K, Rb','Fe, Co, Ni','F, Cl, Br'],'কপার, সিলভার ও গোল্ড মুদ্রা ধাতু।'),
+  B(1,'কোনটি হ্যালোজেন?','ক্লোরিন',['সোডিয়াম','আর্গন','ক্যালসিয়াম'],'Cl গ্রুপ ১৭-র মৌল।'),
+  B(1,'কোনটি ক্ষার ধাতু?','পটাসিয়াম',['ক্যালসিয়াম','ম্যাগনেসিয়াম','অ্যালুমিনিয়াম'],'K গ্রুপ ১-এর ক্ষার ধাতু।'),
+  B(1,'কোনটি মৃৎক্ষার ধাতু?','ক্যালসিয়াম',['সোডিয়াম','পটাসিয়াম','লিথিয়াম'],'Ca গ্রুপ ২-এ আছে।'),
+  B(1,'নিষ্ক্রিয় গ্যাসসমূহ রাসায়নিকভাবে কেমন?','অত্যন্ত নিষ্ক্রিয় (সাধারণত বিক্রিয়া করে না)',['অত্যন্ত সক্রিয়','সব ক্ষেত্রে বিস্ফোরক','ধাতব'],'এদের বাইরের শেল পূর্ণ, তাই বিক্রিয়ায় নিষ্ক্রিয়।'),
+  B(1,'কোন মৌলকে ছুরি দিয়ে কাটা যায়?','সোডিয়াম',['আয়রন','কপার','অ্যালুমিনিয়াম'],'Na নরম ধাতু; ছুরি দিয়ে কাটা যায়।'),
+  B(1,'Na পর্যায় সারণির কোন গ্রুপ ও পর্যায়ে অবস্থিত?','গ্রুপ ১, পর্যায় ৩',['গ্রুপ ২, পর্যায় ৩','গ্রুপ ১, পর্যায় ২','গ্রুপ ১৭, পর্যায় ৩'],'Na: ২, ৮, ১ → ৩টি শেল, ১টি বাইরের ইলেকট্রন।'),
+  B(1,'সোডিয়ামের পারমাণবিক সংখ্যা ১১ বলতে কী বোঝায়?','এর নিউক্লিয়াসে ১১টি প্রোটন আছে',['১১টি নিউট্রন আছে','প্রোটন ও নিউট্রনের মোট সংখ্যা ১১','এতে ১১টি পরমাণু আছে'],'পারমাণবিক সংখ্যা = প্রোটন সংখ্যা।'),
+  B(1,'মৌলের পর্যায় সংখ্যা কিসের সমান?','পরমাণুর শক্তিস্তরের (শেলের) সংখ্যা',['বাইরের ইলেকট্রন সংখ্যা','নিউট্রন সংখ্যা','ভর সংখ্যা'],'যত শেল, তত পর্যায়।'),
+  B(1,'কোনো মৌলের সর্বশেষ শক্তিস্তরের ইলেকট্রন সংখ্যা সাধারণভাবে কী নির্দেশ করে?','গ্রুপ সংখ্যা',['পর্যায় সংখ্যা','পারমাণবিক ভর','নিউট্রন সংখ্যা'],'প্রধান গ্রুপের মৌলে সর্বশেষ শেলের ইলেকট্রন সংখ্যা দিয়ে গ্রুপ বোঝা যায়।'),
+  B(1,'পর্যায় সারণির বাম থেকে ডানে গেলে ধাতব ধর্ম কেমন হয়?','কমে',['বাড়ে','অপরিবর্তিত থাকে','দ্বিগুণ হয়'],'বাম দিকে ধাতু, ডান দিকে অধাতু।'),
+  B(2,'একই পর্যায়ে বাম থেকে ডানে গেলে পারমাণবিক আকার কেমন হয়?','কমে',['বাড়ে','অপরিবর্তিত থাকে','প্রথমে কমে পরে বাড়ে'],'নিউক্লিয়াসের আকর্ষণ বাড়ায় আকার কমে।'),
+  B(2,'একই গ্রুপে উপর থেকে নিচে গেলে পারমাণবিক আকার কেমন হয়?','বাড়ে',['কমে','একই থাকে','শূন্য হয়'],'শক্তিস্তর বাড়ে, তাই আকার বাড়ে।'),
+  B(2,'একই পর্যায়ে বাম থেকে ডানে আয়নিকরণ শক্তি সাধারণত কেমন হয়?','বাড়ে',['কমে','একই থাকে','আগে কমে পরে শূন্য'],'আকার কমে বলে ইলেকট্রন ছাড়তে বেশি শক্তি লাগে।'),
+  B(2,'একই গ্রুপে উপর থেকে নিচে গেলে আয়নিকরণ শক্তি কেমন হয়?','কমে',['বাড়ে','অপরিবর্তিত থাকে','দ্বিগুণ হয়'],'আকার বাড়ে, তাই ইলেকট্রন সহজে ছাড়ে।'),
+  B(2,'ক্ষার ধাতুসমূহের রাসায়নিক সক্রিয়তা গ্রুপে উপর থেকে নিচে কেমন হয়?','বাড়ে',['কমে','একই থাকে','প্রথমে বাড়ে পরে কমে'],'Li < Na < K < Rb < Cs।'),
+  B(2,'হ্যালোজেনের রাসায়নিক সক্রিয়তা গ্রুপে উপর থেকে নিচে কেমন হয়?','কমে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'F > Cl > Br > I।'),
+  B(2,'একই গ্রুপের সকল মৌলের ভৌত ও রাসায়নিক ধর্ম কেমন?','প্রায় একই রকম',['সম্পূর্ণ আলাদা','উপর থেকে নিচে বদলায় না','ডান থেকে বামে বদলায়'],'বাইরের শেলের ইলেকট্রন সংখ্যা সমান বলে ধর্ম সদৃশ।'),
+  B(2,'পর্যায় সারণিতে নাইট্রোজেনের অবস্থান কোথায়?','দ্বিতীয় পর্যায়, গ্রুপ ১৫',['তৃতীয় পর্যায়, গ্রুপ ১৫','দ্বিতীয় পর্যায়, গ্রুপ ১৪','দ্বিতীয় পর্যায়, গ্রুপ ১৬'],'N: ২, ৫ → ২টি শেল, ৫ বাইরের ইলেকট্রন (গ্রুপ ১৫)।'),
+  B(2,'ক্লোরিনের ইলেকট্রন বিন্যাস ২, ৮, ৭ হলে এর অবস্থান কোথায়?','তৃতীয় পর্যায়, গ্রুপ ১৭',['তৃতীয় পর্যায়, গ্রুপ ৭','দ্বিতীয় পর্যায়, গ্রুপ ১৭','চতুর্থ পর্যায়, গ্রুপ ১৭'],'৩ শেল, ৭ বাইরের ইলেকট্রন → গ্রুপ ১৭।'),
+  B(2,'পর্যায় সারণিতে অ্যালুমিনিয়ামের (Z = ১৩) অবস্থান কোথায়?','তৃতীয় পর্যায়, গ্রুপ ১৩',['তৃতীয় পর্যায়, গ্রুপ ৩','দ্বিতীয় পর্যায়, গ্রুপ ১৩','চতুর্থ পর্যায়, গ্রুপ ১৩'],'Al: ২, ৮, ৩ → গ্রুপ ১৩।'),
+  B(2,'ফসফরাসের (Z = ১৫) অবস্থান কোথায়?','তৃতীয় পর্যায়, গ্রুপ ১৫',['তৃতীয় পর্যায়, গ্রুপ ৫','দ্বিতীয় পর্যায়, গ্রুপ ১৫','চতুর্থ পর্যায়, গ্রুপ ১৫'],'P: ২, ৮, ৫ → গ্রুপ ১৫।'),
+  B(2,'সিলিকনের (Z = ১৪) অবস্থান কোথায়?','তৃতীয় পর্যায়, গ্রুপ ১৪',['তৃতীয় পর্যায়, গ্রুপ ৪','দ্বিতীয় পর্যায়, গ্রুপ ১৪','চতুর্থ পর্যায়, গ্রুপ ১৪'],'Si: ২, ৮, ৪ → গ্রুপ ১৪।'),
+  B(2,'বোরনের (Z = ৫) অবস্থান কোথায়?','দ্বিতীয় পর্যায়, গ্রুপ ১৩',['দ্বিতীয় পর্যায়, গ্রুপ ৩','তৃতীয় পর্যায়, গ্রুপ ১৩','প্রথম পর্যায়, গ্রুপ ১৩'],'B: ২, ৩ → গ্রুপ ১৩।'),
+  B(2,'পটাসিয়ামের (Z = ১৯) অবস্থান কোন পর্যায়ে?','চতুর্থ',['তৃতীয়','পঞ্চম','দ্বিতীয়'],'K: ২, ৮, ৮, ১ → ৪টি শেল।'),
+  B(2,'ক্যালসিয়ামের (Z = ২০) অবস্থান কোথায়?','চতুর্থ পর্যায়, গ্রুপ ২',['চতুর্থ পর্যায়, গ্রুপ ১','তৃতীয় পর্যায়, গ্রুপ ২','পঞ্চম পর্যায়, গ্রুপ ২'],'Ca: ২, ৮, ৮, ২।'),
+  B(2,'জিংকের (Z = ৩০) অবস্থান কোথায়?','চতুর্থ পর্যায়, গ্রুপ ১২',['চতুর্থ পর্যায়, গ্রুপ ২','তৃতীয় পর্যায়, গ্রুপ ১২','পঞ্চম পর্যায়, গ্রুপ ১২'],'Zn: [Ar] 3d¹⁰ 4s² → গ্রুপ ১২।'),
+  B(2,'Fe, Co, Ni কোন পর্যায়ের মৌল?','চতুর্থ',['তৃতীয়','পঞ্চম','ষষ্ঠ'],'এরা ৪র্থ পর্যায়ের অবস্থান্তর মৌল।'),
+  B(2,'রুবিডিয়ামের (Z = ৩৭) সর্ববহিঃস্থ স্তরে কয়টি ইলেকট্রন থাকে?','১টি',['২টি','৩টি','৭টি'],'Rb: ২, ৮, ১৮, ৮, ১।'),
+  B(2,'Kr (Z = ৩৬) পর্যায় সারণিতে কোথায় অবস্থিত?','চতুর্থ পর্যায়, গ্রুপ ১৮',['তৃতীয় পর্যায়, গ্রুপ ১৮','চতুর্থ পর্যায়, গ্রুপ ১৭','পঞ্চম পর্যায়, গ্রুপ ১৮'],'Kr: ২, ৮, ১৮, ৮ → নিষ্ক্রিয় গ্যাস।'),
+  B(2,'Au (গোল্ড) কোন গ্রুপে অবস্থিত?','গ্রুপ ১১',['গ্রুপ ৭','গ্রুপ ৮','গ্রুপ ১৩'],'Cu, Ag, Au গ্রুপ ১১।'),
+  B(2,'সক্রিয়তার ভিত্তিতে ধাতুসমূহের সঠিক ক্রম কোনটি?','Na > Mg > Al > Zn > Fe',['Fe > Zn > Al > Mg > Na','Zn > Na > Fe > Al > Mg','Al > Na > Mg > Fe > Zn'],'ক্রম: K > Na > Ca > Mg > Al > Zn > Fe।'),
+  B(2,'নিচের কোনটি অভিজাত ধাতু?','সোনা (Au)',['লোহা (Fe)','সোডিয়াম (Na)','দস্তা (Zn)'],'Au রাসায়নিকভাবে খুব নিষ্ক্রিয়।'),
+  B(2,'নিচের কোনটি উপধাতু (Metalloid)?','সিলিকন',['সোডিয়াম','কপার','ক্লোরিন'],'Si ধাতু ও অধাতু—দুই ধরনের ধর্মই দেখায়।'),
+  B(2,'Na₂O পানিতে মিশে কী ধরনের দ্রবণ দেয়?','ক্ষারীয়',['অম্লীয়','নিরপেক্ষ','উভধর্মী'],'ধাতব অক্সাইড সাধারণত ক্ষারীয়।'),
+  B(2,'Cl₂O₇ পানির সাথে বিক্রিয়া করে কী তৈরি করে?','HClO₄ (অ্যাসিড)',['NaOH','Ca(OH)₂','H₂'],'অধাতব অক্সাইড অম্লীয়।'),
+  B(2,'Al₂O₃ কী ধরনের অক্সাইড?','উভধর্মী',['শুধু অম্লীয়','শুধু ক্ষারীয়','নিরপেক্ষ'],'এটি অ্যাসিড ও ক্ষার—দুটির সাথেই বিক্রিয়া করে।'),
+  B(2,'Na + H₂O → NaOH + X; X কী গ্যাস?','H₂',['O₂','CO₂','N₂'],'সোডিয়াম পানির সাথে বিক্রিয়ায় হাইড্রোজেন গ্যাস দেয়।'),
+  B(2,'গ্রুপ ১-এর মৌলগুলো পানির সাথে কেমন বিক্রিয়া করে?','তীব্র বিক্রিয়া করে ক্ষার ও H₂ উৎপন্ন করে',['কোনো বিক্রিয়া করে না','অ্যাসিড তৈরি করে','শুধু কঠিন লবণ দেয়'],'ক্ষার ধাতু পানির সাথে সহজেই বিক্রিয়া করে।'),
+  B(3,'একটি মৌলের ইলেকট্রন বিন্যাস ২, ৮, ১৮, ৮, ২ হলে এর অবস্থান কোথায়?','পঞ্চম পর্যায়, গ্রুপ ২',['চতুর্থ পর্যায়, গ্রুপ ২','পঞ্চম পর্যায়, গ্রুপ ১','ষষ্ঠ পর্যায়, গ্রুপ ২'],'৫টি শেল, ২ বাইরের ইলেকট্রন → Sr।'),
+  B(3,'পারমাণবিক সংখ্যা ২৯ (Cu) হলে মৌলটির অবস্থান কোথায়?','চতুর্থ পর্যায়, গ্রুপ ১১',['চতুর্থ পর্যায়, গ্রুপ ১','তৃতীয় পর্যায়, গ্রুপ ১১','পঞ্চম পর্যায়, গ্রুপ ১১'],'Cu: [Ar] 3d¹⁰ 4s¹ → গ্রুপ ১১।'),
+  B(3,'Cr (Z = ২৪)-এর ইলেকট্রন বিন্যাস [Ar] 3d⁵ 4s¹ হলে এটি কোন গ্রুপের মৌল?','গ্রুপ ৬',['গ্রুপ ১','গ্রুপ ৫','গ্রুপ ২'],'3d ও 4s-এর ইলেকট্রন যোগ ৫+১ = ৬ → গ্রুপ ৬।'),
+  B(3,'টেলুরিয়ামের (Z = ৫২) অবস্থান কোথায়?','পঞ্চম পর্যায়, গ্রুপ ১৬',['পঞ্চম পর্যায়, গ্রুপ ১৪','চতুর্থ পর্যায়, গ্রুপ ১৬','ষষ্ঠ পর্যায়, গ্রুপ ১৬'],'Te: ২, ৮, ১৮, ১৮, ৬ → ৫ম পর্যায়, গ্রুপ ১৬।'),
+  B(3,'M একটি মৌল যার ইলেকট্রন বিন্যাস ২, ৮, ১৮, ৮, ১। M-এর রাসায়নিক সক্রিয়তা Na-এর তুলনায়—','বেশি',['কম','সমান','শূন্য'],'গ্রুপ ১-এ নিচে গেলে সক্রিয়তা বাড়ে; M = Rb।')
+ ],
+ gens:[LIB.sym,LIB.nameOf,LIB.zOf,LIB.byZ,LIB.group,LIB.period,LIB.valence]
+};
+
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+ExamEngine.start(CH);
+</script>
+</body>
+</html>

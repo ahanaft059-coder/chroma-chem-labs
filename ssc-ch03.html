@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>পদার্থের গঠন | এক্সাম জোন | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,hsl(200,60%,11%),hsl(200,70%,30%),hsl(200,80%,55%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#0369a1,#38bdf8);}
+.scroll{overflow-x:auto}
+.badge2{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:800}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px;align-items:center}.kv span:first-child{color:var(--text-muted)}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.gwrap{grid-template-columns:minmax(0,1fr) minmax(300px,1fr)}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.mode{display:none}.mode.on{display:block}.scroll{overflow-x:auto}
+.rc{background:var(--card-solid);border:1px solid var(--border-color);border-radius:14px;padding:14px;text-align:center}.rc small{color:var(--text-muted);font-weight:700}.rc strong{display:block;font-size:34px;color:#22d3b0;margin-top:4px}
+.pc{border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);border-radius:6px;font-size:11px;font-weight:800;padding:5px 0;cursor:pointer;border-bottom:3px solid var(--c)}.pc.on{background:var(--c);color:#0b1020;box-shadow:0 0 12px var(--c);transform:scale(1.15);z-index:2}
+.orb-t{padding:2px 6px;border-radius:6px;display:inline-block;margin:2px 1px;font-weight:700}
+.wrap{max-width:860px}
+.ex-hero{display:flex;gap:18px;align-items:center;padding:28px 0 12px}.ex-ic{font-size:54px;width:92px;height:92px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:26px;background:var(--card-solid);border:1px solid var(--border-color);box-shadow:0 0 30px rgba(34,211,176,.2)}
+.ex-hero h1{margin:8px 0 6px;font-size:clamp(24px,4.4vw,36px);line-height:1.3;background:linear-gradient(90deg,#22d3b0,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}.ex-sub{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.ex-stats .card{padding:14px;text-align:center;display:flex;flex-direction:column;gap:2px}.ex-stats b{font-size:24px;color:#22d3b0}.ex-stats span{font-size:12px;color:var(--text-muted)}
+.ex-opts{padding:14px 16px;margin-bottom:14px}.ex-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}.ex-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.ex-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ex-mode{text-align:left;cursor:pointer;padding:18px;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--c);transition:.25s}.ex-mode:hover{transform:translateY(-4px);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 28%,transparent)}.ex-mode .mi{font-size:30px}.ex-mode b{font-size:17px}.ex-mode small{color:var(--text-muted);line-height:1.6;font-size:12.5px}.ex-mode em{font-style:normal;font-weight:800;color:var(--c);margin-top:auto;padding-top:6px}.ex-mode.dis{opacity:.5;cursor:not-allowed}
+.ex-foot{text-align:center;color:var(--text-muted);font-size:13px;margin:18px 0 60px}
+.ex-hud{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}.ex-x{width:38px;height:38px;border-radius:12px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font-size:16px}
+.ex-prog{flex:1;min-width:150px;font-size:13px;font-weight:800}.ex-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:5px}.ex-bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3b0,#a855f7);transition:width .4s}
+.ex-pill{padding:7px 12px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13px;white-space:nowrap}
+.ex-q{padding:22px;margin-bottom:14px}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tg.b{background:rgba(251,191,36,.16);color:#fbbf24}.tg.m{background:rgba(251,113,133,.16);color:#fb7185}
+.ex-qt{font-size:19px;line-height:1.85;font-weight:700;margin-bottom:16px}
+.ex-os{display:grid;gap:10px}.ex-opt{display:flex;gap:12px;align-items:center;text-align:left;padding:13px 15px;border-radius:14px;border:1.5px solid var(--border-color);background:var(--card-solid);color:var(--text);font:inherit;font-size:15.5px;cursor:pointer;transition:.18s;line-height:1.6}.ex-opt i{font-style:normal;flex:0 0 32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;background:rgba(255,255,255,.07)}
+.ex-opt:hover{border-color:#a855f7;transform:translateX(3px)}.ex-opt.sel{border-color:#a855f7;background:rgba(168,85,247,.16)}.ex-opt.sel i{background:#a855f7;color:#0b1020}
+.ex-opt.right{border-color:#22d3b0;background:rgba(34,211,176,.16);animation:pop .35s}.ex-opt.right i{background:#22d3b0;color:#0b1020}.ex-opt.wrong{border-color:#fb7185;background:rgba(251,113,133,.15);animation:shk .35s}.ex-opt.wrong i{background:#fb7185;color:#0b1020}.ex-opt.dim{opacity:.5;pointer-events:none}.ex-opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes pop{50%{box-shadow:0 0 22px rgba(34,211,176,.55)}}@keyframes shk{25%{translate:-5px 0}75%{translate:5px 0}}
+.ex-fb{margin-top:14px;padding:13px 15px;border-radius:14px;line-height:1.8;font-size:14.5px}.ex-fb.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-fb.bad{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5)}.ex-fb .xp{color:#fbbf24;font-weight:800;font-size:13px}.ex-exp{margin-top:6px;color:var(--text-muted)}
+.ex-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn.ghost{background:var(--card-solid)!important;color:var(--text)!important;border:1px solid var(--border-color)!important;box-shadow:none!important}.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ex-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px;margin-bottom:60px}.ex-pal button{height:38px;border-radius:10px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font:inherit;font-weight:800}.ex-pal .ans{background:rgba(34,211,176,.2);border-color:#22d3b0}.ex-pal .mk{box-shadow:inset 0 -3px #fb7185}.ex-pal .cur{outline:2px solid #a855f7}
+.ex-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}.ex-modal .card{max-width:380px;width:100%;padding:22px}
+.ex-res{padding:22px;margin:18px 0 14px}.ex-rh{display:flex;gap:18px;align-items:center;padding:16px;border-radius:18px;margin-bottom:12px}.ex-rh.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-rh.bad{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.5)}.ex-rh h2{margin:0 0 4px;font-size:21px}.ex-rh p{margin:0;color:var(--text-muted)}
+.ex-score{display:flex;align-items:baseline;gap:4px}.ex-score b{font-size:46px;color:#22d3b0}.ex-score span{color:var(--text-muted);font-size:18px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span{color:var(--text-muted)}
+details.qa{margin-top:8px}
+@media(max-width:700px){.ex-stats{grid-template-columns:1fr 1fr}.ex-modes{grid-template-columns:1fr}.ex-hero{flex-direction:column;align-items:flex-start}.ex-qt{font-size:17px}}
+</style>
+</head>
+
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>SSC · পদার্থের গঠন</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="exam.html">← <span class="long">এক্সাম জোন</span></a>
+    </div>
+  </header>
+  <main id="app"><div class="msg">লোড হচ্ছে…</div></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script src="exam-engine.js"></script>
+<script>
+CH={id:'ssc-03',exam:'ssc',paper:0,no:3,title:'পদার্থের গঠন',icon:'⚛️',
+ bank:[
+  B(1,'পরমাণুর কেন্দ্রে অবস্থিত অংশকে কী বলে?','নিউক্লিয়াস',['অরবিটাল','শেল','আয়ন'],'প্রোটন ও নিউট্রন পরমাণুর কেন্দ্রে নিউক্লিয়াসে থাকে।'),
+  B(1,'পরমাণুর নিউক্লিয়াসে কোন কণাগুলো থাকে?','প্রোটন ও নিউট্রন',['ইলেকট্রন ও প্রোটন','ইলেকট্রন ও নিউট্রন','শুধু ইলেকট্রন'],'ইলেকট্রন নিউক্লিয়াসের বাইরে শক্তিস্তরে থাকে।'),
+  B(1,'নিচের কোন কণাটি আধানহীন?','নিউট্রন',['প্রোটন','ইলেকট্রন','আয়ন'],'নিউট্রন তড়িৎনিরপেক্ষ।'),
+  B(1,'ইলেকট্রনের আধান কত?','−১',['+১','০','+২'],'ইলেকট্রনে একক ঋণাত্মক আধান থাকে।'),
+  B(1,'পারমাণবিক সংখ্যা (Z) কী নির্দেশ করে?','প্রোটন সংখ্যা',['নিউট্রন সংখ্যা','প্রোটন ও নিউট্রন সংখ্যার যোগফল','ভর সংখ্যা'],'পারমাণবিক সংখ্যা = নিউক্লিয়াসের প্রোটন সংখ্যা।'),
+  B(1,'ভর সংখ্যা কাকে বলে?','প্রোটন ও নিউট্রনের মোট সংখ্যা',['শুধু প্রোটন সংখ্যা','ইলেকট্রন সংখ্যা','নিউট্রনের সংখ্যা'],'ভর সংখ্যা A = Z + N।'),
+  B(1,'ইলেকট্রনের ভর প্রোটনের ভরের প্রায় কত ভাগ?','১/১৮৩৬ ভাগ',['১/১০০ ভাগ','সমান','১/২ ভাগ'],'ইলেকট্রনের ভর প্রোটনের প্রায় ১/১৮৩৬ গুণ।'),
+  B(1,'পরমাণুর নিউক্লিয়াস আবিষ্কার করেন কে?','রাদারফোর্ড',['থমসন','বোর','ডাল্টন'],'রাদারফোর্ডের আলফা কণা বিক্ষেপণ পরীক্ষায় নিউক্লিয়াস আবিষ্কৃত হয়।'),
+  B(1,'রাদারফোর্ড আলফা কণা বিক্ষেপণ পরীক্ষায় কোন ধাতুর পাত ব্যবহার করেছিলেন?','সোনা',['তামা','রুপা','লোহা'],'পাতলা স্বর্ণপাতে আলফা কণা ফেলা হয়।'),
+  B(1,'ইলেকট্রন শেলের ধারণা (শক্তিস্তর মডেল) দেন কে?','নীলস বোর',['থমসন','রাদারফোর্ড','চ্যাডউইক'],'বোর মডেলে ইলেকট্রন নির্দিষ্ট শক্তিস্তরে ঘোরে।'),
+  B(1,'কার্বনের একটি আইসোটোপ কোনটি?','¹⁴C',['¹⁴N','¹⁶O','¹⁹F'],'¹²C, ¹³C, ¹⁴C একই মৌলের আইসোটোপ।'),
+  B(1,'হাইড্রোজেনের কোন আইসোটোপে নিউট্রন থাকে না?','প্রোটিয়াম (¹H)',['ডিউটেরিয়াম','ট্রিটিয়াম','সবগুলোতে থাকে'],'¹H-এ ১টি প্রোটন, ০টি নিউট্রন।'),
+  B(1,'K শেলে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?','২টি',['৮টি','১৮টি','৩২টি'],'শেলে সর্বোচ্চ ২n² ইলেকট্রন; n = ১ হলে ২।'),
+  B(1,'L শেলে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?','৮টি',['২টি','১৮টি','৩২টি'],'২×২² = ৮।'),
+  B(1,'M শেলে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?','১৮টি',['৮টি','১০টি','৩২টি'],'২×৩² = ১৮।'),
+  B(1,'s উপশক্তিস্তরে সর্বোচ্চ কয়টি ইলেকট্রন থাকে?','২টি',['৬টি','১০টি','১৪টি'],'s উপস্তরে ১টি অরবিটাল, তাই ২টি ইলেকট্রন।'),
+  B(1,'p উপশক্তিস্তরে অরবিটালের সংখ্যা কয়টি?','৩টি',['১টি','৫টি','৭টি'],'p উপস্তরে px, py, pz — মোট ৩টি।'),
+  B(1,'d উপশক্তিস্তরে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?','১০টি',['৬টি','২টি','১৪টি'],'d উপস্তরে ৫টি অরবিটাল × ২ = ১০।'),
+  B(1,'s অরবিটালের আকৃতি কেমন?','গোলাকার',['ডাম্বেল আকৃতি','জটিল চার পাপড়ি','ত্রিভুজাকার'],'s অরবিটাল গোলাকার, p অরবিটাল ডাম্বেল আকৃতির।'),
+  B(1,'সোডিয়ামের (Z = ১১) ইলেকট্রন বিন্যাস কোনটি?','২, ৮, ১',['২, ৮, ২','২, ৯','২, ৮, ৩'],'১১টি ইলেকট্রন K শেলে ২, L শেলে ৮ ও M শেলে ১।'),
+  B(1,'ক্লোরিনের (Z = ১৭) সর্বশেষ শেলে কয়টি ইলেকট্রন থাকে?','৭টি',['৫টি','৬টি','৮টি'],'ক্লোরিনের বিন্যাস ২, ৮, ৭।'),
+  B(1,'কোন নিয়ম অনুযায়ী ইলেকট্রন নিম্ন শক্তির অরবিটালে আগে প্রবেশ করে?','আউফবাউ নীতি',['পলির বর্জন নীতি','হুন্ডের নীতি','হাইজেনবার্গ নীতি'],'আউফবাউ নীতি: কম শক্তির অরবিটাল আগে পূর্ণ হয়।'),
+  B(1,'এক অরবিটালে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে এবং তারা বিপরীত স্পিনে থাকবে—এটি কার নীতি?','পলির বর্জন নীতি',['আউফবাউ নীতি','হুন্ডের নীতি','ডাল্টনের নীতি'],'পলির নীতি: একই অরবিটালে সর্বোচ্চ ২টি ইলেকট্রন, বিপরীত স্পিনে।'),
+  B(1,'সমশক্তির অরবিটালে ইলেকট্রন প্রথমে একটি করে জোড়াহীনভাবে প্রবেশ করে—এটি কোন নীতি?','হুন্ডের নীতি',['পলির বর্জন নীতি','আউফবাউ নীতি','বোর নীতি'],'হুন্ডের নীতি অনুযায়ী প্রথমে প্রতিটি অরবিটালে একটি করে ইলেকট্রন বসে।'),
+  B(1,'ধনাত্মক আয়ন (ক্যাটায়ন) তৈরি হয় যখন পরমাণু—','ইলেকট্রন ত্যাগ করে',['ইলেকট্রন গ্রহণ করে','প্রোটন ত্যাগ করে','নিউট্রন গ্রহণ করে'],'ইলেকট্রন হারালে প্রোটন বেশি হয়, ফলে ধনাত্মক আধান আসে।'),
+  B(1,'ঋণাত্মক আয়ন (অ্যানায়ন) তৈরি হয় যখন পরমাণু—','ইলেকট্রন গ্রহণ করে',['ইলেকট্রন ত্যাগ করে','প্রোটন গ্রহণ করে','নিউট্রন ত্যাগ করে'],'অতিরিক্ত ইলেকট্রনে ঋণাত্মক আধান হয়।'),
+  B(1,'যেসব পরমাণুর পারমাণবিক সংখ্যা একই কিন্তু ভর সংখ্যা ভিন্ন তাদের কী বলে?','আইসোটোপ',['আইসোবার','আইসোটোন','আইসোমার'],'প্রোটন সংখ্যা সমান, নিউট্রন সংখ্যা ভিন্ন হলে আইসোটোপ।'),
+  B(1,'যেসব পরমাণুর ভর সংখ্যা সমান কিন্তু পারমাণবিক সংখ্যা ভিন্ন তাদের কী বলে?','আইসোবার',['আইসোটোপ','আইসোটোন','অ্যালোট্রোপ'],'যেমন ⁴⁰Ar ও ⁴⁰Ca।'),
+  B(1,'যেসব পরমাণুর নিউট্রন সংখ্যা সমান তাদের কী বলে?','আইসোটোন',['আইসোটোপ','আইসোবার','আইসোমার'],'সমান নিউট্রন সংখ্যাবিশিষ্ট ভিন্ন মৌলের পরমাণু আইসোটোন।'),
+  B(2,'²³Na পরমাণুতে নিউট্রন সংখ্যা কত? (Na-এর Z = ১১)','১২',['১১','২৩','৩৪'],'N = A − Z = ২৩ − ১১ = ১২।'),
+  B(2,'³⁵Cl-এ প্রোটন, নিউট্রন ও ইলেকট্রন সংখ্যা যথাক্রমে (Z = ১৭)—','১৭, ১৮, ১৭',['১৭, ১৭, ১৮','১৮, ১৭, ১৭','১৭, ৩৫, ১৭'],'p = e = ১৭; n = ৩৫ − ১৭ = ১৮।'),
+  B(2,'Mg²⁺ আয়নে ইলেকট্রন সংখ্যা কত? (Mg-এর Z = ১২)','১০',['১২','১৪','২'],'১২টি ইলেকট্রন থেকে ২টি হারিয়ে ১০টি থাকে।'),
+  B(2,'Cl⁻ আয়নে ইলেকট্রন সংখ্যা কত? (Cl-এর Z = ১৭)','১৮',['১৭','১৬','৮'],'১৭টি ইলেকট্রনের সাথে ১টি যুক্ত হয়ে ১৮টি।'),
+  B(2,'Na⁺ আয়নের ইলেকট্রন বিন্যাস কোন নিষ্ক্রিয় গ্যাসের অনুরূপ?','নিয়ন',['হিলিয়াম','আর্গন','ক্রিপটন'],'Na⁺: ২, ৮ — নিয়নের (Ne) মতো।'),
+  B(2,'পটাসিয়ামের (Z = ১৯) সঠিক ইলেকট্রন বিন্যাস কোনটি?','১s² ২s² ২p⁶ ৩s² ৩p⁶ ৪s¹',['১s² ২s² ২p⁶ ৩s² ৩p⁶ ৩d¹','১s² ২s² ২p⁶ ৩s² ৩p⁵ ৪s²','১s² ২s² ২p⁶ ৩s² ৩p⁶ ৪p¹'],'৩d-এর আগে ৪s পূর্ণ হয়।'),
+  B(2,'ক্যালসিয়ামের (Z = ২০) সর্বশেষ ইলেকট্রন কোন উপস্তরে প্রবেশ করে?','৪s',['৩d','৪p','৩p'],'৩p পূর্ণ হওয়ার পর ৪s-এ ২টি ইলেকট্রন যায়।'),
+  B(2,'কোন মৌলের বিন্যাস ১s² ২s² ২p⁴?','অক্সিজেন',['নাইট্রোজেন','কার্বন','ফ্লোরিন'],'মোট ইলেকট্রন ২+২+৪ = ৮, অর্থাৎ O।'),
+  B(2,'ক্লোরিনের গড় পারমাণবিক ভর ৩৫.৫ হওয়ার কারণ কী?','³⁵Cl ও ³⁷Cl আইসোটোপের মিশ্রণ',['এটি একটি আইসোবার','এতে অর্ধেক নিউট্রন থাকে','ক্লোরিন তেজস্ক্রিয়'],'আইসোটোপের প্রাচুর্য অনুযায়ী গড় ভর ভগ্নাংশ হয়।'),
+  B(2,'নিচের কোন জোড়া আইসোটোন?','¹⁴C ও ¹⁶O',['¹⁴C ও ¹⁴N','¹²C ও ¹⁴C','⁴⁰Ar ও ⁴⁰Ca'],'¹⁴C-এ নিউট্রন ৮, ¹⁶O-তেও ৮।'),
+  B(2,'নিচের কোন জোড়া আইসোবার?','⁴⁰Ar ও ⁴⁰Ca',['¹²C ও ¹³C','¹⁴C ও ¹⁶O','¹H ও ²H'],'ভর সংখ্যা উভয়ের ৪০, কিন্তু Z যথাক্রমে ১৮ ও ২০।'),
+  B(2,'থমসনের পরমাণু মডেলে ইলেকট্রনগুলো কীভাবে থাকে?','ধনাত্মক গোলকের মধ্যে ছড়ানো',['কেন্দ্রে নিউক্লিয়াসে','নির্দিষ্ট শক্তিস্তরে','স্থির কক্ষপথে'],'এটি প্লাম পুডিং মডেল নামে পরিচিত।'),
+  B(2,'রাদারফোর্ডের পরীক্ষায় অধিকাংশ আলফা কণা সোজা বেরিয়ে গেল—এটি প্রমাণ করে পরমাণু—','অধিকাংশই ফাঁকা',['নিরেট গোলক','ধনাত্মক আধানে ভরা','ইলেকট্রনহীন'],'অধিকাংশ জায়গা ফাঁকা, তাই আলফা কণা সরাসরি পার হয়।'),
+  B(2,'কোন আইসোটোপ ক্যান্সার চিকিৎসায় ব্যবহৃত হয়?','Co-৬০',['C-১২','H-১','O-১৬'],'কোবাল্ট-৬০ গামা রশ্মি উৎপন্ন করে, যা রেডিওথেরাপিতে ব্যবহৃত হয়।'),
+  B(2,'প্রাচীন জীবাশ্ম বা কাঠের বয়স নির্ণয়ে কোন আইসোটোপ ব্যবহৃত হয়?','C-১৪',['C-১২','H-২','Cl-৩৫'],'তেজস্ক্রিয় C-১৪-এর ক্ষয়ের হার থেকে বয়স নির্ণয় করা হয়।'),
+  B(2,'কোনটি পরমাণুর নিউক্লিয়াসের ব্যাসার্ধ ও পরমাণুর ব্যাসার্ধের সঠিক তুলনা?','নিউক্লিয়াস পরমাণুর চেয়ে বহুগুণ ক্ষুদ্র',['প্রায় সমান','নিউক্লিয়াস বড়','নিউক্লিয়াস অর্ধেক'],'পরমাণুর প্রায় সমস্ত আয়তনই ইলেকট্রন মেঘে ঘেরা ফাঁকা স্থান।'),
+  B(3,'কোনো মৌলের ইলেকট্রন বিন্যাস ২, ৮, ১৮, ৭। মৌলটির পারমাণবিক সংখ্যা কত?','৩৫',['১৭','৩৩','৩৭'],'২+৮+১৮+৭ = ৩৫ (ব্রোমিন)।'),
+  B(3,'কোনো পরমাণুর ভর সংখ্যা ২৭ এবং নিউট্রন সংখ্যা ১৪। এর ইলেকট্রন বিন্যাস কী?','২, ৮, ৩',['২, ৮, ২','২, ৮, ১৪','২, ৮, ৫'],'Z = ২৭ − ১৪ = ১৩ (Al), বিন্যাস ২, ৮, ৩।'),
+  B(3,'নিচের i, ii, iii বিবৃতি লক্ষ্য করো:<br>i. আইসোটোপের রাসায়নিক ধর্ম প্রায় একই<br>ii. আইসোটোপের নিউট্রন সংখ্যা একই<br>iii. আইসোটোপের ভর সংখ্যা ভিন্ন<br>কোনটি সঠিক?','i ও iii',['i ও ii','ii ও iii','i, ii ও iii'],'আইসোটোপের নিউট্রন সংখ্যা ভিন্ন; (ii) ভুল।'),
+  B(3,'ক্রোমিয়ামের (Z = ২৪) সঠিক ইলেকট্রন বিন্যাস কোনটি?','[Ar] ৩d⁵ ৪s¹',['[Ar] ৩d⁴ ৪s²','[Ar] ৩d⁶','[Ar] ৪s² ৪p⁴'],'অর্ধপূর্ণ d উপস্তরের স্থিতিশীলতার জন্য একটি ইলেকট্রন ৪s থেকে ৩d-তে যায়।'),
+  B(3,'কপারের (Z = ২৯) সঠিক ইলেকট্রন বিন্যাস কোনটি?','[Ar] ৩d¹⁰ ৪s¹',['[Ar] ৩d⁹ ৪s²','[Ar] ৩d¹¹','[Ar] ৪s² ৪p⁹'],'পূর্ণ d উপস্তর বেশি স্থিতিশীল, তাই ৩d¹⁰ ৪s¹।'),
+  B(3,'ক্লোরিনের দুটি আইসোটোপ ³⁵Cl (৭৫%) ও ³⁷Cl (২৫%)। গড় পারমাণবিক ভর কত?','৩৫.৫',['৩৬','৩৬.৫','৩৫.২৫'],'৩৫×০.৭৫ + ৩৭×০.২৫ = ২৬.২৫ + ৯.২৫ = ৩৫.৫।'),
+  B(3,'কোন পরমাণুর বাইরের শেলে ৩টি ইলেকট্রন ও ইলেকট্রন সংখ্যা ১৩? এটি—','অ্যালুমিনিয়াম',['বোরন','ফসফরাস','ম্যাগনেসিয়াম'],'Z = ১৩ হলো Al, বিন্যাস ২, ৮, ৩।'),
+  B(1,'নিচের কোন প্রতীকটি ল্যাটিন নাম থেকে নেওয়া হয়েছে?','Cu',['B','C','Cl'],'Cu এসেছে Cuprum থেকে; B, C, Cl ইংরেজি নাম থেকে।'),
+  B(1,'মৌলের পুরো নামের সংক্ষিপ্ত রূপকে কী বলে?','প্রতীক',['সংকেত','যোজনী','যোজ্যতা'],'মৌলের সংক্ষিপ্ত রূপ হলো প্রতীক; যৌগের সংক্ষিপ্ত রূপ সংকেত।'),
+  B(1,'সোডিয়ামের প্রতীক কোনটি?','Na',['S','So','Sd'],'Na এসেছে ল্যাটিন Natrium থেকে।'),
+  B(1,'কপারের প্রতীক কোনটি?','Cu',['Co','Cp','C'],'কপারের ল্যাটিন নাম Cuprum, তাই Cu।'),
+  B(1,'লেডের (সীসা) ল্যাটিন নাম কী?','Plumbum',['Stannum','Argentum','Hydrargyrum'],'Pb এসেছে Plumbum থেকে।'),
+  B(1,'পটাসিয়ামের প্রতীক কোনটি?','K',['P','Pt','Po'],'K এসেছে ল্যাটিন Kalium থেকে।'),
+  B(1,'বোরনের প্রতীক কোনটি?','B',['Br','Bo','Bn'],'বোরনের প্রতীকে ইংরেজি নামের প্রথম অক্ষরই ব্যবহৃত।'),
+  B(1,'ক্রোমিয়ামের (Chromium) প্রতীক কোনটি?','Cr',['Co','Ch','Cm'],'নামের প্রথম ও তৃতীয় বর্ণ নিয়ে Cr।'),
+  B(1,'কোন মৌলের প্রতীকে ইংরেজি নামের প্রথম ও তৃতীয় বর্ণ ব্যবহৃত হয়েছে?','ক্রোমিয়াম (Cr)',['নিকেল (Ni)','অ্যালুমিনিয়াম (Al)','ক্লোরিন (Cl)'],'Chromium → Cr (C + r, তৃতীয় বর্ণ)।'),
+  B(1,'স্থায়ী কণিকা একত্রিত হয়ে কী গঠিত হয়?','পরমাণু',['অণু','আয়ন','মৌলিক কণিকা'],'প্রোটন, নিউট্রন ও ইলেকট্রন মিলে পরমাণু গঠিত।'),
+  B(1,'পরমাণুর ঋণাত্মক কণিকা কোনটি?','ইলেকট্রন',['প্রোটন','নিউট্রন','নিউক্লিয়াস'],'ইলেকট্রনের আধান ঋণাত্মক (−১)।'),
+  B(1,'পরমাণুর ধনাত্মক কণিকা কোনটি?','প্রোটন',['ইলেকট্রন','নিউট্রন','পজিট্রন'],'প্রোটনের আধান ধনাত্মক (+১)।'),
+  B(1,'পরমাণুতে মৌলিক কণিকার সংখ্যা কয়টি?','৩টি',['২টি','৪টি','৫টি'],'ইলেকট্রন, প্রোটন ও নিউট্রন।'),
+  B(1,'নিউট্রনের কী নেই?','আধান',['ভর','অবস্থান','সংখ্যা'],'নিউট্রন আধানহীন।'),
+  B(1,'প্রোটন ও নিউট্রন কোথায় থাকে?','নিউক্লিয়াসে',['কক্ষপথে','শক্তিস্তরে','পরমাণুর বাইরে'],'এ দুটি কণিকা পরমাণুর কেন্দ্রে (নিউক্লিয়াসে) থাকে।'),
+  B(1,'নিউক্লিয়াসের চারদিকে কোনটি ঘূর্ণায়মান?','ইলেকট্রন',['প্রোটন','নিউট্রন','পজিট্রন'],'ইলেকট্রন বিভিন্ন শক্তিস্তরে নিউক্লিয়াসকে ঘিরে ঘোরে।'),
+  B(1,'পরমাণুর প্রোটন সংখ্যাকে কী বলা হয়?','পারমাণবিক সংখ্যা',['ভর সংখ্যা','নিউক্লিয়ন সংখ্যা','পারমাণবিক ভর'],'প্রোটন সংখ্যা = পারমাণবিক সংখ্যা (Z)।'),
+  B(1,'কোনটিকে পরমাণুর নিজস্ব সত্তা বা পরিচয় বলা হয়?','পারমাণবিক সংখ্যা',['ভর সংখ্যা','নিউট্রন সংখ্যা','নিউক্লিয়ন সংখ্যা'],'প্রতিটি মৌলের পারমাণবিক সংখ্যা ভিন্ন, তাই এটি মৌলের পরিচয়।'),
+  B(1,'ভর সংখ্যা কী?','নিউক্লিয়াসে প্রোটন ও নিউট্রনের মোট সংখ্যা',['শুধু প্রোটন সংখ্যা','প্রোটন ও ইলেকট্রনের সংখ্যা','নিউট্রন ও ইলেকট্রনের সংখ্যা'],'ভর সংখ্যা (A) = প্রোটন + নিউট্রন।'),
+  B(1,'নিউক্লিয়ন সংখ্যা কাকে বলে?','ভর সংখ্যাকে',['পারমাণবিক সংখ্যাকে','নিউট্রন সংখ্যাকে','ইলেকট্রন সংখ্যাকে'],'নিউক্লিয়াসের কণা (প্রোটন + নিউট্রন) সংখ্যাকে নিউক্লিয়ন সংখ্যা বা ভর সংখ্যা বলে।'),
+  B(1,'স্বাভাবিক অবস্থায় পরমাণুতে কোন জোড়ার মান সমান থাকে?','প্রোটন সংখ্যা ও ইলেকট্রন সংখ্যা',['প্রোটন ও নিউট্রন সংখ্যা','ইলেকট্রন ও নিউট্রন সংখ্যা','ভর সংখ্যা ও পারমাণবিক সংখ্যা'],'পরমাণু বিদ্যুৎনিরপেক্ষ, তাই ধনাত্মক ও ঋণাত্মক আধান সমান।'),
+  B(1,'জিপসামের সংকেত কোনটি?','CaSO₄·2H₂O',['CuSO₄·5H₂O','ZnSO₄·7H₂O','MgSO₄·H₂O'],'জিপসাম = ক্যালসিয়াম সালফেট ডাইহাইড্রেট।'),
+  B(1,'ব্লিচিং পাউডারের সংকেত কোনটি?','Ca(OCl)Cl',['Ca(OH)₂','NaHCO₃','C₁₇H₃₅COONa'],'ব্লিচিং পাউডারকে ক্যালসিয়াম হাইপোক্লোরাইট-ক্লোরাইটের মিশ্র লবণ বলা হয়।'),
+  B(1,'নিচের কোন বাক্যটি সঠিক?','কপারের প্রতীক Cu',['সোডিয়ামের প্রতীক SO','আয়রনের প্রতীক I','পটাসিয়ামের প্রতীক P'],'আয়রন = Fe, পটাসিয়াম = K, সোডিয়াম = Na।'),
+  B(1,'নাইট্রোজেন পরমাণুর প্রোটন সংখ্যা কত?','৭',['৫','৬','৮'],'নাইট্রোজেনের পারমাণবিক সংখ্যা ৭।'),
+  B(1,'Mg পরমাণুতে কয়টি প্রোটন আছে?','১২টি',['১০টি','১৪টি','৭টি'],'ম্যাগনেসিয়ামের পারমাণবিক সংখ্যা ১২।'),
+  B(1,'কোন পরমাণুতে মাত্র ১টি প্রোটন থাকে?','হাইড্রোজেন',['হিলিয়াম','লিথিয়াম','অক্সিজেন'],'হাইড্রোজেনের পারমাণবিক সংখ্যা ১।'),
+  B(1,'সিলিকনের পারমাণবিক সংখ্যা কত?','১৪',['১৫','১৯','২৯'],'Si-এর পারমাণবিক সংখ্যা ১৪।'),
+  B(1,'নিয়নের (Ne) নিউক্লিয়াসে কয়টি প্রোটন থাকে?','১০টি',['২টি','১৮টি','৩৬টি'],'নিয়নের পারমাণবিক সংখ্যা ১০।'),
+  B(1,'বোরনের (B) ইলেকট্রন সংখ্যা কত?','৫',['৩','৬','৭'],'বোরনের পারমাণবিক সংখ্যা ৫।'),
+  B(1,'ভর সংখ্যাকে কোন চিহ্ন দিয়ে প্রকাশ করা হয়?','A',['Z','N','M'],'ভর সংখ্যা = A; পারমাণবিক সংখ্যা = Z।'),
+  B(1,'পারমাণবিক সংখ্যাকে কোন চিহ্ন দিয়ে প্রকাশ করা হয়?','Z',['A','N','M'],'প্রোটন সংখ্যাকে Z দ্বারা প্রকাশ করা হয়।'),
+  B(1,'প্রোটনের প্রকৃত ভর কত?','১.৬৭ × ১০⁻²⁴ গ্রাম',['৯.১১ × ১০⁻²⁸ গ্রাম','১ গ্রাম','১.৬৭ × ১০⁻²⁸ গ্রাম'],'প্রোটনের ভর ১.৬৭ × ১০⁻²⁴ g; ইলেকট্রনের ভর ৯.১১ × ১০⁻²⁸ g।'),
+  B(2,'নিচের কোনটি মৌলিক কণিকা নয়?','হাইড্রোজেন অণু',['নিউট্রন','প্রোটন','ইলেকট্রন'],'হাইড্রোজেন অণু মৌলিক কণিকার সমন্বয়ে গঠিত।'),
+  B(2,'কোনো মৌলের পরমাণুতে x সংখ্যক প্রোটন, y ইলেকট্রন ও z নিউট্রন থাকলে ভর সংখ্যা কত?','x + z',['x + y','y + z','x + y + z'],'ভর সংখ্যা = প্রোটন + নিউট্রন।'),
+  B(2,'একটি মৌলের প্রোটন সংখ্যা ২৩ ও ভর সংখ্যা ৪৭ হলে নিউট্রন সংখ্যা কত?','২৪',['২০','৫৩','৭০'],'৪৭ − ২৩ = ২৪।'),
+  B(2,'N পরমাণুতে কয়টি নিউট্রন আছে? (¹⁴₇N)','৭টি',['৫টি','৬টি','৮টি'],'১৪ − ৭ = ৭।'),
+  B(2,'লিথিয়াম পরমাণুর (³Li, ভর সংখ্যা ৭) নিউট্রন সংখ্যা কত?','৪',['১','২','৩'],'৭ − ৩ = ৪।'),
+  B(2,'লিথিয়াম পরমাণুর সর্বশেষ শক্তিস্তরে কয়টি ইলেকট্রন থাকে?','১টি',['২টি','৩টি','৪টি'],'Li-এর ইলেকট্রন বিন্যাস ২, ১।'),
+  B(2,'কোন পরমাণুর প্রোটন সংখ্যা ও নিউট্রন সংখ্যা সমান? (¹²₆C, ²⁴₁₂Mg, ⁷₃Li, ¹¹₅B)','Mg-24',['Li-7','B-11','Al-27'],'Mg-24-এ প্রোটন ১২, নিউট্রন ১২।'),
+  B(2,'³⁵₁₇Cl পরমাণুতে নিউট্রন সংখ্যা কত?','১৮',['১৭','৩৫','৫২'],'৩৫ − ১৭ = ১৮।'),
+  B(2,'²³₁₁Na⁺ আয়নে নিউট্রনের সংখ্যা কত?','১২টি',['১১টি','২৩টি','১০টি'],'২৩ − ১১ = ১২; আয়ন গঠনে নিউট্রন বদলায় না।'),
+  B(2,'Al³⁺ আয়নে কয়টি প্রোটন আছে?','১৩টি',['১০টি','১২টি','২৭টি'],'আয়ন গঠনে প্রোটন সংখ্যা বদলায় না; Al-এর Z = ১৩।'),
+  B(2,'কোনো পরমাণুতে ১৭টি প্রোটন ও ১৮টি নিউট্রন থাকলে নিউক্লিয়ন সংখ্যা কত?','৩৫',['১৭','১৮','১'],'১৭ + ১৮ = ৩৫।'),
+  B(2,'কোনো মৌলের পারমাণবিক সংখ্যা ৯ ও ভর সংখ্যা ১৯ হলে সংক্ষিপ্ত প্রকাশ কোনটি?','¹⁹₉F',['⁹₁₉F','²⁷₉F','⁹₂₇F'],'ভর সংখ্যা উপরে (১৯), পারমাণবিক সংখ্যা নিচে (৯)।'),
+  B(2,'²³⁵₉₂U-এর নিউক্লিয়ন সংখ্যা কত?','২৩৫',['৯২','১৪৩','৩২৭'],'ভর সংখ্যাই নিউক্লিয়ন সংখ্যা।'),
+  B(2,'⁶⁴₂₉Cu-এর নিউট্রন সংখ্যা কত?','৩৫',['২৯','৬৪','১৪'],'৬৪ − ২৯ = ৩৫।'),
+  B(2,'নিয়নের (Z = ১০, A = ২০) ক্ষেত্রে ভর সংখ্যা কত?','২০',['১০','১৯','৯'],'প্রশ্নে প্রদত্ত ভর সংখ্যা ২০।'),
+  B(2,'একটি পরমাণুতে ৮টি ইলেকট্রন ও ৮টি নিউট্রন থাকলে তার ভর সংখ্যা কত?','১৬',['৮','১০','২৬'],'প্রোটন = ইলেকট্রন = ৮; ভর সংখ্যা = ৮ + ৮ = ১৬।'),
+  B(2,'পারমাণবিক সংখ্যা প্রকাশ করে—','মৌলের নিজস্ব ধর্ম/প্রোটন সংখ্যা',['নিউট্রন সংখ্যা','ভর সংখ্যা','আয়নের আধান'],'পারমাণবিক সংখ্যা দিয়েই মৌল চেনা যায়।'),
+  B(3,'কার্বনের পারমাণবিক সংখ্যা ৬ ও ভর সংখ্যা ১৩ হলে ¹³₆C-তে কয়টি নিউট্রন আছে?','৭টি',['৬টি','১৩টি','১৯টি'],'১৩ − ৬ = ৭।'),
+  B(3,'X ও Y কণার সংযুতিতে X-এর প্রোটন ৫, নিউট্রন ৬ এবং Y-এর প্রোটন ১২, নিউট্রন ১২। X-এর ভর সংখ্যা কত?','১১',['৫','৬','১৭'],'৫ + ৬ = ১১।'),
+  B(3,'Y কণার (প্রোটন ১২, নিউট্রন ১২) ভর সংখ্যা কত?','২৪',['১২','১৩','২৫'],'১২ + ১২ = ২৪।'),
+  B(3,'পরমাণুর নিউক্লিয়াসে ১২টি প্রোটন ও ১২টি নিউট্রন থাকলে একে প্রকাশ করা হয়—','²⁴₁₂Mg',['¹²₂₄Mg','²⁴₂₄Mg','¹²₁₂Mg'],'A = ২৪ উপরে, Z = ১২ নিচে; মৌল ম্যাগনেসিয়াম।'),
+  B(3,'ভর সংখ্যা ১২ হলে পরমাণুটির প্রোটন সংখ্যা ৬ ও নিউট্রন সংখ্যা ৬ — তাহলে মৌলটি কী?','কার্বন',['নাইট্রোজেন','অক্সিজেন','বোরন'],'Z = ৬ হলো কার্বন।'),
+  B(1,'আইসোটোপের কোনটি সমান থাকে?','প্রোটন সংখ্যা',['ভর সংখ্যা','নিউট্রন সংখ্যা','নিউক্লিয়ন সংখ্যা'],'আইসোটোপ একই মৌলের পরমাণু, তাই প্রোটন সংখ্যা (পারমাণবিক সংখ্যা) সমান।'),
+  B(1,'আইসোটোপ সৃষ্টি হয় কোন কণার সংখ্যার ভিন্নতার কারণে?','নিউট্রন',['প্রোটন','ইলেকট্রন','ফোটন'],'নিউট্রন সংখ্যা ভিন্ন হলে ভর সংখ্যা ভিন্ন হয়, ফলে আইসোটোপ সৃষ্টি হয়।'),
+  B(1,'একই মৌলের ভিন্ন ভর সংখ্যাযুক্ত পরমাণুগুলোকে ঐ মৌলের কী বলা হয়?','আইসোটোপ',['আইসোবার','আইসোটোন','আইসোমার'],'পারমাণবিক সংখ্যা সমান, ভর সংখ্যা ভিন্ন—আইসোটোপ।'),
+  B(1,'ডিউটেরিয়াম ও ট্রিটিয়াম কোন মৌলের আইসোটোপ?','হাইড্রোজেন',['নাইট্রোজেন','কার্বন','অক্সিজেন'],'হাইড্রোজেনের তিনটি প্রাকৃতিক আইসোটোপ: প্রোটিয়াম, ডিউটেরিয়াম ও ট্রিটিয়াম।'),
+  B(1,'প্রকৃতিতে হাইড্রোজেনের কয়টি আইসোটোপ পাওয়া যায়?','৩টি',['১টি','২টি','৪টি'],'¹H, ²H (D), ³H (T)।'),
+  B(1,'ট্রিটিয়ামের ভর সংখ্যা কত?','৩',['১','২','৪'],'ট্রিটিয়ামে ১টি প্রোটন ও ২টি নিউট্রন; ভর সংখ্যা ৩।'),
+  B(1,'কোনটিতে ২টি নিউট্রন আছে?','ট্রিটিয়াম',['হাইড্রোজেন (প্রোটিয়াম)','ডিউটেরিয়াম','লিথিয়াম'],'ট্রিটিয়াম (³H): ১ প্রোটন, ২ নিউট্রন।'),
+  B(1,'ডিউটেরিয়াম পরমাণুতে নিউট্রনের সংখ্যা কত?','১টি',['০টি','২টি','৩টি'],'²H-এ ১টি প্রোটন ও ১টি নিউট্রন।'),
+  B(1,'হাইড্রোজেনের কোন আইসোটোপে নিউট্রন নেই?','প্রোটিয়াম (¹H)',['ডিউটেরিয়াম','ট্রিটিয়াম','কোনোটিই নয়'],'সাধারণ হাইড্রোজেনে শুধু ১টি প্রোটন থাকে।'),
+  B(1,'ক্লোরিনের কয়টি প্রাকৃতিক আইসোটোপ আছে?','২টি',['১টি','৩টি','৪টি'],'³⁵Cl ও ³⁷Cl।'),
+  B(1,'ক্লোরিনের আপেক্ষিক পারমাণবিক ভর কত?','৩৫.৫',['৩৫','৩৭','৩৬'],'আইসোটোপ ³⁵Cl (৭৫%) ও ³⁷Cl (২৫%)-এর গড় ভর ৩৫.৫।'),
+  B(1,'আপেক্ষিক পারমাণবিক ভর পরিমাপের জন্য এখন কোন পরমাণুর ভরকে একক ধরা হয়?','কার্বন-১২',['হাইড্রোজেন','অক্সিজেন','নাইট্রোজেন'],'C-12 আইসোটোপের ভরের ১/১২ অংশ হলো একক।'),
+  B(1,'আপেক্ষিক পারমাণবিক ভরের একক নেই কেন?','এটি একটি অনুপাত বলে',['এটি সংখ্যা নয় বলে','এটি ভর সংখ্যা বলে','এতে শতকরা হিসাব থাকে বলে'],'দুটি ভরের অনুপাত হওয়ায় এর কোনো একক নেই।'),
+  B(1,'অক্সিজেনের আপেক্ষিক পারমাণবিক ভর কত?','১৬',['৮','১৮','৩২'],'O-এর আপেক্ষিক পারমাণবিক ভর ১৬।'),
+  B(1,'সোডিয়ামের আপেক্ষিক পারমাণবিক ভর কত?','২৩',['১১','২০','১৮'],'Na-এর আপেক্ষিক পারমাণবিক ভর ২৩।'),
+  B(1,'তেজস্ক্রিয় আইসোটোপ কীভাবে তৈরি হয়?','নিউক্লীয় বিক্রিয়ার মাধ্যমে',['রাসায়নিক বিক্রিয়ায়','প্রশমন বিক্রিয়ায়','জারণ-বিজারণ বিক্রিয়ায়'],'পরমাণুর নিউক্লিয়াস পরিবর্তনের মাধ্যমে তেজস্ক্রিয় আইসোটোপ তৈরি হয়।'),
+  B(1,'নিচের কোনটি তেজস্ক্রিয় আইসোটোপ?','¹⁴C',['¹²C','²³Na','¹H'],'C-14 তেজস্ক্রিয়; C-12 স্থায়ী।'),
+  B(1,'পৃথিবীর বয়স নির্ণয়ে কোন আইসোটোপ ব্যবহৃত হয়?','C-14',['C-12','C-13','C-16'],'কার্বন-১৪ ডেটিং-এর মাধ্যমে প্রাচীন বস্তুর বয়স নির্ণয় করা হয়।'),
+  B(1,'খাদ্য সংরক্ষণে ক্ষতিকর ব্যাকটেরিয়া ধ্বংসে কোন আইসোটোপ ব্যবহৃত হয়?','⁶⁰Co (গামা রশ্মি)',['⁸⁰Cr','²¹⁵U','³²P'],'কোবাল্ট-৬০-এর গামা রশ্মি জীবাণু ধ্বংস করে।'),
+  B(1,'ক্যানসার কোষ ধ্বংসে কোন আইসোটোপ ব্যবহৃত হয়?','⁶⁰Co',['⁶⁰Cr','¹³¹I','¹²C'],'কোবাল্ট-৬০ থেকে নির্গত গামা রশ্মি ক্যানসার কোষ নষ্ট করে।'),
+  B(1,'রক্তের লিউকেমিয়া রোগের চিকিৎসায় কোন আইসোটোপ ব্যবহৃত হয়?','³²P',['⁶⁰Co','¹²C','²⁴Mg'],'ফসফরাস-৩২ লিউকেমিয়ার চিকিৎসায় ব্যবহৃত হয়।'),
+  B(1,'হাড়ের ব্যথার চিকিৎসায় কোনটি ব্যবহৃত হয়?','¹⁵³Sm',['⁶⁰Co','¹³¹I','¹⁴C'],'সামারিয়াম-১৫৩ হাড়ের ব্যথা উপশমে ব্যবহৃত হয়।'),
+  B(1,'থাইরয়েড গ্রন্থির চিকিৎসায় কোন আইসোটোপ ব্যবহৃত হয়?','¹³¹I',['⁶⁰Co','³²P','¹⁴C'],'আয়োডিন-১৩১ থাইরয়েডের কোষ নিয়ন্ত্রণে ব্যবহৃত হয়।'),
+  B(1,'তেজস্ক্রিয় আইসোটোপের চলাচল চিহ্নিত করতে কোন যন্ত্র ব্যবহৃত হয়?','গাইগার কাউন্টার',['নিউক্লিয় চুল্লী','পেসমেকার','পারমাণবিক চুল্লী'],'গাইগার কাউন্টার তেজস্ক্রিয় বিকিরণ শনাক্ত করে।'),
+  B(1,'পারমাণবিক বোমার শক্তির উৎস কোনটি?','নিউক্লীয় বিক্রিয়া',['রাসায়নিক বিক্রিয়া','তেজস্ক্রিয়তা রশ্মি','গামা রশ্মি'],'নিউক্লিয়াসের বিভাজনে প্রচণ্ড শক্তি উৎপন্ন হয়।'),
+  B(1,'হার্টে পেসমেকার বসাতে কোন আইসোটোপ ব্যবহৃত হয়?','প্লুটোনিয়াম-২৩৮',['থোরিয়াম-২৩৪','সিজিয়াম-১৩৭','আয়োডিন-১৩১'],'পেসমেকারে প্লুটোনিয়াম-২৩৮ শক্তির উৎস হিসেবে ব্যবহৃত হয়।'),
+  B(1,'যেসব অস্থায়ী আইসোটোপ রশ্মি ও কণা বিকিরণ করে তাদের কী বলা হয়?','তেজস্ক্রিয় আইসোটোপ',['আইসোবার','নিউক্লিয় চুল্লী','তেজস্ক্রিয়তা'],'এরা তেজস্ক্রিয় আইসোটোপ নামে পরিচিত।'),
+  B(1,'এটম বোমা নিক্ষেপ করা হয়েছিল কোথায়?','হিরোশিমা ও নাগাসাকিতে',['টোকিও ও ওসাকায়','বার্লিন ও হিরোশিমায়','নাগাসাকি ও ওসাকায়'],'১৯৪৫ সালে জাপানের হিরোশিমা ও নাগাসাকিতে বোমা ফেলা হয়।'),
+  B(1,'আইসোটোপের একটি পরমাণুর নিউট্রন সংখ্যা ২ ও প্রোটন ১ হলে তার ভর সংখ্যা কত?','৩',['১','২','৪'],'১ + ২ = ৩।'),
+  B(2,'দুটি আইসোটোপের কোনটি সমান নয়?','ভর সংখ্যা',['পারমাণবিক সংখ্যা','ইলেকট্রন সংখ্যা','রাসায়নিক ধর্ম'],'নিউট্রন সংখ্যা আলাদা বলে ভর সংখ্যা আলাদা।'),
+  B(2,'একই মৌলের আইসোটোপগুলোর রাসায়নিক ধর্মে পার্থক্য থাকে না কেন?','একই মৌলের পরমাণু বলে (ইলেকট্রন বিন্যাস একই)',['ভর সংখ্যা সমান বলে','নিউট্রন সংখ্যা সমান বলে','আয়োনিক গঠন বিভিন্ন বলে'],'রাসায়নিক ধর্ম ইলেকট্রন বিন্যাসের উপর নির্ভর করে, যা আইসোটোপে একই।'),
+  B(2,'কোনগুলো পরস্পর আইসোটোপ?','¹⁶₈O, ¹⁷₈O, ¹⁸₈O',['⁴⁰₁₈Ar, ⁴⁰₁₉K, ⁴⁰₂₀Ca','³⁷₁₇Cl, ⁴⁰₂₀Ca, ¹⁹₁₉K','⁴⁰₁₈Ar, ³⁹₁₉K, ¹⁸₂₀Ca'],'আইসোটোপের Z সমান (৮) কিন্তু A ভিন্ন।'),
+  B(2,'নিচের কোন জোড়া আইসোটোপের উদাহরণ?','¹²₆C, ¹⁴₆C',['¹²₆C, ¹²₇C','H₂, He','H⁺, H'],'দুটোরই Z = ৬ কিন্তু A ভিন্ন।'),
+  B(2,'¹⁵₇N আইসোটোপে নিউট্রন সংখ্যা কত?','৮',['৭','১৫','৯'],'১৫ − ৭ = ৮।'),
+  B(2,'ভর সংখ্যার ভিন্নতার কারণে কী সৃষ্টি হয়?','আইসোটোপ',['আইসোবার','আইসোমার','আইসোটোন'],'ভর সংখ্যা ভিন্ন, পারমাণবিক সংখ্যা সমান—আইসোটোপ।'),
+  B(2,'পটাসিয়ামের ১০০টি পরমাণুতে ৯৪টি ³⁹K ও ৬টি ⁴¹K থাকলে আপেক্ষিক পারমাণবিক ভর কত?','৩৯.১২',['৩৯','৪০','৩৯.২২'],'(৩৯×৯৪ + ৪১×৬)/১০০ = ৩৯.১২।'),
+  B(2,'কোন মৌলের পরমাণুর ভর কার্বন-১২ আইসোটোপের ১/১২ অংশের ১৬ গুণ?','অক্সিজেন',['ফসফরাস','নাইট্রোজেন','সিলিকন'],'ভর = ১৬ → অক্সিজেন।'),
+  B(2,'একটি মৌলের আইসোটোপ না থাকলে আপেক্ষিক পারমাণবিক ভর ও ভর সংখ্যার মধ্যে সম্পর্ক কী?','দুটো সমান হয়',['আপেক্ষিক ভর কম হয়','ভর সংখ্যা কম হয়','কোনো সম্পর্ক নেই'],'আইসোটোপ না থাকলে সব পরমাণুর ভর সংখ্যা একই হয়।'),
+  B(2,'আপেক্ষিক পারমাণবিক ভর কোন ভরের গড় নির্দেশ করে?','মৌলের আইসোটোপগুলোর শতকরা পরিমাণ অনুযায়ী গড় ভর',['শুধু সবচেয়ে ভারী আইসোটোপের ভর','শুধু সবচেয়ে হালকা আইসোটোপের ভর','নিউট্রনের ভর'],'গড় = Σ (আইসোটোপ ভর × প্রাচুর্য%) / ১০০।'),
+  B(2,'আপেক্ষিক পারমাণবিক ভর মূলত কী?','একটি অনুপাত',['একটি সমানুপাত','একটি জটিল সংখ্যা','একটি গুণানুপাত'],'এটি দুটি ভরের অনুপাত।'),
+  B(2,'একটি Al পরমাণুর ভর ৪.৪৮২ × ১০⁻²³ g ও কার্বন-১২-এর ১/১২ অংশের ভর ১.৬৬ × ১০⁻²⁴ g হলে Al-এর আপেক্ষিক পারমাণবিক ভর কত?','২৭',['২৫','২৬','১৩'],'৪.৪৮২ × ১০⁻²³ ÷ ১.৬৬ × ১০⁻²⁴ ≈ ২৭।'),
+  B(2,'যৌগের আপেক্ষিক আণবিক ভর নির্ণয় করা হয়—','উপাদান মৌলগুলোর আপেক্ষিক পারমাণবিক ভর থেকে',['শুধু মৌলের পারমাণবিক সংখ্যা থেকে','শুধু আয়ন সংখ্যা থেকে','ইলেকট্রন সংখ্যা থেকে'],'CO₂ = ১২ + ২×১৬ = ৪৪।'),
+  B(2,'CO₂-এর আপেক্ষিক আণবিক ভর কত?','৪৪',['২৮','৩২','৬০'],'১২ + ১৬×২ = ৪৪।'),
+  B(3,'¹⁹₉F পরমাণুতে নিউট্রন সংখ্যা কত?','১০',['৯','১৯','২৮'],'১৯ − ৯ = ১০।'),
+  B(3,'ভর সংখ্যা ১৪ ও নিউট্রন সংখ্যা ৮ হলে কার্বনের কোন আইসোটোপ এটি?','¹⁴₆C',['¹²₆C','¹³₆C','¹⁶₆C'],'Z = ৬ (কার্বন), A = ১৪।'),
+  B(3,'কোনো মৌলের দুটি আইসোটোপের ভর ৩৫ ও ৩৭ এবং প্রাচুর্য ৭৫% ও ২৫% হলে গড় ভর কত?','৩৫.৫',['৩৬','৩৫.২৫','৩৬.৫'],'(৩৫×৭৫ + ৩৭×২৫)/১০০ = ৩৫.৫।'),
+  B(3,'নিচের কোন বিবৃতিটি আইসোটোপ সম্পর্কে সঠিক?','প্রোটন ও ইলেকট্রন সংখ্যা একই, নিউট্রন সংখ্যা ভিন্ন',['নিউট্রন সংখ্যা একই, প্রোটন সংখ্যা ভিন্ন','ইলেকট্রন সংখ্যা ভিন্ন, প্রোটন একই','নিউক্লিয়ন সংখ্যা স্থির'],'আইসোটোপে Z ও ইলেকট্রন সংখ্যা সমান, কিন্তু A ভিন্ন।'),
+  B(1,'ইলেকট্রনসমূহ যে পথে নিউক্লিয়াসকে ঘিরে ভ্রমণ করে তাকে কী বলে?','শক্তিস্তর',['প্রোটন পথ','কুণ্ডলিত পথ','নিউট্রন বলয়'],'বোর মডেলে এগুলোকে শক্তিস্তর বা কক্ষপথ বলা হয়।'),
+  B(1,'রাদারফোর্ড কত সালে নিউক্লিয়াস আবিষ্কার করেন?','১৯১১ সালে',['১৯১২ সালে','১৯১৩ সালে','১৯১০ সালে'],'১৯১১ সালে রাদারফোর্ড পরমাণুর কেন্দ্রে নিউক্লিয়াস আবিষ্কার করেন।'),
+  B(1,'রাদারফোর্ড পরমাণুর কেন্দ্রের কী নামকরণ করেন?','নিউক্লিয়াস',['নিউট্রন','মৌলিক কেন্দ্র','ভরকেন্দ্র'],'পরমাণুর ধনাত্মক ভারী কেন্দ্রকে নিউক্লিয়াস বলা হয়।'),
+  B(1,'রাদারফোর্ডের পরমাণু মডেলকে কিসের সাথে তুলনা করা হয়?','সৌরজগতের সাথে',['ছায়াপথের সাথে','নক্ষত্রপুঞ্জের সাথে','চাঁদের আবর্তনের সাথে'],'নিউক্লিয়াস সূর্যের মতো, ইলেকট্রন গ্রহের মতো ঘোরে—এই তুলনা।'),
+  B(1,'কোন বিজ্ঞানী প্রথম নির্দিষ্ট বৃত্তাকার কক্ষপথের কথা বলেন?','নীলস বোর',['রাদারফোর্ড','ডাল্টন','অ্যাভোগ্যাড্রো'],'বোরের পরমাণু মডেলে নির্দিষ্ট শক্তিস্তরের ধারণা প্রথম আসে।'),
+  B(1,'নিউক্লিয়াসের বাইরে বৃত্তাকার কক্ষপথসমূহকে কী বলা হয়?','শক্তিস্তর',['অরবিটাল','কোয়ান্টাম','স্পিন'],'বোর মডেলে এদের শক্তিস্তর বা শেল বলে।'),
+  B(1,'পরমাণু বিদ্যুৎ নিরপেক্ষ থাকে কেন?','ইলেকট্রন ও প্রোটনের সংখ্যা সমান বলে',['কোনো আধান থাকে না বলে','ইলেকট্রন বেশি বলে','নিউট্রন বেশি বলে'],'ধনাত্মক ও ঋণাত্মক আধান সমান হওয়ায় নিট আধান শূন্য।'),
+  B(1,'কোনটি থেকে পরমাণুতে শক্তিস্তর ও কক্ষপথের ধারণা পাওয়া যায়?','বোর পরমাণু মডেল',['রাদারফোর্ড পরমাণু মডেল','ডাল্টনের পরমাণুবাদ','ম্যাক্সওয়েলের তত্ত্ব'],'বোর মডেলে ইলেকট্রনের শক্তিস্তরের ধারণা আছে।'),
+  B(1,'ইলেকট্রনের প্রধান শক্তিস্তর বা শেলগুলোকে কোন অক্ষর দিয়ে প্রকাশ করা হয়?','K, L, M, N, O, P…',['A, B, C, D…','s, p, d, f','P, Q, R, S…'],'প্রথম শেল K, দ্বিতীয় L, তৃতীয় M, চতুর্থ N।'),
+  B(1,'তৃতীয় শক্তিস্তরকে কোন বর্ণ দিয়ে প্রকাশ করা হয়?','M',['K','L','N'],'K → L → M → N।'),
+  B(1,'দ্বিতীয় প্রধান শক্তিস্তরকে কোন অক্ষর দিয়ে প্রকাশ করা হয়?','L',['K','M','N'],'n = ২ হলো L শেল।'),
+  B(1,'প্রধান কোয়ান্টাম সংখ্যা n = ৩ হলে কোন শক্তিস্তর পাওয়া যায়?','M',['K','L','N'],'n = ১ → K, ২ → L, ৩ → M, ৪ → N।'),
+  B(1,'যে কোনো প্রধান শক্তিস্তরে ইলেকট্রন ধারণ ক্ষমতা কত?','2n²',['n²','2(n+2)²','(2n+n)²'],'n-তম শেলে সর্বোচ্চ 2n² ইলেকট্রন থাকতে পারে।'),
+  B(1,'দ্বিতীয় শক্তিস্তরে সর্বোচ্চ ইলেকট্রন ধারণক্ষমতা কত?','৮টি',['১২টি','১৬টি','১৮টি'],'২ × ২² = ৮।'),
+  B(1,'কোন শেলে সর্বোচ্চ ১৮টি ইলেকট্রন থাকতে পারে?','৩য় (M)',['১ম (K)','২য় (L)','৪র্থ (N)'],'২ × ৩² = ১৮।'),
+  B(1,'কোন শেলে সর্বোচ্চ ৩২টি ইলেকট্রন থাকতে পারে?','N শেলে',['K শেলে','L শেলে','M শেলে'],'২ × ৪² = ৩২।'),
+  B(1,'নাইট্রোজেনের (Z = ৭) ইলেকট্রন বিন্যাস কোনটি?','২, ৫',['২, ৩','২, ৭','২, ৮'],'৭টি ইলেকট্রন → K-তে ২, L-এ ৫।'),
+  B(1,'ম্যাগনেসিয়ামের (Z = ১২) ইলেকট্রন বিন্যাস কোনটি?','২, ৮, ২',['২, ৮, ১','২, ৪, ২','২, ২, ৪'],'১২ ইলেকট্রন: ২ + ৮ + ২।'),
+  B(1,'২, ৮, ৭ ইলেকট্রন বিন্যাস কোন মৌলের?','ক্লোরিন (Cl)',['ফসফরাস (P)','আর্গন (Ar)','অক্সিজেন (O)'],'মোট ১৭ ইলেকট্রন; Z = ১৭ হলো ক্লোরিন।'),
+  B(1,'পটাসিয়ামের (Z = ১৯) ইলেকট্রন বিন্যাস কোনটি?','২, ৮, ৮, ১',['২, ৮, ৭, ২','২, ৭, ৭, ৩','২, ৮, ৯, ০'],'১৯ ইলেকট্রন: ২, ৮, ৮, ১।'),
+  B(1,'Na-এর ইলেকট্রন বিন্যাস কোনটি?','1s² 2s² 2p⁶ 3s¹',['1s² 2s² 2p⁶','1s² 2s² 2p⁶ 3s² 3p⁵','1s² 2s² 2p⁶ 3s² 3p⁶'],'Na (Z = ১১): 1s² 2s² 2p⁶ 3s¹।'),
+  B(1,'L শেলে উপস্তর সংখ্যা কয়টি?','২টি',['১টি','৩টি','৪টি'],'L শেলে 2s ও 2p উপস্তর।'),
+  B(1,'N শেলে উপস্তর সংখ্যা কয়টি?','৪টি',['১টি','২টি','৩টি'],'N শেলে 4s, 4p, 4d, 4f।'),
+  B(1,'M শেলে উপস্তরের বিন্যাস কোনটি?','3s, 3p, 3d',['3s, 3p, 4s','3s, 3p, 3f','Ms, Mp, Md'],'n = ৩-এ তিনটি উপস্তর: s, p, d।'),
+  B(1,'f উপস্তরটি কোন শেলের অন্তর্গত (প্রথম দেখা যায়)?','N',['K','L','M'],'f উপস্তর প্রথম N (n = ৪) শেলে দেখা যায়।'),
+  B(1,'f উপস্তরে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?','১৪টি',['২টি','৬টি','১০টি'],'f উপস্তরে ৭টি অরবিটাল, প্রতিটিতে ২ ইলেকট্রন।'),
+  B(1,'অরবিটাল দ্বারা কী প্রকাশ করা হয়?','ইলেকট্রনের অবস্থান (সম্ভাব্যতা অঞ্চল)',['প্রোটনের অবস্থান','পরমাণুর অবস্থান','পরমাণুর ব্যাপ্তি'],'অরবিটাল হলো নিউক্লিয়াসের চারপাশে ইলেকট্রন পাওয়ার সম্ভাব্য স্থান।'),
+  B(1,'ইলেকট্রনগুলো নিউক্লিয়াসকে ঘিরে মোট কতটি নির্দিষ্ট শক্তিস্তরে আবর্তন করতে পারে?','৭টি',['৩টি','৫টি','৯টি'],'K থেকে Q পর্যন্ত মোট ৭টি শক্তিস্তর পরিচিত।'),
+  B(1,'কোন তেজস্ক্রিয় রশ্মি পোলট্রি ফার্মে ব্যবহৃত হয়?','গামা (γ) রশ্মি',['আলফা (α)','বিটা (β)','ডেল্টা (δ)'],'কোবাল্ট-৬০ থেকে নির্গত গামা রশ্মি জীবাণু নাশে ব্যবহৃত হয়।'),
+  B(2,'রাদারফোর্ডের পরমাণু মডেলের উক্তি কোনটি?','ধনাত্মক আধানের সমান সংখ্যক ঋণাত্মক আধান নিউক্লিয়াসকে ঘিরে থাকে',['পরমাণুর কেন্দ্র বিদ্যুৎ নিরপেক্ষ','নিউক্লিয়াসের ভর নগণ্য','পরমাণু সম্পূর্ণ ধনাত্মক'],'রাদারফোর্ড দেখান, কেন্দ্রে ধনাত্মক নিউক্লিয়াস এবং বাইরে ইলেকট্রন।'),
+  B(2,'বোর মডেলের উক্তি কোনটি?','নিউক্লিয়াসের চারদিকে বৃত্তাকার স্থির কক্ষপথে ইলেকট্রন ঘোরে',['ইলেকট্রন প্রোটনের ভিতরে থাকে','পরমাণু আধানবিহীন গোলক','নিউক্লিয়াসে শুধু নিউট্রন থাকে'],'বোর নির্দিষ্ট শক্তির কক্ষপথের ধারণা দেন।'),
+  B(2,'ইলেকট্রন উচ্চতর শক্তিস্তর থেকে নিম্নতর শক্তিস্তরে নামলে কী ঘটে?','শক্তি বিকিরিত হয়',['শক্তি শোষিত হয়','পরমাণু বিস্ফোরিত হয়','নিউক্লিয়াস ভেঙে যায়'],'নিম্ন স্তরে নামার সময় শক্তি বিকিরণ হয়।'),
+  B(2,'ইলেকট্রন নির্দিষ্ট শক্তি শোষণ করলে কী ঘটে?','নিম্ন শক্তিস্তর থেকে উচ্চতর শক্তিস্তরে যায়',['উচ্চ থেকে নিম্নে যায়','নিউক্লিয়াসে মিশে যায়','প্রোটনে রূপ নেয়'],'শক্তি শোষণ করে ইলেকট্রন উচ্চ স্তরে উন্নীত হয়।'),
+  B(2,'রাদারফোর্ড পরমাণু মডেলের সীমাবদ্ধতা কোনটি?','পারমাণবিক বর্ণালি ব্যাখ্যা করতে না পারা',['পরমাণুর বিদ্যুৎ নিরপেক্ষতা','নিউক্লিয়াসের উপস্থিতি','ইলেকট্রনের কক্ষপথ'],'রাদারফোর্ড মডেল দিয়ে পারমাণবিক বর্ণালি ব্যাখ্যা করা যায় না।'),
+  B(2,'বোর পরমাণু মডেল কোন মৌলের বর্ণালি ব্যাখ্যা করতে পারে?','হাইড্রোজেন',['অক্সিজেন','নাইট্রোজেন','নিয়ন'],'বোর মডেল শুধু এক ইলেকট্রনবিশিষ্ট (H-জাতীয়) পরমাণুর বর্ণালি ব্যাখ্যা করে।'),
+  B(2,'বোর মডেলের সীমাবদ্ধতা কোনটি?','বহু-ইলেকট্রনবিশিষ্ট পরমাণুর বর্ণালি ব্যাখ্যা করতে না পারা',['নিউক্লিয়াস অস্বীকার করা','শক্তিস্তরের ধারণা না থাকা','পরমাণুর বিদ্যুৎ নিরপেক্ষতা অস্বীকার'],'বোর মডেল শুধু হাইড্রোজেন-জাতীয় পরমাণুর জন্য সফল।'),
+  B(2,'অরবিটালে ইলেকট্রন গমনের সঠিক ক্রম কোনটি?','1s < 2s < 2p < 3s < 3p < 4s',['1s < 2s < 3s < 2p < 3p < 4s','4s < 3p < 1s < 2s < 2p < 3s','1s < 2p < 2s < 3s < 3p < 4s'],'শক্তির ক্রম অনুযায়ী ইলেকট্রন প্রবেশ করে।'),
+  B(2,'নিচের কোন উপস্তরে সবার আগে ইলেকট্রন প্রবেশ করে?','4s',['3d','4p','4d'],'4s-এর শক্তি 3d-এর চেয়ে কম, তাই 4s আগে পূর্ণ হয়।'),
+  B(2,'6d অরবিটালের আগে কোন অরবিটালে ইলেকট্রন প্রবেশ করে?','5f',['1s','7p','8s'],'আউফবাউ ক্রম: 7s → 5f → 6d।'),
+  B(2,'ক্রোমিয়ামের (Z = ২৪) ইলেকট্রন বিন্যাসে 3d উপস্তরে কয়টি ইলেকট্রন থাকে?','৫টি',['২টি','৪টি','৭টি'],'Cr: [Ar] 3d⁵ 4s¹ (অর্ধপূর্ণ সুস্থিতি)।'),
+  B(2,'সমশক্তিসম্পন্ন অরবিটালসমূহ অর্ধপূর্ণ বা সম্পূর্ণ পূর্ণ হলে ইলেকট্রন বিন্যাস কী অর্জন করে?','সুস্থিতি',['অধিস্থিতি','স্থিতিহীনতা','শক্তিহীনতা'],'অর্ধপূর্ণ ও পূর্ণ উপস্তর অতিরিক্ত সুস্থিত।'),
+  B(2,'Fe (Z = ২৬)-এর ইলেকট্রন বিন্যাস কোনটি?','২, ৮, ১৪, ২',['২, ৮, ১৬','২, ৮, ৮, ৬, ২','২, ৮, ১০, ৬'],'Fe: ২, ৮, ১৪, ২।'),
+  B(2,'Zn (Z = ৩০)-এর N শেলে ইলেকট্রন সংখ্যা কতটি?','২টি',['৮টি','১৮টি','৩টি'],'Zn: ২, ৮, ১৮, ২।'),
+  B(2,'রুবিডিয়ামের (Z = ৩৭) ইলেকট্রন বিন্যাস কোনটি?','২, ৮, ১৮, ৮, ১',['২, ৮, ১৮, ১৮, ১','২, ৮, ১৮, ৩২, ১','২, ৮, ১৮, ১৮, ৮, ১'],'৩৭টি ইলেকট্রন: ২ + ৮ + ১৮ + ৮ + ১।'),
+  B(2,'ফ্রান্সিয়ামের (Z = ৮৭) N শেলে কতটি ইলেকট্রন থাকে?','৩২টি',['৮টি','১৮টি','৫০টি'],'Fr: ২, ৮, ১৮, ৩২, ১৮, ৮, ১।'),
+  B(2,'কোন মৌলের N শেলে ৮টি ইলেকট্রন বিদ্যমান?','Kr (৩৬)',['Cd (৪৮)','Ar (১৮)','Cl (১৭)'],'Kr: ২, ৮, ১৮, ৮।'),
+  B(2,'একটি ক্ষারীয় মৌল Z-এর (পারমাণবিক সংখ্যা ৫৭) N শেলে কতটি ইলেকট্রন থাকে?','১৮টি',['২টি','৪টি','৩২টি'],'La (৫৭): ২, ৮, ১৮, ১৮, ৯, ২ → N-এ ১৮।'),
+  B(2,'অক্সিজেন পরমাণুতে একটি প্রোটন প্রবেশ করানো সম্ভব হলে এটি কোন মৌলের পরমাণুতে পরিণত হবে?','ফ্লোরিন',['নাইট্রোজেন','কার্বন','অক্সিজেন'],'Z = ৮ → ৯ = ফ্লোরিন।'),
+  B(2,'ম্যাগনেসিয়ামের (১২) ইলেকট্রন বিন্যাসে—','শক্তিস্তর ৩টি ও M শেলে ২টি ইলেকট্রন',['শক্তিস্তর ২টি','L শেলে ২টি ইলেকট্রন','M শেলে ৮টি ইলেকট্রন'],'Mg: ২, ৮, ২।'),
+  B(2,'১৯ পারমাণবিক সংখ্যাবিশিষ্ট মৌলের জন্য কোনটি সঠিক?','4s উপস্তরে ইলেকট্রন আছে; শক্তিক্রম 1s<2s<2p<3s<3p<4s',['সর্বশেষ ইলেকট্রন 3d-তে','4s শক্তিস্তর পরিপূর্ণ','3d-এর আগে 4p পূর্ণ হয়'],'K: 1s²2s²2p⁶3s²3p⁶4s¹।'),
+  B(3,'3d অরবিটালের আগে 4s-এ ইলেকট্রন প্রবেশ করে কেন?','4s-এর শক্তি 3d-এর চেয়ে কম বলে',['3d-এর আধান বেশি বলে','3d ছোট বলে','4s সবসময় ছোট বলে'],'আউফবাউ নীতি অনুযায়ী কম শক্তির অরবিটাল আগে পূর্ণ হয়।'),
+  B(3,'6s অরবিটালের পরে ও 5p-এর আগে—কোনটি ঠিক?','5p অরবিটালের শক্তি 6s-এর চেয়ে কম, তাই 5p আগে পূর্ণ হয়',['6s আগে পূর্ণ হয়','দুটো একসাথে পূর্ণ হয়','5p কখনো পূর্ণ হয় না'],'শক্তিক্রমে 5p < 6s, তাই 5p আগে পূর্ণ হয়।'),
+  B(3,'তৃতীয় পর্যায়ের একটি মৌলের 3s পূর্ণ, 3p-তে ২টি ইলেকট্রন। মৌলটির পারমাণবিক সংখ্যা কত?','১৪',['১২','১৩','১৫'],'2+8+4 = ১৪ (সিলিকন)।'),
+  B(3,'সিলিকনের (Z = ১৪) ইলেকট্রন বিন্যাস কোনটি?','২, ৮, ৪',['২, ৮, ২','২, ৪, ৮','২, ৮, ৬'],'১৪ ইলেকট্রন: ২ + ৮ + ৪।')
+ ],
+ gens:[LIB.valence,LIB.config,LIB.nucl,LIB.ionE]
+};
+
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+ExamEngine.start(CH);
+</script>
+</body>
+</html>

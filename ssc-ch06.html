@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>মোলের ধারণা ও রাসায়নিক গণনা | এক্সাম জোন | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,hsl(200,60%,11%),hsl(200,70%,30%),hsl(200,80%,55%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#0369a1,#38bdf8);}
+.scroll{overflow-x:auto}
+.badge2{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:800}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px;align-items:center}.kv span:first-child{color:var(--text-muted)}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.gwrap{grid-template-columns:minmax(0,1fr) minmax(300px,1fr)}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.mode{display:none}.mode.on{display:block}.scroll{overflow-x:auto}
+.rc{background:var(--card-solid);border:1px solid var(--border-color);border-radius:14px;padding:14px;text-align:center}.rc small{color:var(--text-muted);font-weight:700}.rc strong{display:block;font-size:34px;color:#22d3b0;margin-top:4px}
+.pc{border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);border-radius:6px;font-size:11px;font-weight:800;padding:5px 0;cursor:pointer;border-bottom:3px solid var(--c)}.pc.on{background:var(--c);color:#0b1020;box-shadow:0 0 12px var(--c);transform:scale(1.15);z-index:2}
+.orb-t{padding:2px 6px;border-radius:6px;display:inline-block;margin:2px 1px;font-weight:700}
+.wrap{max-width:860px}
+.ex-hero{display:flex;gap:18px;align-items:center;padding:28px 0 12px}.ex-ic{font-size:54px;width:92px;height:92px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:26px;background:var(--card-solid);border:1px solid var(--border-color);box-shadow:0 0 30px rgba(34,211,176,.2)}
+.ex-hero h1{margin:8px 0 6px;font-size:clamp(24px,4.4vw,36px);line-height:1.3;background:linear-gradient(90deg,#22d3b0,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}.ex-sub{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.ex-stats .card{padding:14px;text-align:center;display:flex;flex-direction:column;gap:2px}.ex-stats b{font-size:24px;color:#22d3b0}.ex-stats span{font-size:12px;color:var(--text-muted)}
+.ex-opts{padding:14px 16px;margin-bottom:14px}.ex-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}.ex-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.ex-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ex-mode{text-align:left;cursor:pointer;padding:18px;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--c);transition:.25s}.ex-mode:hover{transform:translateY(-4px);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 28%,transparent)}.ex-mode .mi{font-size:30px}.ex-mode b{font-size:17px}.ex-mode small{color:var(--text-muted);line-height:1.6;font-size:12.5px}.ex-mode em{font-style:normal;font-weight:800;color:var(--c);margin-top:auto;padding-top:6px}.ex-mode.dis{opacity:.5;cursor:not-allowed}
+.ex-foot{text-align:center;color:var(--text-muted);font-size:13px;margin:18px 0 60px}
+.ex-hud{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}.ex-x{width:38px;height:38px;border-radius:12px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font-size:16px}
+.ex-prog{flex:1;min-width:150px;font-size:13px;font-weight:800}.ex-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:5px}.ex-bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3b0,#a855f7);transition:width .4s}
+.ex-pill{padding:7px 12px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13px;white-space:nowrap}
+.ex-q{padding:22px;margin-bottom:14px}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tg.b{background:rgba(251,191,36,.16);color:#fbbf24}.tg.m{background:rgba(251,113,133,.16);color:#fb7185}
+.ex-qt{font-size:19px;line-height:1.85;font-weight:700;margin-bottom:16px}
+.ex-os{display:grid;gap:10px}.ex-opt{display:flex;gap:12px;align-items:center;text-align:left;padding:13px 15px;border-radius:14px;border:1.5px solid var(--border-color);background:var(--card-solid);color:var(--text);font:inherit;font-size:15.5px;cursor:pointer;transition:.18s;line-height:1.6}.ex-opt i{font-style:normal;flex:0 0 32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;background:rgba(255,255,255,.07)}
+.ex-opt:hover{border-color:#a855f7;transform:translateX(3px)}.ex-opt.sel{border-color:#a855f7;background:rgba(168,85,247,.16)}.ex-opt.sel i{background:#a855f7;color:#0b1020}
+.ex-opt.right{border-color:#22d3b0;background:rgba(34,211,176,.16);animation:pop .35s}.ex-opt.right i{background:#22d3b0;color:#0b1020}.ex-opt.wrong{border-color:#fb7185;background:rgba(251,113,133,.15);animation:shk .35s}.ex-opt.wrong i{background:#fb7185;color:#0b1020}.ex-opt.dim{opacity:.5;pointer-events:none}.ex-opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes pop{50%{box-shadow:0 0 22px rgba(34,211,176,.55)}}@keyframes shk{25%{translate:-5px 0}75%{translate:5px 0}}
+.ex-fb{margin-top:14px;padding:13px 15px;border-radius:14px;line-height:1.8;font-size:14.5px}.ex-fb.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-fb.bad{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5)}.ex-fb .xp{color:#fbbf24;font-weight:800;font-size:13px}.ex-exp{margin-top:6px;color:var(--text-muted)}
+.ex-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn.ghost{background:var(--card-solid)!important;color:var(--text)!important;border:1px solid var(--border-color)!important;box-shadow:none!important}.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ex-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px;margin-bottom:60px}.ex-pal button{height:38px;border-radius:10px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font:inherit;font-weight:800}.ex-pal .ans{background:rgba(34,211,176,.2);border-color:#22d3b0}.ex-pal .mk{box-shadow:inset 0 -3px #fb7185}.ex-pal .cur{outline:2px solid #a855f7}
+.ex-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}.ex-modal .card{max-width:380px;width:100%;padding:22px}
+.ex-res{padding:22px;margin:18px 0 14px}.ex-rh{display:flex;gap:18px;align-items:center;padding:16px;border-radius:18px;margin-bottom:12px}.ex-rh.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-rh.bad{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.5)}.ex-rh h2{margin:0 0 4px;font-size:21px}.ex-rh p{margin:0;color:var(--text-muted)}
+.ex-score{display:flex;align-items:baseline;gap:4px}.ex-score b{font-size:46px;color:#22d3b0}.ex-score span{color:var(--text-muted);font-size:18px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span{color:var(--text-muted)}
+details.qa{margin-top:8px}
+@media(max-width:700px){.ex-stats{grid-template-columns:1fr 1fr}.ex-modes{grid-template-columns:1fr}.ex-hero{flex-direction:column;align-items:flex-start}.ex-qt{font-size:17px}}
+</style>
+</head>
+
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>SSC · মোলের ধারণা ও রাসায়নিক গণনা</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="exam.html">← <span class="long">এক্সাম জোন</span></a>
+    </div>
+  </header>
+  <main id="app"><div class="msg">লোড হচ্ছে…</div></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script src="exam-engine.js"></script>
+<script>
+CH={id:'ssc-06',exam:'ssc',paper:0,no:6,title:'মোলের ধারণা ও রাসায়নিক গণনা',icon:'⚖️',
+ bank:[
+  B(1,'আপেক্ষিক পারমাণবিক ভর কী?','কার্বন-১২ পরমাণুর ভরের ১/১২ অংশের সাথে তুলনামূলক ভর',['হাইড্রোজেন পরমাণুর ভর','অক্সিজেন পরমাণুর ভরের দ্বিগুণ','পরমাণুর প্রোটন সংখ্যা'],'কার্বন-১২ আইসোটোপের ভরের ১/১২ অংশকে একক ধরে অন্য পরমাণুর ভর তুলনা করা হয়।'),
+  B(1,'আ্যাভোগাড্রো সংখ্যার মান কত?','৬.০২ × ১০²³',['৬.০২ × ১০²²','৬.০২ × ১০²⁴','৩.০১ × ১০²³'],'এক মোল পদার্থে ৬.০২ × ১০²³ টি কণা থাকে।'),
+  B(1,'এক মোল পদার্থে কণার সংখ্যা কত?','৬.০২ × ১০²³',['১.৬ × ১০⁻¹⁹','৩.০ × ১০⁸','১২'],'এটিই আ্যাভোগাড্রো সংখ্যা।'),
+  B(1,'H₂O-এর আণবিক ভর কত? (H = ১, O = ১৬)','১৮',['১৭','১৬','২০'],'২×১ + ১৬ = ১৮।'),
+  B(1,'CO₂-এর আণবিক ভর কত? (C = ১২, O = ১৬)','৪৪',['২৮','৩২','৬০'],'১২ + ২×১৬ = ৪৪।'),
+  B(1,'NaCl-এর আণবিক ভর কত? (Na = ২৩, Cl = ৩৫.৫)','৫৮.৫',['৫৮','৬০','৫৬.৫'],'২৩ + ৩৫.৫ = ৫৮.৫।'),
+  B(1,'মোলার আয়তন কাকে বলে?','STP-তে এক মোল গ্যাসের আয়তন',['এক লিটার গ্যাসের ভর','এক গ্রাম গ্যাসের আয়তন','এক মোল তরলের আয়তন'],'STP-তে যেকোনো গ্যাসের এক মোলের আয়তন সমান।'),
+  B(1,'STP-তে এক মোল যেকোনো গ্যাসের আয়তন কত?','২২.৪ লিটার',['১১.২ লিটার','২৪ লিটার','৪৪.৮ লিটার'],'STP (০°C, ১ atm)-তে ১ মোল গ্যাসের আয়তন ২২.৪ L।'),
+  B(1,'STP-এর পূর্ণরূপ কী?','Standard Temperature and Pressure',['Standard Time and Place','Static Temperature and Pressure','Standard Thermal Process'],'প্রমাণ তাপমাত্রা ও চাপে (০°C, ১ atm) গ্যাসের আয়তন মাপা হয়।'),
+  B(1,'মোল সংখ্যা নির্ণয়ের সূত্র কোনটি?','মোল = ভর ÷ মোলার ভর',['মোল = ভর × মোলার ভর','মোল = মোলার ভর ÷ ভর','মোল = ভর + মোলার ভর'],'পদার্থের ভরকে তার মোলার ভর দিয়ে ভাগ করলে মোল সংখ্যা পাওয়া যায়।'),
+  B(1,'পরীক্ষালব্ধ সংকেত (Empirical formula) কী নির্দেশ করে?','যৌগের মৌলগুলোর পরমাণুর সরল অনুপাত',['যৌগের প্রকৃত অণুর পরমাণুসংখ্যা','যৌগের গঠন','যৌগের বিক্রিয়া'],'এটি পরমাণুর সরলতম পূর্ণসংখ্যা অনুপাত দেখায়।'),
+  B(1,'আণবিক সংকেত কী নির্দেশ করে?','অণুতে উপস্থিত প্রতিটি মৌলের প্রকৃত পরমাণুসংখ্যা',['শুধু সরল অনুপাত','ইলেকট্রন সংখ্যা','বন্ধনের ধরন'],'যেমন গ্লুকোজের আণবিক সংকেত C₆H₁₂O₆।'),
+  B(1,'গ্লুকোজের (C₆H₁₂O₆) পরীক্ষালব্ধ সংকেত কোনটি?','CH₂O',['C₆H₁₂O₆','CHO','C₂H₄O₂'],'C : H : O = ৬ : ১২ : ৬ = ১ : ২ : ১।'),
+  B(1,'রাসায়নিক সমীকরণ সমতাকরণ কোন সূত্রের উপর ভিত্তি করে?','ভরের নিত্যতা সূত্র',['গ্যাসের আয়তন সূত্র','চার্লসের সূত্র','ফ্যারাডের সূত্র'],'বিক্রিয়ায় মোট ভর অপরিবর্তিত থাকে, তাই উভয় পাশে পরমাণুসংখ্যা সমান হয়।'),
+  B(1,'ভরের নিত্যতা সূত্রের প্রবক্তা কে?','ল্যাভয়সিয়ে',['ডাল্টন','বয়েল','অ্যাভোগাড্রো'],'ল্যাভয়সিয়ে এই সূত্র প্রতিষ্ঠা করেন।'),
+  B(1,'অ্যাভোগাড্রোর সূত্র অনুসারে সমান তাপমাত্রা ও চাপে সমআয়তন গ্যাসে কী সমান থাকে?','অণুর সংখ্যা',['ভর','ঘনত্ব','পরমাণুর ওজন'],'সমান তাপমাত্রা ও চাপে সমআয়তন সব গ্যাসে অণুসংখ্যা সমান।'),
+  B(1,'রাসায়নিক সমীকরণে বিক্রিয়ক ও উৎপাদের মধ্যে কোন চিহ্ন ব্যবহৃত হয়?','→',['=','≠','+'],'তীর চিহ্ন বিক্রিয়ার দিক নির্দেশ করে।'),
+  B(2,'১ মোল H₂O-তে অণুর সংখ্যা কত?','৬.০২ × ১০²³',['১.৮ × ১০²⁴','৩.০১ × ১০²³','১২.০৪ × ১০²³'],'১ মোলে সবসময় আ্যাভোগাড্রো সংখ্যক অণু থাকে।'),
+  B(2,'১ মোল H₂O-তে মোট পরমাণুর সংখ্যা কত?','১.৮০৬ × ১০²⁴',['৬.০২ × ১০²³','১২.০৪ × ১০²³','৩.০১ × ১০²³'],'প্রতি অণুতে ৩টি পরমাণু; ৩ × ৬.০২ × ১০²³ = ১.৮০৬ × ১০²⁴।'),
+  B(2,'১ মোল CO₂-এর ভর কত? (C = ১২, O = ১৬)','৪৪ গ্রাম',['২৮ গ্রাম','৩২ গ্রাম','২২ গ্রাম'],'CO₂-এর মোলার ভর ৪৪ g/mol।'),
+  B(2,'৩৬ গ্রাম পানিতে কত মোল পানি আছে? (H₂O = ১৮)','২ মোল',['১ মোল','৩ মোল','০.৫ মোল'],'৩৬ ÷ ১৮ = ২ মোল।'),
+  B(2,'১১ গ্রাম CO₂ গ্যাসের মোল সংখ্যা কত? (CO₂ = ৪৪)','০.২৫',['০.৫','১','০.১২৫'],'১১ ÷ ৪৪ = ০.২৫ মোল।'),
+  B(2,'STP-তে ১১.২ লিটার গ্যাস কত মোল?','০.৫ মোল',['১ মোল','২ মোল','০.২৫ মোল'],'১১.২ ÷ ২২.৪ = ০.৫ মোল।'),
+  B(2,'STP-তে ২ মোল অক্সিজেন গ্যাসের আয়তন কত?','৪৪.৮ লিটার',['২২.৪ লিটার','১১.২ লিটার','৬৭.২ লিটার'],'২ × ২২.৪ = ৪৪.৮ L।'),
+  B(2,'STP-তে ৩২ গ্রাম O₂-এর আয়তন কত? (O = ১৬)','২২.৪ লিটার',['১১.২ লিটার','৪৪.৮ লিটার','৩২ লিটার'],'৩২ g O₂ = ১ মোল = ২২.৪ L।'),
+  B(2,'N₂ গ্যাসের মোলার ভর কত? (N = ১৪)','২৮ g/mol',['১৪ g/mol','৩৪ g/mol','২৪ g/mol'],'২ × ১৪ = ২৮।'),
+  B(2,'H₂SO₄-এর আণবিক ভর কত? (H = ১, S = ৩২, O = ১৬)','৯৮',['৯৬','৮২','১০০'],'২ + ৩২ + ৬৪ = ৯৮।'),
+  B(2,'CaCO₃-এর আণবিক ভর কত? (Ca = ৪০, C = ১২, O = ১৬)','১০০',['৮৪','৯৬','১১৬'],'৪০ + ১২ + ৪৮ = ১০০।'),
+  B(2,'CaCO₃-এ ক্যালসিয়ামের শতকরা পরিমাণ কত? (Ca = ৪০, CaCO₃ = ১০০)','৪০%',['১২%','৪৮%','২০%'],'(৪০ ÷ ১০০) × ১০০ = ৪০%।'),
+  B(2,'পানিতে হাইড্রোজেনের শতকরা ভর কত? (H₂O = ১৮)','প্রায় ১১.১%',['প্রায় ৮৮.৯%','প্রায় ৫০%','প্রায় ৫.৬%'],'(২ ÷ ১৮) × ১০০ ≈ ১১.১%।'),
+  B(2,'একটি যৌগে C = ৮০% ও H = ২০% (C = ১২, H = ১) হলে এর পরীক্ষালব্ধ সংকেত কী?','CH₃',['CH₄','C₂H₂','CH₂'],'C : H = ৮০/১২ : ২০/১ = ৬.৬৭ : ২০ = ১ : ৩।'),
+  B(2,'পরীক্ষালব্ধ সংকেত CH₂O ও আণবিক ভর ৬০ হলে আণবিক সংকেত কী? (C = ১২, H = ১, O = ১৬)','C₂H₄O₂',['CH₂O','C₃H₆O₃','C₂H₂O₂'],'CH₂O-এর ভর ৩০; ৬০ ÷ ৩০ = ২, তাই সংকেত C₂H₄O₂।'),
+  B(2,'2H₂ + O₂ → 2H₂O বিক্রিয়ায় ২ মোল H₂ সম্পূর্ণ বিক্রিয়ায় কত মোল H₂O উৎপন্ন হয়?','২ মোল',['১ মোল','৪ মোল','৩ মোল'],'সমীকরণে H₂ : H₂O = ২ : ২।'),
+  B(2,'2H₂ + O₂ → 2H₂O বিক্রিয়ায় ১ মোল O₂ বিক্রিয়া করতে কত মোল H₂ লাগে?','২ মোল',['১ মোল','৪ মোল','০.৫ মোল'],'সমীকরণে H₂ : O₂ = ২ : ১।'),
+  B(2,'N₂ + 3H₂ → 2NH₃ বিক্রিয়ায় ১ মোল N₂ থেকে কত মোল NH₃ পাওয়া যায়?','২ মোল',['১ মোল','৩ মোল','৬ মোল'],'N₂ : NH₃ = ১ : ২।'),
+  B(2,'CaCO₃ → CaO + CO₂ বিক্রিয়ায় ১০০ গ্রাম CaCO₃ বিযোজিত হলে CO₂ কত গ্রাম পাওয়া যায়? (CaCO₃ = ১০০, CO₂ = ৪৪)','৪৪ গ্রাম',['১০০ গ্রাম','৫৬ গ্রাম','২২ গ্রাম'],'১ মোল CaCO₃ থেকে ১ মোল CO₂ = ৪৪ g।'),
+  B(2,'সীমিতকারী বিকারক (Limiting reagent) কোনটি?','যে বিকারক আগে শেষ হয়ে বিক্রিয়া থামিয়ে দেয়',['যে বিকারক বেশি পরিমাণে থাকে','যে বিকারক গ্যাসীয়','যে বিকারকের ভর কম'],'এটি উৎপাদের সর্বোচ্চ পরিমাণ নিয়ন্ত্রণ করে।'),
+  B(2,'রাসায়নিক সমীকরণের সহগ কী নির্দেশ করে?','বিক্রিয়ায় অংশগ্রহণকারী মোলের অনুপাত',['পরমাণুর ইলেকট্রন সংখ্যা','তাপমাত্রা','বিক্রিয়ার গতি'],'সহগ মোল অনুপাত দেখায়।'),
+  B(2,'নিচের কোনটি ১ মোল পদার্থ?','১২ গ্রাম কার্বন (C-১২)',['১২ গ্রাম অক্সিজেন','১ গ্রাম কার্বন','১২ লিটার CO₂'],'১২ g কার্বনে ৬.০২ × ১০²³ টি পরমাণু আছে।'),
+  B(2,'১ মোল মৌলিক হাইড্রোজেন পরমাণুর ভর কত? (H = ১)','১ গ্রাম',['২ গ্রাম','০.৫ গ্রাম','১২ গ্রাম'],'H-এর মোলার ভর ১ g/mol।'),
+  B(2,'সমান ভরের হাইড্রোজেন ও অক্সিজেন গ্যাসে কোনটির অণুসংখ্যা বেশি? (H₂ = ২, O₂ = ৩২)','হাইড্রোজেন',['অক্সিজেন','দুটোই সমান','নির্ণয় করা যায় না'],'H₂-এর মোলার ভর কম, তাই সমান ভরে মোল সংখ্যা বেশি।'),
+  B(3,'৯ গ্রাম পানিতে কয়টি অণু আছে? (H₂O = ১৮)','৩.০১ × ১০²³',['৬.০২ × ১০²³','১.৮ × ১০²⁴','৯ × ১০²³'],'৯ ÷ ১৮ = ০.৫ মোল; ০.৫ × ৬.০২ × ১০²³ = ৩.০১ × ১০²³।'),
+  B(3,'৪.৪ গ্রাম CO₂ গ্যাসে অণুর সংখ্যা কত? (CO₂ = ৪৪)','৬.০২ × ১০²²',['৬.০২ × ১০²³','৬.০২ × ১০²¹','৪.৪ × ১০²³'],'৪.৪ ÷ ৪৪ = ০.১ মোল; ০.১ × ৬.০২ × ১০²³ = ৬.০২ × ১০²²।'),
+  B(3,'STP-তে ৫.৬ লিটার NH₃ গ্যাসের ভর কত? (N = ১৪, H = ১)','৪.২৫ গ্রাম',['১৭ গ্রাম','৮.৫ গ্রাম','২.১২৫ গ্রাম'],'৫.৬ ÷ ২২.৪ = ০.২৫ মোল; ০.২৫ × ১৭ = ৪.২৫ g।'),
+  B(3,'২৪ গ্রাম Mg-কে যথেষ্ট HCl-এর সাথে বিক্রিয়া করালে STP-তে কত লিটার H₂ পাওয়া যায়? (Mg = ২৪; Mg + 2HCl → MgCl₂ + H₂)','২২.৪ লিটার',['১১.২ লিটার','৪৪.৮ লিটার','২৪ লিটার'],'১ মোল Mg থেকে ১ মোল H₂ = ২২.৪ L।'),
+  B(3,'৪ গ্রাম H₂ ও ৩২ গ্রাম O₂ থেকে সর্বোচ্চ কত গ্রাম পানি পাওয়া যায়? (2H₂ + O₂ → 2H₂O; H₂ = ২, O₂ = ৩২)','৩৬ গ্রাম',['৩৮ গ্রাম','১৮ গ্রাম','৭২ গ্রাম'],'H₂ = ২ মোল, O₂ = ১ মোল; O₂ সীমিতকারী, ২ মোল H₂O = ৩৬ g।'),
+  B(3,'একটি গ্যাসের STP-তে ঘনত্ব ১.২৫ g/L হলে এর মোলার ভর কত?','২৮ g/mol',['১৪ g/mol','৩২ g/mol','৪৪ g/mol'],'১.২৫ × ২২.৪ = ২৮ g/mol।'),
+  B(1,'অ্যামেদিও অ্যাভোগাড্রো কোন দেশের বিজ্ঞানী ছিলেন?','ইতালি',['জার্মানি','ফ্রান্স','যুক্তরাষ্ট্র'],'অ্যাভোগাড্রো ছিলেন ইতালীয় বিজ্ঞানী।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় বিক্রিয়ক ও উৎপাদের পরিমাণগত সম্পর্ক আলোচনাকে কী বলে?','স্টয়কিওমেট্রি',['জিওকেমিস্ট্রি','থার্মোকেমিস্ট্রি','ইলেকট্রোকেমিস্ট্রি'],'Stoichiometry বিক্রিয়ার পরিমাণগত হিসাব।'),
+  B(1,'অ্যাভোগাড্রো সংখ্যার মান কত?','6.023 × 10²³',['6.023 × 10⁻²³','3.011 × 10²³','6.023 × 10²⁰'],'১ মোল পদার্থে এই সংখ্যক কণা থাকে।'),
+  B(1,'মোল কোন রাশির একক?','পদার্থের পরিমাণ',['ভর','আয়তন','তাপমাত্রা'],'মোল = amount of substance-এর SI একক।'),
+  B(1,'H₂SO₄-এর আণবিক ভর কত? (H=১, S=৩২, O=১৬)','৯৮',['৮০','৬৪','১০৬'],'২ + ৩২ + ৬৪ = ৯৮।'),
+  B(1,'CaCO₃-এর আণবিক ভর কত? (Ca=৪০, C=১২, O=১৬)','১০০',['৮৪','৯৬','১২০'],'৪০ + ১২ + ৪৮ = ১০০।'),
+  B(1,'NaOH-এর আণবিক ভর কত? (Na=২৩, O=১৬, H=১)','৪০',['২৪','৩৯','৫৬'],'২৩ + ১৬ + ১ = ৪০।'),
+  B(1,'HCl-এর আণবিক ভর কত? (H=১, Cl=৩৫.৫)','৩৬.৫',['৩৫.৫','৩৭','৭১'],'১ + ৩৫.৫ = ৩৬.৫।'),
+  B(1,'NH₃-এর আণবিক ভর কত? (N=১৪, H=১)','১৭',['১৫','১৮','২৮'],'১৪ + ৩ = ১৭।'),
+  B(1,'CH₄-এর আণবিক ভর কত? (C=১২, H=১)','১৬',['১৩','১৪','২০'],'১২ + ৪ = ১৬।'),
+  B(1,'Na₂CO₃-এর আণবিক ভর কত? (Na=২৩, C=১২, O=১৬)','১০৬',['৮৪','১০০','১২২'],'৪৬ + ১২ + ৪৮ = ১০৬।'),
+  B(1,'গ্লুকোজের (C₆H₁₂O₆) আণবিক ভর কত?','১৮০',['১৫০','১৬০','৩৪২'],'৭২ + ১২ + ৯৬ = ১৮০।'),
+  B(1,'HNO₃-এর আণবিক ভর কত? (H=১, N=১৪, O=১৬)','৬৩',['৪৮','৬৪','৮৫'],'১ + ১৪ + ৪৮ = ৬৩।'),
+  B(1,'১ মোল NaCl-এর ভর কত গ্রাম? (Na=২৩, Cl=৩৫.৫)','৫৮.৫',['২৩','৩৫.৫','৮১'],'২৩ + ৩৫.৫ = ৫৮.৫।'),
+  B(1,'১২ গ্রাম কার্বনে (C-১২) কত সংখ্যক পরমাণু থাকে?','6.023 × 10²³',['6.023 × 10²²','১২','১'],'১ মোল C = ১২ g।'),
+  B(1,'১ মোল অক্সিজেন অণু (O₂) এর ভর কত?','৩২ গ্রাম',['১৬ গ্রাম','১৮ গ্রাম','৬৪ গ্রাম'],'O₂ = ৩২।'),
+  B(1,'১ মোল পানিতে অণুর সংখ্যা কত?','6.023 × 10²³',['১৮','6.023 × 10²¹','২'],'১ মোল = N সংখ্যক অণু।'),
+  B(1,'১ মোল CO₂ গ্যাসে অণুর সংখ্যা কত?','6.023 × 10²³',['44','6.023 × 10²⁴','3.011 × 10²³'],'যেকোনো পদার্থের ১ মোলে N সংখ্যক কণা থাকে।'),
+  B(1,'৩৬ গ্রাম পানি কত মোল?','২ মোল',['১ মোল','০.৫ মোল','৪ মোল'],'৩৬ ÷ ১৮ = ২।'),
+  B(1,'৮৮ গ্রাম CO₂ কত মোল?','২ মোল',['১ মোল','০.৫ মোল','৪ মোল'],'৮৮ ÷ ৪৪ = ২।'),
+  B(1,'৪৯ গ্রাম H₂SO₄ কত মোল?','০.৫ মোল',['১ মোল','২ মোল','৪৯ মোল'],'৪৯ ÷ ৯৮ = ০.৫।'),
+  B(1,'০.৫ মোল O₂-এর ভর কত?','১৬ গ্রাম',['৩২ গ্রাম','৮ গ্রাম','৬৪ গ্রাম'],'০.৫ × ৩২ = ১৬।'),
+  B(1,'২ মোল NH₃-এর ভর কত?','৩৪ গ্রাম',['১৭ গ্রাম','৩৫ গ্রাম','৫১ গ্রাম'],'২ × ১৭ = ৩৪।'),
+  B(1,'৩.০১১ × 10²³ সংখ্যক অণু কত মোলের সমান?','০.৫ মোল',['১ মোল','২ মোল','০.২৫ মোল'],'৩.০১১×10²³ ÷ ৬.০২৩×10²³ = ০.৫।'),
+  B(1,'STP-তে যেকোনো গ্যাসের ১ মোলের আয়তন কত?','২২.৪ লিটার',['১১.২ লিটার','২৪ লিটার','৪৪.৮ লিটার'],'STP-তে ১ মোল গ্যাস = ২২.৪ L।'),
+  B(1,'STP-তে ৪৪.৮ লিটার O₂ কত মোল?','২ মোল',['১ মোল','০.৫ মোল','৪ মোল'],'৪৪.৮ ÷ ২২.৪ = ২।'),
+  B(1,'STP-তে ১১.২ লিটার H₂ গ্যাসের ভর কত? (H = ১)','১ গ্রাম',['২ গ্রাম','০.৫ গ্রাম','১১.২ গ্রাম'],'০.৫ মোল × ২ = ১ g।'),
+  B(1,'মোলার দ্রবণ (1 M) বলতে কী বোঝায়?','১ লিটার দ্রবণে ১ মোল দ্রব',['১ লিটার দ্রাবকে ১ মোল দ্রব','১০০ mL-এ ১ গ্রাম দ্রব','১ কেজি দ্রবণে ১ মোল দ্রব'],'মোলারিটি = মোল ÷ দ্রবণের আয়তন (L)।'),
+  B(1,'ডেসিমোলার দ্রবণের ঘনমাত্রা কত?','০.১ M',['০.৫ M','১ M','১০ M'],'ডেসি = ১/১০।'),
+  B(1,'সেমিমোলার দ্রবণের ঘনমাত্রা কত?','০.৫ M',['০.১ M','১ M','২ M'],'সেমি = অর্ধেক।'),
+  B(2,'১০ গ্রাম NaOH-এ কত মোল আছে? (NaOH = ৪০)','০.২৫ মোল',['০.৫ মোল','০.১ মোল','৪ মোল'],'১০ ÷ ৪০ = ০.২৫।'),
+  B(2,'১০০ গ্রাম CaCO₃-এ অণুর সংখ্যা কত?','6.023 × 10²³',['6.023 × 10²⁴','6.023 × 10²¹','১০০'],'১০০ g = ১ মোল।'),
+  B(2,'১ মোল CO₂-এ মোট পরমাণুর সংখ্যা কত?','3 × 6.023 × 10²³',['6.023 × 10²³','2 × 6.023 × 10²³','4 × 6.023 × 10²³'],'প্রতি অণুতে ৩টি পরমাণু (১ C + ২ O)।'),
+  B(2,'১ মোল CH₄-এ মোট পরমাণুর সংখ্যা কত?','5 × 6.023 × 10²³',['4 × 6.023 × 10²³','6.023 × 10²³','3 × 6.023 × 10²³'],'প্রতি অণুতে ৫টি পরমাণু।'),
+  B(2,'১ মোল পানিতে হাইড্রোজেন পরমাণুর সংখ্যা কত?','1.2046 × 10²⁴',['6.023 × 10²³','3.011 × 10²³','1.8 × 10²⁴'],'২ × ৬.০২৩ × 10²³।'),
+  B(2,'একটি পানির অণুর ভর কত গ্রাম প্রায়?','2.99 × 10⁻²³',['18','6.023 × 10⁻²³','2.99 × 10²³'],'১৮ ÷ ৬.০২৩×10²³ ≈ ২.৯৯×10⁻²³।'),
+  B(2,'একটি সোডিয়াম পরমাণুর ভর কত গ্রাম প্রায়?','3.82 × 10⁻²³',['২৩','3.82 × 10²³','6.023 × 10⁻²³'],'২৩ ÷ ৬.০২৩×10²³ ≈ ৩.৮২×10⁻²³।'),
+  B(2,'৪ গ্রাম NaOH ১ লিটার দ্রবণে দ্রবীভূত থাকলে দ্রবণের মোলারিটি কত?','০.১ M',['০.৫ M','১ M','৪ M'],'৪ ÷ ৪০ = ০.১ মোল/লিটার।'),
+  B(2,'৫.৮৫ গ্রাম NaCl ৫০০ mL দ্রবণে থাকলে মোলারিটি কত?','০.২ M',['০.১ M','০.৫ M','১ M'],'০.১ মোল ÷ ০.৫ L = ০.২ M।'),
+  B(2,'২ M দ্রবণের ২৫০ mL-এ কত মোল দ্রব আছে?','০.৫ মোল',['২ মোল','১ মোল','০.২৫ মোল'],'২ × ০.২৫ = ০.৫।'),
+  B(2,'০.১ M NaOH-এর ৫০০ mL-এ কত গ্রাম NaOH আছে?','২ গ্রাম',['৪ গ্রাম','১ গ্রাম','২০ গ্রাম'],'০.০৫ মোল × ৪০ = ২ g।'),
+  B(2,'১০ mL ১ M দ্রবণকে পানি মিশিয়ে ১০০ mL করলে নতুন ঘনমাত্রা কত?','০.১ M',['০.০১ M','১ M','১০ M'],'M₁V₁ = M₂V₂ → ১×১০ = M₂×১০০।'),
+  B(2,'পানির (H₂O) মধ্যে হাইড্রোজেনের শতকরা সংযুতি প্রায় কত?','১১.১১%',['৫.৫%','২২.২২%','৮৮.৮৯%'],'২/১৮ × ১০০ ≈ ১১.১১%।'),
+  B(2,'CO₂-এ কার্বনের শতকরা সংযুতি প্রায় কত?','২৭.২৭%',['৫০%','৭২.৭৩%','১২%'],'১২/৪৪ × ১০০ ≈ ২৭.২৭%।'),
+  B(2,'CaCO₃-এ ক্যালসিয়ামের শতকরা সংযুতি কত?','৪০%',['১২%','৪৮%','২০%'],'৪০/১০০ × ১০০ = ৪০%।'),
+  B(2,'MgO-তে ম্যাগনেসিয়ামের শতকরা সংযুতি কত? (Mg = ২৪)','৬০%',['৪০%','৫০%','২৪%'],'২৪/৪০ × ১০০ = ৬০%।'),
+  B(2,'CH₄-এ কার্বনের শতকরা সংযুতি কত?','৭৫%',['২৫%','১২%','৮০%'],'১২/১৬ × ১০০ = ৭৫%।'),
+  B(2,'NH₃-এ নাইট্রোজেনের শতকরা সংযুতি প্রায় কত?','৮২.৩৫%',['১৭.৬৫%','৫০%','১৪%'],'১৪/১৭ × ১০০ ≈ ৮২.৩৫%।'),
+  B(2,'স্থূল সংকেত (Empirical formula) কী?','যৌগে মৌলসমূহের পরমাণু সংখ্যার সরলতম অনুপাত',['অণুর প্রকৃত সংকেত','যৌগের আণবিক ভর','যৌগের ঘনত্ব'],'যেমন গ্লুকোজের স্থূল সংকেত CH₂O।'),
+  B(2,'গ্লুকোজ (C₆H₁₂O₆)-এর স্থূল সংকেত কোনটি?','CH₂O',['CHO','C₂H₄O₂','C₆H₁₂O₆'],'৬ : ১২ : ৬ = ১ : ২ : ১।'),
+  B(2,'বেনজিনের (C₆H₆) স্থূল সংকেত কোনটি?','CH',['C₂H₂','C₃H₃','C₆H₆'],'৬ : ৬ = ১ : ১।'),
+  B(2,'হাইড্রোজেন পারক্সাইড (H₂O₂)-এর স্থূল সংকেত কোনটি?','HO',['H₂O','H₂O₂','H₂O₄'],'১ : ১ অনুপাত।'),
+  B(2,'আণবিক সংকেত = (স্থূল সংকেত) × n; n কীভাবে পাওয়া যায়?','আণবিক ভর ÷ স্থূল সংকেতের ভর',['পারমাণবিক সংখ্যা ÷ ভর','আয়তন ÷ ভর','মোল ÷ আয়তন'],'n একটি পূর্ণ সংখ্যা।'),
+  B(2,'H₂ + O₂ → H₂O সমীকরণটি সমতা করলে H₂-এর সহগ কত হবে?','২',['১','৩','৪'],'2H₂ + O₂ → 2H₂O।'),
+  B(2,'N₂ + H₂ → NH₃ সমতা করলে H₂-এর সহগ কত?','৩',['১','২','৬'],'N₂ + 3H₂ → 2NH₃।'),
+  B(2,'Mg + O₂ → MgO সমতা করলে MgO-এর সহগ কত?','২',['১','৩','৪'],'2Mg + O₂ → 2MgO।'),
+  B(2,'CaCO₃ → CaO + CO₂ বিক্রিয়ায় ১০০ গ্রাম CaCO₃ থেকে কত গ্রাম CO₂ পাওয়া যায়?','৪৪ গ্রাম',['৫৬ গ্রাম','১০০ গ্রাম','২২ গ্রাম'],'১ মোল CaCO₃ → ১ মোল CO₂ = ৪৪ g।'),
+  B(2,'২৪ গ্রাম Mg সম্পূর্ণ জ্বললে কত গ্রাম MgO তৈরি হয়? (O=১৬)','৪০ গ্রাম',['২৪ গ্রাম','১৬ গ্রাম','৬৪ গ্রাম'],'১ মোল Mg → ১ মোল MgO = ৪০ g।'),
+  B(2,'২ মোল H₂ পর্যাপ্ত O₂-এর সাথে বিক্রিয়ায় কত গ্রাম পানি তৈরি করে?','৩৬ গ্রাম',['১৮ গ্রাম','৩২ গ্রাম','৭২ গ্রাম'],'২H₂ + O₂ → ২H₂O; ২ মোল = ৩৬ g।'),
+  B(2,'লিমিটিং বিক্রিয়ক কী?','যে বিক্রিয়ক আগে শেষ হয়ে উৎপাদের পরিমাণ নির্ধারণ করে',['যে বিক্রিয়ক বেশি থাকে','যে বিক্রিয়ক ক্যাটালিস্ট','যে বিক্রিয়ক গ্যাসীয়'],'এটি বিক্রিয়ার সীমা ঠিক করে।'),
+  B(3,'২ মোল H₂ ও ২ মোল O₂ বিক্রিয়া করলে লিমিটিং বিক্রিয়ক কোনটি? (২H₂ + O₂ → ২H₂O)','H₂',['O₂','উভয়ই','কোনোটিই নয়'],'২ মোল H₂-এর জন্য ১ মোল O₂ লাগে; O₂ বেশি থাকে।'),
+  B(3,'৩ মোল N₂ ও ৩ মোল H₂ বিক্রিয়ায় (N₂ + 3H₂ → 2NH₃) কত মোল NH₃ হয়?','২ মোল',['৩ মোল','৬ মোল','১ মোল'],'৩ মোল H₂ → ২ মোল NH₃; H₂ লিমিটিং।'),
+  B(3,'শতকরা ফলন (% yield) = ?','(প্রকৃত ফলন ÷ তাত্ত্বিক ফলন) × ১০০',['(তাত্ত্বিক ÷ প্রকৃত) × ১০০','প্রকৃত − তাত্ত্বিক','মোল × আয়তন'],'যেমন ৪০ g ÷ ৫০ g × ১০০ = ৮০%।'),
+  B(3,'তাত্ত্বিক ফলন ৫০ গ্রাম, প্রকৃত ফলন ৪০ গ্রাম হলে শতকরা ফলন কত?','৮০%',['৯০%','৭০%','১২৫%'],'৪০/৫০ × ১০০ = ৮০%।'),
+  B(3,'১০০ গ্রাম CaCO₃ বিয়োজনে তাত্ত্বিক CO₂ ৪৪ g; প্রকৃত ৩৩ g হলে শতকরা ফলন কত?','৭৫%',['৮০%','৬০%','৯০%'],'৩৩/৪৪ × ১০০ = ৭৫%।'),
+  B(3,'কোনো যৌগে C ৪০%, H ৬.৭%, O ৫৩.৩% থাকলে স্থূল সংকেত কী? (C=১২, H=১, O=১৬)','CH₂O',['CHO','C₂H₄O','CH₄O'],'মোল অনুপাত ৩.৩৩ : ৬.৭ : ৩.৩৩ ≈ ১ : ২ : ১।'),
+  B(3,'১ লিটার ০.৫ M H₂SO₄ দ্রবণে H₂SO₄-এর ভর কত? (H₂SO₄ = ৯৮)','৪৯ গ্রাম',['৯৮ গ্রাম','২৪.৫ গ্রাম','০.৫ গ্রাম'],'০.৫ × ৯৮ = ৪৯ g।')
+ ],
+ gens:[LIB.mass1,LIB.mass2,LIB.mass3,LIB.moles1,LIB.moles2,LIB.pct]
+};
+
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+ExamEngine.start(CH);
+</script>
+</body>
+</html>
