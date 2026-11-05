@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>খনিজ সম্পদ: জীবাশ্ম | এক্সাম জোন | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,hsl(200,60%,11%),hsl(200,70%,30%),hsl(200,80%,55%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#0369a1,#38bdf8);}
+.scroll{overflow-x:auto}
+.badge2{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:800}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px;align-items:center}.kv span:first-child{color:var(--text-muted)}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.gwrap{grid-template-columns:minmax(0,1fr) minmax(300px,1fr)}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.mode{display:none}.mode.on{display:block}.scroll{overflow-x:auto}
+.rc{background:var(--card-solid);border:1px solid var(--border-color);border-radius:14px;padding:14px;text-align:center}.rc small{color:var(--text-muted);font-weight:700}.rc strong{display:block;font-size:34px;color:#22d3b0;margin-top:4px}
+.pc{border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);border-radius:6px;font-size:11px;font-weight:800;padding:5px 0;cursor:pointer;border-bottom:3px solid var(--c)}.pc.on{background:var(--c);color:#0b1020;box-shadow:0 0 12px var(--c);transform:scale(1.15);z-index:2}
+.orb-t{padding:2px 6px;border-radius:6px;display:inline-block;margin:2px 1px;font-weight:700}
+.wrap{max-width:860px}
+.ex-hero{display:flex;gap:18px;align-items:center;padding:28px 0 12px}.ex-ic{font-size:54px;width:92px;height:92px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:26px;background:var(--card-solid);border:1px solid var(--border-color);box-shadow:0 0 30px rgba(34,211,176,.2)}
+.ex-hero h1{margin:8px 0 6px;font-size:clamp(24px,4.4vw,36px);line-height:1.3;background:linear-gradient(90deg,#22d3b0,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}.ex-sub{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.ex-stats .card{padding:14px;text-align:center;display:flex;flex-direction:column;gap:2px}.ex-stats b{font-size:24px;color:#22d3b0}.ex-stats span{font-size:12px;color:var(--text-muted)}
+.ex-opts{padding:14px 16px;margin-bottom:14px}.ex-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}.ex-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.ex-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ex-mode{text-align:left;cursor:pointer;padding:18px;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--c);transition:.25s}.ex-mode:hover{transform:translateY(-4px);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 28%,transparent)}.ex-mode .mi{font-size:30px}.ex-mode b{font-size:17px}.ex-mode small{color:var(--text-muted);line-height:1.6;font-size:12.5px}.ex-mode em{font-style:normal;font-weight:800;color:var(--c);margin-top:auto;padding-top:6px}.ex-mode.dis{opacity:.5;cursor:not-allowed}
+.ex-foot{text-align:center;color:var(--text-muted);font-size:13px;margin:18px 0 60px}
+.ex-hud{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}.ex-x{width:38px;height:38px;border-radius:12px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font-size:16px}
+.ex-prog{flex:1;min-width:150px;font-size:13px;font-weight:800}.ex-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:5px}.ex-bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3b0,#a855f7);transition:width .4s}
+.ex-pill{padding:7px 12px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13px;white-space:nowrap}
+.ex-q{padding:22px;margin-bottom:14px}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tg.b{background:rgba(251,191,36,.16);color:#fbbf24}.tg.m{background:rgba(251,113,133,.16);color:#fb7185}
+.ex-qt{font-size:19px;line-height:1.85;font-weight:700;margin-bottom:16px}
+.ex-os{display:grid;gap:10px}.ex-opt{display:flex;gap:12px;align-items:center;text-align:left;padding:13px 15px;border-radius:14px;border:1.5px solid var(--border-color);background:var(--card-solid);color:var(--text);font:inherit;font-size:15.5px;cursor:pointer;transition:.18s;line-height:1.6}.ex-opt i{font-style:normal;flex:0 0 32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;background:rgba(255,255,255,.07)}
+.ex-opt:hover{border-color:#a855f7;transform:translateX(3px)}.ex-opt.sel{border-color:#a855f7;background:rgba(168,85,247,.16)}.ex-opt.sel i{background:#a855f7;color:#0b1020}
+.ex-opt.right{border-color:#22d3b0;background:rgba(34,211,176,.16);animation:pop .35s}.ex-opt.right i{background:#22d3b0;color:#0b1020}.ex-opt.wrong{border-color:#fb7185;background:rgba(251,113,133,.15);animation:shk .35s}.ex-opt.wrong i{background:#fb7185;color:#0b1020}.ex-opt.dim{opacity:.5;pointer-events:none}.ex-opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes pop{50%{box-shadow:0 0 22px rgba(34,211,176,.55)}}@keyframes shk{25%{translate:-5px 0}75%{translate:5px 0}}
+.ex-fb{margin-top:14px;padding:13px 15px;border-radius:14px;line-height:1.8;font-size:14.5px}.ex-fb.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-fb.bad{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5)}.ex-fb .xp{color:#fbbf24;font-weight:800;font-size:13px}.ex-exp{margin-top:6px;color:var(--text-muted)}
+.ex-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn.ghost{background:var(--card-solid)!important;color:var(--text)!important;border:1px solid var(--border-color)!important;box-shadow:none!important}.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ex-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px;margin-bottom:60px}.ex-pal button{height:38px;border-radius:10px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font:inherit;font-weight:800}.ex-pal .ans{background:rgba(34,211,176,.2);border-color:#22d3b0}.ex-pal .mk{box-shadow:inset 0 -3px #fb7185}.ex-pal .cur{outline:2px solid #a855f7}
+.ex-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}.ex-modal .card{max-width:380px;width:100%;padding:22px}
+.ex-res{padding:22px;margin:18px 0 14px}.ex-rh{display:flex;gap:18px;align-items:center;padding:16px;border-radius:18px;margin-bottom:12px}.ex-rh.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-rh.bad{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.5)}.ex-rh h2{margin:0 0 4px;font-size:21px}.ex-rh p{margin:0;color:var(--text-muted)}
+.ex-score{display:flex;align-items:baseline;gap:4px}.ex-score b{font-size:46px;color:#22d3b0}.ex-score span{color:var(--text-muted);font-size:18px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span{color:var(--text-muted)}
+details.qa{margin-top:8px}
+@media(max-width:700px){.ex-stats{grid-template-columns:1fr 1fr}.ex-modes{grid-template-columns:1fr}.ex-hero{flex-direction:column;align-items:flex-start}.ex-qt{font-size:17px}}
+</style>
+</head>
+
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>SSC · খনিজ সম্পদ: জীবাশ্ম</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="exam.html">← <span class="long">এক্সাম জোন</span></a>
+    </div>
+  </header>
+  <main id="app"><div class="msg">লোড হচ্ছে…</div></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script src="exam-engine.js"></script>
+<script>
+CH={id:'ssc-11',exam:'ssc',paper:0,no:11,title:'খনিজ সম্পদ: জীবাশ্ম',icon:'🛢️',
+ bank:[
+  B(1,'জীবাশ্ম জ্বালানি তৈরি হয় কী থেকে?','মৃত উদ্ভিদ ও প্রাণীদেহ থেকে',['ভূগর্ভের কঠিন শিলা থেকে','সমুদ্রের তলার মাটি থেকে','ক্যালসিয়াম কার্বনেট থেকে'],'লক্ষ লক্ষ বছর ধরে উচ্চ চাপ-তাপে রূপান্তরিত হয়ে।'),
+  B(1,'জীবাশ্ম জ্বালানি তৈরিতে কোন পরিবেশ প্রয়োজন?','বায়ুর অনুপস্থিতি',['প্রচুর বাতাস','সরাসরি সূর্যালোক','তীব্র শীতলতা'],'অক্সিজেনের অভাবে পচন-বিযোজনে এগুলো হয়।'),
+  B(1,'জীবাশ্ম জ্বালানির প্রধান উপাদান কোন দুটি মৌল?','কার্বন ও হাইড্রোজেন',['কার্বন ও নাইট্রোজেন','কার্বন ও অক্সিজেন','হাইড্রোজেন ও নাইট্রোজেন'],'হাইড্রোকার্বন।'),
+  B(1,'সকল জ্বালানির মূল উপাদান কোন মৌল?','কার্বন (C)',['অক্সিজেন','নাইট্রোজেন','সালফার'],'কার্বন পুড়ে তাপ দেয়।'),
+  B(1,'নিচের কোনটি জীবাশ্ম জ্বালানি?','প্রাকৃতিক গ্যাস',['কাঠ','ইথানল','হাইড্রোজেন'],'কয়লা, পেট্রোলিয়াম ও প্রাকৃতিক গ্যাস।'),
+  B(1,'জীবাশ্ম জ্বালানি কয়টি প্রধান ধরনের?','৩টি (কয়লা, পেট্রোলিয়াম, প্রাকৃতিক গ্যাস)',['২টি','৪টি','৫টি'],'প্রধান তিনটি।'),
+  B(1,'জীবাশ্ম জ্বালানি কেমন শক্তির উৎস?','অনবায়নযোগ্য',['নবায়নযোগ্য','সীমাহীন','সৌরশক্তি'],'একবার ব্যবহারে পুনরায় সহজে তৈরি হয় না।'),
+  B(1,'উদ্ভিদদেহ মাটির নিচে চাপা পড়ে দীর্ঘদিন পর কী হয়?','কয়লা',['তেল','প্রাকৃতিক গ্যাস','পাথর'],'উদ্ভিদজ উৎস থেকে কয়লা।'),
+  B(1,'কয়লার প্রধান উপাদান কোনটি?','কার্বন',['হাইড্রোজেন','ইথেন','বিউটেন'],'কয়লা মূলত কার্বন।'),
+  B(1,'কোন কয়লায় কার্বনের পরিমাণ সবচেয়ে বেশি?','অ্যানথ্রাসাইট',['লিগনাইট','পিট','বিটুমিনাস'],'অ্যানথ্রাসাইট সর্বোচ্চ মানের কয়লা।'),
+  B(1,'কয়লার সঠিক শ্রেণিবিন্যাস (নিম্ন থেকে উচ্চ মান) কোনটি?','পিট → লিগনাইট → বিটুমিনাস → অ্যানথ্রাসাইট',['অ্যানথ্রাসাইট → পিট → লিগনাইট','লিগনাইট → পিট → অ্যানথ্রাসাইট','বিটুমিনাস → পিট → লিগনাইট'],'কার্বনের পরিমাণ ক্রমান্বয়ে বাড়ে।'),
+  B(1,'কয়লাকে বায়ুর অনুপস্থিতিতে উত্তপ্ত করলে কোনটি পাওয়া যায়?','কোক',['ন্যাপথা','বিটুমিন','কেরোসিন'],'কয়লার ধ্বংসাত্মক পাতনে কোক পাওয়া যায়।'),
+  B(1,'কয়লার ধ্বংসাত্মক পাতনে কোনটি পাওয়া যায় না?','পেট্রোল',['কোক','আলকাতরা','কোল গ্যাস'],'পেট্রোল পেট্রোলিয়ামের অংশ।'),
+  B(1,'কোক কোন কাজে ব্যবহৃত হয়?','ধাতু নিষ্কাশনে বিজারক ও জ্বালানি হিসেবে',['রান্নায় তরল জ্বালানি','সার তৈরিতে','পিচ্ছিলকারক হিসেবে'],'ব্লাস্ট ফার্নেসে কোক ব্যবহৃত হয়।'),
+  B(1,'কয়লা থেকে প্রাপ্ত আলকাতরা (কোল টার) থেকে কোন যৌগ পাওয়া যায়?','বেনজিন, ন্যাপথালিন',['মিথেন, ইথেন','প্রোপেন, বিউটেন','কেরোসিন'],'আলকাতরা থেকে অ্যারোমেটিক যৌগ মেলে।'),
+  B(1,'বাংলাদেশের কোথায় কয়লাখনি আছে?','বড়পুকুরিয়া (দিনাজপুর)',['কক্সবাজার','বরিশাল','খুলনা'],'বড়পুকুরিয়া কয়লাখনি দিনাজপুরে।'),
+  B(1,'নিচের কোনটি বাংলাদেশের কয়লাক্ষেত্র?','ফুলবাড়ী',['বিজয়পুর','কক্সবাজার','রূপপুর'],'ফুলবাড়ী (দিনাজপুর) কয়লাক্ষেত্র।'),
+  B(1,'বাংলাদেশের কয়লা প্রধানত কী কাজে ব্যবহৃত হয়?','বিদ্যুৎ উৎপাদনে',['রান্নায় মিথেন হিসেবে','সার তৈরিতে','যানবাহন চালাতে'],'তাপবিদ্যুৎ কেন্দ্রে ব্যবহৃত হয়।'),
+  B(1,'প্রাকৃতিক গ্যাসের প্রধান উপাদান কোনটি?','মিথেন (CH₄)',['ইথেন','প্রোপেন','বিউটেন'],'৯০% এর বেশি মিথেন।'),
+  B(1,'প্রাকৃতিক গ্যাসে মিথেনের পরিমাণ প্রায় কত?','৯০% এর বেশি',['৪০%','২০%','১০%'],'বাকিটা ইথেন, প্রোপেন ইত্যাদি।'),
+  B(1,'প্রাকৃতিক গ্যাসের বর্ণ কেমন?','বর্ণহীন',['কালো','সবুজ','বাদামি'],'মিথেন বর্ণহীন ও গন্ধহীন।'),
+  B(1,'মিথেন গ্যাসকে কী বলা হয় (জলাভূমি থেকে উৎপন্ন)?','মার্শ গ্যাস',['কোল গ্যাস','প্রোডিউসার গ্যাস','নোবেল গ্যাস'],'জলাভূমির পচন থেকে মিথেন তৈরি হয়।'),
+  B(1,'CNG-এর পূর্ণরূপ কী?','Compressed Natural Gas',['Compact Nitrogen Gas','Carbon Natural Gas','Common Natural Gas'],'সংকুচিত প্রাকৃতিক গ্যাস।'),
+  B(1,'CNG-এর প্রধান উপাদান কোনটি?','মিথেন',['প্রোপেন','বিউটেন','ইথেন'],'প্রাকৃতিক গ্যাসই সংকুচিত করা হয়।'),
+  B(1,'LPG-এর পূর্ণরূপ কী?','Liquefied Petroleum Gas',['Light Petrol Gas','Liquid Propane Group','Large Petroleum Gas'],'তরলীকৃত পেট্রোলিয়াম গ্যাস।'),
+  B(1,'LPG-এর প্রধান উপাদান কোনটি?','প্রোপেন ও বিউটেন',['মিথেন ও ইথেন','অক্সিজেন ও নাইট্রোজেন','আইসোবিউটেন ও পেন্টেন'],'এগুলো সহজে তরল করা যায়।'),
+  B(1,'LPG সিলিন্ডারে গ্যাস লিক হলে ধরার জন্য কী মেশানো হয়?','মার্কাপ্টান (গন্ধযুক্ত যৌগ)',['ক্লোরিন','অক্সিজেন','সালফিউরিক অ্যাসিড'],'গ্যাস গন্ধহীন, তাই মার্কাপ্টান দেওয়া হয়।'),
+  B(1,'প্রাকৃতিক গ্যাস দহনে কী উৎপন্ন হয়?','CO₂ ও জলীয় বাষ্প',['CO ও H₂','H₂ ও O₂','NO₂ শুধু'],'CH₄ + 2O₂ → CO₂ + 2H₂O।'),
+  B(1,'নিচের কোনটি তাপউৎপাদী বিক্রিয়া?','CH₄ + 2O₂ → CO₂ + 2H₂O',['CaCO₃ → CaO + CO₂','N₂ + O₂ → 2NO','H₂O → H₂ + O₂'],'দহন বিক্রিয়ায় তাপ নির্গত হয়।'),
+  B(1,'প্রাকৃতিক গ্যাস কোন কাজে ব্যবহৃত হয়?','সার কারখানা, বিদ্যুৎ ও রান্নায়',['কেবল সড়ক নির্মাণে','কেবল সংকর তৈরিতে','কোনো কাজে নয়'],'ইউরিয়া সার তৈরিতে মিথেন কাঁচামাল।'),
+  B(1,'বাংলাদেশের গ্যাসক্ষেত্র কোনটি?','তিতাস',['বড়পুকুরিয়া','বিজয়পুর','ফুলবাড়ী'],'তিতাস গ্যাসক্ষেত্র।'),
+  B(1,'হবিগঞ্জে অবস্থিত গ্যাসক্ষেত্র কোনটি?','বিবিয়ানা',['ফুলবাড়ী','বড়পুকুরিয়া','রূপপুর'],'বিবিয়ানা হবিগঞ্জে অবস্থিত।'),
+  B(1,'বাংলাদেশের কোথায় তেল পাওয়া গেছে?','সিলেট',['বরিশাল','দিনাজপুর','খুলনা'],'হরিপুর (সিলেট) তেলক্ষেত্র।'),
+  B(1,'বাংলাদেশের কোথায় অপরিশোধিত তেল পরিশোধন করা হয়?','চট্টগ্রাম',['খুলনা','রাজশাহী','সিলেট'],'ইস্টার্ন রিফাইনারি, চট্টগ্রাম।'),
+  B(1,'পেট্রোলিয়াম প্রধানত কীসের মিশ্রণ?','হাইড্রোকার্বন',['অ্যালকোহল','জৈব অ্যাসিড','হ্যালোজেন'],'অসংখ্য হাইড্রোকার্বনের জটিল মিশ্রণ।'),
+  B(1,'পেট্রোলিয়ামের অপর নাম কী?','তরল সোনা',['তরল রুপা','কালো মাটি','সবুজ তেল'],'উচ্চ অর্থনৈতিক মূল্যের কারণে।'),
+  B(1,'অপরিশোধিত পেট্রোলিয়ামকে ইংরেজিতে কী বলে?','ক্রুড অয়েল',['রিফাইনড অয়েল','বিটুমিন','গ্যাসোলিন'],'Crude oil।'),
+  B(1,'পেট্রোলিয়ামের উপাদানগুলো পৃথক করা হয় কোন পদ্ধতিতে?','আংশিক পাতন',['পরিস্রাবণ','কেলাসন','ঊর্ধ্বপাতন'],'স্ফুটনাঙ্কের পার্থক্যের ভিত্তিতে।'),
+  B(1,'আংশিক পাতনে পেট্রোলিয়ামের উপাদান পৃথক করা হয় কোন ধর্মের ভিত্তিতে?','স্ফুটনাঙ্ক',['গলনাঙ্ক','বর্ণ','ঘনত্ব শুধু'],'বিভিন্ন স্ফুটনাঙ্ক বিশিষ্ট ভগ্নাংশ।'),
+  B(1,'আংশিক পাতনে সবচেয়ে প্রথমে কোনটি পৃথক হয়?','পেট্রোলিয়াম গ্যাস (LPG)',['বিটুমিন','ডিজেল','লুব্রিকেটিং তেল'],'সবচেয়ে কম স্ফুটনাঙ্ক বলে টাওয়ারের মাথায়।'),
+  B(1,'আংশিক পাতন টাওয়ারের তলদেশে কোনটি পাওয়া যায়?','বিটুমিন (অবশিষ্টাংশ)',['পেট্রোল','LPG','কেরোসিন'],'সর্বোচ্চ স্ফুটনাঙ্ক বিশিষ্ট ভারী অংশ।'),
+  B(1,'আংশিক পাতন টাওয়ারে নিচের কোন ক্রমটি স্ফুটনাঙ্ক অনুযায়ী বাড়ছে?','গ্যাস < পেট্রোল < কেরোসিন < ডিজেল < বিটুমিন',['বিটুমিন < ডিজেল < গ্যাস','ডিজেল < গ্যাস < পেট্রোল','কেরোসিন < গ্যাস < বিটুমিন'],'ছোট শিকলের হাইড্রোকার্বনের স্ফুটনাঙ্ক কম।'),
+  B(1,'পেট্রল ইঞ্জিনের জ্বালানি কোনটি?','গ্যাসোলিন (পেট্রোল)',['ডিজেল','বিটুমিন','ন্যাপথা'],'গ্যাসোলিন = পেট্রোল।'),
+  B(1,'মোটরগাড়ি ও প্রাইভেট কারে কোন জ্বালানি ব্যবহৃত হয়?','গ্যাসোলিন',['কেরোসিন','বিটুমিন','লুব্রিকেটিং অয়েল'],'পেট্রোল ইঞ্জিনে।'),
+  B(1,'ডিজেল ইঞ্জিন কোথায় ব্যবহৃত হয়?','ট্রাক, বাস, ট্রেন ও লঞ্চে',['শুধু সাইকেলে','শুধু প্রাইভেট কারে (সব সময়)','কোথাও না'],'ভারী যানবাহনে ডিজেল ব্যবহৃত হয়।'),
+  B(1,'জেট ইঞ্জিনের জ্বালানি কোনটি?','কেরোসিন (এভিয়েশন ফুয়েল)',['পেট্রোল','ডিজেল','বিটুমিন'],'বিমানে বিশেষ শোধিত কেরোসিন ব্যবহৃত হয়।'),
+  B(1,'রাস্তা তৈরিতে কোন পেট্রোলিয়াম ভগ্নাংশ ব্যবহৃত হয়?','বিটুমিন (পিচ)',['গ্যাসোলিন','কেরোসিন','ন্যাপথা'],'রাস্তা নির্মাণ ও ছাদ প্রলেপে।'),
+  B(1,'ইঞ্জিনের পিচ্ছিলকারক হিসেবে কোনটি ব্যবহৃত হয়?','লুব্রিকেটিং তেল',['কেরোসিন','ডিজেল','গ্যাসোলিন'],'ঘর্ষণ কমায়।'),
+  B(1,'মোমবাতি তৈরিতে কোন ভগ্নাংশ ব্যবহৃত হয়?','প্যারাফিন মোম',['ডিজেল','কেরোসিন','গ্যাসোলিন'],'লুব্রিকেটিং তেল অংশ থেকে পাওয়া যায়।'),
+  B(1,'পেট্রোকেমিক্যাল শিল্পের কাঁচামাল কোনটি?','ন্যাপথা',['বিটুমিন','কেরোসিন','ডিজেল'],'প্লাস্টিক, সার, রাবার ইত্যাদি তৈরির কাঁচামাল।'),
+  B(1,'পেট্রোলিয়াম থেকে কোনটি পাওয়া যায় না?','কোক',['গ্যাসোলিন','ডিজেল','বিটুমিন'],'কোক পাওয়া যায় কয়লা থেকে।'),
+  B(1,'আংশিক পাতনে পাওয়া যায়—','কেরোসিন',['কোক','কোল টার','ধাতু'],'কেরোসিন স্টোভের জ্বালানি।'),
+  B(1,'পেট্রোলিয়াম গ্যাস সাধারণত কোন কাজে ব্যবহৃত হয়?','রান্নার জ্বালানি (LPG)',['রাস্তা তৈরিতে','পিচ্ছিলকারক হিসেবে','জাহাজ চালাতে'],'LPG হিসেবে।'),
+  B(1,'অ্যালকেন (সম্পৃক্ত হাইড্রোকার্বন)-এর সাধারণ সংকেত কোনটি?','CₙH₂ₙ₊₂',['CₙH₂ₙ','CₙH₂ₙ₋₂','CₙHₙ'],'অ্যালকেনের সাধারণ সংকেত CₙH₂ₙ₊₂।'),
+  B(1,'মিথেনের আণবিক সংকেত কোনটি?','CH₄',['C₂H₆','C₃H₈','C₄H₁₀'],'সরলতম হাইড্রোকার্বন।'),
+  B(1,'ইথেনের আণবিক সংকেত কোনটি?','C₂H₆',['CH₄','C₃H₈','C₂H₄'],'n = ২ → C₂H₆।'),
+  B(1,'প্রোপেনের আণবিক সংকেত কোনটি?','C₃H₈',['C₃H₆','C₄H₁₀','C₂H₆'],'n = ৩ → C₃H₈।'),
+  B(1,'বিউটেনের আণবিক সংকেত কোনটি?','C₄H₁₀',['C₄H₈','C₃H₈','C₅H₁₂'],'n = ৪ → C₄H₁₀।'),
+  B(1,'পেন্টেনের আণবিক সংকেত কোনটি?','C₅H₁₂',['C₅H₁₀','C₄H₁₀','C₆H₁₄'],'n = ৫ → C₅H₁₂।'),
+  B(1,'নিচের কোনটি অ্যারোমেটিক যৌগ?','বেনজিন',['মিথেন','ইথেন','প্রোপেন'],'C₆H₆।'),
+  B(1,'বেনজিনের আণবিক সংকেত কোনটি?','C₆H₆',['C₆H₁₂','C₆H₁₄','C₅H₁₂'],'বলয়াকার অ্যারোমেটিক যৌগ।'),
+  B(1,'ক্ষুদ্র শিকলের (C₁–C₄) অ্যালকেনসমূহ সাধারণ তাপমাত্রায় কেমন?','গ্যাসীয়',['কঠিন','তরল','প্লাজমা'],'মিথেন থেকে বিউটেন গ্যাসীয়।'),
+  B(1,'জ্বালানির দহনে প্রধানত কোন শক্তি পাওয়া যায়?','তাপশক্তি',['রাসায়নিক শক্তি','সৌরশক্তি','শব্দশক্তি'],'দহনে রাসায়নিক শক্তি তাপ শক্তিতে রূপান্তরিত হয়।'),
+  B(1,'দহন কী ধরনের বিক্রিয়া?','তাপউৎপাদী',['তাপহারী','প্রশমন','অধঃক্ষেপণ'],'দহনে তাপ ও আলো নির্গত হয়।'),
+  B(1,'অসম্পূর্ণ দহনে কোন বিষাক্ত গ্যাস তৈরি হয়?','কার্বন মনোক্সাইড',['কার্বন ডাইঅক্সাইড','অক্সিজেন','নাইট্রোজেন'],'অক্সিজেন কম থাকলে CO ও কার্বন কণা (কালি) হয়।'),
+  B(1,'জীবাশ্ম জ্বালানি পোড়ালে বাতাসে কোন গ্যাস বাড়ে যা গ্লোবাল ওয়ার্মিং ঘটায়?','কার্বন ডাইঅক্সাইড',['অক্সিজেন','নাইট্রোজেন','নিয়ন'],'CO₂ গ্রিনহাউস গ্যাস।'),
+  B(1,'জীবাশ্ম জ্বালানি থেকে বায়ুদূষণ কমাতে কোনটি বেশি উপযোগী?','প্রাকৃতিক গ্যাস (CNG)',['কয়লা','ডিজেল','অপরিশোধিত তেল'],'CNG তুলনামূলক কম দূষণকারী।'),
+  B(1,'কয়লা পোড়ালে সালফার থাকলে কোন গ্যাস বের হয়?','SO₂',['H₂','O₂','N₂'],'এটি অম্লবৃষ্টির কারণ।'),
+  B(1,'অম্লবৃষ্টির জন্য প্রধানত কোন গ্যাস দায়ী?','SO₂ ও NO₂',['CO₂ ও N₂','H₂ ও He','O₂ ও N₂'],'জীবাশ্ম জ্বালানির দহনজাত।'),
+  B(2,'CH₄ + 2O₂ → CO₂ + 2H₂O বিক্রিয়ায় ১ মোল CH₄ পুড়লে কত মোল CO₂ পাওয়া যায়?','১ মোল',['২ মোল','৩ মোল','০.৫ মোল'],'১ : ১ অনুপাত।'),
+  B(2,'CH₄ + 2O₂ → CO₂ + 2H₂O বিক্রিয়ায় ১৬ গ্রাম CH₄ পুড়লে কত গ্রাম পানি তৈরি হয়? (H = ১, O = ১৬)','৩৬ গ্রাম',['১৮ গ্রাম','৯ গ্রাম','৭২ গ্রাম'],'১ মোল CH₄ → ২ মোল H₂O = ৩৬ g।'),
+  B(2,'C₃H₈ + 5O₂ → 3CO₂ + 4H₂O সমীকরণে প্রোপেনের ১ মোল দহনে কত মোল O₂ লাগে?','৫ মোল',['৩ মোল','৪ মোল','২ মোল'],'সমতাকৃত সমীকরণের সহগ।'),
+  B(2,'2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O বিক্রিয়ায় ১ মোল ইথেন দহনে কত মোল CO₂ উৎপন্ন হয়?','২ মোল',['১ মোল','৪ মোল','৬ মোল'],'২ মোল ইথেন → ৪ মোল CO₂; তাই ১ মোল → ২ মোল।'),
+  B(2,'C₄H₁₀ (বিউটেন) দহনে ১ মোল বিউটেন থেকে কত মোল CO₂ উৎপন্ন হয়?','৪ মোল',['২ মোল','৫ মোল','১০ মোল'],'প্রতিটি C পরমাণু একটি CO₂ দেয়।'),
+  B(2,'STP-তে ২২.৪ লিটার মিথেন সম্পূর্ণ পুড়লে কত লিটার CO₂ পাওয়া যায় (STP-তে)?','২২.৪ লিটার',['৪৪.৮ লিটার','১১.২ লিটার','৬৭.২ লিটার'],'১ মোল CH₄ → ১ মোল CO₂।'),
+  B(2,'পেট্রোলিয়ামের আংশিক পাতনে কোন ভগ্নাংশে কার্বন সংখ্যা সবচেয়ে বেশি?','বিটুমিন',['পেট্রোল','LPG','কেরোসিন'],'সবচেয়ে বড় শিকলের হাইড্রোকার্বন।'),
+  B(2,'আংশিক পাতন টাওয়ারে উপাদানগুলো পৃথক হয় কারণ—','প্রত্যেকের স্ফুটনাঙ্ক ভিন্ন',['প্রত্যেকের রং ভিন্ন','সবার গলনাঙ্ক সমান','সবার ঘনত্ব সমান'],'ঠান্ডা হয়ে বিভিন্ন উচ্চতায় ঘনীভূত হয়।'),
+  B(2,'ক্ষুদ্র শিকলের হাইড্রোকার্বনের বৈশিষ্ট্য কোনটি?','কম স্ফুটনাঙ্ক ও সহজে জ্বলে',['খুব উচ্চ স্ফুটনাঙ্ক','খুব ঘন তরল','কঠিন ও অদাহ্য'],'ছোট অণুতে আন্তঃআণবিক আকর্ষণ কম।'),
+  B(2,'দীর্ঘ শিকলের হাইড্রোকার্বনের স্ফুটনাঙ্ক সাধারণত কেমন?','বেশি',['কম','শূন্য','সমান'],'আন্তঃআণবিক আকর্ষণ বেশি।'),
+  B(2,'কেরোসিন ও পেট্রোলের মধ্যে কোনটির স্ফুটনাঙ্ক বেশি?','কেরোসিন',['পেট্রোল','দুটিই সমান','কোনোটিই নয়'],'কেরোসিনে কার্বন সংখ্যা বেশি।'),
+  B(2,'বিটুমিন ও ডিজেলের মধ্যে কোনটি আংশিক পাতন টাওয়ারে নিচে পাওয়া যায়?','বিটুমিন',['ডিজেল','দুটিই এক জায়গায়','LPG'],'বিটুমিন সবচেয়ে ভারী।'),
+  B(2,'কয়লা থেকে কোল গ্যাস তৈরির সময় কোন প্রক্রিয়া ঘটে?','ধ্বংসাত্মক পাতন',['আংশিক পাতন','কেলাসন','পরিস্রাবণ'],'বায়ুর অনুপস্থিতিতে উত্তপ্ত করা হয়।'),
+  B(2,'জীবাশ্ম জ্বালানির বিকল্প নবায়নযোগ্য উৎস কোনটি?','সৌরশক্তি ও বায়ুশক্তি',['কয়লা','পেট্রোলিয়াম','প্রাকৃতিক গ্যাস'],'পরিবেশবান্ধব ও অফুরন্ত।'),
+  B(2,'অপরিশোধিত তেল সরাসরি ব্যবহার না করে পরিশোধন করা হয় কেন?','ভিন্ন ভিন্ন কাজের উপযোগী উপাদান পেতে',['কেবল রং বদলাতে','ওজন বাড়াতে','দাম কমাতে'],'বিভিন্ন ভগ্নাংশের ব্যবহার ভিন্ন।'),
+  B(2,'ইউরিয়া সার উৎপাদনে প্রাকৃতিক গ্যাস ব্যবহৃত হয় কারণ—','এটি হাইড্রোজেনের উৎস',['এটি নাইট্রোজেন দেয় না','এটি ক্ষারক','এটি সালফার সরবরাহ করে'],'CH₄ থেকে H₂ পেয়ে NH₃ ও পরে ইউরিয়া তৈরি হয়।'),
+  B(2,'ব্লাস্ট ফার্নেসে কোক কেন ব্যবহৃত হয়?','CO তৈরি করে আকরিক বিজারণের জন্য',['আকরিক দ্রবীভূত করতে','স্ল্যাগ ধরতে','ঠান্ডা করতে'],'C + O₂ → CO₂; CO₂ + C → 2CO।'),
+  B(3,'নিচের বিবৃতিগুলো লক্ষ করো:<br>i. কয়লা জীবাশ্ম জ্বালানি<br>ii. প্রাকৃতিক গ্যাসে মিথেন বেশি<br>iii. পেট্রোলিয়াম নবায়নযোগ্য<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'পেট্রোলিয়াম অনবায়নযোগ্য।'),
+  B(3,'নিচের বিবৃতিগুলো লক্ষ করো:<br>i. আংশিক পাতন স্ফুটনাঙ্কের ওপর নির্ভর করে<br>ii. পরিশোধনাগারে করা হয়<br>iii. এতে রাসায়নিক বিক্রিয়া ঘটে<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'আংশিক পাতন ভৌত প্রক্রিয়া।'),
+  B(3,'নিচের বিবৃতিগুলো লক্ষ করো:<br>i. LPG-তে প্রোপেন ও বিউটেন থাকে<br>ii. CNG-তে মিথেন প্রধান<br>iii. দুটিই তরল অবস্থায় বাতাসে মিশে থাকে<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'LPG ও CNG ব্যবহারের সময় গ্যাসীয়।'),
+  B(3,'CH₄ + 2O₂ → CO₂ + 2H₂O + তাপ—এই বিক্রিয়ায়—<br>i. তাপউৎপাদী<br>ii. দহন নামে পরিচিত<br>iii. ΔH ধনাত্মক<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'তাপ নির্গত হলে ΔH ঋণাত্মক।'),
+  B(3,'১৬ গ্রাম মিথেন ও ৬৪ গ্রাম O₂ থেকে CO₂ কত গ্রাম পাওয়া যায় (CH₄ + 2O₂ → CO₂ + 2H₂O)? (C = ১২, O = ১৬, H = ১)','৪৪ গ্রাম',['২২ গ্রাম','৮৮ গ্রাম','৬৪ গ্রাম'],'১ মোল CH₄ ও ২ মোল O₂ (সঠিক অনুপাত) → ১ মোল CO₂ = ৪৪ g।'),
+  B(3,'একটি হাইড্রোকার্বনের সাধারণ সংকেত CₙH₂ₙ₊₂ এবং n = ৬ হলে সংকেত কী?','C₆H₁₄',['C₆H₁₂','C₆H₆','C₆H₁₀'],'২ × ৬ + ২ = ১৪।'),
+  B(1,'কয়লা কোন ধরনের পদার্থ?','কঠিন জীবাশ্ম জ্বালানি',['তরল খনিজ','গ্যাসীয় খনিজ','ধাতব আকরিক'],'কয়লা কঠিন অবস্থায় খনি থেকে তোলা হয়।'),
+  B(1,'কয়লার ধ্বংসাত্মক পাতনে প্রাপ্ত গ্যাসকে কী বলে?','কোল গ্যাস',['মার্শ গ্যাস','বায়োগ্যাস','CNG'],'কোল গ্যাসে H₂, CH₄, CO থাকে।'),
+  B(1,'জ্বালানির দহনে তাপ নির্গত হওয়ার কারণ কী?','বন্ধন ভাঙার চেয়ে নতুন বন্ধন গঠনে বেশি শক্তি নির্গত হয়',['বন্ধন গঠনে শক্তি শোষিত হয়','কোনো বন্ধন ভাঙে না','নিউক্লিয় বিভাজন ঘটে'],'উৎপাদে মোট শক্তি কম, তাই তাপ বের হয়।'),
+  B(1,'তরল জ্বালানি কোনটি?','কেরোসিন',['কয়লা','কোক','মিথেন'],'কেরোসিন তরল হাইড্রোকার্বন।'),
+  B(1,'গ্যাসীয় জ্বালানি কোনটি?','মিথেন',['কয়লা','কেরোসিন','পিচ'],'প্রাকৃতিক গ্যাস।'),
+  B(1,'কঠিন জ্বালানি কোনটি?','কয়লা',['কেরোসিন','CNG','পেট্রোল'],'কাঠ, কয়লা, কোক কঠিন জ্বালানি।'),
+  B(1,'নিচের কোনটি সম্পৃক্ত হাইড্রোকার্বন?','ইথেন',['ইথিন','ইথাইন','বেনজিন'],'ইথেন C₂H₆ একক বন্ধনযুক্ত।'),
+  B(1,'ইথিনের আণবিক সংকেত কোনটি?','C₂H₄',['C₂H₆','C₂H₂','CH₄'],'অ্যালকিনের সাধারণ সংকেত CₙH₂ₙ।'),
+  B(1,'অশোধিত পেট্রোলিয়াম সাধারণত কেমন দেখতে?','গাঢ় বাদামি বা কালচে তরল',['বর্ণহীন গ্যাস','সাদা কঠিন','নীল তরল'],'ক্রুড অয়েল গাঢ় রঙের।'),
+  B(2,'পেট্রোলিয়ামের সবচেয়ে হালকা (কম স্ফুটনাঙ্ক) ভগ্নাংশ কোনটি?','পেট্রোলিয়াম গ্যাস',['ডিজেল','বিটুমিন','লুব্রিকেটিং তেল'],'টাওয়ারের একেবারে মাথায় সংগৃহীত হয়।')
+ ],
+ gens:[]
+};
+
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+ExamEngine.start(CH);
+</script>
+</body>
+</html>
