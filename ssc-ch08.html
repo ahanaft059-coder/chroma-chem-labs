@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>রসায়ন ও শক্তি | এক্সাম জোন | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,hsl(200,60%,11%),hsl(200,70%,30%),hsl(200,80%,55%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#0369a1,#38bdf8);}
+.scroll{overflow-x:auto}
+.badge2{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:800}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px;align-items:center}.kv span:first-child{color:var(--text-muted)}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.gwrap{grid-template-columns:minmax(0,1fr) minmax(300px,1fr)}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.mode{display:none}.mode.on{display:block}.scroll{overflow-x:auto}
+.rc{background:var(--card-solid);border:1px solid var(--border-color);border-radius:14px;padding:14px;text-align:center}.rc small{color:var(--text-muted);font-weight:700}.rc strong{display:block;font-size:34px;color:#22d3b0;margin-top:4px}
+.pc{border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);border-radius:6px;font-size:11px;font-weight:800;padding:5px 0;cursor:pointer;border-bottom:3px solid var(--c)}.pc.on{background:var(--c);color:#0b1020;box-shadow:0 0 12px var(--c);transform:scale(1.15);z-index:2}
+.orb-t{padding:2px 6px;border-radius:6px;display:inline-block;margin:2px 1px;font-weight:700}
+.wrap{max-width:860px}
+.ex-hero{display:flex;gap:18px;align-items:center;padding:28px 0 12px}.ex-ic{font-size:54px;width:92px;height:92px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:26px;background:var(--card-solid);border:1px solid var(--border-color);box-shadow:0 0 30px rgba(34,211,176,.2)}
+.ex-hero h1{margin:8px 0 6px;font-size:clamp(24px,4.4vw,36px);line-height:1.3;background:linear-gradient(90deg,#22d3b0,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}.ex-sub{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.ex-stats .card{padding:14px;text-align:center;display:flex;flex-direction:column;gap:2px}.ex-stats b{font-size:24px;color:#22d3b0}.ex-stats span{font-size:12px;color:var(--text-muted)}
+.ex-opts{padding:14px 16px;margin-bottom:14px}.ex-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}.ex-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.ex-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ex-mode{text-align:left;cursor:pointer;padding:18px;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--c);transition:.25s}.ex-mode:hover{transform:translateY(-4px);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 28%,transparent)}.ex-mode .mi{font-size:30px}.ex-mode b{font-size:17px}.ex-mode small{color:var(--text-muted);line-height:1.6;font-size:12.5px}.ex-mode em{font-style:normal;font-weight:800;color:var(--c);margin-top:auto;padding-top:6px}.ex-mode.dis{opacity:.5;cursor:not-allowed}
+.ex-foot{text-align:center;color:var(--text-muted);font-size:13px;margin:18px 0 60px}
+.ex-hud{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}.ex-x{width:38px;height:38px;border-radius:12px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font-size:16px}
+.ex-prog{flex:1;min-width:150px;font-size:13px;font-weight:800}.ex-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:5px}.ex-bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3b0,#a855f7);transition:width .4s}
+.ex-pill{padding:7px 12px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13px;white-space:nowrap}
+.ex-q{padding:22px;margin-bottom:14px}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tg.b{background:rgba(251,191,36,.16);color:#fbbf24}.tg.m{background:rgba(251,113,133,.16);color:#fb7185}
+.ex-qt{font-size:19px;line-height:1.85;font-weight:700;margin-bottom:16px}
+.ex-os{display:grid;gap:10px}.ex-opt{display:flex;gap:12px;align-items:center;text-align:left;padding:13px 15px;border-radius:14px;border:1.5px solid var(--border-color);background:var(--card-solid);color:var(--text);font:inherit;font-size:15.5px;cursor:pointer;transition:.18s;line-height:1.6}.ex-opt i{font-style:normal;flex:0 0 32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;background:rgba(255,255,255,.07)}
+.ex-opt:hover{border-color:#a855f7;transform:translateX(3px)}.ex-opt.sel{border-color:#a855f7;background:rgba(168,85,247,.16)}.ex-opt.sel i{background:#a855f7;color:#0b1020}
+.ex-opt.right{border-color:#22d3b0;background:rgba(34,211,176,.16);animation:pop .35s}.ex-opt.right i{background:#22d3b0;color:#0b1020}.ex-opt.wrong{border-color:#fb7185;background:rgba(251,113,133,.15);animation:shk .35s}.ex-opt.wrong i{background:#fb7185;color:#0b1020}.ex-opt.dim{opacity:.5;pointer-events:none}.ex-opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes pop{50%{box-shadow:0 0 22px rgba(34,211,176,.55)}}@keyframes shk{25%{translate:-5px 0}75%{translate:5px 0}}
+.ex-fb{margin-top:14px;padding:13px 15px;border-radius:14px;line-height:1.8;font-size:14.5px}.ex-fb.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-fb.bad{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5)}.ex-fb .xp{color:#fbbf24;font-weight:800;font-size:13px}.ex-exp{margin-top:6px;color:var(--text-muted)}
+.ex-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn.ghost{background:var(--card-solid)!important;color:var(--text)!important;border:1px solid var(--border-color)!important;box-shadow:none!important}.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ex-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px;margin-bottom:60px}.ex-pal button{height:38px;border-radius:10px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font:inherit;font-weight:800}.ex-pal .ans{background:rgba(34,211,176,.2);border-color:#22d3b0}.ex-pal .mk{box-shadow:inset 0 -3px #fb7185}.ex-pal .cur{outline:2px solid #a855f7}
+.ex-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}.ex-modal .card{max-width:380px;width:100%;padding:22px}
+.ex-res{padding:22px;margin:18px 0 14px}.ex-rh{display:flex;gap:18px;align-items:center;padding:16px;border-radius:18px;margin-bottom:12px}.ex-rh.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-rh.bad{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.5)}.ex-rh h2{margin:0 0 4px;font-size:21px}.ex-rh p{margin:0;color:var(--text-muted)}
+.ex-score{display:flex;align-items:baseline;gap:4px}.ex-score b{font-size:46px;color:#22d3b0}.ex-score span{color:var(--text-muted);font-size:18px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span{color:var(--text-muted)}
+details.qa{margin-top:8px}
+@media(max-width:700px){.ex-stats{grid-template-columns:1fr 1fr}.ex-modes{grid-template-columns:1fr}.ex-hero{flex-direction:column;align-items:flex-start}.ex-qt{font-size:17px}}
+</style>
+</head>
+
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>SSC · রসায়ন ও শক্তি</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="exam.html">← <span class="long">এক্সাম জোন</span></a>
+    </div>
+  </header>
+  <main id="app"><div class="msg">লোড হচ্ছে…</div></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script src="exam-engine.js"></script>
+<script>
+CH={id:'ssc-08',exam:'ssc',paper:0,no:8,title:'রসায়ন ও শক্তি',icon:'⚡',
+ bank:[
+  B(1,'যে বিক্রিয়ায় তাপ নির্গত হয় তাকে বলে—','তাপোৎপাদী বিক্রিয়া',['তাপহারী বিক্রিয়া','উভমুখী বিক্রিয়া','অনুঘটকীয় বিক্রিয়া'],'যেমন দহন।'),
+  B(1,'যে বিক্রিয়ায় পরিবেশ থেকে তাপ শোষিত হয় তাকে বলে—','তাপহারী বিক্রিয়া',['তাপোৎপাদী বিক্রিয়া','নিরপেক্ষকরণ','দহন'],'বিক্রিয়ার সময় তাপ শোষিত হয়।'),
+  B(1,'সালোকসংশ্লেষণ কোন ধরনের বিক্রিয়া?','তাপহারী',['তাপোৎপাদী','দহন','নিরপেক্ষকরণ'],'সূর্যের আলোর শক্তি শোষিত হয়।'),
+  B(1,'কয়লা পোড়ানো কোন ধরনের বিক্রিয়া?','তাপোৎপাদী',['তাপহারী','উভমুখী','প্রশমন'],'দহনে তাপ ও আলো নির্গত হয়।'),
+  B(1,'তাপোৎপাদী বিক্রিয়ার ক্ষেত্রে ΔH-এর মান কেমন হয়?','ঋণাত্মক',['ধনাত্মক','শূন্য','অসীম'],'তাপ নির্গত হলে ΔH < ০।'),
+  B(1,'নিচের কোনটি নবায়নযোগ্য শক্তির উৎস?','সৌরশক্তি',['কয়লা','পেট্রোলিয়াম','প্রাকৃতিক গ্যাস'],'কয়লা, পেট্রোলিয়াম ও প্রাকৃতিক গ্যাস জীবাশ্ম জ্বালানি।'),
+  B(2,'সালোকসংশ্লেষণে শক্তির রূপান্তর কোনটি?','আলোক শক্তি → রাসায়নিক শক্তি',['রাসায়নিক শক্তি → আলোক শক্তি','তাপ শক্তি → আলোক শক্তি','বৈদ্যুতিক শক্তি → রাসায়নিক শক্তি'],'উদ্ভিদ আলোক শক্তি গ্লুকোজে রাসায়নিক শক্তিরূপে সঞ্চয় করে।'),
+  B(2,'শুকনো ব্যাটারি বা কোষ বিদ্যুৎ দেওয়ার সময় শক্তির রূপান্তর হলো—','রাসায়নিক শক্তি → বৈদ্যুতিক শক্তি',['বৈদ্যুতিক শক্তি → রাসায়নিক শক্তি','তাপ শক্তি → রাসায়নিক শক্তি','আলোক শক্তি → বৈদ্যুতিক শক্তি'],'কোষের ভেতরের রাসায়নিক বিক্রিয়া বিদ্যুৎ উৎপন্ন করে।'),
+  B(2,'হাইড্রোজেন ফুয়েল সেলে বিদ্যুৎ উৎপাদনের সময় উপজাত হিসেবে কী পাওয়া যায়?','পানি',['কার্বন ডাই-অক্সাইড','সালফার ডাই-অক্সাইড','অ্যামোনিয়া'],'২H₂ + O₂ → ২H₂O।'),
+  B(2,'পানিতে NaOH দ্রবীভূত করলে পাত্র গরম হয়। এটি কী নির্দেশ করে?','দ্রবণ প্রক্রিয়া তাপোৎপাদী',['দ্রবণ প্রক্রিয়া তাপহারী','বিক্রিয়ার হার শূন্য','এটি ভৌত পরিবর্তন নয়'],'তাপ নির্গত হওয়ায় তাপমাত্রা বাড়ে।'),
+  B(2,'পানিতে NH₄Cl দ্রবীভূত করলে পাত্র ঠান্ডা অনুভূত হয়। কারণ—','দ্রবণ প্রক্রিয়া তাপহারী',['দ্রবণ প্রক্রিয়া তাপোৎপাদী','বিক্রিয়া সম্পূর্ণ হয় না','তাপ নির্গত হয়'],'দ্রবণ প্রক্রিয়ায় পরিবেশ থেকে তাপ শোষিত হয়।'),
+  B(2,'CaO-এর সাথে পানি মেশালে তাপ নির্গত হয়। এটি কোন ধরনের বিক্রিয়া?','তাপোৎপাদী',['তাপহারী','উভমুখী','বিয়োজন'],'CaO + H₂O → Ca(OH)₂ + তাপ।'),
+  B(2,'CaCO₃ → CaO + CO₂ বিক্রিয়াটি কোন ধরনের?','তাপহারী',['তাপোৎপাদী','নিরপেক্ষকরণ','দহন'],'চুনাপাথর বিয়োজনে তাপ শোষিত হয়।'),
+  B(3,'তাপোৎপাদী বিক্রিয়ায় উৎপাদের মোট শক্তি বিক্রিয়কের মোট শক্তির তুলনায়—','কম',['বেশি','সমান','নির্ধারণ করা যায় না'],'অতিরিক্ত শক্তি তাপ হিসেবে নির্গত হয়।'),
+  B(3,'তাপহারী বিক্রিয়ায় ΔH-এর মান—','ধনাত্মক',['ঋণাত্মক','শূন্য','সর্বদা −১'],'তাপ শোষিত হলে ΔH > ০।'),
+  B(2,'জ্বালানির দহনে প্রধানত রাসায়নিক শক্তি রূপান্তরিত হয়—','তাপ ও আলোক শক্তিতে',['শুধু শব্দ শক্তিতে','শুধু যান্ত্রিক শক্তিতে','চৌম্বক শক্তিতে'],'দহন তাপোৎপাদী বিক্রিয়া।'),
+  B(1,'কিলোক্যালরির সংক্ষিপ্ত রূপ কোনটি?','kcal',['KCL','KC','Kcl'],'১ kcal = ১০০০ cal।'),
+  B(1,'সকল ধরনের শক্তির SI একক কোনটি?','জুল (J)',['ক্যালরি','নিউটন','ওয়াট'],'বর্তমানে শক্তির আন্তর্জাতিক একক জুল।'),
+  B(1,'১ ক্যালরি = কত জুল (প্রায়)?','৪.১৮ J',['৪.৮১ J','১০০০ J','০.২৪ J'],'১ cal = ৪.১৮ J।'),
+  B(1,'১ কিলোজুল = কত জুল?','১০০০ J',['১০০ J','১০ J','১০⁶ J'],'কিলো = ১০³।'),
+  B(1,'১ কিলোক্যালরি বলতে কী বোঝায়?','১ কেজি পানির তাপমাত্রা ১°C বাড়াতে প্রয়োজনীয় তাপ',['১ গ্রাম পানির তাপমাত্রা ১°C বাড়াতে প্রয়োজনীয় তাপ','১ লিটার পানি বাষ্প করতে প্রয়োজনীয় তাপ','১ গ্রাম বরফ গলাতে প্রয়োজনীয় তাপ'],'১ গ্রাম পানির ক্ষেত্রে ১ ক্যালরি, ১ কেজির ক্ষেত্রে ১ কিলোক্যালরি।'),
+  B(1,'বন্ধন শক্তি কী?','দুটি পরমাণুর বন্ধন ভাঙতে বা গঠনে যে শক্তি লাগে/নির্গত হয়',['পরমাণুর ভর','নিউক্লিয়াসের শক্তি','অণুর আয়তন'],'বন্ধন ভাঙতে শক্তি লাগে, বন্ধন গঠনে শক্তি নির্গত হয়।'),
+  B(1,'বন্ধন ভাঙতে কী ঘটে?','শক্তি শোষিত হয়',['শক্তি নির্গত হয়','শক্তির পরিবর্তন হয় না','তাপমাত্রা কমে না'],'বন্ধন ভাঙা তাপহারী প্রক্রিয়া।'),
+  B(1,'বন্ধন গঠনে কী ঘটে?','শক্তি নির্গত হয়',['শক্তি শোষিত হয়','কিছুই ঘটে না','ভর বাড়ে'],'বন্ধন গঠন তাপউৎপাদী প্রক্রিয়া।'),
+  B(1,'C–H বন্ধনের বন্ধন শক্তি কত? (kJ/mol)','প্রায় ৪১৪',['প্রায় ৩৪৪','প্রায় ৬১৫','প্রায় ৩৯১'],'C–H বন্ধন শক্তি প্রায় ৪১৪ kJ/mol।'),
+  B(1,'আন্তঃআণবিক আকর্ষণ কোন ধরনের যৌগে থাকে?','সমযোজী যৌগের অণুসমূহের মধ্যে',['আয়নিক যৌগের আয়নের মধ্যে','ধাতব পরমাণুর মধ্যে','নিউক্লিয়াসে'],'সমযোজী অণুসমূহ দুর্বল আকর্ষণ বলে আকর্ষিত থাকে।'),
+  B(1,'যে বিক্রিয়ায় তাপ নির্গত হয় তাকে কী বলে?','তাপউৎপাদী বিক্রিয়া',['তাপহারী বিক্রিয়া','উভমুখী বিক্রিয়া','সংযোজন বিক্রিয়া'],'যেমন দহন, প্রশমন।'),
+  B(1,'যে বিক্রিয়ায় পরিবেশ থেকে তাপ শোষিত হয় তাকে কী বলে?','তাপহারী বিক্রিয়া',['তাপউৎপাদী বিক্রিয়া','দহন বিক্রিয়া','প্রশমন বিক্রিয়া'],'যেমন CaCO₃-এর তাপীয় বিযোজন।'),
+  B(1,'তাপউৎপাদী বিক্রিয়ায় ΔH-এর মান কেমন?','ঋণাত্মক',['ধনাত্মক','শূন্য','অনির্দিষ্ট'],'তাপ বের হলে ΔH < ০।'),
+  B(1,'তাপহারী বিক্রিয়ায় ΔH-এর মান কেমন?','ধনাত্মক',['ঋণাত্মক','শূন্য','অসংজ্ঞায়িত'],'তাপ শোষিত হলে ΔH > ০।'),
+  B(1,'ΔH-এর সূত্র কোনটি?','উৎপাদের মোট শক্তি − বিক্রিয়কের মোট শক্তি',['বিক্রিয়কের শক্তি − উৎপাদের শক্তি','বিক্রিয়ক + উৎপাদ','বিক্রিয়ক ÷ উৎপাদ'],'ΔH = E(উৎপাদ) − E(বিক্রিয়ক)।'),
+  B(1,'বিক্রিয়কের অভ্যন্তরীণ শক্তি ৫০ kJ/mol ও উৎপাদের ৮০ kJ/mol হলে ΔH কত?','+৩০ kJ/mol',['−৩০ kJ/mol','+১৩০ kJ/mol','০'],'৮০ − ৫০ = +৩০; বিক্রিয়াটি তাপহারী।'),
+  B(1,'দহন বিক্রিয়া কোন ধরনের?','তাপউৎপাদী',['তাপহারী','উভমুখী','নিরপেক্ষ'],'দহনে তাপ ও আলো নির্গত হয়।'),
+  B(1,'নিচের কোনটি জীবাশ্ম জ্বালানি?','কয়লা',['কাঠ','গোবর','সৌরশক্তি'],'কয়লা, পেট্রোলিয়াম ও প্রাকৃতিক গ্যাস জীবাশ্ম জ্বালানি।'),
+  B(1,'প্রাকৃতিক গ্যাসের প্রধান উপাদান কোনটি?','মিথেন (CH₄)',['ইথেন','প্রোপেন','কার্বন ডাইঅক্সাইড'],'প্রাকৃতিক গ্যাসের ৯০–৯৫% মিথেন।'),
+  B(1,'CNG-এর পূর্ণরূপ কী?','Compressed Natural Gas',['Compact Natural Gas','Common Nitrogen Gas','Carbon Natural Gas'],'সংকুচিত প্রাকৃতিক গ্যাস।'),
+  B(1,'LPG-এর প্রধান উপাদান কোনটি?','প্রোপেন ও বিউটেন',['মিথেন ও ইথেন','হাইড্রোজেন','অ্যাসিটিলিন'],'সিলিন্ডারের রান্নার গ্যাস (LPG) প্রোপেন-বিউটেন মিশ্রণ।'),
+  B(1,'বায়োগ্যাসের প্রধান উপাদান কোনটি?','মিথেন',['কার্বন মনোক্সাইড','হাইড্রোজেন','অক্সিজেন'],'গোবর বা জৈব বর্জ্যের অবায়বীয় পচনে মিথেন তৈরি হয়।'),
+  B(1,'নিচের কোনটি অনবায়নযোগ্য শক্তির উৎস?','পেট্রোলিয়াম',['বায়ুশক্তি','সৌরশক্তি','জলবিদ্যুৎ'],'এগুলো ব্যবহারে একসময় শেষ হয়ে যাবে।'),
+  B(1,'জীবাশ্ম জ্বালানি পোড়ালে প্রধানত কোন গ্যাস বায়ুমণ্ডলে বাড়ে?','কার্বন ডাইঅক্সাইড',['অক্সিজেন','নাইট্রোজেন','হিলিয়াম'],'এটি গ্রিনহাউস গ্যাস।'),
+  B(1,'কোন গ্যাস গ্রিনহাউস প্রভাবের জন্য প্রধানত দায়ী?','CO₂',['N₂','O₂','Ar'],'CO₂ ও CH₄ তাপ আটকে রাখে।'),
+  B(1,'অম্লবৃষ্টির জন্য প্রধানত কোন গ্যাস দায়ী?','SO₂ ও NO₂',['N₂ ও O₂','H₂ ও He','CO₂ ও Ar'],'এরা পানির সাথে মিশে অ্যাসিড তৈরি করে।'),
+  B(1,'কার্বন মনোক্সাইড (CO) কেমন গ্যাস?','বিষাক্ত',['নিরীহ','জ্বলনে সহায়ক','অক্সিজেনের মতো নিরাপদ'],'CO রক্তের হিমোগ্লোবিনের সাথে যুক্ত হয়ে বিষক্রিয়া ঘটায়।'),
+  B(1,'ইথানলের সংকেত কোনটি?','C₂H₅OH',['CH₃OH','C₃H₇OH','CH₃COOH'],'CH₃–CH₂–OH।'),
+  B(1,'কোনটি বায়োফুয়েল?','ইথানল',['কয়লা','প্রাকৃতিক গ্যাস','ডিজেল'],'ইথানল জৈব উৎস (আখ, ভুট্টা) থেকে তৈরি।'),
+  B(1,'পেট্রোলের সাথে ইথানল মেশালে কী সুবিধা হয়?','দহন ভালো হয় ও দূষণ কমে',['দাম বাড়ে','গ্যাস বেশি তৈরি হয়','ইঞ্জিন জ্যাম হয়'],'ইথানলে অক্সিজেন থাকে, তাই দহন পূর্ণ হয়।'),
+  B(1,'যে কোষ রাসায়নিক শক্তিকে বিদ্যুৎ শক্তিতে রূপান্তর করে তাকে কী বলে?','গ্যালভানিক কোষ',['তড়িৎ বিশ্লেষ্য কোষ','নিউক্লিয় কোষ','সৌর কোষ'],'গ্যালভানিক কোষে স্বতঃস্ফূর্ত রেডক্স বিক্রিয়া ঘটে।'),
+  B(1,'যে কোষে বিদ্যুৎ ব্যবহার করে রাসায়নিক বিক্রিয়া ঘটানো হয় তাকে কী বলে?','তড়িৎ বিশ্লেষ্য কোষ',['গ্যালভানিক কোষ','শুষ্ক কোষ','জ্বালানি কোষ'],'বিদ্যুৎ শক্তি → রাসায়নিক শক্তি।'),
+  B(1,'ইলেকট্রোড কয় প্রকার?','২ প্রকার (অ্যানোড ও ক্যাথোড)',['১ প্রকার','৩ প্রকার','৪ প্রকার'],'অ্যানোড ও ক্যাথোড।'),
+  B(1,'যে ইলেকট্রোডে জারণ ঘটে তাকে কী বলে?','অ্যানোড',['ক্যাথোড','লবণ সেতু','তড়িৎ বিশ্লেষ্য'],'অ্যানোডে জারণ (ইলেকট্রন ত্যাগ)।'),
+  B(1,'যে ইলেকট্রোডে বিজারণ ঘটে তাকে কী বলে?','ক্যাথোড',['অ্যানোড','লবণ সেতু','সেল'],'ক্যাথোডে বিজারণ (ইলেকট্রন গ্রহণ)।'),
+  B(1,'অ্যানোডের প্রতি আকৃষ্ট আয়নকে কী বলে?','অ্যানায়ন',['ক্যাটায়ন','আইসোটোপ','আইসোমার'],'ঋণাত্মক আয়ন অ্যানোডের দিকে যায়।'),
+  B(1,'ক্যাথোডের প্রতি আকৃষ্ট আয়নকে কী বলে?','ক্যাটায়ন',['অ্যানায়ন','নিউট্রন','প্রোটন'],'ধনাত্মক আয়ন ক্যাথোডের দিকে যায়।'),
+  B(1,'নিচের কোনটি অ্যানায়ন?','Cl⁻',['Al³⁺','Pb²⁺','Zn²⁺'],'ঋণাত্মক আয়ন = অ্যানায়ন।'),
+  B(1,'ডেনিয়েল কোষে লবণ সেতু কোন আকৃতির নল?','U',['V','O','I'],'U-আকৃতির নল।'),
+  B(1,'ডেনিয়েল কোষ কত সালে আবিষ্কৃত হয়?','১৮৩৬',['১৮৩৮','১৮৩৭','১৭৮৬'],'জন ফ্রেডেরিক ডেনিয়েল ১৮৩৬ সালে এটি আবিষ্কার করেন।'),
+  B(1,'ডেনিয়েল কোষে দুটি ধাতব ইলেকট্রোড কোনগুলো?','Zn ও Cu',['Fe ও Cu','Zn ও Ag','Pb ও Zn'],'Zn অ্যানোড, Cu ক্যাথোড।'),
+  B(1,'ডেনিয়েল কোষে অ্যানোডে কোন ধাতু থাকে?','Zn',['Cu','Fe','Ag'],'Zn → Zn²⁺ + 2e⁻।'),
+  B(1,'ডেনিয়েল কোষে ক্যাথোডে কী ঘটে?','Cu²⁺ বিজারিত হয়ে Cu জমা হয়',['Zn জারিত হয়','H₂ বের হয়','Zn²⁺ জমা হয়'],'Cu²⁺ + 2e⁻ → Cu।'),
+  B(1,'গ্যালভানিক কোষে লবণ সেতুর কাজ কী?','দুই অর্ধকোষের বৈদ্যুতিক নিরপেক্ষতা বজায় রাখা',['ইলেকট্রন তৈরি করা','তাপ উৎপন্ন করা','ধাতুকে গলানো'],'আয়ন চলাচল করে বর্তনী সম্পূর্ণ রাখে।'),
+  B(1,'লবণ সেতুতে সাধারণত কোন লবণের দ্রবণ ব্যবহৃত হয়?','KCl বা KNO₃',['ZnCl₂','HCl','CuSO₄'],'নিষ্ক্রিয় তড়িৎ বিশ্লেষ্য ব্যবহৃত হয়।'),
+  B(1,'বাহ্যিক তারে ইলেকট্রন কোন দিকে চলে (ডেনিয়েল কোষে)?','Zn থেকে Cu-এর দিকে',['Cu থেকে Zn-এর দিকে','কোনোটিই নয়','উভয় দিকে সমান'],'অ্যানোড (Zn) থেকে ক্যাথোড (Cu)।'),
+  B(1,'শুষ্ক কোষ (Dry cell)-এ অ্যানোড কোনটি?','Zn',['C (গ্রাফাইট)','MnO₂','NH₄Cl'],'দস্তার আবরণ অ্যানোড।'),
+  B(1,'শুষ্ক কোষে ক্যাথোড কোনটি?','গ্রাফাইট (কার্বন দণ্ড)',['Zn','Pb','Cu'],'কার্বন দণ্ড ক্যাথোড হিসেবে কাজ করে।'),
+  B(1,'শুষ্ক কোষে কোন যৌগ জারক হিসেবে থাকে?','MnO₂',['PbO₂','NaCl','CuO'],'MnO₂ হাইড্রোজেনকে জারিত করে।'),
+  B(1,'টর্চলাইট ও রিমোট কন্ট্রোলে সাধারণত কোন কোষ ব্যবহৃত হয়?','শুষ্ক কোষ',['লেড স্টোরেজ ব্যাটারি','নিউক্লিয় চুল্লি','তড়িৎ বিশ্লেষ্য কোষ'],'শুষ্ক কোষ ছোট যন্ত্রে ব্যবহৃত হয়।'),
+  B(1,'শুষ্ক কোষে অ্যানোডের জিংক কোন আয়নে পরিণত হয়?','Zn²⁺',['Zn⁺','Zn³⁺','Zn⁻'],'Zn → Zn²⁺ + 2e⁻।'),
+  B(1,'বাস বা ট্রাকের ব্যাটারি সাধারণত কোনটি?','লেড স্টোরেজ ব্যাটারি',['শুষ্ক কোষ','লিথিয়াম কয়েন সেল','সৌর কোষ'],'গাড়িতে লেড অ্যাসিড ব্যাটারি ব্যবহৃত হয়।'),
+  B(1,'লেড স্টোরেজ ব্যাটারিতে ইলেকট্রোলাইট কী?','লঘু H₂SO₄',['গাঢ় HCl','NaCl দ্রবণ','NaOH'],'সালফিউরিক অ্যাসিডের দ্রবণ ব্যবহৃত হয়।'),
+  B(1,'লেড স্টোরেজ ব্যাটারি কেমন ধরনের কোষ?','রিচার্জযোগ্য',['শুধু একবার ব্যবহারযোগ্য','শুধু গ্যাসীয় অবস্থায় কার্যকর','সৌরশক্তি চালিত'],'চার্জ দিয়ে পুনরায় ব্যবহার করা যায়।'),
+  B(1,'ইলেকট্রোপ্লেটিং-এ যে বস্তুতে প্রলেপ দেওয়া হয় সেটি কোন ইলেকট্রোড?','ক্যাথোড',['অ্যানোড','লবণ সেতু','ইলেকট্রোলাইট'],'বস্তুটি ক্যাথোডে স্থাপন করা হয়।'),
+  B(1,'ইলেকট্রোপ্লেটিংয়ে যে ধাতুর প্রলেপ দেওয়া হয় তা কোন ইলেকট্রোডে থাকে?','অ্যানোড',['ক্যাথোড','লবণ সেতু','কোনোটিই নয়'],'অ্যানোডের ধাতু দ্রবীভূত হয়ে ক্যাথোডে জমা হয়।'),
+  B(1,'চামচে রুপার প্রলেপ দিতে কোন দ্রবণ ব্যবহৃত হয়?','AgNO₃',['CuSO₄','ZnSO₄','NaCl'],'রূপার লবণের দ্রবণ ব্যবহৃত হয়।'),
+  B(1,'ইলেকট্রোপ্লেটিং-এর একটি উদ্দেশ্য কোনটি?','ক্ষয়রোধ ও সৌন্দর্য বৃদ্ধি',['ধাতুকে গলানো','বিদ্যুৎ উৎপাদন','গ্যাস উৎপাদন'],'ক্ষয়রোধ, সৌন্দর্য ও টেকসই করার জন্য।'),
+  B(1,'নিউক্লিয় শক্তি কোন প্রক্রিয়ায় পাওয়া যায়?','নিউক্লিয় বিভাজন ও সংযোজন',['রাসায়নিক বন্ধন ভাঙা','দহন','সালোকসংশ্লেষণ'],'ফিশন ও ফিউশন।'),
+  B(1,'নিউক্লিয় ফিশন (বিভাজন) বিক্রিয়ায় কী ঘটে?','ভারী নিউক্লিয়াস ভেঙে ছোট নিউক্লিয়াস হয়',['হালকা নিউক্লিয়াস জুড়ে ভারী হয়','ইলেকট্রন স্থানান্তর হয়','শুধু দহন হয়'],'যেমন U-২৩৫ নিউট্রন দ্বারা বিভাজিত হয়।'),
+  B(1,'নিউক্লিয় ফিউশন বিক্রিয়ায় কী ঘটে?','হালকা নিউক্লিয়াস জুড়ে ভারী নিউক্লিয়াস গঠন করে',['ভারী নিউক্লিয়াস ভেঙে যায়','ইলেকট্রন চলে যায়','কিছুই ঘটে না'],'যেমন হাইড্রোজেন → হিলিয়াম।'),
+  B(1,'হাইড্রোজেন বোমা কোন বিক্রিয়ার ওপর ভিত্তি করে তৈরি?','নিউক্লিয় ফিউশন',['নিউক্লিয় ফিশন','দহন','প্রশমন'],'হাইড্রোজেন বোমা ফিউশন বিক্রিয়া ব্যবহার করে।'),
+  B(1,'পারমাণবিক বোমা কোন বিক্রিয়ার ওপর ভিত্তি করে তৈরি?','নিউক্লিয় ফিশন',['নিউক্লিয় ফিউশন','দহন','সংযোজন'],'নিয়ন্ত্রণহীন চেইন বিক্রিয়া।'),
+  B(1,'সূর্যের শক্তির উৎস কোনটি?','নিউক্লিয় ফিউশন',['নিউক্লিয় ফিশন','দহন','রাসায়নিক বিক্রিয়া'],'সূর্যে হাইড্রোজেন হিলিয়ামে রূপান্তরিত হয়।'),
+  B(1,'পারমাণবিক চুল্লির সাহায্যে প্রধানত কী উৎপন্ন করা হয়?','বিদ্যুৎ',['পানি','কয়লা','বায়ু'],'নিয়ন্ত্রিত ফিশনের তাপ দিয়ে বিদ্যুৎ উৎপাদন।'),
+  B(1,'ফিশন বিক্রিয়ায় ব্যবহৃত প্রধান জ্বালানি কোনটি?','ইউরেনিয়াম-২৩৫',['কার্বন-১২','হাইড্রোজেন-১','অক্সিজেন-১৬'],'U-২৩৫ নিউট্রনের আঘাতে বিভাজিত হয়।'),
+  B(1,'বাংলাদেশের কোথায় পারমাণবিক বিদ্যুৎ কেন্দ্র নির্মিত হচ্ছে/হয়েছে?','রূপপুর (ঈশ্বরদী, পাবনা)',['কক্সবাজার','কাপ্তাই','সিলেট'],'রূপপুর পারমাণবিক বিদ্যুৎ কেন্দ্র।'),
+  B(1,'চেইন বিক্রিয়ায় ভাঙা নিউক্লিয়াস থেকে কী নির্গত হয়ে বিক্রিয়া চালিয়ে যায়?','নিউট্রন',['প্রোটন','ইলেকট্রন','আলফা কণা'],'নির্গত নিউট্রন অন্য নিউক্লিয়াসকে আঘাত করে।'),
+  B(2,'সবুজ পাতায় সালোকসংশ্লেষণে সূর্যালোক শোষণকারী রঞ্জক কোনটি?','ক্লোরোফিল',['লিউকোপ্লাস্ট','অ্যান্থোসায়ানিন','ক্যারোটিন'],'ক্লোরোফিল আলো শোষণ করে।'),
+  B(2,'সালোকসংশ্লেষণে শক্তির রূপান্তর কীভাবে ঘটে?','আলোক শক্তি → রাসায়নিক শক্তি',['রাসায়নিক শক্তি → আলোক শক্তি','তাপ → বিদ্যুৎ','বিদ্যুৎ → আলো'],'গ্লুকোজে রাসায়নিক শক্তি সঞ্চিত হয়।'),
+  B(2,'গ্যালভানিক কোষে শক্তির রূপান্তর কোনটি?','রাসায়নিক শক্তি → বিদ্যুৎ শক্তি',['বিদ্যুৎ শক্তি → রাসায়নিক শক্তি','তাপ শক্তি → আলোক শক্তি','যান্ত্রিক → রাসায়নিক'],'এটি ব্যাটারির মূলনীতি।'),
+  B(2,'ইলেকট্রোপ্লেটিং (তড়িৎ বিশ্লেষ্য কোষ)-এ শক্তির রূপান্তর কোনটি?','বিদ্যুৎ শক্তি → রাসায়নিক শক্তি',['রাসায়নিক শক্তি → বিদ্যুৎ শক্তি','আলো → রাসায়নিক','তাপ → বিদ্যুৎ'],'বিদ্যুৎ বিক্রিয়া ঘটায়।'),
+  B(2,'দহনে প্রধানত কোন শক্তির রূপান্তর ঘটে?','রাসায়নিক শক্তি → তাপ ও আলো',['তাপ → রাসায়নিক','বিদ্যুৎ → রাসায়নিক','আলো → বিদ্যুৎ'],'জ্বালানি পুড়ে তাপ ও আলো দেয়।'),
+  B(2,'ইথানলের দহনে কী উৎপন্ন হয়?','CO₂ ও H₂O',['CO ও H₂','C ও H₂','CH₄ ও O₂'],'C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O।'),
+  B(2,'মিথেনের দহন সমীকরণ কোনটি?','CH₄ + 2O₂ → CO₂ + 2H₂O',['CH₄ + O₂ → CO₂ + H₂O','CH₄ + 3O₂ → CO₂ + 2H₂O','2CH₄ + O₂ → 2CO₂ + H₂O'],'সমতাকৃত সমীকরণ।'),
+  B(2,'অসম্পূর্ণ দহনে কোন বিষাক্ত গ্যাস উৎপন্ন হয়?','CO',['CO₂','O₂','N₂'],'অক্সিজেনের অভাবে CO তৈরি হয়।'),
+  B(2,'একটি যৌগে NaCl-এর আন্তঃআণবিক/আয়নিক আকর্ষণ Cl₂-এর তুলনায় কেমন?','বেশি',['কম','সমান','শূন্য'],'আয়নিক যৌগে আয়নের আকর্ষণ বেশি হয়।'),
+  B(2,'কোনটি তাপহারী?','CaCO₃ → CaO + CO₂',['2H₂ + O₂ → 2H₂O','CH₄ + 2O₂ → CO₂ + 2H₂O','NaOH + HCl → NaCl + H₂O'],'চুনাপাথর ভাঙতে তাপ লাগে।'),
+  B(2,'ডেনিয়েল কোষের মোট বিক্রিয়া কোনটি?','Zn + Cu²⁺ → Zn²⁺ + Cu',['Cu + Zn²⁺ → Cu²⁺ + Zn','Zn + Cu → ZnCu','Zn²⁺ + Cu²⁺ → Zn + Cu'],'Zn জারিত হয়, Cu²⁺ বিজারিত হয়।'),
+  B(2,'শুষ্ক কোষে কোনটি ইলেকট্রোলাইট হিসেবে থাকে?','NH₄Cl-এর পেস্ট',['H₂SO₄','NaOH','CuSO₄'],'অ্যামোনিয়াম ক্লোরাইড ও ZnCl₂-এর পেস্ট।'),
+  B(2,'কোন কোষ ব্যাটারি হিসেবে বারবার রিচার্জ করা যায়?','লেড স্টোরেজ ব্যাটারি',['শুষ্ক কোষ (অ্যালকালাইন প্রাইমারি)','ডেনিয়েল কোষ (শুকনো)','সাধারণ টর্চ সেল'],'সেকেন্ডারি কোষ রিচার্জযোগ্য।'),
+  B(2,'ফুয়েল সেলে সাধারণত কোন দুটি গ্যাস বিক্রিয়া করে?','H₂ ও O₂',['N₂ ও H₂','CO₂ ও H₂O','CH₄ ও N₂'],'বিক্রিয়ার উপজাত পানি।'),
+  B(2,'ফুয়েল সেলের বিক্রিয়ার উপজাত কী?','পানি',['CO₂','SO₂','NO₂'],'2H₂ + O₂ → 2H₂O।'),
+  B(2,'সৌরকোষ কোন শক্তিকে বিদ্যুৎ শক্তিতে রূপান্তর করে?','আলোক শক্তি',['তাপ শক্তি','শব্দ শক্তি','গতিশক্তি'],'ফটোভোলটাইক কোষ।'),
+  B(2,'নিচের কোনটি পরিবেশবান্ধব জ্বালানি?','হাইড্রোজেন',['কয়লা','ডিজেল','কেরোসিন'],'পোড়ালে শুধু পানি উৎপন্ন হয়।'),
+  B(2,'ΔH = −৯২ kJ/mol হলে বিক্রিয়াটি কেমন?','তাপউৎপাদী',['তাপহারী','নিরপেক্ষ','অসংজ্ঞায়িত'],'ΔH ঋণাত্মক।'),
+  B(2,'N₂ + 3H₂ ⇌ 2NH₃ + ৯২ kJ—এখানে ΔH কত?','−৯২ kJ',['+৯২ kJ','০','+১৮৪ kJ'],'তাপ নির্গত হচ্ছে, তাই ঋণাত্মক।'),
+  B(2,'তড়িৎ বিশ্লেষণে (NaCl গলিত) ক্যাথোডে কী জমা হয়?','Na ধাতু',['Cl₂','O₂','H₂'],'Na⁺ + e⁻ → Na।'),
+  B(2,'গলিত NaCl-এর তড়িৎ বিশ্লেষণে অ্যানোডে কী উৎপন্ন হয়?','Cl₂ গ্যাস',['Na','O₂','H₂'],'2Cl⁻ → Cl₂ + 2e⁻।'),
+  B(3,'ডেনিয়েল কোষ চলাকালে Zn ইলেকট্রোডের ভর কী হয়?','কমে',['বাড়ে','অপরিবর্তিত','দ্বিগুণ'],'Zn জারিত হয়ে দ্রবণে যায়।'),
+  B(3,'ডেনিয়েল কোষ চলাকালে Cu ইলেকট্রোডের ভর কী হয়?','বাড়ে',['কমে','অপরিবর্তিত','শূন্য'],'Cu²⁺ বিজারিত হয়ে Cu জমা হয়।'),
+  B(3,'ডেনিয়েল কোষে ZnSO₄ দ্রবণের ঘনমাত্রা সময়ের সাথে কী হয়?','বাড়ে',['কমে','অপরিবর্তিত','শূন্য'],'Zn²⁺ বাড়ে।'),
+  B(3,'শুষ্ক কোষে অ্যানোডে বিক্রিয়া কোনটি?','Zn → Zn²⁺ + 2e⁻',['Zn²⁺ + 2e⁻ → Zn','MnO₂ + e⁻ → Mn','2H⁺ → H₂'],'জিংক জারিত হয়।'),
+  B(3,'নিচের বিবৃতিগুলো লক্ষ করো:<br>i. অ্যানোডে জারণ ঘটে<br>ii. ক্যাথোডে বিজারণ ঘটে<br>iii. গ্যালভানিক কোষে অ্যানোড ধনাত্মক<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'গ্যালভানিক কোষে অ্যানোড ঋণাত্মক ও ক্যাথোড ধনাত্মক।'),
+  B(3,'নিচের বিবৃতিগুলো লক্ষ করো:<br>i. শুষ্ক কোষ টর্চলাইটে ব্যবহৃত হয়<br>ii. লেড স্টোরেজ ব্যাটারি রিচার্জযোগ্য<br>iii. ফিউশন থেকে বিদ্যুৎ বাণিজ্যিকভাবে সহজলভ্য<br>কোনটি সঠিক?','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'বাণিজ্যিক বিদ্যুৎ এখন ফিশন থেকে আসে, ফিউশন থেকে নয়।')
+ ]
+};
+
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+ExamEngine.start(CH);
+</script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>রাসায়নিক বিক্রিয়া | এক্সাম জোন | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(168,85,247,.28);--gradient-primary:linear-gradient(135deg,#9333ea,#3b82f6);--gradient-glow:rgba(147,51,234,.18);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--gold:#d97706;--accent:#7c3aed;--ok:#16a34a;--bad:#dc2626;--glass:#cfe3f5;--stand:#e2e8f0;--tick:#334155}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(168,85,247,.35);--gradient-primary:linear-gradient(135deg,#a855f7,#60a5fa);--gradient-glow:rgba(168,85,247,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--gold:#fbbf24;--accent:#a78bfa;--ok:#4ade80;--bad:#f87171;--glass:#8fb4d6;--stand:#1e293b;--tick:#cbd5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pageIn .6s ease both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:drift 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#0891b2;top:-150px;left:-120px}
+.b2{width:620px;height:620px;background:#7e22ce;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:26px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#22d3ee 55%,#a855f7);box-shadow:0 0 18px #22d3ee,0 0 34px rgba(168,85,247,.7)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}
+.brand small{display:block;font-size:12px;font-weight:700;color:#a855f7}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);display:inline-flex;align-items:center;justify-content:center;transition:transform .3s,box-shadow .3s}
+.icon-btn:hover{transform:rotate(180deg);box-shadow:0 8px 22px var(--gradient-glow)}
+.back-btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}
+.back-btn:hover{transform:translateX(-3px);border-color:rgba(168,85,247,.6)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.hero{text-align:center;margin-bottom:22px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:800;letter-spacing:-.5px;line-height:1.25;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+.hero h1 .em{-webkit-text-fill-color:initial}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:640px;font-size:15.5px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.lab{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.lab{grid-template-columns:1fr}.back-btn .long{display:none}}
+.card{position:relative;border-radius:24px;padding:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.stage{position:sticky;top:90px}
+@media(max-width:900px){.stage{position:static}}
+.stage svg{width:100%;height:auto;display:block;max-height:640px}
+.hud{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hud .box{flex:1 1 120px;padding:8px 12px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.hud small{display:block;font-size:11px;font-weight:700;color:var(--text-muted)}
+.hud b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.stepper{display:grid;gap:10px;margin-bottom:14px}
+.st{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1.5px solid var(--border-color);transition:border-color .25s,opacity .25s}
+.st .no{width:30px;height:30px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--card-bg);border:1.5px solid var(--border-color)}
+.st.active{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.st.done{border-color:rgba(74,222,128,.5)}
+.st.done .no{background:var(--ok);color:#fff;border-color:transparent}
+.st.lock{opacity:.5}
+.st .tx{flex:1;min-width:0}
+.st .tx b{display:block;font-size:14.5px}
+.st .tx small b{display:inline;font-size:inherit}
+.st .tx small{color:var(--text-muted);font-size:12.5px;line-height:1.5}
+.st select,.st .sel{margin-top:6px;font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 10px;border-radius:10px;color:var(--text-color);background:var(--card-bg);border:1px solid var(--border-color);max-width:100%}
+.st select option{background:var(--card-solid);color:var(--text-color)}
+.btn{font-family:inherit;font-size:14px;font-weight:800;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;color:#fff;background:var(--gradient-primary);transition:transform .2s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px var(--gradient-glow)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1px solid var(--border-color)}
+.btn.warn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tap{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.tap button{flex:1 1 90px}
+.tap button.on{background:var(--gradient-primary);color:#fff;border-color:transparent}
+.hint{font-size:13px;line-height:1.7;color:var(--text-muted);margin:8px 2px 0}
+.live{padding:10px 14px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.6;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);margin-top:10px;min-height:48px}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--border-color)}
+.tbl th{font-size:12px;color:var(--text-muted);font-weight:800}
+.tbl tr.sel td{background:rgba(168,85,247,.08)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.num{font-family:inherit;font-size:15px;font-weight:700;padding:10px 14px;border-radius:12px;width:170px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none}
+.num:focus{border-color:#a855f7;box-shadow:0 0 0 4px var(--gradient-glow)}
+.res{margin-top:14px;padding:14px 16px;border-radius:16px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1.5px solid var(--border-color)}
+.res.ok{border-color:rgba(74,222,128,.6)}
+.res.bad{border-color:rgba(248,113,113,.6)}
+.res h3{margin:0 0 6px;font-size:16px}
+.res code,.th code{font-family:'Hind Siliguri',ui-monospace,monospace;font-weight:700;background:rgba(168,85,247,.12);padding:1px 7px;border-radius:8px}
+.formula{display:block;text-align:center;margin:8px 0;padding:10px;border-radius:12px;font-size:17px;font-weight:800;background:rgba(168,85,247,.1);border:1px dashed rgba(168,85,247,.4)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 14px}
+.tab{font-family:inherit;font-size:14px;font-weight:800;padding:10px 18px;border-radius:30px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.tab:hover{color:var(--text-color);border-color:rgba(168,85,247,.55)}
+.tab.on{color:#fff;border-color:transparent;background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.pane{display:none}.pane.on{display:block;animation:pageIn .4s ease both}
+.th{line-height:1.85;font-size:15px}
+.th h3{margin:18px 0 6px;font-size:17px}
+.th ul,.th ol{margin:6px 0;padding-left:22px}
+.th table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+.th th,.th td{border:1px solid var(--border-color);padding:8px 10px;text-align:left}
+.th th{background:var(--card-solid)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:4px;border:1px solid var(--border-color)}
+details.qa{border:1px solid var(--border-color);border-radius:14px;background:var(--card-solid);margin:8px 0;padding:0 14px}
+details.qa summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14.5px}
+details.qa p{margin:0 0 12px;color:var(--text-muted);line-height:1.8;font-size:14px}
+.chartwrap svg{width:100%;height:auto;display:block}
+.chartwrap text{fill:var(--text-muted);font-size:10px;font-family:inherit}
+.toast{position:fixed;left:50%;bottom:52px;transform:translate(-50%,16px);padding:10px 18px;border-radius:14px;font-size:14px;font-weight:700;color:#fff;background:#111827;border:1px solid rgba(255,255,255,.15);opacity:0;pointer-events:none;transition:.3s;z-index:3000;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.credit-bar{position:fixed;bottom:0;left:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit-bar{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit-bar span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.swirl{animation:swirl .5s ease-in-out 3}
+@keyframes swirl{25%{transform:translate(5px,0) rotate(2deg)}75%{transform:translate(-5px,0) rotate(-2deg)}}
+.drip{animation:fall .55s linear infinite}
+@keyframes fall{0%{transform:translateY(0);opacity:1}85%{opacity:1}100%{transform:translateY(var(--fd,70px));opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+ant}}
+ll{overflow-x:auto}
+.msg{margin-top:10px;padding:9px 13px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3)}
+.btn.ghost{background:var(--card-solid);color:var(--text-color);border:1.5px solid var(--border-color)}
+.empty{text-align:center;color:var(--text-muted);padding:30px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.ob{font-family:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color)}
+.rt{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.rt td,.rt th{padding:7px 10px;border-bottom:1px solid var(--border-color);text-align:left}.rt th{color:var(--text-muted);font-size:12.5px}
+.ctl{display:grid;gap:12px;margin-bottom:6px}
+.ctl .lb2{font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--c,#a855f7)}
+.chip.on{border-color:var(--c,#a855f7);background:rgba(168,85,247,.16);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.chip:hover{transform:translateY(-1px)}
+.legendc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:700;color:var(--text-muted);margin:12px 0 4px}
+.legendc span{display:inline-flex;align-items:center;gap:5px}.legendc i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chartwrap{position:relative}
+.sc{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+#ch{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+#ch text{font-family:inherit}
+.ax{fill:var(--text-muted);font-size:11px;font-weight:700}
+.axt{fill:var(--text-color);font-size:12px;font-weight:800}
+.gl{stroke:var(--border-color);stroke-width:1;opacity:.55}
+.tip{position:absolute;pointer-events:none;z-index:5;min-width:170px;max-width:260px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.65;background:rgba(10,12,28,.94);color:#f8fafc;border:1px solid rgba(168,85,247,.5);box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}.tip b{font-size:13.5px}.tip .dt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+[data-theme="light"] .tip{background:rgba(255,255,255,.97);color:#0f172a;border-color:rgba(124,58,237,.5)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600}
+.pbar{display:inline-block;height:6px;border-radius:6px;background:var(--border-color);width:70px;vertical-align:middle;margin-left:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px}
+.dtb{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtb th{font-size:11.5px;color:var(--text-muted);text-align:right;padding:6px 8px;font-weight:800}.dtb th:first-child{text-align:left}
+.dtb td{padding:8px;border-bottom:1px dashed var(--border-color);text-align:right}.dtb td:first-child{text-align:left;color:var(--text-muted);font-weight:700}
+.dtb tr.sel td{background:rgba(168,85,247,.12)}.dtb tr.sel td:first-child{color:var(--text-color)}
+.dtb tr{cursor:pointer}
+.ebig{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.esym{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;flex:0 0 auto;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.ebig h3{margin:0;font-size:18px}.ebig small{color:var(--text-muted);font-weight:600;display:block;line-height:1.6}
+.insrow{padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13.5px;line-height:1.7}
+.insrow .tr{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:800;font-size:12px;margin-left:4px}
+.tr.up{background:rgba(34,197,94,.18);color:#4ade80}.tr.dn{background:rgba(244,63,94,.18);color:#fb7185}.tr.mx{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="light"] .tr.up{color:#15803d}[data-theme="light"] .tr.dn{color:#be123c}[data-theme="light"] .tr.mx{color:#b45309}
+.tabtbl{max-height:460px;overflow:auto;border-radius:12px;border:1px solid var(--border-color)}
+.tabtbl table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.tabtbl th{position:sticky;top:0;background:var(--card-solid);padding:8px;text-align:right;font-size:11.5px;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.tabtbl th:nth-child(-n+3),.tabtbl td:nth-child(-n+3){text-align:left}
+.tabtbl td{padding:6px 8px;border-bottom:1px solid var(--border-color);text-align:right;white-space:nowrap}
+.tabtbl tr.sel td{background:rgba(168,85,247,.14)}.tabtbl td.cp,.tabtbl th.cp{background:rgba(168,85,247,.1);color:var(--text-color);font-weight:800}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gtitle{font-size:15px;font-weight:800;margin:6px 0 2px}
+.state-panel{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.sb{padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:800;color:#fff}
+.sb.s{background:#d97706}.sb.l{background:#2563eb}.sb.g{background:#64748b}.sb.u{background:#475569}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.up{color:#22d3b0;font-weight:800}.dn{color:#fb7185;font-weight:800}
+.scroll{overflow-x:auto}
+.gwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr);gap:22px;align-items:start}
+@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.search{position:relative;max-width:480px;margin:0 auto 20px}
+.search input{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);outline:none;transition:.25s}
+.search input:focus{border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.35)}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:30;border-radius:14px;overflow:hidden;background:var(--card-solid);border:1.5px solid var(--border-color);box-shadow:var(--shadow);display:none}
+.sug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:0;background:transparent;color:var(--text-color);cursor:pointer}
+.sug button:hover,.sug button.on{background:rgba(168,85,247,.15)}
+.sug b{min-width:30px;color:#a855f7}
+.gbtns{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
+@media(max-width:700px){.gbtns{grid-template-columns:repeat(5,1fr)}}
+.gb{font-family:inherit;font-size:13px;font-weight:800;padding:9px 2px;border-radius:10px;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);transition:.2s}
+.gb:hover{transform:translateY(-2px);color:var(--text-color)}
+.gb.on{color:#fff;background:var(--gradient-primary);border-color:transparent;box-shadow:0 0 16px rgba(168,85,247,.5)}
+.gw{overflow-x:auto;padding-bottom:6px}
+.pg{display:grid;grid-template-columns:20px repeat(18,minmax(38px,1fr));gap:4px;min-width:780px;padding:12px;border-radius:20px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow)}
+.gl{font-size:10px;font-weight:800;color:var(--text-muted);text-align:center;align-self:end}
+.pl{font-size:10px;font-weight:800;color:var(--text-muted);display:grid;place-items:center}
+.ce{aspect-ratio:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;user-select:none;background:var(--card-solid);border:1px solid var(--border-color);color:var(--text-color);transition:transform .2s,opacity .25s,box-shadow .25s,border-color .25s}
+.ce .z{position:absolute;top:2px;left:3px;font-size:8.5px;font-weight:700;color:var(--text-muted)}
+.ce .s{font-size:14px;font-weight:800;margin-top:3px}
+.ce .nm{font-size:7.5px;color:var(--text-muted);font-weight:600;max-width:96%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1100px){.ce .nm{display:none}}
+.ce:hover{transform:scale(1.12);z-index:5;border-color:#a855f7}
+.pg.blk .ce[data-b="s"]{background:rgba(56,189,248,.14)}.pg.blk .ce[data-b="p"]{background:rgba(168,85,247,.16)}.pg.blk .ce[data-b="d"]{background:rgba(245,158,11,.15)}.pg.blk .ce[data-b="f"]{background:rgba(16,185,129,.16)}
+.pg.has .ce{opacity:.32}
+.pg.has .ce.hl{opacity:1;transform:scale(1.1);z-index:6;color:#fff;background:linear-gradient(135deg,#7e22ce,#2563eb);border-color:#a855f7;box-shadow:0 0 18px rgba(168,85,247,.7)}
+.ce.sel{outline:2.5px solid #fbbf24;outline-offset:1px;z-index:7}
+.fl{grid-column:2/4;font-size:9.5px;font-weight:800;color:var(--text-muted);display:flex;align-items:center;justify-content:center;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.legend .ob{font-size:12.5px;padding:6px 12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.panel{position:sticky;top:90px;min-height:420px}
+@media(max-width:1000px){.panel{position:static}}
+.panel h2{font-size:19px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pl2{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35)}
+.sec h3{font-size:14.5px;margin:16px 0 6px;color:#a855f7}
+.sec ul{margin:0;padding-left:20px}.sec li{font-size:14px;line-height:1.75;margin-bottom:5px}
+.trick{padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.8;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3)}
+.trick strong{color:#f43f5e}.ml{margin-top:6px;font-weight:800;color:#38bdf8;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color)}
+.chip:hover{border-color:#a855f7}
+.ecard{margin-top:14px;padding:14px;border-radius:16px;background:var(--card-solid);border:1.5px solid #fbbf24}
+.ecard h4{margin:0 0 6px;font-size:16px}.ecard td{padding:3px 10px 3px 0;font-size:13.5px}.ecard td:first-child{color:var(--text-muted)}
+.ecard a{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;color:#a855f7;text-decoration:none}
+.empty{text-align:center;color:var(--text-muted);line-height:1.8;padding:70px 10px;font-size:14.5px}
+.mv{display:none}.mv.on{display:block}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.scalebar{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:11.5px;font-weight:700;color:var(--text-muted)}
+.scalebar i{flex:1;height:10px;border-radius:8px;background:linear-gradient(90deg,hsl(200,60%,11%),hsl(200,70%,30%),hsl(200,80%,55%))}
+.ce .ev{font-size:8.5px;font-weight:700;margin-top:1px;opacity:.9}
+.ce{min-width:0}
+.pg{min-width:700px;gap:3px;padding:10px}
+.gwrap{grid-template-columns:minmax(0,1fr) 330px}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span:first-child{color:var(--text-muted)}.kv b{text-align:right}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.big{font-size:30px;font-weight:900;color:#22d3b0;line-height:1.1}
+.rkr{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;margin:6px 0;cursor:pointer;font-size:13.5px}
+.rkr .bar{height:14px;border-radius:8px;background:linear-gradient(90deg,#0369a1,#38bdf8);}
+.scroll{overflow-x:auto}
+.badge2{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:800}
+.stickyc{position:sticky;top:90px}@media(max-width:1000px){.stickyc{position:static}}
+.pane h3{margin:0 0 10px;font-size:17px}.pane ul{line-height:1.95;padding-left:20px;margin:0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px;align-items:center}.kv span:first-child{color:var(--text-muted)}
+.insr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13.5px;line-height:1.75}
+.gwrap{grid-template-columns:minmax(0,1fr) minmax(300px,1fr)}@media(max-width:1000px){.gwrap{grid-template-columns:1fr}}
+.mode{display:none}.mode.on{display:block}.scroll{overflow-x:auto}
+.rc{background:var(--card-solid);border:1px solid var(--border-color);border-radius:14px;padding:14px;text-align:center}.rc small{color:var(--text-muted);font-weight:700}.rc strong{display:block;font-size:34px;color:#22d3b0;margin-top:4px}
+.pc{border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);border-radius:6px;font-size:11px;font-weight:800;padding:5px 0;cursor:pointer;border-bottom:3px solid var(--c)}.pc.on{background:var(--c);color:#0b1020;box-shadow:0 0 12px var(--c);transform:scale(1.15);z-index:2}
+.orb-t{padding:2px 6px;border-radius:6px;display:inline-block;margin:2px 1px;font-weight:700}
+.wrap{max-width:860px}
+.ex-hero{display:flex;gap:18px;align-items:center;padding:28px 0 12px}.ex-ic{font-size:54px;width:92px;height:92px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:26px;background:var(--card-solid);border:1px solid var(--border-color);box-shadow:0 0 30px rgba(34,211,176,.2)}
+.ex-hero h1{margin:8px 0 6px;font-size:clamp(24px,4.4vw,36px);line-height:1.3;background:linear-gradient(90deg,#22d3b0,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}.ex-sub{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7}
+.ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.ex-stats .card{padding:14px;text-align:center;display:flex;flex-direction:column;gap:2px}.ex-stats b{font-size:24px;color:#22d3b0}.ex-stats span{font-size:12px;color:var(--text-muted)}
+.ex-opts{padding:14px 16px;margin-bottom:14px}.ex-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0}.ex-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.ex-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ex-mode{text-align:left;cursor:pointer;padding:18px;font:inherit;color:var(--text);display:flex;flex-direction:column;gap:6px;border-top:3px solid var(--c);transition:.25s}.ex-mode:hover{transform:translateY(-4px);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 28%,transparent)}.ex-mode .mi{font-size:30px}.ex-mode b{font-size:17px}.ex-mode small{color:var(--text-muted);line-height:1.6;font-size:12.5px}.ex-mode em{font-style:normal;font-weight:800;color:var(--c);margin-top:auto;padding-top:6px}.ex-mode.dis{opacity:.5;cursor:not-allowed}
+.ex-foot{text-align:center;color:var(--text-muted);font-size:13px;margin:18px 0 60px}
+.ex-hud{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}.ex-x{width:38px;height:38px;border-radius:12px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font-size:16px}
+.ex-prog{flex:1;min-width:150px;font-size:13px;font-weight:800}.ex-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:5px}.ex-bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3b0,#a855f7);transition:width .4s}
+.ex-pill{padding:7px 12px;border-radius:12px;background:var(--card-solid);border:1px solid var(--border-color);font-size:13px;white-space:nowrap}
+.ex-q{padding:22px;margin-bottom:14px}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tg.b{background:rgba(251,191,36,.16);color:#fbbf24}.tg.m{background:rgba(251,113,133,.16);color:#fb7185}
+.ex-qt{font-size:19px;line-height:1.85;font-weight:700;margin-bottom:16px}
+.ex-os{display:grid;gap:10px}.ex-opt{display:flex;gap:12px;align-items:center;text-align:left;padding:13px 15px;border-radius:14px;border:1.5px solid var(--border-color);background:var(--card-solid);color:var(--text);font:inherit;font-size:15.5px;cursor:pointer;transition:.18s;line-height:1.6}.ex-opt i{font-style:normal;flex:0 0 32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;background:rgba(255,255,255,.07)}
+.ex-opt:hover{border-color:#a855f7;transform:translateX(3px)}.ex-opt.sel{border-color:#a855f7;background:rgba(168,85,247,.16)}.ex-opt.sel i{background:#a855f7;color:#0b1020}
+.ex-opt.right{border-color:#22d3b0;background:rgba(34,211,176,.16);animation:pop .35s}.ex-opt.right i{background:#22d3b0;color:#0b1020}.ex-opt.wrong{border-color:#fb7185;background:rgba(251,113,133,.15);animation:shk .35s}.ex-opt.wrong i{background:#fb7185;color:#0b1020}.ex-opt.dim{opacity:.5;pointer-events:none}.ex-opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+@keyframes pop{50%{box-shadow:0 0 22px rgba(34,211,176,.55)}}@keyframes shk{25%{translate:-5px 0}75%{translate:5px 0}}
+.ex-fb{margin-top:14px;padding:13px 15px;border-radius:14px;line-height:1.8;font-size:14.5px}.ex-fb.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-fb.bad{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5)}.ex-fb .xp{color:#fbbf24;font-weight:800;font-size:13px}.ex-exp{margin-top:6px;color:var(--text-muted)}
+.ex-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn.ghost{background:var(--card-solid)!important;color:var(--text)!important;border:1px solid var(--border-color)!important;box-shadow:none!important}.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ex-pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:7px;margin-bottom:60px}.ex-pal button{height:38px;border-radius:10px;border:1px solid var(--border-color);background:var(--card-solid);color:var(--text);cursor:pointer;font:inherit;font-weight:800}.ex-pal .ans{background:rgba(34,211,176,.2);border-color:#22d3b0}.ex-pal .mk{box-shadow:inset 0 -3px #fb7185}.ex-pal .cur{outline:2px solid #a855f7}
+.ex-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}.ex-modal .card{max-width:380px;width:100%;padding:22px}
+.ex-res{padding:22px;margin:18px 0 14px}.ex-rh{display:flex;gap:18px;align-items:center;padding:16px;border-radius:18px;margin-bottom:12px}.ex-rh.ok{background:rgba(34,211,176,.1);border:1px solid rgba(34,211,176,.5)}.ex-rh.bad{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.5)}.ex-rh h2{margin:0 0 4px;font-size:21px}.ex-rh p{margin:0;color:var(--text-muted)}
+.ex-score{display:flex;align-items:baseline;gap:4px}.ex-score b{font-size:46px;color:#22d3b0}.ex-score span{color:var(--text-muted);font-size:18px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:14px}.kv span{color:var(--text-muted)}
+details.qa{margin-top:8px}
+@media(max-width:700px){.ex-stats{grid-template-columns:1fr 1fr}.ex-modes{grid-template-columns:1fr}.ex-hero{flex-direction:column;align-items:flex-start}.ex-qt{font-size:17px}}
+</style>
+</head>
+
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="dashboard.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>SSC · রাসায়নিক বিক্রিয়া</small></span></a>
+    <div class="top-right">
+      <button class="icon-btn" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+      <a class="back-btn" href="exam.html">← <span class="long">এক্সাম জোন</span></a>
+    </div>
+  </header>
+  <main id="app"><div class="msg">লোড হচ্ছে…</div></main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="credit-bar">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script src="exam-engine.js"></script>
+<script>
+CH={id:'ssc-07',exam:'ssc',paper:0,no:7,title:'রাসায়নিক বিক্রিয়া',icon:'🔥',
+ bank:[
+  B(1,'ভর সংরক্ষণ সূত্রের প্রবক্তা কে?','ল্যাভয়সিয়ে',['ডাল্টন','প্রুস্ট','অ্যাভোগাড্রো'],'রাসায়নিক বিক্রিয়ায় মোট ভর অপরিবর্তিত থাকে।'),
+  B(1,'ভর সংরক্ষণ সূত্র অনুযায়ী বদ্ধ পাত্রে সংঘটিত বিক্রিয়ায়—','বিক্রিয়কের মোট ভর = উৎপাদের মোট ভর',['বিক্রিয়কের মোট ভর < উৎপাদের মোট ভর','বিক্রিয়কের মোট ভর > উৎপাদের মোট ভর','উৎপাদের ভর সর্বদা শূন্য'],'বিক্রিয়ায় ভর সৃষ্টি বা ধ্বংস হয় না।'),
+  B(1,'N₂ + 3H₂ → 2NH₃ বিক্রিয়াটি কোন ধরনের?','সংযোজন',['বিয়োজন','প্রতিস্থাপন','দ্বি-প্রতিস্থাপন'],'দুটি পদার্থ যুক্ত হয়ে একটি যৌগ গঠন করেছে।'),
+  B(1,'CaCO₃ → CaO + CO₂ কোন ধরনের বিক্রিয়া?','বিয়োজন',['সংযোজন','প্রতিস্থাপন','দ্বি-প্রতিস্থাপন'],'একটি যৌগ ভেঙে দুটি পদার্থ উৎপন্ন হয়েছে।'),
+  B(1,'Zn + H₂SO₄ → ZnSO₄ + H₂ কোন ধরনের বিক্রিয়া?','প্রতিস্থাপন',['সংযোজন','বিয়োজন','দ্বি-প্রতিস্থাপন'],'Zn, H-কে প্রতিস্থাপন করেছে।'),
+  B(1,'NaOH + HCl → NaCl + H₂O কোন ধরনের বিক্রিয়া?','দ্বি-প্রতিস্থাপন',['সংযোজন','বিয়োজন','প্রতিস্থাপন'],'দুটি যৌগ পরস্পরের আয়ন বিনিময় করেছে।'),
+  B(1,'BaCl₂ দ্রবণে Na₂SO₄ দ্রবণ মেশালে কোন সাদা অধঃক্ষেপ পড়ে?','BaSO₄',['NaCl','BaCl₂','Na₂SO₄'],'BaSO₄ পানিতে অদ্রবণীয়।'),
+  B(1,'জারণ বলতে ইলেকট্রনের ক্ষেত্রে কী বোঝায়?','ইলেকট্রন ত্যাগ',['ইলেকট্রন গ্রহণ','প্রোটন ত্যাগ','নিউট্রন গ্রহণ'],'OIL RIG: Oxidation Is Loss।'),
+  B(1,'বিজারণ বলতে ইলেকট্রনের ক্ষেত্রে কী বোঝায়?','ইলেকট্রন গ্রহণ',['ইলেকট্রন ত্যাগ','প্রোটন গ্রহণ','নিউট্রন ত্যাগ'],'RIG: Reduction Is Gain।'),
+  B(1,'মুক্ত মৌলের জারণ সংখ্যা কত?','০',['+১','−১','+২'],'যেমন Na, O₂, Cl₂ ইত্যাদিতে জারণ সংখ্যা ০।'),
+  B(1,'সমীকরণে ‘↓’ চিহ্ন দ্বারা কী বোঝায়?','অধঃক্ষেপ পড়া',['গ্যাস নির্গত হওয়া','তাপ নির্গত হওয়া','বিক্রিয়া থেমে যাওয়া'],'‘↑’ চিহ্ন গ্যাস নির্গমন বোঝায়।'),
+  B(1,'Na⁺ আয়নে সোডিয়ামের জারণ সংখ্যা কত?','+১',['০','−১','+২'],'একক আয়নের জারণ সংখ্যা আয়নের চার্জের সমান।'),
+  B(1,'2Mg + O₂ → 2MgO বিক্রিয়ায় Mg-এর ক্ষেত্রে কী ঘটছে?','জারিত হচ্ছে',['বিজারিত হচ্ছে','প্রশমিত হচ্ছে','কোনো পরিবর্তন হচ্ছে না'],'Mg ইলেকট্রন ত্যাগ করে Mg²⁺ হয়, অর্থাৎ জারিত হয়।'),
+  B(2,'N₂ + 3H₂ → 2NH₃ সমীকরণে সহগের যোগফল কত?','৬',['৫','৩','৭'],'১ + ৩ + ২ = ৬।'),
+  B(2,'H₂ + O₂ → H₂O সমীকরণটি সমতাকরণ করলে সহগের যোগফল কত?','৫',['৩','৪','৬'],'২H₂ + O₂ → ২H₂O; ২ + ১ + ২ = ৫।'),
+  B(2,'Fe + O₂ → Fe₂O₃ সমীকরণটি সমতাকরণ করলে সহগের যোগফল কত?','৯',['৫','৭','১০'],'৪Fe + ৩O₂ → ২Fe₂O₃; ৪ + ৩ + ২ = ৯।'),
+  B(2,'Mg + HCl → MgCl₂ + H₂ সমতাকৃত সমীকরণে HCl-এর সহগ কত?','২',['১','৩','৪'],'Mg + ২HCl → MgCl₂ + H₂।'),
+  B(2,'KMnO₄-এ Mn-এর জারণ সংখ্যা কত?','+৭',['+২','+৪','+৬'],'(+১) + x + 4(−২) = ০ ⇒ x = +৭।'),
+  B(2,'H₂SO₄-এ সালফারের জারণ সংখ্যা কত?','+৬',['+৪','+২','−২'],'২(+১) + x + 4(−২) = ০ ⇒ x = +৬।'),
+  B(2,'NH₃-এ নাইট্রোজেনের জারণ সংখ্যা কত?','−৩',['+৩','−১','০'],'x + 3(+১) = ০ ⇒ x = −৩।'),
+  B(2,'CH₄-এ কার্বনের জারণ সংখ্যা কত?','−৪',['+৪','−২','০'],'x + 4(+১) = ০ ⇒ x = −৪।'),
+  B(2,'জারক পদার্থ বিক্রিয়ায়—','ইলেকট্রন গ্রহণ করে',['ইলেকট্রন ত্যাগ করে','প্রোটন ত্যাগ করে','অপরিবর্তিত থাকে'],'জারক নিজে বিজারিত হয়।'),
+  B(2,'CuO + H₂ → Cu + H₂O বিক্রিয়ায় বিজারক কোনটি?','H₂',['CuO','Cu','H₂O'],'H₂ ইলেকট্রন ত্যাগ করে জারিত হয়, তাই এটি বিজারক।'),
+  B(2,'Fe³⁺ + e⁻ → Fe²⁺ কোন ধরনের পরিবর্তন?','বিজারণ',['জারণ','প্রশমন','দহন'],'ইলেকট্রন গ্রহণ ঘটেছে।'),
+  B(2,'Cl₂ + 2KBr → 2KCl + Br₂ কোন ধরনের বিক্রিয়া?','প্রতিস্থাপন',['সংযোজন','বিয়োজন','দ্বি-প্রতিস্থাপন'],'Cl, Br-কে প্রতিস্থাপন করেছে।'),
+  B(2,'AgNO₃ দ্রবণে NaCl দ্রবণ মেশালে কী দেখা যায়?','সাদা অধঃক্ষেপ',['নীল অধঃক্ষেপ','গ্যাসের বুদবুদ','কোনো পরিবর্তন নেই'],'AgCl-এর সাদা অধঃক্ষেপ পড়ে।'),
+  B(2,'CuSO₄ দ্রবণে NaOH দ্রবণ মেশালে কোন বর্ণের অধঃক্ষেপ পড়ে?','নীল',['সাদা','লালচে বাদামি','সবুজ'],'Cu(OH)₂ নীল বর্ণের অধঃক্ষেপ।'),
+  B(2,'FeCl₃ দ্রবণে NaOH দ্রবণ মেশালে কোন বর্ণের অধঃক্ষেপ পড়ে?','লালচে বাদামি',['সাদা','নীল','হলুদ'],'Fe(OH)₃ লালচে বাদামি অধঃক্ষেপ।'),
+  B(2,'নিচের কোনটি রাসায়নিক পরিবর্তন?','লোহায় মরিচা পড়া',['বরফ গলা','পানির বাষ্পীভবন','কর্পূরের উর্ধ্বপাতন'],'মরিচা নতুন পদার্থ, ফলে এটি রাসায়নিক পরিবর্তন।'),
+  B(2,'একটি রাসায়নিক বিক্রিয়ায় জারণ ও বিজারণ—','একই সাথে ঘটে',['একটির পর একটি আলাদাভাবে ঘটে','শুধু জারণ ঘটে','শুধু বিজারণ ঘটে'],'একটি পদার্থের ইলেকট্রন ত্যাগের সাথে অন্যটির ইলেকট্রন গ্রহণ ঘটে।'),
+  B(2,'2Na + Cl₂ → 2NaCl বিক্রিয়ায় জারিত হয় কোনটি?','Na',['Cl₂','NaCl','কোনোটিই নয়'],'Na ইলেকট্রন ত্যাগ করে Na⁺ হয়।'),
+  B(2,'মিথেনের সম্পূর্ণ দহনের সমতাকৃত সমীকরণ কোনটি?','CH₄ + 2O₂ → CO₂ + 2H₂O',['CH₄ + O₂ → CO₂ + H₂O','CH₄ + 3O₂ → CO₂ + 2H₂O','CH₄ → C + 2H₂'],'উভয় পাশে C = ১, H = ৪, O = ৪।'),
+  B(2,'রাসায়নিক সমীকরণ সমতাকরণ করা হয় কোন সূত্রের ভিত্তিতে?','ভর সংরক্ষণ সূত্র',['গ্যাসের আয়তন সূত্র','বয়েলের সূত্র','চার্লসের সূত্র'],'উভয় পাশে প্রতিটি মৌলের পরমাণুর সংখ্যা সমান করতে হয়।'),
+  B(2,'Zn + H₂SO₄ → ZnSO₄ + H₂ বিক্রিয়ায় জারিত পদার্থ কোনটি?','Zn',['H₂SO₄-এর O','ZnSO₄','H₂'],'Zn (০) → Zn²⁺ (+২); জারণ সংখ্যা বেড়েছে।'),
+  B(2,'2KClO₃ → 2KCl + 3O₂ সমীকরণে সহগের যোগফল কত?','৭',['৫','৬','৮'],'২ + ২ + ৩ = ৭।'),
+  B(3,'ভর সংরক্ষণ সূত্র সম্পর্কে—<br>i. বিক্রিয়ায় পরমাণুর সংখ্যা অপরিবর্তিত থাকে<br>ii. বিক্রিয়ায় অণুর সংখ্যা সর্বদা অপরিবর্তিত থাকে<br>iii. বিক্রিয়ায় মোট ভর অপরিবর্তিত থাকে<br>নিচের কোনটি সঠিক?','i ও iii',['i ও ii','ii ও iii','i, ii ও iii'],'N₂ + 3H₂ → 2NH₃-এ অণুর সংখ্যা ৪ থেকে ২ হয়, তাই ii ভুল।'),
+  B(3,'MnO₂ + 4HCl → MnCl₂ + Cl₂ + 2H₂O বিক্রিয়ায় বিজারক কোনটি?','HCl',['MnO₂','MnCl₂','H₂O'],'Cl⁻ (−১) → Cl₂ (০); HCl জারিত হয়, তাই এটি বিজারক।'),
+  B(3,'Fe₂O₃ + 3CO → 2Fe + 3CO₂ বিক্রিয়ায় বিজারক কোনটি?','CO',['Fe₂O₃','Fe','CO₂'],'C (+২) → C (+৪) জারিত হয়; তাই CO বিজারক।'),
+  B(3,'Cr₂O₇²⁻ আয়নে Cr-এর জারণ সংখ্যা কত?','+৬',['+৩','+৭','+১২'],'২x + ৭(−২) = −২ ⇒ x = +৬।'),
+  B(3,'NO₃⁻ আয়নে নাইট্রোজেনের জারণ সংখ্যা কত?','+৫',['+৩','+৪','−৫'],'x + ৩(−২) = −১ ⇒ x = +৫।'),
+  B(3,'H₂O₂-এ অক্সিজেনের জারণ সংখ্যা কত?','−১',['−২','০','+১'],'পার-অক্সাইডে O-এর জারণ সংখ্যা −১।'),
+  B(3,'২Al + Fe₂O₃ → Al₂O₃ + ২Fe বিক্রিয়াটি কোন ধরনের?','প্রতিস্থাপন',['সংযোজন','বিয়োজন','দ্বি-প্রতিস্থাপন'],'অধিক সক্রিয় Al, Fe-কে অক্সাইড থেকে প্রতিস্থাপন করেছে।'),
+  B(3,'Cu + 2AgNO₃ → Cu(NO₃)₂ + 2Ag বিক্রিয়ায় কোনটি বিজারিত হয়?','Ag⁺',['Cu','NO₃⁻','Cu²⁺'],'Ag⁺ (+১) → Ag (০); ইলেকট্রন গ্রহণ করে।'),
+  B(2,'নিচের কোনটি সংযোজন বিক্রিয়ার উদাহরণ?','2Mg + O₂ → 2MgO',['2H₂O₂ → 2H₂O + O₂','Zn + 2HCl → ZnCl₂ + H₂','AgNO₃ + NaCl → AgCl + NaNO₃'],'দুটি মৌল যুক্ত হয়ে একটি যৌগ গঠন করেছে।'),
+  B(1,'বরফ গলে পানিতে পরিণত হওয়া কোন ধরনের পরিবর্তন?','ভৌত পরিবর্তন',['রাসায়নিক পরিবর্তন','নিউক্লীয় পরিবর্তন','আয়নিক পরিবর্তন'],'শুধু অবস্থার পরিবর্তন হয়, নতুন পদার্থ তৈরি হয় না।'),
+  B(1,'ভৌত পরিবর্তনের বৈশিষ্ট্য কোনটি?','নতুন পদার্থ তৈরি হয় না',['নতুন পদার্থ তৈরি হয়','রাসায়নিক সংযুতি বদলায়','স্থায়ী পরিবর্তন হয়'],'পদার্থের রাসায়নিক ধর্ম অপরিবর্তিত থাকে।'),
+  B(1,'কাঠ পোড়ানো কোন ধরনের পরিবর্তন?','রাসায়নিক পরিবর্তন',['ভৌত পরিবর্তন','অবস্থার পরিবর্তন','দ্রবণ'],'ছাই ও গ্যাস—নতুন পদার্থ তৈরি হয়।'),
+  B(1,'দুধ থেকে দই হওয়া কী ধরনের পরিবর্তন?','রাসায়নিক পরিবর্তন',['ভৌত পরিবর্তন','দ্রবণ প্রক্রিয়া','বাষ্পীভবন'],'নতুন পদার্থ তৈরি হয়।'),
+  B(1,'যে বিক্রিয়া শুধু একদিকে (অগ্রমুখে) চলে তাকে কী বলে?','একমুখী বিক্রিয়া',['উভমুখী বিক্রিয়া','তাপহারী বিক্রিয়া','সাম্যাবস্থা'],'উৎপাদ আর বিক্রিয়কে ফিরে যায় না।'),
+  B(1,'যে বিক্রিয়া উভয় দিকে ঘটতে পারে তাকে কী বলে?','উভমুখী বিক্রিয়া',['একমুখী বিক্রিয়া','তাপোৎপাদী বিক্রিয়া','জারণ বিক্রিয়া'],'প্রতীক: ⇌।'),
+  B(1,'উভমুখী বিক্রিয়ায় ব্যবহৃত চিহ্ন কোনটি?','⇌',['→','↑','↓'],'⇌ দ্বারা সাম্যাবস্থা দেখানো হয়।'),
+  B(1,'কোনটি উভমুখী বিক্রিয়া?','N₂ + 3H₂ ⇌ 2NH₃',['NaOH + HCl → NaCl + H₂O','2Mg + O₂ → 2MgO','AgNO₃ + NaCl → AgCl + NaNO₃'],'হেবার প্রক্রিয়ায় অ্যামোনিয়া উৎপাদন উভমুখী।'),
+  B(1,'যে বিক্রিয়ায় তাপ শোষিত হয় তাকে কী বলে?','তাপহারী বিক্রিয়া',['তাপোৎপাদী বিক্রিয়া','একমুখী বিক্রিয়া','জারণ বিক্রিয়া'],'এন্ডোথার্মিক (ΔH ধনাত্মক)।'),
+  B(1,'যে বিক্রিয়ায় তাপ নির্গত হয় তাকে কী বলে?','তাপোৎপাদী বিক্রিয়া',['তাপহারী বিক্রিয়া','উভমুখী বিক্রিয়া','অধঃক্ষেপণ'],'এক্সোথার্মিক (ΔH ঋণাত্মক)।'),
+  B(1,'কয়লা দহন কোন ধরনের বিক্রিয়া?','তাপোৎপাদী',['তাপহারী','উভমুখী','নিস্তেজ'],'তাপ ও আলো নির্গত হয়।'),
+  B(1,'জারণ-বিজারণ বিক্রিয়ার অপর নাম কী?','রেডক্স বিক্রিয়া',['ডাবল ডিকম্পোজিশন','হাইড্রোলাইসিস','পলিমারকরণ'],'Redox = Reduction + Oxidation।'),
+  B(1,'যে বিক্রিয়ায় ইলেকট্রনের স্থানান্তর হয় না তাকে কী বলে?','নন-রেডক্স বিক্রিয়া',['রেডক্স বিক্রিয়া','জারণ','বিজারণ'],'জারণ সংখ্যার পরিবর্তন হয় না।'),
+  B(1,'অম্ল-ক্ষারক নিরপেক্ষীকরণ কোন ধরনের বিক্রিয়া?','নন-রেডক্স',['রেডক্স','তাপহারী','জারণ'],'জারণ সংখ্যা অপরিবর্তিত থাকে।'),
+  B(1,'ইলেকট্রন গ্রহণকে কী বলে?','বিজারণ',['জারণ','আর্দ্রবিশ্লেষণ','প্রশমন'],'বিজারণ = ইলেকট্রন গ্রহণ।'),
+  B(1,'ইলেকট্রন ত্যাগকে কী বলে?','জারণ',['বিজারণ','পলিমারকরণ','প্রশমন'],'জারণ = ইলেকট্রন ত্যাগ।'),
+  B(1,'জারণ সংখ্যা বৃদ্ধি পেলে সেই প্রক্রিয়াকে কী বলে?','জারণ',['বিজারণ','প্রশমন','তাপন'],'সংখ্যা বাড়লে জারণ, কমলে বিজারণ।'),
+  B(1,'বিজারক পদার্থ বিক্রিয়ায় কী করে?','নিজে জারিত হয়ে অন্যকে বিজারিত করে',['নিজে বিজারিত হয়','ইলেকট্রন গ্রহণ করে','কোনো পরিবর্তন হয় না'],'বিজারক ইলেকট্রন দেয়।'),
+  B(1,'পানির সাথে কোনো যৌগের বিক্রিয়ায় বিয়োজন ঘটলে তাকে কী বলে?','আর্দ্রবিশ্লেষণ (হাইড্রোলাইসিস)',['পলিমারকরণ','সমানুকরণ','দহন'],'পানির সাহায্যে বিশ্লিষ্ট হওয়া।'),
+  B(1,'কোনো পদার্থের সাথে পানি যুক্ত হওয়াকে কী বলে?','পানিযোজন (হাইড্রেশন)',['আর্দ্রবিশ্লেষণ','সমানুকরণ','পলিমারকরণ'],'যেমন ইথিন + পানি → ইথানল।'),
+  B(1,'সমানুকরণ (Isomerization) কী?','অণুর গঠন বদলে সমআণবিক সংকেতের ভিন্ন যৌগে রূপান্তর',['দুটি অণু যুক্ত হওয়া','পানি যোগ করা','ইলেকট্রন স্থানান্তর'],'আণবিক সংকেত একই থাকে, গঠন আলাদা।'),
+  B(1,'অনেক ছোট অণু যুক্ত হয়ে বড় অণু (পলিমার) গঠনকে কী বলে?','পলিমারকরণ',['সমানুকরণ','আর্দ্রবিশ্লেষণ','প্রশমন'],'যেমন ইথিন → পলিথিন।'),
+  B(1,'পলিথিন তৈরির মনোমার কোনটি?','ইথিন',['মিথেন','ইথেন','প্রোপেন'],'n CH₂=CH₂ → (–CH₂–CH₂–)ₙ।'),
+  B(1,'লা শাতেলিয়ের নীতি কিসের সাথে সম্পর্কিত?','রাসায়নিক সাম্যাবস্থা',['ভর সংরক্ষণ','আয়নিক বন্ধন','আণবিক ভর'],'সাম্যাবস্থায় পরিবর্তন করলে সিস্টেম তা প্রতিরোধ করে।'),
+  B(1,'রাসায়নিক সাম্যাবস্থায় সম্মুখ ও বিপরীত বিক্রিয়ার গতি কেমন?','সমান',['সম্মুখ বেশি','বিপরীত বেশি','শূন্য'],'গতিশীল সাম্য—উভয় বিক্রিয়া চলতে থাকে।'),
+  B(1,'অনুঘটক বিক্রিয়ায় কী করে?','বিক্রিয়ার গতি পরিবর্তন করে কিন্তু নিজে অপরিবর্তিত থাকে',['স্থায়ীভাবে ব্যয় হয়','উৎপাদ বাড়ায়','ভর বদলে দেয়'],'অনুঘটক সক্রিয়ন শক্তি পরিবর্তন করে।'),
+  B(1,'ধনাত্মক অনুঘটক বিক্রিয়ার গতিবেগ কী করে?','বাড়ায়',['কমায়','শূন্য করে','অপরিবর্তিত রাখে'],'সক্রিয়ন শক্তি কমায়।'),
+  B(1,'তাপমাত্রা বাড়ালে সাধারণত বিক্রিয়ার গতি কী হয়?','বাড়ে',['কমে','অপরিবর্তিত থাকে','শূন্য হয়'],'সংঘর্ষ বেশি হয় ও সক্রিয়ন শক্তি অতিক্রম সহজ হয়।'),
+  B(1,'ঘনমাত্রা বাড়ালে বিক্রিয়ার গতি সাধারণত কী হয়?','বাড়ে',['কমে','অপরিবর্তিত থাকে','শূন্য হয়'],'প্রতি একক আয়তনে বেশি কণা থাকে।'),
+  B(1,'কঠিন বিক্রিয়কের পৃষ্ঠতল বাড়ালে বিক্রিয়ার গতি—','বাড়ে',['কমে','একই থাকে','শূন্য হয়'],'চূর্ণ করলে বেশি পৃষ্ঠ সংস্পর্শে আসে।'),
+  B(1,'Zn + CuSO₄ → ZnSO₄ + Cu কোন ধরনের বিক্রিয়া?','প্রতিস্থাপন',['সংযোজন','বিয়োজন','প্রশমন'],'Zn, Cu-কে প্রতিস্থাপন করে।'),
+  B(1,'2H₂ + O₂ → 2H₂O কোন ধরনের বিক্রিয়া?','সংযোজন',['বিয়োজন','প্রতিস্থাপন','দ্বি-বিয়োজন'],'দুটি পদার্থ যুক্ত হয়ে একটি তৈরি।'),
+  B(1,'2H₂O → 2H₂ + O₂ কোন ধরনের বিক্রিয়া?','বিয়োজন',['সংযোজন','প্রতিস্থাপন','প্রশমন'],'একটি যৌগ ভেঙে একাধিক পদার্থ।'),
+  B(1,'কোন পরিবর্তনে বিক্রিয়ার সময় গ্যাস উৎপন্ন হয়?','CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂',['NaOH + HCl → NaCl + H₂O','AgNO₃ + NaCl → AgCl + NaNO₃','BaCl₂ + Na₂SO₄ → BaSO₄ + 2NaCl'],'CO₂ গ্যাস নির্গত হয়।'),
+  B(1,'সমীকরণে ‘↑’ চিহ্ন কী নির্দেশ করে?','গ্যাস উৎপন্ন হয়েছে',['অধঃক্ষেপ পড়েছে','তাপ নির্গত','উভমুখী বিক্রিয়া'],'↑ = গ্যাস নির্গমন; ↓ = অধঃক্ষেপ।'),
+  B(1,'রাসায়নিক সমীকরণে Δ চিহ্ন কী নির্দেশ করে?','তাপ প্রয়োগ',['অনুঘটক','চাপ','অধঃক্ষেপ'],'তীরের উপর Δ মানে তাপ দেওয়া।'),
+  B(2,'N₂ + O₂ ⇌ 2NO বিক্রিয়াটি কী ধরনের?','তাপহারী ও উভমুখী',['তাপোৎপাদী ও একমুখী','শুধু একমুখী','শুধু তাপোৎপাদী'],'উচ্চ তাপমাত্রায় ঘটে, তাপ শোষণ করে।'),
+  B(2,'N₂ + 3H₂ ⇌ 2NH₃ + তাপ—তাপমাত্রা কমালে সাম্যাবস্থা কোন দিকে সরবে?','অগ্র (NH₃ উৎপাদনের দিকে)',['বিপরীত দিকে','সরবে না','স্থির থাকবে'],'তাপোৎপাদী বিক্রিয়া নিম্ন তাপে অগ্র দিকে অগ্রসর হয়।'),
+  B(2,'N₂ + 3H₂ ⇌ 2NH₃-এ চাপ বাড়ালে সাম্যাবস্থা কোন দিকে সরবে?','NH₃ উৎপাদনের দিকে (কম মোলের দিকে)',['H₂-এর দিকে','N₂-এর দিকে','কোনো পরিবর্তন নেই'],'৪ মোল → ২ মোল; চাপ বাড়লে কম মোলের দিকে যায়।'),
+  B(2,'হেবার প্রক্রিয়ায় সাধারণত কোন অনুঘটক ব্যবহৃত হয়?','লোহা (Fe)',['প্ল্যাটিনাম','নিকেল','ভ্যানাডিয়াম পেন্টক্সাইড'],'Fe অনুঘটক NH₃ উৎপাদনে।'),
+  B(2,'সালফিউরিক অ্যাসিডের স্পর্শ প্রক্রিয়ায় কোন অনুঘটক ব্যবহৃত হয়?','V₂O₅',['Fe','Ni','MnO₂'],'SO₂ → SO₃ রূপান্তরে V₂O₅ ব্যবহৃত হয়।'),
+  B(2,'2KClO₃ → 2KCl + 3O₂ বিক্রিয়ায় অনুঘটক কোনটি?','MnO₂',['Fe','V₂O₅','Pt'],'MnO₂ বিক্রিয়ার গতি বাড়ায়।'),
+  B(2,'Mg + 2HCl → MgCl₂ + H₂ বিক্রিয়ায় জারিত পদার্থ কোনটি?','Mg',['HCl','MgCl₂','H₂'],'Mg-এর জারণ সংখ্যা ০ → +২।'),
+  B(2,'Mg + 2HCl → MgCl₂ + H₂ বিক্রিয়ায় বিজারিত পদার্থ কোনটি?','H⁺ (HCl-এর হাইড্রোজেন)',['Mg','Cl⁻','MgCl₂'],'H-এর জারণ সংখ্যা +১ → ০।'),
+  B(2,'KMnO₄-এ Mn-এর জারণ সংখ্যা +৭। এটি বিক্রিয়ায় সাধারণত কী করে?','জারক হিসেবে কাজ করে',['বিজারক','প্রশমক','অনুঘটক'],'+৭ সর্বোচ্চ অবস্থা; এটি ইলেকট্রন গ্রহণ করে।'),
+  B(2,'CO₂-এ কার্বনের জারণ সংখ্যা কত?','+৪',['+২','০','−৪'],'C + 2(−২) = ০ → +৪।'),
+  B(2,'SO₂-এ সালফারের জারণ সংখ্যা কত?','+৪',['+২','+৬','−২'],'S + 2(−২) = ০ → +৪।'),
+  B(2,'H₂S-এ সালফারের জারণ সংখ্যা কত?','−২',['+২','০','+৬'],'২(+১) + S = ০ → −২।'),
+  B(2,'NaCl-এ Cl-এর জারণ সংখ্যা কত?','−১',['+১','০','−২'],'Na = +১, তাই Cl = −১।'),
+  B(2,'Fe₂O₃-এ আয়রনের জারণ সংখ্যা কত?','+৩',['+২','+৬','০'],'২Fe + ৩(−২) = ০ → Fe = +৩।'),
+  B(2,'অম্ল ও ক্ষারকের বিক্রিয়ায় লবণ ও পানি তৈরিকে কী বলে?','প্রশমন (নিরপেক্ষীকরণ)',['জারণ','হাইড্রোলাইসিস','পলিমারকরণ'],'H⁺ + OH⁻ → H₂O।'),
+  B(2,'CH₄ + 2O₂ → CO₂ + 2H₂O বিক্রিয়াটি কোন ধরনের?','দহন (তাপোৎপাদী ও রেডক্স)',['প্রশমন','বিয়োজন','অধঃক্ষেপণ'],'মিথেনের সম্পূর্ণ দহন।'),
+  B(2,'দুটি দ্রবণ মিশিয়ে অদ্রবণীয় কঠিন পদার্থ তৈরি হলে তাকে কী বলে?','অধঃক্ষেপ',['দ্রবণ','দ্রবীভবন','বাষ্পীভবন'],'যেমন AgCl-এর সাদা অধঃক্ষেপ।'),
+  B(2,'AgNO₃ + NaCl → AgCl↓ + NaNO₃ বিক্রিয়ায় অধঃক্ষেপের রং কী?','সাদা',['হলুদ','নীল','লাল'],'AgCl সাদা অধঃক্ষেপ।'),
+  B(2,'CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄ বিক্রিয়ায় অধঃক্ষেপের রং কী?','নীল',['সাদা','লাল','সবুজ'],'Cu(OH)₂ নীল অধঃক্ষেপ।'),
+  B(2,'জল-গ্যাস ও হাইড্রোজেন তৈরির বিক্রিয়াগুলো সাধারণত কী ধরনের?','তাপহারী',['তাপোৎপাদী','নিউক্লীয়','নন-রেডক্স'],'উচ্চ তাপমাত্রা লাগে, তাপ শোষণ করে।'),
+  B(2,'সালোকসংশ্লেষণ কোন ধরনের বিক্রিয়া?','তাপহারী',['তাপোৎপাদী','নিরপেক্ষকরণ','প্রশমন'],'আলোক শক্তি শোষিত হয়।'),
+  B(2,'শ্বসন কোন ধরনের বিক্রিয়া?','তাপোৎপাদী',['তাপহারী','উভমুখী','অধঃক্ষেপণ'],'গ্লুকোজ জারিত হয়ে শক্তি নির্গত হয়।'),
+  B(3,'কোনো বিক্রিয়ায় বিক্রিয়কের মোট শক্তি উৎপাদের শক্তির চেয়ে বেশি হলে বিক্রিয়াটি কেমন?','তাপোৎপাদী',['তাপহারী','উভমুখী','অধঃক্ষেপী'],'অতিরিক্ত শক্তি তাপরূপে নির্গত হয়।'),
+  B(3,'2Na + Cl₂ → 2NaCl বিক্রিয়ায় মোট কয়টি ইলেকট্রন স্থানান্তরিত হয়?','২টি',['১টি','৩টি','৪টি'],'২টি Na, প্রতিটি ১টি করে ইলেকট্রন দেয়।'),
+  B(3,'Fe + CuSO₄ → FeSO₄ + Cu বিক্রিয়ায় নিচের কোনটি সঠিক?','Fe বিজারক, Cu²⁺ জারক',['Fe জারক, Cu²⁺ বিজারক','Fe ও Cu উভয়ই জারিত','এটি নন-রেডক্স'],'Fe → Fe²⁺ (জারণ); Cu²⁺ → Cu (বিজারণ)।'),
+  B(1,'পানির একটি অণু কী কী পরমাণু দিয়ে গঠিত?','২টি হাইড্রোজেন ও ১টি অক্সিজেন',['১টি হাইড্রোজেন ও ২টি অক্সিজেন','২টি হাইড্রোজেন ও ২টি অক্সিজেন','১টি হাইড্রোজেন ও ১টি অক্সিজেন'],'পানির সংকেত H₂O।'),
+  B(1,'বরফের রাসায়নিক সংকেত কোনটি?','H₂O',['H₂O₂','HO₂','OH'],'বরফ, পানি ও জলীয় বাষ্প—তিন অবস্থাতেই সংকেত H₂O।'),
+  B(1,'পানিকে ১০০°C তাপমাত্রায় জলীয় বাষ্পে পরিণত করলে এর রাসায়নিক সংযুতি কেমন থাকে?','অপরিবর্তিত থাকে',['বৃদ্ধি পায়','হ্রাস পায়','হাইড্রোজেন ও অক্সিজেনে ভেঙে যায়'],'এটি ভৌত পরিবর্তন; সংযুতি একই থাকে।'),
+  B(1,'ভৌত পরিবর্তনে পদার্থের শতকরা সংযুতি কেমন থাকে?','অভিন্ন থাকে',['পরিবর্তিত হয়','শূন্য হয়','বেড়ে যায়'],'নতুন পদার্থ তৈরি হয় না।'),
+  B(1,'মোমের প্রধান উপাদান কী?','হাইড্রোকার্বন',['পানি','ক্ষার','ডিজেল'],'মোম মূলত কার্বন ও হাইড্রোজেনের যৌগ।'),
+  B(1,'মোম পোড়ালে কী কী উৎপন্ন হয়?','কার্বন ডাইঅক্সাইড ও জলীয় বাষ্প',['অক্সিজেন ও নাইট্রিক অক্সাইড','শুধু অক্সিজেন','হাইড্রোজেন ও নাইট্রোজেন'],'হাইড্রোকার্বন + O₂ → CO₂ + H₂O।'),
+  B(1,'লোহায় মরিচা পড়া কোন ধরনের পরিবর্তন?','রাসায়নিক পরিবর্তন',['ভৌত পরিবর্তন','অস্থায়ী পরিবর্তন','বাহ্যিক পরিবর্তন'],'নতুন পদার্থ (আয়রন অক্সাইড) তৈরি হয়।'),
+  B(1,'মোমবাতি জ্বালানো কোন ধরনের পরিবর্তন?','রাসায়নিক',['শুধু ভৌত','অস্থায়ী','কোনোটিই নয়'],'দহনে নতুন পদার্থ তৈরি হয়।'),
+  B(1,'জলীয় বাষ্পকে ঠান্ডা করলে কী হয়?','পানিতে পরিণত হয়',['বরফে পরিণত হয়','ঊর্ধ্বপাতিত হয়','বিযোজিত হয়'],'এটি ঘনীভবন—ভৌত পরিবর্তন।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় যে পদার্থ নিয়ে বিক্রিয়া শুরু হয় তাকে কী বলে?','বিক্রিয়ক',['উৎপাদ','প্রভাবক','দ্রাবক'],'বিক্রিয়ক → উৎপাদ।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় যে নতুন পদার্থ তৈরি হয় তাকে কী বলে?','উৎপাদ',['বিক্রিয়ক','প্রভাবক','দ্রবণ'],'সমীকরণে তীরের ডান দিকে থাকে।'),
+  B(1,'বিক্রিয়ক ও উৎপাদের ভৌত ও রাসায়নিক ধর্ম কেমন?','ভিন্ন',['অভিন্ন','একই','সর্বদা সমান'],'নতুন পদার্থ বলে ধর্ম আলাদা।'),
+  B(1,'রাসায়নিক পরিবর্তনে পরমাণুগুলোর মধ্যে কী ঘটে?','পুরনো বন্ধন ভাঙে ও নতুন বন্ধন গঠিত হয়',['পরমাণু ধ্বংস হয়','নিউক্লিয়াস বদলে যায়','কিছুই ঘটে না'],'পরমাণু একই থাকে; পুনর্বিন্যাস হয়।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় কোনটি পরিবর্তিত হয় না?','মোট ভর',['তাপ','উৎপাদের ধর্ম','পদার্থের রঙ'],'ভর সংরক্ষণ সূত্র।'),
+  B(1,'যে বিক্রিয়া শুধু একদিকে সম্পন্ন হয় তাকে কী বলে?','একমুখী বিক্রিয়া',['উভমুখী বিক্রিয়া','সাম্যাবস্থা','সমান্তরাল বিক্রিয়া'],'উৎপাদ আবার বিক্রিয়কে পরিণত হয় না।'),
+  B(1,'কোন ধরনের বিক্রিয়া অসম্পূর্ণ থাকে?','উভমুখী বিক্রিয়া',['একমুখী বিক্রিয়া','দহন বিক্রিয়া','নিরপেক্ষীকরণ'],'উভয় দিকে ঘটে বলে বিক্রিয়ক ও উৎপাদ দুটোই থাকে।'),
+  B(1,'বিক্রিয়ার ঘনমাত্রা বাড়ালে বিক্রিয়ার গতি—','বাড়ে',['কমে','অপরিবর্তিত থাকে','বন্ধ হয়'],'ঘনমাত্রা বাড়লে সংঘর্ষ বাড়ে।'),
+  B(1,'তাপমাত্রা বাড়ালে সাধারণত বিক্রিয়ার গতি—','বাড়ে',['কমে','অপরিবর্তিত থাকে','শূন্য হয়'],'উচ্চ তাপমাত্রায় কণার গতিশক্তি বেশি।'),
+  B(1,'প্রভাবক কী করে?','বিক্রিয়ার গতি পরিবর্তন করে কিন্তু নিজে অক্ষত থাকে',['বিক্রিয়ক হিসেবে খরচ হয়','উৎপাদ তৈরি করে','সাম্যাবস্থা ভেঙে দেয়'],'প্রভাবক বিক্রিয়ার শেষে একই থাকে।'),
+  B(1,'নিচের কোন বিক্রিয়াটি উভমুখী?','এস্টারিফিকেশন',['কার্বনের দহন','ম্যাগনেসিয়ামের দহন','কাগজ পোড়ানো'],'অ্যালকোহল + অ্যাসিড ⇌ এস্টার + পানি।'),
+  B(1,'ইথানল ও জৈব অ্যাসিডের বিক্রিয়ায় অজৈব অ্যাসিডের (H⁺) উপস্থিতিতে কী উৎপন্ন হয়?','এস্টার',['কিটোন','অ্যালকোহল','অ্যালডিহাইড'],'এ বিক্রিয়াকে এস্টারিফিকেশন বলে।'),
+  B(1,'রাসায়নিক সাম্যাবস্থা কেমন অবস্থা?','গতিশীল',['স্থির (বিক্রিয়া বন্ধ)','তাপ শোষণ করা','কেবল উৎপাদ সৃষ্টির অবস্থা'],'সম্মুখ ও বিপরীত বিক্রিয়ার গতি সমান হয়, বিক্রিয়া থামে না।'),
+  B(1,'সাম্যাবস্থায় সম্মুখ ও বিপরীত বিক্রিয়ার গতি কেমন?','সমান',['সম্মুখ বেশি','বিপরীত বেশি','শূন্য'],'গতি সমান হলেই সাম্য।'),
+  B(1,'CaCO₃ কে তাপ দিলে কী উৎপন্ন হয়?','CaO ও CO₂',['Ca ও O₂','শুধু CaO','Ca ও CO₂'],'CaCO₃ → CaO + CO₂।'),
+  B(1,'CaCO₃-এর তাপীয় বিযোজন খোলা পাত্রে একমুখী কেন?','CO₂ বেরিয়ে যায় বলে',['CaO গ্যাস হয়ে যায় বলে','CaCO₃ ভাঙে না বলে','চাপ বেশি বলে'],'CO₂ অপসারিত হলে বিপরীত বিক্রিয়া ঘটে না।'),
+  B(1,'CaCO₃-এর তাপীয় বিযোজন বদ্ধ পাত্রে কেমন বিক্রিয়া?','উভমুখী',['একমুখী','প্রশমন','দহন'],'CO₂ আবদ্ধ থাকে, CaO-এর সাথে বিক্রিয়ায় আবার CaCO₃ তৈরি হয়।'),
+  B(1,'তাপ নির্গত হয়—এমন বিক্রিয়াকে কী বলে?','তাপোৎপাদী',['তাপহারী','একমুখী','জারণ'],'∆H ঋণাত্মক।'),
+  B(1,'তাপোৎপাদী বিক্রিয়ায় ∆H-এর মান কেমন?','ঋণাত্মক',['ধনাত্মক','শূন্য','অসংজ্ঞায়িত'],'তাপ নির্গত হলে ∆H < 0।'),
+  B(1,'তাপহারী বিক্রিয়ায় ∆H-এর মান কেমন?','ধনাত্মক',['ঋণাত্মক','শূন্য','অসংজ্ঞায়িত'],'তাপ শোষিত হলে ∆H > 0।'),
+  B(1,'নিরপেক্ষীকরণ (প্রশমন) বিক্রিয়ায় কী ঘটে?','তাপ নির্গত হয়',['তাপ শোষিত হয়','∆H = 0','কিছুই ঘটে না'],'অ্যাসিড + ক্ষার → লবণ + পানি + তাপ।'),
+  B(1,'হেবার-বশ পদ্ধতিতে কী উৎপন্ন হয়?','অ্যামোনিয়া',['সালফিউরিক অ্যাসিড','হাইড্রোজেন ক্লোরাইড','নাইট্রিক অ্যাসিড'],'N₂ + 3H₂ ⇌ 2NH₃।'),
+  B(2,'হেবার-বশ পদ্ধতিতে অ্যামোনিয়া উৎপাদনে সাধারণ তাপমাত্রা কত?','৪৫০–৫৫০°C',['২০০–৩০০°C','৭০০–৮০০°C','১০০–১৫০°C'],'প্রভাবক Fe ব্যবহার করা হয়।'),
+  B(2,'হেবার-বশ পদ্ধতিতে সাধারণত কত চাপ প্রয়োগ করা হয়?','২০০–২৫০ atm',['১–২ atm','৫০০ atm','১০০০ atm'],'উচ্চ চাপ NH₃-এর পরিমাণ বাড়ায়।'),
+  B(2,'N₂ + 3H₂ ⇌ 2NH₃ + ৯২.২ kJ—এ বিক্রিয়াটি কী ধরনের?','তাপোৎপাদী ও উভমুখী',['তাপহারী ও একমুখী','তাপহারী ও উভমুখী','তাপোৎপাদী ও একমুখী'],'তাপ উৎপন্ন হয় এবং বিক্রিয়াটি উভয় দিকে ঘটে।'),
+  B(2,'হেবার-বশ পদ্ধতিতে নিয়ামক কোনগুলো?','তাপমাত্রা, চাপ ও প্রভাবক',['শুধু আলো','শুধু ঘনমাত্রা','শুধু পাত্র'],'এই তিনটি নিয়ামক NH₃ উৎপাদন প্রভাবিত করে।'),
+  B(2,'H₂O-তে হাইড্রোজেন ও অক্সিজেনের জারণ সংখ্যা যথাক্রমে—','+১, −২',['−১, +২','+২, −১','+১, −১'],'যৌগে H = +১, O = −২।'),
+  B(2,'MgSO₄-এ Mg-এর জারণ সংখ্যা কত?','+২',['−২','+১','+৬'],'গ্রুপ ২-এর ধাতু।'),
+  B(2,'জারক পদার্থ কী করে?','ইলেকট্রন গ্রহণ করে নিজে বিজারিত হয়',['ইলেকট্রন ত্যাগ করে বিজারিত হয়','ইলেকট্রন ত্যাগ করে জারিত হয়','কোনো পরিবর্তন হয় না'],'জারক নিজে বিজারিত হয়।'),
+  B(2,'বিজারক পদার্থ কী করে?','ইলেকট্রন ত্যাগ করে নিজে জারিত হয়',['ইলেকট্রন গ্রহণ করে জারিত হয়','ইলেকট্রন গ্রহণ করে বিজারিত হয়','জারণ সংখ্যা কমে'],'বিজারক নিজে জারিত হয়।'),
+  B(2,'2FeCl₂ + Cl₂ → 2FeCl₃ বিক্রিয়ায় Fe-এর জারণ সংখ্যা কীভাবে বদলায়?','+২ থেকে +৩',['+৩ থেকে +২','+২ থেকে +১','+১ থেকে +২'],'Fe²⁺ → Fe³⁺—জারণ।'),
+  B(2,'X + 2HCl → CaCl₂ + CO₂ + Y—এ X ও Y কী?','CaCO₃ ও H₂O',['CaO ও O₂','CaCO₃ ও H₂','Ca(NO₃)₂ ও NO₂'],'CaCO₃ + 2HCl → CaCl₂ + CO₂ + H₂O।'),
+  B(2,'CH₄ + 2O₂ → CO₂ + 2H₂O—এ বিক্রিয়াটি কোন ধরনের?','দহন (তাপোৎপাদী)',['প্রশমন','তাপহারী','একমুখী ও তাপহারী'],'মিথেনের দহনে তাপ নির্গত হয়।'),
+  B(2,'যে বিক্রিয়ায় বিক্রিয়ক ও উৎপাদের মধ্যে উভমুখী তীর (⇌) ব্যবহৃত হয় সেটি—','উভমুখী বিক্রিয়া',['একমুখী বিক্রিয়া','দহন বিক্রিয়া','তাপহারী বিক্রিয়া'],'⇌ উভমুখী বিক্রিয়ার প্রতীক।'),
+  B(3,'বিক্রিয়াটি খোলা পাত্রে ঘটলে একমুখী হবে—','CaCO₃ → CaO + CO₂',['N₂ + 3H₂ ⇌ 2NH₃','CH₃COOH + C₂H₅OH ⇌ এস্টার + H₂O','PCl₅ ⇌ PCl₃ + Cl₂'],'গ্যাস CO₂ বেরিয়ে গেলে বিপরীত বিক্রিয়া ঘটে না।'),
+  B(1,'মোমের প্রধান উপাদান কোনটি?','হাইড্রোকার্বন',['পানি','ক্ষার','ডিজেল'],'মোম কার্বন ও হাইড্রোজেনের যৌগ (হাইড্রোকার্বন)।'),
+  B(1,'মোম জ্বালালে কী উৎপন্ন হয়?','কার্বন ডাইঅক্সাইড ও জলীয় বাষ্প',['অক্সিজেন ও জলীয় বাষ্প','অক্সিজেন ও নাইট্রিক অক্সাইড','শুধু কার্বন মনোক্সাইড'],'হাইড্রোকার্বন দহনে CO₂ ও H₂O তৈরি হয়।'),
+  B(1,'পানির ১টি অণু কী দিয়ে তৈরি?','২টি হাইড্রোজেন ও ১টি অক্সিজেন পরমাণু',['১টি হাইড্রোজেন ও ২টি অক্সিজেন পরমাণু','২টি হাইড্রোজেন ও ২টি অক্সিজেন পরমাণু','১টি হাইড্রোজেন ও ১টি অক্সিজেন পরমাণু'],'পানির অণুতে ২টি H ও ১টি O থাকে।'),
+  B(1,'বরফের রাসায়নিক সংকেত কী?','H₂O',['H₂O₂','HO₂','H₃O'],'বরফ, পানি ও জলীয় বাষ্প—সবারই সংকেত H₂O।'),
+  B(1,'বরফ → পানি → জলীয় বাষ্প—এটি কোন ধরনের পরিবর্তন?','ভৌত পরিবর্তন',['রাসায়নিক পরিবর্তন','দহন','প্রশমন'],'শুধু অবস্থার পরিবর্তন, নতুন পদার্থ নয়।'),
+  B(1,'নিচের কোনটি ভৌত পরিবর্তন?','বরফ গলা',['মোমবাতি জ্বালানো','লোহায় মরিচা পড়া','দুধ থেকে দই হওয়া'],'বরফ গলায় নতুন পদার্থ তৈরি হয় না।'),
+  B(1,'রাসায়নিক পরিবর্তনে কিসের পরিবর্তন ঘটে?','পদার্থের ধর্ম ও গঠন',['শুধু আকার','শুধু রং','কিছুই না'],'নতুন ধর্মবিশিষ্ট পদার্থ তৈরি হয়।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় যে পদার্থ দিয়ে শুরু হয় তাকে কী বলে?','বিক্রিয়ক',['উৎপাদ','প্রভাবক','দ্রাবক'],'বিক্রিয়কই বিক্রিয়ার শুরুর পদার্থ।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় নতুন যে পদার্থ তৈরি হয় তাকে কী বলে?','উৎপাদ',['বিক্রিয়ক','প্রভাবক','দ্রাবক'],'বিক্রিয়ার ফলে যা তৈরি হয় তা উৎপাদ।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় বন্ধন ভাঙা ও গড়ায় কোন শক্তি জড়িত?','রাসায়নিক শক্তি (বন্ধন শক্তি)',['শব্দ শক্তি','গতিশক্তি','আলোক শক্তি'],'বন্ধন ভাঙতে শক্তি লাগে, গড়লে শক্তি নির্গত হয়।'),
+  B(1,'রাসায়নিক বিক্রিয়ায় কোনটির পরিবর্তন ঘটে না?','ভর',['তাপ','চাপ','পদার্থের ধর্ম'],'ভরের নিত্যতা সূত্র অনুসারে মোট ভর অপরিবর্তিত।'),
+  B(1,'রাসায়নিক বিক্রিয়াকে সাধারণভাবে কয়টি বিষয়ের ওপর ভিত্তি করে ভাগ করা হয়?','৩টি (দিক, তাপ ও ইলেকট্রন স্থানান্তর)',['১টি','২টি','৫টি'],'বিক্রিয়ার দিক, তাপের পরিবর্তন ও ইলেকট্রন স্থানান্তর।'),
+  B(1,'বিক্রিয়ার দিকের ওপর ভিত্তি করে বিক্রিয়া কয় প্রকার?','২ প্রকার',['১ প্রকার','৩ প্রকার','৪ প্রকার'],'একমুখী ও উভমুখী।'),
+  B(1,'তাপের পরিবর্তনের ওপর ভিত্তি করে বিক্রিয়া কয় প্রকার?','২ প্রকার',['১ প্রকার','৩ প্রকার','৪ প্রকার'],'তাপউৎপাদী ও তাপহারী।'),
+  B(1,'বিক্রিয়ায় তাপমাত্রা বাড়ালে সাধারণত বিক্রিয়ার গতি কেমন হয়?','বাড়ে',['কমে','অপরিবর্তিত থাকে','বন্ধ হয়ে যায়'],'বেশি সংঘর্ষ ঘটে বলে গতি বাড়ে।'),
+  B(1,'বিক্রিয়কের ঘনমাত্রা বাড়ালে বিক্রিয়ার গতি কেমন হয়?','বাড়ে',['কমে','অপরিবর্তিত থাকে','বন্ধ হয়ে যায়'],'ঘনমাত্রা বাড়লে সংঘর্ষের সংখ্যা বাড়ে।'),
+  B(1,'কোন বিক্রিয়া সম্পূর্ণ হয় না?','উভমুখী বিক্রিয়া',['একমুখী বিক্রিয়া','দহন বিক্রিয়া','প্রশমন বিক্রিয়া'],'উভমুখী বিক্রিয়ায় বিক্রিয়ক ও উৎপাদ একসাথে থাকে।'),
+  B(1,'CaCO₃ খোলা পাত্রে উত্তপ্ত করলে সাধারণত কোন বিক্রিয়া ঘটে?','একমুখী (সম্পূর্ণ) বিক্রিয়া',['উভমুখী বিক্রিয়া','প্রশমন','দহন'],'CO₂ বেরিয়ে যায় বলে বিপরীত বিক্রিয়া হয় না।'),
+  B(1,'বদ্ধ পাত্রে CaCO₃-এর তাপীয় বিযোজন কেমন বিক্রিয়া?','উভমুখী',['একমুখী','প্রশমন','প্রতিস্থাপন'],'CO₂ বেরোতে না পারায় CaO ও CO₂ আবার মিলে CaCO₃ হয়।'),
+  B(1,'ইথানল ও জৈব অ্যাসিডের বিক্রিয়ায় কী উৎপন্ন হয়?','এস্টার',['কিটোন','অ্যালডিহাইড','ইথার'],'এস্টারিফিকেশন বিক্রিয়া।'),
+  B(1,'এস্টারিফিকেশন কোন ধরনের বিক্রিয়া?','উভমুখী',['একমুখী','প্রশমন','জারণ'],'জৈব অ্যাসিড + অ্যালকোহল ⇌ এস্টার + পানি।'),
+  B(1,'অ্যামোনিয়া উৎপাদনের হেবার-বোস পদ্ধতিতে কোন গ্যাস দুটি বিক্রিয়ক?','N₂ ও H₂',['N₂ ও O₂','H₂ ও O₂','NH₃ ও N₂'],'N₂ + 3H₂ ⇌ 2NH₃।'),
+  B(1,'হেবার-বোস পদ্ধতিতে অ্যামোনিয়া উৎপাদনের সময় কী ধরনের বিক্রিয়া ঘটে?','তাপউৎপাদী ও উভমুখী',['তাপহারী ও একমুখী','তাপহারী ও উভমুখী','তাপউৎপাদী ও একমুখী'],'ΔH ঋণাত্মক, বিক্রিয়াটি উভমুখী।'),
+  B(1,'হেবার-বোস পদ্ধতিতে সাধারণত কোন প্রভাবক ব্যবহৃত হয়?','লোহা (Fe)',['প্ল্যাটিনাম','নিকেল','কপার'],'কাঁচা লোহা বা আয়রন প্রভাবক হিসেবে ব্যবহৃত হয়।'),
+  B(1,'কোন বিক্রিয়ায় ΔH-এর মান ঋণাত্মক হয়?','তাপউৎপাদী',['তাপহারী','নিরপেক্ষ','তাপশূন্য'],'তাপ নির্গত হলে ΔH ঋণাত্মক।'),
+  B(1,'তাপহারী বিক্রিয়ায় ΔH-এর মান কেমন?','ধনাত্মক',['ঋণাত্মক','শূন্য','অসংজ্ঞায়িত'],'তাপ শোষিত হলে ΔH ধনাত্মক।'),
+  B(1,'অম্ল-ক্ষারক প্রশমন বিক্রিয়ায় তাপের কী ঘটে?','তাপ নির্গত হয়',['তাপ শোষিত হয়','তাপ অপরিবর্তিত থাকে','তাপ শূন্য হয়'],'প্রশমন তাপউৎপাদী।'),
+  B(1,'জারণ-বিজারণ যুগপৎ ঘটে এমন বিক্রিয়াকে কী বলে?','রেডক্স বিক্রিয়া',['প্রশমন বিক্রিয়া','দহন বিক্রিয়া','সংযোজন বিক্রিয়া'],'Redox = Reduction + Oxidation।'),
+  B(1,'জারক পদার্থ ইলেকট্রনের ক্ষেত্রে কী করে?','ইলেকট্রন গ্রহণ করে নিজে বিজারিত হয়',['ইলেকট্রন ত্যাগ করে জারিত হয়','ইলেকট্রন গ্রহণ করে জারিত হয়','ইলেকট্রন ত্যাগ করে বিজারিত হয়'],'জারক অন্যকে জারিত করে, নিজে বিজারিত হয়।'),
+  B(1,'বিজারক পদার্থ ইলেকট্রনের ক্ষেত্রে কী করে?','ইলেকট্রন ত্যাগ করে নিজে জারিত হয়',['ইলেকট্রন গ্রহণ করে বিজারিত হয়','ইলেকট্রন গ্রহণ করে জারিত হয়','ইলেকট্রন ত্যাগ করে বিজারিত হয়'],'বিজারক অন্যকে বিজারিত করে, নিজে জারিত হয়।'),
+  B(1,'মৃৎক্ষার ধাতুসমূহের জারণ সংখ্যা কত?','+২',['+১','−১','০'],'গ্রুপ ২-এর ধাতু ২টি ইলেকট্রন ত্যাগ করে।'),
+  B(1,'ক্ষার ধাতুসমূহের জারণ সংখ্যা কত?','+১',['+২','−১','০'],'গ্রুপ ১-এর ধাতু একটি ইলেকট্রন ত্যাগ করে।'),
+  B(1,'FeSO₄-এ Fe-এর জারণ সংখ্যা কত?','+২',['+১','+৩','−২'],'SO₄²⁻ এর চার্জ −২, তাই Fe = +২।'),
+  B(1,'FeCl₃-এ Fe-এর জারণ সংখ্যা কত?','+৩',['+১','+২','−৩'],'৩টি Cl⁻ আছে, তাই Fe = +৩।'),
+  B(1,'Zn + Cu²⁺ → Zn²⁺ + Cu বিক্রিয়ায় জারক কোনটি?','Cu²⁺',['Zn','Zn²⁺','Cu'],'Cu²⁺ ইলেকট্রন গ্রহণ করে Cu হয়।'),
+  B(1,'Zn + Cu²⁺ → Zn²⁺ + Cu বিক্রিয়ায় বিজারক কোনটি?','Zn',['Cu²⁺','Zn²⁺','Cu'],'Zn ইলেকট্রন দেয়।'),
+  B(1,'2FeCl₂ + Cl₂ → 2FeCl₃ বিক্রিয়ায় কোনটি জারিত হয়?','Fe²⁺',['Cl₂','Cl⁻','Fe³⁺'],'Fe²⁺ → Fe³⁺, ইলেকট্রন হারায়।'),
+  B(1,'2FeCl₂ + Cl₂ → 2FeCl₃ বিক্রিয়ায় Cl₂ কী হিসেবে কাজ করে?','জারক',['বিজারক','প্রভাবক','দ্রাবক'],'Cl₂ ইলেকট্রন গ্রহণ করে।'),
+  B(1,'NaCl + AgNO₃ → AgCl↓ + NaNO₃ কোন ধরনের বিক্রিয়া?','দ্বি-বিনিময় (অধঃক্ষেপণ) বিক্রিয়া',['জারণ-বিজারণ','প্রশমন','সংযোজন'],'আয়ন বিনিময় করে অদ্রবণীয় AgCl তৈরি হয়।'),
+  B(1,'Ca(OH)₂ + CO₂ → CaCO₃ + H₂O বিক্রিয়ায় চুনের পানি ঘোলা হওয়ার কারণ কী?','অদ্রবণীয় CaCO₃ তৈরি হয়',['H₂ উৎপন্ন হয়','CO গ্যাস তৈরি হয়','O₂ তৈরি হয়'],'CaCO₃ পানিতে অদ্রবণীয়।'),
+  B(2,'CH₄ + 2O₂ → CO₂ + 2H₂O বিক্রিয়াটি কী ধরনের?','দহন বিক্রিয়া',['প্রশমন বিক্রিয়া','বিযোজন বিক্রিয়া','অধঃক্ষেপণ বিক্রিয়া'],'জ্বালানি অক্সিজেনে পুড়ে তাপ দেয়।'),
+  B(2,'N₂ + O₂ → 2NO বিক্রিয়ায় ΔH ধনাত্মক হলে বিক্রিয়াটি কেমন?','তাপহারী',['তাপউৎপাদী','প্রশমন','অসম্ভব'],'ΔH > ০ → তাপ শোষিত হয়।'),
+  B(2,'N₂ + 3H₂ ⇌ 2NH₃ + ৯২ kJ—বিক্রিয়াটি কেমন?','তাপউৎপাদী',['তাপহারী','তাপশূন্য','অনির্দিষ্ট'],'তাপ উৎপন্ন হচ্ছে (+৯২ kJ)।'),
+  B(2,'রাসায়নিক সাম্যাবস্থার বৈশিষ্ট্য কোনটি?','সম্মুখ ও বিপরীত বিক্রিয়ার গতি সমান',['বিক্রিয়া বন্ধ হয়ে যায়','শুধু সম্মুখ বিক্রিয়া চলে','শুধু উৎপাদ থাকে'],'এটি একটি গতিশীল সাম্য।'),
+  B(2,'রাসায়নিক সাম্যাবস্থায় বিক্রিয়া কেমন থাকে?','চলমান কিন্তু ঘনমাত্রা স্থির',['সম্পূর্ণ থেমে যায়','কেবল সম্মুখমুখী','অবিরাম গতি বাড়ে'],'দুই দিকের গতি সমান হওয়ায় ঘনমাত্রা স্থির থাকে।'),
+  B(2,'KMnO₄-এ Mn-এর জারণ সংখ্যা +৭—এ থেকে বোঝা যায়—','Mn সর্বোচ্চ জারণ অবস্থায় আছে',['Mn নিরপেক্ষ','Mn বিজারিত','Mn ঋণাত্মক'],'+৭ Mn-এর সর্বোচ্চ জারণ অবস্থা; জারক হিসেবে কাজ করে।'),
+  B(2,'কার্বন + অক্সিজেন → কার্বন ডাইঅক্সাইড বিক্রিয়ায় কার্বনের কী ঘটে?','জারিত হয়',['বিজারিত হয়','অপরিবর্তিত থাকে','ভেঙে যায়'],'C-এর জারণ সংখ্যা ০ থেকে +৪ হয়।')
+ ],
+ gens:[LIB.ox,LIB.eqSum]
+};
+
+$('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); };
+ExamEngine.start(CH);
+</script>
+</body>
+</html>
