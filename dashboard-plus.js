@@ -325,6 +325,67 @@
     var hr = document.querySelector('.header-right'), sb = $('openSettings');
     if (hr) { var kbtn = mk('button', 'theme-btn', '🔎'); kbtn.type = 'button'; kbtn.id = 'lpOpenK'; kbtn.title = 'সার্চ (Ctrl+K)'; kbtn.setAttribute('aria-label', 'সার্চ খোলো'); kbtn.addEventListener('click', openK); hr.insertBefore(kbtn, sb || null); }
 
+
+    /* ================= 🎯 পরীক্ষার বিষয়: ঘোষণা বার + অধ্যায় রিবন + সাইড ট্যাব ================= */
+    (function examTopics() {
+        var SSC = ['রসায়নের ধারণা', 'পদার্থের অবস্থা', 'পদার্থের গঠন', 'পর্যায় সারণি', 'রাসায়নিক বন্ধন', 'মৌলের ধারণা ও রাসায়নিক গণনা', 'রাসায়নিক বিক্রিয়া', 'রসায়ন ও শক্তি', 'এসিড-ক্ষার সমতা', 'খনিজ সম্পদ: ধাতু-অধাতু', 'খনিজ সম্পদ: জীবাশ্ম', 'আমাদের জীবনে রসায়ন'];
+        var HSC = ['ল্যাবরেটরির নিরাপদ ব্যবহার', 'গুণগত রসায়ন', 'মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন', 'রাসায়নিক পরিবর্তন', 'কর্মমুখী রসায়ন', 'পরিবেশ রসায়ন', 'জৈব রসায়ন', 'পরিমাণগত রসায়ন', 'তড়িৎ রসায়ন', 'অর্থনৈতিক রসায়ন'];
+        var TK = key('ExamTopic'), BK = key('BarHide');
+        var st2 = document.createElement('style'); st2.textContent =
+        '.lp-bar{position:relative;z-index:61;display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:9px 12px 9px 18px;border-radius:18px;color:#fff;background:linear-gradient(90deg,#f43f5e,#fb923c,#f43f5e);background-size:200% 100%;animation:lpBar 6s linear infinite;box-shadow:0 10px 26px rgba(244,63,94,.35)}' +
+        '@keyframes lpBar{to{background-position:200% 0}}' +
+        '.lp-bar i.d{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:#fff;animation:lpPulse 1.4s ease-in-out infinite}' +
+        '.lp-bar span.t{flex:1;min-width:0;font-size:14px;font-weight:700;line-height:1.5}' +
+        '.lp-bar a{flex-shrink:0;padding:7px 16px;border-radius:12px;font-size:13px;font-weight:800;text-decoration:none;color:#f43f5e;background:#fff;transition:transform .2s}.lp-bar a:hover{transform:translateY(-2px)}' +
+        '.lp-bar button{flex-shrink:0;width:30px;height:30px;border-radius:50%;font-size:13px;cursor:pointer;color:#fff;background:rgba(255,255,255,.22);border:0}.lp-bar button:hover{background:rgba(255,255,255,.4)}' +
+        '.lp-rib{margin-bottom:35px;padding:20px 0 14px;overflow:hidden;border-radius:26px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}' +
+        '.lp-rib h3{margin:0 22px 4px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}' +
+        '.lp-rib h3 small{font-size:12.5px;font-weight:600;color:var(--text-muted)}' +
+        '.lp-mq{position:relative;overflow:hidden;padding:7px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}' +
+        '.lp-trk{display:flex;gap:10px;width:max-content;animation:lpMq 60s linear infinite}.lp-mq.rev .lp-trk{animation-direction:reverse;animation-duration:50s}.lp-mq:hover .lp-trk{animation-play-state:paused}' +
+        '@keyframes lpMq{to{transform:translateX(-50%)}}' +
+        '.lp-tp{flex-shrink:0;display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:30px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);transition:transform .2s,border-color .2s,background .2s}' +
+        '.lp-tp b{padding:1px 8px;border-radius:10px;font-size:11px;font-weight:800;color:#fff;background:linear-gradient(135deg,#f43f5e,#fb923c)}.lp-tp b.h{background:linear-gradient(135deg,#a855f7,#3b82f6)}' +
+        '.lp-tp:hover,.lp-tp:focus-visible{transform:translateY(-3px);border-color:#fb923c;outline:none}' +
+        '.lp-edge{position:fixed;right:0;top:46%;z-index:2400;padding:16px 10px;border-radius:16px 0 0 16px;writing-mode:vertical-rl;font-size:14px;font-weight:800;letter-spacing:1px;text-decoration:none;color:#fff;background:linear-gradient(180deg,#f43f5e,#fb923c);box-shadow:-6px 8px 26px rgba(244,63,94,.45);animation:lpEdge 2.4s ease-in-out infinite;transition:padding .25s}' +
+        '.lp-edge:hover{padding-right:18px}@keyframes lpEdge{50%{box-shadow:-10px 8px 38px rgba(251,146,60,.75)}}' +
+        '@media(max-width:600px){.lp-bar span.t{font-size:12.5px}.lp-bar a{padding:6px 12px}.lp-edge{top:auto;bottom:130px;padding:12px 8px;font-size:12.5px}.lp-rib h3{margin:0 16px 4px}}' +
+        '@media(prefers-reduced-motion:reduce){.lp-trk{animation:none;flex-wrap:wrap;width:auto;padding:0 16px}.lp-mq{-webkit-mask-image:none;mask-image:none}.lp-trk .dup{display:none}}';
+        document.head.appendChild(st2);
+
+        /* ১) উপরের ঘোষণা বার */
+        var container = document.querySelector('.container');
+        if (container && get(BK, '') !== today()) {
+            var bar = mk('div', 'lp-bar'); bar.setAttribute('role', 'region'); bar.setAttribute('aria-label', 'পরীক্ষা ঘোষণা');
+            var go = mk('a', '', 'এখনই দাও →'); go.href = 'exam.html'; go.addEventListener('click', function () { set(key('ExamSeen'), true); });
+            var x = mk('button', '', '✕'); x.type = 'button'; x.setAttribute('aria-label', 'আজকের মতো বন্ধ করো'); x.addEventListener('click', function () { set(BK, today()); bar.remove(); });
+            bar.append(mk('i', 'd'), mk('span', 't', '🔥 নিজেকে যাচাই করো: পরীক্ষা জোনে এখনই পরীক্ষা দাও এবং প্রস্তুতি কেমন তা জেনে নাও!'), go, x);
+            container.insertBefore(bar, container.firstChild);
+        }
+
+        /* ২) অধ্যায় রিবন (দুই সারি, উল্টো দিকে চলে; মাউস রাখলে থামে) */
+        var anchor = document.querySelector('.lp-spot') || document.querySelector('.unique-welcome-banner');
+        if (anchor && anchor.parentNode) {
+            var rib = mk('section', 'lp-rib'); rib.setAttribute('aria-label', 'পরীক্ষার অধ্যায়');
+            var h = mk('h3'); h.append('📚 কোন অধ্যায়ের প্রস্তুতি যাচাই করবে?'); h.appendChild(mk('small', '', 'অধ্যায়ে চাপ দাও, পরীক্ষা জোনে চলে যাবে')); rib.appendChild(h);
+            function row(list, tag, rev) {
+                var mq = mk('div', 'lp-mq' + (rev ? ' rev' : '')), trk = mk('div', 'lp-trk');
+                for (var r = 0; r < 2; r++) list.forEach(function (name) {
+                    var b = mk('button', 'lp-tp'); b.type = 'button'; if (r) { b.className += ' dup'; b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
+                    b.appendChild(mk('b', tag === 'HSC' ? 'h' : '', tag)); b.append(name);
+                    b.addEventListener('click', function () { set(TK, { level: tag, topic: name, at: Date.now() }); set(key('ExamSeen'), true); location.href = 'exam.html'; });
+                    trk.appendChild(b);
+                });
+                mq.appendChild(trk); return mq;
+            }
+            rib.append(row(SSC, 'SSC', false), row(HSC, 'HSC', true));
+            anchor.parentNode.insertBefore(rib, anchor.nextSibling);
+        }
+
+        /* ৩) ডান পাশের ভাসমান ট্যাব */
+        var edge = mk('a', 'lp-edge', '🎯 পরীক্ষা দাও'); edge.href = 'exam.html'; edge.title = 'পরীক্ষা জোনে যাও'; document.body.appendChild(edge);
+    })();
+
     /* ================= স্বয়ংক্রিয় ছোট ফিক্স (HTML না ছুঁয়েই) ================= */
     (function autoFixes() {
         try {
