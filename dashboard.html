@@ -24,14 +24,13 @@
     </script>
 
     <!-- Login guard: logged-in na thakle login page e pathiye dey -->
-    <script src="auth.js?v=3"></script>
+    <script src="auth.js"></script>
     <script>
         const AUTH_OK = (typeof Auth !== 'undefined');
         const ME = AUTH_OK ? Auth.currentUser() : null;
         if (AUTH_OK && !ME) {
             document.documentElement.style.display = 'none';
-            const why = (Auth.check && Auth.check().why) || 'nosession';
-            window.location.replace('login.html?why=' + why);
+            window.location.replace('login.html');
         }
     </script>
 
@@ -72,8 +71,6 @@
         * { box-sizing: border-box; }
 
         html { scroll-behavior: smooth; }
-
-        <script src="dashboard-plus.js"></script>
 
         body {
             font-family: 'Plus Jakarta Sans', 'Hind Siliguri', 'Segoe UI', system-ui, sans-serif;
