@@ -1,464 +1,309 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রসায়ন জ্ঞানকোষ ও ফান ফ্যাক্টস</title>
-    
-    <!-- Font Awesome CDN for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
-
-    <style>
-        :root {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --border-color: #e2e8f0;
-            --shadow: rgba(15, 23, 42, 0.08);
-            --section-border: rgba(168, 85, 247, 0.3);
-        }
-        [data-theme="dark"] {
-            --bg-color: #0b0f19;
-            --card-bg: #111827;
-            --text-color: #f8fafc;
-            --border-color: #1f2937;
-            --shadow: rgba(0, 0, 0, 0.5);
-            --section-border: rgba(168, 85, 247, 0.4);
-        }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 30px 20px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        /* Top Back & Theme Navigation */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-        .back-btn {
-            text-decoration: none;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 6px var(--shadow);
-            transition: 0.2s;
-        }
-        .back-btn:hover {
-            transform: scale(1.02);
-            color: #00f2fe;
-        }
-
-        .page-title-area {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .page-title-area h1 {
-            font-size: 30px;
-            margin-bottom: 10px;
-            color: #a855f7;
-        }
-        .page-title-area p {
-            opacity: 0.8;
-            font-size: 16px;
-        }
-
-        /* Category Sections */
-        .category-section {
-            background: var(--card-bg);
-            border: 2px solid var(--section-border);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 35px;
-            box-shadow: 0 10px 25px var(--shadow);
-        }
-        .section-heading {
-            font-size: 20px;
-            margin-top: 0;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .item-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .item-card {
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.08), rgba(168, 85, 247, 0.08));
-            border: 2px solid var(--section-border);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .item-card:hover {
-            transform: translateY(-4px);
-            background: linear-gradient(135deg, #00f2fe, #3b82f6);
-            color: #0b0f19;
-            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
-        }
-        .item-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 8px;
-        }
-
-        /* Popup Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: var(--card-bg);
-            border: 2px solid var(--section-border);
-            padding: 30px;
-            border-radius: 20px;
-            text-align: left;
-            max-width: 480px;
-            width: 90%;
-            box-shadow: 0 10px 30px var(--shadow);
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .close-btn {
-            background: linear-gradient(135deg, #a855f7, #3b82f6);
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            margin-top: 20px;
-            border-radius: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d0902">
+<meta name="description" content="রসায়নের মৌল, দেশ ও বিজ্ঞানীদের অবাক করা ফান ফ্যাক্টস, সাথে সত্য-মিথ্যা কুইজ।">
+<title>রসায়ন জ্ঞানকোষ ও ফান ফ্যাক্টস | Lab Alchemy</title>
+<script>
+(function () {
+    var t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg:#fffaf0;--card:rgba(255,255,255,.86);--solid:#ffffff;--text:#2b1d03;--muted:#7b6a45;--line:rgba(180,120,10,.24);--shadow:0 12px 32px -10px rgba(180,110,10,.28);--g1:#fde047;--g2:#f59e0b;--g3:#fb923c;--deep:#b45309;--ink:#2b1d03;--grad:linear-gradient(135deg,#fde047,#f59e0b);--glow:rgba(245,158,11,.3);--dot:rgba(180,120,10,.16);--good:#15803d;--bad:#dc2626;--blob:.35}
+[data-theme="dark"]{--bg:#0d0902;--card:rgba(32,23,7,.74);--solid:#1a1306;--text:#fff8e1;--muted:#cdb77f;--line:rgba(251,191,36,.2);--shadow:0 20px 44px -16px rgba(0,0,0,.8);--deep:#fbbf24;--glow:rgba(251,191,36,.28);--dot:rgba(251,191,36,.12);--good:#4ade80;--bad:#fb7185;--blob:.45}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;padding:18px 18px 66px;min-height:100vh;
+    /* আগের ফন্টই রাখা হয়েছে */
+    font-family:'Segoe UI',system-ui,sans-serif;
+    background:var(--bg);color:var(--text);transition:background .4s,color .4s;animation:pg .6s ease both}
+body.lock{overflow:hidden}
+@keyframes pg{from{opacity:0}}
+.fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.fx i{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob)}
+.fx .a{width:520px;height:520px;background:#fde047;top:-170px;left:-130px}.fx .b{width:600px;height:600px;background:#fb923c;bottom:-250px;right:-180px;opacity:calc(var(--blob) * .75)}
+.fx .dots{position:absolute;inset:0;border-radius:0;filter:none;opacity:1;background-image:radial-gradient(var(--dot) 1.4px,transparent 1.6px);background-size:26px 26px;-webkit-mask-image:radial-gradient(ellipse at 50% 18%,#000 15%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 18%,#000 15%,transparent 75%)}
+.sp{position:absolute;color:var(--g2);animation:tw 3.4s ease-in-out infinite;user-select:none}
+@keyframes tw{0%,100%{opacity:.1;transform:scale(.6) rotate(0)}50%{opacity:.9;transform:scale(1.1) rotate(25deg)}}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--g2);outline-offset:2px}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 18px;margin-bottom:28px;border-radius:22px;background:var(--card);border:1.5px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+.bulb{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;background:var(--grad);box-shadow:0 0 20px var(--glow)}
+.brand b{display:block;font-size:17px;font-weight:800;line-height:1.2}.brand small{display:block;font-size:12px;font-weight:700;color:var(--deep)}
+.tr{display:flex;align-items:center;gap:10px}
+.ib{width:40px;height:40px;border-radius:13px;cursor:pointer;font-size:16px;color:var(--text);background:var(--solid);border:1px solid var(--line);transition:transform .4s}.ib:hover{transform:rotate(180deg)}
+.bk{display:inline-flex;align-items:center;padding:10px 16px;border-radius:13px;font-size:14px;font-weight:700;text-decoration:none;color:var(--ink);background:var(--grad);box-shadow:0 6px 16px var(--glow);transition:transform .25s}.bk:hover{transform:translateX(-3px)}
+.hero{text-align:center;margin-bottom:26px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:800;color:var(--deep);background:color-mix(in srgb,var(--g2) 14%,transparent);border:1px solid var(--line)}
+.hero h1{margin:14px 0 10px;font-size:clamp(2rem,5.6vw,3.3rem);font-weight:800;line-height:1.25;letter-spacing:-.5px;background:linear-gradient(135deg,#fbbf24,#f59e0b,#ea580c);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sh 6s linear infinite}
+[data-theme="dark"] .hero h1{background-image:linear-gradient(135deg,#fde047,#fbbf24,#fb923c)}
+@keyframes sh{to{background-position:200% center}}
+.hero>p{margin:0 auto;max-width:620px;font-size:16px;line-height:1.75;color:var(--muted)}
+.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:20px 0 0}
+.stat{min-width:130px;padding:12px 20px;border-radius:18px;text-align:center;background:var(--card);border:1.5px solid var(--line)}
+.stat b{display:block;font-size:1.7rem;font-weight:800;line-height:1.2;color:var(--deep)}.stat span{font-size:12.5px;font-weight:700;color:var(--muted)}
+.prog{max-width:420px;margin:16px auto 0}.prog div{height:10px;border-radius:10px;background:var(--line);overflow:hidden}.prog i{display:block;height:100%;width:0;background:var(--grad);transition:width .6s}.prog small{display:block;margin-top:6px;font-size:13px;font-weight:700;color:var(--muted)}
+.note{position:relative;max-width:700px;margin:26px auto 0;padding:20px 24px 18px;text-align:left;border-radius:6px 22px 22px 22px;background:linear-gradient(135deg,#fef08a,#fde047);color:#3a2a05;box-shadow:0 18px 34px -12px rgba(180,110,10,.55);transform:rotate(-1deg);transition:transform .3s}
+.note:hover{transform:rotate(0) translateY(-3px)}
+.note::before{content:'';position:absolute;top:-12px;left:50%;width:84px;height:24px;margin-left:-42px;border-radius:5px;background:rgba(255,255,255,.55);box-shadow:0 2px 6px rgba(0,0,0,.15);transform:rotate(2deg)}
+.note small{display:block;margin-bottom:6px;font-size:12px;font-weight:800;letter-spacing:.6px;color:#92400e}
+.note p{margin:0;font-size:16px;line-height:1.75;font-weight:700}
+.note button{margin-top:12px;padding:8px 16px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;color:#3a2a05;background:rgba(255,255,255,.6);border:1px solid rgba(146,64,14,.35);border-radius:12px}.note button:hover{background:#fff}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:34px 0 10px}
+.search{flex:1 1 260px;font:inherit;font-size:15px;font-weight:600;padding:13px 18px;border-radius:16px;color:var(--text);background:var(--card);border:1.5px solid var(--line);outline:none;transition:border-color .25s,box-shadow .25s}
+.search:focus{border-color:var(--g2);box-shadow:0 0 0 4px var(--glow)}.search::placeholder{color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font:inherit;font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:30px;cursor:pointer;color:var(--muted);background:var(--solid);border:1.5px solid var(--line);transition:transform .2s,color .2s,border-color .2s}
+.chip:hover{color:var(--text);border-color:var(--g2);transform:translateY(-2px)}
+.chip.on{color:var(--ink);border-color:transparent;background:var(--grad);box-shadow:0 8px 20px var(--glow)}
+.count{margin:10px 4px 0;font-size:13px;font-weight:600;color:var(--muted)}
+.st{display:flex;align-items:center;gap:10px;margin:34px 0 8px;padding-bottom:12px;font-size:22px;font-weight:800;border-bottom:2px dashed var(--line)}
+.st span{margin-left:auto;font-size:13px;color:var(--muted)}
+.sub{margin:0 0 16px;font-size:14px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.bk .long{display:none}}
+.card{position:relative;overflow:hidden;border-radius:22px;background:var(--card);border:1.5px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .3s,border-color .3s,box-shadow .3s;animation:rs .5s ease both}
+@keyframes rs{from{opacity:0;transform:translateY(14px)}}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--grad)}
+.card::after{content:'';position:absolute;top:-70px;right:-50px;width:180px;height:180px;pointer-events:none;background:radial-gradient(circle,var(--glow),transparent 70%)}
+.card:hover{transform:translateY(-6px);border-color:var(--g2);box-shadow:0 24px 44px -16px var(--glow)}
+.card.seen{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.cb{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px;width:100%;padding:22px 20px 18px;text-align:left;font:inherit;cursor:pointer;color:var(--text);background:none;border:0}
+.row{display:flex;align-items:center;gap:14px;padding-right:44px}
+.icon{width:52px;height:52px;flex-shrink:0;border-radius:16px;font-size:26px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--g2) 14%,var(--solid));border:1px solid var(--line)}
+.card h3{margin:0;font-size:17.5px;font-weight:800;line-height:1.4}
+.card p{margin:0;font-size:13.5px;line-height:1.65;font-weight:500;color:var(--muted)}
+.go{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:800;color:var(--deep)}
+.ok{display:none;padding:2px 10px;border-radius:20px;font-size:11.5px;font-weight:800;color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent);border:1px solid color-mix(in srgb,var(--good) 40%,transparent)}.card.seen .ok{display:inline-block}
+.star{position:absolute;top:16px;right:14px;z-index:2;width:36px;height:36px;border-radius:12px;font-size:16px;cursor:pointer;color:var(--muted);background:var(--solid);border:1px solid var(--line);transition:transform .25s,color .25s}
+.star:hover{transform:scale(1.15) rotate(-10deg);color:var(--g2)}.star.on{color:#f59e0b;border-color:#f59e0b;box-shadow:0 0 16px var(--glow)}
+.empty{display:none;margin:36px 0;padding:30px;text-align:center;border-radius:20px;font-weight:600;color:var(--muted);background:var(--card);border:1px dashed var(--line)}.empty.show{display:block}
+.quiz{max-width:640px;margin:0 auto;padding:24px;border-radius:26px;text-align:center;background:var(--card);border:1.5px solid var(--line);box-shadow:var(--shadow)}
+.quiz .s{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--muted)}
+.quiz .q{margin:18px 0;font-size:clamp(1.1rem,3.6vw,1.35rem);font-weight:700;line-height:1.65;min-height:3.4em}
+.quiz .ans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quiz .ans button{padding:14px;font:inherit;font-size:17px;font-weight:800;cursor:pointer;color:var(--text);background:var(--solid);border:2px solid var(--line);border-radius:16px;transition:transform .2s,border-color .2s}
+.quiz .ans button:hover:not(:disabled){transform:translateY(-3px);border-color:var(--g2)}
+.quiz .ans button.right{color:#fff;background:#16a34a;border-color:#16a34a}.quiz .ans button.wrong{color:#fff;background:#dc2626;border-color:#dc2626}
+.quiz .fb{min-height:52px;margin-top:14px;font-size:14.5px;line-height:1.7;font-weight:600;text-align:left}.fb.okk{color:var(--good)}.fb.no{color:var(--bad)}
+.quiz .nx{margin-top:12px;padding:11px 26px;font:inherit;font-size:15px;font-weight:800;cursor:pointer;color:var(--ink);background:var(--grad);border:0;border-radius:14px;box-shadow:0 8px 20px var(--glow)}
+.ov{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(15,8,0,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}.ov.on{opacity:1;visibility:visible}
+.md{width:100%;max-width:580px;max-height:88vh;display:flex;flex-direction:column;border-radius:26px;overflow:hidden;background:var(--solid);border:2px solid var(--g2);box-shadow:0 30px 60px rgba(0,0,0,.45);transform:scale(.94);transition:transform .25s}.ov.on .md{transform:none}
+.mh{display:flex;align-items:center;gap:14px;padding:18px 22px;background:linear-gradient(135deg,#fde047,#fbbf24);color:#3a2a05}
+.mh .icon{background:rgba(255,255,255,.55);border-color:rgba(146,64,14,.3)}.mh h2{margin:0;flex:1;font-size:19px;font-weight:800;line-height:1.4}
+.mh button{width:38px;height:38px;border-radius:50%;font-size:15px;cursor:pointer;color:#3a2a05;background:rgba(255,255,255,.6);border:1px solid rgba(146,64,14,.3)}.mh button:hover{background:#fff}.mh button.on{background:#f59e0b;color:#fff}
+.mb{padding:6px 22px 14px;overflow-y:auto;margin:0;list-style:none;counter-reset:f}
+.mb li{counter-increment:f;display:flex;gap:12px;padding:13px 0;font-size:15px;line-height:1.75;color:var(--muted);border-bottom:1px dashed var(--line)}.mb li:last-child{border-bottom:0}
+.mb li::before{content:counter(f);flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:3px;font-size:12px;font-weight:800;color:var(--ink);background:var(--grad)}
+.mb li b{color:var(--text)}
+.mf{display:flex;align-items:center;gap:8px;padding:12px 18px;border-top:1px solid var(--line)}
+.mf button{min-height:40px;padding:0 15px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:12px}.mf button:hover:not(:disabled){border-color:var(--g2)}.mf button:disabled{opacity:.4;cursor:default}
+.mf .pos{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:56px;transform:translateX(-50%) translateY(20px);z-index:300;padding:10px 20px;border-radius:14px;font-size:14px;font-weight:700;color:var(--ink);background:var(--grad);box-shadow:0 12px 30px var(--glow);opacity:0;transition:opacity .3s,transform .3s;pointer-events:none}.toast.on{opacity:1;transform:translateX(-50%)}
+.credit{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:60;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:var(--muted);background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+.credit span{margin-left:5px;font-weight:700;color:var(--deep)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.sp{display:none}}
+</style>
 </head>
 <body>
-
-    <div class="container">
-        <!-- Top Header with Back Button -->
-        <div class="page-header">
-            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> হোম পেজে ফিরে যাও</a>
-            <button class="back-btn" onclick="toggleTheme()"> 🌓 থিম </button>
+<div class="fx"><i class="a"></i><i class="b"></i><i class="dots"></i><div id="sparks"></div></div>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" id="brandLink" href="index.html"><span class="bulb">💡</span><span><b>রসায়ন জ্ঞানকোষ</b><small>ফান ফ্যাক্টস</small></span></a>
+        <div class="tr">
+            <button class="ib" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="bk" id="backBtn" href="index.html">← <span class="long">হোম পেজে ফিরে যাও</span></a>
         </div>
+    </header>
 
-        <div class="page-title-area">
-            <h1> 🧠 রসায়ন  ফান ফ্যাক্টস </h1>
-            <p> মৌল, বিভিন্ন দেশের অবদান এবং বিজ্ঞানীদের আবিষ্কার নিয়ে সাজানো তথ্যভাণ্ডার।</p>
-        </div>
+    <section class="hero">
+        <span class="pill">🧠 জানার আনন্দ</span>
+        <h1>রসায়ন ফান ফ্যাক্টস</h1>
+        <p>মৌল, বিভিন্ন দেশের অবদান এবং বিজ্ঞানীদের আবিষ্কার নিয়ে সাজানো তথ্যভাণ্ডার।</p>
+        <div class="stats" id="stats"></div>
+        <div class="prog"><div><i id="pbar"></i></div><small id="ptxt"></small></div>
+        <div class="note" aria-live="polite"><small>✨ আজকের একটি ফান ফ্যাক্ট</small><p id="rfText"></p><button type="button" id="rfBtn">🎲 আরেকটা দেখাও</button></div>
+    </section>
 
-        <!-- ১. মৌলসমূহ (Elements Section) -->
-        <div class="category-section">
-            <h2 class="section-heading">⚛️ মৌলসমূহ ও তাদের মজার তথ্য</h2>
-            <p style="opacity: 0.8; font-size: 14px;">নিচ থেকে যেকোনো মৌলের কার্ডে ক্লিক করো এবং তার অসাধারণ সব ফান ফ্যাক্ট জেনে নাও!</p>
-            
-            <div class="item-grid">
-                <div class="item-card" onclick="showDetail('hydrogen')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">হাইড্রোজেন (H)</div>
-                </div>
-                
-                <div class="item-card" onclick="showDetail('oxygen')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">অক্সিজেন (O)</div>
-                </div>
-                
-                <div class="item-card" onclick="showDetail('carbon')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">কার্বন (C)</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('sodium')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">সোডিয়াম (Na)</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('helium')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">হিলিয়াম (He)</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('gold')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">স্বর্ণ বা গোল্ড (Au)</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ২. রসায়নে বিভিন্ন দেশের অবদান (Countries Section) -->
-        <div class="category-section">
-            <h2 class="section-heading">🗺️ রসায়নে বিভিন্ন দেশের অবদান</h2>
-            <p style="opacity: 0.8; font-size: 14px;">কোন দেশের বিজ্ঞানীরা রসায়ন শাস্ত্রে কেমন অবদান রেখেছেন তা জানতে নিচে ক্লিক করো!</p>
-            
-            <div class="item-grid">
-                <div class="item-card" onclick="showDetail('egypt_greece')">
-                    <div style="font-size: 26px;">🏛️</div>
-                    <div class="item-title">মিশর ও গ্রিস (আলকেমি)</div>
-                </div>
-                
-                <div class="item-card" onclick="showDetail('arabia')">
-                    <div style="font-size: 26px;">📜</div>
-                    <div class="item-title">আরব বিশ্ব</div>
-                </div>
-                
-                <div class="item-card" onclick="showDetail('france')">
-                    <div style="font-size: 26px;">🇫🇷</div>
-                    <div class="item-title">ফ্রান্স</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('germany')">
-                    <div style="font-size: 26px;">🇩🇪</div>
-                    <div class="item-title">জার্মানি</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('uk')">
-                    <div style="font-size: 26px;">🇬🇧</div>
-                    <div class="item-title">যুক্তরাজ্য (UK)</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('usa')">
-                    <div style="font-size: 26px;">🇺🇸</div>
-                    <div class="item-title">যুক্তরাষ্ট্র (USA)</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ৩. প্রখ্যাত বিজ্ঞানীগণ (Scientists Section) -->
-        <div class="category-section">
-            <h2 class="section-heading">👨‍🔬 প্রখ্যাত বিজ্ঞানী ও তাদের অবদান</h2>
-            <p style="opacity: 0.8; font-size: 14px;">নিচ থেকে যেকোনো বিজ্ঞানীর নামের কার্ডে ক্লিক করো এবং রসায়নে তাদের বিশেষ অবদান সম্পর্কে বিস্তারিত জেনে নাও!</p>
-            
-            <div class="item-grid">
-                <div class="item-card" onclick="showDetail('lavoisier')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">অঁতোয়ান লাভোভিসিয়ে</div>
-                </div>
-                
-                <div class="item-card" onclick="showDetail('mendeleev')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">দিমিত্রি মেন্দিভ</div>
-                </div>
-                
-                <div class="item-card" onclick="showDetail('curie')">
-                    <div style="font-size: 26px;">⚡</div>
-                    <div class="item-title">ম্যাসুরি কুরি</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('dalton')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">জন ডাল্টন</div>
-                </div>
-
-                <div class="item-card" onclick="showDetail('boyle')">
-                    <div style="font-size: 26px;"></div>
-                    <div class="item-title">রবার্ট বয়েল</div>
-                </div>
-            </div>
-        </div>
+    <div class="tools">
+        <input class="search" id="q" type="search" placeholder="খোঁজো… (যেমন: সোনা, কুরি, জার্মানি, বারুদ)" aria-label="খোঁজো" autocomplete="off">
+        <div class="chips" id="chips" role="group" aria-label="বিভাগ"></div>
     </div>
+    <div class="count" id="count" aria-live="polite"></div>
+    <div id="sections"></div>
+    <div class="empty" id="empty">কিছু পাওয়া যায়নি। অন্য শব্দ বা বিভাগে খুঁজে দেখো।</div>
 
-    <!-- Popup Modal -->
-    <div id="chemModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-top: 0; color: #a855f7;" id="modal-title">তথ্য</h3>
-            <p id="fact-text" style="font-size: 15px; opacity: 0.9; line-height: 1.6;"></p>
-            <button class="close-btn" onclick="closeModal()">ঠিক আছে</button>
-        </div>
+    <h2 class="st" id="quizTitle">🎯 সত্য নাকি মিথ্যা?</h2>
+    <p class="sub">উপরের তথ্যগুলো কতটা মনে আছে? যাচাই করে দেখো।</p>
+    <div class="quiz">
+        <div class="s"><span id="qNo"></span><span id="qScore"></span></div>
+        <div class="q" id="qText"></div>
+        <div class="ans"><button type="button" id="aT">✅ সত্য</button><button type="button" id="aF">❌ মিথ্যা</button></div>
+        <div class="fb" id="qFb" aria-live="polite"></div>
+        <button type="button" class="nx" id="qNext" hidden>পরের প্রশ্ন →</button>
     </div>
+</div>
+<div class="ov" id="ov" aria-hidden="true"><div class="md" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="mh"><div class="icon" id="mIcon" aria-hidden="true"></div><h2 id="mTitle"></h2><button type="button" id="mFav" aria-label="প্রিয় করো" title="প্রিয়">★</button><button type="button" id="mClose" aria-label="বন্ধ করো">✕</button></div>
+    <ul class="mb" id="mBody"></ul>
+    <div class="mf"><button type="button" id="mPrev">←</button><span class="pos" id="mPos"></span><button type="button" id="mCopy" title="কপি করো">📋</button><button type="button" id="mNext">→</button></div>
+</div></div>
+<div class="toast" id="toast" role="status"></div>
+<div class="credit">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
 
-    <script>
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', next);
-            document.documentElement.setAttribute('data-theme', next);
-        }
+<script>
+/* ফিরে যাওয়ার পেজ বদলাতে চাইলে শুধু এই লাইনটি বদলাও */
+const BACK_URL = 'index.html';
+const CATS = [['⚛️ মৌলসমূহ ও তাদের মজার তথ্য', 'যেকোনো মৌলের কার্ডে চাপ দিয়ে তার অসাধারণ সব ফান ফ্যাক্ট জেনে নাও!', 'মৌল'], ['🗺️ রসায়নে বিভিন্ন দেশের অবদান', 'কোন দেশের বিজ্ঞানীরা রসায়নে কেমন অবদান রেখেছেন তা জানতে নিচে চাপ দাও!', 'দেশ'], ['👨‍🔬 প্রখ্যাত বিজ্ঞানী ও তাদের অবদান', 'যেকোনো বিজ্ঞানীর কার্ডে চাপ দিয়ে রসায়নে তাদের বিশেষ অবদান জেনে নাও!', 'বিজ্ঞানী']];
+/* নতুন কার্ড যোগ করতে শুধু এখানে একটি এন্ট্রি যোগ করো:
+   [বিভাগ(০ মৌল, ১ দেশ, ২ বিজ্ঞানী), আইকন, নাম, ইংরেজি সার্চ শব্দ, [তথ্য...]]   ("শিরোনাম:: লেখা" দিলে শিরোনাম বোল্ড হয়) */
+const RAW = [
+ [0,'🎈','হাইড্রোজেন (H)','hydrogen',['মহাবিশ্বের ভরের প্রায় ৭৫%:: মহাবিশ্বের মোট ভরের প্রায় তিন-চতুর্থাংশই হাইড্রোজেন।','সবচেয়ে হালকা মৌল:: এটি পর্যায় সারণির প্রথম মৌল (পারমাণবিক সংখ্যা ১), এর সাধারণ আইসোটোপে কোনো নিউট্রন নেই।','রকেটের জ্বালানি:: তরল হাইড্রোজেন মহাশূন্য অভিযানে রকেটের জ্বালানি হিসেবে ব্যবহৃত হয়।','পানির উপাদান:: হাইড্রোজেন দহনে অক্সিজেনের সাথে মিলে পানি (H₂O) তৈরি করে।']],
+ [0,'🫁','অক্সিজেন (O)','oxygen',['ভূত্বকের সবচেয়ে প্রাচুর্যপূর্ণ মৌল:: পৃথিবীর ভূত্বকের ভরের প্রায় ৪৬% অক্সিজেন।','বায়ুর ২১%:: পৃথিবীর বায়ুমণ্ডলের আয়তনের প্রায় ২১% অংশজুড়ে অক্সিজেন গ্যাস।','ফ্যাকাশে নীল:: তরল ও কঠিন অবস্থায় অক্সিজেনের রং ফ্যাকাশে নীল দেখায়।','মানবদেহে:: মানুষের দেহের ভরের প্রায় ৬৫% অক্সিজেন, কারণ দেহে প্রচুর পানি আছে।']],
+ [0,'💎','কার্বন (C)','carbon diamond graphite',['রূপভেদ:: হীরা, গ্রাফাইট, গ্রাফিন ও ফুলরিন সবই শুধু কার্বন দিয়ে তৈরি, শুধু পরমাণু সাজানোর ধরন আলাদা।','জৈব যৌগের ভিত্তি:: প্রতিটি জৈব যৌগের প্রধান উপাদান কার্বন।','যোজনী:: কার্বন সাধারণত চার যোজী (টেট্রাভ্যালেন্ট), তাই চারটি বন্ধন গড়তে পারে।','বয়স নির্ণয়:: তেজস্ক্রিয় C-14 দিয়ে প্রাচীন জীবদেহাংশের বয়স মাপা হয়।']],
+ [0,'🌬️','নাইট্রোজেন (N)','nitrogen',['বায়ুর সিংহভাগ:: বায়ুমণ্ডলের প্রায় ৭৮% নাইট্রোজেন।','জীবনের উপাদান:: প্রোটিন ও ডিএনএ-র অপরিহার্য উপাদান।','বজ্রপাতের উপহার:: বজ্রের বিদ্যুতে বাতাসের নাইট্রোজেন ও অক্সিজেন মিলে নাইট্রোজেনের অক্সাইড তৈরি হয়, যা বৃষ্টির সাথে মাটিতে এসে গাছের সার হয়।','অতি ঠান্ডা:: তরল নাইট্রোজেন প্রায় −১৯৬°C তাপমাত্রায় ফোটে, তাই খাবার ও জৈব নমুনা জমিয়ে রাখতে ব্যবহার হয়।']],
+ [0,'🧂','সোডিয়াম (Na)','sodium',['নরম ধাতু:: এত নরম যে ছুরি দিয়ে মাখনের মতো কাটা যায়।','কেরোসিনে সংরক্ষণ:: বাতাসে দ্রুত ম্লান হয় এবং পানির সাথে তীব্র বিক্রিয়া করে হাইড্রোজেন ও তাপ দেয়, তাই কেরোসিনে ডুবিয়ে রাখা হয়।','খাবার লবণ:: ক্লোরিনের সাথে যুক্ত হয়ে সাধারণ লবণ (NaCl) তৈরি করে।','আবিষ্কার:: ১৮০৭ সালে হামফ্রি ডেভি তড়িৎ বিশ্লেষণের মাধ্যমে প্রথম আলাদা করেন।']],
+ [0,'🌞','হিলিয়াম (He)','helium',['সূর্যে প্রথম পাওয়া:: ১৮৬৮ সালে সূর্যের বর্ণালিতে এটি প্রথম শনাক্ত হয়, তাই নাম গ্রিক "হেলিয়স" (সূর্য) থেকে।','দ্বিতীয় হালকা মৌল:: মহাবিশ্বে হাইড্রোজেনের পরেই এর প্রাচুর্য।','নিরাপদ বেলুন:: অদাহ্য বলে বেলুন ওড়ানোর জন্য নিরাপদ।','সবচেয়ে কম ফুটনাঙ্ক:: প্রায় −২৬৯°C-তে ফোটে, তাই অতি-ঠান্ডা যন্ত্রে (যেমন এমআরআই) ব্যবহার হয়।']],
+ [0,'🥇','স্বর্ণ বা গোল্ড (Au)','gold aurum',['জং ধরে না:: নোবেল ধাতু, তাই বাতাসে রেখে দিলেও নষ্ট হয় না।','পাতলা তার:: ১ গ্রাম সোনা দিয়ে প্রায় ২–৩ কিলোমিটার লম্বা সূক্ষ্ম তার তৈরি করা সম্ভব।','নামের রহস্য:: প্রতীক Au এসেছে ল্যাটিন "Aurum" থেকে।','রাজঅম্লে দ্রবণীয়:: অ্যাকোয়া রেজিয়া (গাঢ় HCl ও HNO₃-এর মিশ্রণ) সোনাকে গলাতে পারে।']],
+ [0,'🏊','ক্লোরিন (Cl)','chlorine',['সবুজাভ-হলুদ গ্যাস:: গ্রিক "chloros" মানে সবুজ, সেখান থেকেই নাম।','জীবাণুমুক্তকরণ:: পানি পরিশোধন ও সুইমিং পুলে জীবাণু মারতে ব্যবহৃত হয়।','মৌল হিসেবে স্বীকৃতি:: ১৮১০ সালে হামফ্রি ডেভি এটিকে মৌল প্রমাণ করে নাম দেন।','লবণের অংশ:: সোডিয়ামের সাথে মিলে খাবার লবণ তৈরি করে।']],
+ [0,'🧲','লোহা (Fe)','iron',['পৃথিবীর কেন্দ্রে:: পৃথিবীর কোর মূলত লোহা ও নিকেলের সংকর।','রক্তে লোহা:: রক্তের হিমোগ্লোবিনে লোহা থাকে, যা অক্সিজেন বহন করে।','মরিচা:: আর্দ্র বাতাসে লোহা ক্ষয় হয়ে মরিচা (আর্দ্র আয়রন অক্সাইড) তৈরি করে।','স্টিলের ভিত্তি:: লোহার সাথে সামান্য কার্বন মিশিয়ে ইস্পাত বানানো হয়।']],
+ [0,'🔔','তামা (Cu)','copper',['প্রাচীন ধাতু:: মানুষের ব্যবহৃত প্রথম দিকের ধাতুগুলোর একটি।','ভালো পরিবাহী:: তাপ ও বিদ্যুতের খুব ভালো পরিবাহী, তাই তার তৈরিতে ব্যবহৃত।','সংকর ধাতু:: তামা + টিন = ব্রোঞ্জ, তামা + জিংক = পিতল।','সবুজ আস্তরণ:: বাতাসে দীর্ঘদিন থাকলে ওপরে সবুজ প্যাটিনা পড়ে (যেমন স্ট্যাচু অব লিবার্টি)।']],
+ [0,'🌡️','পারদ (Hg)','mercury',['তরল ধাতু:: ২৫°C তাপমাত্রায় এটিই একমাত্র তরল ধাতু।','নামের রহস্য:: প্রতীক Hg এসেছে ল্যাটিন "Hydrargyrum" (তরল রুপা) থেকে।','বিষাক্ত:: এর বাষ্প ও যৌগ খুব বিষাক্ত, তাই পুরোনো পারদ থার্মোমিটারের ব্যবহার কমছে।','অনেক ভারী:: পানির চেয়ে প্রায় ১৩.৫ গুণ ঘন।']],
+ [0,'✈️','অ্যালুমিনিয়াম (Al)','aluminium aluminum',['প্রাচুর্যপূর্ণ ধাতু:: ভূত্বকে সবচেয়ে বেশি পাওয়া ধাতু।','একসময় সোনার চেয়েও দামি:: ১৯শ শতকে নিষ্কাশন কঠিন ছিল বলে এটি বহুমূল্য ছিল।','নিষ্কাশন:: বক্সাইট আকরিক থেকে তড়িৎ বিশ্লেষণে (১৮৮৬ সালে আবিষ্কৃত পদ্ধতি) সস্তায় তৈরি হয়।','নিজেই সুরক্ষিত:: বাতাসে ওপরে পাতলা অক্সাইডের স্তর পড়ে ভেতরটা রক্ষা করে।']],
+ [0,'💻','সিলিকন (Si)','silicon',['দ্বিতীয় প্রাচুর্যপূর্ণ মৌল:: ভূত্বকে অক্সিজেনের পরেই সিলিকন।','বালি ও কাচ:: এদের মূল উপাদান সিলিকন ডাই-অক্সাইড (SiO₂)।','অর্ধপরিবাহী:: কম্পিউটার ও মোবাইলের চিপ তৈরির প্রধান উপাদান।']],
+ [0,'🦴','ক্যালসিয়াম (Ca)','calcium',['হাড় ও দাঁত:: হাড় ও দাঁতের প্রধান খনিজ উপাদান ক্যালসিয়ামের যৌগ।','চুনাপাথর:: চুনাপাথর, মার্বেল ও ঝিনুকের খোলের মূল উপাদান CaCO₃।','শিখা পরীক্ষা:: ক্যালসিয়ামের যৌগ আগুনে ইটের মতো লালচে শিখা দেয়।']],
+ [0,'☢️','ইউরেনিয়াম (U)','uranium',['সবচেয়ে ভারী প্রাকৃতিক মৌলগুলোর একটি:: প্রকৃতিতে প্রাপ্ত ভারী মৌলগুলোর মধ্যে অন্যতম।','পারমাণবিক জ্বালানি:: U-235 আইসোটোপ পারমাণবিক চুল্লির জ্বালানি।','নামের উৎস:: ১৭৮৯ সালে ক্ল্যাপ্রথ আবিষ্কার করেন এবং ইউরেনাস গ্রহের নামে নাম রাখেন।','তেজস্ক্রিয়তার সূচনা:: ইউরেনিয়াম থেকেই ১৮৯৬ সালে বেকেরেল তেজস্ক্রিয়তা শনাক্ত করেন।']],
+ [0,'🌃','নিয়ন (Ne)','neon',['নিয়ন সাইন:: বিদ্যুৎ চালালে এটি উজ্জ্বল লালচে-কমলা আলো দেয়।','নামের মানে:: গ্রিক "neos" অর্থ নতুন।','নিষ্ক্রিয় গ্যাস:: অন্য মৌলের সাথে প্রায় কোনো যৌগ গঠন করে না।','আবিষ্কার:: ১৮৯৮ সালে রামসে ও ট্র্যাভার্স এটি আবিষ্কার করেন।']],
+ [1,'🏛️','মিশর ও গ্রিস (আলকেমি)','egypt greece alchemy',['আলকেমির সূচনা:: প্রাচীন মিশরে ধাতু নিষ্কাশন, কাচ ও রং তৈরির চর্চা থেকে আলকেমির ধারণা বিকশিত হয়। আলেকজান্দ্রিয়া ছিল এর প্রধান কেন্দ্র।','পরমাণুর ধারণা:: গ্রিক দার্শনিক ডেমোক্রিটাস পদার্থের ক্ষুদ্রতম অবিভাজ্য কণা "অ্যাটম" ধারণার প্রস্তাব করেন।','চার উপাদান:: এম্পিডোক্লিস ও অ্যারিস্টোটল মাটি, পানি, বাতাস ও আগুনকে মূল উপাদান ভাবতেন।']],
+ [1,'📜','আরব বিশ্ব','arab arabia jabir',['পরীক্ষানির্ভর রসায়ন:: জাবির ইবনে হাইয়ান ও আল-রাজির মতো বিজ্ঞানীরা পাতন, কেলাসন ও বিভিন্ন অ্যাসিড তৈরির পদ্ধতির উন্নতি ঘটান।','নামের উৎস:: আরবি "আল-কিমিয়া" থেকে "কেমিস্ট্রি" ও "আলকেমি" শব্দের উৎপত্তি ধরা হয়।','জ্ঞান ইউরোপে:: তাদের বই অনূদিত হয়ে মধ্যযুগীয় ইউরোপে রসায়নের ভিত্তি গড়ে দেয়।']],
+ [1,'🇫🇷','ফ্রান্স','france',['আধুনিক রসায়ন:: লাভোয়াজিয়ে ভরের নিত্যতা সূত্র ও দহনের সঠিক ব্যাখ্যা দিয়ে আধুনিক রসায়নের ভিত্তি গড়েন।','নামকরণ পদ্ধতি:: ১৭৮৭ সালে মৌল ও যৌগের নামকরণের প্রথম সুসংগঠিত পদ্ধতি তৈরিতে ফরাসিদের বড় ভূমিকা ছিল।','মেট্রিক পদ্ধতি:: ওজন ও পরিমাপের মেট্রিক পদ্ধতি চালুতে ভূমিকা রাখে, যা রসায়নের হিসাবকে সহজ করেছে।','কুরি পরিবার:: মারি ও পিয়ের কুরি ফ্রান্সে বসেই রেডিয়াম ও পোলোনিয়াম আবিষ্কার করেন।']],
+ [1,'🇩🇪','জার্মানি','germany',['জৈব রসায়ন:: ভোলার (১৮২৮) ইউরিয়া সংশ্লেষণ করেন এবং লিবিগ জৈব রসায়ন ও কৃষি রসায়নে বড় অবদান রাখেন।','রং ও ওষুধ শিল্প:: ১৯শ শতকে কৃত্রিম রঞ্জক ও ওষুধ শিল্পে জার্মানি বিশ্বে এগিয়ে ছিল।','হাবার-বশ প্রক্রিয়া:: বাতাস থেকে অ্যামোনিয়া তৈরির পদ্ধতি সারের উৎপাদন বদলে দিয়েছে।']],
+ [1,'🇬🇧','যুক্তরাজ্য (UK)','uk britain england',['পরীক্ষামূলক ভিত্তি:: বয়েল, প্রিস্টলি, ক্যাভেন্ডিশ ও ডাল্টনের কাজে আধুনিক রসায়নের পরীক্ষামূলক ভিত্তি গড়ে ওঠে।','গ্যাসের সূত্র:: বয়েলের সূত্র অক্সফোর্ডে আবিষ্কৃত হয় (বয়েল ছিলেন আইরিশ বংশোদ্ভূত)।','তড়িৎ রসায়ন:: ডেভি ও ফ্যারাডে তড়িৎ বিশ্লেষণ নিয়ে যুগান্তকারী কাজ করেন।','পরমাণুর গঠন:: থমসন ইলেকট্রন এবং রাদারফোর্ড নিউক্লিয়াস আবিষ্কারে যুক্ত ছিলেন।']],
+ [1,'🇺🇸','যুক্তরাষ্ট্র (USA)','usa america',['ভারী মৌল:: সিবোর্গ ও তাঁর দল প্লুটোনিয়ামসহ বহু ট্রান্সইউরেনিয়াম মৌল আবিষ্কার করেন।','পলিমার শিল্প:: ডুপন্টে ক্যারোদার্সের নাইলন (১৯৩৫) ও আধুনিক পলিমার শিল্প গড়ে ওঠে।','পেট্রোকেমিক্যাল:: পেট্রোকেমিক্যাল ও রাসায়নিক প্রকৌশলে বিশ্বে অগ্রণী।']],
+ [1,'🇮🇳','ভারত ও বাংলা','india bengal bangladesh ray iron pillar',['দিল্লির লৌহ স্তম্ভ:: প্রায় ১৬০০ বছরের পুরোনো এই স্তম্ভে সহজে মরিচা ধরেনি, প্রাচীন ভারতের ধাতুবিদ্যার প্রমাণ।','উজ্জ্বল ইস্পাত:: প্রাচীন ভারতের "উড্জ" ইস্পাত তলোয়ারের জন্য বিখ্যাত ছিল।','আচার্য প্রফুল্লচন্দ্র রায়:: বাংলার এই রসায়নবিদ (জন্ম খুলনা) ১৮৯৬ সালে স্থিতিশীল মারকিউরাস নাইট্রাইট সংশ্লেষণ করেন এবং ১৯০১ সালে বেঙ্গল কেমিক্যালস প্রতিষ্ঠা করেন।']],
+ [1,'🇨🇳','চীন','china gunpowder',['বারুদ:: প্রাচীন চীনা আলকেমিস্টরা অমরত্বের ওষুধ খুঁজতে গিয়ে বারুদ আবিষ্কার করেন।','কাগজ ও চীনামাটি:: কাগজ তৈরি ও চীনামাটির (পোর্সেলিন) পাত্র তৈরির উন্নত রাসায়নিক কৌশল তাদের হাতে বিকশিত হয়।']],
+ [1,'🇮🇹','ইতালি','italy avogadro volta',['অ্যাভোগাদ্রো:: ১৮১১ সালে সম আয়তনের গ্যাসে সমান অণুর অনুকল্প দেন।','ভোল্টা:: ১৮০০ সালে প্রথম ব্যাটারি (ভোল্টীয় কোষ) তৈরি করেন।','কানিৎসারো:: ১৮৬০ সালের কার্লস্রুহে সম্মেলনে অ্যাভোগাদ্রোর ধারণা তুলে ধরে পারমাণবিক ভরের জট খোলেন।']],
+ [1,'🇸🇪','সুইডেন','sweden nobel berzelius arrhenius',['নোবেল পুরস্কার:: আলফ্রেড নোবেল ১৮৬৭ সালে ডিনামাইট উদ্ভাবন করেন এবং তাঁর সম্পত্তি থেকেই নোবেল পুরস্কার চালু হয়।','বার্জেলিয়াস:: মৌলের আধুনিক প্রতীক (H, O, Na) চালু করেন এবং সেলেনিয়ামসহ কয়েকটি মৌল আবিষ্কার করেন।','আরহেনিয়াস:: আয়নীকরণ তত্ত্বের জনক।']],
+ [1,'🇷🇺','রাশিয়া','russia mendeleev',['পর্যায় সারণি:: ১৮৬৯ সালে দিমিত্রি মেন্ডেলিভ পর্যায় সারণি প্রকাশ করেন।','ভবিষ্যদ্বাণী:: তাঁর ফাঁকা ঘরে পরে গ্যালিয়াম, স্ক্যান্ডিয়াম ও জার্মেনিয়াম আবিষ্কৃত হয়।']],
+ [2,'🧑‍🔬','অঁতোয়ান লাভোয়াজিয়ে (Antoine Lavoisier)','lavoisier',['আধুনিক রসায়নের জনক:: তাঁকে আধুনিক রসায়নের প্রতিষ্ঠাতা বলা হয়।','ভরের নিত্যতা সূত্র:: বিক্রিয়ার আগে ও পরে মোট ভর সমান থাকে, এই সূত্র সুস্পষ্টভাবে প্রতিষ্ঠা করেন।','অক্সিজেনের নামকরণ:: দহনে অক্সিজেনের ভূমিকা ব্যাখ্যা করে এর নাম দেন "অক্সিজেন" (গ্রিকে অর্থ অম্ল-উৎপাদক)।','করুণ পরিণতি:: ১৭৯৪ সালে ফরাসি বিপ্লবের সময় তাঁর মৃত্যুদণ্ড কার্যকর হয়।']],
+ [2,'🗂️','দিমিত্রি মেন্ডেলিভ (Dmitri Mendeleev)','mendeleev periodic table',['পর্যায় সারণি:: ১৮৬৯ সালে মৌলগুলো পারমাণবিক ভর ও ধর্ম অনুযায়ী সাজিয়ে প্রথম কার্যকরী পর্যায় সারণি তৈরি করেন।','সাহসী ভবিষ্যদ্বাণী:: অনাবিষ্কৃত মৌলের জন্য ফাঁকা ঘর রাখেন, পরে গ্যালিয়াম (১৮৭৫), স্ক্যান্ডিয়াম ও জার্মেনিয়াম তা সত্য প্রমাণ করে।','সম্মান:: ১০১ নম্বর মৌলের নাম তাঁর নামে "মেন্ডেলেভিয়াম"।']],
+ [2,'☢️','মারি কুরি (Marie Curie)','curie marie radium polonium nobel',['তেজস্ক্রিয়তা গবেষণা:: "রেডিওঅ্যাক্টিভিটি" শব্দটি তাঁরই দেওয়া।','নতুন মৌল:: রেডিয়াম ও পোলোনিয়াম আবিষ্কার করেন; পোলোনিয়াম নাম রাখেন নিজের মাতৃভূমি পোল্যান্ডের নামে।','নোবেল রেকর্ড:: পদার্থবিজ্ঞানে (১৯০৩) ও রসায়নে (১৯১১) দুটি ভিন্ন বিষয়ে নোবেল পান, প্রথম নারী নোবেলজয়ীও তিনি।']],
+ [2,'⚛️','জন ডাল্টন (John Dalton)','dalton atomic theory',['পারমাণবিক তত্ত্ব:: ১৮০৩ সালে পরমাণুর প্রথম বৈজ্ঞানিক তত্ত্ব দেন: প্রতিটি মৌল অবিভাজ্য কণা পরমাণু দিয়ে গঠিত (পরে জানা গেছে পরমাণুও বিভাজ্য)।','আংশিক চাপের সূত্র:: গ্যাস মিশ্রণের চাপ নিয়ে সূত্র দেন।','বর্ণান্ধতা:: নিজে বর্ণান্ধ ছিলেন, তাই এই অবস্থার নাম "ডাল্টনিজম"।']],
+ [2,'🎈','রবার্ট বয়েল (Robert Boyle)','boyle',['রসায়নকে বিজ্ঞান বানানো:: আলকেমি থেকে বের করে রসায়নকে পরীক্ষামূলক বিজ্ঞানের রূপ দিতে সাহায্য করেন (দ্য স্কেপটিক্যাল কেমিস্ট, ১৬৬১)।','বয়েলের সূত্র:: ১৬৬২ সালে নির্দিষ্ট তাপমাত্রায় গ্যাসের আয়তন ও চাপের বিপরীত সম্পর্ক আবিষ্কার করেন।','অম্ল-ক্ষার সূচক:: উদ্ভিজ্জ রং দিয়ে অম্ল ও ক্ষার আলাদা করার পরীক্ষা করেন।','আইরিশ বংশোদ্ভূত:: তাঁর জন্ম আয়ারল্যান্ডে, কাজ করেছেন ইংল্যান্ডে।']],
+ [2,'🏺','জাবির ইবনে হাইয়ান (Jabir ibn Hayyan)','jabir geber',['পরীক্ষার ওপর জোর:: রসায়নে হাতে-কলমে পরীক্ষার গুরুত্ব তুলে ধরেন।','পদ্ধতির উন্নতি:: পাতন, কেলাসন ও বাষ্পীভবনের কৌশল উন্নত করেন; ঐতিহ্যে সালফিউরিক ও নাইট্রিক এসিড প্রস্তুতির কৃতিত্বও তাঁকে দেওয়া হয়।','ইউরোপে "গেবার":: ল্যাটিন অনুবাদে তিনি "Geber" নামে পরিচিত।']],
+ [2,'🥤','জোসেফ প্রিস্টলি (Joseph Priestley)','priestley oxygen soda water',['অক্সিজেন:: ১৭৭৪ সালে অক্সিজেন গ্যাস আলাদা করেন (শেলেও স্বাধীনভাবে করেছিলেন)।','সোডা ওয়াটার:: ১৭৭২ সালের কাছাকাছি পানিতে CO₂ গুলে প্রথম কার্বনেটেড পানি তৈরি করেন।','"রাবার" নাম:: পেন্সিলের দাগ ঘষে তোলা যায় দেখে একে "রাবার" নাম দেন বলে ধরা হয়।']],
+ [2,'💡','হামফ্রি ডেভি (Humphry Davy)','davy sodium potassium',['তড়িৎ বিশ্লেষণে নতুন মৌল:: ১৮০৭ সালে সোডিয়াম ও পটাশিয়াম এবং পরে ক্যালসিয়াম, ম্যাগনেসিয়াম, বেরিয়ামসহ বহু ধাতু আলাদা করেন।','ডেভি ল্যাম্প:: ১৮১৫ সালে খনিশ্রমিকদের জন্য নিরাপদ বাতি আবিষ্কার করেন।','ফ্যারাডের শিক্ষক:: মাইকেল ফ্যারাডে তাঁর সহকারী ছিলেন।']],
+ [2,'🔌','মাইকেল ফ্যারাডে (Michael Faraday)','faraday electrolysis benzene',['তড়িৎ বিশ্লেষণের সূত্র:: ১৮৩৩-৩৪ সালে পরিমাণগত সূত্র দেন।','বেনজিন আবিষ্কার:: ১৮২৫ সালে বেনজিন আলাদা করেন।','শূন্য থেকে শুরু:: বইবাঁধাইয়ের শিক্ষানবিশ থেকে বিশ্বসেরা বিজ্ঞানী হয়ে ওঠেন।']],
+ [2,'🎯','আর্নেস্ট রাদারফোর্ড (Ernest Rutherford)','rutherford nucleus',['নিউক্লিয়াস:: ১৯১১ সালে আলফা কণা বিচ্ছুরণ পরীক্ষায় পরমাণুর কেন্দ্রে নিউক্লিয়াস আবিষ্কার করেন।','রসায়নে নোবেল:: ১৯০৮ সালে তেজস্ক্রিয়তা নিয়ে কাজের জন্য রসায়নে নোবেল পান।','প্রথম রূপান্তর:: ১৯১৯ সালে নাইট্রোজেনকে কৃত্রিমভাবে অক্সিজেনে রূপান্তর করেন।','নিউজিল্যান্ডে জন্ম:: জন্ম নিউজিল্যান্ডে, কাজ করেছেন ইংল্যান্ডে।']],
+ [2,'🌀','নিলস বোর (Niels Bohr)','bohr atomic model',['বোর মডেল:: ১৯১৩ সালে শক্তিস্তরভিত্তিক পরমাণু মডেল দেন।','নোবেল:: ১৯২২ সালে পদার্থবিজ্ঞানে নোবেল পান।','সম্মান:: ১০৭ নম্বর মৌলের নাম "বোরিয়াম" তাঁর নামে।']],
+ [2,'🔗','লাইনাস পাউলিং (Linus Pauling)','pauling electronegativity',['দুই নোবেল:: রসায়নে (১৯৫৪) ও শান্তিতে (১৯৬২) আলাদা আলাদা নোবেল পান।','তড়িৎ ঋণাত্মকতা:: ১৯৩২ সালে মৌলের তড়িৎ ঋণাত্মকতার স্কেল দেন।','সংকরণ:: অরবিটাল সংকরণ তত্ত্ব দিয়ে অণুর আকৃতি ব্যাখ্যা করেন।']],
+ [2,'📦','আমেদেও অ্যাভোগাদ্রো (Amedeo Avogadro)','avogadro',['অনুকল্প:: ১৮১১ সালে সম আয়তনের গ্যাসে সমান সংখ্যক অণু থাকার ধারণা দেন।','দেরিতে স্বীকৃতি:: জীবদ্দশায় ধারণাটি অবহেলিত ছিল, প্রায় ৫০ বছর পর কানিৎসারো তা তুলে ধরেন।','ধ্রুবকের নাম:: "অ্যাভোগাদ্রো ধ্রুবক" নামটি পরে (বিংশ শতকের শুরুতে) দেওয়া হয়।']],
+ [2,'🌾','ফ্রিটজ হাবার (Fritz Haber)','haber ammonia',['বাতাস থেকে সার:: ১৯০৯ সালে বাতাসের নাইট্রোজেন থেকে অ্যামোনিয়া তৈরির পদ্ধতি দেখান।','নোবেল:: ১৯১৮ সালে রসায়নে নোবেল পান।','বিতর্কিত দিক:: প্রথম বিশ্বযুদ্ধে বিষাক্ত গ্যাস প্রকল্পে জড়িত থাকায় তিনি বিতর্কিত।']],
+ [2,'🇧🇩','আচার্য প্রফুল্লচন্দ্র রায় (P. C. Ray)','ray prafulla chandra',['খুলনায় জন্ম:: ১৮৬১ সালে বর্তমান বাংলাদেশের খুলনায় জন্ম নেন।','মারকিউরাস নাইট্রাইট:: ১৮৯৬ সালে স্থিতিশীল মারকিউরাস নাইট্রাইট সংশ্লেষণ করেন।','শিল্প উদ্যোক্তা:: ১৯০১ সালে বেঙ্গল কেমিক্যাল অ্যান্ড ফার্মাসিউটিক্যাল ওয়ার্কস প্রতিষ্ঠা করেন।','ইতিহাস লেখক:: "হিন্দু রসায়নের ইতিহাস" নামে গ্রন্থ লেখেন।']],
+ [2,'🔬','ডরোথি হজকিন (Dorothy Hodgkin)','hodgkin crystallography',['নোবেল:: ১৯৬৪ সালে রসায়নে নোবেল পান।','গঠন নির্ণয়:: এক্স-রে ক্রিস্টালোগ্রাফি দিয়ে পেনিসিলিন, ভিটামিন B₁₂ ও ইনসুলিনের গঠন বের করেন।']]
+];
+const TFS = [
+ ['সোনা বাতাসে থাকলেও জং ধরে না বা নষ্ট হয় না।', true, 'সোনা নিষ্ক্রিয় (নোবেল) ধাতু, তাই অক্সিজেনের সাথে সহজে বিক্রিয়া করে না।'],
+ ['হিলিয়াম ভরা বেলুনে আগুন ধরার ঝুঁকি আছে।', false, 'হিলিয়াম অদাহ্য, তাই নিরাপদ। দাহ্য গ্যাস হলো হাইড্রোজেন।'],
+ ['মহাবিশ্বে সবচেয়ে প্রাচুর্যপূর্ণ মৌল হাইড্রোজেন।', true, 'ভরের প্রায় ৭৫% হাইড্রোজেন, তারপর হিলিয়াম।'],
+ ['মানবদেহের ভরের সবচেয়ে বড় অংশ কার্বন।', false, 'সবচেয়ে বড় অংশ অক্সিজেন (প্রায় ৬৫%), কার্বন প্রায় ১৮%।'],
+ ['হীরা ও গ্রাফাইট দুটোই শুধু কার্বন দিয়ে তৈরি।', true, 'এরা কার্বনের দুটি ভিন্ন রূপভেদ, শুধু পরমাণু সাজানোর ধরন আলাদা।'],
+ ['২৫°C তাপমাত্রায় পারদই একমাত্র তরল ধাতু।', true, 'গ্যালিয়াম ও সিজিয়াম প্রায় ২৯-২৮°C-এ গলে, তাই ২৫°C-এ শুধু পারদ তরল।'],
+ ['pH ৭ মানে দ্রবণ অম্লীয়।', false, 'pH ৭ মানে প্রশম। ৭ এর কম অম্লীয়, ৭ এর বেশি ক্ষারীয়।'],
+ ['সোডিয়াম পানির সাথে বিক্রিয়া করে হাইড্রোজেন গ্যাস দেয়।', true, '2Na + 2H₂O → 2NaOH + H₂↑।'],
+ ['ক্লোরিন সাধারণ তাপমাত্রায় সবুজাভ-হলুদ গ্যাস।', true, 'গ্রিক "chloros" মানে সবুজ, সেখান থেকেই এর নাম।'],
+ ['মারি কুরি একই বিষয়ে দুবার নোবেল পেয়েছিলেন।', false, 'তিনি দুটি ভিন্ন বিষয়ে পেয়েছেন: পদার্থবিজ্ঞান (১৯০৩) ও রসায়ন (১৯১১)।'],
+ ['বজ্রপাত বাতাসের নাইট্রোজেনকে মাটির উপযোগী যৌগে বদলাতে পারে।', true, 'বিদ্যুতের স্ফুলিঙ্গে N₂ ও O₂ বিক্রিয়া করে নাইট্রোজেনের অক্সাইড তৈরি হয়, যা বৃষ্টির সাথে মাটিতে আসে।'],
+ ['পৃথিবীর কেন্দ্রের (কোর) প্রধান উপাদান লোহা ও নিকেল।', true, 'পৃথিবীর কোর মূলত লোহা-নিকেল সংকর দিয়ে গঠিত।'],
+ ['অ্যালুমিনিয়াম ভূত্বকে সবচেয়ে প্রাচুর্যপূর্ণ ধাতু।', true, 'মৌলের মধ্যে অক্সিজেন ও সিলিকনের পরেই অ্যালুমিনিয়াম।'],
+ ['রাদারফোর্ড ১৯১১ সালে ইলেকট্রন আবিষ্কার করেন।', false, 'ইলেকট্রন আবিষ্কার করেন থমসন (১৮৯৭)। রাদারফোর্ড ১৯১১ সালে নিউক্লিয়াস আবিষ্কার করেন।']
+];
 
-        // সম্প্রসারিত ও সমৃদ্ধ ডাটাবেস
-        const database = {
-            hydrogen: {
-                title: " হাইড্রোজেন (Hydrogen)",
-                facts: [
-                    "১. মহাবিশ্বের মোট ভরের প্রায় ৭৫% জুড়েই রয়েছে শুধু হাইড্রোজেন।",
-                    "২. এটি পর্যায় সারণীর সবচেয়ে হালকা এবং প্রথম মৌল (পারমাণবিক সংখ্যা ১)।",
-                    "৩. তরল হাইড্রোজেন রকেটের জ্বালানি হিসেবে মহাশূন্যে ব্যবহার করা হয়।"
-                ]
-            },
-            oxygen: {
-                title: " অক্সিজেন (Oxygen)",
-                facts: [
-                    "১. পৃথিবীর ভূত্বকের সবচেয়ে বেশি পরিমাণে থাকা মৌল হলো অক্সিজেন (প্রায় ৪৬%)।",
-                    "২. তরল বা কঠিন অবস্থায় অক্সিজেনের রঙ ফ্যাকাশে নীল দেখায়।",
-                    "৩. পৃথিবীর বায়ুমণ্ডলের প্রায় ২১% অংশজুড়ে অক্সিজেন গ্যাস রয়েছে।"
-                ]
-            },
-            carbon: {
-                title: " কার্বন (Carbon)",
-                facts: [
-                    "১. কার্বনের দুটি বিপরীত রূপ হলো গ্রাফাইট ও হীরা।",
-                    "২. পৃথিবীতে যত জৈব যৌগ পাওয়া যায়, তার প্রতিটিতেই কার্বন প্রধান উপাদান।",
-                    "৩. কার্বনের যোজনী সবসময় ৪ (টেট্রাভ্যালেন্ট)।"
-                ]
-            },
-            sodium: {
-                title: " সোডিয়াম (Sodium - Na)",
-                facts: [
-                    "১. সোডিয়াম এত নরম ধাতু যে এটি ছুরি দিয়ে মাখনের মতো কাটা যায়।",
-                    "২. এটি বাতাসে খোলা রাখলে আগুন ধরে যায় এবং পানির সাথে তীব্র বিক্রিয়া করে।",
-                    "৩. ক্লোরিনের সাথে যুক্ত হয়ে এটি আমাদের খাবার লবণ (NaCl) তৈরি করে।"
-                ]
-            },
-            helium: {
-                title: " হিলিয়াম (Helium - He)",
-                facts: [
-                    "১. হিলিয়াম মহাবিশ্বের দ্বিতীয় সবচেয়ে হালকা এবং সহজলভ্য মৌল।",
-                    "২. এটি বাতাসে বেলুন ওড়াতে ব্যবহৃত হয় কারণ এটি অত্যন্ত হালকা এবং অদাহ্য।",
-                    "৩. এটি গ্রহের বায়ুমণ্ডল থেকে মহাশূন্যে সহজে হারিয়ে যেতে পারে।"
-                ]
-            },
-            gold: {
-                title: " স্বর্ণ বা গোল্ড (Gold - Au)",
-                facts: [
-                    "১. এটি এমন এক নোবেল ধাতু যা কখনো বায়ুর সংস্পর্শে এসে জং ধরে না বা নষ্ট হয় না।",
-                    "২. ১ গ্রাম সোনা দিয়ে প্রায় ২ কিলোমিটার লম্বা সুক্ষ্ম তার তৈরি করা সম্ভব।",
-                    "৩. এর রাসায়নিক প্রতীক 'Au' এসেছে ল্যাটিন শব্দ 'Aurum' থেকে।"
-                ]
-            },
-            egypt_greece: {
-                title: "🏛️ মিশর ও গ্রিসের অবদান",
-                facts: [
-                    "১. প্রাচীন মিশরে সোনা তৈরি এবং ধাতু নিষ্কাশনের মাধ্যমে আলকেমি বা রসায়নের প্রাথমিক চর্চা শুরু হয়েছিল।",
-                    "২. গ্রিক দার্শনিকরা প্রথম পদার্থের ক্ষুদ্রতম কণা বা 'অ্যাটম' ধারণার প্রস্তাব করেছিলেন।"
-                ]
-            },
-            arabia: {
-                title: "📜 আরব বিশ্বের অবদান",
-                facts: [
-                    "১. আরব বিজ্ঞানীরা (যেমন জাবির ইবনে হাইয়ান) পরীক্ষাগারে পাতন (Distillation) পদ্ধতি এবং বিভিন্ন অ্যাসিড আবিষ্কার করেন।",
-                    "২. 'আল-কিমিয়া' শব্দটি থেকে বর্তমানের 'কেমিস্ট্রি' বা রসায়ন নামটি এসেছে।"
-                ]
-            },
-            france: {
-                title: "🇫🇷 ফ্রান্সের অবদান",
-                facts: [
-                    "১. আধুনিক রসায়নের জনক অঁতোয়ান লাভোভিসিয়ে ফ্রান্সে বসেই মৌলের নামকরণ করেন।",
-                    "২. তারা ওজন ও পরিমাপের মেট্রিক পদ্ধতি চালু করেন যা রসায়নের গণনায় বিপ্লব আনে।"
-                ]
-            },
-            germany: {
-                title: "🇩🇪 জার্মানির অবদান",
-                facts: [
-                    "১. জার্মানি জৈব রসায়ন, রঞ্জক পদার্থ (Dye industry) এবং রাসায়নিক শিল্প উৎপাদনে বিশ্বে নেতৃত্ব দিয়েছিল।",
-                    "২. তারা সারের কারখানা এবং সিন্থেটিক উপাদান আবিষ্কারে বিরাট ভূমিকা রাখে।"
-                ]
-            },
-            uk: {
-                title: "🇬🇧 যুক্তরাজ্যের অবদান",
-                facts: [
-                    "১. রবার্ট বয়েল এবং জন ডাল্টনের হাত ধরে যুক্তরাজ্যে আধুনিক রসায়নের পরীক্ষামূলক ভিত্তি স্থাপন হয়।",
-                    "২. গ্যাসীয় পদার্থের চাপ ও আয়তনের মধ্যকার সম্পর্ক (বয়েলের সূত্র) এখানেই আবিষ্কৃত হয়।"
-                ]
-            },
-            usa: {
-                title: "🇺🇸 যুক্তরাষ্ট্রের অবদান",
-                facts: [
-                    "১. পারমাণবিক রসায়ন ও সিন্থেটিক ভারী মৌল (যেমন প্লুটোনিয়াম, ইউরেনিয়াম পরবর্তী মৌল) আবিষ্কারে যুক্তরাষ্ট্র অনন্য ভূমিকা রেখেছে।",
-                    "২. আধুনিক পলিমার ও পেট্রোকেমিক্যাল শিল্পে তাদের অবদান সবচেয়ে বেশি।"
-                ]
-            },
-            lavoisier: {
-                title: " অঁতোয়ান লাভোভিসিয়ে (Antoine Lavoisier)",
-                facts: [
-                    "১. **আধুনিক রসায়নের জনক:** তাকে আধুনিক রসায়নের প্রতিষ্ঠাতা বলা হয়।",
-                    "২. **ভরের সংরক্ষণ সূত্র:** বিক্রিয়ার আগে ও পরে পদার্থের মোট ভর সর্বদা সমান থাকে।",
-                    "৩. **অক্সিজেনের নামকরণ:** তিনি বাতাসের উপাদান পরীক্ষা করে অক্সিজেন নামকরণ করেন।"
-                ]
-            },
-            mendeleev: {
-                title: " দিমিত্রি মেন্দিভ (Dmitri Mendeleev)",
-                facts: [
-                    "১. **পর্যায় সারণী প্রণেতা:** মৌলগুলোকে সাজিয়ে প্রথম কার্যকরী পর্যায় সারণী তৈরি করেন।",
-                    "২. **ভবিষ্যদ্বাণী:** অজানা মৌলগুলোর জন্য ফাঁকা স্থান রেখে গিয়েছিলেন যা পরে সঠিক প্রমাণিত হয়।"
-                ]
-            },
-            curie: {
-                title: " ম্যাসুরি কুরি (Marie Curie)",
-                facts: [
-                    "১. **তেজস্ক্রিয়তা গবেষণা:** তেজস্ক্রিয়তা নিয়ে অসামান্য গবেষণা করেন।",
-                    "২. **নতুন মৌল আবিষ্কার:** রেডিয়াম ও পোলোনিয়াম আবিষ্কার করেন।",
-                    "৩. **নোবেল রেকর্ড:** তিনিই একমাত্র বিজ্ঞানী যিনি পদার্থ ও রসায়ন উভয় বিষয়ে নোবেল পান।"
-                ]
-            },
-            dalton: {
-                title: " জন ডাল্টন (John Dalton)",
-                facts: [
-                    "১. **পারমাণবিক তত্ত্ব:** ১৮০৩ সালে বিখ্যাত ডাল্টনের পারমাণবিক তত্ত্ব প্রকাশ করেন।",
-                    "২. **পরমাণু ধারণা:** প্রতিটি মৌল অবিভাজ্য কণা বা পরমাণু দ্বারা গঠিত।"
-                ]
-            },
-            boyle: {
-                title: " রবার্ট বয়েল (Robert Boyle)",
-                facts: [
-                    "১. **আধুনিক রসায়নের অগ্রদূত:** তিনি আলকেমি থেকে বের করে রসায়নকে একটি পরীক্ষামূলক বিজ্ঞানের রূপ দিতে সাহায্য করেন।",
-                    "২. **বয়েলের সূত্র:** নির্দিষ্ট তাপমাত্রায় গ্যাসের আয়তন ও চাপের বিপরীত সম্পর্কিত বিখ্যাত সূত্রটি তিনি আবিষ্কার করেন।"
-                ]
-            }
-        };
+const ITEMS = RAW.map(([cat, icon, title, en, facts], i) => ({ id: i, cat, icon, title, en, facts }));
+const TOTAL_FACTS = ITEMS.reduce((n, x) => n + x.facts.length, 0);
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+$('brandLink').href = BACK_URL; $('backBtn').href = BACK_URL;
+$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
+(function sparks() { const r = $('sparks'); for (let i = 0; i < 16; i++) { const s = document.createElement('span'); s.className = 'sp'; s.textContent = i % 3 ? '✦' : '✨'; s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 70 + '%'; s.style.fontSize = 10 + Math.random() * 14 + 'px'; s.style.animationDelay = Math.random() * 3 + 's'; s.style.animationDuration = 2.6 + Math.random() * 2.4 + 's'; r.appendChild(s); } })();
+let seen = new Set(load('ff_seen', [])), fav = new Set(load('ff_fav', []));
+let tab = 'all', list = [], idx = -1, opener = null, tt;
+function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('on'), 1900); }
+function split(f) { const k = f.indexOf('::'); return k < 0 ? [null, f] : [f.slice(0, k), f.slice(k + 2).trim()]; }
+function paintTop() {
+    const st = $('stats'); st.replaceChildren();
+    [[ITEMS.length, 'টি কার্ড'], [TOTAL_FACTS, 'টি ফান ফ্যাক্ট'], [fav.size, '⭐ প্রিয়']].forEach(([n, l]) => { const d = document.createElement('div'), b = document.createElement('b'), s = document.createElement('span'); d.className = 'stat'; b.textContent = bn(n); s.textContent = l; d.append(b, s); st.appendChild(d); });
+    $('pbar').style.width = seen.size / ITEMS.length * 100 + '%'; $('ptxt').textContent = '📚 ' + bn(seen.size) + ' / ' + bn(ITEMS.length) + 'টি কার্ড জানা হয়েছে';
+}
+function randFact() { const it = ITEMS[Math.floor(Math.random() * ITEMS.length)], [h, t] = split(it.facts[Math.floor(Math.random() * it.facts.length)]); $('rfText').textContent = it.icon + ' ' + it.title + ' — ' + (h ? h + ': ' : '') + t; }
+$('rfBtn').addEventListener('click', randFact);
+function renderChips() {
+    const c = $('chips'); c.replaceChildren();
+    [['all', 'সব'], ['0', '⚛️ মৌল'], ['1', '🗺️ দেশ'], ['2', '👨‍🔬 বিজ্ঞানী'], ['new', '🆕 না-জানা (' + bn(ITEMS.length - seen.size) + ')'], ['fav', '⭐ প্রিয় (' + bn(fav.size) + ')']].forEach(([k, n]) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (tab === k ? ' on' : ''); b.textContent = n; b.setAttribute('aria-pressed', String(tab === k)); b.addEventListener('click', () => { tab = k; render(); }); c.appendChild(b);
+    });
+}
+function card(it, n) {
+    const art = document.createElement('article'); art.className = 'card' + (seen.has(it.id) ? ' seen' : ''); art.dataset.id = it.id; art.style.animationDelay = Math.min(n, 9) * 40 + 'ms';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'cb'; b.setAttribute('aria-label', it.title + ' সম্পর্কে জানো');
+    const r = document.createElement('div'); r.className = 'row'; const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = it.icon; ic.setAttribute('aria-hidden', 'true'); const h = document.createElement('h3'); h.textContent = it.title; r.append(ic, h);
+    const p = document.createElement('p'); const [hd, tx] = split(it.facts[0]); p.textContent = (hd ? hd + ': ' : '') + tx;
+    const g = document.createElement('div'); g.className = 'go'; const gt = document.createElement('span'); gt.textContent = bn(it.facts.length) + 'টি ফান ফ্যাক্ট জানো →'; const ok = document.createElement('span'); ok.className = 'ok'; ok.textContent = '✓ জানা'; g.append(gt, ok);
+    b.append(r, p, g); b.addEventListener('click', () => open(it.id, b));
+    const s = document.createElement('button'); s.type = 'button'; s.className = 'star' + (fav.has(it.id) ? ' on' : ''); s.textContent = '★'; s.setAttribute('aria-label', 'প্রিয় করো: ' + it.title); s.setAttribute('aria-pressed', String(fav.has(it.id)));
+    s.addEventListener('click', e => { e.stopPropagation(); toggleFav(it.id); });
+    art.append(b, s); return art;
+}
+function toggleFav(id) { if (fav.has(id)) { fav.delete(id); toast('প্রিয় থেকে সরানো হয়েছে'); } else { fav.add(id); toast('⭐ প্রিয়তে যোগ হয়েছে'); } save('ff_fav', [...fav]); paintTop(); if (tab === 'fav') render(); else { renderChips(); document.querySelectorAll('.card[data-id="' + id + '"] .star').forEach(s => { s.classList.toggle('on', fav.has(id)); s.setAttribute('aria-pressed', String(fav.has(id))); }); } if ($('ov').classList.contains('on') && list[idx] && list[idx].id === id) $('mFav').classList.toggle('on', fav.has(id)); }
+function render() {
+    renderChips(); const q = $('q').value.trim().toLowerCase();
+    list = ITEMS.filter(it => (tab === 'all' || (tab === 'new' ? !seen.has(it.id) : tab === 'fav' ? fav.has(it.id) : it.cat === +tab)) && (!q || (it.title + ' ' + it.en + ' ' + it.facts.join(' ')).toLowerCase().includes(q)));
+    const root = $('sections'); root.replaceChildren(); let n = 0;
+    CATS.forEach(([title, sub], ci) => { const part = list.filter(it => it.cat === ci); if (!part.length) return;
+        const w = document.createElement('div'), h = document.createElement('h2'); h.className = 'st'; h.textContent = title; const s = document.createElement('span'); s.textContent = bn(part.length) + 'টি'; h.appendChild(s);
+        const p = document.createElement('p'); p.className = 'sub'; p.textContent = sub; const g = document.createElement('div'); g.className = 'grid'; part.forEach(it => g.appendChild(card(it, n++))); w.append(h, p, g); root.appendChild(w); });
+    $('empty').classList.toggle('show', !list.length); $('count').textContent = bn(list.length) + 'টি কার্ড দেখানো হচ্ছে'; paintTop();
+}
+function fill() {
+    const it = list[idx]; if (!it) return; $('mIcon').textContent = it.icon; $('mTitle').textContent = it.title; $('mFav').classList.toggle('on', fav.has(it.id)); const ul = $('mBody'); ul.replaceChildren(); ul.scrollTop = 0;
+    it.facts.forEach(f => { const [h, t] = split(f), li = document.createElement('li'), d = document.createElement('div'); if (h) { const b = document.createElement('b'); b.textContent = h + ': '; d.appendChild(b); } d.appendChild(document.createTextNode(t)); li.appendChild(d); ul.appendChild(li); });
+    $('mPrev').disabled = idx <= 0; $('mNext').disabled = idx >= list.length - 1; $('mPos').textContent = bn(idx + 1) + ' / ' + bn(list.length);
+    if (!seen.has(it.id)) { seen.add(it.id); save('ff_seen', [...seen]); paintTop(); document.querySelectorAll('.card[data-id="' + it.id + '"]').forEach(c => c.classList.add('seen')); renderChips(); }
+}
+function open(id, btn) { idx = list.findIndex(t => t.id === id); if (idx < 0) return; opener = btn; fill(); $('ov').classList.add('on'); $('ov').setAttribute('aria-hidden', 'false'); document.body.classList.add('lock'); $('mClose').focus(); }
+function close() { $('ov').classList.remove('on'); $('ov').setAttribute('aria-hidden', 'true'); document.body.classList.remove('lock'); if (tab === 'new') render(); if (opener && document.contains(opener)) opener.focus(); }
+$('mClose').addEventListener('click', close); $('ov').addEventListener('click', e => { if (e.target === $('ov')) close(); });
+$('mPrev').addEventListener('click', () => { if (idx > 0) { idx--; fill(); } }); $('mNext').addEventListener('click', () => { if (idx < list.length - 1) { idx++; fill(); } });
+$('mFav').addEventListener('click', () => { if (list[idx]) toggleFav(list[idx].id); });
+$('mCopy').addEventListener('click', () => { const it = list[idx]; if (!it) return; const txt = it.title + '\n' + it.facts.map((f, i) => bn(i + 1) + '. ' + split(f).filter(Boolean).join(': ')).join('\n') + '\n— Lab Alchemy'; if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('📋 কপি হয়েছে'), () => toast('কপি করা যায়নি')); else toast('কপি করা যায়নি'); });
+document.addEventListener('keydown', e => { if (!$('ov').classList.contains('on')) return; if (e.key === 'Escape') close(); else if (e.key === 'ArrowLeft') $('mPrev').click(); else if (e.key === 'ArrowRight') $('mNext').click(); });
+$('q').addEventListener('input', render);
 
-        function showDetail(key) {
-            const data = database[key];
-            if (!data) return;
-
-            let formattedText = data.facts.join("<br><br>");
-            
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('fact-text').innerHTML = formattedText;
-            document.getElementById('chemModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('chemModal').style.display = 'none';
-        }
-    </script>
+/* সত্য-মিথ্যা কুইজ */
+let deck = [], qi = 0, qs = 0, locked = false, best = 0; try { best = parseInt(localStorage.getItem('ff_best') || '0', 10) || 0; } catch (e) {}
+function qStart() { deck = shuffle(TFS.slice()); qi = 0; qs = 0; qShow(); }
+function qShow() {
+    if (qi >= deck.length) { if (qs > best) { best = qs; try { localStorage.setItem('ff_best', String(best)); } catch (e) {} } $('qNo').textContent = 'শেষ!'; $('qText').textContent = '🎉 তোমার স্কোর ' + bn(qs) + '/' + bn(deck.length) + (qs === deck.length ? ' — নিখুঁত!' : ''); $('qScore').textContent = '🏆 সেরা: ' + bn(best); $('aT').disabled = $('aF').disabled = true; $('qFb').textContent = ''; $('qNext').hidden = false; $('qNext').textContent = 'আবার খেলো 🔄'; $('qNext').onclick = qStart; return; }
+    locked = false; $('qNo').textContent = 'প্রশ্ন ' + bn(qi + 1) + '/' + bn(deck.length); $('qScore').textContent = '✅ ' + bn(qs) + ' • 🏆 সেরা: ' + bn(best); $('qText').textContent = deck[qi][0];
+    ['aT', 'aF'].forEach(id => { const b = $(id); b.disabled = false; b.className = ''; }); $('qFb').className = 'fb'; $('qFb').textContent = ''; $('qNext').hidden = true; $('qNext').textContent = 'পরের প্রশ্ন →'; $('qNext').onclick = () => { qi++; qShow(); };
+}
+function qAns(v) { if (locked) return; locked = true; const [, ok, why] = deck[qi], right = v === ok; if (right) qs++;
+    $('aT').disabled = $('aF').disabled = true; $(ok ? 'aT' : 'aF').classList.add('right'); if (!right) $(v ? 'aT' : 'aF').classList.add('wrong');
+    $('qFb').className = 'fb ' + (right ? 'okk' : 'no'); $('qFb').textContent = (right ? '✅ সঠিক! ' : '❌ ভুল! ') + why; $('qScore').textContent = '✅ ' + bn(qs) + ' • 🏆 সেরা: ' + bn(best); $('qNext').hidden = false; $('qNext').focus({ preventScroll: true }); }
+$('aT').addEventListener('click', () => qAns(true)); $('aF').addEventListener('click', () => qAns(false));
+randFact(); render(); qStart();
+</script>
 </body>
 </html>
