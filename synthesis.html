@@ -1,61 +1,327 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <title>সংযোজন বিক্রিয়া সলভার</title>
-    <style>
-        body { font-family: sans-serif; background: #f8fafc; }
-        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .solver-box { max-width: 500px; margin: 100px auto; padding: 30px; background: #ffffff; border-radius: 15px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); text-align: center; }
-        input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
-        .solve-btn { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #output { margin-top: 20px; padding: 15px; background: #eff6ff; border-radius: 8px; border-left: 5px solid #2563eb; text-align: left; }
-        .note { text-align: left; margin-top: 30px; padding: 15px; background: #fffbeb; border-left: 5px solid #f59e0b; border-radius: 8px; font-size: 0.9rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>সংযোজন বিক্রিয়া সলভার | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.74);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(16,185,129,.32);--gradient-primary:linear-gradient(135deg,#059669,#3b82f6);--gradient-glow:rgba(16,185,129,.2);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--accent:#059669;--good:#059669;--bad:#e11d48;--mono:ui-monospace,Menlo,Consolas,monospace}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(52,211,153,.35);--gradient-primary:linear-gradient(135deg,#34d399,#60a5fa);--gradient-glow:rgba(52,211,153,.26);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--accent:#34d399;--good:#34d399;--bad:#fb7185}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pg .6s ease both}
+@keyframes pg{from{opacity:0}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:dr 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#059669;top:-150px;left:-120px}.b2{width:620px;height:620px;background:#2563eb;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes dr{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.wrap{position:relative;z-index:1;max-width:960px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:28px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#34d399 55%,#3b82f6);box-shadow:0 0 18px #34d399,0 0 34px rgba(59,130,246,.6)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}.brand small{display:block;font-size:12px;font-weight:700;color:var(--accent)}
+.tr{display:flex;align-items:center;gap:10px}
+.ib{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .3s}.ib:hover{transform:rotate(180deg)}
+.bk{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}.bk:hover{transform:translateX(-3px);border-color:var(--accent)}
+.hero{text-align:center;margin-bottom:24px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:var(--accent);background:rgba(16,185,129,.1);border:1px solid var(--section-border)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.3;letter-spacing:-.5px;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:620px;font-size:16px;line-height:1.75;font-weight:500;color:var(--text-muted)}
+.demo{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;padding:10px 20px;border-radius:18px;font:700 16px var(--mono);background:var(--card-solid);border:1px solid var(--border-color)}
+.demo .a{color:#fb7185}.demo .b{color:#60a5fa}.demo .ar{color:var(--accent)}
+.glass{position:relative;overflow:hidden;background:var(--card-bg);border:1.5px solid var(--section-border);border-radius:26px;box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.glass::before{content:'';position:absolute;top:-80px;right:-60px;width:220px;height:220px;pointer-events:none;background:radial-gradient(circle,var(--gradient-glow),transparent 70%)}
+.glass>*{position:relative}
+.box{padding:26px;margin-bottom:22px}
+.box h2{margin:0 0 6px;font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
+.sub{margin:0 0 16px;font-size:14px;color:var(--text-muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.inp{flex:1 1 260px;font:700 17px var(--mono);padding:14px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:2px solid var(--border-color);outline:none;transition:border-color .25s,box-shadow .25s}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--gradient-glow)}
+.btn{padding:14px 24px;font:inherit;font-size:15px;font-weight:800;cursor:pointer;color:#06130e;background:var(--gradient-primary);border:0;border-radius:16px;box-shadow:0 8px 20px var(--gradient-glow);transition:transform .25s}.btn:hover{transform:translateY(-2px)}
+.btn.ghost{color:var(--text-color);background:transparent;border:1.5px solid var(--border-color);box-shadow:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{padding:8px 14px;font:700 13.5px var(--mono);cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);border-radius:30px;transition:transform .2s,border-color .2s}
+.chip:hover{transform:translateY(-2px);border-color:var(--accent)}
+.chip.tab{font-family:inherit;color:var(--text-muted)}.chip.tab.on{color:#06130e;background:var(--gradient-primary);border-color:transparent}
+.parsed{min-height:34px;margin-top:12px;font:700 14px var(--mono);color:var(--text-muted)}
+.parsed span{display:inline-block;margin:0 4px 4px 0;padding:4px 12px;border-radius:10px;color:var(--text-color);background:rgba(16,185,129,.12);border:1px solid var(--section-border)}
+.res{margin-bottom:22px}
+.rc{padding:24px;margin-bottom:16px;animation:rs .45s ease both}
+@keyframes rs{from{opacity:0;transform:translateY(12px)}}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tag{padding:3px 12px;border-radius:20px;font-size:12px;font-weight:800;color:var(--accent);background:rgba(16,185,129,.1);border:1px solid var(--section-border)}
+.tag.o{color:#fb923c;background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.4)}.tag.p{color:#a78bfa;background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.4)}
+.eq{font:800 clamp(1.15rem,3.6vw,1.7rem) var(--mono);line-height:1.7;word-break:break-word;color:var(--text-color)}
+.eq .c{color:#fbbf24}.eq .ar{color:var(--accent);margin:0 6px}
+.cp{display:flex;gap:8px;margin-top:10px}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:16px}
+.it{padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1px solid var(--border-color)}
+.it small{display:block;margin-bottom:5px;font-size:12px;font-weight:800;letter-spacing:.3px;color:var(--text-muted)}.it span{font-size:14.5px;line-height:1.7;font-weight:600}
+.bal{width:100%;margin-top:16px;border-collapse:collapse;font:700 14px var(--mono);text-align:center}
+.bal th,.bal td{padding:8px 10px;border-bottom:1px solid var(--border-color)}.bal th{font-size:12px;color:var(--text-muted);font-family:inherit}
+.bal td.ok{color:var(--good)}
+.steps{margin:16px 0 0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:8px}
+.steps li{counter-increment:s;position:relative;padding:10px 14px 10px 46px;font-size:14.5px;line-height:1.7;color:var(--text-muted);background:var(--card-solid);border-radius:14px;border:1px solid var(--border-color)}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#06130e;background:var(--gradient-primary)}
+.err{padding:20px;border-radius:18px;font-size:15px;line-height:1.75;font-weight:600;color:var(--bad);background:rgba(244,63,94,.08);border:1px dashed rgba(244,63,94,.45)}
+.err b{display:block;margin-bottom:4px}
+.sug{margin-top:12px;color:var(--text-color)}
+.pr .rq{margin:6px 0 14px;font:800 clamp(1.2rem,3.6vw,1.7rem) var(--mono)}
+.fb{min-height:26px;margin-top:12px;font-size:14.5px;line-height:1.7;font-weight:700}.fb.ok{color:var(--good)}.fb.no{color:var(--bad)}
+.list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.li{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}
+.li .e{flex:1;font:700 14px var(--mono);line-height:1.6;word-break:break-word}.li button{padding:6px 12px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--text-color);background:transparent;border:1px solid var(--border-color);border-radius:10px}.li button:hover{border-color:var(--accent)}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.types{grid-template-columns:1fr}.bk .long{display:none}.box{padding:20px}}
+.ty{padding:18px;border-radius:20px;background:var(--card-solid);border:1px solid var(--border-color)}
+.ty b{display:block;margin-bottom:6px;font-size:15px}.ty code{display:block;margin-bottom:8px;font:800 14px var(--mono);color:var(--accent)}.ty p{margin:0;font-size:13.5px;line-height:1.7;color:var(--text-muted)}
+.notes{margin:0;padding-left:20px;font-size:14px;line-height:1.9;color:var(--text-muted)}
+.credit{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#34d399,#60a5fa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
-
-    <button class="back-btn" onclick="window.history.back()">⬅️ ব্যাক</button>
-
-    <div class="solver-box">
-        <h3>সংযোজন বিক্রিয়া সলভার</h3>
-        <input type="text" id="reactants" placeholder="সঠিক ফরম্যাটে লিখুন (যেমন: Na+Cl2)">
-        <button class="solve-btn" onclick="solve()">সমাধান দেখুন</button>
-        <div id="output">ফলাফল এখানে আসবে।</div>
-
-        <div class="note">
-            <strong>📝 নিয়মাবলী:</strong>
-            <ul>
-                <li>সঠিক কেস (Case-sensitive) মেনে চলতে হবে (যেমন: Na+Cl2 লিখতে হবে, na+cl2 নয়)।</li>
-                <li>কোনো স্পেস (Space) দেওয়া যাবে না।</li>
-                <li>সঠিক সংকেত না হলে রেজাল্ট দেখাবে না।</li>
-            </ul>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" id="brandLink" href="reaction_page.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Addition Reaction</small></span></a>
+        <div class="tr">
+            <button class="ib" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="bk" id="backBtn" href="reaction_page.html">← <span class="long">বিক্রিয়া ল্যাব</span></a>
         </div>
-    </div>
+    </header>
 
-    <script>
-        const combinationReactions = [
-            { r: "Na+Cl2", p: "2Na + Cl₂ → 2NaCl" }, 
-            { r: "Mg+O2", p: "2Mg + O₂ → 2MgO" },
-            { r: "H2+Cl2", p: "H₂ + Cl₂ → 2HCl" }, 
-            { r: "N2+3H2", p: "N₂ + 3H₂ → 2NH₃" },
-            { r: "CaO+H2O", p: "CaO + H₂O → Ca(OH)₂" }, 
-            { r: "Fe+S", p: "Fe + S → FeS" },
-            { r: "C+O2", p: "C + O₂ → CO₂" }, 
-            { r: "SO2+O2", p: "2SO₂ + O₂ → 2SO₃" }
-        ];
+    <section class="hero">
+        <span class="pill">➕ A + B → AB</span>
+        <h1>সংযোজন বিক্রিয়া সলভার</h1>
+        <p>বিক্রিয়কের সংকেত লেখো, সমতাকৃত সমীকরণ, শর্ত, পর্যবেক্ষণ আর পরমাণু গণনার প্রমাণসহ উত্তর পাবে।</p>
+        <div class="demo" aria-hidden="true"><span class="a">2Na</span><span>+</span><span class="b">Cl₂</span><span class="ar">⟶</span><span>2NaCl</span></div>
+    </section>
 
-        function solve() {
-            let input = document.getElementById('reactants').value;
-            let output = document.getElementById('output');
-            let match = combinationReactions.find(item => item.r === input);
-            
-            if (match) {
-                output.innerHTML = `<strong>উৎপাদ:</strong><br>${match.p}`;
-            } else {
-                output.innerHTML = "ভুল ফরম্যাট! দয়া করে সঠিক সংকেত ও ফরম্যাটে লিখুন।";
-            }
-        }
-    </script>
+    <!-- সলভার -->
+    <section class="glass box" aria-labelledby="sT">
+        <h2 id="sT">🧪 সমাধান করো</h2>
+        <p class="sub">যেমন: <b>Na + Cl2</b>, <b>h2 o2</b>, <b>C₂H₄ + Br₂</b>। বড়-ছোট হাতের অক্ষর, স্পেস ও ক্রম নিয়ে চিন্তা নেই।</p>
+        <div class="row">
+            <input class="inp" id="inp" type="text" placeholder="বিক্রিয়ক লেখো… (যেমন: Na+Cl2)" aria-label="বিক্রিয়ক" autocomplete="off" spellcheck="false">
+            <button class="btn" id="go" type="button">সমাধান দেখুন</button>
+            <button class="btn ghost" id="clr" type="button">মুছো</button>
+        </div>
+        <div class="parsed" id="parsed" aria-live="polite"></div>
+        <div class="chips" id="tabs" role="group" aria-label="উদাহরণের ধরন"></div>
+        <div class="chips" id="exs"></div>
+        <div class="chips" id="hist" aria-label="সর্বশেষ খোঁজা"></div>
+    </section>
+
+    <div class="res" id="res" aria-live="polite"></div>
+
+    <!-- অনুশীলন -->
+    <section class="glass box pr" aria-labelledby="pT">
+        <h2 id="pT">🎯 নিজে চেষ্টা করো</h2>
+        <p class="sub">নিচের বিক্রিয়কে বিক্রিয়া করলে কোন যৌগ তৈরি হয়? উৎপাদের সংকেত লেখো।</p>
+        <div class="rq" id="rq"></div>
+        <div class="row"><input class="inp" id="pin" type="text" placeholder="উৎপাদ লেখো… (যেমন: NaCl)" aria-label="উৎপাদ" autocomplete="off" spellcheck="false"><button class="btn" id="pchk" type="button">যাচাই করো</button><button class="btn ghost" id="pnext" type="button">🎲 আরেকটি</button></div>
+        <div class="fb" id="pfb" aria-live="polite"></div>
+    </section>
+
+    <!-- ধরন -->
+    <section class="glass box" aria-labelledby="tT">
+        <h2 id="tT">🧭 সংযোজন বিক্রিয়ার তিন রূপ</h2>
+        <p class="sub">দুই বা বেশি বিক্রিয়ক মিলে একটিমাত্র উৎপাদ তৈরি হলেই সেটি সংযোজন।</p>
+        <div class="types">
+            <div class="ty"><b>মৌল + মৌল</b><code>A + B → AB</code><p>Na + Cl₂, Mg + O₂, H₂ + O₂ ইত্যাদি। দুটি মৌল মিলে নতুন যৌগ।</p></div>
+            <div class="ty"><b>যৌগ + মৌল / যৌগ + যৌগ</b><code>AB + C → ABC</code><p>SO₂ + O₂, CaO + H₂O, NH₃ + HCl। অক্সাইড, এসিড ও লবণ তৈরির প্রধান পথ।</p></div>
+            <div class="ty"><b>অসম্পৃক্ত যৌগে সংযোজন (জৈব)</b><code>C=C + X–Y → X–C–C–Y</code><p>ইথিন ও ইথাইনের দ্বি/ত্রিবন্ধন ভেঙে নতুন পরমাণু যুক্ত হয়।</p></div>
+        </div>
+    </section>
+
+    <!-- সব বিক্রিয়া -->
+    <section class="glass box" aria-labelledby="lT">
+        <h2 id="lT">📚 সব সংযোজন বিক্রিয়ার তালিকা</h2>
+        <p class="sub" id="lsub"></p>
+        <div class="row"><input class="inp" id="lq" type="search" style="font:600 15px inherit;font-family:inherit" placeholder="খোঁজো… (যেমন: ক্লোরিন, অ্যামোনিয়া, ইথিন)" aria-label="তালিকায় খোঁজো" autocomplete="off"></div>
+        <div class="chips" id="ltabs" role="group" aria-label="তালিকার ধরন"></div>
+        <ul class="list" id="list" style="margin-top:14px"></ul>
+    </section>
+
+    <section class="glass box">
+        <h2>📝 ব্যবহারের নিয়ম</h2>
+        <ul class="notes">
+            <li>বিক্রিয়কগুলো <b>+</b>, স্পেস বা কমা দিয়ে আলাদা করো। ক্রম বদলালেও চলবে (Cl2+Na)।</li>
+            <li>বড়-ছোট হাতের অক্ষর কোনো সমস্যা নয়, তবে সংখ্যা সংকেতের অংশ: <b>Cl2</b> (Cl₂), <b>H2O</b> (H₂O)। সাবস্ক্রিপ্ট (Cl₂) বসালেও চলে।</li>
+            <li>বিক্রিয়কের আগে সহগ (2Na) লিখলে তা উপেক্ষা করা হয়। সমতা আমরা নিজেই করে দিই।</li>
+            <li>একই বিক্রিয়কে একাধিক উৎপাদ হতে পারে (যেমন C + O₂ → CO₂ বা CO), তখন সবগুলো দেখানো হয়।</li>
+            <li>তালিকায় না থাকা বিক্রিয়া দিলে কাছাকাছি বিক্রিয়ার পরামর্শ দেখানো হয়।</li>
+        </ul>
+    </section>
+</div>
+<div class="credit">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+
+<script>
+/* ফিরে যাওয়ার পেজ বদলাতে চাইলে শুধু এই লাইনটি বদলাও */
+const BACK_URL = 'reaction_page.html';
+/* নতুন বিক্রিয়া যোগ করতে R তালিকায় একটি লাইন যোগ করো:
+   [বিক্রিয়ক(কমা দিয়ে), বিক্রিয়কের সহগ, উৎপাদ, উৎপাদের সহগ, শর্ত, পর্যবেক্ষণ, মনে রাখার কথা, দল(e মৌল+মৌল · c যৌগ · o জৈব), তীর(ঐচ্ছিক ⇌)] */
+const R = [
+ ['Na,Cl2','2,1','NaCl',2,'উত্তপ্ত সোডিয়াম ক্লোরিন গ্যাসে প্রবেশ করালে','উজ্জ্বল হলুদ শিখায় জ্বলে সাদা NaCl (খাবার লবণ) তৈরি হয়','Na → Na⁺ ও Cl → Cl⁻, আয়নিক যৌগ','e'],
+ ['K,Cl2','2,1','KCl',2,'উত্তপ্ত অবস্থায়','তীব্র বিক্রিয়ায় সাদা KCl তৈরি হয়','ক্ষার ধাতুর সক্রিয়তা নিচের দিকে বাড়ে','e'],
+ ['Mg,Cl2','1,1','MgCl2',1,'উত্তপ্ত অবস্থায়','উজ্জ্বল আলো সহ সাদা MgCl₂','দ্বিযোজী Mg দুটি Cl-এর সাথে যুক্ত হয়','e'],
+ ['Al,Cl2','2,3','AlCl3',2,'উত্তপ্ত অ্যালুমিনিয়াম ক্লোরিনে','সাদা ধোঁয়া, AlCl₃ উর্ধ্বপাতিত হয়','ত্রিযোজী Al, তাই সহগ ২ ও ৩','e'],
+ ['Fe,Cl2','2,3','FeCl3',2,'উত্তপ্ত লোহা ক্লোরিনে','বাদামি ধোঁয়া, FeCl₃ তৈরি হয়','ক্লোরিন লোহাকে Fe³⁺ এ জারিত করে (FeCl₂ নয়)','e'],
+ ['Cu,Cl2','1,1','CuCl2',1,'উত্তপ্ত তামা ক্লোরিনে','বাদামি-হলুদ ধোঁয়া, CuCl₂ তৈরি','জলে দ্রবীভূত হলে নীলচে-সবুজ দ্রবণ','e'],
+ ['Mg,O2','2,1','MgO',2,'বাতাসে বা অক্সিজেনে জ্বালালে','চোখ ধাঁধানো উজ্জ্বল সাদা আলো ও সাদা ছাই (MgO)','আতশবাজি ও আগেকার ফ্ল্যাশ ফটোগ্রাফিতে ব্যবহৃত','e'],
+ ['Ca,O2','2,1','CaO',2,'উত্তপ্ত করলে','উজ্জ্বল শিখায় জ্বলে সাদা CaO তৈরি হয়','CaO পরে পানির সাথে Ca(OH)₂ হয়','e'],
+ ['Al,O2','4,3','Al2O3',2,'উত্তপ্ত করলে','উজ্জ্বল শিখায় সাদা Al₂O₃','Al₂O₃ এর পাতলা স্তর ভেতরের ধাতুকে রক্ষা করে','e'],
+ ['Fe,O2','3,2','Fe3O4',1,'লোহার তার বিশুদ্ধ অক্সিজেনে জ্বালালে','স্ফুলিঙ্গ ছড়িয়ে কালো Fe₃O₄ তৈরি হয়','আর্দ্র বাতাসে ধীরে ধীরে যা হয় সেটি মরিচা (আর্দ্র আয়রন অক্সাইড)','e'],
+ ['Cu,O2','2,1','CuO',2,'বাতাসে উত্তপ্ত করলে','লালচে তামা কালো CuO-তে রূপান্তরিত হয়','CuO কালো রঙের','e'],
+ ['Na,O2','4,1','Na2O',2,'বাতাসে খোলা রাখলে','উজ্জ্বল পৃষ্ঠ ম্লান হয়ে সাদা অক্সাইড জমে','তাই সোডিয়াম কেরোসিনে ডুবিয়ে রাখা হয়','e'],
+ ['S,O2','1,1','SO2',1,'জ্বালালে','নীল শিখা ও ঝাঁঝালো SO₂ গ্যাস','এসিড বৃষ্টির একটি কারণ','e'],
+ ['C,O2','1,1','CO2',1,'পর্যাপ্ত অক্সিজেনে জ্বালালে','তাপ নির্গত হয়, রঙহীন CO₂ গ্যাস','সম্পূর্ণ দহন','e'],
+ ['C,O2','2,1','CO',2,'সীমিত অক্সিজেনে জ্বালালে','বিষাক্ত CO গ্যাস উৎপন্ন হয়','অসম্পূর্ণ দহন; বদ্ধ ঘরে কয়লা পোড়ানো বিপজ্জনক','e'],
+ ['H2,O2','2,1','H2O',2,'স্ফুলিঙ্গ বা উচ্চ তাপে','বিস্ফোরণসহ পানির বাষ্প ও প্রচুর তাপ','হাইড্রোজেন পরিচ্ছন্ন জ্বালানি, দহনে শুধু পানি','e'],
+ ['H2,Cl2','1,1','HCl',2,'সূর্যালোক বা UV আলো','সবুজাভ-হলুদ রং মিলিয়ে যায়, HCl গ্যাস তৈরি হয়','অন্ধকারে ধীর, তীব্র আলোয় বিস্ফোরক','e'],
+ ['H2,I2','1,1','HI',2,'উত্তপ্ত করলে','বেগুনি আয়োডিন বাষ্পের রং ফিকে হয়','উভমুখী বিক্রিয়ার ক্লাসিক উদাহরণ','e','⇌'],
+ ['N2,H2','1,3','NH3',2,'Fe অনুঘটক, ≈৪৫০°C, ≈২০০ atm (হেবার প্রক্রিয়া)','অ্যামোনিয়ার ঝাঁঝালো গন্ধ','উভমুখী; কৃত্রিম সার তৈরির ভিত্তি','e','⇌'],
+ ['N2,O2','1,1','NO',2,'বিদ্যুৎ স্ফুলিঙ্গ বা ≈৩০০০°C','বর্ণহীন NO (তাপহারী বিক্রিয়া)','বজ্রপাতে নাইট্রোজেন স্থিরীকরণের ধাপ','e'],
+ ['Mg,N2','3,1','Mg3N2',1,'উত্তপ্ত করলে','হলদে-সবুজাভ Mg₃N₂','ম্যাগনেসিয়াম বাতাসে জ্বলে নাইট্রাইডও দেয়','e'],
+ ['Fe,S','1,1','FeS',1,'মিশ্রণ উত্তপ্ত করলে','ধূসর-কালো কঠিন FeS তৈরি হয়','মিশ্রণ ও যৌগের পার্থক্য বোঝানোর ক্লাসিক পরীক্ষা','e'],
+ ['CaO,H2O','1,1','Ca(OH)2',1,'সাধারণ অবস্থায়','প্রচুর তাপ নির্গত হয়, পানি ফুটে ওঠে; দ্রবণ ক্ষারীয়','চুন সজীবকরণ ও নির্মাণ কাজে','c'],
+ ['CaO,CO2','1,1','CaCO3',1,'উত্তপ্ত অবস্থায়','সাদা CaCO₃ তৈরি হয়','চুনাপাথরের বিয়োজনের বিপরীত বিক্রিয়া','c'],
+ ['Na2O,H2O','1,1','NaOH',2,'সাধারণ অবস্থায়','তাপ নির্গত হয়, ক্ষারীয় দ্রবণ','ক্ষারধর্মী অক্সাইড + পানি = ক্ষার','c'],
+ ['CO2,H2O','1,1','H2CO3',1,'সাধারণ অবস্থায়','দুর্বল কার্বনিক এসিড তৈরি, দ্রবণ হালকা অম্লীয়','সোডা ওয়াটারের টক স্বাদ','c','⇌'],
+ ['SO2,H2O','1,1','H2SO3',1,'সাধারণ অবস্থায়','সালফিউরাস এসিড; দ্রবণ অম্লীয়','এসিড বৃষ্টির একটি কারণ','c','⇌'],
+ ['SO3,H2O','1,1','H2SO4',1,'সাধারণ অবস্থায়','প্রচুর তাপ; তীব্র সালফিউরিক এসিড','শিল্পে SO₃ কে গাঢ় H₂SO₄-এ শোষণ করানো হয়','c'],
+ ['P2O5,H2O','1,3','H3PO4',2,'গরম পানিতে','ফসফরিক এসিড তৈরি হয়','অম্লধর্মী অক্সাইড + পানি = অক্সি-এসিড','c'],
+ ['SO2,O2','2,1','SO3',2,'V₂O₅ অনুঘটক, ≈৪৫০°C (স্পর্শ প্রক্রিয়া)','সাদা ধোঁয়াশা SO₃','সালফিউরিক এসিড তৈরির গুরুত্বপূর্ণ ধাপ','c','⇌'],
+ ['NO,O2','2,1','NO2',2,'বাতাসের সংস্পর্শে','বর্ণহীন NO বাদামি NO₂-তে পরিণত হয়','বজ্রপাতের সময় বাতাসে এই ধাপ ঘটে','c'],
+ ['CO,O2','2,1','CO2',2,'জ্বালালে','নীল শিখায় CO জ্বলে','CO গ্যাসীয় জ্বালানি ও বিষ','c'],
+ ['NH3,HCl','1,1','NH4Cl',1,'সাধারণ অবস্থায়','সাদা ধোঁয়া (NH₄Cl এর ক্ষুদ্র কণা)','দুটি গ্যাসের মুখ কাছাকাছি আনলে ধোঁয়া দেখা যায়','c'],
+ ['PCl3,Cl2','1,1','PCl5',1,'সাধারণ অবস্থায়','হালকা হলুদ কঠিন PCl₅','উভমুখী বিক্রিয়া','c','⇌'],
+ ['C2H4,H2','1,1','C2H6',1,'Ni অনুঘটক, ≈২০০°C (বা Pt/Pd সাধারণ তাপমাত্রায়)','অসম্পৃক্ত ইথিন সম্পৃক্ত ইথেনে রূপান্তরিত হয়','উদ্ভিজ্জ তেল থেকে বনস্পতি ঘি তৈরির মূল ধারণা','o'],
+ ['C2H4,Br2','1,1','C2H4Br2',1,'সাধারণ অবস্থায় (ব্রোমিন পানি)','ব্রোমিন পানির বাদামি রং বিবর্ণ হয়','অ্যালকিন শনাক্তকরণের পরীক্ষা','o'],
+ ['C2H4,Cl2','1,1','C2H4Cl2',1,'সাধারণ অবস্থায়','তৈলাক্ত তরল ১,২-ডাইক্লোরোইথেন','এ কারণেই অ্যালকিনকে "অলেফিন" (তেল-উৎপাদক) বলা হয়','o'],
+ ['C2H4,HBr','1,1','C2H5Br',1,'সাধারণ অবস্থায়','ব্রোমোইথেন তৈরি হয়','হ্যালো অ্যালকেন প্রস্তুতির পদ্ধতি','o'],
+ ['C2H4,H2O','1,1','C2H5OH',1,'H₃PO₄ অনুঘটক, ≈৩০০°C, উচ্চ চাপ','ইথানল উৎপন্ন হয় (হাইড্রেশন)','শিল্পে ইথানল উৎপাদনের একটি পদ্ধতি','o'],
+ ['C2H2,H2','1,1','C2H4',1,'Pd (লিন্ডলার) অনুঘটক','ত্রিবন্ধন দ্বিবন্ধনে নামে','আংশিক হাইড্রোজেনেশন','o'],
+ ['C2H2,H2','1,2','C2H6',1,'Ni অনুঘটক, উত্তপ্ত','দুই ধাপে সম্পূর্ণ সম্পৃক্ত ইথেন তৈরি','অতিরিক্ত H₂ থাকলে এ পর্যন্ত যায়','o'],
+ ['C2H2,Br2','1,1','C2H2Br2',1,'সাধারণ অবস্থায়','ব্রোমিন পানির রং বিবর্ণ হয়','প্রথম ধাপে দ্বিবন্ধনযুক্ত ডাইব্রোমাইড','o'],
+ ['C2H2,Br2','1,2','C2H2Br4',1,'অতিরিক্ত ব্রোমিনে','চারটি Br যুক্ত হয়ে সম্পৃক্ত টেট্রাব্রোমোইথেন','ত্রিবন্ধনে দুই ধাপে সংযোজন ঘটে','o'],
+ ['C2H2,HCl','1,1','C2H3Cl',1,'HgCl₂ অনুঘটক, ≈১৫০°C','ভিনাইল ক্লোরাইড তৈরি হয়','পিভিসি প্লাস্টিকের মনোমার','o'],
+ ['C2H2,H2O','1,1','C2H4O',1,'HgSO₄ ও লঘু H₂SO₄, ≈৮০°C','ইথান্যাল (CH₃CHO) তৈরি হয়','অ্যালডিহাইড প্রস্তুতির পদ্ধতি','o'],
+ ['C3H6,HBr','1,1','C3H7Br',1,'সাধারণ অবস্থায়','প্রধান উৎপাদ ২-ব্রোমোপ্রোপেন (মার্কনিকভ নিয়ম)','H যুক্ত হয় বেশি H-যুক্ত কার্বনে, Br যুক্ত হয় অপর কার্বনে','o'],
+ ['C6H6,H2','1,3','C6H12',1,'Ni অনুঘটক, ≈২০০°C, উচ্চ চাপ','বেনজিন সাইক্লোহেক্সেনে পরিণত হয়','বেনজিনে সংযোজন কঠিন, তাই কঠোর শর্ত লাগে','o'],
+ ['C6H6,Cl2','1,3','C6H6Cl6',1,'সূর্যালোক বা UV আলো','বেনজিন হেক্সাক্লোরাইড (BHC) তৈরি হয়','কীটনাশক হিসেবে একসময় ব্যবহৃত','o'],
+ ['C2H4O,HCN','1,1','C3H5NO',1,'ক্ষারীয় মাধ্যমে','সায়ানোহাইড্রিন তৈরি হয়','কার্বনিল মূলকে সংযোজন','o'],
+ ['CH2O,H2','1,1','CH4O',1,'Ni অনুঘটক','মিথানল (CH₃OH) তৈরি হয়','C=O বন্ধনের হাইড্রোজেনেশন','o']
+].map(a => ({ re: a[0].split(','), rc: a[1].split(',').map(Number), p: a[2], pc: a[3], cond: a[4], obs: a[5], note: a[6], g: a[7], ar: a[8] || '→' }));
+
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+$('brandLink').href = BACK_URL; $('backBtn').href = BACK_URL;
+$('themeBtn').addEventListener('click', () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); });
+function mk(t, c, x) { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+const SUBS = '₀₁₂₃₄₅₆₇₈₉';
+const sub = f => f.replace(/([A-Za-z)])(\d+)/g, (m, a, d) => a + d.replace(/\d/g, x => SUBS[x]));
+const unsub = s => s.replace(/[₀-₉]/g, d => String(SUBS.indexOf(d)));
+const norm = f => unsub(f).replace(/\s+/g, '').replace(/^\d+/, '').replace(/\((g|s|l|aq)\)$/i, '').toLowerCase();
+
+/* সংকেত থেকে পরমাণু গণনা (বন্ধনী সহ) */
+function parse(f) {
+    const tk = f.match(/[A-Z][a-z]?|\d+|\(|\)/g); if (!tk || tk.join('') !== f) return null; let i = 0;
+    function grp() { const c = {}; while (i < tk.length) { const t = tk[i]; if (t === '(') { i++; const sc = grp(); if (tk[i] !== ')') throw 0; i++; let m = 1; if (/^\d+$/.test(tk[i] || '')) m = +tk[i++]; for (const k in sc) c[k] = (c[k] || 0) + sc[k] * m; } else if (t === ')') break; else if (/^[A-Z]/.test(t)) { i++; let m = 1; if (/^\d+$/.test(tk[i] || '')) m = +tk[i++]; c[t] = (c[t] || 0) + m; } else throw 0; } return c; }
+    try { const c = grp(); return i === tk.length ? c : null; } catch (e) { return null; }
+}
+const elems = f => Object.keys(parse(f) || {});
+const side = (fs, cs) => { const t = {}; fs.forEach((f, k) => { const c = parse(f) || {}; for (const e in c) t[e] = (t[e] || 0) + c[e] * cs[k]; }); return t; };
+const keyOf = arr => arr.map(norm).sort().join('+');
+const IDX = {}; R.forEach(r => { (IDX[keyOf(r.re)] = IDX[keyOf(r.re)] || []).push(r); });
+const eqHtml = r => { const w = document.createElement('div'); w.className = 'eq';
+    const part = (f, c) => { const s = document.createElement('span'); if (c > 1) { const k = document.createElement('span'); k.className = 'c'; k.textContent = c; s.appendChild(k); } s.append(sub(f)); return s; };
+    r.re.forEach((f, i) => { if (i) w.append(' + '); w.appendChild(part(f, r.rc[i])); }); const ar = document.createElement('span'); ar.className = 'ar'; ar.textContent = r.ar; w.appendChild(ar); w.appendChild(part(r.p, r.pc)); return w; };
+const eqText = r => r.re.map((f, i) => (r.rc[i] > 1 ? r.rc[i] : '') + sub(f)).join(' + ') + ' ' + r.ar + ' ' + (r.pc > 1 ? r.pc : '') + sub(r.p);
+const kindOf = r => r.g === 'o' ? 'অসম্পৃক্ত/কার্বনিল যৌগে সংযোজন' : r.re.every(f => elems(f).length === 1) ? 'মৌল + মৌল → যৌগ' : r.re.some(f => elems(f).length === 1) ? 'যৌগ + মৌল → যৌগ' : 'যৌগ + যৌগ → যৌগ';
+const tokens = s => { let t = s.split(/→|⟶|⇌|->|=>|=/)[0]; return t.split(/[\s+,;]+/).map(x => x.trim()).filter(Boolean); };
+
+/* ---------- ইতিহাস ---------- */
+let hist = []; try { hist = JSON.parse(localStorage.getItem('synth_hist') || '[]'); } catch (e) {}
+function paintHist() { const h = $('hist'); h.replaceChildren(); if (!hist.length) return; h.appendChild(mk('span', '', '🕘 সর্বশেষ:')).style.cssText = 'font-size:13px;font-weight:700;color:var(--text-muted);align-self:center'; hist.forEach(x => { const b = mk('button', 'chip', x); b.type = 'button'; b.addEventListener('click', () => { $('inp').value = x; solve(); }); h.appendChild(b); }); }
+
+/* ---------- সমাধান ---------- */
+function preview() { const t = tokens($('inp').value), p = $('parsed'); p.replaceChildren(); if (!t.length) return; p.append('শনাক্ত: '); t.forEach(x => { const s = mk('span', '', sub(unsub(x).replace(/^\d+/, ''))); p.appendChild(s); }); }
+function resultCard(r, n) {
+    const c = mk('article', 'glass rc'); c.style.animationDelay = n * 90 + 'ms';
+    const tg = mk('div', 'tags'); tg.appendChild(mk('span', 'tag', kindOf(r))); if (r.ar === '⇌') tg.appendChild(mk('span', 'tag p', 'উভমুখী (⇌)')); if (r.g === 'o') tg.appendChild(mk('span', 'tag o', 'HSC জৈব')); c.appendChild(tg);
+    c.appendChild(eqHtml(r));
+    const cp = mk('div', 'cp'), cb = mk('button', 'btn ghost', '📋 সমীকরণ কপি'); cb.type = 'button'; cb.style.padding = '8px 14px'; cb.addEventListener('click', () => { if (navigator.clipboard) navigator.clipboard.writeText(eqText(r)).then(() => { cb.textContent = '✔ কপি হয়েছে'; setTimeout(() => cb.textContent = '📋 সমীকরণ কপি', 1500); }); }); cp.appendChild(cb); c.appendChild(cp);
+    const inf = mk('div', 'info'); [['⚙️ শর্ত', r.cond], ['👀 পর্যবেক্ষণ', r.obs], ['💡 মনে রাখো', r.note]].forEach(([l, v]) => { const d = mk('div', 'it'); d.appendChild(mk('small', '', l)); d.appendChild(mk('span', '', v)); inf.appendChild(d); }); c.appendChild(inf);
+    const L = side(r.re, r.rc), Rr = side([r.p], [r.pc]), es = [...new Set([...Object.keys(L), ...Object.keys(Rr)])];
+    const t = mk('table', 'bal'); const hd = t.createTHead().insertRow(); ['মৌল', 'বাঁ পাশে', 'ডান পাশে', 'মিল'].forEach(x => hd.appendChild(mk('th', '', x)));
+    const tb = t.createTBody(); es.forEach(e => { const row = tb.insertRow(); [e, bn(L[e] || 0), bn(Rr[e] || 0)].forEach(x => row.insertCell().textContent = x); const ok = (L[e] || 0) === (Rr[e] || 0); const cell = row.insertCell(); cell.textContent = ok ? '✔' : '✘'; cell.className = ok ? 'ok' : ''; });
+    c.appendChild(t);
+    const st = mk('ol', 'steps'); [
+        'বিক্রিয়ক শনাক্ত: ' + r.re.map(f => sub(f) + ' (' + (elems(f).length === 1 ? 'মৌল' : 'যৌগ') + ')').join(', ') + '।',
+        bn(r.re.length) + 'টি বিক্রিয়ক মিলে মাত্র একটি উৎপাদ (' + sub(r.p) + ') তৈরি হয়, তাই এটি সংযোজন বিক্রিয়া।',
+        'সমতাকরণ: প্রতিটি মৌলের পরমাণু সংখ্যা দুই পাশে সমান করতে সহগ বসানো হয়েছে (উপরের টেবিলে মিলিয়ে দেখো)।',
+        r.ar === '⇌' ? 'বিক্রিয়াটি উভমুখী, তাই তীর ⇌ দিয়ে লেখা হয়।' : 'বিক্রিয়াটি সাধারণত এক মুখী, তাই তীর → দিয়ে লেখা হয়।'
+    ].forEach(x => st.appendChild(mk('li', '', x))); c.appendChild(st);
+    return c;
+}
+function solve() {
+    const raw = $('inp').value, tk = tokens(raw), res = $('res'); res.replaceChildren(); if (!tk.length) { res.appendChild(mk('div', 'err', '')).innerHTML = ''; res.firstChild.append(Object.assign(mk('b', '', 'কিছু লেখা হয়নি'), {}), 'বিক্রিয়ক লেখো, যেমন Na + Cl2'); return; }
+    const found = IDX[keyOf(tk)];
+    if (found) { found.forEach((r, i) => res.appendChild(resultCard(r, i))); const key = tk.map(x => unsub(x).replace(/^\d+/, '')).join('+'); hist = [key].concat(hist.filter(x => x !== key)).slice(0, 5); try { localStorage.setItem('synth_hist', JSON.stringify(hist)); } catch (e) {} paintHist(); res.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const e = mk('div', 'err'); e.appendChild(mk('b', '', '😕 এই বিক্রিয়কের জন্য সংযোজন বিক্রিয়া পাওয়া গেল না'));
+    const bad = tk.filter(x => !parse(unsub(x).replace(/^\d+/, '').replace(/^[a-z]/, c => c.toUpperCase())) && !R.some(r => r.re.concat(r.p).map(norm).includes(norm(x))));
+    e.append(bad.length ? 'এই সংকেতগুলো চেনা গেল না: ' + bad.join(', ') + '। সংখ্যা সংকেতের অংশ (Cl2, H2O), তাই লেখার ধরন একবার দেখে নাও। ' : 'এই জোড়ার বিক্রিয়া আমাদের তালিকায় নেই বা এটি সংযোজন নয়। ');
+    const ks = tk.map(norm), near = R.filter(r => r.re.map(norm).some(k => ks.includes(k)));
+    if (near.length) { e.append('এগুলো দেখতে পারো:'); const ch = mk('div', 'chips sug'); const seen = new Set(); near.forEach(r => { const k = r.re.join('+'); if (seen.has(k)) return; seen.add(k); const b = mk('button', 'chip', k); b.type = 'button'; b.addEventListener('click', () => { $('inp').value = k; preview(); solve(); }); ch.appendChild(b); }); e.appendChild(ch); }
+    res.appendChild(e);
+}
+$('go').addEventListener('click', solve); $('clr').addEventListener('click', () => { $('inp').value = ''; $('res').replaceChildren(); $('parsed').replaceChildren(); $('inp').focus(); });
+$('inp').addEventListener('keydown', e => { if (e.key === 'Enter') solve(); }); $('inp').addEventListener('input', preview);
+
+/* ---------- উদাহরণ ট্যাব ---------- */
+const EXG = [['e', 'মৌল + মৌল'], ['c', 'যৌগ'], ['o', 'জৈব (HSC)']]; let exg = 'e';
+function paintEx() { const t = $('tabs'); t.replaceChildren(); EXG.forEach(([k, n]) => { const b = mk('button', 'chip tab' + (k === exg ? ' on' : ''), n); b.type = 'button'; b.addEventListener('click', () => { exg = k; paintEx(); }); t.appendChild(b); });
+    const x = $('exs'); x.replaceChildren(); const seen = new Set(); R.filter(r => r.g === exg).forEach(r => { const k = r.re.join('+'); if (seen.has(k)) return; seen.add(k); const b = mk('button', 'chip', sub(r.re.join(' + '))); b.type = 'button'; b.addEventListener('click', () => { $('inp').value = k; preview(); solve(); }); x.appendChild(b); }); }
+
+/* ---------- অনুশীলন ---------- */
+let cur = null;
+function nextQ() { cur = R[Math.floor(Math.random() * R.length)]; $('rq').textContent = cur.re.map(sub).join(' + ') + '  →  ?'; $('pin').value = ''; $('pfb').textContent = ''; $('pfb').className = 'fb'; }
+function check() { const v = unsub($('pin').value).replace(/\s+/g, ''); if (!v) { $('pin').focus(); return; } const a = parse(v) || parse(v.replace(/^[a-z]/, c => c.toUpperCase())), p = parse(cur.p);
+    const ok = (a && p && JSON.stringify(Object.entries(a).sort()) === JSON.stringify(Object.entries(p).sort())) || norm(v) === norm(cur.p);
+    const fb = $('pfb'); fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.textContent = ok ? '✅ সঠিক! ' + eqText(cur) : '❌ ঠিক হয়নি। সঠিক উৎপাদ: ' + sub(cur.p) + ' (' + eqText(cur) + ')'; }
+$('pchk').addEventListener('click', check); $('pnext').addEventListener('click', nextQ); $('pin').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+
+/* ---------- সব বিক্রিয়ার তালিকা ---------- */
+let lg = 'all';
+const LT = [['all', 'সব'], ['e', 'মৌল + মৌল'], ['c', 'যৌগ'], ['o', 'জৈব']];
+function paintList() { const q = $('lq').value.trim().toLowerCase(); const t = $('ltabs'); t.replaceChildren(); LT.forEach(([k, n]) => { const b = mk('button', 'chip tab' + (k === lg ? ' on' : ''), n); b.type = 'button'; b.addEventListener('click', () => { lg = k; paintList(); }); t.appendChild(b); });
+    const ul = $('list'); ul.replaceChildren(); const L = R.filter(r => (lg === 'all' || r.g === lg) && (!q || (eqText(r) + ' ' + r.re.join(' ') + ' ' + r.obs + ' ' + r.cond + ' ' + r.note).toLowerCase().includes(q)));
+    L.forEach(r => { const li = mk('li', 'li'); li.appendChild(mk('span', 'e', eqText(r))); const b = mk('button', '', 'দেখো'); b.type = 'button'; b.addEventListener('click', () => { $('inp').value = r.re.join('+'); preview(); solve(); }); li.appendChild(b); ul.appendChild(li); });
+    $('lsub').textContent = 'মোট ' + bn(R.length) + 'টি বিক্রিয়া · এখন দেখানো হচ্ছে ' + bn(L.length) + 'টি। "দেখো" চাপলে বিস্তারিত সমাধান আসবে।'; }
+$('lq').addEventListener('input', paintList);
+paintEx(); paintHist(); paintList(); nextQ();
+</script>
 </body>
 </html>
