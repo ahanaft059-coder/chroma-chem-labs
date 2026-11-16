@@ -110,6 +110,36 @@
         .empty { display: none; margin: 40px 0; padding: 30px; text-align: center; border-radius: 20px; font-weight: 600; color: var(--text-muted); background: var(--card-bg); border: 1px dashed var(--border-color); }
         .empty.show { display: block; }
 
+        /* ক্যাটাগরি কার্ড (games.html হোম) */
+        .section-title.prem { border-bottom-color: rgba(34,211,238,.55); color: #22d3ee; }
+        [data-theme="light"] .section-title.prem { color: #0e7490; }
+        .cats { display: grid; grid-template-columns: repeat(auto-fit,minmax(270px,1fr)); gap: 22px; margin-top: 26px; }
+        .cat { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; min-height: 290px; padding: 28px 26px; border-radius: 26px; text-decoration: none; color: var(--text-color);
+            background: var(--card-bg); border: 1.5px solid var(--section-border); box-shadow: var(--shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: transform .3s, border-color .3s, box-shadow .3s; }
+        .cat::before { content: ''; position: absolute; top: -90px; right: -70px; width: 240px; height: 240px; pointer-events: none; background: radial-gradient(circle,var(--gradient-glow),transparent 70%); }
+        .cat > * { position: relative; }
+        .cat:hover { transform: translateY(-6px); border-color: rgba(168,85,247,.75); box-shadow: 0 24px 44px -16px var(--gradient-glow); }
+        .cat.adv { border-color: rgba(251,191,36,.45); }
+        .cat.adv:hover { border-color: rgba(251,191,36,.9); box-shadow: 0 24px 44px -16px rgba(251,191,36,.3); }
+        .cat.prem { border-color: rgba(34,211,238,.5); }
+        .cat.prem:hover { border-color: rgba(34,211,238,.95); box-shadow: 0 24px 44px -16px rgba(34,211,238,.35); }
+        .cat-icon { width: 68px; height: 68px; border-radius: 20px; font-size: 34px; display: flex; align-items: center; justify-content: center; background: var(--card-solid); border: 1px solid var(--border-color); }
+        .cat h3 { margin: 0; font-size: 22px; font-weight: 800; line-height: 1.35; }
+        .cat.adv h3 { color: var(--gold); }
+        .cat.prem h3 { color: #22d3ee; }
+        [data-theme="light"] .cat.prem h3 { color: #0e7490; }
+        .cat p { margin: 0; font-size: 14.5px; line-height: 1.7; font-weight: 500; color: var(--text-muted); }
+        .cat .meta { margin-top: auto; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .cat .go { display: block; text-align: center; padding: 13px; border-radius: 14px; font-size: 15px; font-weight: 800; color: #fff; background: var(--gradient-primary); transition: transform .25s, box-shadow .25s; }
+        .cat:hover .go { transform: translateY(-2px); box-shadow: 0 10px 22px var(--gradient-glow); }
+        .cat.adv .go { color: #1a1204; background: linear-gradient(135deg,#fbbf24,#fb923c); }
+        .cat.prem .go { color: #06222b; background: linear-gradient(135deg,#22d3ee,#a78bfa); }
+        .game.prem { border-color: rgba(34,211,238,.5); }
+        .game.prem:hover { border-color: rgba(34,211,238,.95); box-shadow: 0 24px 44px -16px rgba(34,211,238,.35); }
+        .game.prem h3 { color: #22d3ee; }
+        [data-theme="light"] .game.prem h3 { color: #0e7490; }
+        .game.prem .play { color: #06222b; background: linear-gradient(135deg,#22d3ee,#a78bfa); }
+
         .credit-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 34px; z-index: 2500; display: flex; align-items: center; justify-content: center; font-size: .78rem; letter-spacing: .6px; color: #64748b; background: rgba(5,6,15,.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,.06); }
         [data-theme="light"] .credit-bar { background: rgba(255,255,255,.88); color: #475569; border-top-color: rgba(15,23,42,.1); }
         .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#22d3ee,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
@@ -132,16 +162,16 @@
         <section class="hero">
             <span class="pill">🎮 খেলতে খেলতে শেখো</span>
             <h1>রসায়ন গেম হাব</h1>
-            <p>তোমার পছন্দের গেমটি বেছে নাও এবং খেলা শুরু করো!</p>
+            <p>প্রথমে একটি ক্যাটাগরি বেছে নাও, তারপর তোমার পছন্দের গেমটি খেলো!</p>
         </section>
 
         <div class="tools">
             <input class="search" id="q" type="search" placeholder="গেম খোঁজো… (যেমন: মোল, IUPAC, গ্যাস)" aria-label="গেম খোঁজো" autocomplete="off">
             <div class="chips" id="chips" role="group" aria-label="ফিল্টার">
-                <button type="button" class="chip on" data-f="all">সব</button>
+                <button type="button" class="chip on" data-f="home">সব ক্যাটাগরি</button>
                 <button type="button" class="chip" data-f="core">মূল গেম</button>
                 <button type="button" class="chip" data-f="adv">অ্যাডভান্সড</button>
-                <button type="button" class="chip" data-f="open">খেলার উপযোগী</button>
+                <button type="button" class="chip" data-f="premium">স্মার্ট ও প্রিমিয়াম</button>
             </div>
         </div>
         <div class="count" id="count" aria-live="polite"></div>
@@ -179,11 +209,22 @@
             ['🔒', 'মেটাল এক্সট্রাকশন', 'খনিজ থেকে ধাতু নিষ্কাশনের সঠিক ধাপগুলো সাজাও।', null],
             ['🔒', 'কেমিক্যাল ইকুইলিব্রিয়াম', 'সাম্যাবস্থার নীতি প্রয়োগ করে বিক্রিয়ার দিক নির্ধারণ করো।', null]
         ];
+        const PREMIUM = [
+            ['🃏', 'Elementa — পিরিয়ডিক কার্ড ব্যাটল', 'Uno-এর মতো কার্ড গেম: যোজনী মেলাও, অ্যাকশন কার্ড খেলো আর শিল্ড টেস্টে পেনাল্টি আটকাও!', 'game21.html']
+        ];
+        /* তিনটি ক্যাটাগরি: নতুন ক্যাটাগরি যোগ করতে এখানে একটি অবজেক্ট আর নিচে GAMES-এ একটি লাইন যোগ করো */
+        const CATS = [
+            { key: 'core', cls: '', icon: '⚡', label: 'মূল গেমসমূহ (Core Games)', desc: 'রসায়নের বেসিক ধারণা ঝালিয়ে নেওয়ার জনপ্রিয় গেমগুলো এখানে।', btn: 'খেলুন ⚡' },
+            { key: 'adv', cls: 'adv', icon: '🚀', label: 'Advanced & New Games', desc: 'কোয়ান্টাম, গ্যাস, সলিউশনসহ নতুন ও কঠিন চ্যালেঞ্জ।', btn: 'খেলুন 🚀' },
+            { key: 'premium', cls: 'prem', icon: '💎', label: 'Smart & Premium Games', desc: 'স্মার্ট ও প্রিমিয়াম মানের বিশেষ গেম। আপাতত ১টি, নতুন গেম আসছে।', btn: 'খেলুন 💎', more: true }
+        ];
         const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
         const $ = id => document.getElementById(id);
         const GAMES = [];
         CORE.forEach((g, i) => GAMES.push({ n: i + 1, icon: g[0], t: g[1], d: g[2], href: g[3], kind: 'core' }));
         ADV.forEach((g, i) => GAMES.push({ n: CORE.length + i + 1, icon: g[0], t: g[1], d: g[2], href: g[3], kind: 'adv' }));
+        PREMIUM.forEach((g, i) => GAMES.push({ n: CORE.length + ADV.length + i + 1, icon: g[0], t: g[1], d: g[2], href: g[3], kind: 'premium' }));
+        const catOf = key => CATS.find(c => c.key === key);
 
         /* লগইন থাকলে ড্যাশবোর্ডে ফেরার লিংক; পেজটি সবার জন্য খোলা */
         try {
@@ -198,13 +239,16 @@
             document.documentElement.setAttribute('data-theme', next);
         });
 
-        let filter = 'all', query = '';
+        /* view: 'home' = তিন ক্যাটাগরির কার্ড, নয়তো ক্যাটাগরির key। লিংক হয় games.html#core, #adv, #premium */
+        let view = 'home', query = '';
         const norm = s => s.toLowerCase();
+        const viewFromHash = () => { const h = location.hash.slice(1); return CATS.some(c => c.key === h) ? h : 'home'; };
 
         function card(g) {
             const locked = !g.href;
+            const cat = catOf(g.kind);
             const el = document.createElement('article');
-            el.className = 'game' + (g.kind === 'adv' ? ' adv' : '') + (locked ? ' locked' : '');
+            el.className = 'game' + (cat.cls ? ' ' + cat.cls : '') + (locked ? ' locked' : '');
             const no = document.createElement('span'); no.className = 'no'; no.textContent = 'গেম ' + bn(g.n);
             const top = document.createElement('div');
             const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = g.icon; ic.setAttribute('aria-hidden', 'true');
@@ -213,36 +257,66 @@
             top.append(ic, h, p);
             const a = document.createElement('a'); a.className = 'play';
             if (locked) { a.textContent = 'শীঘ্রই আসছে 🔒'; a.setAttribute('aria-disabled', 'true'); a.tabIndex = -1; a.href = '#'; a.addEventListener('click', e => e.preventDefault()); }
-            else { a.href = g.href; a.textContent = g.kind === 'adv' ? 'খেলুন 🚀' : 'খেলুন ⚡'; a.setAttribute('aria-label', g.t + ' খেলুন'); }
+            else { a.href = g.href; a.textContent = cat.btn; a.setAttribute('aria-label', g.t + ' খেলুন'); }
             el.append(no, top, a);
             return el;
         }
-        function section(title, cls, list) {
+        function section(cat, list) {
             const wrap = document.createElement('div');
-            const h = document.createElement('h2'); h.className = 'section-title ' + cls; h.textContent = title;
+            const h = document.createElement('h2'); h.className = 'section-title ' + cat.cls; h.textContent = cat.icon + ' ' + cat.label;
             const grid = document.createElement('div'); grid.className = 'grid';
             list.forEach(g => grid.appendChild(card(g)));
             wrap.append(h, grid); return wrap;
         }
+        function catCard(cat) {
+            const list = GAMES.filter(g => g.kind === cat.key);
+            const open = list.filter(g => g.href).length;
+            const a = document.createElement('a');
+            a.className = 'cat' + (cat.cls ? ' ' + cat.cls : '');
+            a.href = '#' + cat.key;
+            a.setAttribute('aria-label', cat.label + ' — ' + bn(list.length) + 'টি গেম');
+            const ic = document.createElement('div'); ic.className = 'cat-icon'; ic.textContent = cat.icon; ic.setAttribute('aria-hidden', 'true');
+            const h = document.createElement('h3'); h.textContent = cat.label;
+            const p = document.createElement('p'); p.textContent = cat.desc;
+            const meta = document.createElement('div'); meta.className = 'meta';
+            meta.textContent = bn(list.length) + 'টি গেম · ' + bn(open) + 'টি খেলার উপযোগী' + (cat.more ? ' · আরও আসছে' : '');
+            const go = document.createElement('span'); go.className = 'go'; go.textContent = 'গেমগুলো দেখো →';
+            a.append(ic, h, p, meta, go);
+            return a;
+        }
         function render() {
             const q = norm(query.trim());
-            const list = GAMES.filter(g =>
-                (filter === 'all' || filter === g.kind || (filter === 'open' && g.href)) &&
-                (!q || norm(g.t + ' ' + g.d).includes(q)));
             const root = $('sections'); root.replaceChildren();
-            const core = list.filter(g => g.kind === 'core'), adv = list.filter(g => g.kind === 'adv');
-            if (core.length) root.appendChild(section('⚡ মূল গেমসমূহ (Core Games)', '', core));
-            if (adv.length) root.appendChild(section('🚀 Advanced & New Games', 'adv', adv));
-            $('empty').classList.toggle('show', !list.length);
-            const open = list.filter(g => g.href).length;
-            $('count').textContent = bn(list.length) + 'টি গেম দেখানো হচ্ছে · ' + bn(open) + 'টি খেলার উপযোগী';
+            let shown = [];
+            if (q) {
+                /* সার্চ করলে সব ক্যাটাগরি থেকে মিলে যাওয়া গেম দেখাবে */
+                CATS.forEach(cat => {
+                    const list = GAMES.filter(g => g.kind === cat.key && norm(g.t + ' ' + g.d).includes(q));
+                    if (list.length) { root.appendChild(section(cat, list)); shown = shown.concat(list); }
+                });
+            } else if (view === 'home') {
+                const grid = document.createElement('div'); grid.className = 'cats';
+                CATS.forEach(cat => grid.appendChild(catCard(cat)));
+                root.appendChild(grid);
+            } else {
+                const cat = catOf(view);
+                shown = GAMES.filter(g => g.kind === view);
+                root.appendChild(section(cat, shown));
+            }
+            $('empty').classList.toggle('show', !!q && !shown.length);
+            if (!q && view === 'home') $('count').textContent = bn(CATS.length) + 'টি ক্যাটাগরি · মোট ' + bn(GAMES.length) + 'টি গেম';
+            else $('count').textContent = bn(shown.length) + 'টি গেম দেখানো হচ্ছে · ' + bn(shown.filter(g => g.href).length) + 'টি খেলার উপযোগী';
+            document.querySelectorAll('#chips .chip').forEach(x => x.classList.toggle('on', !q && x.dataset.f === view));
         }
         $('q').addEventListener('input', e => { query = e.target.value; render(); });
         document.querySelectorAll('#chips .chip').forEach(b => b.addEventListener('click', () => {
-            filter = b.dataset.f;
-            document.querySelectorAll('#chips .chip').forEach(x => x.classList.toggle('on', x === b));
-            render();
+            $('q').value = ''; query = '';
+            const next = b.dataset.f === 'home' ? '' : b.dataset.f;
+            if (location.hash.slice(1) === next) { view = viewFromHash(); render(); }
+            else location.hash = next;
         }));
+        window.addEventListener('hashchange', () => { view = viewFromHash(); render(); window.scrollTo(0, 0); });
+        view = viewFromHash();
         render();
     </script>
 </body>
