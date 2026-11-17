@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060f">
+<title>সমতাকরণ ক্যালকুলেটর | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function () {
+    let t = 'dark';
+    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg-color:#eef2f9;--card-bg:rgba(255,255,255,.76);--card-solid:#fff;--text-color:#0f172a;--text-muted:#5b6b82;--border-color:rgba(15,23,42,.12);--shadow:0 10px 30px -5px rgba(15,23,42,.08);--section-border:rgba(37,99,235,.34);--gradient-primary:linear-gradient(135deg,#2563eb,#06b6d4);--gradient-glow:rgba(37,99,235,.22);--grid-line:rgba(15,23,42,.05);--blob-opacity:.22;--accent:#2563eb;--good:#059669;--bad:#e11d48;--on:#fff;--mono:ui-monospace,Menlo,Consolas,monospace}
+[data-theme="dark"]{--bg-color:#05060f;--card-bg:rgba(16,20,36,.62);--card-solid:#0b0f1c;--text-color:#f8fafc;--text-muted:#94a3b8;--border-color:rgba(255,255,255,.1);--shadow:0 20px 40px -15px rgba(0,0,0,.7);--section-border:rgba(96,165,250,.38);--gradient-primary:linear-gradient(135deg,#60a5fa,#22d3ee);--gradient-glow:rgba(96,165,250,.28);--grid-line:rgba(255,255,255,.035);--blob-opacity:.42;--accent:#60a5fa;--good:#34d399;--bad:#fb7185;--on:#04101f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;padding:18px 18px 64px;font-family:'Plus Jakarta Sans','Hind Siliguri','Segoe UI',system-ui,sans-serif;background:var(--bg-color);color:var(--text-color);transition:background .4s,color .4s;animation:pg .6s ease both}
+@keyframes pg{from{opacity:0}}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:var(--blob-opacity);animation:dr 26s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:#2563eb;top:-150px;left:-120px}.b2{width:620px;height:620px;background:#2563eb;bottom:-230px;right:-170px;animation-duration:32s}
+@keyframes dr{to{transform:translate(70px,50px) scale(1.15)}}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:52px 52px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 78%)}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.wrap{position:relative;z-index:1;max-width:960px;margin:0 auto}
+.top{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;margin-bottom:28px;border-radius:24px;background:var(--card-bg);border:1.5px solid var(--border-color);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-color)}
+.orb{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#fff,#60a5fa 55%,#06b6d4);box-shadow:0 0 18px #60a5fa,0 0 34px rgba(6,182,212,.6)}
+.brand b{display:block;font-size:18px;font-weight:800;line-height:1.2}.brand small{display:block;font-size:12px;font-weight:700;color:var(--accent)}
+.tr{display:flex;align-items:center;gap:10px}
+.ib{width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:16px;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .3s}.ib:hover{transform:rotate(180deg)}
+.bk{display:inline-flex;align-items:center;padding:11px 18px;border-radius:14px;font-size:14px;font-weight:700;text-decoration:none;color:var(--text-color);background:var(--card-solid);border:1px solid var(--border-color);transition:transform .25s,border-color .25s}.bk:hover{transform:translateX(-3px);border-color:var(--accent)}
+.hero{text-align:center;margin-bottom:24px}
+.pill{display:inline-block;padding:6px 16px;border-radius:30px;font-size:13px;font-weight:700;color:var(--accent);background:rgba(37,99,235,.1);border:1px solid var(--section-border)}
+.hero h1{margin:14px 0 10px;font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.3;letter-spacing:-.5px;background:var(--gradient-primary);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:200% center}}
+.hero p{margin:0 auto;max-width:620px;font-size:16px;line-height:1.75;font-weight:500;color:var(--text-muted)}
+.demo{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;padding:10px 20px;border-radius:18px;font:700 16px var(--mono);background:var(--card-solid);border:1px solid var(--border-color)}
+.demo .a{color:#fb7185}.demo .b{color:#60a5fa}.demo .ar{color:var(--accent)}
+/* ---------- অপশন বাছাই ---------- */
+.picks{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:26px 0 10px}
+.pk{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:28px 22px 22px;text-align:left;font:inherit;cursor:pointer;color:var(--text-color);border-radius:26px;background:var(--card-bg);border:1.5px solid var(--section-border);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .3s,border-color .3s,box-shadow .3s;animation:rs .5s ease both}
+.pk::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:var(--c)}
+.pk::after{content:'';position:absolute;top:-70px;right:-50px;width:200px;height:200px;pointer-events:none;background:radial-gradient(circle,color-mix(in srgb,var(--c) 30%,transparent),transparent 70%)}
+.pk:hover{transform:translateY(-8px);border-color:var(--c);box-shadow:0 26px 46px -16px color-mix(in srgb,var(--c) 55%,transparent)}
+.pk .big{position:relative;z-index:1;width:64px;height:64px;border-radius:20px;font-size:32px;display:flex;align-items:center;justify-content:center;background:var(--card-solid);border:2px solid var(--c)}
+.pk h3{position:relative;z-index:1;margin:0;font-size:22px;font-weight:800}.pk p{position:relative;z-index:1;margin:0;font-size:14px;line-height:1.7;font-weight:500;color:var(--text-muted)}
+.pk .go{position:relative;z-index:1;margin-top:auto;font-size:14px;font-weight:800;color:var(--c)}
+.pk:nth-child(2){animation-delay:.07s}.pk:nth-child(3){animation-delay:.14s}
+@media(max-width:820px){.picks{grid-template-columns:1fr}}
+.modebar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:8px;border-radius:22px;background:var(--card-bg);border:1.5px solid var(--border-color);backdrop-filter:blur(14px)}
+.mb{flex:1 1 160px;padding:12px 14px;font:inherit;font-size:14.5px;font-weight:800;cursor:pointer;color:var(--text-muted);background:transparent;border:0;border-radius:16px;transition:background .25s,color .25s}
+.mb:hover{color:var(--text-color)}.mb.on{color:var(--on);background:var(--gradient-primary);box-shadow:0 8px 20px var(--gradient-glow)}
+.glass{position:relative;overflow:hidden;background:var(--card-bg);border:1.5px solid var(--section-border);border-radius:26px;box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.glass::before{content:'';position:absolute;top:-80px;right:-60px;width:220px;height:220px;pointer-events:none;background:radial-gradient(circle,var(--gradient-glow),transparent 70%)}
+.glass>*{position:relative}
+.box{padding:26px;margin-bottom:22px}
+.box h2{margin:0 0 6px;font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
+.sub{margin:0 0 16px;font-size:14px;line-height:1.7;color:var(--text-muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.inp{flex:1 1 260px;font:700 17px var(--mono);padding:14px 18px;border-radius:16px;color:var(--text-color);background:var(--card-solid);border:2px solid var(--border-color);outline:none;transition:border-color .25s,box-shadow .25s}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--gradient-glow)}
+select.inp{flex:1 1 180px;font-family:inherit;font-size:15px;cursor:pointer}
+.btn{padding:14px 24px;font:inherit;font-size:15px;font-weight:800;cursor:pointer;color:var(--on);background:var(--gradient-primary);border:0;border-radius:16px;box-shadow:0 8px 20px var(--gradient-glow);transition:transform .25s}.btn:hover{transform:translateY(-2px)}
+.btn.ghost{color:var(--text-color);background:transparent;border:1.5px solid var(--border-color);box-shadow:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{padding:8px 14px;font:700 13.5px var(--mono);cursor:pointer;color:var(--text-color);background:var(--card-solid);border:1.5px solid var(--border-color);border-radius:30px;transition:transform .2s,border-color .2s}
+.chip:hover{transform:translateY(-2px);border-color:var(--accent)}
+.chip.tab{font-family:inherit;color:var(--text-muted)}.chip.tab.on{color:var(--on);background:var(--gradient-primary);border-color:transparent}
+.parsed{min-height:34px;margin-top:12px;font:700 14px var(--mono);color:var(--text-muted)}
+.parsed span{display:inline-block;margin:0 4px 4px 0;padding:4px 12px;border-radius:10px;color:var(--text-color);background:rgba(37,99,235,.12);border:1px solid var(--section-border)}
+.rc{padding:24px;margin-bottom:16px;animation:rs .45s ease both}
+@keyframes rs{from{opacity:0;transform:translateY(12px)}}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tag{padding:3px 12px;border-radius:20px;font-size:12px;font-weight:800;color:var(--accent);background:rgba(37,99,235,.1);border:1px solid var(--section-border)}
+.tag.o{color:#fb923c;background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.4)}.tag.p{color:#a78bfa;background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.4)}
+.eq{font:800 clamp(1.15rem,3.6vw,1.7rem) var(--mono);line-height:1.7;word-break:break-word}
+.eq .c{color:#fbbf24}.eq .ar{color:var(--accent);margin:0 6px}
+.cp{display:flex;gap:8px;margin-top:10px}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:16px}
+.it{padding:12px 14px;border-radius:16px;background:var(--card-solid);border:1px solid var(--border-color)}
+.it small{display:block;margin-bottom:5px;font-size:12px;font-weight:800;color:var(--text-muted)}.it span{font-size:14.5px;line-height:1.7;font-weight:600}
+.bal{width:100%;margin-top:16px;border-collapse:collapse;font:700 14px var(--mono);text-align:center}
+.bal th,.bal td{padding:8px 10px;border-bottom:1px solid var(--border-color)}.bal th{font-size:12px;color:var(--text-muted);font-family:inherit}.bal td.ok{color:var(--good)}
+.steps{margin:16px 0 0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:8px}
+.steps li{counter-increment:s;position:relative;padding:10px 14px 10px 46px;font-size:14.5px;line-height:1.7;color:var(--text-muted);background:var(--card-solid);border-radius:14px;border:1px solid var(--border-color)}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--on);background:var(--gradient-primary)}
+.err{padding:20px;border-radius:18px;font-size:15px;line-height:1.75;font-weight:600;color:var(--bad);background:rgba(37,99,235,.08);border:1px dashed rgba(37,99,235,.45)}
+.err b{display:block;margin-bottom:4px}.sug{color:var(--text-color)}
+.fb{min-height:26px;margin-top:12px;font-size:14.5px;line-height:1.7;font-weight:700}.fb.ok{color:var(--good)}.fb.no{color:var(--bad)}
+.list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.li{border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color);overflow:hidden}
+.li summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none}
+.li summary::-webkit-details-marker{display:none}.li summary::after{content:'▾';margin-left:auto;color:var(--text-muted);transition:transform .2s}.li[open] summary::after{transform:rotate(180deg)}
+.li .e{font:700 14px var(--mono);line-height:1.6;word-break:break-word}
+.li .d{padding:0 14px 14px;display:grid;gap:8px;font-size:14px;line-height:1.7;color:var(--text-muted)}.li .d b{color:var(--text-color)}
+.li .d button{justify-self:start;padding:7px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--text-color);background:transparent;border:1px solid var(--border-color);border-radius:10px}
+.acc{display:flex;flex-direction:column;gap:10px}
+.acc details{border-radius:18px;background:var(--card-solid);border:1px solid var(--border-color)}
+.acc summary{padding:14px 18px;cursor:pointer;font-size:15.5px;font-weight:800;list-style:none;display:flex;align-items:center;gap:10px}
+.acc summary::-webkit-details-marker{display:none}.acc summary::after{content:'＋';margin-left:auto;color:var(--accent);font-size:18px}.acc details[open] summary::after{content:'－'}
+.acc .ab{padding:0 18px 16px;font-size:14.5px;line-height:1.85;color:var(--text-muted)}.acc .ab p{margin:0 0 8px}.acc .ab code{font:700 13.5px var(--mono);color:var(--accent);background:rgba(37,99,235,.1);padding:2px 8px;border-radius:8px}
+.acc .ab ul{margin:6px 0 0;padding-left:20px}
+.xc{display:grid;gap:12px;margin-top:16px}
+.xc .step{padding:12px 16px;border-radius:14px;font-size:14.5px;line-height:1.8;background:var(--card-solid);border:1px solid var(--border-color)}
+.xc .res2{padding:16px;border-radius:18px;text-align:center;font:800 clamp(1.4rem,4vw,2rem) var(--mono);color:var(--on);background:var(--gradient-primary)}
+.xc .res2 small{display:block;margin-top:4px;font:700 14px 'Plus Jakarta Sans','Hind Siliguri',sans-serif}
+.qh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;font-weight:800;color:var(--text-muted)}
+.qbar{height:8px;margin:10px 0 18px;border-radius:8px;background:var(--border-color);overflow:hidden}.qbar i{display:block;height:100%;width:0;background:var(--gradient-primary);transition:width .4s}
+.qq{margin:0 0 6px;font-size:14px;font-weight:700;color:var(--text-muted)}
+.qeq{margin:0 0 16px;font:800 clamp(1.2rem,3.8vw,1.8rem) var(--mono);line-height:1.8;word-break:break-word}
+.qeq input{width:58px;margin:0 4px;padding:6px 4px;text-align:center;font:800 inherit;color:var(--text-color);background:var(--card-solid);border:2px solid var(--accent);border-radius:12px;outline:none}
+.qeq input:focus{box-shadow:0 0 0 4px var(--gradient-glow)}.qeq input.right{border-color:var(--good);background:rgba(37,99,235,.15)}.qeq input.wrong{border-color:var(--bad);background:rgba(225,29,72,.18)}
+.opts{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}.opts label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:800;color:var(--text-muted);flex:1 1 160px}
+.big2{text-align:center;padding:10px 0}.big2 b{display:block;font-size:3rem;line-height:1.2;background:var(--gradient-primary);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.wr{margin:0 0 8px;padding:10px 14px;border-radius:14px;font:700 14px var(--mono);line-height:1.7;background:var(--card-solid);border:1px solid var(--border-color)}
+.credit{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:2500;display:flex;align-items:center;justify-content:center;font-size:.78rem;letter-spacing:.6px;color:#64748b;background:rgba(5,6,15,.8);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.06)}
+[data-theme="light"] .credit{background:rgba(255,255,255,.88);color:#475569;border-top-color:rgba(15,23,42,.1)}
+.credit span{margin-left:5px;font-weight:700;background:linear-gradient(90deg,#60a5fa,#22d3ee);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@media(max-width:700px){.bk .long{display:none}.box{padding:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.mcq{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:6px}
+.mcq button{padding:14px;font:inherit;font-size:15px;font-weight:800;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:2px solid var(--border-color);border-radius:16px;transition:transform .2s,border-color .2s}
+.mcq button:hover:not(:disabled){transform:translateY(-2px);border-color:var(--accent)}.mcq button.right{color:#fff;background:#059669;border-color:#059669}.mcq button.wrong{color:#fff;background:#e11d48;border-color:#e11d48}
+@media(max-width:520px){.mcq{grid-template-columns:1fr}}
+.rule{padding:16px 18px;border-radius:18px;margin-top:14px;background:var(--card-solid);border:1px solid var(--border-color);border-left:5px solid var(--accent)}
+.rule b{display:block;margin-bottom:4px;font:800 15px var(--mono);color:var(--accent)}.rule p{margin:0;font-size:14px;line-height:1.75;color:var(--text-muted)}
+.exl{display:grid;gap:8px;margin-top:12px}.exl .x{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}.exl .x span{flex:1;font:700 14px var(--mono);line-height:1.6;word-break:break-word}.exl .x button{padding:6px 12px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--text-color);background:transparent;border:1px solid var(--border-color);border-radius:10px}
+
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}@media(max-width:600px){.ag{grid-template-columns:1fr}}
+.ag .a{padding:14px 16px;border-radius:18px;background:var(--card-solid);border:1px solid var(--border-color)}.ag .a small{display:block;margin-bottom:6px;font-size:12px;font-weight:800;color:var(--text-muted)}.ag .a b{display:block;font:800 18px var(--mono)}.ag .a span{display:block;margin-top:4px;font-size:13px;line-height:1.6;color:var(--text-muted)}
+.ag .a.ox{border-left:5px solid #f59e0b}.ag .a.rd{border-left:5px solid #22d3ee}
+.kd{margin-top:16px}.kd h4{margin:0 0 8px;font-size:15px;font-weight:800}.hf{padding:10px 14px;margin-bottom:8px;border-radius:14px;font:700 14.5px var(--mono);line-height:1.7;background:var(--card-solid);border:1px solid var(--border-color);word-break:break-word}.hf em{font:800 11.5px 'Plus Jakarta Sans','Hind Siliguri',sans-serif;font-style:normal;margin-right:8px;padding:2px 8px;border-radius:20px;color:#fff}.hf em.ox{background:#d97706}.hf em.rd{background:#0891b2}
+.etot{margin-top:10px;font-size:14px;font-weight:700;color:var(--text-muted)}.etot b{color:var(--accent)}
+.act{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0 4px;font:700 15px var(--mono)}.act span{padding:4px 10px;border-radius:10px;background:var(--card-solid);border:1px solid var(--border-color)}.act span.h{color:#f59e0b}.act i{font-style:normal;color:var(--text-muted)}
+.onr{display:grid;gap:8px;margin-top:14px}.onr .o{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color)}.onr .o b{min-width:64px;font:800 22px var(--mono);color:var(--accent)}.onr .o span{font-size:14px;line-height:1.7;color:var(--text-muted)}
+
+.map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 12px;margin:16px 0 4px;padding:14px;border-radius:18px;background:var(--card-solid);border:1px dashed var(--border-color);font:800 15px var(--mono)}
+.map i{font-style:normal;color:var(--text-muted)}.map span{padding:6px 12px;border-radius:12px;border:1.5px solid var(--border-color);background:var(--card-bg)}.map small{display:block;margin-bottom:2px;font:700 10.5px 'Plus Jakarta Sans','Hind Siliguri',sans-serif;color:var(--text-muted)}
+.map .ds{border-color:#f59e0b}.map .dd{border-color:#22d3ee}
+.pos{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0 0;font:700 14px var(--mono)}.pos span{padding:4px 10px;border-radius:10px;background:var(--card-solid);border:1px solid var(--border-color)}.pos span.a{background:#f59e0b;color:#1a1204;border-color:#f59e0b}.pos span.b{background:#22d3ee;color:#04161a;border-color:#22d3ee}.pos span.h{color:#f59e0b}.pos i{font-style:normal;color:var(--text-muted)}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}.yn button{padding:16px;font:inherit;font-size:16px;font-weight:800;cursor:pointer;color:var(--text-color);background:var(--card-solid);border:2px solid var(--border-color);border-radius:16px;transition:transform .2s,border-color .2s}.yn button:hover:not(:disabled){transform:translateY(-2px);border-color:var(--accent)}.yn button.right{color:#fff;background:#059669;border-color:#059669}.yn button.wrong{color:#fff;background:#e11d48;border-color:#e11d48}
+.tl2{display:flex;gap:8px;margin:0 0 12px}.tl2 button{flex:1;padding:10px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;color:var(--text-muted);background:var(--card-solid);border:1.5px solid var(--border-color);border-radius:14px}.tl2 button.on{color:var(--on);background:var(--gradient-primary);border-color:transparent}
+
+.eqin{font:700 18px var(--mono)}
+.sol{display:grid;gap:8px;margin-top:14px}.sol .s{padding:12px 16px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color);font-size:14.5px;line-height:1.85;color:var(--text-muted)}.sol .s b{color:var(--text-color)}.sol .s code{font:700 14px var(--mono);color:var(--accent);background:rgba(37,99,235,.1);padding:2px 8px;border-radius:8px}
+.mt{width:100%;margin-top:14px;border-collapse:collapse;font:700 13.5px var(--mono);text-align:center}.mt th,.mt td{padding:8px 10px;border-bottom:1px solid var(--border-color)}.mt th{font-size:12px;color:var(--text-muted);font-family:inherit}
+.warn{padding:12px 16px;margin-top:12px;border-radius:14px;font-size:14px;line-height:1.7;font-weight:600;color:#b45309;background:rgba(245,158,11,.12);border:1px dashed rgba(245,158,11,.5)}[data-theme="dark"] .warn{color:#fbbf24}
+.stp{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.opt2{display:grid;gap:10px;margin-bottom:6px}.opt2 button{padding:14px 16px;text-align:left;font:700 clamp(.95rem,3vw,1.15rem) var(--mono);cursor:pointer;color:var(--text-color);background:var(--card-solid);border:2px solid var(--border-color);border-radius:16px;transition:transform .2s,border-color .2s;word-break:break-word}.opt2 button:hover:not(:disabled){transform:translateY(-2px);border-color:var(--accent)}.opt2 button.right{color:#fff;background:#059669;border-color:#059669}.opt2 button.wrong{color:#fff;background:#e11d48;border-color:#e11d48}
+.fcs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.fcs span{padding:6px 12px;border-radius:12px;font:700 14px var(--mono);background:var(--card-solid);border:1px solid var(--border-color)}.fcs span b{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div></div>
+<div class="grid-bg"></div>
+<div class="wrap">
+    <header class="top">
+        <a class="brand" id="brandLink" href="reaction_page.html"><span class="orb"></span><span><b>Lab Alchemy</b><small>Equation Balancer</small></span></a>
+        <div class="tr">
+            <button class="ib" id="themeBtn" title="থিম পরিবর্তন করো" aria-label="থিম পরিবর্তন করো">🌓</button>
+            <a class="bk" id="backBtn" href="reaction_page.html">← <span class="long">বিক্রিয়া ল্যাব</span></a>
+        </div>
+    </header>
+    <section class="hero">
+        <span class="pill">⚖️ বাঁ পাশ = ডান পাশ</span>
+        <h1>সমতাকরণ ক্যালকুলেটর</h1>
+        <p id="heroP">বিক্রিয়ক ও উৎপাদের পরমাণুর সংখ্যা সমান করার গাণিতিক ট্রিকস এবং বিক্রিয়ার সমতা নির্ণয়ের লাইভ টুল। তুমি কী করতে চাও? বেছে নাও।</p>
+        <div class="demo" aria-hidden="true"><span class="a">H₂</span><span>+</span><span class="b">O₂</span><span class="ar">⇒</span><span>2H₂</span><span>+</span><span class="b">O₂</span><span class="ar">⟶</span><span>2H₂O</span></div>
+    </section>
+    <div class="picks" id="picks"></div>
+    <nav class="modebar" id="modebar" hidden aria-label="অপশন"></nav>
+
+    <!-- অপশন ১ -->
+    <section id="m-solve" hidden>
+        <div class="glass box">
+            <h2>✍️ লাইভ সমতাকরণ</h2>
+            <p class="sub">অসমতাকৃত সমীকরণ লেখো, যেমন: <b>H2 + O2 → H2O</b>। তীর হিসেবে <b>→</b>, <b>-&gt;</b> বা <b>=</b> যেকোনোটি চলে। লেখার সাথে সাথেই সমতাকৃত সমীকরণ আসবে। মৌলের প্রতীকে বড়-ছোট হাতের অক্ষর ঠিক রাখো (CO আর Co এক নয়)।</p>
+            <div class="row">
+                <input class="inp eqin" id="inp" type="text" placeholder="যেমন: C3H8 + O2 → CO2 + H2O" aria-label="অসমতাকৃত সমীকরণ" autocomplete="off" spellcheck="false">
+                <button class="btn" id="go" type="button">সমতা করো</button>
+                <button class="btn ghost" id="clr" type="button">মুছো</button>
+            </div>
+            <div class="parsed" id="parsed" aria-live="polite"></div>
+            <div class="chips" id="tabs" role="group" aria-label="উদাহরণের ধরন"></div>
+            <div class="chips" id="exs"></div>
+            <div class="chips" id="hist" aria-label="সর্বশেষ"></div>
+        </div>
+        <div id="res" aria-live="polite"></div>
+        <div class="glass box"><h2>📝 ব্যবহারের নিয়ম</h2>
+            <p class="sub" style="margin:0">• বিক্রিয়ক ও উৎপাদ আলাদা করতে <b>→</b>, <b>-&gt;</b>, <b>=</b> বা <b>⇒</b> দাও। পদার্থগুলো <b>+</b> দিয়ে আলাদা করো।<br>• সংখ্যা সংকেতের অংশ: <b>H2O</b> (H₂O), <b>Ca(OH)2</b>, <b>Al2(SO4)3</b>। সাবস্ক্রিপ্ট (H₂O) বসালেও চলে। পানিযুক্ত লবণে <b>CuSO4.5H2O</b> লেখো।<br>• আগে থেকে সহগ লিখে দিলে (2H2) তা উপেক্ষা করা হয়।<br>• আয়নের আধান (Fe³⁺) এখানে সমর্থিত নয়। শুধু নিরপেক্ষ অণু ও যৌগ দাও।<br>• একটি মৌল শুধু এক পাশে থাকলে সমীকরণ সমতা করা যায় না, তখন কোন মৌল সমস্যা করছে বলে দেওয়া হয়।</p></div>
+    </section>
+
+    <!-- অপশন ২ -->
+    <section id="m-learn" hidden>
+        <div class="glass box"><h2>🔎 কীভাবে হয়, ট্রিকসসহ শেখো</h2><p class="sub">প্রতিটি শিরোনামে চাপ দিয়ে খুলো। নিচে ধাপে ধাপে বীজগাণিতিক পদ্ধতি আর সংকেত বিশ্লেষক টুল আছে।</p><div class="acc" id="lessons"></div></div>
+        <div class="glass box">
+            <h2>🪜 ধাপে ধাপে দেখো (বীজগাণিতিক পদ্ধতি)</h2>
+            <p class="sub">একটি সমীকরণ বেছে নাও, তারপর "পরের ধাপ" চেপে একটি একটি করে সমাধান খুলো।</p>
+            <div class="row"><select class="inp" id="sel" aria-label="সমীকরণ বাছাই"></select><button class="btn ghost" id="srs" type="button">⟲ আবার শুরু</button></div>
+            <div class="sol" id="sol" aria-live="polite"></div>
+            <div class="stp"><button class="btn" id="snx" type="button">পরের ধাপ →</button><button class="btn ghost" id="sall" type="button">সব ধাপ দেখাও</button></div>
+        </div>
+        <div class="glass box">
+            <h2>🔬 সংকেত বিশ্লেষক: পরমাণু গণনা ও আণবিক ভর</h2>
+            <p class="sub">যেকোনো যৌগের সংকেত লেখো। কোন মৌলের কয়টি পরমাণু আছে আর আণবিক ভর কত, দেখাবে। (C=১২, H=১, O=১৬ ইত্যাদি)</p>
+            <div class="row"><input class="inp" id="fin" type="text" placeholder="যেমন: Al2(SO4)3" aria-label="যৌগের সংকেত" autocomplete="off" spellcheck="false"></div>
+            <div id="fout" aria-live="polite"></div>
+        </div>
+        <div class="glass box">
+            <h2>📚 উদাহরণের সংগ্রহ</h2>
+            <p class="sub" id="lsub"></p>
+            <div class="row"><input class="inp" id="lq" type="search" style="font:600 15px 'Plus Jakarta Sans','Hind Siliguri',sans-serif" placeholder="খোঁজো… (যেমন: প্রোপেন, অ্যামোনিয়া)" aria-label="খোঁজো" autocomplete="off"></div>
+            <div class="list" id="list" style="margin-top:14px"></div>
+        </div>
+    </section>
+
+    <!-- অপশন ৩ -->
+    <section id="m-test" hidden>
+        <div class="glass box" id="tsetup">
+            <h2>🎯 নিজেকে পরীক্ষা করো</h2>
+            <p class="sub">প্রশ্নের ধরন, কঠিনতা আর সংখ্যা ঠিক করে পরীক্ষা শুরু করো। শেষে ফলাফল ও ভুলগুলোর সঠিক উত্তর দেখাবে।</p>
+            <div class="opts">
+                <label>প্রশ্ন সংখ্যা<select class="inp" id="tn"><option value="5">৫টি</option><option value="10" selected>১০টি</option><option value="15">১৫টি</option></select></label>
+                <label>কঠিনতা<select class="inp" id="td"><option value="all">সব</option><option value="e">সহজ</option><option value="m">মাঝারি</option><option value="h">কঠিন</option></select></label>
+                <label>প্রশ্নের ধরন<select class="inp" id="tt"><option value="mix">মিশ্র</option><option value="f">সহগ বসাও</option><option value="m">সঠিক সমীকরণ বাছো</option><option value="c">পরমাণু গুনে বলো</option></select></label>
+            </div>
+            <button class="btn" id="tstart" type="button">পরীক্ষা শুরু করো →</button>
+            <p class="sub" id="tbest" style="margin:14px 0 0"></p>
+        </div>
+        <div class="glass box" id="tplay" hidden>
+            <div class="qh"><span id="tno"></span><span id="tsc"></span></div>
+            <div class="qbar"><i id="tbar"></i></div>
+            <p class="qq" id="tq"></p>
+            <div class="qeq" id="teq"></div>
+            <div class="row"><button class="btn" id="tchk" type="button">যাচাই করো</button><button class="btn ghost" id="tnext" type="button" hidden>পরের প্রশ্ন →</button></div>
+            <div class="fb" id="tfb" aria-live="polite"></div>
+        </div>
+        <div class="glass box" id="tend" hidden></div>
+    </section>
+</div>
+<div class="credit">Developed &amp; Designed by <span>Ahanaf Abid Omlan</span></div>
+<script>
+/* ফিরে যাওয়ার পেজ বদলাতে চাইলে শুধু এই লাইনটি বদলাও */
+const BACK_URL = 'reaction_page.html';
+/* নতুন উদাহরণ যোগ করতে EX তালিকায় একটি লাইন যোগ করো: [অসমতাকৃত সমীকরণ, বিবরণ, দল(a মৌলিক · b দহন · c যৌগিক · d অম্ল-ক্ষার/বিনিময় · e জটিল)]
+   সহগ নিজে নিজে হিসাব হয়, তাই হাতে লিখতে হবে না। */
+const EX = [
+ ['H2 + O2 = H2O', 'পানি তৈরি', 'a'], ['N2 + H2 = NH3', 'অ্যামোনিয়া (হেবার)', 'a'], ['Na + Cl2 = NaCl', 'খাবার লবণ', 'a'], ['Mg + O2 = MgO', 'ম্যাগনেসিয়ামের দহন', 'a'], ['Al + O2 = Al2O3', 'অ্যালুমিনিয়াম অক্সাইড', 'a'], ['Fe + O2 = Fe3O4', 'লোহার দহন', 'a'], ['Fe + Cl2 = FeCl3', 'আয়রন(III) ক্লোরাইড', 'a'], ['SO2 + O2 = SO3', 'স্পর্শ প্রক্রিয়া', 'a'], ['P4 + O2 = P2O5', 'ফসফরাসের দহন', 'a'],
+ ['CH4 + O2 = CO2 + H2O', 'মিথেনের দহন', 'b'], ['C2H6 + O2 = CO2 + H2O', 'ইথেনের দহন', 'b'], ['C3H8 + O2 = CO2 + H2O', 'প্রোপেনের দহন', 'b'], ['C2H4 + O2 = CO2 + H2O', 'ইথিনের দহন', 'b'], ['C2H2 + O2 = CO2 + H2O', 'ইথাইনের দহন', 'b'], ['C2H5OH + O2 = CO2 + H2O', 'ইথানলের দহন', 'b'], ['C6H12O6 + O2 = CO2 + H2O', 'গ্লুকোজের শ্বসন', 'b'], ['C6H6 + O2 = CO2 + H2O', 'বেনজিনের দহন', 'b'], ['NH3 + O2 = NO + H2O', 'ওস্টওয়াল্ড প্রক্রিয়া', 'b'], ['NH3 + O2 = N2 + H2O', 'অ্যামোনিয়ার দহন', 'b'],
+ ['KClO3 = KCl + O2', 'পটাশিয়াম ক্লোরেটের বিয়োজন', 'c'], ['H2O2 = H2O + O2', 'H₂O₂ এর বিয়োজন', 'c'], ['CaCO3 = CaO + CO2', 'চুনাপাথরের বিয়োজন', 'c'], ['NaHCO3 = Na2CO3 + H2O + CO2', 'বেকিং সোডা', 'c'], ['Fe(OH)3 = Fe2O3 + H2O', 'আয়রন হাইড্রক্সাইড', 'c'], ['CuSO4.5H2O = CuSO4 + H2O', 'নীল তুঁতে', 'c'], ['(NH4)2Cr2O7 = Cr2O3 + N2 + H2O', 'ভলকানো', 'c'],
+ ['Zn + HCl = ZnCl2 + H2', 'দস্তা + এসিড', 'd'], ['Al + HCl = AlCl3 + H2', 'অ্যালুমিনিয়াম + এসিড', 'd'], ['Al + H2SO4 = Al2(SO4)3 + H2', 'অ্যালুমিনিয়াম + সালফিউরিক এসিড', 'd'], ['Zn + CuSO4 = ZnSO4 + Cu', 'ধাতু প্রতিস্থাপন', 'd'], ['Cl2 + KI = KCl + I2', 'হ্যালোজেন প্রতিস্থাপন', 'd'], ['NaOH + H2SO4 = Na2SO4 + H2O', 'প্রশমন', 'd'], ['Ca(OH)2 + HCl = CaCl2 + H2O', 'প্রশমন', 'd'], ['Na2CO3 + HCl = NaCl + H2O + CO2', 'কার্বনেট + এসিড', 'd'], ['BaCl2 + Na2SO4 = BaSO4 + NaCl', 'অধঃক্ষেপণ', 'd'], ['AgNO3 + NaCl = AgCl + NaNO3', 'সাদা অধঃক্ষেপ', 'd'], ['Pb(NO3)2 + KI = PbI2 + KNO3', 'হলুদ অধঃক্ষেপ', 'd'], ['Fe2O3 + CO = Fe + CO2', 'লোহা নিষ্কাশন', 'd'], ['Fe2O3 + Al = Al2O3 + Fe', 'থার্মাইট', 'd'],
+ ['Ca(OH)2 + H3PO4 = Ca3(PO4)2 + H2O', 'ক্যালসিয়াম ফসফেট', 'e'], ['Al2(SO4)3 + Ca(OH)2 = Al(OH)3 + CaSO4', 'পানি পরিশোধন', 'e'], ['Cu + HNO3 = Cu(NO3)2 + NO2 + H2O', 'গাঢ় নাইট্রিক এসিড', 'e'], ['Cu + HNO3 = Cu(NO3)2 + NO + H2O', 'লঘু নাইট্রিক এসিড', 'e'], ['KMnO4 + HCl = KCl + MnCl2 + Cl2 + H2O', 'পারম্যাঙ্গানেট + HCl', 'e'], ['K2Cr2O7 + HCl = KCl + CrCl3 + Cl2 + H2O', 'ডাইক্রোমেট + HCl', 'e'], ['Zn + HNO3 = Zn(NO3)2 + NH4NO3 + H2O', 'অতি লঘু HNO₃', 'e']
+];
+const AM = { H: 1, C: 12, N: 14, O: 16, F: 19, Na: 23, Mg: 24, Al: 27, Si: 28, P: 31, S: 32, Cl: 35.5, K: 39, Ca: 40, Cr: 52, Mn: 55, Fe: 56, Cu: 63.5, Zn: 65, Br: 80, Ag: 108, I: 127, Ba: 137, Pb: 207, Hg: 201, Sn: 119 };
+const $ = id => document.getElementById(id);
+const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false, maximumFractionDigits: 2 });
+$('brandLink').href = BACK_URL; $('backBtn').href = BACK_URL;
+$('themeBtn').addEventListener('click', () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', n); } catch (e) {} document.documentElement.setAttribute('data-theme', n); });
+function mk(t, c, x) { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+const SUBS = '₀₁₂₃₄₅₆₇₈₉';
+const sub = f => f.replace(/\./g, '·').replace(/([A-Za-z)])(\d+)/g, (m, a, d) => a + d.replace(/\d/g, x => SUBS[x]));
+const unsub = s => s.replace(/[₀-₉]/g, d => String(SUBS.indexOf(d)));
+const gcd = (a, b) => b ? gcd(b, a % b) : Math.abs(a), lcm = (a, b) => a / gcd(a, b) * b;
+const LET = 'abcdefghijklmnopqrstuvwxyz';
+function parse1(f) {
+    const tk = f.match(/[A-Z][a-z]?|\d+|\(|\)/g); if (!tk || tk.join('') !== f) return null; let i = 0;
+    function grp() { const c = {}; while (i < tk.length) { const t = tk[i]; if (t === '(') { i++; const sc = grp(); if (tk[i] !== ')') throw 0; i++; let m = 1; if (/^\d+$/.test(tk[i] || '')) m = +tk[i++]; for (const k in sc) c[k] = (c[k] || 0) + sc[k] * m; } else if (t === ')') break; else if (/^[A-Z]/.test(t)) { i++; let m = 1; if (/^\d+$/.test(tk[i] || '')) m = +tk[i++]; c[t] = (c[t] || 0) + m; } else throw 0; } return c; }
+    try { const c = grp(); return i === tk.length ? c : null; } catch (e) { return null; }
+}
+function parse(f) { f = f.replace(/[·*]/g, '.'); if (f.indexOf('.') < 0) return parse1(f); const tot = {}; for (const p of f.split('.')) { const m = p.match(/^(\d*)(.+)$/), k = m[1] ? +m[1] : 1, c = parse1(m[2]); if (!c) return null; for (const e in c) tot[e] = (tot[e] || 0) + c[e] * k; } return tot; }
+const fixCase = s => s.replace(/[a-z]/g, (c, i) => (i === 0 || /[^A-Za-z]/.test(s[i - 1])) ? c.toUpperCase() : c);
+const mass = c => { let m = 0; for (const e in c) { if (!(e in AM)) return null; m += AM[e] * c[e]; } return m; };
+
+/* ================= সমতাকরণ ইঞ্জিন ================= */
+const fr = (n, d = 1) => { if (d < 0) { n = -n; d = -d; } const g = gcd(n, d) || 1; return [n / g, d / g]; };
+const fadd = (a, b) => fr(a[0] * b[1] + b[0] * a[1], a[1] * b[1]), fmul = (a, b) => fr(a[0] * b[0], a[1] * b[1]), fdiv = (a, b) => fr(a[0] * b[1], a[1] * b[0]), fsub = (a, b) => fadd(a, [-b[0], b[1]]);
+const fstr = x => x[1] === 1 ? String(x[0]) : x[0] + '/' + x[1];
+function splitEq(s) { let t = unsub(s).replace(/[⟶→⇒⇌]|<=>|<->|->|=>/g, '=').replace(/\s+/g, ' ').trim(); const i = t.indexOf('='); if (i < 0) return { err: 'তীর (→ বা =) দেওয়া হয়নি। বিক্রিয়ক ও উৎপাদ আলাদা করতে তীর লাগবে।' }; const L = t.slice(0, i), R = t.slice(i + 1).replace(/^=+/, ''); const sp = x => x.split('+').map(y => y.trim()).filter(Boolean); return { L: sp(L), R: sp(R) }; }
+function cleanSp(x) { const m = x.replace(/\s+/g, '').match(/^(\d*)(.+)$/); return { f: m[2], had: !!m[1] }; }
+function readEq(s) { const p = splitEq(s); if (p.err) return p; if (!p.L.length || !p.R.length) return { err: 'দুই পাশেই অন্তত একটি পদার্থ লাগবে।' }; const out = { L: [], R: [], fixed: [], had: false };
+    for (const [side, key] of [[p.L, 'L'], [p.R, 'R']]) for (const raw of side) { const { f, had } = cleanSp(raw); if (had) out.had = true; let c = parse(f), ff = f; if (!c) { const g = fixCase(f); if (g !== f && parse(g)) { c = parse(g); ff = g; out.fixed.push(f + ' → ' + g); } } if (!c) return { err: '"' + f + '" সংকেতটি চেনা গেল না। সংখ্যা ছাড়া সংকেতে মৌলের প্রতীক বড় হাতের অক্ষরে শুরু হয় (যেমন Na, Cl)। আধানযুক্ত আয়ন সমর্থিত নয়।' }; out[key].push({ f: ff, c }); }
+    return out; }
+function balance(L, R) { const sp = L.concat(R), n = sp.length, els = [...new Set(sp.flatMap(s => Object.keys(s.c)))];
+    const only = els.filter(e => !(L.some(s => e in s.c) && R.some(s => e in s.c))); if (only.length) return { err: 'মৌল ' + only.join(', ') + ' শুধু এক পাশে আছে। সমীকরণের দুই পাশেই প্রতিটি মৌল থাকতে হবে, তাই সংকেত বা উৎপাদ ঠিক আছে কিনা দেখো।' };
+    let M = els.map(e => sp.map((s, j) => fr((s.c[e] || 0) * (j < L.length ? 1 : -1)))); const piv = []; let r = 0;
+    for (let c = 0; c < n && r < M.length; c++) { let p = -1; for (let i = r; i < M.length; i++) if (M[i][c][0] !== 0) { p = i; break; } if (p < 0) continue; [M[r], M[p]] = [M[p], M[r]]; const d = M[r][c]; M[r] = M[r].map(x => fdiv(x, d)); for (let i = 0; i < M.length; i++) if (i !== r && M[i][c][0] !== 0) { const f = M[i][c]; M[i] = M[i].map((x, k) => fsub(x, fmul(f, M[r][k]))); } piv.push(c); r++; }
+    const free = []; for (let c = 0; c < n; c++) if (!piv.includes(c)) free.push(c); if (!free.length) return { err: 'এই সংকেতগুলো দিয়ে সমতা করা সম্ভব নয় (কোনো ধনাত্মক সহগ মেলে না)। সংকেত বা উৎপাদ আবার দেখো।' };
+    const basis = free.map(fc => { const v = Array(n).fill(null).map(() => fr(0)); v[fc] = fr(1); piv.forEach((pc, ri) => { v[pc] = fr(-M[ri][fc][0], M[ri][fc][1]); }); return v; });
+    let sol = basis.reduce((a, v) => a.map((x, k) => fadd(x, v[k])), Array(n).fill(null).map(() => fr(0))); let ok = sol.every(x => x[0] > 0);
+    if (!ok) { const neg = sol.every(x => x[0] < 0); if (neg) { sol = sol.map(x => fr(-x[0], x[1])); ok = true; } }
+    if (!ok) { for (const v of basis) { if (v.every(x => x[0] > 0)) { sol = v; ok = true; break; } if (v.every(x => x[0] < 0)) { sol = v.map(x => fr(-x[0], x[1])); ok = true; break; } } }
+    if (!ok) return { err: 'সমীকরণটি ধনাত্মক পূর্ণসংখ্যা সহগ দিয়ে সমতা করা যায় না। কোনো বিক্রিয়ক বা উৎপাদ ভুল থাকতে পারে।' };
+    const L0 = sol.reduce((a, x) => lcm(a, x[1]), 1); let ints = sol.map(x => x[0] * (L0 / x[1])); const g0 = ints.reduce(gcd); ints = ints.map(x => x / g0);
+    return { coefs: ints, rational: sol, els, M, free, multi: free.length > 1, sp }; }
+function eqStr(sp, co, nL, arrow) { const f = (s, k) => (co[k] > 1 ? co[k] : '') + sub(s.f); return sp.slice(0, nL).map((s, k) => f(s, k)).join(' + ') + ' ' + (arrow || '→') + ' ' + sp.slice(nL).map((s, k) => f(s, nL + k)).join(' + '); }
+function stepsOf(L, R, B) { const sp = L.concat(R), nL = L.length, v = k => LET[k], S = [];
+    S.push(['১. সমীকরণ লিখি', 'অসমতাকৃত সমীকরণ: <code>' + sp.slice(0, nL).map(s => sub(s.f)).join(' + ') + ' → ' + sp.slice(nL).map(s => sub(s.f)).join(' + ') + '</code>']);
+    S.push(['২. প্রতিটি পদার্থের সামনে চলক বসাই', '<code>' + sp.slice(0, nL).map((s, k) => v(k) + sub(s.f)).join(' + ') + ' → ' + sp.slice(nL).map((s, k) => v(nL + k) + sub(s.f)).join(' + ') + '</code>। এখানে ' + sp.map((s, k) => '<b>' + v(k) + '</b> = ' + sub(s.f) + ' এর সহগ').join(', ') + '।']);
+    const eqs = B.els.map(e => { const l = sp.slice(0, nL).map((s, k) => s.c[e] ? (s.c[e] > 1 ? s.c[e] : '') + v(k) : null).filter(Boolean).join(' + '), r = sp.slice(nL).map((s, k) => s.c[e] ? (s.c[e] > 1 ? s.c[e] : '') + v(nL + k) : null).filter(Boolean).join(' + '); return '<b>' + e + ':</b> <code>' + l + ' = ' + r + '</code>'; });
+    S.push(['৩. প্রতিটি মৌলের জন্য সমীকরণ', 'দুই পাশে প্রতিটি মৌলের পরমাণু সংখ্যা সমান হতে হবে:<br>' + eqs.join('<br>')]);
+    const fc = B.free[0], rs = B.rational.map((x, k) => '<b>' + v(k) + '</b> = ' + fstr(x)).join(', ');
+    S.push(['৪. একটি চলকের মান ধরে বাকিগুলো বের করি', (B.multi ? 'একাধিক মুক্ত চলক থাকায় সবগুলোকে ১ ধরে যোগ করা হয়েছে। ' : '') + '<b>' + v(fc) + ' = ১</b> ধরে সমীকরণগুলো মেলালে পাই: ' + rs + '।']);
+    const L0 = B.rational.reduce((a, x) => lcm(a, x[1]), 1); S.push(['৫. ভগ্নাংশ দূর করি', L0 > 1 ? 'ভগ্নাংশ আছে, তাই সবকটি মানকে ল.সা.গু <b>' + bn(L0) + '</b> দিয়ে গুণ করি, তারপর গ.সা.গু দিয়ে ভাগ করে সবচেয়ে ছোট পূর্ণসংখ্যা পাই।' : 'সব মান পূর্ণসংখ্যা, তাই গুণ করার দরকার নেই (দরকারে গ.সা.গু দিয়ে ভাগ করে সরল করি)।']);
+    S.push(['৬. চূড়ান্ত সমীকরণ ও যাচাই', 'সহগ: ' + B.coefs.map((c, k) => '<b>' + v(k) + '</b>=' + c).join(', ') + '। সমতাকৃত সমীকরণ: <code>' + eqStr(sp, B.coefs, nL) + '</code>। এবার দুই পাশের প্রতিটি মৌল গুনে মিলিয়ে দেখো।']);
+    return S; }
+function typeOf(L, R) { const f = L.map(s => s.f), p = R.map(s => s.f); if (f.includes('O2') && p.some(x => x === 'CO2' || x === 'H2O' || x === 'SO2')) return 'দহন বিক্রিয়া'; if (L.length > 1 && R.length === 1) return 'সংযোজন বিক্রিয়া'; if (L.length === 1 && R.length > 1) return 'বিয়োজন বিক্রিয়া'; if (L.length === 2 && R.length === 2) return 'প্রতিস্থাপন বা বিনিময় বিক্রিয়া'; return 'বিক্রিয়া'; }
+
+/* ================= অপশন বাছাই ================= */
+const MODES = [
+    ['solve', '✍️', 'লাইভ সমতাকরণ', 'অসমতাকৃত সমীকরণ লেখো, সাথে সাথে সমতাকৃত সমীকরণ, পরমাণু গণনা ও ভরের হিসাব পাও।', 'var(--accent)'],
+    ['learn', '🔎', 'কীভাবে হয়', 'সমতার গাণিতিক ট্রিকস, ধাপে ধাপে বীজগাণিতিক পদ্ধতি আর সংকেত বিশ্লেষক টুল।', '#22d3ee'],
+    ['test', '🎯', 'পরীক্ষা দাও', 'সহগ বসাও, সঠিক সমীকরণ বাছো বা পরমাণু গুনে বলো। স্কোর পাও।', '#fbbf24']
+];
+let mode = null;
+function paintPicks() { const p = $('picks'); p.replaceChildren(); MODES.forEach(([k, ic, t, d, c]) => { const b = mk('button', 'pk'); b.type = 'button'; b.style.setProperty('--c', c); b.setAttribute('aria-label', t); const big = mk('div', 'big', ic); big.setAttribute('aria-hidden', 'true'); b.append(big, mk('h3', '', t), mk('p', '', d), mk('span', 'go', 'শুরু করো →')); b.addEventListener('click', () => go(k)); p.appendChild(b); }); }
+function paintBar() { const m = $('modebar'); m.replaceChildren(); MODES.forEach(([k, ic, t]) => { const b = mk('button', 'mb' + (k === mode ? ' on' : ''), ic + ' ' + t); b.type = 'button'; b.setAttribute('aria-pressed', String(k === mode)); b.addEventListener('click', () => go(k)); m.appendChild(b); }); }
+function go(k) { if (location.hash.replace('#', '') !== k) { try { history.pushState(null, '', '#' + k); } catch (e) { location.hash = k; } } show(k); }
+function show(k) { mode = MODES.some(m => m[0] === k) ? k : null; $('picks').hidden = !!mode; $('modebar').hidden = !mode; ['solve', 'learn', 'test'].forEach(x => $('m-' + x).hidden = x !== mode); $('heroP').hidden = !!mode; if (mode) paintBar(); window.scrollTo(0, 0); if (mode === 'test') setupTest(); }
+window.addEventListener('popstate', () => show(location.hash.replace('#', '')));
+
+/* ================= ১) লাইভ সমতাকরণ ================= */
+let hist = []; try { hist = JSON.parse(localStorage.getItem('bal_hist') || '[]'); } catch (e) {}
+function paintHist() { const h = $('hist'); h.replaceChildren(); if (!hist.length) return; const l = mk('span', '', '🕘 সর্বশেষ:'); l.style.cssText = 'font-size:13px;font-weight:700;color:var(--text-muted);align-self:center'; h.appendChild(l); hist.forEach(x => { const b = mk('button', 'chip', x); b.type = 'button'; b.style.fontSize = '12.5px'; b.addEventListener('click', () => { $('inp').value = x; run(true); }); h.appendChild(b); }); }
+function resultCard(L, R, B, fixed, had) {
+    const c = mk('article', 'glass rc'), sp = L.concat(R), nL = L.length;
+    const tg = mk('div', 'tags'); tg.appendChild(mk('span', 'tag', '⚖️ সমতাকৃত')); tg.appendChild(mk('span', 'tag p', typeOf(L, R))); if (B.multi) tg.appendChild(mk('span', 'tag o', 'একাধিক সমাধান সম্ভব')); c.appendChild(tg);
+    const w = mk('div', 'eq'); sp.forEach((s, k) => { if (k) w.append(k === nL ? '' : ' + '); if (k === nL) w.appendChild(mk('span', 'ar', '→')); const sp2 = document.createElement('span'); if (B.coefs[k] > 1) { const kk = document.createElement('span'); kk.className = 'c'; kk.textContent = B.coefs[k]; sp2.appendChild(kk); } sp2.append(sub(s.f)); w.appendChild(sp2); }); c.appendChild(w);
+    const cp = mk('div', 'cp'), cb = mk('button', 'btn ghost', '📋 সমীকরণ কপি'); cb.type = 'button'; cb.style.padding = '8px 14px'; cb.addEventListener('click', () => { if (navigator.clipboard) navigator.clipboard.writeText(eqStr(sp, B.coefs, nL)).then(() => { cb.textContent = '✔ কপি হয়েছে'; setTimeout(() => cb.textContent = '📋 সমীকরণ কপি', 1500); }); }); cp.appendChild(cb); c.appendChild(cp);
+    const fc = mk('div', 'fcs'); sp.forEach((s, k) => { const x = mk('span'); x.append(sub(s.f) + ' → সহগ ', mk('b', '', bn(B.coefs[k]))); fc.appendChild(x); }); c.appendChild(fc);
+    if (had) c.appendChild(mk('div', 'warn', 'ℹ️ তুমি আগে থেকে যে সহগ লিখেছিলে তা উপেক্ষা করে নতুন করে হিসাব করা হয়েছে।'));
+    if (fixed.length) c.appendChild(mk('div', 'warn', '🔤 হাতের অক্ষর ঠিক করা হয়েছে: ' + fixed.join(', ') + '। এটি তোমার উদ্দেশ্য কিনা দেখে নাও।'));
+    if (B.multi) c.appendChild(mk('div', 'warn', '⚠️ এই পদার্থগুলো দিয়ে একাধিক ভিন্ন সমতাকৃত সমীকরণ সম্ভব (স্বাধীন সম্পর্ক একাধিক)। সবচেয়ে সরল একটি দেখানো হলো। ঠিক কোন বিক্রিয়াটি বোঝাতে চেয়েছো, তা নিশ্চিত করো।'));
+    const lc = {}, rc = {}; sp.forEach((s, k) => { for (const e in s.c) { const t = k < nL ? lc : rc; t[e] = (t[e] || 0) + s.c[e] * B.coefs[k]; } });
+    const t = mk('table', 'bal'); const hd = t.createTHead().insertRow(); ['মৌল', 'বাঁ পাশে', 'ডান পাশে', 'মিল'].forEach(x => hd.appendChild(mk('th', '', x)));
+    const tb = t.createTBody(); B.els.forEach(e => { const row = tb.insertRow(); [e, bn(lc[e]), bn(rc[e])].forEach(x => row.insertCell().textContent = x); const ok = lc[e] === rc[e], cell = row.insertCell(); cell.textContent = ok ? '✔' : '✘'; cell.className = ok ? 'ok' : ''; }); c.appendChild(t);
+    const ms = sp.map(s => mass(s.c)); if (ms.every(x => x !== null)) { const mt = mk('table', 'mt'); const h2 = mt.createTHead().insertRow(); ['পদার্থ', 'সহগ (মোল)', 'আণবিক ভর', 'মোট ভর (g)'].forEach(x => h2.appendChild(mk('th', '', x))); const b2 = mt.createTBody(); let sl = 0, sr = 0;
+        sp.forEach((s, k) => { const row = b2.insertRow(), tot = B.coefs[k] * ms[k]; if (k < nL) sl += tot; else sr += tot; [sub(s.f) + (k < nL ? '  (বিক্রিয়ক)' : '  (উৎপাদ)'), bn(B.coefs[k]), bn(ms[k]), bn(tot)].forEach(x => row.insertCell().textContent = x); });
+        const row = b2.insertRow(); [ 'মোট', '', 'বিক্রিয়ক ' + bn(sl) + ' g', 'উৎপাদ ' + bn(sr) + ' g' + (Math.abs(sl - sr) < 1e-6 ? ' ✔' : '')].forEach(x => row.insertCell().textContent = x); const hh = mk('h4', '', '⚖️ মোল ও ভরের হিসাব (ভরের নিত্যতা)'); hh.style.margin = '18px 0 0'; c.append(hh, mt); }
+    const det = document.createElement('details'); det.className = 'li'; det.style.marginTop = '16px'; det.open = false; const sm = document.createElement('summary'); sm.appendChild(mk('span', 'e', '🪜 ধাপে ধাপে বীজগাণিতিক পদ্ধতি দেখো')); det.appendChild(sm); const d = mk('div', 'd'); stepsOf(L, R, B).forEach(([h, html]) => { const s = mk('div', 'step'); s.style.cssText = 'padding:10px 14px;border-radius:14px;background:var(--card-solid);border:1px solid var(--border-color);line-height:1.9;font-size:14.5px;color:var(--text-muted)'; const b = mk('b', '', h); b.style.display = 'block'; b.style.color = 'var(--text-color)'; const x = mk('div'); x.innerHTML = html; s.append(b, x); d.appendChild(s); }); det.appendChild(d); c.appendChild(det);
+    return c; }
+let timer = null;
+function run(save) { const s = $('inp').value, res = $('res'), pv = $('parsed'); res.replaceChildren(); pv.replaceChildren(); if (!s.trim()) return;
+    const q = readEq(s); if (q.err) { if (save) { const e = mk('div', 'err'); e.append(mk('b', '', '😕 সমীকরণটি পড়া গেল না'), q.err); res.appendChild(e); } else { pv.textContent = q.err; } return; }
+    pv.append('শনাক্ত: '); q.L.concat(q.R).forEach(x => pv.appendChild(mk('span', '', sub(x.f))));
+    const B = balance(q.L, q.R); if (B.err) { const e = mk('div', 'err'); e.append(mk('b', '', '😕 সমতা করা গেল না'), B.err); res.appendChild(e); return; }
+    res.appendChild(resultCard(q.L, q.R, B, q.fixed, q.had)); if (save) { const key = s.trim(); hist = [key].concat(hist.filter(x => x !== key)).slice(0, 5); try { localStorage.setItem('bal_hist', JSON.stringify(hist)); } catch (e) {} paintHist(); res.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
+$('go').addEventListener('click', () => run(true)); $('clr').addEventListener('click', () => { $('inp').value = ''; $('res').replaceChildren(); $('parsed').replaceChildren(); $('inp').focus(); });
+$('inp').addEventListener('keydown', e => { if (e.key === 'Enter') run(true); }); $('inp').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => run(false), 280); });
+const EXG = [['a', 'মৌলিক'], ['b', '🔥 দহন'], ['c', 'বিয়োজন'], ['d', 'অম্ল-ক্ষার/প্রতিস্থাপন'], ['e', '🧠 জটিল']]; let exg = 'a';
+function paintEx() { const t = $('tabs'); t.replaceChildren(); EXG.forEach(([k, n]) => { const b = mk('button', 'chip tab' + (k === exg ? ' on' : ''), n); b.type = 'button'; b.addEventListener('click', () => { exg = k; paintEx(); }); t.appendChild(b); }); const x = $('exs'); x.replaceChildren(); EX.filter(e => e[2] === exg).forEach(e => { const b = mk('button', 'chip', sub(e[0].replace(/ = /, ' → ').replace(/ = /g, ' + '))); b.style.fontSize = '12.5px'; b.type = 'button'; b.title = e[1]; b.addEventListener('click', () => { $('inp').value = e[0]; run(true); }); x.appendChild(b); }); }
+
+/* ================= ২) কীভাবে হয় ================= */
+const LESSONS = [
+ ['১. সমতাকরণ কেন দরকার?', ['রাসায়নিক বিক্রিয়ায় পরমাণু সৃষ্টি বা ধ্বংস হয় না, শুধু নতুনভাবে সাজায়। তাই বিক্রিয়ার আগে ও পরে <b>প্রতিটি মৌলের পরমাণু সংখ্যা সমান</b> থাকতে হবে। এটিই <b>ভরের নিত্যতা সূত্র</b> (ল্যাভোয়াজিয়ে)।', 'সমীকরণ সমতা করতে শুধু <b>সহগ</b> (পদার্থের সামনের সংখ্যা) বদলানো যায়। সংকেতের নিচের ছোট সংখ্যা (H₂O এর ২) কখনো বদলানো যায় না, কারণ তাহলে পদার্থটাই বদলে যায় (H₂O → H₂O₂)।']],
+ ['২. ৬টি গাণিতিক ট্রিকস (হিট অ্যান্ড ট্রায়াল)', ['<ul><li><b>ট্রিক ১:</b> সবচেয়ে জটিল (বেশি পরমাণুর) যৌগের সহগ ১ ধরে শুরু করো।</li><li><b>ট্রিক ২:</b> যে মৌল প্রতি পাশে মাত্র একটি পদার্থে আছে, তাকে আগে সমতা করো। O ও H শেষে রাখো, কারণ এরা অনেক জায়গায় থাকে।</li><li><b>ট্রিক ৩:</b> দহনে ক্রম: <b>C → H → O</b>। আগে CO₂, তারপর H₂O, শেষে O₂।</li><li><b>ট্রিক ৪:</b> মূলক (SO₄, PO₄, NO₃, OH) দুই পাশে অপরিবর্তিত থাকলে তাকে একটি একক ধরে গোনো।</li><li><b>ট্রিক ৫:</b> একপাশে বিজোড় O থাকলে অপরপাশের সংখ্যাকে ২ দিয়ে গুণ করো (জোড় করো)। ভগ্নাংশ এলে (½) শেষে সব সহগকে ২ দিয়ে গুণ করে দূর করো।</li><li><b>ট্রিক ৬:</b> শেষে দ্বিপরমাণুক মৌল (H₂, O₂, N₂, Cl₂) ঠিক করো এবং <b>প্রতিটি মৌল গুনে যাচাই</b> করো।</li></ul>']],
+ ['৩. উদাহরণ: প্রোপেনের দহন (C → H → O)', ['<code>C₃H₈ + O₂ → CO₂ + H₂O</code>', '<ul><li><b>C:</b> বাঁয়ে ৩টি, তাই CO₂ এর সহগ ৩ ⇒ <code>C₃H₈ + O₂ → 3CO₂ + H₂O</code></li><li><b>H:</b> বাঁয়ে ৮টি, তাই H₂O এর সহগ ৪ ⇒ <code>C₃H₈ + O₂ → 3CO₂ + 4H₂O</code></li><li><b>O:</b> ডানে (৩×২) + ৪ = ১০টি, তাই O₂ এর সহগ ৫</li><li><b>ফল:</b> <code>C₃H₈ + 5O₂ → 3CO₂ + 4H₂O</code></li></ul>']],
+ ['৪. বীজগাণিতিক পদ্ধতি (কঠিন সমীকরণের জন্য)', ['যখন হিট-ট্রায়ালে আটকে যাও (যেমন KMnO₄ + HCl), তখন চলক দিয়ে সমীকরণ বানাও:', '<ul><li>প্রতিটি পদার্থের সামনে চলক বসাও: a, b, c, …</li><li>প্রতিটি মৌলের জন্য "বাঁ পাশের পরমাণু = ডান পাশের পরমাণু" সমীকরণ লেখো।</li><li>একটি চলককে ১ ধরে বাকিগুলো বের করো।</li><li>ভগ্নাংশ এলে ল.সা.গু দিয়ে গুণ করো।</li></ul>', 'এই পেজের ক্যালকুলেটর ঠিক এই পদ্ধতিই ব্যবহার করে। নিচে ধাপে ধাপে দেখো।']],
+ ['৫. আয়নিক সমীকরণ ও জারণ সংখ্যা পদ্ধতি (সংক্ষেপে)', ['<ul><li><b>জারণ সংখ্যা পদ্ধতি:</b> জারিত ও বিজারিত মৌলের ইলেকট্রন ত্যাগ ও গ্রহণ সমান করে সহগ বসানো হয়। জারণ-বিজারণ বিক্রিয়ায় (যেমন KMnO₄ + HCl) এটি কার্যকর।</li><li><b>অর্ধ-বিক্রিয়া পদ্ধতি:</b> জারণ ও বিজারণকে আলাদা লিখে ইলেকট্রন সমান করে যোগ করা হয়।</li></ul>', 'জারণ-বিজারণ নিয়ে বিস্তারিত জানতে বিক্রিয়া ল্যাবের "জারণ-বিজারণ" পেজ দেখো।']],
+ ['৬. সাধারণ ভুলগুলো', ['<ul><li>সংকেতের নিচের সংখ্যা বদলে সমতা করা।</li><li>শুধু মৌল গুনে মূলক (SO₄, OH) এর সংখ্যা ভুলে যাওয়া, বন্ধনীর বাইরের সংখ্যা গুণ করতে ভুলে যাওয়া (Ca(OH)₂ এ O ও H ২টি করে)।</li><li>H₂ বা O₂ কে একক পরমাণু (H, O) ধরা।</li><li>শেষে যাচাই না করা।</li></ul>']]
+];
+function paintLessons() { const a = $('lessons'); a.replaceChildren(); LESSONS.forEach(([t, ps], i) => { const d = document.createElement('details'); if (i === 0) d.open = true; d.appendChild(mk('summary', '', t)); const b = mk('div', 'ab'); ps.forEach(p => { const el = p.startsWith('<ul') ? document.createElement('div') : mk('p'); el.innerHTML = p; b.appendChild(el); }); d.appendChild(b); a.appendChild(d); }); }
+/* স্টেপার */
+let stepsCur = [], shown = 0;
+function paintSel() { const s = $('sel'); s.replaceChildren(); EX.forEach((e, i) => { const o = mk('option', '', e[0].replace(/ = /, ' → ').replace(/ = /g, ' + ') + '  (' + e[1] + ')'); o.value = i; s.appendChild(o); }); s.value = 11; s.addEventListener('change', loadSteps); loadSteps(); }
+function loadSteps() { const e = EX[+$('sel').value], q = readEq(e[0]); const B = balance(q.L, q.R); stepsCur = stepsOf(q.L, q.R, B); shown = 1; paintSteps(); }
+function paintSteps() { const o = $('sol'); o.replaceChildren(); stepsCur.slice(0, shown).forEach(([h, html]) => { const s = mk('div', 's'); const b = mk('b', '', h); b.style.display = 'block'; const x = mk('div'); x.innerHTML = html; s.append(b, x); o.appendChild(s); }); $('snx').disabled = shown >= stepsCur.length; $('snx').textContent = shown >= stepsCur.length ? '✔ সব ধাপ শেষ' : 'পরের ধাপ (' + bn(shown + 1) + '/' + bn(stepsCur.length) + ') →'; }
+$('snx').addEventListener('click', () => { if (shown < stepsCur.length) { shown++; paintSteps(); } }); $('sall').addEventListener('click', () => { shown = stepsCur.length; paintSteps(); }); $('srs').addEventListener('click', () => { shown = 1; paintSteps(); });
+/* সংকেত বিশ্লেষক */
+function analyzeF() { const raw = $('fin').value.trim(), out = $('fout'); out.replaceChildren(); if (!raw) return; let f = unsub(raw).replace(/\s+/g, '').replace(/^\d+/, ''), c = parse(f), note = ''; if (!c) { const g = fixCase(f); if (g !== f && parse(g)) { c = parse(g); f = g; note = 'হাতের অক্ষর ঠিক করে ' + f + ' ধরা হয়েছে।'; } } if (!c) { const e = mk('div', 'err'); e.append(mk('b', '', '😕 সংকেতটি চেনা গেল না'), 'মৌলের প্রতীক বড় হাতের অক্ষরে শুরু হয় (যেমন Na, Cl)।'); out.appendChild(e); return; }
+    const t = mk('table', 'bal'); t.style.marginTop = '14px'; const hd = t.createTHead().insertRow(); ['মৌল', 'পরমাণু সংখ্যা', 'পারমাণবিক ভর', 'মোট'].forEach(x => hd.appendChild(mk('th', '', x))); const tb = t.createTBody(); let tot = 0, all = true; Object.keys(c).forEach(e => { const row = tb.insertRow(), m = AM[e]; if (m === undefined) all = false; else tot += m * c[e]; [e, bn(c[e]), m === undefined ? '?' : bn(m), m === undefined ? '?' : bn(m * c[e])].forEach(x => row.insertCell().textContent = x); });
+    const r = mk('div', 'res2', sub(f) + (all ? ' = ' + bn(tot) : '')); r.style.marginTop = '14px'; if (all) r.appendChild(mk('small', '', 'আণবিক ভর (g/mol)')); if (note) out.appendChild(mk('div', 'warn', note)); out.append(r, t); }
+$('fin').addEventListener('input', analyzeF);
+function paintList() { const q = $('lq').value.trim().toLowerCase(), ul = $('list'); ul.replaceChildren(); const L = EX.filter(e => !q || (e[0] + ' ' + e[1]).toLowerCase().includes(q));
+    L.forEach(e => { const r = readEq(e[0]), B = balance(r.L, r.R), d = document.createElement('details'); d.className = 'li'; const s = document.createElement('summary'); s.appendChild(mk('span', 'e', eqStr(B.sp, B.coefs, r.L.length))); d.appendChild(s); const b = mk('div', 'd'); [['বিবরণ', e[1]], ['অসমতাকৃত', sub(e[0].replace(/ = /, ' → ').replace(/ = /g, ' + '))]].forEach(([l, v]) => { const p = mk('div'); p.appendChild(mk('b', '', l + ': ')); p.append(v); b.appendChild(p); });
+        const bt = mk('button', '', '✍️ বিস্তারিত সমাধান দেখো'); bt.type = 'button'; bt.addEventListener('click', () => { $('inp').value = e[0]; go('solve'); run(true); }); b.appendChild(bt); d.appendChild(b); ul.appendChild(d); });
+    $('lsub').textContent = 'মোট ' + bn(EX.length) + 'টি সমীকরণ · এখন দেখানো হচ্ছে ' + bn(L.length) + 'টি। যেকোনোটিতে চাপ দিলে সমতাকৃত রূপ ও বিস্তারিত পাবে।'; }
+$('lq').addEventListener('input', paintList);
+
+/* ================= ৩) পরীক্ষা ================= */
+let T = null, bestS = {}; try { bestS = JSON.parse(localStorage.getItem('bal_best') || '{}'); } catch (e) {}
+function setupTest() { $('tsetup').hidden = false; $('tplay').hidden = true; $('tend').hidden = true; $('tbest').textContent = bestS.s != null ? '🏆 সেরা ফল: ' + bn(bestS.s) + '/' + bn(bestS.n) : ''; }
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const POOL = EX.map(e => { const r = readEq(e[0]), B = balance(r.L, r.R), mx = Math.max(...B.coefs), n = B.sp.length, lvl = (n <= 3 && mx <= 3) ? 'e' : (n >= 5 || mx > 6) ? 'h' : 'm'; return { e, r, B, lvl, nL: r.L.length }; });
+function distract(Q) { const out = new Set(), co = Q.B.coefs; let k = 0; while (out.size < 3 && k++ < 80) { const c2 = co.slice(), i = Math.floor(Math.random() * c2.length), d = Math.random() < .5 ? 1 : -1; c2[i] = Math.max(1, c2[i] + d); if (JSON.stringify(c2) === JSON.stringify(co)) continue; const same = c2.every((x, j) => x === co[j]); if (same) continue; out.add(JSON.stringify(c2)); } return [...out].map(x => JSON.parse(x)); }
+function startTest() { const n = +$('tn').value, df = $('td').value, ty = $('tt').value, kinds = ['f', 'm', 'c']; let base = POOL.filter(q => df === 'all' || q.lvl === df); if (base.length < 3) base = POOL; let pool = shuffle(base.slice()); while (pool.length < n) pool = pool.concat(shuffle(base.slice()));
+    T = { qs: pool.slice(0, n).map((q, i) => ({ Q: q, t: ty === 'mix' ? kinds[i % 3] : ty })), i: 0, sc: 0, wrong: [], done: false }; $('tsetup').hidden = true; $('tend').hidden = true; $('tplay').hidden = false; showQ(); }
+function showQ() { const { Q, t } = T.qs[T.i], B = Q.B, sp = B.sp, nL = Q.nL; T.done = false; $('tno').textContent = 'প্রশ্ন ' + bn(T.i + 1) + '/' + bn(T.qs.length); $('tsc').textContent = '✅ ' + bn(T.sc); $('tbar').style.width = T.i / T.qs.length * 100 + '%'; $('tfb').textContent = ''; $('tfb').className = 'fb'; $('tchk').hidden = false; $('tnext').hidden = true; const eq = $('teq'); eq.replaceChildren();
+    if (t === 'f') { $('tq').textContent = 'সমীকরণটি সমতা করো। প্রতিটি ঘরে সহগ (সংখ্যা) লেখো, সহগ ১ হলেও ১ লেখো।'; sp.forEach((s, k) => { if (k) eq.append(k === nL ? '' : ' + '); if (k === nL) eq.append(' → '); const i = mk('input'); i.type = 'number'; i.min = 1; i.max = 20; i.dataset.k = k; i.setAttribute('aria-label', s.f + ' এর সহগ'); const sp2 = document.createElement('span'); sp2.append(i, sub(s.f)); eq.appendChild(sp2); }); setTimeout(() => eq.querySelector('input').focus(), 30); }
+    else if (t === 'm') { $('tq').textContent = 'নিচের কোনটি সঠিকভাবে সমতাকৃত সমীকরণ?'; eq.append(sp.slice(0, nL).map(s => sub(s.f)).join(' + ') + ' → ' + sp.slice(nL).map(s => sub(s.f)).join(' + ')); const opts = [B.coefs].concat(distract(Q)); const box = mk('div', 'opt2'); box.id = 'opt2'; box.style.marginTop = '14px'; shuffle(opts).forEach(co => { const b = mk('button', '', eqStr(sp, co, nL)); b.type = 'button'; b.dataset.ok = String(JSON.stringify(co) === JSON.stringify(B.coefs)); b.addEventListener('click', () => pickOpt(b)); box.appendChild(b); }); eq.appendChild(box); $('tchk').hidden = true; }
+    else { const els = B.els, el = els[Math.floor(Math.random() * els.length)], side = Math.random() < .5 ? 'L' : 'R'; T.qs[T.i].el = el; T.qs[T.i].side = side; let ans = 0; sp.forEach((s, k) => { if ((side === 'L') === (k < nL)) ans += (s.c[el] || 0) * B.coefs[k]; }); T.qs[T.i].ans = ans; $('tq').textContent = 'সমতাকৃত সমীকরণে ' + (side === 'L' ? 'বাঁ' : 'ডান') + ' পাশে মোট কয়টি ' + el + ' পরমাণু আছে? (সহগসহ গুনে বলো)'; eq.append(eqStr(sp, B.coefs, nL) + '   ⇒   ' + el + ' = '); const i = mk('input'); i.type = 'number'; i.id = 'ans'; i.style.width = '100px'; i.setAttribute('aria-label', 'পরমাণু সংখ্যা'); eq.appendChild(i); setTimeout(() => i.focus(), 30); } }
+function finish(ok, extra) { T.done = true; const { Q } = T.qs[T.i], B = Q.B; if (ok) T.sc++; else T.wrong.push((extra || '') + eqStr(B.sp, B.coefs, Q.nL)); const fb = $('tfb'); fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.textContent = (ok ? '✅ সঠিক! ' : '❌ ঠিক হয়নি। ') + (extra || '') + eqStr(B.sp, B.coefs, Q.nL); $('tsc').textContent = '✅ ' + bn(T.sc); $('tchk').hidden = true; const nx = $('tnext'); nx.hidden = false; nx.textContent = T.i === T.qs.length - 1 ? 'ফলাফল দেখো →' : 'পরের প্রশ্ন →'; nx.focus(); }
+function pickOpt(btn) { if (T.done) return; const ok = btn.dataset.ok === 'true'; document.querySelectorAll('#opt2 button').forEach(b => { b.disabled = true; if (b.dataset.ok === 'true') b.classList.add('right'); }); if (!ok) btn.classList.add('wrong'); finish(ok, 'সঠিক সমীকরণ: '); }
+function checkQ() { if (T.done) return; const q = T.qs[T.i], B = q.Q.B;
+    if (q.t === 'f') { const ins = [...$('teq').querySelectorAll('input')]; if (ins.some(i => !i.value)) { ins.find(i => !i.value).focus(); return; } let ok = true; ins.forEach(i => { const good = +i.value === B.coefs[+i.dataset.k]; i.classList.toggle('right', good); i.classList.toggle('wrong', !good); if (!good) ok = false; }); finish(ok, ''); }
+    else { const v = $('ans').value; if (v === '') return; finish(+v === q.ans, q.el + ' = ' + q.ans + ' (' + (q.side === 'L' ? 'বাঁ' : 'ডান') + ' পাশ)। '); } }
+function nextQ() { if (T.i >= T.qs.length - 1) return endTest(); T.i++; showQ(); }
+function endTest() { $('tplay').hidden = true; const e = $('tend'); e.hidden = false; e.replaceChildren(); const n = T.qs.length, p = Math.round(T.sc / n * 100);
+    if (bestS.s == null || T.sc / n > bestS.s / bestS.n) { bestS = { s: T.sc, n }; try { localStorage.setItem('bal_best', JSON.stringify(bestS)); } catch (x) {} }
+    e.appendChild(mk('h2', '', '🏁 পরীক্ষা শেষ')); const b = mk('div', 'big2'); b.append(mk('b', '', bn(T.sc) + '/' + bn(n)), mk('span', 'sub', bn(p) + '% · ' + (p === 100 ? '🌟 নিখুঁত!' : p >= 70 ? '👏 দারুণ হয়েছে' : p >= 40 ? '🙂 ভালো চেষ্টা, আরেকবার দাও' : '💪 ট্রিকসগুলো একবার দেখে আবার চেষ্টা করো'))); e.appendChild(b);
+    if (T.wrong.length) { e.appendChild(mk('h2', '', '❌ ভুলগুলোর সঠিক উত্তর')); [...new Set(T.wrong)].forEach(w => e.appendChild(mk('div', 'wr', w))); }
+    const row = mk('div', 'row'); const again = mk('button', 'btn', '🔁 আবার পরীক্ষা'); again.type = 'button'; again.addEventListener('click', setupTest); const lr = mk('button', 'btn ghost', '🔎 কীভাবে হয় শিখো'); lr.type = 'button'; lr.addEventListener('click', () => go('learn')); row.append(again, lr); e.appendChild(row); window.scrollTo(0, 0); }
+$('tstart').addEventListener('click', startTest); $('tchk').addEventListener('click', checkQ); $('tnext').addEventListener('click', nextQ);
+document.addEventListener('keydown', e => { if (e.key !== 'Enter' || mode !== 'test' || $('tplay').hidden || e.target.tagName === 'BUTTON') return; e.preventDefault(); T && T.done ? nextQ() : checkQ(); });
+
+paintPicks(); paintEx(); paintHist(); paintLessons(); paintSel(); paintList(); show(location.hash.replace('#', ''));
+</script>
+</body>
+</html>
