@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#07090e">
+    <title>Fusion 2048 | তারার ভেতরের ফিউশন</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        /* বাইরের ব্যাকগ্রাউন্ডের পছন্দ (শুধু এই গেমের জন্য) */
+        (function () {
+            try { if (localStorage.getItem('fusion-bg') === 'alt') document.documentElement.setAttribute('data-bg', 'alt'); } catch (e) {}
+        })();
+    </script>
+    <style>
+        /* এই পেজ সম্পূর্ণ আলাদা ডিজাইনের: মূল সাইটের থিমের সাথে মেলে না।
+           মাঝের কালো অংশ (.stage) সবসময় কালোই থাকে; 🌓 বাটন শুধু বাইরের ব্যাকগ্রাউন্ডের রং সামান্য বদলায়। */
+        :root {
+            color-scheme: dark;
+            --page: #06080d; --page2: #0d121b;
+            --bg: #090d13; --panel: #111923; --panel2: #17212d; --line: #263446;
+            --fg: #e8eef6; --mute: #8896a9;
+            --f0: #e5533d; --f1: #eba72b; --f2: #25a872; --f3: #4a86e8;
+            --sans: 'Bricolage Grotesque','Hind Siliguri',system-ui,-apple-system,'Segoe UI',sans-serif;
+            --mono: 'IBM Plex Mono','Hind Siliguri',ui-monospace,SFMono-Regular,Menlo,monospace;
+        }
+        :root[data-bg="alt"] { --page: #1a2231; --page2: #2a3650; }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; min-height: 100vh; color: var(--fg);
+            font: 400 15px/1.55 var(--sans);
+            padding: 14px max(12px,env(safe-area-inset-right,0px)) 26px max(12px,env(safe-area-inset-left,0px));
+            background-color: var(--page);
+            background-image: radial-gradient(color-mix(in srgb,var(--fg) 8%,transparent) 1px,transparent 1.3px), radial-gradient(ellipse 80% 50% at 50% 0%,var(--page2),transparent 70%);
+            background-size: 24px 24px, 100% 100%;
+            background-attachment: fixed;
+            transition: background-color .45s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        button { font: inherit; color: inherit; }
+        :focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+        [hidden] { display: none !important; }
+
+        .stage { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; padding: 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 30px 80px -30px #000; }
+        .credit { margin: 14px 0 0; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: .4px; color: color-mix(in srgb,var(--fg) 55%,transparent); }
+
+        /* উপরের বার */
+        .bar { display: flex; align-items: center; gap: 10px; }
+        .brand { display: flex; align-items: center; gap: 9px; margin-right: auto; min-width: 0; }
+        .brand svg { width: 30px; height: 30px; flex: none; color: var(--f1); }
+        .brand b { display: block; font: 700 23px/1.1 var(--sans); letter-spacing: -.02em; }
+        .brand small { display: block; font-size: 12px; font-weight: 500; color: var(--mute); margin-top: 2px; }
+        .btn { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 8px 13px; cursor: pointer; font-weight: 600; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s, border-color .15s, opacity .15s; }
+        .btn:hover:not(:disabled) { background: var(--panel2); border-color: color-mix(in srgb,var(--fg) 30%,var(--line)); }
+        .btn:disabled { opacity: .4; cursor: default; }
+        .btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+        .btn.primary:hover { background: #fff; }
+        .btn.icon { width: 40px; height: 40px; padding: 0; font-size: 16px; }
+
+        /* স্কোর ও লক্ষ্য */
+        .stats { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; }
+        .stat { display: flex; flex-direction: column; gap: 2px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); min-width: 0; }
+        .stat span { font-size: 12px; font-weight: 600; color: var(--mute); }
+        .stat b { font: 600 20px/1.2 var(--mono); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; }
+        .goal { display: flex; flex-direction: column; justify-content: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); min-width: 0; }
+        .goal div { display: flex; align-items: baseline; gap: 8px; }
+        .goal span { font-size: 12px; font-weight: 600; color: var(--mute); }
+        .goal b { font: 700 20px/1.2 var(--sans); }
+        .goal em { font-style: normal; font-size: 12px; color: var(--mute); margin-left: auto; white-space: nowrap; }
+        .prog { height: 5px; border-radius: 5px; background: var(--panel2); overflow: hidden; }
+        .prog i { display: block; height: 100%; width: 0; border-radius: 5px; background: linear-gradient(90deg,var(--f2),var(--f1)); transition: width .4s ease; }
+
+        /* টুলস */
+        .tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .seg { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-right: auto; }
+        .seg button { border: 0; background: none; padding: 7px 12px; border-radius: 9px; font-size: 13.5px; font-weight: 600; color: var(--mute); cursor: pointer; transition: background .15s, color .15s; }
+        .seg button:hover { color: var(--fg); }
+        .seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+
+        /* বোর্ড */
+        .board { padding: clamp(6px,2.2vw,12px); border-radius: 22px; background: #0a1018; border: 1px solid var(--line); touch-action: none; user-select: none; -webkit-user-select: none; box-shadow: inset 0 0 60px rgba(0,0,0,.5); }
+        .field { position: relative; width: 100%; aspect-ratio: 1 / 1; --gap: clamp(6px,2.2vw,12px); }
+        .cells { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4,1fr); grid-template-rows: repeat(4,1fr); gap: var(--gap); }
+        .cells i { display: block; border-radius: calc(var(--gap) * 1.1); background: #0e1520; box-shadow: inset 0 0 0 1px #1a2635; }
+        .tiles { position: absolute; inset: 0; }
+        .tile { position: absolute; left: 0; top: 0; width: calc((100% - 3 * var(--gap)) / 4); height: calc((100% - 3 * var(--gap)) / 4);
+            transform: translate(calc(var(--c) * (100% + var(--gap))), calc(var(--r) * (100% + var(--gap))));
+            transition: transform .13s ease-out; container-type: inline-size; }
+        .face { position: absolute; inset: 0; border-radius: calc(var(--gap) * 1.1); color: var(--ink,#fff);
+            background: linear-gradient(155deg,var(--top),var(--end));
+            box-shadow: 0 1px 0 rgba(255,255,255,.28) inset, 0 8px 18px -10px rgba(0,0,0,.9), 0 0 0 1px rgba(0,0,0,.5); }
+        .face::after { content: ""; position: absolute; inset: 5cqw; border: .7cqw solid color-mix(in srgb,var(--ink,#fff) 30%,transparent); border-radius: 9cqw; pointer-events: none; }
+        .tile.f0 { --top: #e85a43; --end: #a82b1a; --ink: #fff; }
+        .tile.f1 { --top: #f6c254; --end: #d9921a; --ink: #1c1304; }
+        .tile.f2 { --top: #22a56f; --end: #0c6444; --ink: #fff; }
+        .tile.f3 { --top: #4a86e8; --end: #1f4ea8; --ink: #fff; }
+        .tile.hi .face { box-shadow: 0 1px 0 rgba(255,255,255,.3) inset, 0 0 26px color-mix(in srgb,var(--top) 60%,transparent), 0 0 0 1px rgba(0,0,0,.5); }
+        .z { position: absolute; left: 11cqw; top: 9cqw; font: 600 13cqw/1 var(--mono); opacity: .9; }
+        .sym { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-56%); text-align: center; font: 700 42cqw/1 var(--sans); letter-spacing: -.04em; font-variation-settings: 'opsz' 96; }
+        .nm { position: absolute; left: 0; right: 0; bottom: 11cqw; text-align: center; font: 650 12.5cqw/1 var(--sans); letter-spacing: .02em; }
+        .face.pop { animation: spawn .2s .1s ease-out backwards; }
+        .face.merge { animation: mergepop .24s .08s ease-out backwards; }
+        @keyframes spawn { from { transform: scale(.4); opacity: 0; } }
+        @keyframes mergepop { 0% { transform: scale(.7); } 60% { transform: scale(1.14); } 100% { transform: scale(1); } }
+
+        /* ল্যাব নোট */
+        .lab { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); min-height: 74px; }
+        .lsym { flex: none; width: 50px; height: 50px; border-radius: 12px; display: grid; place-items: center; font: 700 22px/1 var(--sans); background: var(--panel2); border: 1px solid var(--line); }
+        .lab div { min-width: 0; font-size: 13.5px; line-height: 1.5; }
+        .lab b { font-weight: 700; }
+        .lab .meta { margin-left: 6px; font-size: 12px; color: var(--mute); }
+        .lab .eq { display: block; margin-top: 1px; font: 500 12.5px/1.4 var(--mono); color: var(--f1); }
+        .lab p { margin: 2px 0 0; color: #b9c4d2; }
+
+        /* আবিষ্কারের সিঁড়ি */
+        .coll { display: grid; gap: 8px; }
+        .collhead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+        .collhead b { font-size: 14px; font-weight: 700; }
+        .collhead span { font-size: 12.5px; color: var(--mute); }
+        .ladder { display: flex; flex-wrap: wrap; gap: 6px; }
+        .step { display: grid; place-items: center; min-width: 38px; height: 34px; padding: 0 6px; border-radius: 9px; font: 700 13.5px/1 var(--sans); color: #fff; border: 1px solid transparent; }
+        .step.f0 { background: linear-gradient(155deg,#e85a43,#a82b1a); }
+        .step.f1 { background: linear-gradient(155deg,#f6c254,#d9921a); color: #1c1304; }
+        .step.f2 { background: linear-gradient(155deg,#22a56f,#0c6444); }
+        .step.f3 { background: linear-gradient(155deg,#4a86e8,#1f4ea8); }
+        .step.q { background: var(--panel); border-color: var(--line); color: var(--mute); font-weight: 500; }
+        .step.goal-step { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+        /* মডাল */
+        .modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(4,7,11,.76); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .sheet { width: min(460px,100%); max-height: 92%; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: 0 30px 80px -20px #000; }
+        .sheet h2 { margin: 6px 0 12px; font: 700 21px/1.4 var(--sans); }
+        .sheet p { margin: 0 0 12px; color: #b9c4d2; }
+        .mtag { display: inline-block; font-size: 12.5px; font-weight: 700; color: var(--mute); padding: 4px 11px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel2); }
+        .bigsym { display: grid; place-items: center; width: 84px; height: 84px; margin: 12px 0 4px; border-radius: 18px; font: 700 38px/1 var(--sans); color: #fff; box-shadow: 0 0 40px -6px var(--glow); }
+        .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+        .rules { display: grid; gap: 10px; margin: 0 0 16px; padding: 0; list-style: none; }
+        .rules li { display: grid; grid-template-columns: 96px 1fr; gap: 10px; font-size: 14px; line-height: 1.6; color: #c4cedb; }
+        .rules li b { color: var(--fg); font-weight: 700; }
+        .score { display: grid; gap: 6px; margin: 0 0 16px; font-size: 13.5px; color: var(--mute); }
+        .score div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+
+        .toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top,0px) + 22px); transform: translateX(-50%); z-index: 45; max-width: calc(100% - 24px); font-size: 15px; font-weight: 800; background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 99px; opacity: 0; pointer-events: none; text-align: center; }
+        .toast.on { animation: toast 1.8s ease forwards; }
+        @keyframes toast { 0% { opacity: 0; transform: translate(-50%,-8px); } 12%,80% { opacity: 1; transform: translate(-50%,0); } 100% { opacity: 0; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+        @media (max-width: 480px) {
+            body { padding-top: 8px; }
+            .stage { padding: 10px; border-radius: 20px; gap: 10px; }
+            .btn .long { display: none; }
+            .brand small { display: none; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .goal { grid-column: 1 / -1; }
+            .rules li { grid-template-columns: 1fr; gap: 2px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header class="bar">
+            <a class="btn" href="games.html#premium" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+            <div class="brand">
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="16" r="5.2" fill="currentColor" stroke="none"/><path d="M16 3v4.5M16 24.5V29M3 16h4.5M24.5 16H29M6.8 6.8l3.2 3.2M22 22l3.2 3.2M25.2 6.8 22 10M10 22l-3.2 3.2"/></svg>
+                <div><b>Fusion 2048</b><small>তারার ভেতরের ফিউশন</small></div>
+            </div>
+            <button class="btn icon" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+        </header>
+
+        <section class="stats" aria-label="স্কোর">
+            <div class="stat"><span>পয়েন্ট</span><b id="score">০</b></div>
+            <div class="stat"><span>সেরা</span><b id="best">০</b></div>
+            <div class="goal">
+                <div><span>লক্ষ্য</span><b id="goalSym">Ti</b><em id="goalName"></em></div>
+                <div class="prog" aria-hidden="true"><i id="prog"></i></div>
+            </div>
+        </section>
+
+        <div class="tools">
+            <div class="seg" role="group" aria-label="কঠিনতা">
+                <button type="button" data-mode="easy" aria-pressed="false">সহজ</button>
+                <button type="button" data-mode="normal" aria-pressed="true">মাঝারি</button>
+                <button type="button" data-mode="hard" aria-pressed="false">কঠিন</button>
+            </div>
+            <button class="btn" id="btnUndo">↶ পূর্বাবস্থা</button>
+            <button class="btn" id="btnRules">নিয়ম</button>
+            <button class="btn" id="btnNew">নতুন খেলা</button>
+        </div>
+
+        <div class="board" id="board" aria-label="গেম বোর্ড">
+            <div class="field">
+                <div class="cells" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="tiles" id="tiles"></div>
+            </div>
+        </div>
+
+        <section class="lab" id="lab" aria-live="polite"></section>
+
+        <section class="coll" aria-label="আবিষ্কৃত মৌল">
+            <div class="collhead"><b>মৌলের সিঁড়ি</b><span id="found"></span></div>
+            <div class="ladder" id="ladder"></div>
+        </section>
+    </div>
+    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+
+    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+    (function () {
+        'use strict';
+        var $ = function (s) { return document.querySelector(s); };
+        var bn = function (n) { return Number(n).toLocaleString('bn-BD', { useGrouping: false }); };
+
+        /* 🌓 বাটন শুধু বাইরের ব্যাকগ্রাউন্ডের রং বদলায়; মাঝের কালো অংশ একই থাকে */
+        $('#bgBtn').addEventListener('click', function () {
+            var root = document.documentElement;
+            var next = root.getAttribute('data-bg') === 'alt' ? 'dark' : 'alt';
+            if (next === 'alt') root.setAttribute('data-bg', 'alt'); else root.removeAttribute('data-bg');
+            try { localStorage.setItem('fusion-bg', next); } catch (e) {}
+        });
+
+        /* ---------- ডেটা: তারার ভেতরের ফিউশন সিঁড়ি ---------- */
+        var FAM = ['সক্রিয় ধাতু', 'ট্রানজিশন ধাতু', 'অধাতু', 'p-ব্লক ও নিষ্ক্রিয় গ্যাস'];
+        var FAMCOL = ['var(--f0)', 'var(--f1)', 'var(--f2)', 'var(--f3)'];
+        var EL = [null,
+            { z: 1,  sym: 'H',  en: 'Hydrogen',  bn: 'হাইড্রোজেন',  fam: 2, fact: 'মহাবিশ্বের সবচেয়ে হালকা ও সবচেয়ে প্রাচুর্যপূর্ণ মৌল। তারার প্রধান জ্বালানি।' },
+            { z: 2,  sym: 'He', en: 'Helium',    bn: 'হিলিয়াম',     fam: 3, fact: 'সূর্যের কেন্দ্রে হাইড্রোজেন ফিউশন হয়ে হিলিয়াম তৈরি হয়। এটি একটি নিষ্ক্রিয় গ্যাস।' },
+            { z: 6,  sym: 'C',  en: 'Carbon',    bn: 'কার্বন',        fam: 2, fact: 'তিনটি হিলিয়াম মিলে কার্বন তৈরি হয় (ট্রিপল-আলফা প্রক্রিয়া)। প্রাণের ভিত্তি।' },
+            { z: 8,  sym: 'O',  en: 'Oxygen',    bn: 'অক্সিজেন',     fam: 2, fact: 'কার্বনের সাথে আরেকটি হিলিয়াম যুক্ত হয়ে অক্সিজেন হয়। বাতাসের প্রায় ২১%।' },
+            { z: 10, sym: 'Ne', en: 'Neon',      bn: 'নিয়ন',          fam: 3, fact: 'বড় তারার ভেতরে তৈরি হয়। বিজ্ঞাপনের সাইনে লালচে-কমলা আলো দেয়।' },
+            { z: 12, sym: 'Mg', en: 'Magnesium', bn: 'ম্যাগনেসিয়াম', fam: 0, fact: 'জ্বলার সময় চোখ ধাঁধানো সাদা আলো দেয়। ক্লোরোফিলের কেন্দ্রে থাকে।' },
+            { z: 14, sym: 'Si', en: 'Silicon',   bn: 'সিলিকন',        fam: 3, fact: 'বালু ও কম্পিউটার চিপের মূল উপাদান।' },
+            { z: 16, sym: 'S',  en: 'Sulfur',    bn: 'সালফার',        fam: 2, fact: 'হলুদ কঠিন পদার্থ। সালফিউরিক অ্যাসিডের উৎস।' },
+            { z: 18, sym: 'Ar', en: 'Argon',     bn: 'আর্গন',         fam: 3, fact: 'বাতাসে তৃতীয় সর্বাধিক গ্যাস। বৈদ্যুতিক বাল্বে ভরা হয়।' },
+            { z: 20, sym: 'Ca', en: 'Calcium',   bn: 'ক্যালসিয়াম',   fam: 0, fact: 'হাড় ও দাঁত গঠন করে। চুনাপাথরের প্রধান উপাদান।' },
+            { z: 22, sym: 'Ti', en: 'Titanium',  bn: 'টাইটানিয়াম',   fam: 1, fact: 'শক্ত, হালকা ও মরিচা-প্রতিরোধী। শরীরের ইমপ্লান্টে ব্যবহৃত হয়।' },
+            { z: 24, sym: 'Cr', en: 'Chromium',  bn: 'ক্রোমিয়াম',    fam: 1, fact: 'স্টেইনলেস স্টিল ও ক্রোম প্লেটিংয়ের উজ্জ্বলতার কারণ।' },
+            { z: 26, sym: 'Fe', en: 'Iron',      bn: 'আয়রন (লোহা)',  fam: 1, fact: 'এখানে এসে তারার ভেতরের ফিউশন থেমে যায়, কারণ এরপর ফিউশনে আর শক্তি পাওয়া যায় না।' }
+        ];
+        var MAXLV = EL.length - 1;
+        var MODES = { easy: { lv: 9, label: 'সহজ' }, normal: { lv: 11, label: 'মাঝারি' }, hard: { lv: 13, label: 'কঠিন' } };
+
+        /* ---------- অবস্থা ---------- */
+        var tilesEl = $('#tiles');
+        var G = null, nextId = 1;
+        var found = {}, best = 0, mode = 'normal';
+        try {
+            var arr = JSON.parse(localStorage.getItem('fusion-found') || '[]');
+            if (Array.isArray(arr)) arr.forEach(function (n) { if (n >= 1 && n <= MAXLV) found[n] = true; });
+            best = parseInt(localStorage.getItem('fusion-best'), 10) || 0;
+            var sm = localStorage.getItem('fusion-mode');
+            if (sm && MODES[sm]) mode = sm;
+        } catch (e) {}
+
+        function save() {
+            try {
+                localStorage.setItem('fusion-found', JSON.stringify(Object.keys(found).map(Number)));
+                localStorage.setItem('fusion-best', String(best));
+                localStorage.setItem('fusion-mode', mode);
+            } catch (e) {}
+        }
+        function goalLv() { return MODES[mode].lv; }
+        function maxLv() { var m = 0; G.cells.forEach(function (t) { if (t && t.lv > m) m = t.lv; }); return m; }
+        function toast(t) { var e = $('#toast'); e.textContent = t; e.classList.remove('on'); void e.offsetWidth; e.classList.add('on'); }
+
+        /* ---------- টাইল ---------- */
+        function place(t) { t.el.style.setProperty('--r', t.r); t.el.style.setProperty('--c', t.c); }
+        function makeTile(lv, r, c, anim) {
+            var e = EL[lv];
+            var el = document.createElement('div');
+            el.className = 'tile f' + e.fam + (lv >= 11 ? ' hi' : '');
+            el.dataset.lv = lv;
+            el.style.setProperty('--r', r);
+            el.style.setProperty('--c', c);
+            el.innerHTML = '<div class="face' + (anim ? ' ' + anim : '') + '"><span class="z">' + e.z + '</span><b class="sym">' + e.sym + '</b><span class="nm">' + e.en + '</span></div>';
+            tilesEl.appendChild(el);
+            return { id: nextId++, lv: lv, r: r, c: c, el: el };
+        }
+        function spawn() {
+            var empty = [];
+            for (var i = 0; i < 16; i++) if (!G.cells[i]) empty.push(i);
+            if (!empty.length) return;
+            var idx = empty[Math.floor(Math.random() * empty.length)];
+            var lv = Math.random() < 0.9 ? 1 : 2;
+            G.cells[idx] = makeTile(lv, Math.floor(idx / 4), idx % 4, 'pop');
+            if (lv === 2 && !found[2]) { found[2] = true; save(); renderLadder(); }
+        }
+
+        /* ---------- চালনা ---------- */
+        function snapshot() { return { lv: G.cells.map(function (t) { return t ? t.lv : 0; }), score: G.score }; }
+        function restore(s) {
+            tilesEl.innerHTML = '';
+            G.cells = s.lv.map(function (lv, i) { return lv ? makeTile(lv, Math.floor(i / 4), i % 4, '') : null; });
+            G.score = s.score;
+            G.over = false;
+        }
+        function move(dir) {
+            if (!G || G.over) return;
+            var before = snapshot();
+            var moved = false, gained = 0, newest = 0;
+            for (var i = 0; i < 4; i++) {
+                var pos = [];
+                for (var k = 0; k < 4; k++) {
+                    var r, c;
+                    if (dir === 3) { r = i; c = k; } else if (dir === 1) { r = i; c = 3 - k; } else if (dir === 0) { r = k; c = i; } else { r = 3 - k; c = i; }
+                    pos.push([r, c]);
+                }
+                var tiles = [];
+                pos.forEach(function (p) { var t = G.cells[p[0] * 4 + p[1]]; if (t) tiles.push(t); });
+                var placed = [];
+                for (var t = 0; t < tiles.length; t++) {
+                    var a = tiles[t], b = tiles[t + 1];
+                    if (b && a.lv === b.lv && a.lv < MAXLV) { placed.push({ merge: [a, b] }); t++; }
+                    else placed.push({ tile: a });
+                }
+                pos.forEach(function (p) { G.cells[p[0] * 4 + p[1]] = null; });
+                placed.forEach(function (item, idx) {
+                    var rr = pos[idx][0], cc = pos[idx][1];
+                    if (item.tile) {
+                        var tt = item.tile;
+                        if (tt.r !== rr || tt.c !== cc) { moved = true; tt.r = rr; tt.c = cc; place(tt); }
+                        G.cells[rr * 4 + cc] = tt;
+                    } else {
+                        moved = true;
+                        var a2 = item.merge[0], b2 = item.merge[1];
+                        [a2, b2].forEach(function (x) { x.r = rr; x.c = cc; place(x); });
+                        var nt = makeTile(a2.lv + 1, rr, cc, 'merge');
+                        G.cells[rr * 4 + cc] = nt;
+                        gained += Math.pow(2, nt.lv);
+                        if (nt.lv > newest) newest = nt.lv;
+                        setTimeout(function () { a2.el.remove(); b2.el.remove(); }, 150);
+                    }
+                });
+            }
+            if (!moved) return;
+            G.hist.push(before);
+            if (G.hist.length > 10) G.hist.shift();
+            G.score += gained;
+            if (G.score > best) { best = G.score; save(); }
+            spawn();
+            if (newest) discover(newest);
+            updateHUD();
+            checkEnd();
+        }
+        function canMove() {
+            for (var i = 0; i < 16; i++) {
+                var t = G.cells[i];
+                if (!t) return true;
+                var r = Math.floor(i / 4), c = i % 4;
+                if (c < 3 && G.cells[i + 1] && G.cells[i + 1].lv === t.lv && t.lv < MAXLV) return true;
+                if (r < 3 && G.cells[i + 4] && G.cells[i + 4].lv === t.lv && t.lv < MAXLV) return true;
+            }
+            return false;
+        }
+        function checkEnd() {
+            if (!G.won && maxLv() >= goalLv()) { G.won = true; showWin(); return; }
+            if (!canMove()) { G.over = true; showOver(); }
+        }
+        function undo() {
+            if (!G || !G.hist.length || G.undos <= 0) return;
+            closeModal();
+            restore(G.hist.pop());
+            G.undos--;
+            updateHUD();
+        }
+
+        /* ---------- দেখানো ---------- */
+        function discover(lv) {
+            showEl(lv);
+            if (!found[lv]) {
+                found[lv] = true; save(); renderLadder();
+                toast('নতুন মৌল আবিষ্কার: ' + EL[lv].sym + ' · ' + EL[lv].bn);
+            }
+        }
+        function showEl(lv) {
+            var e = EL[lv], p = EL[lv - 1];
+            var eq = lv > 1 ? '<span class="eq">' + p.sym + ' + ' + p.sym + ' → ' + e.sym + '</span>' : '<span class="eq">সব মৌলের শুরু</span>';
+            $('#lab').innerHTML = '<span class="lsym" style="color:' + FAMCOL[e.fam] + '">' + e.sym + '</span><div><b>' + e.bn + '</b><span class="meta">' + e.en + ' · Z ' + e.z + ' · ' + FAM[e.fam] + '</span>' + eq + '<p>' + e.fact + '</p></div>';
+        }
+        function renderLadder() {
+            var n = 0, html = '';
+            for (var lv = 1; lv <= MAXLV; lv++) {
+                var e = EL[lv], has = !!found[lv];
+                if (has) n++;
+                html += '<span class="step ' + (has ? 'f' + e.fam : 'q') + (lv === goalLv() ? ' goal-step' : '') + '" title="' + (has ? e.bn + ' (' + e.en + ')' : 'এখনো আবিষ্কার হয়নি') + '">' + (has ? e.sym : '?') + '</span>';
+            }
+            $('#ladder').innerHTML = html;
+            $('#found').textContent = bn(n) + '/' + bn(MAXLV) + ' আবিষ্কৃত';
+        }
+        function updateHUD() {
+            $('#score').textContent = bn(G.score);
+            $('#best').textContent = bn(best);
+            var g = EL[goalLv()];
+            $('#goalSym').textContent = g.sym;
+            $('#goalName').textContent = g.bn;
+            $('#prog').style.width = Math.min(100, Math.round(maxLv() / goalLv() * 100)) + '%';
+            var u = $('#btnUndo');
+            u.textContent = '↶ পূর্বাবস্থা (' + bn(G.undos) + ')';
+            u.disabled = !(G.hist.length && G.undos > 0);
+            document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === mode)); });
+            renderLadder();
+        }
+
+        /* ---------- মডাল ---------- */
+        function openModal(html) { $('#sheet').innerHTML = html; $('#modal').hidden = false; }
+        function closeModal() { $('#modal').hidden = true; $('#sheet').innerHTML = ''; }
+        function showWin() {
+            var e = EL[goalLv()];
+            openModal('<span class="mtag">🎉 লক্ষ্য পূর্ণ!</span><div class="bigsym" style="background:linear-gradient(155deg,' + FAMCOL[e.fam] + ',#0b1118);--glow:' + FAMCOL[e.fam] + '">' + e.sym + '</div>' +
+                '<h2>তুমি ' + e.bn + ' (' + e.sym + ') তৈরি করেছ!</h2><p>' + e.fact + '</p>' +
+                '<div class="row"><button class="btn" id="cont">খেলা চালিয়ে যাও</button><button class="btn primary" id="again">নতুন খেলা</button></div>');
+            $('#cont').onclick = function () { closeModal(); checkEnd(); };
+            $('#again').onclick = newGame;
+        }
+        function showOver() {
+            var e = EL[maxLv()];
+            openModal('<span class="mtag">ফিউশন থেমে গেছে</span><h2>আর কোনো চাল বাকি নেই</h2>' +
+                '<div class="score"><div><span>পয়েন্ট</span><span>' + bn(G.score) + '</span></div><div><span>সেরা পয়েন্ট</span><span>' + bn(best) + '</span></div><div><span>সবচেয়ে ভারী মৌল</span><span>' + e.sym + ' · ' + e.bn + '</span></div></div>' +
+                '<div class="row">' + (G.undos > 0 && G.hist.length ? '<button class="btn" id="undoBtn">↶ পূর্বাবস্থা (' + bn(G.undos) + ')</button>' : '') + '<button class="btn primary" id="again">আবার খেলো</button></div>');
+            if ($('#undoBtn')) $('#undoBtn').onclick = undo;
+            $('#again').onclick = newGame;
+        }
+        function rulesModal() {
+            openModal('<span class="mtag">কীভাবে খেলবে</span><h2>তারার মতো মৌল জুড়ে লক্ষ্যে পৌঁছাও</h2>' +
+                '<ul class="rules">' +
+                '<li><b>চালনা</b><span>কীবোর্ডের তীর চিহ্ন বা W A S D চাপো। ফোনে বোর্ডে সোয়াইপ করো।</span></li>' +
+                '<li><b>মেলানো</b><span>একই দুটি মৌল ধাক্কা খেলে মিলে পরের ধাপের মৌল হয়। যেমন H + H → He।</span></li>' +
+                '<li><b>সিঁড়ি</b><span>H → He → C → O → Ne → Mg → Si → S → Ar → Ca → Ti → Cr → Fe</span></li>' +
+                '<li><b>বিজ্ঞান</b><span>তারার ভেতরে হাইড্রোজেন থেকে হিলিয়াম হয়, তারপর হিলিয়াম যুক্ত হতে হতে ভারী মৌল তৈরি হয়। খেলার সুবিধার জন্য ধাপগুলো সরল করা হয়েছে।</span></li>' +
+                '<li><b>লোহা (Fe)</b><span>এরপর ফিউশনে আর শক্তি পাওয়া যায় না, তাই Fe আর অন্য Fe-র সাথে মেলে না।</span></li>' +
+                '<li><b>লক্ষ্য</b><span>সহজ: Ar, মাঝারি: Ti, কঠিন: Fe। খেলার মাঝেও কঠিনতা বদলাতে পারো।</span></li>' +
+                '<li><b>পূর্বাবস্থা</b><span>প্রতি খেলায় ৩ বার শেষ চাল ফেরাতে পারবে।</span></li>' +
+                '</ul><div class="row"><button class="btn primary" id="rClose">বুঝেছি</button></div>');
+            $('#rClose').onclick = closeModal;
+        }
+
+        /* ---------- নতুন খেলা ---------- */
+        function newGame() {
+            closeModal();
+            tilesEl.innerHTML = '';
+            G = { cells: new Array(16).fill(null), score: 0, hist: [], undos: 3, won: false, over: false };
+            spawn(); spawn();
+            found[1] = true; save();
+            showEl(1);
+            updateHUD();
+        }
+
+        /* ---------- ইনপুট ---------- */
+        var KEYS = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3, W: 0, D: 1, S: 2, A: 3 };
+        document.addEventListener('keydown', function (e) {
+            if (!$('#modal').hidden) return;
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (Object.prototype.hasOwnProperty.call(KEYS, e.key)) { e.preventDefault(); move(KEYS[e.key]); }
+        });
+        var sx = 0, sy = 0, sid = null, board = $('#board');
+        board.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; sid = e.pointerId; });
+        window.addEventListener('pointerup', function (e) {
+            if (sid === null) return;
+            sid = null;
+            if (!$('#modal').hidden) return;
+            var dx = e.clientX - sx, dy = e.clientY - sy;
+            if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+            if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 1 : 3); else move(dy > 0 ? 2 : 0);
+        });
+        window.addEventListener('pointercancel', function () { sid = null; });
+
+        document.querySelectorAll('.seg button').forEach(function (b) {
+            b.addEventListener('click', function () {
+                mode = b.dataset.mode; save();
+                var reached = maxLv() >= goalLv();
+                if (reached && !G.won) { G.won = true; updateHUD(); showWin(); return; }
+                if (!reached) G.won = false;
+                updateHUD();
+            });
+        });
+        $('#btnUndo').addEventListener('click', undo);
+        $('#btnRules').addEventListener('click', rulesModal);
+        var newTimer = null;
+        $('#btnNew').addEventListener('click', function () {
+            var b = $('#btnNew');
+            if (G.score === 0 || G.over || newTimer) {
+                if (newTimer) { clearTimeout(newTimer); newTimer = null; b.textContent = 'নতুন খেলা'; }
+                newGame(); return;
+            }
+            b.textContent = 'নিশ্চিত? আবার চাপো';
+            newTimer = setTimeout(function () { newTimer = null; b.textContent = 'নতুন খেলা'; }, 2500);
+        });
+
+        newGame();
+    })();
+    </script>
+</body>
+</html>
