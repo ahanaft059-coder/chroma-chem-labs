@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ff5436">
+    <title>থার্মো কেমিস্ট্রি কোয়েস্ট | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () { try { var v = localStorage.getItem('thermo-bg'); if (v === 'alt') v = '2'; if (v === '2' || v === '3') document.documentElement.setAttribute('data-bg', v); } catch (e) {} })();
+    </script>
+    <style>
+/* ===== NB KIT: sticker / neo-brutalist দৃশ্যরূপ =====
+   প্রতিটি গেম নিজের :root-এ এই টোকেনগুলো বদলে নিজস্ব রং পায়:
+   --o1 --o2 --o3 (বাইরের ব্যাকগ্রাউন্ড), --paper (বোর্ড), --paper2, --ink, --a1 --a2 --a3 (অ্যাকসেন্ট)  */
+:root {
+    color-scheme: light;
+    --o1: #ff6b4a; --o2: #ffd23f; --o3: #5ad1c4;
+    --paper: #fff8ec; --paper2: #ffffff; --ink: #1d1030; --mute: #6a5f80;
+    --a1: #ff6b4a; --a2: #2ec4b6; --a3: #ffd23f; --good: #12a36b; --bad: #e5384d;
+    --bw: 3px; --rad: 16px; --sh: 5px;
+    --display: 'Bricolage Grotesque','Hind Siliguri',system-ui,sans-serif;
+    --body: 'Hind Siliguri','Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+    --pat: radial-gradient(rgba(29,16,48,.20) 1.4px, transparent 1.6px);
+    --pat-size: 22px 22px;
+}
+:root[data-bg="2"] { --o1: #2ec4b6; --o2: #c9f2ee; --o3: #ff6b4a; }
+:root[data-bg="3"] { --o1: #a78bfa; --o2: #ffd6f0; --o3: #ffd23f; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0; min-height: 100vh; color: var(--ink); font-family: var(--body); font-weight: 500; line-height: 1.55;
+    padding: 18px max(14px, env(safe-area-inset-right, 0px)) 30px max(14px, env(safe-area-inset-left, 0px));
+    background-color: var(--o1);
+    background-image: var(--pat), radial-gradient(circle at 12% 6%, var(--o2) 0, transparent 46%), radial-gradient(circle at 94% 96%, var(--o3) 0, transparent 50%);
+    background-size: var(--pat-size), 100% 100%, 100% 100%;
+    background-attachment: fixed; transition: background-color .4s; -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.stage { max-width: 860px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 24px; box-shadow: 9px 9px 0 var(--ink); }
+.credit { width: fit-content; max-width: 100%; margin: 18px auto 0; padding: 6px 14px; text-align: center; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; color: var(--ink); background: var(--paper); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+
+/* উপরের বার */
+.top { display: flex; align-items: center; gap: 10px; }
+.titlebox { margin-right: auto; min-width: 0; }
+.titlebox b { display: inline-block; padding: 3px 12px; font: 800 clamp(1.05rem, 3.6vw, 1.35rem)/1.3 var(--display); color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-1.2deg); }
+.titlebox small { display: block; margin: 5px 0 0 4px; font-size: 12px; font-weight: 700; color: var(--mute); }
+.btn, .back-btn, .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 14px;
+    font: 800 14px/1 var(--body); text-decoration: none; cursor: pointer; color: var(--ink); background: var(--paper2);
+    border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s, background .12s;
+}
+.btn:hover:not(:disabled), .back-btn:hover, .icon-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.btn:active:not(:disabled), .back-btn:active, .icon-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; box-shadow: 2px 2px 0 var(--ink); }
+.btn.primary { background: var(--a1); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.btn.alt { background: var(--a2); }
+.btn.big { min-height: 54px; padding: 0 26px; font-size: 17px; border-radius: 14px; }
+.icon-btn { width: 42px; padding: 0; font-size: 17px; }
+
+/* পিল, ক্যাপসুল, কার্ড */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; font-size: 13px; font-weight: 800; color: var(--ink); background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+.pill b { font-variant-numeric: tabular-nums; }
+.box { padding: 14px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: var(--rad); box-shadow: 5px 5px 0 var(--ink); }
+.sticker { display: inline-block; padding: 3px 11px; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--a3); border: 2.5px solid var(--ink); border-radius: 8px; transform: rotate(-2deg); }
+.meter { height: 16px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 99px; overflow: hidden; }
+.meter i { display: block; height: 100%; width: 100%; background: var(--a1); border-right: 2.5px solid var(--ink); transition: width .25s ease; }
+.hazard { height: 12px; border: 2.5px solid var(--ink); border-radius: 6px; background: repeating-linear-gradient(-45deg, var(--a3) 0 10px, var(--ink) 10px 20px); }
+
+/* মডাল */
+.modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; background: rgba(29,16,48,.58); }
+.sheet { width: min(500px, 100%); max-height: 92%; overflow: auto; padding: 22px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 22px; box-shadow: 9px 9px 0 var(--ink); }
+.sheet h2 { margin: 6px 0 10px; font: 800 22px/1.35 var(--display); }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 18px); transform: translateX(-50%); z-index: 3500; padding: 8px 16px; font-size: 15px; font-weight: 800; color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 99px; box-shadow: 4px 4px 0 var(--ink); opacity: 0; pointer-events: none; }
+.toast.on { animation: nbtoast 1.7s ease forwards; }
+@keyframes nbtoast { 0% { opacity: 0; transform: translate(-50%, -10px); } 12%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+@keyframes nbshake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes nbpop { from { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.12); } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 520px) { .stage { padding: 12px; border-radius: 20px; gap: 12px; box-shadow: 6px 6px 0 var(--ink); } .back-btn .long { display: none; } .titlebox small { display: none; } }
+
+        /* ===== থার্মো কোয়েস্ট: গরম/ঠান্ডা থিম ===== */
+        :root {
+            --o1: #ff5436; --o2: #ffb13b; --o3: #d93a1c;
+            --paper: #fff4dc; --paper2: #fffdf6; --ink: #2a0f14; --mute: #7a5560;
+            --a1: #ff4a2b; --a2: #5fd4ff; --a3: #ffc933; --good: #0f9d63; --bad: #d8243c;
+            --heat: #ff4a2b; --ice: #5fd4ff; --text-muted: var(--mute);
+            --pat: radial-gradient(rgba(42,15,20,.22) 1.4px, transparent 1.6px);
+            --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='26'%3E%3Cpath d='M0 13Q16 1 32 13T64 13' fill='none' stroke='%23ff8a63' stroke-width='5' stroke-opacity='.55'/%3E%3C/svg%3E");
+        }
+        :root[data-bg="2"] { --o1: #6ccbff; --o2: #e6f8ff; --o3: #3a9ee6; --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='26'%3E%3Cpath d='M0 13Q16 1 32 13T64 13' fill='none' stroke='%23b5e6ff' stroke-width='5' stroke-opacity='.7'/%3E%3C/svg%3E"); }
+        :root[data-bg="3"] { --o1: #a35cff; --o2: #ff7be0; --o3: #6a3bd8; --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='26'%3E%3Cpath d='M0 13Q16 1 32 13T64 13' fill='none' stroke='%23d1a6ff' stroke-width='5' stroke-opacity='.6'/%3E%3C/svg%3E"); }
+        body {
+            background-image: var(--pat), var(--wave), radial-gradient(circle at 12% 6%, var(--o2) 0, transparent 46%), radial-gradient(circle at 94% 96%, var(--o3) 0, transparent 52%);
+            background-size: 22px 22px, 64px 26px, 100% 100%, 100% 100%;
+        }
+        .modal { background: rgba(42,15,20,.62); }
+        .top { flex-wrap: nowrap; }
+        .titlebox b { background: var(--a3); line-height: 1.25; }
+        .titlebox small { display: inline-block; margin: 6px 0 0 4px; padding: 0 9px; font-size: 11.5px; color: var(--ink); background: var(--a2); border: 2px solid var(--ink); border-radius: 99px; transform: rotate(1.5deg); }
+        #bgBtn:hover { transform: translate(-1px,-1px); }
+
+        /* তাপ-মিটার (থার্মোমিটার) */
+        .hud { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; }
+        .cell { display: flex; flex-direction: column; gap: 3px; padding: 7px 11px; min-width: 0; background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 14px; box-shadow: 3px 3px 0 var(--ink); }
+        .cell span { font-size: 12px; font-weight: 800; color: var(--mute); }
+        .cell b { font-size: 19px; font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; }
+        .cell.wide { background: var(--paper2); }
+        .cell.wide .hn { float: right; font-size: 13px; padding: 0 8px; color: #fff; background: var(--ink); border-radius: 99px; }
+        .thermo { display: flex; align-items: center; margin-top: 3px; }
+        .bulb { flex: none; width: 34px; height: 34px; margin-right: -9px; z-index: 2; border-radius: 50%; border: var(--bw) solid var(--ink); background: radial-gradient(circle at 32% 30%, #fff 0 9%, transparent 11%), var(--heat); box-shadow: 2px 2px 0 var(--ink); }
+        .thermo:has(.low) .bulb { background: radial-gradient(circle at 32% 30%, #fff 0 9%, transparent 11%), var(--ice); }
+        .thermo .meter { position: relative; flex: 1; height: 22px; margin: 0; background: var(--paper2); border-radius: 0 99px 99px 0; }
+        .meter i { background: linear-gradient(90deg, #ffc933, #ff7a2b 55%, #ff3b2b); }
+        .meter i.low { background: linear-gradient(90deg, #5fd4ff, #2f9be8); animation: blink .7s infinite; }
+        .thermo .meter::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 2px), rgba(42,15,20,.55) calc(10% - 2px) 10%); -webkit-mask: linear-gradient(transparent 0, transparent 0); mask: none; }
+        @keyframes blink { 50% { opacity: .5; } }
+        @media (max-width: 560px) { .hud { grid-template-columns: 1fr 1fr 1fr; } .cell.wide { grid-column: 1 / -1; } }
+
+        .btn.primary { background: var(--a1); }
+        .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .view { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; background: var(--paper2); }
+        .view h2 { margin: 0; font: 800 24px/1.4 var(--display); }
+        .view p { margin: 0; max-width: 520px; color: var(--mute); font-weight: 600; line-height: 1.7; }
+        .hero { display: grid; place-items: center; width: 92px; height: 92px; font-size: 52px; line-height: 1; background: var(--a2); border: var(--bw) solid var(--ink); border-radius: 26px; box-shadow: 5px 5px 0 var(--ink); transform: rotate(-4deg); }
+        .view .hz { width: min(440px, 100%); }
+        .lvls { display: grid; gap: 10px; width: min(440px,100%); }
+        .lvl { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; min-height: 60px; text-align: left; padding: 8px 12px; cursor: pointer; color: var(--ink); background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+        .lvl:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+        .lvl:active:not(:disabled) { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+        .lvl:disabled { cursor: default; opacity: .6; border-style: dashed; box-shadow: 2px 2px 0 var(--ink); }
+        .lvl .n { width: 40px; height: 40px; display: grid; place-items: center; font: 800 18px var(--display); color: #fff; text-shadow: 1px 1px 0 var(--ink); background: var(--a1); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 2px 2px 0 var(--ink); }
+        .lvl:nth-child(2) .n { background: var(--a3); color: var(--ink); text-shadow: none; }
+        .lvl:nth-child(3) .n { background: var(--a2); color: var(--ink); text-shadow: none; }
+        .lvl b { display: block; font-size: 15.5px; font-weight: 800; }
+        .lvl small { color: var(--mute); font-size: 12.5px; font-weight: 700; }
+        .lvl em { font-style: normal; font-size: 12px; font-weight: 800; padding: 2px 9px; background: var(--a3); border: 2px solid var(--ink); border-radius: 99px; transform: rotate(2deg); }
+        .best { display: inline-block; padding: 3px 12px; font-size: 13px; font-weight: 800; background: var(--a3); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); }
+
+        /* গোলকধাঁধা */
+        .mzwrap { position: relative; width: min(520px,100%); margin: 0 auto; aspect-ratio: 1 / 1; container-type: inline-size; touch-action: none; user-select: none; -webkit-user-select: none; border-radius: 14px; overflow: hidden; border: var(--bw) solid var(--ink); background: #ffeec2; box-shadow: 5px 5px 0 var(--ink); }
+        .maze { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(var(--T),1fr); grid-template-rows: repeat(var(--T),1fr); }
+        .maze i { display: grid; place-items: center; font-style: normal; font-size: calc(100cqw / var(--T) * .62); line-height: 1; }
+        .maze i.f { background: #ffeec2; }
+        .maze i.w { position: relative; z-index: 1; background: var(--ink); box-shadow: calc(100cqw / var(--T) * .16) calc(100cqw / var(--T) * .16) 0 rgba(42,15,20,.28), inset 0 0 0 calc(100cqw / var(--T) * .06) #4a1d26; }
+        .maze i.d { position: relative; z-index: 2; border: calc(100cqw / var(--T) * .13) solid transparent; background: linear-gradient(#ffe9a0,#ffe9a0) padding-box, repeating-linear-gradient(-45deg, var(--a3) 0 4px, var(--ink) 4px 8px) border-box; animation: glow 1.4s ease-in-out infinite; }
+        @keyframes glow { 50% { filter: brightness(1.12) saturate(1.2); } }
+        .pl { position: absolute; left: 0; top: 0; z-index: 5; width: calc(100% / var(--T)); height: calc(100% / var(--T)); display: grid; place-items: center; font-size: calc(100cqw / var(--T) * .7); line-height: 1;
+            transform: translate(calc(var(--c) * 100%), calc(var(--r) * 100%)); transition: transform .12s ease-out; pointer-events: none;
+            filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(2px 3px 0 var(--ink)); }
+        .pad { display: grid; grid-template-columns: repeat(3,68px); grid-template-rows: repeat(2,58px); gap: 8px; justify-content: center; }
+        .pad button { font-size: 22px; font-weight: 800; cursor: pointer; touch-action: manipulation; color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 0 5px 0 var(--ink); transition: transform .08s, box-shadow .08s, background .08s; }
+        .pad button:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); background: var(--a1); color: #fff; }
+        .pad .up { grid-column: 2; grid-row: 1; } .pad .lf { grid-column: 1; grid-row: 2; } .pad .dn { grid-column: 2; grid-row: 2; } .pad .rt { grid-column: 3; grid-row: 2; }
+        .hint { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--mute); line-height: 1.6; }
+        .view > .hint { margin: 0; }
+
+        /* ধাঁধার টিকিট */
+        .sheet { position: relative; padding: 0 22px 22px; background: var(--paper); }
+        .sheet::before { content: ""; display: block; height: 14px; margin: 0 -22px 16px; border-bottom: var(--bw) solid var(--ink); border-radius: 19px 19px 0 0; background: repeating-linear-gradient(-45deg, var(--a3) 0 10px, var(--ink) 10px 20px); }
+        .qtag { display: inline-flex; align-items: center; gap: 7px; padding: 4px 13px; font-size: 13px; font-weight: 800; color: var(--ink); background: var(--a3); border: 2.5px solid var(--ink); border-radius: 8px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(-3deg); }
+        .qtag::before { content: ""; width: 8px; height: 8px; background: var(--paper); border: 2px solid var(--ink); border-radius: 50%; }
+        .qtext { margin: 12px 0 14px; font: 800 clamp(1.1rem,3.4vw,1.4rem)/1.6 var(--body); }
+        .qtext .sub { display: inline-block; margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--mute); }
+        .sheet .row { justify-content: flex-end; margin-top: 14px; padding-top: 14px; border-top: 3px dashed var(--ink); }
+        .sheet .row:empty { display: none; }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        @media (max-width: 520px) { .opts { grid-template-columns: 1fr; } }
+        .opt { display: flex; align-items: center; gap: 10px; min-height: 56px; text-align: left; padding: 10px 12px; cursor: pointer; font-weight: 800; font-size: 15.5px; color: var(--ink); background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); transition: transform .1s, box-shadow .1s; }
+        .opt:active:not(:disabled) { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+        .opt.hot { background: #ffb59f; } .opt.cold { background: #b5ecff; justify-content: flex-end; text-align: right; }
+        .opt .k { flex: none; width: 28px; height: 28px; display: grid; place-items: center; font-size: 13px; font-weight: 800; background: var(--paper2); border: 2px solid var(--ink); border-radius: 8px; }
+        .opt:disabled { cursor: default; }
+        .card { margin: 4px 0 12px; padding: 22px 14px; text-align: center; font-size: clamp(1.15rem,3.6vw,1.5rem); font-weight: 800; line-height: 1.5; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 16px; box-shadow: 5px 5px 0 var(--ink); transform: rotate(-.8deg); }
+        .meter.sm { height: 12px; margin: 0 0 14px; }
+        .why { margin-top: 12px; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.6; font-weight: 600; color: var(--ink); background: var(--paper2); border: 2.5px dashed var(--ink); }
+        .why.good { background: #c9f5de; border-style: solid; } .why.bad { background: #ffd3d8; border-style: solid; animation: nbshake .35s; }
+        .cheat { margin-top: 12px; padding: 8px 12px; background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 12px; }
+        .cheat summary { cursor: pointer; min-height: 28px; font-weight: 800; font-size: 13.5px; }
+        .cheat ul, .formula { margin: 8px 0 2px; padding: 0 0 0 18px; font-size: 13.5px; line-height: 1.8; color: var(--ink); }
+        .cheat code, .formula code { font-family: ui-monospace,Menlo,Consolas,monospace; font-weight: 700; color: var(--ink); background: #ffe27a; padding: 0 4px; border-radius: 4px; font-size: 13px; }
+        .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 4px; }
+        @media (max-width: 440px) { .tiles { grid-template-columns: 1fr; } }
+        .tile { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-height: 64px; padding: 10px 12px; text-align: left; cursor: pointer; color: var(--ink); background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); transition: transform .1s, box-shadow .1s, background .1s; }
+        .tile:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+        .tile:active:not(:disabled) { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+        .tile b { font-size: 16px; font-weight: 800; }
+        .tile span { font-size: 12.5px; color: var(--mute); font-weight: 700; }
+        .tile em { font-style: normal; font-size: 12px; font-weight: 800; padding: 1px 8px; background: var(--paper); border: 2px solid var(--ink); border-radius: 99px; }
+        .tile.s2 { background: #ffd24d; transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); } .tile.s2 span { color: var(--ink); }
+        .tile.s0 { background: #8fe0ff; transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); } .tile.s0 span { color: var(--ink); }
+        .tile.s1 { border-style: dashed; }
+        .tile:disabled { cursor: default; }
+        .sumbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0 0; padding: 9px 14px; font-size: 12.5px; font-weight: 800; color: #ffe9c4; background: var(--ink); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 rgba(42,15,20,.35); }
+        .sumbar b { font: 800 22px ui-monospace,Menlo,Consolas,monospace; color: #ffc933; text-shadow: 0 0 8px rgba(255,201,51,.55); }
+        .sumbar.eq b { color: #6dffb5; text-shadow: 0 0 8px rgba(109,255,181,.6); } .sumbar.eq { box-shadow: 4px 4px 0 var(--good); }
+        .dial { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 6px 0 10px; }
+        .dial .btn { min-width: 52px; min-height: 46px; }
+        .dv { min-width: 96px; text-align: center; padding: 6px 12px; background: var(--ink); border: var(--bw) solid var(--ink); border-radius: 14px; }
+        .dv b { font: 800 26px ui-monospace,Menlo,Consolas,monospace; color: #ffc933; font-variant-numeric: tabular-nums; } .dv small { display: block; font-size: 12px; font-weight: 800; color: #ffe9c4; }
+        .rules { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+        .rules li { display: grid; grid-template-columns: 100px 1fr; gap: 10px; font-size: 14px; line-height: 1.6; color: var(--ink); }
+        .rules li b { font-weight: 800; }
+        .score { display: grid; gap: 6px; font-size: 14px; font-weight: 700; }
+        .score div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2.5px dashed var(--ink); padding-bottom: 6px; }
+        @media (max-width: 520px) { .rules li { grid-template-columns: 1fr; gap: 2px; } .sheet { padding: 0 16px 18px; } .sheet::before { margin: 0 -16px 14px; } .pad { grid-template-columns: repeat(3,64px); } }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header class="top">
+            <a class="back-btn" href="games.html#adv" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+            <div class="titlebox"><b>🔥 থার্মো কেমিস্ট্রি কোয়েস্ট</b><small>Advanced Game</small></div>
+            <button class="icon-btn" id="soundBtn" title="সাউন্ড চালু/বন্ধ" aria-label="সাউন্ড চালু বা বন্ধ করো">🔔</button>
+            <button class="icon-btn" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+        </header>
+
+        <section class="hud" aria-label="অবস্থা">
+            <div class="cell wide"><span>🔥 তাপ শক্তি <b id="sHeatNum" class="hn">১০০</b></span><div class="thermo"><span class="bulb" aria-hidden="true"></span><div class="meter"><i id="sHeat"></i></div></div></div>
+            <div class="cell"><span>লেভেল</span><b id="sLevel">–</b></div>
+            <div class="cell"><span>দরজা</span><b id="sDoors">–</b></div>
+            <div class="cell"><span>স্কোর</span><b id="sScore">০</b></div>
+        </section>
+
+        <main class="box view" id="view" aria-live="polite"></main>
+    </div>
+    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+
+    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+/* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+   ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+   বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+function NBSound(key) {
+    let on = true, ac = null;
+    try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+    function tone(f, t0, dur, type, vol) {
+        if (!on) return;
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+            const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+        } catch (e) {}
+    }
+    const api = {
+        ok() { tone(660, 0, .12); tone(880, .1, .16); },
+        bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+        tap() { tone(520, 0, .06, 'triangle', .1); },
+        pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+        win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+        lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+        get on() { return on; },
+        toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+    };
+    function paint() { try { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; } catch (e) {} }
+    function hook() { try { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } } catch (e) {} }
+    try { document.addEventListener('DOMContentLoaded', hook); if (document.readyState !== 'loading') hook(); } catch (e) {}
+    return api;
+}
+
+    </script>
+    <script>
+    (function () {
+        'use strict';
+        const $ = s => document.querySelector(s);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const rnd = n => Math.floor(Math.random() * n);
+        const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+        /* সাউন্ড (NBSound আলাদা স্ক্রিপ্টে; না থাকলে নীরব) */
+        const sfx = (function () { try { return NBSound('thermo'); } catch (e) { const n = () => {}; return { ok: n, bad: n, tap: n, pop: n, win: n, lose: n }; } })();
+        /* 🌓 গরম → বরফ-নীল → ম্যাজেন্টা */
+        const BGS = [null, '2', '3'];
+        $('#bgBtn').addEventListener('click', () => {
+            const root = document.documentElement;
+            const i = (BGS.indexOf(root.getAttribute('data-bg')) + 1) % BGS.length, v = BGS[i];
+            if (v) root.setAttribute('data-bg', v); else root.removeAttribute('data-bg');
+            try { localStorage.setItem('thermo-bg', v || '1'); } catch (e) {}
+            sfx.tap();
+        });
+
+        /* ---------- ধাঁধার উপাদান (MCQ নয়) ---------- */
+        /* ১) সর্ট: [প্রক্রিয়া, তাপোৎপাদী কি না, ব্যাখ্যা] */
+        const SORTS = [
+            ['মিথেন গ্যাসের দহন', true, 'দহন সবসময় তাপ ছাড়ে।'],
+            ['Mg ফিতা পোড়ানো', true, 'Mg-এর দহনে প্রচণ্ড তাপ ও আলো বের হয়।'],
+            ['HCl + NaOH-এর প্রশমন', true, 'প্রশমনে প্রায় −৫৭ kJ/mol তাপ ছাড়ে।'],
+            ['বাষ্প ঠান্ডা হয়ে পানি হওয়া (ঘনীভবন)', true, 'বাষ্প থেকে তরল হতে তাপ ছাড়তে হয়।'],
+            ['পানি জমে বরফ হওয়া', true, 'জমতে হলে পানিকে তাপ ছাড়তে হয়।'],
+            ['লোহায় মরিচা ধরা', true, 'ধীরগতির জারণ, তাপ ছাড়ে।'],
+            ['CaO-তে পানি ঢালা', true, 'চুন বুঝলে (slaking) প্রচুর তাপ বের হয়।'],
+            ['গ্লুকোজের শ্বসন', true, 'শরীরের শক্তির উৎস, তাপ ছাড়ে।'],
+            ['Na ধাতু পানিতে ফেলা', true, 'তীব্র তাপোৎপাদী বিক্রিয়া।'],
+            ['বরফ গলা', false, 'গলতে আশপাশ থেকে তাপ শুষে নিতে হয়।'],
+            ['পানির বাষ্পীভবন', false, 'তরল থেকে বাষ্প হতে তাপ শোষণ লাগে।'],
+            ['CaCO₃ গরম করে CaO ও CO₂ বানানো', false, 'এই বিয়োজনে ΔH = +১৭৮ kJ, তাপ দিতে হয়।'],
+            ['সালোকসংশ্লেষণ', false, 'গাছ সূর্যের আলোর শক্তি শোষণ করে।'],
+            ['NH₄NO₃ পানিতে গোলা (cold pack)', false, 'দ্রবীভূত হতে তাপ শোষণ করে, তাই ঠান্ডা লাগে।'],
+            ['পানির তড়িৎ বিশ্লেষণ', false, 'H₂ ও O₂-তে ভাঙতে শক্তি দিতে হয়।'],
+            ['N₂ + O₂ → 2NO', false, 'ΔH = +১৮০ kJ, বিদ্যুৎ-স্ফুলিঙ্গে এই শক্তি আসে।']
+        ];
+        /* ২) ΔHf চিপ: সব তথ্য প্রমাণ গঠন-এনথালপি (kJ/mol); role: +১ উৎপাদ, −১ বিক্রিয়ক */
+        const DHF = [
+            { eq: 'CH₄ + 2O₂ → CO₂ + 2H₂O(l)', dh: -891, sp: [['CH₄', 1, -75, -1], ['O₂', 2, 0, -1], ['CO₂', 1, -394, 1], ['H₂O(l)', 2, -286, 1]] },
+            { eq: 'CaCO₃ → CaO + CO₂', dh: 178, sp: [['CaCO₃', 1, -1207, -1], ['CaO', 1, -635, 1], ['CO₂', 1, -394, 1]] },
+            { eq: 'C₂H₄ + H₂ → C₂H₆', dh: -137, sp: [['C₂H₄', 1, 52, -1], ['H₂', 1, 0, -1], ['C₂H₆', 1, -85, 1]] },
+            { eq: '2NO + O₂ → 2NO₂', dh: -114, sp: [['NO', 2, 90, -1], ['O₂', 1, 0, -1], ['NO₂', 2, 33, 1]] },
+            { eq: 'Fe₂O₃ + 3CO → 2Fe + 3CO₂', dh: -25, sp: [['Fe₂O₃', 1, -824, -1], ['CO', 3, -111, -1], ['Fe', 2, 0, 1], ['CO₂', 3, -394, 1]] }
+        ];
+        const CHEAT = '<ul><li><code>q = m × c × ΔT</code> (পানির c ≈ ৪.২ J/g·°C)</li><li><code>ΔH = ΣΔHf(উৎপাদ) − ΣΔHf(বিক্রিয়ক)</code></li><li>হেসের সূত্র: ধাপের ΔH যোগ করো; বিক্রিয়া উল্টালে চিহ্ন উল্টে যায়</li><li>তাপ ছাড়লে ΔH ঋণাত্মক (তাপোৎপাদী); তাপ শুষলে ধনাত্মক (তাপহারী)</li></ul>';
+
+        const LEVELS = [
+            { n: 6, doors: 3, types: ['sort', 'sort', 'sort'], name: 'শিক্ষানবিস', desc: 'তাপোৎপাদী না তাপহারী সর্ট' },
+            { n: 8, doors: 4, types: ['hess', 'cal', 'sort', 'hess'], name: 'গবেষক', desc: 'হেসের ধাঁধা ও ক্যালরিমিটার' },
+            { n: 10, doors: 5, types: ['dhf', 'hess', 'cal', 'dhf', 'cal'], name: 'বিজ্ঞানী', desc: 'ΔHf, হেস ও ক্যালরিমিটার' }
+        ];
+        const HEAT0 = 100, PENALTY = 15, SORT_PEN = 10, TOKEN = 15;
+        const TYPENAME = { sort: 'সর্ট', hess: 'হেসের ধাঁধা', dhf: 'ΔHf চিপ', cal: 'ক্যালরিমিটার' };
+
+        function genHess() {
+            const L = 'ABCDEFGH'.split(''); shuffle(L);
+            for (let tries = 0; tries < 500; tries++) {
+                const v = () => { let x = 0; while (!x) x = (rnd(37) - 18) * 5; return x; };
+                const a = v(), b = v(), c = v(), d = v();
+                const T = a - b + c;
+                if (Math.abs(T) > 150 || Math.abs(T) < 5) continue;
+                let cnt = 0;
+                for (const s of [-1, 0, 1]) for (const t of [-1, 0, 1]) for (const u of [-1, 0, 1]) for (const w of [-1, 0, 1]) if (s * a + t * b + u * c + w * d === T) cnt++;
+                if (cnt !== 1) continue;
+                const tiles = shuffle([
+                    { lab: L[0] + ' → ' + L[1], v: a, sol: 1 },
+                    { lab: L[2] + ' → ' + L[1], v: b, sol: -1 },
+                    { lab: L[2] + ' → ' + L[3], v: c, sol: 1 },
+                    { lab: L[4] + ' → ' + L[1], v: d, sol: 0 }
+                ]);
+                return { type: 'hess', title: 'লক্ষ্য: ' + L[0] + ' → ' + L[3], target: T, tiles, states: tiles.map(() => 0), mistakes: 0, msg: '', done: false, right: false };
+            }
+            throw new Error('hess gen failed');
+        }
+        function genDhf() {
+            const R = DHF[rnd(DHF.length)];
+            const tiles = R.sp.map(([t, n, v, role]) => ({ lab: (n > 1 ? n + ' × ' : '') + t, sub: 'ΔHf = ' + sgn(v) + ' kJ/mol', v: n * v, sol: role }));
+            return { type: 'dhf', title: R.eq, target: R.dh, tiles, states: tiles.map(() => 0), mistakes: 0, msg: '', done: false, right: false };
+        }
+        function genCal() {
+            const m = [20, 40, 50, 100, 200][rnd(5)], dT = (1 + rnd(8)) * 5, c = 4.2;
+            const unknown = rnd(2) ? 'dT' : 'm';
+            return { type: 'cal', m, dT, c, q: Math.round(m * c * dT), unknown, val: unknown === 'dT' ? 10 : 100, mistakes: 0, msg: '', done: false, right: false };
+        }
+        function genSort() {
+            for (;;) {
+                const pick = shuffle(SORTS.slice()).slice(0, 3);
+                const e = pick.filter(p => p[1]).length;
+                if (e > 0 && e < 3) return { type: 'sort', queue: pick.slice(), got: 0, total: 3, mistakes: 0, msg: '', done: false, right: false };
+            }
+        }
+        const sgn = n => (n > 0 ? '+' : n < 0 ? '−' : '') + bn(Math.abs(n));
+        const bestKey = 'thermo-best', unlockKey = 'thermo-unlocked';
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
+        let unlocked = Math.min(LEVELS.length, Math.max(1, parseInt(lsGet(unlockKey), 10) || 1));
+        let best = parseInt(lsGet(bestKey), 10) || 0;
+
+        /* ---------- গোলকধাঁধা ---------- */
+        function makeMaze(n) {
+            const T = 2 * n + 1;
+            const open = Array.from({ length: T }, () => Array(T).fill(false));
+            const seen = Array.from({ length: n }, () => Array(n).fill(false));
+            const st = [[0, 0]]; seen[0][0] = true; open[1][1] = true;
+            while (st.length) {
+                const [i, j] = st[st.length - 1];
+                const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([a, b]) => [i + a, j + b, a, b])
+                    .filter(([x, y]) => x >= 0 && y >= 0 && x < n && y < n && !seen[x][y]);
+                if (!nb.length) { st.pop(); continue; }
+                const [x, y, a, b] = nb[rnd(nb.length)];
+                seen[x][y] = true; open[2 * i + 1 + a][2 * j + 1 + b] = true; open[2 * x + 1][2 * y + 1] = true; st.push([x, y]);
+            }
+            return { n, T, open };
+        }
+        function findPath(M, blocked) {
+            const T = M.T, start = [1, 1], end = [T - 2, T - 2];
+            const prev = new Map(); const key = (r, c) => r * T + c;
+            const q = [start]; prev.set(key(1, 1), null);
+            while (q.length) {
+                const [r, c] = q.shift();
+                if (r === end[0] && c === end[1]) break;
+                for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+                    const x = r + a, y = c + b;
+                    if (x < 0 || y < 0 || x >= T || y >= T || !M.open[x][y] || prev.has(key(x, y)) || (blocked && blocked.has(x + ',' + y))) continue;
+                    prev.set(key(x, y), [r, c]); q.push([x, y]);
+                }
+            }
+            if (!prev.has(key(end[0], end[1]))) return null;
+            const path = []; let cur = end;
+            while (cur) { path.push(cur); cur = prev.get(key(cur[0], cur[1])); }
+            return path.reverse();
+        }
+        function buildLevel(L) {
+            const M = makeMaze(L.n), T = M.T;
+            const path = findPath(M);
+            const cells = path.filter(([r, c]) => r % 2 === 1 && c % 2 === 1 && !(r === 1 && c === 1) && !(r === T - 2 && c === T - 2));
+            const doors = new Set();
+            for (let d = 0; d < L.doors; d++) {
+                const idx = Math.min(cells.length - 1, Math.floor((d + 0.5) * cells.length / L.doors));
+                doors.add(cells[idx][0] + ',' + cells[idx][1]);
+            }
+            const ends = [];
+            for (let i = 0; i < L.n; i++) for (let j = 0; j < L.n; j++) {
+                const r = 2 * i + 1, c = 2 * j + 1;
+                if ((r === 1 && c === 1) || (r === T - 2 && c === T - 2)) continue;
+                const deg = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([a, b]) => M.open[r + a][c + b]).length;
+                if (deg === 1) ends.push(r + ',' + c);
+            }
+            const tokens = new Set(shuffle(ends).slice(0, 2 + LEVELS.indexOf(L)));
+            return { M, doors, tokens, total: L.doors, types: LEVELS.indexOf(L) === 0 ? L.types.slice() : shuffle(L.types.slice()) };
+        }
+
+        /* ---------- অবস্থা ---------- */
+        const S = { level: -1, B: null, r: 1, c: 1, heat: HEAT0, score: 0, startScore: 0, streak: 0, steps: 0, correct: 0, wrong: 0, playing: false, asking: null, pool: [] };
+        const view = $('#view'), modal = $('#modal'), sheet = $('#sheet');
+
+        function hud() {
+            const L = S.level >= 0 ? LEVELS[S.level] : null;
+            $('#sHeatNum').textContent = bn(S.heat) + '%';
+            const bar = $('#sHeat'); bar.style.width = S.heat + '%'; bar.classList.toggle('low', S.heat <= 25);
+            $('#sLevel').textContent = L ? bn(S.level + 1) + '/' + bn(LEVELS.length) : '–';
+            $('#sDoors').textContent = S.B ? bn(S.B.total - S.B.doors.size) + '/' + bn(S.B.total) : '–';
+            $('#sScore').textContent = bn(S.score);
+        }
+        let toastTimer = null;
+        function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); }
+        function showSheet(html) { sheet.innerHTML = html; modal.hidden = false; }
+        function hideSheet() { modal.hidden = true; sheet.innerHTML = ''; }
+
+        /* ---------- স্ক্রিন ---------- */
+        function showIdle() {
+            S.playing = false; S.asking = null; S.B = null; S.level = -1; S.heat = HEAT0; S.score = 0; hud(); hideSheet();
+            let h = '<div class="hero">🧪</div><h2>তাপের গোলকধাঁধা পার হও</h2>' +
+                '<p>দরজা (🔒) খুলতে তাপ-রসায়নের ধাঁধা সমাধান করো: সর্ট, হেসের ধাঁধা, ΔHf চিপ ও ক্যালরিমিটার। ভুল করলে তাপ শক্তি কমবে।</p><div class="lvls">';
+            LEVELS.forEach((L, i) => {
+                const lock = i + 1 > unlocked;
+                h += '<button class="lvl" data-a="start:' + i + '"' + (lock ? ' disabled' : '') + '><span class="n">' + (lock ? '🔒' : bn(i + 1)) + '</span><span><b>' + L.name + '</b><small>' + L.desc + ' · ' + bn(L.doors) + 'টি দরজা</small></span><em>' + (lock ? 'লক' : 'খেলো') + '</em></button>';
+            });
+            h += '</div><div class="row"><button class="btn" data-a="rules">📖 নিয়ম</button><button class="btn" data-a="cheat">🧮 সূত্র</button></div>' +
+                '<div class="best">🏆 সেরা স্কোর: ' + bn(best) + '</div>';
+            view.innerHTML = h;
+        }
+        function startLevel(i, fresh) {
+            if (fresh) { S.score = 0; S.streak = 0; }
+            S.level = i; S.B = buildLevel(LEVELS[i]); S.r = 1; S.c = 1; S.heat = HEAT0; S.steps = 0; S.pool = []; S.asking = null;
+            S.startScore = S.score; S.playing = true; hideSheet();
+            const T = S.B.M.T;
+            let cells = '';
+            for (let r = 0; r < T; r++) for (let c = 0; c < T; c++) cells += '<i class="' + cls(r, c) + '">' + glyph(r, c) + '</i>';
+            view.innerHTML = '<div class="mzwrap" id="mzwrap" style="--T:' + T + '"><div class="maze" id="maze">' + cells + '</div><div class="pl" id="pl" style="--r:1;--c:1">🧑‍🔬</div></div>' +
+                '<div class="pad"><button class="up" data-d="-1,0" aria-label="উপরে">▲</button><button class="lf" data-d="0,-1" aria-label="বামে">◀</button><button class="dn" data-d="1,0" aria-label="নিচে">▼</button><button class="rt" data-d="0,1" aria-label="ডানে">▶</button></div>' +
+                '<div class="hint">তীরচিহ্ন / WASD / সোয়াইপ দিয়ে চলো। 🔒 দরজায় ধাক্কা দিলে ধাঁধা আসবে। কানাগলিতে 🔥 পেলে তাপ বাড়বে।</div>' +
+                '<div class="row"><button class="btn" data-a="cheat">🧮 সূত্র</button><button class="btn" data-a="restart">↺ রিস্টার্ট</button><button class="btn" data-a="home">🏠 হোম</button></div>';
+            hud();
+        }
+        function cls(r, c) {
+            const B = S.B, k = r + ',' + c;
+            if (!B.M.open[r][c]) return 'w';
+            return B.doors.has(k) ? 'd' : 'f';
+        }
+        function glyph(r, c) {
+            const B = S.B, k = r + ',' + c, T = B.M.T;
+            if (r === T - 2 && c === T - 2) return '🏁';
+            if (B.doors.has(k)) return '🔒';
+            if (B.tokens.has(k)) return '🔥';
+            return '';
+        }
+        function paint(r, c) {
+            const el = $('#maze') && $('#maze').children && $('#maze').children[r * S.B.M.T + c];
+            if (!el) return;
+            el.className = cls(r, c); el.textContent = glyph(r, c);
+        }
+
+        /* ---------- চলাচল ---------- */
+        function tryMove(dr, dc) {
+            if (!S.playing || S.asking) return false;
+            const T = S.B.M.T, r = S.r + dr, c = S.c + dc;
+            if (r < 0 || c < 0 || r >= T || c >= T || !S.B.M.open[r][c]) return false;
+            if (S.B.doors.has(r + ',' + c)) { sfx.pop(); openPuzzle(r, c); return false; }
+            stepTo(r, c); return true;
+        }
+        function stepTo(r, c) {
+            S.r = r; S.c = c; S.steps++;
+            const pl = $('#pl'); if (pl) { pl.style.setProperty('--r', r); pl.style.setProperty('--c', c); }
+            const k = r + ',' + c;
+            if (!S.B.tokens.has(k)) sfx.tap();
+            if (S.B.tokens.has(k)) {
+                sfx.ok(); S.B.tokens.delete(k); paint(r, c);
+                const before = S.heat; S.heat = Math.min(HEAT0, S.heat + TOKEN); hud();
+                toast('🔥 +' + bn(S.heat - before) + ' তাপ শক্তি');
+            }
+            const T = S.B.M.T;
+            if (r === T - 2 && c === T - 2) levelClear();
+        }
+
+        /* ---------- ধাঁধা ---------- */
+        function openPuzzle(r, c) {
+            const type = S.B.types[S.B.total - S.B.doors.size];
+            const P = type === 'sort' ? genSort() : type === 'hess' ? genHess() : type === 'dhf' ? genDhf() : genCal();
+            P.dr = r; P.dc = c; S.asking = P; renderPuzzle();
+        }
+        const tilesSum = P => P.tiles.reduce((s, t, i) => s + P.states[i] * t.v, 0);
+        const calGiven = P => P.unknown === 'dT' ? P.m * P.c * P.val : P.val * P.c * P.dT;
+        function renderPuzzle() {
+            const P = S.asking;
+            let h = '<span class="qtag">🔒 দরজা · ' + TYPENAME[P.type] + '</span>';
+            if (P.type === 'sort') {
+                const cur = P.queue[0];
+                h += '<div class="qtext">' + (P.done ? 'সবগুলো ঠিকঠাক সর্ট হয়েছে!' : 'এটি কি তাপ ছাড়ে, না তাপ শোষে?') + '</div>';
+                if (!P.done) {
+                    h += '<div class="card">' + esc(cur[0]) + '</div><div class="meter sm"><i style="width:' + Math.round(P.got / P.total * 100) + '%"></i></div>' +
+                        '<div class="opts"><button class="opt hot" data-a="sort:1"><span class="k">←</span><span>🔥 তাপোৎপাদী (তাপ ছাড়ে)</span></button><button class="opt cold" data-a="sort:0"><span>🧊 তাপহারী (তাপ শোষে)</span><span class="k">→</span></button></div>';
+                }
+            } else if (P.type === 'tiles' || P.type === 'hess' || P.type === 'dhf') {
+                const hess = P.type === 'hess';
+                h += '<div class="qtext">' + esc(P.title) + '<br><small class="sub">' + (hess ? 'মাপা ΔH = ' : 'মাপা ΔH = ') + sgn(P.target) + ' kJ</small></div>' +
+                    '<div class="hint">' + (hess ? 'ধাপগুলো ট্যাপ করে বদলাও: বাদ → যেমন আছে → উল্টে নাও (চিহ্ন বদলায়)। যোগফল লক্ষ্যের সমান হলে লক খোলো।' : 'চিপ ট্যাপ করো: বাদ → যোগ (+) → বিয়োগ (−)। কোনটা যোগ, কোনটা বিয়োগ করলে মাপা ΔH আসে?') + '</div><div class="tiles">';
+                P.tiles.forEach((t, i) => {
+                    const st = P.states[i];
+                    const lab = st === 0 ? 'বাদ' : st === 1 ? (hess ? 'যেমন আছে' : '＋ যোগ') : (hess ? '⇄ উল্টে' : '− বিয়োগ');
+                    h += '<button class="tile s' + (st + 1) + '" data-a="tile:' + i + '"' + (P.done ? ' disabled' : '') + '><b>' + esc(t.lab) + '</b><span>' + (hess ? 'ΔH = ' : '') + (hess ? sgn(t.v) + ' kJ' : esc(t.sub) + ' · মান ' + sgn(t.v)) + '</span><em>' + lab + '</em></button>';
+                });
+                const sum = tilesSum(P);
+                h += '</div><div class="sumbar ' + (sum === P.target ? 'eq' : '') + '"><span>এখনকার যোগফল</span><b>' + sgn(sum) + ' kJ</b><span>লক্ষ্য ' + sgn(P.target) + '</span></div>' +
+                    (P.done ? '' : '<div class="row"><button class="btn" data-a="treset">↺ রিসেট</button><button class="btn primary" data-a="tsubmit">🔓 লক খোলো</button></div>');
+            } else {
+                const un = P.unknown === 'dT';
+                h += '<div class="qtext">' + (un ? '<b>' + bn(P.m) + ' g</b> পানিকে গরম করতে ঠিক <b>' + bn(P.q) + ' J</b> তাপ দেওয়া হবে।' : 'পানির তাপমাত্রা ঠিক <b>' + bn(P.dT) + ' °C</b> বাড়াতে <b>' + bn(P.q) + ' J</b> তাপ দেওয়া হবে।') + '<br><small class="sub">c = ' + bn(P.c) + ' J/g·°C। ' + (un ? 'তাপমাত্রা কত °C বাড়বে?' : 'পানি কত গ্রাম লাগবে?') + '</small></div>' +
+                    '<div class="dial"><button class="btn" data-a="dial:' + (un ? -5 : -50) + '">' + (un ? '−৫' : '−৫০') + '</button><button class="btn" data-a="dial:' + (un ? -1 : -10) + '">' + (un ? '−১' : '−১০') + '</button><div class="dv"><b>' + bn(P.val) + '</b><small>' + (un ? '°C' : 'g') + '</small></div><button class="btn" data-a="dial:' + (un ? 1 : 10) + '">' + (un ? '+১' : '+১০') + '</button><button class="btn" data-a="dial:' + (un ? 5 : 50) + '">' + (un ? '+৫' : '+৫০') + '</button></div>' +
+                    (P.done ? '' : '<div class="row"><button class="btn primary" data-a="cal">🔥 গরম করো</button></div>');
+            }
+            if (P.msg) h += '<div class="why ' + (P.msgGood ? 'good' : 'bad') + '">' + P.msg + '</div>';
+            else if (!P.done) h += '<div class="why">ভুল হলে তাপ শক্তি কমবে, তাই ভেবে এগোও।</div>';
+            h += '<details class="cheat"><summary>🧮 সূত্র দেখো</summary>' + CHEAT + '</details><div class="row" id="qrow">' +
+                (P.over ? '<button class="btn primary" data-a="qnext">এগোও</button>' : P.done ? '<button class="btn primary" data-a="qnext">দরজা খোলো ➜</button>' : '') + '</div>';
+            showSheet(h);
+        }
+        function penalize(P, n, msg) {
+            sfx.bad(); P.mistakes++; S.heat = Math.max(0, S.heat - n); hud();
+            P.msg = msg + ' <b>−' + bn(n) + ' তাপ শক্তি।</b>'; P.msgGood = false;
+            if (S.heat <= 0) { P.over = true; P.done = false; }
+        }
+        function solved(P, msg) {
+            sfx.ok(); P.done = true; P.right = true; P.msg = '<b>✅ ঠিক! দরজা খুলে গেল।</b> ' + msg; P.msgGood = true;
+            if (P.mistakes === 0) { S.streak++; S.score += 100 + Math.min(S.streak - 1, 4) * 20; } else { S.streak = 0; S.score += 60; }
+            S.correct++; S.wrong += P.mistakes;
+            S.B.doors.delete(P.dr + ',' + P.dc); paint(P.dr, P.dc); hud();
+        }
+        function sortPick(exo) {
+            const P = S.asking; if (!P || P.type !== 'sort' || P.done || P.over) return;
+            const cur = P.queue[0];
+            if (!!exo === cur[1]) {
+                P.queue.shift(); P.got++;
+                if (!P.queue.length) { solved(P, 'প্রতিটি প্রক্রিয়া ঠিকঠাক চিনেছ।'); }
+                else { sfx.tap(); P.msg = '<b>✅ ' + esc(cur[0]) + '</b>: ' + esc(cur[2]); P.msgGood = true; }
+            } else {
+                P.queue.push(P.queue.shift());
+                penalize(P, SORT_PEN, '<b>❌ ' + esc(cur[0]) + '</b> ' + (cur[1] ? 'তাপোৎপাদী' : 'তাপহারী') + '। ' + esc(cur[2]));
+            }
+            renderPuzzle();
+        }
+        function tileTap(i) {
+            const P = S.asking; if (!P || !P.tiles || P.done || P.over) return;
+            sfx.tap(); P.states[i] = P.states[i] === 0 ? 1 : P.states[i] === 1 ? -1 : 0; P.msg = ''; renderPuzzle();
+        }
+        function tileSubmit() {
+            const P = S.asking; if (!P || !P.tiles || P.done || P.over) return;
+            const exact = P.tiles.every((t, i) => t.v === 0 || P.states[i] === t.sol);
+            if (exact && tilesSum(P) === P.target) {
+                solved(P, P.type === 'hess' ? 'ধাপ যোগ করে ও উল্টে হেসের সূত্র মিলিয়েছ।' : 'ΔH = ΣΔHf(উৎপাদ) − ΣΔHf(বিক্রিয়ক)।');
+            } else if (tilesSum(P) !== P.target) {
+                penalize(P, PENALTY, '<b>❌ যোগফল (' + sgn(tilesSum(P)) + ') লক্ষ্যের সমান নয়।</b>');
+            } else {
+                penalize(P, PENALTY, '<b>❌ যোগফল মিলেছে, কিন্তু চিপ/ধাপ ঠিক নয়।</b> যে বিক্রিয়ায় আছে তার সাথে মিলিয়ে দেখো।');
+            }
+            renderPuzzle();
+        }
+        function tileReset() { const P = S.asking; if (!P || !P.tiles || P.done || P.over) return; sfx.tap(); P.states = P.tiles.map(() => 0); P.msg = ''; renderPuzzle(); }
+        function dialMove(d) {
+            const P = S.asking; if (!P || P.type !== 'cal' || P.done || P.over) return;
+            const un = P.unknown === 'dT'; sfx.tap();
+            P.val = Math.max(un ? 1 : 10, Math.min(un ? 60 : 400, P.val + d)); P.msg = ''; renderPuzzle();
+        }
+        function calSubmit() {
+            const P = S.asking; if (!P || P.type !== 'cal' || P.done || P.over) return;
+            const given = Math.round(calGiven(P));
+            if (given === P.q) solved(P, 'q = m × c × ΔT, তাই ' + (P.unknown === 'dT' ? 'ΔT = ' + bn(P.q) + ' ÷ (' + bn(P.m) + ' × ' + bn(P.c) + ') = ' + bn(P.dT) + ' °C।' : 'm = ' + bn(P.q) + ' ÷ (' + bn(P.c) + ' × ' + bn(P.dT) + ') = ' + bn(P.m) + ' g।'));
+            else penalize(P, PENALTY, '<b>❌ ' + (given > P.q ? 'বেশি তাপ' : 'কম তাপ') + '।</b> তোমার মানে ' + bn(given) + ' J লাগত, দরকার ' + bn(P.q) + ' J।');
+            renderPuzzle();
+        }
+        function qnext() {
+            const A = S.asking; if (!A || !(A.done || A.over)) return;
+            hideSheet(); S.asking = null;
+            if (S.heat <= 0) { fail(); return; }
+            stepTo(A.dr, A.dc);
+        }
+
+        /* ---------- ফলাফল ---------- */
+        function levelClear() {
+            S.playing = false; sfx.win();
+            const bonus = S.heat * 2; S.score += bonus;
+            if (S.score > best) { best = S.score; lsSet(bestKey, best); }
+            const last = S.level === LEVELS.length - 1;
+            if (!last && S.level + 2 > unlocked) { unlocked = S.level + 2; lsSet(unlockKey, unlocked); }
+            hud();
+            showSheet('<span class="qtag">🎉 লেভেল ' + bn(S.level + 1) + ' শেষ</span><h2>' + (last ? 'তুমি তাপ-রসায়ন জয় করেছ!' : 'দারুণ! গোলকধাঁধা পার হয়েছ') + '</h2>' +
+                '<div class="score"><div><span>ঠিক উত্তর</span><b>' + bn(S.correct) + '</b></div><div><span>ভুল উত্তর</span><b>' + bn(S.wrong) + '</b></div><div><span>অবশিষ্ট তাপ বোনাস</span><b>+' + bn(bonus) + '</b></div><div><span>মোট স্কোর</span><b>' + bn(S.score) + '</b></div><div><span>সেরা স্কোর</span><b>' + bn(best) + '</b></div></div>' +
+                '<div class="row"><button class="btn" data-a="home">🏠 হোম</button>' + (last ? '<button class="btn primary" data-a="start:0">↺ নতুন করে খেলো</button>' : '<button class="btn primary" data-a="next">পরের লেভেল ➜</button>') + '</div>');
+        }
+        function fail() {
+            S.playing = false; sfx.lose(); S.score = S.startScore; hud();
+            showSheet('<span class="qtag">🧊 তাপ শক্তি শেষ</span><h2>বিক্রিয়া থেমে গেছে</h2><p style="margin:0 0 6px;color:var(--text-muted);line-height:1.7">সূত্রগুলো একবার দেখে নিয়ে আবার চেষ্টা করো।</p>' +
+                '<details class="cheat" open><summary>🧮 সূত্র</summary>' + CHEAT + '</details><div class="row"><button class="btn" data-a="home">🏠 হোম</button><button class="btn primary" data-a="restart">↺ আবার চেষ্টা</button></div>');
+        }
+        function showRules() {
+            showSheet('<h2>📖 নিয়ম</h2><ul class="rules"><li><b>লক্ষ্য</b><span>🧑‍🔬 কে গোলকধাঁধার শেষের 🏁 পর্যন্ত পৌঁছাও।</span></li><li><b>দরজা 🔒</b><span>পথ আটকে থাকে। দরজায় ধাক্কা দিলে একটা ধাঁধা আসে, সমাধান করলে খুলে যায়।</span></li><li><b>সর্ট</b><span>প্রক্রিয়াটা তাপ ছাড়ে (🔥) না শোষে (🧊), বেছে নাও।</span></li><li><b>হেসের ধাঁধা</b><span>ধাপগুলো যোগ করো বা উল্টে নাও, যাতে মোট ΔH লক্ষ্যের সমান হয়।</span></li><li><b>ΔHf চিপ</b><span>কোন চিপ যোগ, কোনটা বিয়োগ করলে বিক্রিয়ার ΔH আসে ঠিক করো।</span></li><li><b>ক্যালরিমিটার</b><span>q = m·c·ΔT দিয়ে ঠিক যতটা তাপ দরকার ততটাই দাও।</span></li><li><b>তাপ শক্তি</b><span>ভুলে কমে। শূন্য হলে লেভেল ব্যর্থ।</span></li><li><b>🔥 টোকেন</b><span>কানাগলিতে থাকে, +' + bn(TOKEN) + ' তাপ শক্তি দেয়।</span></li></ul><div class="row"><button class="btn primary" data-a="close">বুঝেছি</button></div>');
+        }
+        function showCheat() { showSheet('<h2>🧮 সূত্র</h2><div class="formula">' + CHEAT + '</div><div class="row"><button class="btn primary" data-a="close">বন্ধ করো</button></div>'); }
+
+        /* ---------- ইভেন্ট ---------- */
+        function act(a) {
+            if (a.indexOf('sort:') === 0) return sortPick(a.slice(5) === '1');
+            if (a.indexOf('tile:') === 0) return tileTap(parseInt(a.slice(5), 10));
+            if (a.indexOf('dial:') === 0) return dialMove(parseInt(a.slice(5), 10));
+            if (a.indexOf('start:') === 0) return startLevel(parseInt(a.slice(6), 10), true);
+            switch (a) {
+                case 'qnext': return qnext();
+                case 'tsubmit': return tileSubmit();
+                case 'treset': return tileReset();
+                case 'cal': return calSubmit();
+                case 'next': return startLevel(S.level + 1, false);
+                case 'restart': return startLevel(Math.max(0, S.level), false);
+                case 'home': return showIdle();
+                case 'rules': return showRules();
+                case 'cheat': return showCheat();
+                case 'close': return hideSheet();
+            }
+        }
+        function onClick(e) {
+            const t = e.target && e.target.closest ? e.target.closest('[data-a]') : null;
+            if (t) act(t.getAttribute('data-a'));
+        }
+        view.addEventListener('click', onClick); sheet.addEventListener('click', onClick);
+        let rep = null;
+        function stopRep() { if (rep) { clearInterval(rep); rep = null; } }
+        view.addEventListener('pointerdown', e => {
+            const b = e.target && e.target.closest ? e.target.closest('[data-d]') : null;
+            if (!b) return;
+            const [dr, dc] = b.getAttribute('data-d').split(',').map(Number);
+            tryMove(dr, dc); stopRep();
+            rep = setInterval(() => tryMove(dr, dc), 150);
+        });
+        ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => view.addEventListener(t, stopRep));
+        window.addEventListener('blur', stopRep);
+        let tx = 0, ty = 0;
+        view.addEventListener('touchstart', e => { if (e.target.closest && e.target.closest('#mzwrap')) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; } }, { passive: true });
+        view.addEventListener('touchend', e => {
+            if (!(e.target.closest && e.target.closest('#mzwrap'))) return;
+            const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+            if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+            if (Math.abs(dx) > Math.abs(dy)) tryMove(0, dx > 0 ? 1 : -1); else tryMove(dy > 0 ? 1 : -1, 0);
+        }, { passive: true });
+        const KEYS = { ArrowUp: [-1, 0], w: [-1, 0], W: [-1, 0], ArrowDown: [1, 0], s: [1, 0], S: [1, 0], ArrowLeft: [0, -1], a: [0, -1], A: [0, -1], ArrowRight: [0, 1], d: [0, 1], D: [0, 1] };
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (!modal.hidden) {
+                const P = S.asking;
+                if (P && P.type === 'sort' && !P.done && !P.over) {
+                    if (e.key === 'ArrowLeft' || e.key === '1') { e.preventDefault(); sortPick(true); }
+                    else if (e.key === 'ArrowRight' || e.key === '2') { e.preventDefault(); sortPick(false); }
+                }
+                return;
+            }
+            const d = KEYS[e.key];
+            if (d && S.playing) { e.preventDefault(); tryMove(d[0], d[1]); }
+        });
+
+        showIdle();
+        /*TESTHOOK*/
+    })();
+    </script>
+</body>
+</html>

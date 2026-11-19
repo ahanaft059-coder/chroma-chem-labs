@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ff8fc7">
+    <title>পিরিয়ডিক টেবিল পাজল | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Lexend:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () { try { var b = localStorage.getItem('ptable-bg'); if (b === '2' || b === '3') document.documentElement.setAttribute('data-bg', b); } catch (e) {} })();
+    </script>
+    <style>
+        /* নিও-ব্রুটালিস্ট: ফ্ল্যাট রং, মোটা কালির বর্ডার, ব্লার ছাড়া শক্ত ছায়া।
+           বাইরের ব্যাকগ্রাউন্ড (বাবলগাম পিঙ্ক) আলাদা, মাঝের বোর্ড (.stage) সাদা।
+           🌓 বাটন শুধু বাইরের ব্যাকগ্রাউন্ডের রং বদলায়। */
+        :root {
+            color-scheme: light;
+            --bg: #ff8fc7; --dot: rgba(43,16,85,.2);
+            --stage: #fffafc; --card: #ffffff; --ink: #2b1055; --mute: #5d4a86; --line: #2b1055; --sh: #2b1055;
+            --accent: #7b3ff2; --sun: #ffe14d; --good: #0f7a52; --bad: #c81e4a;
+            --alkali: #ff9b8a; --earth: #ffbf69; --trans: #ffe14d; --post: #b8a9ff; --meta: #7de3b0; --non: #6fd0ff; --hal: #ff9ee0; --noble: #d6a8ff;
+            --display: 'Lexend','Hind Siliguri','Segoe UI',system-ui,sans-serif;
+        }
+        :root[data-bg="2"] { --bg: #6ee7b7; }
+        :root[data-bg="3"] { --bg: #8ea2ff; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; min-height: 100vh; color: var(--ink); font-family: 'Lexend','Hind Siliguri','Segoe UI',system-ui,sans-serif; font-weight: 500; line-height: 1.55;
+            padding: 18px max(12px,env(safe-area-inset-right,0px)) 30px max(12px,env(safe-area-inset-left,0px));
+            background-color: var(--bg); background-image: radial-gradient(var(--dot) 1.5px, transparent 1.5px); background-size: 22px 22px;
+            -webkit-tap-highlight-color: transparent; transition: background-color .3s; overflow-x: hidden;
+        }
+        button { font: inherit; color: inherit; }
+        a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+        [hidden] { display: none !important; }
+        .stage { max-width: 860px; margin: 0 auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; background: var(--stage); border-radius: 10px; border: 2px solid var(--line); box-shadow: 7px 7px 0 var(--sh); }
+        .credit { width: fit-content; max-width: 100%; margin: 22px auto 0; padding: 6px 14px; text-align: center; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; color: var(--ink); background: #fff; border: 2px solid var(--line); border-radius: 8px; box-shadow: 3px 3px 0 var(--sh); transform: rotate(-1deg); }
+
+        .top { display: flex; align-items: center; gap: 10px; }
+        .back-btn, .icon-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; border-radius: 8px; border: 2px solid var(--line); background: var(--card); box-shadow: 3px 3px 0 var(--sh); text-decoration: none; color: var(--ink); font-weight: 700; font-size: 14px; cursor: pointer; transition: transform .12s, box-shadow .12s; }
+        .back-btn { padding: 0 14px; margin-right: auto; }
+        .icon-btn { width: 42px; font-size: 17px; background: var(--sun); }
+        .back-btn:hover, .icon-btn:hover, .btn:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--sh); }
+        .back-btn:active, .icon-btn:active, .btn:active:not(:disabled) { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--sh); }
+
+        .hero { display: flex; align-items: center; justify-content: space-between; gap: 14px 22px; flex-wrap: wrap; padding: 2px 0 6px; }
+        .titlebox { min-width: 0; flex: 1 1 280px; }
+        .titlebox b { display: block; font: 800 clamp(1.7rem,6.4vw,2.7rem)/1.12 var(--display); letter-spacing: -1.2px; }
+        .titlebox b em { font-style: normal; background: linear-gradient(transparent 58%, var(--sun) 58% 92%, transparent 92%); padding: 0 2px; }
+        .titlebox small { display: inline-block; margin-top: 8px; padding: 2px 10px; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent); border: 2px solid var(--line); border-radius: 6px; box-shadow: 2px 2px 0 var(--sh); transform: rotate(-2deg); }
+        .strip { display: flex; gap: 9px; padding: 4px 6px 8px 2px; flex: 0 0 auto; }
+        .stk { position: relative; display: flex; flex-direction: column; justify-content: flex-end; width: 54px; height: 66px; padding: 5px 6px; border: 2px solid var(--line); border-radius: 8px; box-shadow: 4px 4px 0 var(--sh); font: 800 21px/1 var(--display); color: var(--ink); transform: rotate(-3deg); }
+        .stk small { position: absolute; top: 4px; left: 6px; font: 700 10px/1 var(--display); }
+        .stk:nth-child(even) { transform: rotate(2.5deg) translateY(4px); }
+        .stk:nth-child(3) { transform: rotate(-1deg) translateY(-3px); }
+
+        .hud { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 8px; background: var(--card); border: 2px solid var(--line); box-shadow: 2px 2px 0 var(--sh); font-size: 13px; font-weight: 700; color: var(--mute); }
+        .pill:nth-child(1) { background: #d6fbe7; } .pill:nth-child(2) { background: #ffd9e2; } .pill:nth-child(3) { background: #fff3a8; } .pill:nth-child(4) { background: #dbe4ff; }
+        .pill b { color: var(--ink); font-weight: 800; font-variant-numeric: tabular-nums; }
+        .lv { display: flex; gap: 10px; flex-wrap: wrap; }
+        .lvb { flex: 1 1 150px; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 9px 12px 8px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); box-shadow: 3px 3px 0 var(--sh); cursor: pointer; text-align: left; transition: transform .12s, box-shadow .12s, background .12s; }
+        .lvb:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--sh); }
+        .lvb:active:not(:disabled) { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--sh); }
+        .lvb b { font-size: 14.5px; font-weight: 800; } .lvb small { font-size: 12px; color: var(--mute); font-weight: 600; line-height: 1.4; }
+        .lvb i { font-style: normal; font-size: 16px; letter-spacing: 2px; color: #c2410c; margin-top: 2px; }
+        .lvb.on { background: var(--sun); transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--sh); }
+        .lvb.on small { color: var(--ink); } .lvb.on i { color: var(--ink); }
+        .lvb:disabled { opacity: .55; cursor: default; background: #efe8f7; box-shadow: 2px 2px 0 var(--sh); }
+
+        .tablewrap { overflow-x: auto; padding: 10px 12px 12px 10px; border-radius: 10px; background: #fff; border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--sh); }
+        .pt { display: grid; gap: 4px; min-width: 580px; }
+        .pt .lab { display: grid; place-items: center; font-size: 11px; font-weight: 800; color: var(--mute); }
+        .c { position: relative; aspect-ratio: 1 / 1; border-radius: 6px; border: 2px dashed rgba(43,16,85,.4); background: #f7f1ff; display: grid; place-items: center; padding: 0; cursor: pointer; transition: transform .12s, background .15s; }
+        .c small { position: absolute; top: 1px; left: 3px; font-size: 9px; font-weight: 700; color: var(--mute); }
+        .c.target:hover { background: #ffe9f5; border-style: solid; transform: translate(-1px,-1px); }
+        .c.f { border: 2px solid var(--line); box-shadow: 2px 2px 0 var(--sh); cursor: default; font-weight: 800; font-size: clamp(11px,2.3vw,16px); color: var(--ink); }
+        .c.f small { color: rgba(43,16,85,.75); } .c.f:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--sh); }
+        .c.hint { animation: pulse .6s ease-in-out 3; border: 2px solid var(--ink); background: var(--sun); box-shadow: 3px 3px 0 var(--sh); z-index: 1; }
+        .c.shake { animation: shake .35s; border: 2px solid var(--bad); background: #ffd9e2; }
+        @keyframes pulse { 50% { transform: scale(1.18); } }
+        @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        .k-alkali { background: var(--alkali); } .k-earth { background: var(--earth); } .k-trans { background: var(--trans); } .k-post { background: var(--post); }
+        .k-meta { background: var(--meta); } .k-non { background: var(--non); } .k-hal { background: var(--hal); } .k-noble { background: var(--noble); }
+        .legend { display: flex; flex-wrap: wrap; gap: 7px; }
+        .legend span { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; color: var(--ink); border: 2px solid var(--line); box-shadow: 2px 2px 0 var(--sh); }
+        .legend span:nth-child(odd) { transform: rotate(-1.2deg); } .legend span:nth-child(even) { transform: rotate(1deg); }
+
+        .msg { min-height: 56px; padding: 10px 14px; border-radius: 8px; background: #f3ebff; border: 2px dashed var(--ink); font-size: 14px; line-height: 1.65; font-weight: 600; color: var(--ink); }
+        .msg.ok { background: #bff5d8; border-style: solid; box-shadow: 3px 3px 0 var(--sh); } .msg.bad { background: #ffc9d6; border-style: solid; box-shadow: 3px 3px 0 var(--sh); }
+        .tray { display: flex; flex-wrap: wrap; gap: 12px 10px; justify-content: center; padding: 14px 10px 12px; border-radius: 10px; background: repeating-linear-gradient(45deg,#fff3fa 0 10px,#f4efff 10px 20px); border: 2px solid var(--line); min-height: 96px; align-content: flex-start; }
+        .tile { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 76px; padding: 8px 10px; border-radius: 8px; border: 2px solid var(--line); background: var(--sun); box-shadow: 3px 3px 0 var(--sh); cursor: pointer; transform: rotate(-2deg); transition: transform .12s, box-shadow .12s, background .12s; }
+        .tile:nth-child(5n+1) { background: var(--non); } .tile:nth-child(5n+2) { background: var(--hal); transform: rotate(1.5deg); } .tile:nth-child(5n+3) { background: var(--meta); } .tile:nth-child(5n+4) { background: var(--alkali); transform: rotate(1.5deg); } .tile:nth-child(5n) { background: var(--post); }
+        .tile:hover { transform: translate(-1px,-3px) rotate(0); box-shadow: 5px 6px 0 var(--sh); }
+        .tile:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--sh); }
+        .tile.sel { background: var(--ink); color: #fff; transform: translate(-3px,-6px) rotate(0) scale(1.06); box-shadow: 7px 8px 0 var(--accent); z-index: 1; }
+        .tile.sel span { color: #e6d9ff; } .tile.sel em { color: var(--sun); }
+        .tile.shake { animation: shake .35s; }
+        .tile b { font: 800 22px/1.1 var(--display); } .tile span { font-size: 11.5px; font-weight: 600; color: var(--ink); } .tile em { font-style: normal; font-size: 12.5px; font-weight: 800; color: var(--ink); }
+        .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; border: 2px solid var(--line); background: var(--card); border-radius: 8px; padding: 0 16px; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 3px 3px 0 var(--sh); transition: transform .12s, box-shadow .12s; }
+        .btn:disabled { opacity: .5; cursor: default; box-shadow: 2px 2px 0 var(--sh); }
+        .btn.primary { color: #fff; background: var(--accent); }
+        #btnHint { background: var(--sun); } #btnRules { background: #dbe4ff; } #btnRestart { background: #ffd9e2; }
+        .modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; background: rgba(43,16,85,.6); }
+        .sheet { width: min(480px,100%); max-height: 92%; overflow: auto; background: var(--stage); border: 2px solid var(--line); border-radius: 10px; padding: 22px; box-shadow: 8px 8px 0 var(--sh); text-align: center; }
+        .sheet h2 { margin: 6px 0 10px; font: 800 24px/1.35 var(--display); letter-spacing: -.5px; }
+        .stars { font-size: 40px; letter-spacing: 6px; color: #ff9f1c; -webkit-text-stroke: 1.5px var(--ink); }
+        .score { display: grid; gap: 8px; margin: 12px 0 18px; font-size: 14px; font-weight: 600; color: var(--mute); text-align: left; }
+        .score div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px dashed rgba(43,16,85,.35); padding-bottom: 6px; } .score b { color: var(--ink); }
+        .rules { display: grid; gap: 10px; margin: 12px 0 18px; padding: 0; list-style: none; text-align: left; }
+        .rules li { font-size: 14px; line-height: 1.65; color: var(--mute); padding: 8px 12px; background: #fff; border: 2px solid var(--line); border-left-width: 8px; border-radius: 6px; } .rules li b { color: var(--ink); }
+        .rules li:nth-child(4n+1) { border-left-color: var(--non); } .rules li:nth-child(4n+2) { border-left-color: var(--hal); } .rules li:nth-child(4n+3) { border-left-color: var(--sun); } .rules li:nth-child(4n) { border-left-color: var(--meta); }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+        @media (max-width: 520px) { .back-btn .long { display: none; } .stage { padding: 12px; box-shadow: 5px 5px 0 var(--sh); } .tile { min-width: 66px; } .stk { width: 46px; height: 58px; font-size: 18px; } .strip { gap: 7px; } .titlebox { flex-basis: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header class="top">
+            <a class="back-btn" href="games.html#adv" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+            <button class="icon-btn" id="soundBtn" type="button" title="শব্দ চালু/বন্ধ" aria-label="শব্দ চালু/বন্ধ">🔔</button>
+            <button class="icon-btn" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+        </header>
+        <div class="hero">
+            <div class="titlebox"><b>🧩 <em>পিরিয়ডিক টেবিল</em> পাজল</b><small>Advanced Game</small></div>
+            <div class="strip" aria-hidden="true"><span class="stk k-non"><small>1</small>H</span><span class="stk k-noble"><small>2</small>He</span><span class="stk k-alkali"><small>3</small>Li</span><span class="stk k-earth"><small>4</small>Be</span><span class="stk k-meta"><small>5</small>B</span></div>
+        </div>
+        <div class="lv" id="lv"></div>
+        <div class="hud">
+            <span class="pill">✅ বসানো <b id="sPlaced">০/০</b></span>
+            <span class="pill">❌ ভুল <b id="sMiss">০</b></span>
+            <span class="pill">💡 ইঙ্গিত <b id="sHint">৩</b></span>
+            <span class="pill">⏱️ <b id="sTime">০:০০</b></span>
+            <button class="btn" id="btnRules" style="margin-left:auto">📖 নিয়ম</button>
+        </div>
+        <div class="tablewrap"><div class="pt" id="pt"></div></div>
+        <div class="legend" id="legend"></div>
+        <div class="msg" id="msg">নিচ থেকে একটি মৌল বেছে নাও, তারপর টেবিলের সঠিক ঘরে ট্যাপ করো।</div>
+        <div class="tray" id="tray"></div>
+        <div class="row"><button class="btn" id="btnHint">💡 ইঙ্গিত</button><button class="btn" id="btnRestart">↺ নতুন করে</button></div>
+    </div>
+    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+
+    <script>
+    (function () {
+        'use strict';
+        const $ = s => document.querySelector(s);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+        /* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+           ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+           বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+        function NBSound(key) {
+            let on = true, ac = null;
+            try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+            function tone(f, t0, dur, type, vol) {
+                if (!on) return;
+                try {
+                    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+                    if (ac.state === 'suspended') ac.resume();
+                    const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+                    const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+                } catch (e) {}
+            }
+            const api = {
+                ok() { tone(660, 0, .12); tone(880, .1, .16); },
+                bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+                tap() { tone(520, 0, .06, 'triangle', .1); },
+                pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+                win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+                lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+                get on() { return on; },
+                toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+            };
+            function paint() { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; }
+            document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } });
+            if (document.readyState !== 'loading') { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } }
+            return api;
+        }
+
+        const sfx = (function () { try { return NBSound('ptable'); } catch (e) { const n = () => {}; return { ok: n, bad: n, tap: n, pop: n, win: n, lose: n }; } })();
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+
+        $('#bgBtn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-bg') || '1';
+            const next = cur === '1' ? '2' : cur === '2' ? '3' : '1';
+            if (next === '1') document.documentElement.removeAttribute('data-bg'); else document.documentElement.setAttribute('data-bg', next);
+            lsSet('ptable-bg', next);
+        });
+
+        /* সংকেত, বাংলা নাম, ধরন, ইলেকট্রন বিন্যাস (Z = ১..৩৬) */
+        const EL = [
+            ['H', 'হাইড্রোজেন', 'non', '1'], ['He', 'হিলিয়াম', 'noble', '2'], ['Li', 'লিথিয়াম', 'alkali', '2,1'], ['Be', 'বেরিলিয়াম', 'earth', '2,2'],
+            ['B', 'বোরন', 'meta', '2,3'], ['C', 'কার্বন', 'non', '2,4'], ['N', 'নাইট্রোজেন', 'non', '2,5'], ['O', 'অক্সিজেন', 'non', '2,6'],
+            ['F', 'ফ্লোরিন', 'hal', '2,7'], ['Ne', 'নিয়ন', 'noble', '2,8'], ['Na', 'সোডিয়াম', 'alkali', '2,8,1'], ['Mg', 'ম্যাগনেসিয়াম', 'earth', '2,8,2'],
+            ['Al', 'অ্যালুমিনিয়াম', 'post', '2,8,3'], ['Si', 'সিলিকন', 'meta', '2,8,4'], ['P', 'ফসফরাস', 'non', '2,8,5'], ['S', 'সালফার', 'non', '2,8,6'],
+            ['Cl', 'ক্লোরিন', 'hal', '2,8,7'], ['Ar', 'আর্গন', 'noble', '2,8,8'], ['K', 'পটাসিয়াম', 'alkali', '2,8,8,1'], ['Ca', 'ক্যালসিয়াম', 'earth', '2,8,8,2'],
+            ['Sc', 'স্ক্যান্ডিয়াম', 'trans', '2,8,9,2'], ['Ti', 'টাইটেনিয়াম', 'trans', '2,8,10,2'], ['V', 'ভ্যানাডিয়াম', 'trans', '2,8,11,2'], ['Cr', 'ক্রোমিয়াম', 'trans', '2,8,13,1'],
+            ['Mn', 'ম্যাঙ্গানিজ', 'trans', '2,8,13,2'], ['Fe', 'আয়রন (লোহা)', 'trans', '2,8,14,2'], ['Co', 'কোবাল্ট', 'trans', '2,8,15,2'], ['Ni', 'নিকেল', 'trans', '2,8,16,2'],
+            ['Cu', 'কপার (তামা)', 'trans', '2,8,18,1'], ['Zn', 'জিংক (দস্তা)', 'trans', '2,8,18,2'], ['Ga', 'গ্যালিয়াম', 'post', '2,8,18,3'], ['Ge', 'জার্মেনিয়াম', 'meta', '2,8,18,4'],
+            ['As', 'আর্সেনিক', 'meta', '2,8,18,5'], ['Se', 'সেলেনিয়াম', 'non', '2,8,18,6'], ['Br', 'ব্রোমিন', 'hal', '2,8,18,7'], ['Kr', 'ক্রিপ্টন', 'noble', '2,8,18,8']
+        ];
+        const CAT = { alkali: 'ক্ষার ধাতু', earth: 'মৃৎক্ষার ধাতু', trans: 'ট্রানজিশন ধাতু', post: 'অন্যান্য ধাতু', meta: 'ধাতুকল্প', non: 'অধাতু', hal: 'হ্যালোজেন', noble: 'নিষ্ক্রিয় গ্যাস' };
+        function pos(z) {
+            if (z === 1) return [1, 1]; if (z === 2) return [1, 18];
+            if (z <= 4) return [2, z - 2]; if (z <= 10) return [2, z + 8];
+            if (z <= 12) return [3, z - 10]; if (z <= 18) return [3, z];
+            return [4, z - 18];
+        }
+        const LEVELS = [
+            { name: 'লেভেল ১', desc: 'পারমাণবিক সংখ্যা দেখে (১–২০)', from: 1, max: 20, pre: [], clue: 'z', tip: 'টেবিল পারমাণবিক সংখ্যার ক্রমে বাঁ থেকে ডানে সাজানো। ঘরের ছোট সংখ্যাটা মিলিয়ে নাও।' },
+            { name: 'লেভেল ২', desc: 'ইলেকট্রন বিন্যাস দেখে (৩–২০)', from: 3, max: 20, pre: [1, 2], clue: 'cfg', tip: 'শেলের সংখ্যা = পর্যায় (সারি)। শেষ শেলের ইলেকট্রন = গ্রুপ (১ বা ২; ৩ থেকে ৮ হলে ১০ যোগ করো)।' },
+            { name: 'লেভেল ৩', desc: 'ট্রানজিশন ধাতু সহ (১–৩৬)', from: 1, max: 36, pre: [], clue: 'name', tip: 'গ্রুপ ৩–১২ ট্রানজিশন ধাতুর। Sc থেকে Zn এই ১০টি ঘরে এক এক করে বসে। ইঙ্গিতে পারমাণবিক সংখ্যা দেখা যায়।' }
+        ];
+        let stars = {}; try { stars = JSON.parse(lsGet('ptable-stars') || '{}') || {}; } catch (e) { stars = {}; }
+        const S = { lv: 0, placed: {}, tray: [], sel: null, miss: 0, hints: 3, hintUsed: 0, t0: 0, ticker: null, over: false, total: 0 };
+        const key = (p, g) => p + '-' + g;
+        const unlockedLv = i => i === 0 || stars[i - 1] > 0;
+        const starStr = n => '★'.repeat(n || 0) + '☆'.repeat(3 - (n || 0));
+
+        function renderLevels() {
+            $('#lv').innerHTML = LEVELS.map((L, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlockedLv(i) ? '' : ' disabled') + '><b>' + (unlockedLv(i) ? '' : '🔒 ') + L.name + '</b><small>' + L.desc + '</small><i>' + starStr(stars[i]) + '</i></button>').join('');
+        }
+        $('#legend').innerHTML = Object.keys(CAT).map(k => '<span class="k-' + k + '">' + CAT[k] + '</span>').join('');
+
+        function start(i) {
+            clearInterval(S.ticker);
+            const L = LEVELS[i];
+            S.lv = i; S.placed = {}; S.sel = null; S.miss = 0; S.hints = 3; S.hintUsed = 0; S.over = false; S.t0 = Date.now();
+            L.pre.forEach(z => { const p = pos(z); S.placed[key(p[0], p[1])] = z; });
+            const zs = []; for (let z = L.from; z <= L.max; z++) zs.push(z);
+            S.tray = shuffle(zs); S.total = zs.length;
+            S.revealed = {};
+            renderLevels(); renderTable(); renderTray(); hud();
+            setMsg('📌 ' + L.tip, '');
+            S.ticker = setInterval(tickTime, 500);
+        }
+        function tickTime() { if (S.over) return; const s = Math.floor((Date.now() - S.t0) / 1000); $('#sTime').textContent = bn(Math.floor(s / 60)) + ':' + (s % 60 < 10 ? '০' : '') + bn(s % 60); }
+        function hud() {
+            const done = Object.keys(S.placed).length - LEVELS[S.lv].pre.length;
+            $('#sPlaced').textContent = bn(done) + '/' + bn(S.total); $('#sMiss').textContent = bn(S.miss); $('#sHint').textContent = bn(S.hints);
+            $('#btnHint').disabled = S.over || S.hints <= 0 || !S.tray.length;
+        }
+        function setMsg(t, c) { const m = $('#msg'); m.textContent = t; m.className = 'msg' + (c ? ' ' + c : ''); }
+
+        function renderTable() {
+            const L = LEVELS[S.lv], maxP = L.max > 20 ? 4 : 4;
+            const cells = {};
+            for (let z = 1; z <= L.max; z++) { const p = pos(z); cells[key(p[0], p[1])] = z; }
+            let h = '<span class="lab"></span>';
+            for (let g = 1; g <= 18; g++) h += '<span class="lab">' + bn(g) + '</span>';
+            for (let p = 1; p <= maxP; p++) {
+                h += '<span class="lab">' + bn(p) + '</span>';
+                for (let g = 1; g <= 18; g++) {
+                    const k = key(p, g), z = cells[k];
+                    if (!z) { h += '<span></span>'; continue; }
+                    if (S.placed[k]) { const e = EL[S.placed[k] - 1]; h += '<button class="c f k-' + e[2] + '" data-info="' + S.placed[k] + '"><small>' + bn(S.placed[k]) + '</small>' + e[0] + '</button>'; }
+                    else h += '<button class="c target" data-k="' + k + '" aria-label="খালি ঘর, পর্যায় ' + bn(p) + ' গ্রুপ ' + bn(g) + '">' + (L.clue === 'z' ? '<small>' + bn(z) + '</small>' : '') + '</button>';
+                }
+            }
+            $('#pt').style.gridTemplateColumns = '22px repeat(18, minmax(26px, 1fr))';
+            $('#pt').innerHTML = h;
+        }
+        function renderTray() {
+            const L = LEVELS[S.lv];
+            $('#tray').innerHTML = S.tray.length ? S.tray.map(z => {
+                const e = EL[z - 1];
+                const extra = L.clue === 'z' ? '<em>Z = ' + bn(z) + '</em>' : L.clue === 'cfg' ? '<em>' + e[3].split(',').map(bn).join(', ') + '</em>' : (S.revealed[z] ? '<em>Z = ' + bn(z) + '</em>' : '');
+                return '<button class="tile' + (S.sel === z ? ' sel' : '') + '" data-z="' + z + '"><b>' + e[0] + '</b><span>' + e[1] + '</span>' + extra + '</button>';
+            }).join('') : '<div style="align-self:center;font-weight:700;color:var(--mute)">সব মৌল বসানো হয়ে গেছে 🎉</div>';
+        }
+
+        function selectTile(z) { if (S.over) return; sfx.tap(); S.sel = S.sel === z ? null : z; renderTray(); if (S.sel) { const e = EL[z - 1]; setMsg('বেছে নিয়েছ: ' + e[0] + ' (' + e[1] + ')। এখন টেবিলের ঘরে ট্যাপ করো।', ''); } }
+        function placeAt(k) {
+            if (S.over || !S.sel || S.placed[k]) return;
+            const z = S.sel, p = pos(z), L = LEVELS[S.lv];
+            if (key(p[0], p[1]) === k) {
+                S.placed[k] = z; S.tray = S.tray.filter(t => t !== z); S.sel = null; sfx.ok();
+                const e = EL[z - 1];
+                renderTable(); renderTray(); hud();
+                setMsg('✅ ' + e[0] + ' — ' + e[1] + ' · Z = ' + bn(z) + ' · ' + CAT[e[2]] + ' · ইলেকট্রন বিন্যাস ' + e[3].split(',').map(bn).join(', ') + ' · পর্যায় ' + bn(p[0]) + ', গ্রুপ ' + bn(p[1]), 'ok');
+                if (!S.tray.length) finish();
+            } else {
+                S.miss++; hud(); sfx.bad();
+                const cell = document.querySelector('[data-k="' + k + '"]'); if (cell) { cell.classList.add('shake'); setTimeout(() => cell.classList.remove('shake'), 400); }
+                setMsg('❌ ভুল ঘর। ' + L.tip, 'bad');
+            }
+        }
+        function useHint() {
+            if (S.over || S.hints <= 0 || !S.tray.length) return;
+            const z = S.sel || S.tray[0]; if (!S.sel) { S.sel = z; }
+            S.hints--; S.hintUsed++; S.revealed[z] = true;
+            const p = pos(z); renderTray(); hud();
+            const cell = document.querySelector('[data-k="' + key(p[0], p[1]) + '"]');
+            if (cell) { cell.classList.add('hint'); setTimeout(() => cell.classList.remove('hint'), 2000); }
+            setMsg('💡 ' + EL[z - 1][0] + ' বসবে পর্যায় ' + bn(p[0]) + ', গ্রুপ ' + bn(p[1]) + '-এ (পারমাণবিক সংখ্যা ' + bn(z) + ')। জ্বলজ্বলে ঘরটি দেখো।', '');
+        }
+        function finish() {
+            S.over = true; clearInterval(S.ticker); sfx.win();
+            const sec = Math.floor((Date.now() - S.t0) / 1000), score = S.miss + 2 * S.hintUsed;
+            const st = score <= 2 ? 3 : score <= 6 ? 2 : 1;
+            if (!stars[S.lv] || st > stars[S.lv]) { stars[S.lv] = st; lsSet('ptable-stars', JSON.stringify(stars)); }
+            renderLevels(); hud();
+            const last = S.lv === LEVELS.length - 1;
+            $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + (last ? '🎉 পিরিয়ডিক টেবিল তোমার দখলে!' : 'টেবিল সম্পূর্ণ!') + '</h2>' +
+                '<div class="score"><div><span>সময়</span><b>' + bn(Math.floor(sec / 60)) + ' মি. ' + bn(sec % 60) + ' সে.</b></div><div><span>ভুল</span><b>' + bn(S.miss) + '</b></div><div><span>ইঙ্গিত ব্যবহার</span><b>' + bn(S.hintUsed) + '</b></div></div>' +
+                '<div class="row"><button class="btn" data-a="again">↺ আবার</button>' + (last ? '' : '<button class="btn primary" data-a="next">পরের লেভেল ➜</button>') + '</div>';
+            $('#modal').hidden = false;
+        }
+        function rules() {
+            $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul class="rules"><li><b>লক্ষ্য:</b> নিচের মৌলগুলো টেবিলের সঠিক ঘরে বসিয়ে পুরো টেবিল ভরাও।</li><li><b>কীভাবে:</b> একটি মৌল ট্যাপ করে বেছে নাও, তারপর খালি ঘরে ট্যাপ করো।</li><li><b>ঠিক হলে</b> ঘরটি ধরন অনুযায়ী রঙিন হয় এবং মৌলের তথ্য দেখা যায়। বসানো ঘরে ট্যাপ করলেও তথ্য দেখবে।</li><li><b>ভুল হলে</b> ভুলের সংখ্যা বাড়ে এবং কী নিয়ম মনে রাখতে হবে তার টিপস আসে।</li><li><b>ইঙ্গিত:</b> ৩টি, সঠিক ঘরটি জ্বলে ওঠে। ভুল ও ইঙ্গিত কম হলে ৩ তারা!</li><li><b>লেভেল:</b> ১ম লেভেল শেষ করলে পরেরটি খোলে।</li></ul><div class="row"><button class="btn primary" data-a="close">বুঝেছি</button></div>';
+            $('#modal').hidden = false;
+        }
+        function act(a) {
+            if (a === 'close') $('#modal').hidden = true;
+            else if (a === 'again') { $('#modal').hidden = true; start(S.lv); }
+            else if (a === 'next') { $('#modal').hidden = true; start(Math.min(LEVELS.length - 1, S.lv + 1)); }
+        }
+        document.addEventListener('click', e => {
+            const t = e.target && e.target.closest ? e.target : null; if (!t) return;
+            const q = s => t.closest(s);
+            let n;
+            if ((n = q('[data-a]'))) return act(n.getAttribute('data-a'));
+            if ((n = q('[data-lv]'))) { if (unlockedLv(+n.getAttribute('data-lv'))) start(+n.getAttribute('data-lv')); return; }
+            if ((n = q('[data-z]'))) return selectTile(+n.getAttribute('data-z'));
+            if ((n = q('[data-k]'))) return placeAt(n.getAttribute('data-k'));
+            if ((n = q('[data-info]'))) { const z = +n.getAttribute('data-info'), e2 = EL[z - 1], p = pos(z); setMsg(e2[0] + ' — ' + e2[1] + ' · Z = ' + bn(z) + ' · ' + CAT[e2[2]] + ' · ইলেকট্রন বিন্যাস ' + e2[3].split(',').map(bn).join(', ') + ' · পর্যায় ' + bn(p[0]) + ', গ্রুপ ' + bn(p[1]), 'ok'); }
+        });
+        $('#btnHint').addEventListener('click', useHint);
+        $('#btnRestart').addEventListener('click', () => start(S.lv));
+        $('#btnRules').addEventListener('click', rules);
+        start(0);
+        /*TESTHOOK*/
+    })();
+    </script>
+</body>
+</html>

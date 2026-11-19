@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ffe94d">
+    <title>পলিমার ওয়ার্ল্ড | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () { try { var b = localStorage.getItem('polymer-bg'); if (b === '2' || b === '3') document.documentElement.setAttribute('data-bg', b); } catch (e) {} })();
+    </script>
+    <style>
+/* ===== NB KIT: sticker / neo-brutalist দৃশ্যরূপ =====
+   প্রতিটি গেম নিজের :root-এ এই টোকেনগুলো বদলে নিজস্ব রং পায়:
+   --o1 --o2 --o3 (বাইরের ব্যাকগ্রাউন্ড), --paper (বোর্ড), --paper2, --ink, --a1 --a2 --a3 (অ্যাকসেন্ট)  */
+:root {
+    color-scheme: light;
+    --o1: #ff6b4a; --o2: #ffd23f; --o3: #5ad1c4;
+    --paper: #fff8ec; --paper2: #ffffff; --ink: #1d1030; --mute: #6a5f80;
+    --a1: #ff6b4a; --a2: #2ec4b6; --a3: #ffd23f; --good: #12a36b; --bad: #e5384d;
+    --bw: 3px; --rad: 16px; --sh: 5px;
+    --display: 'Bricolage Grotesque','Hind Siliguri',system-ui,sans-serif;
+    --body: 'Hind Siliguri','Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+    --pat: radial-gradient(rgba(29,16,48,.20) 1.4px, transparent 1.6px);
+    --pat-size: 22px 22px;
+}
+:root[data-bg="2"] { --o1: #2ec4b6; --o2: #c9f2ee; --o3: #ff6b4a; }
+:root[data-bg="3"] { --o1: #a78bfa; --o2: #ffd6f0; --o3: #ffd23f; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0; min-height: 100vh; color: var(--ink); font-family: var(--body); font-weight: 500; line-height: 1.55;
+    padding: 18px max(14px, env(safe-area-inset-right, 0px)) 30px max(14px, env(safe-area-inset-left, 0px));
+    background-color: var(--o1);
+    background-image: var(--pat), radial-gradient(circle at 12% 6%, var(--o2) 0, transparent 46%), radial-gradient(circle at 94% 96%, var(--o3) 0, transparent 50%);
+    background-size: var(--pat-size), 100% 100%, 100% 100%;
+    background-attachment: fixed; transition: background-color .4s; -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.stage { max-width: 860px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 24px; box-shadow: 9px 9px 0 var(--ink); }
+.credit { width: fit-content; max-width: 100%; margin: 18px auto 0; padding: 6px 14px; text-align: center; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; color: var(--ink); background: var(--paper); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+
+/* উপরের বার */
+.top { display: flex; align-items: center; gap: 10px; }
+.titlebox { margin-right: auto; min-width: 0; }
+.titlebox b { display: inline-block; padding: 3px 12px; font: 800 clamp(1.05rem, 3.6vw, 1.35rem)/1.3 var(--display); color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-1.2deg); }
+.titlebox small { display: block; margin: 5px 0 0 4px; font-size: 12px; font-weight: 700; color: var(--mute); }
+.btn, .back-btn, .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 14px;
+    font: 800 14px/1 var(--body); text-decoration: none; cursor: pointer; color: var(--ink); background: var(--paper2);
+    border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s, background .12s;
+}
+.btn:hover:not(:disabled), .back-btn:hover, .icon-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.btn:active:not(:disabled), .back-btn:active, .icon-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; box-shadow: 2px 2px 0 var(--ink); }
+.btn.primary { background: var(--a1); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.btn.alt { background: var(--a2); }
+.btn.big { min-height: 54px; padding: 0 26px; font-size: 17px; border-radius: 14px; }
+.icon-btn { width: 42px; padding: 0; font-size: 17px; }
+
+/* পিল, ক্যাপসুল, কার্ড */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; font-size: 13px; font-weight: 800; color: var(--ink); background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+.pill b { font-variant-numeric: tabular-nums; }
+.box { padding: 14px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: var(--rad); box-shadow: 5px 5px 0 var(--ink); }
+.sticker { display: inline-block; padding: 3px 11px; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--a3); border: 2.5px solid var(--ink); border-radius: 8px; transform: rotate(-2deg); }
+.meter { height: 16px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 99px; overflow: hidden; }
+.meter i { display: block; height: 100%; width: 100%; background: var(--a1); border-right: 2.5px solid var(--ink); transition: width .25s ease; }
+.hazard { height: 12px; border: 2.5px solid var(--ink); border-radius: 6px; background: repeating-linear-gradient(-45deg, var(--a3) 0 10px, var(--ink) 10px 20px); }
+
+/* মডাল */
+.modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; background: rgba(29,16,48,.58); }
+.sheet { width: min(500px, 100%); max-height: 92%; overflow: auto; padding: 22px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 22px; box-shadow: 9px 9px 0 var(--ink); }
+.sheet h2 { margin: 6px 0 10px; font: 800 22px/1.35 var(--display); }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 18px); transform: translateX(-50%); z-index: 3500; padding: 8px 16px; font-size: 15px; font-weight: 800; color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 99px; box-shadow: 4px 4px 0 var(--ink); opacity: 0; pointer-events: none; }
+.toast.on { animation: nbtoast 1.7s ease forwards; }
+@keyframes nbtoast { 0% { opacity: 0; transform: translate(-50%, -10px); } 12%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+@keyframes nbshake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes nbpop { from { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.12); } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 520px) { .stage { padding: 12px; border-radius: 20px; gap: 12px; box-shadow: 6px 6px 0 var(--ink); } .back-btn .long { display: none; } .titlebox small { display: none; } }
+
+/* ===== Polymer World: নিজস্ব প্যালেট (লেমন-হলুদ + হ্যাক্সাগন মৌচাক) ===== */
+:root {
+    --o1: #ffe94d; --o2: #fff6a0; --o3: #ffd92e;
+    --paper: #fffaf0; --paper2: #ffffff; --ink: #241a5e; --mute: #5f5690;
+    --a1: #ff3d8b; --a2: #00b8a9; --a3: #7c4dff; --good: #0a9a6a; --bad: #e0244f;
+    --hex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23241a5e' stroke-opacity='.17' stroke-width='2.2'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%23241a5e' stroke-opacity='.17' stroke-width='2.2'/%3E%3C/svg%3E");
+    --pat: radial-gradient(rgba(36,26,94,.13) 1.3px, transparent 1.5px);
+}
+:root[data-bg="2"] { --o1: #ffee5e; --o2: #b6f1da; --o3: #a9dcff; }
+:root[data-bg="3"] { --o1: #ffe74a; --o2: #ffc4b8; --o3: #d6c6ff; }
+body {
+    background-color: var(--o1);
+    background-image: var(--hex), var(--pat), radial-gradient(circle at 10% 6%, var(--o2) 0, transparent 44%), radial-gradient(circle at 94% 96%, var(--o3) 0, transparent 48%);
+    background-size: 56px 100px, 22px 22px, 100% 100%, 100% 100%;
+}
+.stage { max-width: 820px; }
+.titlebox b { color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.titlebox small { color: var(--mute); }
+.back-btn { background: var(--o1); }
+#soundBtn { background: #c9f6ef; }
+#bgBtn { background: #ffd1e6; }
+.icon-btn { min-width: 42px; }
+
+/* স্টেজ ফোল্ডার-ট্যাব */
+.lv { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
+.lvb { flex: 1 1 150px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
+    background: #ece4ff; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
+.lvb:nth-child(2) { background: #d4f6ef; } .lvb:nth-child(3) { background: #ffe0ee; }
+.lvb:hover:not(:disabled) { transform: translateY(-3px); }
+.lvb:active:not(:disabled) { transform: translateY(1px); }
+.lvb b { font: 800 14px/1.3 var(--body); padding-right: 64px; } .lvb small { font-size: 12px; font-weight: 700; color: var(--mute); line-height: 1.3; }
+.lvb i { position: absolute; top: 6px; right: 6px; padding: 1px 7px; font-style: normal; font-size: 12px; letter-spacing: 1px; color: var(--ink); background: #ffd23f; border: 2px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(3deg); }
+.lvb.on { background: #fff; padding-bottom: 12px; box-shadow: 0 -4px 0 var(--a1) inset; }
+.lvb.on small { color: var(--ink); }
+.lvb:disabled { opacity: .55; cursor: default; filter: grayscale(.4); }
+.hud { display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
+.hud .pill:nth-child(1) { background: #e5dcff; } .hud .pill:nth-child(2) { background: #ffd4de; } .hud .pill:nth-child(3) { background: #fff0a8; } .hud .pill:nth-child(4) { background: #c4efff; }
+
+/* অর্ডার: কাত করা টিকিট স্টাব */
+.order { position: relative; margin: 4px 6px; padding: 14px 22px 14px 26px; background: #ffd0e6; color: var(--ink); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 5px 5px 0 var(--ink); transform: rotate(-.8deg);
+    background-image: linear-gradient(90deg, transparent calc(100% - 70px), var(--ink) calc(100% - 70px) calc(100% - 67px), transparent calc(100% - 67px)); }
+.order::before, .order::after { content: ""; position: absolute; width: 22px; height: 22px; left: -13px; top: 50%; margin-top: -11px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 50%; clip-path: inset(0 0 0 50%); }
+.order::after { left: auto; right: -13px; clip-path: inset(0 50% 0 0); }
+.order small { display: inline-block; padding: 2px 10px; font-size: 12px; font-weight: 800; color: #fff; background: var(--a3); border: 2.5px solid var(--ink); border-radius: 8px; transform: rotate(-1.5deg); }
+.order h2 { margin: 6px 70px 4px 0; font: 800 clamp(1.15rem, 3.6vw, 1.5rem)/1.4 var(--display); }
+.order p { margin: 0 70px 0 0; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+
+/* রিঅ্যাক্টর: কাচের ফ্লাস্ক/টিউব প্যানেল */
+.reactor { position: relative; margin-top: 12px; padding: 16px 16px 16px 36px; min-height: 140px; border: 4px solid var(--ink); border-radius: 18px 18px 38px 38px; box-shadow: 6px 6px 0 var(--ink);
+    background: linear-gradient(115deg, transparent 0 8%, rgba(255,255,255,.7) 8% 11%, transparent 11% 15%, rgba(255,255,255,.55) 15% 16.5%, transparent 16.5%), #d9f6ff; }
+.reactor::before { content: "⚗️ ফ্লাস্ক"; position: absolute; top: -17px; left: 22px; padding: 2px 12px; font-size: 12px; font-weight: 800; background: var(--a2); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 8px; transform: rotate(-2deg); }
+.reactor::after { content: ""; position: absolute; left: 9px; top: 18px; bottom: 26px; width: 14px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); background: repeating-linear-gradient(to bottom, var(--ink) 0 3px, transparent 3px 14px); opacity: .55; -webkit-mask: linear-gradient(90deg, #000 0 100%); }
+.chainhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; font-weight: 800; color: var(--ink); }
+.chainhead #count { padding: 2px 10px; background: #fff; border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 0; }
+.bead { display: inline-flex; align-items: center; padding: 8px 11px; font: 800 13.5px/1.2 ui-monospace, Menlo, Consolas, 'Hind Siliguri', monospace; color: var(--ink); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); animation: nbpop .35s ease-out; }
+.bead.slot { background: rgba(255,255,255,.55); border-style: dashed; box-shadow: none; color: #7a7aa8; animation: none; }
+.bond { width: 14px; height: 7px; background: var(--ink); border-radius: 3px; }
+.drop { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin: 0 2px; font-size: 15px; background: #bfeaff; border: 2.5px solid var(--ink); border-radius: 50% 50% 50% 12%; box-shadow: 2px 2px 0 var(--ink); transform: rotate(-8deg); animation: drip .7s ease-out; }
+@keyframes drip { from { transform: translateY(-14px) rotate(-8deg); opacity: 0; } to { transform: translateY(0) rotate(-8deg); opacity: 1; } }
+.formula { margin-top: 12px; font: 800 14px/1.4 ui-monospace, Menlo, Consolas, monospace; color: var(--ink); }
+.formula:not(:empty) { display: inline-block; padding: 4px 12px; background: #fff; border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); }
+
+.msg { min-height: 56px; display: flex; align-items: center; padding: 10px 14px; background: #fff3a8; color: var(--ink); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); font-size: 14px; line-height: 1.6; font-weight: 600; }
+.msg.ok { background: #bff5de; } .msg.bad { background: #ffc9d6; }
+
+/* মনোমার: কাত করা তাসের মতো কার্ড */
+.tray { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px 12px; padding: 4px 4px 6px; }
+.mono { display: flex; flex-direction: column; gap: 3px; min-height: 64px; padding: 11px 12px; text-align: left; cursor: pointer; color: var(--ink); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); transform: rotate(-1.6deg); transition: transform .12s, box-shadow .12s; }
+.mono:nth-child(even) { transform: rotate(1.4deg); } .mono:nth-child(3n) { transform: rotate(-.6deg); }
+.mono:hover:not(:disabled) { transform: rotate(0) translate(-1px, -3px); box-shadow: 6px 7px 0 var(--ink); }
+.mono:active:not(:disabled) { transform: rotate(0) translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.mono b { font: 800 14px/1.3 var(--body); } .mono code { font: 800 13px/1.35 ui-monospace, Menlo, Consolas, monospace; color: var(--ink); }
+.mono.hint { animation: glow .7s ease-in-out 3; outline: 4px solid var(--a1); outline-offset: 2px; }
+.mono.shake { animation: nbshake .35s; box-shadow: 4px 4px 0 var(--bad); }
+.mono:disabled { opacity: .55; cursor: default; box-shadow: 2px 2px 0 var(--ink); }
+@keyframes glow { 50% { transform: scale(1.06) rotate(0); } }
+
+/* মডাল: ল্যাব লেবেল */
+.modal { background: rgba(36,26,94,.55); backdrop-filter: none; }
+.sheet { position: relative; text-align: center; padding-top: 0; background: #fffdf3; }
+.sheet::before { content: "LAB LABEL · POLYMER"; display: block; margin: 0 -22px 14px; padding: 7px 14px; font: 800 12px/1.2 var(--display); letter-spacing: 1.5px; color: var(--o1); background: var(--ink); text-align: left; }
+.stars { font-size: 38px; letter-spacing: 6px; color: #ffb800; -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--ink); }
+.big { margin: 8px 0; padding: 8px 12px; font: 800 18px/1.4 ui-monospace, Menlo, Consolas, monospace; color: var(--ink); background: #e5dcff; border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); overflow-wrap: anywhere; }
+.info { display: grid; gap: 6px; margin: 10px 0 14px; text-align: left; font-size: 14px; }
+.info div { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 6px; border-bottom: 2.5px dashed var(--ink); color: var(--mute); font-weight: 700; } .info b { color: var(--ink); text-align: right; }
+.rules { display: grid; gap: 9px; margin: 12px 0 16px; padding: 0; list-style: none; text-align: left; }
+.rules li { font-size: 14px; line-height: 1.6; color: var(--mute); padding: 8px 12px; background: #fff; border: 2.5px solid var(--ink); border-radius: 12px; } .rules li b { color: var(--ink); }
+@media (max-width: 520px) {
+    .top { gap: 8px; } .icon-btn, .back-btn { min-width: 42px; }
+    .titlebox b { font-size: 1rem; padding: 3px 9px; }
+    .order { padding-left: 22px; } .order h2, .order p { margin-right: 52px; }
+    .order { background-image: linear-gradient(90deg, transparent calc(100% - 52px), var(--ink) calc(100% - 52px) calc(100% - 49px), transparent calc(100% - 49px)); }
+    .reactor { padding-left: 30px; } .lvb { flex-basis: 100%; }
+    .lvb { min-height: 52px; }
+}
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header class="top">
+            <a class="back-btn" href="games.html#adv" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+            <div class="titlebox"><b>🧬 পলিমার ওয়ার্ল্ড</b><small>Advanced Game</small></div>
+            <button class="icon-btn" id="soundBtn" title="সাউন্ড চালু/বন্ধ" aria-label="সাউন্ড চালু বা বন্ধ করো">🔔</button>
+            <button class="icon-btn" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+        </header>
+        <div class="lv" id="lv"></div>
+        <div class="hud">
+            <span class="pill">📦 অর্ডার <b id="sOrder">০/০</b></span>
+            <span class="pill">❌ ভুল <b id="sMiss">০</b></span>
+            <span class="pill">💡 ইঙ্গিত <b id="sHint">৩</b></span>
+            <span class="pill">💧 পানি <b id="sWater">০</b></span>
+            <button class="btn" id="btnRules" style="margin-left:auto">📖 নিয়ম</button>
+        </div>
+        <section class="order" id="order"></section>
+        <section class="reactor"><div class="chainhead"><span>⚗️ রিঅ্যাক্টর: পলিমার চেইন</span><span id="count"></span></div><div class="chain" id="chain"></div><div class="formula" id="formula"></div></section>
+        <div class="msg" id="msg"></div>
+        <div class="tray" id="tray"></div>
+        <div class="row"><button class="btn" id="btnHint">💡 ইঙ্গিত</button><button class="btn" id="btnReset">↺ চেইন ভাঙো (এই অর্ডার নতুন করে)</button></div>
+    </div>
+    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+
+    <script>
+/* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+   ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+   বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+function NBSound(key) {
+    let on = true, ac = null;
+    try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+    function tone(f, t0, dur, type, vol) {
+        if (!on) return;
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+            const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+        } catch (e) {}
+    }
+    const api = {
+        ok() { tone(660, 0, .12); tone(880, .1, .16); },
+        bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+        tap() { tone(520, 0, .06, 'triangle', .1); },
+        pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+        win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+        lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+        get on() { return on; },
+        toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+    };
+    function paint() { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; }
+    document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } });
+    if (document.readyState !== 'loading') { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } }
+    return api;
+}
+
+    (function () {
+        'use strict';
+        const sfx = NBSound('polymer');
+        const $ = s => document.querySelector(s);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+        const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+        $('#bgBtn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-bg') || '1';
+            const next = cur === '1' ? '2' : cur === '2' ? '3' : '1';
+            if (next === '1') document.documentElement.removeAttribute('data-bg'); else document.documentElement.setAttribute('data-bg', next);
+            lsSet('polymer-bg', next); sfx.tap();
+        });
+
+        /* মনোমার: সংকেত, বাংলা নাম, চেইনের পুনরাবৃত্ত একক, রং, কোন পলিমার বানায় */
+        const MON = {
+            ethene: { f: 'CH₂=CH₂', n: 'ইথিন', u: '–CH₂–CH₂–', c: '#ffe08a', makes: 'পলিথিন' },
+            propene: { f: 'CH₂=CH–CH₃', n: 'প্রোপিন', u: '–CH₂–CH(CH₃)–', c: '#ffc2a8', makes: 'পলিপ্রোপিন' },
+            vcl: { f: 'CH₂=CHCl', n: 'ভিনাইল ক্লোরাইড', u: '–CH₂–CHCl–', c: '#b9e8c9', makes: 'PVC' },
+            tfe: { f: 'CF₂=CF₂', n: 'টেট্রাফ্লুরোইথিন', u: '–CF₂–CF₂–', c: '#bfe0ff', makes: 'টেফলন (PTFE)' },
+            styrene: { f: 'CH₂=CH–C₆H₅', n: 'স্টাইরিন', u: '–CH₂–CH(C₆H₅)–', c: '#e3c9ff', makes: 'পলিস্টাইরিন' },
+            adipic: { f: 'HOOC–(CH₂)₄–COOH', n: 'অ্যাডিপিক অ্যাসিড', u: '–OC–(CH₂)₄–CO–', c: '#ffd0e4', makes: 'নাইলন-৬,৬ (ডায়ামিনের সাথে)' },
+            hmda: { f: 'H₂N–(CH₂)₆–NH₂', n: 'হেক্সামিথিলিন ডায়ামিন', u: '–NH–(CH₂)₆–NH–', c: '#c9f0f0', makes: 'নাইলন-৬,৬ (অ্যাডিপিক অ্যাসিডের সাথে)' },
+            tpa: { f: 'HOOC–C₆H₄–COOH', n: 'টেরেফথালিক অ্যাসিড', u: '–OC–C₆H₄–CO–', c: '#ffd9b3', makes: 'পলিয়েস্টার (গ্লাইকলের সাথে)' },
+            eg: { f: 'HO–CH₂CH₂–OH', n: 'ইথিলিন গ্লাইকল', u: '–O–CH₂CH₂–O–', c: '#d4e8a8', makes: 'পলিয়েস্টার (অ্যাসিডের সাথে)' }
+        };
+        const UNITS = 6;
+        const ORDERS = [
+            { id: 'pe', stage: 0, name: 'পলিথিন', kind: 'add', need: ['ethene'], form: '[–CH₂–CH₂–]ₙ', link: '', uses: 'প্লাস্টিক ব্যাগ, বোতল, পাইপ', fact: 'ইথিনের C=C দ্বিবন্ধন ভেঙে অসংখ্য ইউনিট পরপর যুক্ত হয়ে লম্বা চেইন তৈরি হয়।' },
+            { id: 'pvc', stage: 0, name: 'পিভিসি (PVC)', kind: 'add', need: ['vcl'], form: '[–CH₂–CHCl–]ₙ', link: '', uses: 'পানির পাইপ, জানালার ফ্রেম, তারের মোড়ক', fact: 'পলিভিনাইল ক্লোরাইড, এর মনোমার ভিনাইল ক্লোরাইড (CH₂=CHCl)।' },
+            { id: 'pp', stage: 1, name: 'পলিপ্রোপিন', kind: 'add', need: ['propene'], form: '[–CH₂–CH(CH₃)–]ₙ', link: '', uses: 'খাবারের কনটেইনার, দড়ি, গাড়ির বাম্পার', fact: 'প্রোপিনের CH₃ শাখা চেইনের গায়ে ঝুলে থাকে।' },
+            { id: 'ptfe', stage: 1, name: 'টেফলন (PTFE)', kind: 'add', need: ['tfe'], form: '[–CF₂–CF₂–]ₙ', link: '', uses: 'নন-স্টিক ফ্রাইপ্যানের আস্তরণ', fact: 'C–F বন্ধন খুব শক্ত, তাই টেফলন প্রায় সব রাসায়নিকের বিরুদ্ধে নিষ্ক্রিয় ও পিচ্ছিল।' },
+            { id: 'ps', stage: 1, name: 'পলিস্টাইরিন', kind: 'add', need: ['styrene'], form: '[–CH₂–CH(C₆H₅)–]ₙ', link: '', uses: 'থার্মোকল, ডিসপোজেবল কাপ, প্যাকেজিং ফোম', fact: 'বেনজিন রিং (C₆H₅) চেইনের পাশে ঝুলে থাকে বলে এটি শক্ত ও হালকা।' },
+            { id: 'nylon', stage: 2, name: 'নাইলন-৬,৬', kind: 'cond', need: ['adipic', 'hmda'], form: '[–OC–(CH₂)₄–CO–NH–(CH₂)₆–NH–]ₙ', link: 'অ্যামাইড (–CONH–)', uses: 'দড়ি, কাপড়, টুথব্রাশের ব্রিসল', fact: 'অ্যাসিডের –OH ও অ্যামিনের –H মিলে পানি হয়ে বেরিয়ে যায়, বাকি অংশ অ্যামাইড বন্ধনে জোড়া লাগে।' },
+            { id: 'pet', stage: 2, name: 'পলিয়েস্টার (PET/টেরিলিন)', kind: 'cond', need: ['tpa', 'eg'], form: '[–OC–C₆H₄–CO–O–CH₂CH₂–O–]ₙ', link: 'এস্টার (–COO–)', uses: 'পানির বোতল, পোশাকের কাপড়', fact: 'অ্যাসিড ও অ্যালকোহল এস্টার বন্ধনে জোড়া লাগে, প্রতিবার একটি পানির অণু বেরোয়।' }
+        ];
+        const STAGES = [
+            { name: 'অ্যাডিশন পলিমার ১', desc: 'পলিথিন ও PVC', tray: ['ethene', 'propene', 'vcl'] },
+            { name: 'অ্যাডিশন পলিমার ২', desc: 'পলিপ্রোপিন, টেফলন, পলিস্টাইরিন', tray: ['propene', 'tfe', 'styrene', 'vcl'] },
+            { name: 'কনডেনসেশন পলিমার', desc: 'নাইলন ও পলিয়েস্টার', tray: ['adipic', 'hmda', 'tpa', 'eg'] }
+        ];
+        let stars = {}; try { stars = JSON.parse(lsGet('polymer-stars') || '{}') || {}; } catch (e) { stars = {}; }
+        const S = { st: 0, oi: 0, chain: [], water: 0, miss: 0, hints: 3, hintUsed: 0, over: false, tray: [] };
+        const unlocked = i => i === 0 || stars[i - 1] > 0;
+        const starStr = n => '★'.repeat(n || 0) + '☆'.repeat(3 - (n || 0));
+        const orders = () => ORDERS.filter(o => o.stage === S.st);
+        const cur = () => orders()[S.oi];
+
+        function renderLevels() {
+            $('#lv').innerHTML = STAGES.map((L, i) => '<button class="lvb' + (i === S.st ? ' on' : '') + '" data-st="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? '' : '🔒 ') + L.name + '</b><small>' + L.desc + '</small><i>' + starStr(stars[i]) + '</i></button>').join('');
+        }
+        function startStage(i) {
+            S.st = i; S.oi = 0; S.miss = 0; S.hints = 3; S.hintUsed = 0; S.over = false; S.tray = shuffle(STAGES[i].tray);
+            renderLevels(); startOrder();
+        }
+        function startOrder() {
+            S.chain = []; S.water = 0; render();
+            const o = cur();
+            setMsg(o.kind === 'add' ? '🧪 ' + bnTxt('একটি মনোমার বেছে নাও, বারবার ট্যাপ করে চেইন বাড়াও।') : '🧪 দুই ধরনের মনোমার লাগবে। পালাক্রমে ট্যাপ করো, প্রতিবার জোড়া লাগলে পানি বেরোবে।', '');
+        }
+        const bnTxt = t => t;
+        function setMsg(t, c) { const m = $('#msg'); m.textContent = t; m.className = 'msg' + (c ? ' ' + c : ''); }
+        function render() {
+            const o = cur();
+            $('#order').innerHTML = '<small>' + (o.kind === 'add' ? 'অ্যাডিশন পলিমারাইজেশন' : 'কনডেনসেশন পলিমারাইজেশন') + '</small><h2>অর্ডার: ' + o.name + ' বানাও</h2><p>' +
+                (o.kind === 'add' ? 'সঠিক মনোমার বেছে ' + bn(UNITS) + 'টি ইউনিট জোড়া লাগাও।' : 'দুটি আলাদা মনোমার পালাক্রমে জোড়া লাগিয়ে ' + bn(UNITS) + 'টি ইউনিটের চেইন বানাও।') + '</p>';
+            let ch = '';
+            for (let i = 0; i < UNITS; i++) {
+                const k = S.chain[i];
+                if (i > 0) ch += (k && o.kind === 'cond' ? '<span class="drop" title="পানি বেরিয়েছে">💧</span>' : '<span class="bond"></span>');
+                ch += k ? '<span class="bead" style="background:' + MON[k].c + '">' + MON[k].u + '</span>' : '<span class="bead slot">' + (o.kind === 'add' ? '…' : '?') + '</span>';
+            }
+            $('#chain').innerHTML = ch;
+            $('#count').textContent = bn(S.chain.length) + '/' + bn(UNITS) + ' ইউনিট';
+            $('#formula').textContent = S.chain.length === UNITS ? o.form : '';
+            $('#tray').innerHTML = S.tray.map(k => '<button class="mono" data-m="' + k + '" style="background:' + MON[k].c + '"' + (S.over ? ' disabled' : '') + '><b>' + MON[k].n + '</b><code>' + MON[k].f + '</code></button>').join('');
+            $('#sOrder').textContent = bn(Math.min(S.oi + 1, orders().length)) + '/' + bn(orders().length);
+            $('#sMiss').textContent = bn(S.miss); $('#sHint').textContent = bn(S.hints); $('#sWater').textContent = bn(S.water);
+            $('#btnHint').disabled = S.over || S.hints <= 0;
+        }
+        function addMono(k) {
+            if (S.over || S.chain.length >= UNITS) return;
+            const o = cur(), last = S.chain[S.chain.length - 1];
+            let ok, why = '';
+            if (o.kind === 'add') {
+                ok = k === o.need[0];
+                if (!ok) why = MON[k].n + ' (' + MON[k].f + ') থেকে হয় ' + MON[k].makes + ', ' + o.name + ' নয়। ' + o.name + '-এর জন্য ' + MON[o.need[0]].n + ' (' + MON[o.need[0]].f + ') লাগে।';
+            } else if (!o.need.includes(k)) {
+                ok = false; why = MON[k].n + ' এই পলিমারের অংশ নয়। ' + o.name + '-এর জন্য লাগে ' + MON[o.need[0]].n + ' ও ' + MON[o.need[1]].n + '।';
+            } else if (k === last) {
+                ok = false; why = 'একই মনোমার পরপর জোড়া লাগে না। কনডেনসেশনে দুই ধরনের মনোমার (দুই প্রান্তে আলাদা গ্রুপ) পালাক্রমে যুক্ত হয়।';
+            } else ok = true;
+            if (!ok) {
+                S.miss++; render(); sfx.bad();
+                const b = document.querySelector('[data-m="' + k + '"]'); if (b) { b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); }
+                setMsg('❌ ' + why, 'bad'); return;
+            }
+            S.chain.push(k);
+            if (o.kind === 'cond' && S.chain.length > 1) S.water++;
+            render(); sfx.pop(); setTimeout(sfx.ok, 110);
+            if (o.kind === 'add') setMsg('✅ ' + MON[k].f + '-এর C=C দ্বিবন্ধন খুলে একক বন্ধন হলো, ইউনিটটি চেইনে যুক্ত হলো। কোনো উপজাত বের হয়নি।', 'ok');
+            else setMsg('✅ ' + MON[k].n + ' যুক্ত হলো।' + (S.chain.length > 1 ? ' 💧 একটি H₂O অণু বেরিয়ে গেল (মোট ' + bn(S.water) + ')।' : ' এখন অন্য মনোমারটি যোগ করো।'), 'ok');
+            if (S.chain.length === UNITS) orderDone();
+        }
+        function useHint() {
+            if (S.over || S.hints <= 0) return;
+            const o = cur(), last = S.chain[S.chain.length - 1];
+            const want = o.kind === 'add' ? o.need[0] : (last ? o.need.find(x => x !== last) : o.need[0]);
+            S.hints--; S.hintUsed++; render(); sfx.tap();
+            const b = document.querySelector('[data-m="' + want + '"]'); if (b) { b.classList.add('hint'); setTimeout(() => b.classList.remove('hint'), 2200); }
+            setMsg('💡 জ্বলজ্বলে মনোমারটি এখন ঠিক।', '');
+        }
+        function orderDone() {
+            const o = cur(), lastOrder = S.oi === orders().length - 1;
+            let st = 0;
+            if (lastOrder) {
+                S.over = true;
+                const score = S.miss + 2 * S.hintUsed; st = score <= 2 ? 3 : score <= 6 ? 2 : 1;
+                if (!stars[S.st] || st > stars[S.st]) { stars[S.st] = st; lsSet('polymer-stars', JSON.stringify(stars)); }
+                renderLevels(); setTimeout(sfx.win, 260);
+            }
+            $('#sheet').innerHTML = (lastOrder ? '<div class="stars">' + starStr(st) + '</div>' : '<div style="font-size:42px">🎉</div>') + '<h2>' + o.name + ' তৈরি!</h2><div class="big">' + o.form + '</div>' +
+                '<div class="info"><div><span>ধরন</span><b>' + (o.kind === 'add' ? 'অ্যাডিশন (উপজাত নেই)' : 'কনডেনসেশন (' + o.link + ' বন্ধন)') + '</b></div><div><span>মনোমার</span><b>' + o.need.map(k => MON[k].n).join(' + ') + '</b></div>' +
+                (o.kind === 'cond' ? '<div><span>বেরোনো পানি</span><b>' + bn(S.water) + ' অণু H₂O</b></div>' : '') + '<div><span>ব্যবহার</span><b>' + o.uses + '</b></div></div><p style="margin:0 0 14px;color:var(--mute);font-weight:600;line-height:1.7;font-size:14px">' + o.fact + '</p>' +
+                (lastOrder ? '<div class="info"><div><span>ভুল</span><b>' + bn(S.miss) + '</b></div><div><span>ইঙ্গিত</span><b>' + bn(S.hintUsed) + '</b></div></div><div class="row"><button class="btn" data-a="again">↺ আবার</button>' + (S.st < STAGES.length - 1 ? '<button class="btn primary" data-a="nextstage">পরের স্টেজ ➜</button>' : '') + '</div>' : '<div class="row"><button class="btn primary" data-a="nextorder">পরের অর্ডার ➜</button></div>');
+            $('#modal').hidden = false;
+        }
+        function rules() {
+            $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul class="rules"><li><b>লক্ষ্য:</b> অর্ডারের পলিমার বানাতে সঠিক মনোমার ট্যাপ করে চেইন গড়ো।</li><li><b>অ্যাডিশন:</b> একই মনোমার বারবার। C=C দ্বিবন্ধন খুলে ইউনিট জোড়া লাগে, কোনো উপজাত নেই।</li><li><b>কনডেনসেশন:</b> দুই ধরনের মনোমার পালাক্রমে। প্রতিবার জোড়া লাগলে H₂O বেরোয়। ' + UNITS + 'টি ইউনিটে ' + (UNITS - 1) + 'টি পানির অণু।</li><li><b>ভুল হলে</b> কেন ভুল হলো তা জানানো হবে।</li><li><b>ইঙ্গিত ৩টি।</b> ভুল ও ইঙ্গিত কম হলে ৩ তারা। ১ম স্টেজ শেষ করলে পরেরটি খোলে।</li></ul><div class="row"><button class="btn primary" data-a="close">বুঝেছি</button></div>';
+            $('#modal').hidden = false;
+        }
+        function act(a) {
+            if (a === 'close') $('#modal').hidden = true;
+            else if (a === 'nextorder') { $('#modal').hidden = true; S.oi++; startOrder(); }
+            else if (a === 'nextstage') { $('#modal').hidden = true; startStage(S.st + 1); }
+            else if (a === 'again') { $('#modal').hidden = true; startStage(S.st); }
+        }
+        document.addEventListener('click', e => {
+            const t = e.target && e.target.closest ? e.target : null; if (!t) return;
+            let n;
+            if ((n = t.closest('[data-a]'))) { sfx.tap(); return act(n.getAttribute('data-a')); }
+            if ((n = t.closest('[data-st]'))) { const i = +n.getAttribute('data-st'); if (unlocked(i)) { sfx.tap(); startStage(i); } return; }
+            if ((n = t.closest('[data-m]'))) return addMono(n.getAttribute('data-m'));
+        });
+        $('#btnHint').addEventListener('click', useHint);
+        $('#btnReset').addEventListener('click', () => { if (!S.over) { sfx.tap(); S.chain = []; S.water = 0; render(); setMsg('চেইন ভেঙে নতুন করে শুরু করো।', ''); } });
+        $('#btnRules').addEventListener('click', () => { sfx.tap(); rules(); });
+        startStage(0);
+    })();
+    </script>
+</body>
+</html>
