@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#b79cff">
+    <title>কেমিক্যাল ইকুইলিব্রিয়াম | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () { try { var b = localStorage.getItem('equil-bg'); if (b === '2' || b === '3') document.documentElement.setAttribute('data-bg', b); } catch (e) {} })();
+    </script>
+    <style>
+/* ===== NB KIT: sticker / neo-brutalist দৃশ্যরূপ =====
+   প্রতিটি গেম নিজের :root-এ এই টোকেনগুলো বদলে নিজস্ব রং পায়:
+   --o1 --o2 --o3 (বাইরের ব্যাকগ্রাউন্ড), --paper (বোর্ড), --paper2, --ink, --a1 --a2 --a3 (অ্যাকসেন্ট)  */
+:root {
+    color-scheme: light;
+    --o1: #ff6b4a; --o2: #ffd23f; --o3: #5ad1c4;
+    --paper: #fff8ec; --paper2: #ffffff; --ink: #1d1030; --mute: #6a5f80;
+    --a1: #ff6b4a; --a2: #2ec4b6; --a3: #ffd23f; --good: #12a36b; --bad: #e5384d;
+    --bw: 3px; --rad: 16px; --sh: 5px;
+    --display: 'Bricolage Grotesque','Hind Siliguri',system-ui,sans-serif;
+    --body: 'Hind Siliguri','Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+    --pat: radial-gradient(rgba(29,16,48,.20) 1.4px, transparent 1.6px);
+    --pat-size: 22px 22px;
+}
+:root[data-bg="2"] { --o1: #2ec4b6; --o2: #c9f2ee; --o3: #ff6b4a; }
+:root[data-bg="3"] { --o1: #a78bfa; --o2: #ffd6f0; --o3: #ffd23f; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0; min-height: 100vh; color: var(--ink); font-family: var(--body); font-weight: 500; line-height: 1.55;
+    padding: 18px max(14px, env(safe-area-inset-right, 0px)) 30px max(14px, env(safe-area-inset-left, 0px));
+    background-color: var(--o1);
+    background-image: var(--pat), radial-gradient(circle at 12% 6%, var(--o2) 0, transparent 46%), radial-gradient(circle at 94% 96%, var(--o3) 0, transparent 50%);
+    background-size: var(--pat-size), 100% 100%, 100% 100%;
+    background-attachment: fixed; transition: background-color .4s; -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.stage { max-width: 860px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 24px; box-shadow: 9px 9px 0 var(--ink); }
+.credit { width: fit-content; max-width: 100%; margin: 18px auto 0; padding: 6px 14px; text-align: center; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; color: var(--ink); background: var(--paper); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+
+/* উপরের বার */
+.top { display: flex; align-items: center; gap: 10px; }
+.titlebox { margin-right: auto; min-width: 0; }
+.titlebox b { display: inline-block; padding: 3px 12px; font: 800 clamp(1.05rem, 3.6vw, 1.35rem)/1.3 var(--display); color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-1.2deg); }
+.titlebox small { display: block; margin: 5px 0 0 4px; font-size: 12px; font-weight: 700; color: var(--mute); }
+.btn, .back-btn, .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 14px;
+    font: 800 14px/1 var(--body); text-decoration: none; cursor: pointer; color: var(--ink); background: var(--paper2);
+    border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s, background .12s;
+}
+.btn:hover:not(:disabled), .back-btn:hover, .icon-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.btn:active:not(:disabled), .back-btn:active, .icon-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; box-shadow: 2px 2px 0 var(--ink); }
+.btn.primary { background: var(--a1); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.btn.alt { background: var(--a2); }
+.btn.big { min-height: 54px; padding: 0 26px; font-size: 17px; border-radius: 14px; }
+.icon-btn { width: 42px; padding: 0; font-size: 17px; }
+
+/* পিল, ক্যাপসুল, কার্ড */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; font-size: 13px; font-weight: 800; color: var(--ink); background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+.pill b { font-variant-numeric: tabular-nums; }
+.box { padding: 14px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: var(--rad); box-shadow: 5px 5px 0 var(--ink); }
+.sticker { display: inline-block; padding: 3px 11px; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--a3); border: 2.5px solid var(--ink); border-radius: 8px; transform: rotate(-2deg); }
+.meter { height: 16px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 99px; overflow: hidden; }
+.meter i { display: block; height: 100%; width: 100%; background: var(--a1); border-right: 2.5px solid var(--ink); transition: width .25s ease; }
+.hazard { height: 12px; border: 2.5px solid var(--ink); border-radius: 6px; background: repeating-linear-gradient(-45deg, var(--a3) 0 10px, var(--ink) 10px 20px); }
+
+/* মডাল */
+.modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; background: rgba(29,16,48,.58); }
+.sheet { width: min(500px, 100%); max-height: 92%; overflow: auto; padding: 22px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 22px; box-shadow: 9px 9px 0 var(--ink); }
+.sheet h2 { margin: 6px 0 10px; font: 800 22px/1.35 var(--display); }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 18px); transform: translateX(-50%); z-index: 3500; padding: 8px 16px; font-size: 15px; font-weight: 800; color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 99px; box-shadow: 4px 4px 0 var(--ink); opacity: 0; pointer-events: none; }
+.toast.on { animation: nbtoast 1.7s ease forwards; }
+@keyframes nbtoast { 0% { opacity: 0; transform: translate(-50%, -10px); } 12%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+@keyframes nbshake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes nbpop { from { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.12); } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 520px) { .stage { padding: 12px; border-radius: 20px; gap: 12px; box-shadow: 6px 6px 0 var(--ink); } .back-btn .long { display: none; } .titlebox small { display: none; } }
+
+/* ===== ইকুইলিব্রিয়াম ল্যাব: ল্যাভেন্ডার + পিংক, রুলড-নোটবুক প্যাটার্ন ===== */
+:root {
+    --o1: #b79cff; --o2: #ffe0f3; --o3: #7fe3d0;
+    --paper: #fbf7ff; --paper2: #ffffff; --ink: #231a3d; --mute: #66598a;
+    --a1: #8a4fff; --a2: #ff5fa2; --a3: #ffd84d;
+    --pat: repeating-linear-gradient(0deg, rgba(35,26,61,.10) 0 1px, transparent 1px 26px);
+    --pat-size: 100% 100%;
+}
+:root[data-bg="2"] { --o1: #ffd166; --o2: #fff3cf; --o3: #ff8fb8; }
+:root[data-bg="3"] { --o1: #6fd8c6; --o2: #d9fff7; --o3: #b79cff; }
+#bgBtn { background: #e9ddff; }
+.lv { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
+.lvb { flex: 1 1 110px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
+    background: #eadfff; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
+.lvb:nth-child(2) { background: #ffdcec; } .lvb:nth-child(3) { background: #d5f6ef; } .lvb:nth-child(4) { background: #fff0b8; } .lvb:nth-child(5) { background: #dbe8ff; }
+.lvb:hover:not(:disabled) { transform: translateY(-3px); }
+.lvb b { font: 800 13.5px/1.3 var(--body); padding-right: 50px; } .lvb small { font-size: 11.5px; font-weight: 700; color: var(--mute); line-height: 1.3; }
+.lvb i { position: absolute; top: 6px; right: 6px; padding: 1px 7px; font-style: normal; font-size: 12px; letter-spacing: 1px; background: var(--a3); border: 2px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(3deg); }
+.lvb.on { background: #fff; padding-bottom: 12px; box-shadow: 0 -4px 0 var(--a1) inset; }
+.lvb.on small { color: var(--ink); }
+.lvb:disabled { opacity: .55; cursor: default; filter: grayscale(.4); }
+.hud { display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
+.hud .pill:nth-child(1) { background: #eadfff; } .hud .pill:nth-child(2) { background: #fff0a8; }
+
+.job { padding: 12px 16px; background: #ffd9ec; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 5px 5px 0 var(--ink); }
+.job h2 { margin: 6px 0 4px; font: 800 clamp(1.1rem, 3.6vw, 1.45rem)/1.4 var(--display); }
+.job p { margin: 0; font-size: 13.5px; font-weight: 600; }
+.lab { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: stretch; }
+.vessel { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 10px; min-height: 190px; background: #fff; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+.flask { position: relative; width: 96px; height: 120px; border: var(--bw) solid var(--ink); border-radius: 8px 8px 40px 40px; overflow: hidden; background: #f4f8ff; }
+.flask i { position: absolute; left: 0; right: 0; bottom: 0; height: 78%; transition: background .35s; border-top: 2.5px solid var(--ink); }
+.flask u { position: absolute; left: 14px; bottom: 14px; width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.8); border: 2px solid var(--ink); text-decoration: none; animation: bub 2.4s ease-in infinite; }
+.flask u:nth-of-type(2) { left: 50px; animation-delay: .8s; } .flask u:nth-of-type(3) { left: 72px; animation-delay: 1.5s; }
+@keyframes bub { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-70px); opacity: 0; } }
+.vessel .cap { margin-top: 8px; font-size: 12px; font-weight: 800; text-align: center; }
+.eqn { padding: 8px 12px; font: 800 clamp(1rem, 3.4vw, 1.25rem)/1.5 'Plus Jakarta Sans', var(--body); background: #fff; border: var(--bw) solid var(--ink); border-radius: 12px; text-align: center; }
+.eqn small { display: block; font: 700 12px var(--body); color: var(--mute); }
+.comp { display: flex; height: 34px; margin-top: 8px; border: var(--bw) solid var(--ink); border-radius: 10px; overflow: hidden; background: #fff; }
+.comp span { display: grid; place-items: center; min-width: 0; overflow: hidden; font-size: 11.5px; font-weight: 800; white-space: nowrap; border-right: 2px solid var(--ink); transition: width .3s; }
+.comp span:last-child { border-right: 0; }
+.legend { display: flex; gap: 6px 12px; flex-wrap: wrap; margin-top: 6px; font-size: 12px; font-weight: 700; }
+.legend b { display: inline-block; width: 11px; height: 11px; margin-right: 4px; vertical-align: -1px; border: 2px solid var(--ink); border-radius: 3px; }
+.panel { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ctl { padding: 10px 12px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); }
+.ctl label { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 800; }
+.ctl label output { font-variant-numeric: tabular-nums; color: var(--a1); }
+.ctl input[type=range] { width: 100%; margin: 8px 0 0; height: 26px; accent-color: var(--a1); cursor: pointer; }
+.ctl small { display: block; font-size: 11.5px; font-weight: 600; color: var(--mute); }
+.tog { width: 100%; margin-top: 6px; }
+.tog.on { background: var(--a3); }
+.goals { display: grid; gap: 7px; }
+.goal { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 13.5px; font-weight: 800; background: #ffe9f2; border: 2.5px solid var(--ink); border-radius: 10px; }
+.goal.ok { background: #d9f5e6; }
+.goal em { font-style: normal; margin-left: auto; font-variant-numeric: tabular-nums; }
+.goal .ic { display: inline-grid; place-items: center; width: 24px; height: 24px; border: 2.5px solid var(--ink); border-radius: 50%; background: #fff; font-size: 13px; flex: 0 0 24px; }
+.shift { padding: 8px 12px; min-height: 42px; font-size: 13.5px; font-weight: 700; background: #fff8cf; border: 2.5px solid var(--ink); border-radius: 10px; }
+.shift b { color: var(--a1); }
+.sheet { position: relative; text-align: center; padding-top: 0; background: #fffdf3; }
+.sheet::before { content: "LAB LABEL · EQUILIBRIUM"; display: block; margin: 0 -22px 14px; padding: 7px 14px; font: 800 12px/1.2 var(--display); letter-spacing: 1.5px; color: #fff; background: var(--a1); border-bottom: var(--bw) solid var(--ink); border-radius: 18px 18px 0 0; }
+.stars { font-size: 38px; letter-spacing: 6px; color: #ffb800; -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--ink); }
+.sheet p { font-size: 14.5px; margin: 6px 0 14px; } .sheet ul { text-align: left; font-size: 14px; padding-left: 22px; }
+.learn { text-align: left; padding: 10px 12px; margin: 10px 0 14px; font-size: 13.5px; font-weight: 600; background: #eadfff; border: 2.5px solid var(--ink); border-radius: 10px; }
+@media (max-width: 560px) { .lab { grid-template-columns: 1fr; } .vessel { flex-direction: row; justify-content: center; gap: 14px; min-height: 0; } .panel { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header class="top">
+            <a class="back-btn" href="games.html#adv" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+            <div class="titlebox"><b>⚖️ ইকুইলিব্রিয়াম ল্যাব</b><small>Advanced Game</small></div>
+            <button class="icon-btn" id="soundBtn" title="সাউন্ড চালু/বন্ধ" aria-label="সাউন্ড চালু বা বন্ধ করো">🔔</button>
+            <button class="icon-btn" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+        </header>
+        <div class="lv" id="lv"></div>
+        <div class="hud">
+            <span class="pill">🎛️ পরিবর্তন <b id="sMoves">০</b> <small id="sPar"></small></span>
+            <span class="pill">💡 ইঙ্গিত <b id="sHint">২</b></span>
+            <button class="btn" id="btnRules" style="margin-left:auto">📖 নিয়ম</button>
+        </div>
+        <section class="job" id="job"></section>
+        <section class="lab">
+            <div class="vessel"><div class="flask" id="flask"><i id="liq"></i><u></u><u></u><u></u></div><div class="cap" id="vcap"></div></div>
+            <div><div class="eqn" id="eqn"></div><div class="comp" id="comp"></div><div class="legend" id="legend"></div></div>
+        </section>
+        <section class="panel" id="panel"></section>
+        <section class="goals" id="goals"></section>
+        <div class="shift" id="shift">স্লাইডার নাড়ো — সাম্য কোনদিকে সরে দেখো।</div>
+        <div class="row"><button class="btn" id="btnHint">💡 ইঙ্গিত</button><button class="btn" id="btnReset">↺ শুরুর অবস্থা</button><button class="btn primary big" id="btnDone" disabled>✅ পরীক্ষা সম্পন্ন</button></div>
+    </div>
+    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+
+    <script>
+/* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+   ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+   বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+function NBSound(key) {
+    let on = true, ac = null;
+    try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+    function tone(f, t0, dur, type, vol) {
+        if (!on) return;
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+            const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+        } catch (e) {}
+    }
+    const api = {
+        ok() { tone(660, 0, .12); tone(880, .1, .16); },
+        bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+        tap() { tone(520, 0, .06, 'triangle', .1); },
+        pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+        win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+        lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+        get on() { return on; },
+        toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+    };
+    function paint() { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; }
+    document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } });
+    if (document.readyState !== 'loading') { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } }
+    return api;
+}
+
+    (function () {
+        'use strict';
+        let sfx;
+        try { sfx = NBSound('equil'); } catch (e) { sfx = { ok() {}, bad() {}, tap() {}, pop() {}, win() {}, lose() {}, toggle() {} }; }
+        const $ = s => document.querySelector(s);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const f1 = n => Number(n).toLocaleString('bn-BD', { useGrouping: false, maximumFractionDigits: 1 });
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+        $('#bgBtn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-bg') || '1';
+            const next = cur === '1' ? '2' : cur === '2' ? '3' : '1';
+            if (next === '1') document.documentElement.removeAttribute('data-bg'); else document.documentElement.setAttribute('data-bg', next);
+            lsSet('equil-bg', next); sfx.tap();
+        });
+
+        const R = 8.314;
+        /* সাম্য সমাধান: ln Q(ξ) = ln K, ξ-তে মনোটোনিক ⇒ বাইসেকশন। গ্যাসের সক্রিয়তা = মোল-ভগ্নাংশ × P, তরলের = মোল-ভগ্নাংশ */
+        function solve(rx, o) {
+            const nu = rx.nu, n0 = rx.n0(o); let xmax = Infinity;
+            nu.forEach((v, i) => { if (v < 0) xmax = Math.min(xmax, n0[i] / -v); });
+            const lnK = rx.lnK(o.T);
+            const f = x => {
+                const n = n0.map((v, i) => v + nu[i] * x);
+                const ng = n.reduce((a, c, i) => a + (rx.gas[i] ? c : 0), 0) || 1, nl = n.reduce((a, c) => a + c, 0);
+                let s = 0;
+                n.forEach((v, i) => { let a = rx.gas[i] ? v / ng * o.P : v / nl; if (rx.rem && rx.rem[i]) a *= (1 - (o.rem || 0) / 100); s += nu[i] * Math.log(Math.max(a, 1e-300)); });
+                return s - lnK;
+            };
+            let lo = 0, hi = xmax * (1 - 1e-12);
+            for (let k = 0; k < 200; k++) { const m = (lo + hi) / 2; if (f(m) > 0) hi = m; else lo = m; }
+            const x = (lo + hi) / 2, n = n0.map((v, i) => v + nu[i] * x), nt = n.reduce((a, c) => a + c, 0);
+            return { x, y: x / xmax * 100, mol: n.map(v => v / nt * 100) };
+        }
+        const rate = (rx, o) => 100 * Math.exp(-rx.Ea * 1000 / R * (1 / o.T - 1 / rx.Tref)) * (o.cat ? 1 : Math.exp(-rx.dE * 1000 / (R * o.T)));
+
+        const SP = ['#d9b8ff', '#ffc2dc', '#b6efd9', '#ffe08a'];
+        const LEVELS = [
+            { name: 'NO₂ ⇄ N₂O₄', sub: 'রং বদলের খেলা', icon: '🟤', par: 3,
+              intro: 'কাচের ফ্লাস্কে বাদামী NO₂ গ্যাস আছে। এটাকে প্রায় বর্ণহীন (ফ্যাকাশে) করো। সীমা: নিরাপত্তার জন্য চাপ ২ atm এর বেশি নয়।',
+              eq: '2NO₂ (বাদামী) ⇌ N₂O₄ (বর্ণহীন)', dH: -57.2, dn: -1, species: ['NO₂', 'N₂O₄'], cols: ['#c47a3a', '#e8f1f5'],
+              rx: { nu: [-2, 1], gas: [1, 1], n0: () => [2, 0], lnK: T => 57200 / (R * T) - 175.8 / R },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 250, max: 450, step: 10, v: 400 }, { k: 'P', n: '🗜️ চাপ', u: ' atm', min: 0.5, max: 2, step: 0.1, v: 1 }],
+              goals: [{ id: 'no2', n: 'NO₂ (বাদামী) কমাও', op: 'le', v: 10, u: '%' }],
+              hint: 'বিক্রিয়াটা তাপ ছাড়ে (ΔH ঋণাত্মক)। ঠান্ডা করলে সাম্য ডানে (N₂O₄) সরে।',
+              learn: 'তাপ ছাড়ার বিক্রিয়ায় (exothermic) তাপমাত্রা কমালে সাম্য ডানে সরে — Le Chatelier নীতি।' },
+            { name: 'NO₂ উল্টো', sub: 'চাপ ও তাপ', icon: '🟫', par: 3,
+              intro: 'এবার উল্টো কাজ: ফ্লাস্ক গাঢ় বাদামী (NO₂ ≥ ৮৫%) করো। সীমা: প্লাস্টিক ফ্লাস্ক — ৩৫০ K এর বেশি গরম করা যাবে না!',
+              eq: '2NO₂ (বাদামী) ⇌ N₂O₄ (বর্ণহীন)', dH: -57.2, dn: -1, species: ['NO₂', 'N₂O₄'], cols: ['#c47a3a', '#e8f1f5'],
+              rx: { nu: [-2, 1], gas: [1, 1], n0: () => [2, 0], lnK: T => 57200 / (R * T) - 175.8 / R },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 250, max: 350, step: 10, v: 300 }, { k: 'P', n: '🗜️ চাপ', u: ' atm', min: 0.2, max: 10, step: 0.1, v: 5 }],
+              goals: [{ id: 'no2', n: 'NO₂ (বাদামী) বাড়াও', op: 'ge', v: 85, u: '%' }],
+              hint: 'গ্যাসের মোল বেশি যেদিকে সেদিকে যেতে চাপ কমাও (২ মোল NO₂ বনাম ১ মোল N₂O₄)। তাপও বাড়াও।',
+              learn: 'চাপ কমালে সাম্য বেশি গ্যাস-মোলের দিকে (বামে, NO₂) সরে; তাপ বাড়ালেও বামে সরে।' },
+            { name: 'হ্যাবার (NH₃)', sub: 'সার কারখানা', icon: '🌾', par: 5,
+              intro: 'অ্যামোনিয়া কারখানার ম্যানেজার হও! তিনটা শর্তই একসাথে মেলাতে হবে: পর্যাপ্ত ফলন, দ্রুত গতি, আর বাজেটের ভেতরে খরচ। ক্যাটালিস্ট (Fe) ছাড়া গতি প্রায় শূন্য।',
+              eq: 'N₂ + 3H₂ ⇌ 2NH₃', dH: -92.4, dn: -2, species: ['N₂', 'H₂', 'NH₃'], cols: ['#d9b8ff', '#bfe3ff', '#ffc2dc'],
+              rx: { nu: [-1, -3, 2], gas: [1, 1, 1], n0: () => [1, 3, 0], lnK: T => 92400 / (R * T) - 212 / R, Ea: 90, Tref: 700, dE: 150 },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 500, max: 1000, step: 25, v: 500 }, { k: 'P', n: '🗜️ চাপ', u: ' atm', min: 10, max: 400, step: 10, v: 50 }, { k: 'cat', n: '🧲 Fe ক্যাটালিস্ট', v: 0 }],
+              cost: { p: 20, t: 40, c: 2 },
+              goals: [{ id: 'y', n: 'NH₃ ফলন', op: 'ge', v: 45, u: '%' }, { id: 'rate', n: 'বিক্রিয়ার গতি', op: 'ge', v: 40, u: '' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 28, u: '💰' }],
+              hint: 'ফলনের জন্য উচ্চ চাপ ও কম তাপ ভালো; কিন্তু খুব কম তাপে গতি মরে যায়। মাঝামাঝি তাপে (≈ ৭০০ K) ক্যাটালিস্ট দিয়ে চাপ বাড়াও।',
+              learn: 'ফলন (কম তাপ) বনাম গতি (বেশি তাপ) — তাই শিল্পে আপস: প্রায় ৭০০ K, উচ্চ চাপ ও আয়রন ক্যাটালিস্ট। ক্যাটালিস্ট সাম্য বদলায় না, শুধু পৌঁছাতে সাহায্য করে।' },
+            { name: 'কন্টাক্ট (SO₃)', sub: 'সালফিউরিক অ্যাসিড', icon: '🏭', par: 4,
+              intro: 'H₂SO₄ কারখানার প্রথম ধাপ: SO₂ থেকে SO₃। ফলন ≥ ৯৫%, গতি ভালো, আর খরচ কম রাখো। সাবধান — এখানে বেশি চাপ দিলে অকারণে খরচ বাড়ে!',
+              eq: '2SO₂ + O₂ ⇌ 2SO₃', dH: -197, dn: -1, species: ['SO₂', 'O₂', 'SO₃'], cols: ['#ffe08a', '#bfe3ff', '#ffc2dc'],
+              rx: { nu: [-2, -1, 2], gas: [1, 1, 1], n0: () => [2, 1, 0], lnK: T => 197000 / (R * T) - 188 / R, Ea: 80, Tref: 700, dE: 100 },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 500, max: 1000, step: 25, v: 900 }, { k: 'P', n: '🗜️ চাপ', u: ' atm', min: 1, max: 10, step: 1, v: 8 }, { k: 'cat', n: '🧲 V₂O₅ ক্যাটালিস্ট', v: 0 }],
+              cost: { p: 2, t: 40, c: 2 },
+              goals: [{ id: 'y', n: 'SO₃ ফলন', op: 'ge', v: 95, u: '%' }, { id: 'rate', n: 'বিক্রিয়ার গতি', op: 'ge', v: 50, u: '' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 14, u: '💰' }],
+              hint: 'এখানে সাম্য এমনিতেই ডানে ঝোঁকা — চাপ কমিয়ে খরচ বাঁচাও। তাপ ≈ ৭০০ K আর ক্যাটালিস্ট দরকার।',
+              learn: 'যেখানে ফলন আগে থেকেই বেশি, সেখানে চাপ বাড়ানো অর্থহীন। ≈ ৭০০ K + V₂O₅ + কম চাপ — ফলন, গতি ও খরচের সেরা মিল।' },
+            { name: 'এস্টার তৈরি', sub: 'ডানে ঠেলে দাও', icon: '🍎', par: 4,
+              intro: 'অ্যাসিড + অ্যালকোহল ⇌ এস্টার + পানি। K মাত্র ≈ ৪, তাই ডানে ঠেলতে হবে। অ্যালকোহল দামি আর পানি সরানোরও খরচ আছে — বাজেটের মধ্যে ফলন ≥ ৯০% আনো।',
+              eq: 'CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O', dH: 0, dn: 0, species: ['অ্যাসিড', 'অ্যালকোহল', 'এস্টার', 'পানি'], cols: ['#ffe08a', '#bfe3ff', '#ffc2dc', '#b6efd9'],
+              rx: { nu: [-1, -1, 1, 1], gas: [0, 0, 0, 0], n0: o => [1, o.b, 0, 0], lnK: () => Math.log(4), rem: [0, 0, 0, 1], Ea: 60, Tref: 350, dE: 40 },
+              knobs: [{ k: 'b', n: '🍷 অ্যালকোহল (সমতুল্য)', u: '×', min: 1, max: 5, step: 0.5, v: 1 }, { k: 'rem', n: '💧 পানি সরানো', u: '%', min: 0, max: 90, step: 10, v: 0 }, { k: 'cat', n: '🧪 H₂SO₄ অনুঘটক', v: 0 }],
+              fixedT: 350, costFn: o => 2 * o.b + o.rem * 0.05 + (o.cat ? 1 : 0),
+              goals: [{ id: 'y', n: 'এস্টারের ফলন', op: 'ge', v: 90, u: '%' }, { id: 'rate', n: 'বিক্রিয়ার গতি', op: 'ge', v: 50, u: '' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 9, u: '💰' }],
+              hint: 'বিক্রিয়ক বাড়ালে বা উৎপাদ (পানি) সরালে সাম্য ডানে সরে। এখানে তাপ-চাপ বদলে লাভ নেই (ΔH ≈ ০, গ্যাস নেই)।',
+              learn: 'বিক্রিয়ক যোগ করা বা উৎপাদ সরানোই Le Chatelier এর সবচেয়ে সরাসরি কৌশল। অনুঘটক শুধু গতি বাড়ায়, ফলন নয়।' }
+        ];
+        LEVELS.forEach(L => { if (L.rx.Ea == null) { L.rx.Ea = 60; L.rx.Tref = 700; L.rx.dE = 0; } });
+
+        const S = { lv: 0, o: {}, moves: 0, hints: 2, done: false, prev: null };
+        let stars = {}; try { stars = JSON.parse(lsGet('equil-stars') || '{}') || {}; } catch (e) { stars = {}; }
+        const unlocked = i => i === 0 || stars[i - 1] > 0;
+        const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
+        const LV = () => LEVELS[S.lv];
+
+        function opts() { const L = LV(), o = Object.assign({ T: L.fixedT || 300, P: 1, b: 1, rem: 0, cat: 0 }, S.o); return o; }
+        function evalAll() {
+            const L = LV(), o = opts(), r = solve(L.rx, o), rt = rate(L.rx, o);
+            let cost = 0;
+            if (L.costFn) cost = L.costFn(o); else if (L.cost) cost = o.P / L.cost.p + (o.T - 300) / L.cost.t + (o.cat ? L.cost.c : 0);
+            return { o, r, rate: rt, cost, vals: { no2: r.mol[0], y: r.y, rate: rt, cost } };
+        }
+        const goalOk = (g, v) => g.op === 'ge' ? v >= g.v - 1e-9 : v <= g.v + 1e-9;
+
+        function startLevel(i) {
+            S.lv = i; const L = LV(); S.o = {}; L.knobs.forEach(k => { S.o[k.k] = k.v; }); S.moves = 0; S.hints = 2; S.done = false;
+            S.prev = evalAll(); renderTabs(); renderStatic(); render(); $('#shift').innerHTML = 'স্লাইডার নাড়ো — সাম্য কোনদিকে সরে দেখো। 👀';
+        }
+        function renderTabs() {
+            $('#lv').innerHTML = LEVELS.map((L, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? L.icon : '🔒') + ' ' + L.name + '</b><small>' + L.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join('');
+        }
+        function renderStatic() {
+            const L = LV();
+            $('#job').innerHTML = '<span class="sticker">লেভেল ' + bn(S.lv + 1) + ' / ' + bn(LEVELS.length) + '</span><h2>' + L.icon + ' ' + L.name + ' — ' + L.sub + '</h2><p>' + L.intro + '</p>';
+            $('#eqn').innerHTML = L.eq + '<small>' + (L.dH ? (L.dH < 0 ? '🔥 তাপ ছাড়ে (exothermic)' : '❄️ তাপ শোষে (endothermic)') + ' · ΔH = ' + bn(L.dH) + ' kJ' : 'ΔH ≈ ০') + (L.rx.gas[0] ? ' · গ্যাস-মোল পরিবর্তন Δn = ' + bn(L.dn) : ' · তরল দশা') + '</small>';
+            $('#legend').innerHTML = L.species.map((s, i) => '<span><b style="background:' + L.cols[i] + '"></b>' + s + '</span>').join('');
+            $('#panel').innerHTML = L.knobs.map(k => k.min == null
+                ? '<div class="ctl"><label><span>' + k.n + '</span><output id="o_' + k.k + '"></output></label><button class="btn tog" data-tog="' + k.k + '" id="t_' + k.k + '">চালু / বন্ধ</button><small>শুধু গতি বদলায়, সাম্য নয়।</small></div>'
+                : '<div class="ctl"><label for="r_' + k.k + '"><span>' + k.n + '</span><output id="o_' + k.k + '"></output></label><input type="range" id="r_' + k.k + '" data-k="' + k.k + '" min="' + k.min + '" max="' + k.max + '" step="' + k.step + '" value="' + S.o[k.k] + '"></div>').join('');
+        }
+        function render() {
+            const L = LV(), E = evalAll(), o = E.o;
+            L.knobs.forEach(k => {
+                const out = $('#o_' + k.k); if (!out) return;
+                if (k.min == null) { out.textContent = o[k.k] ? 'চালু ✔' : 'বন্ধ'; $('#t_' + k.k).classList.toggle('on', !!o[k.k]); }
+                else { out.textContent = f1(o[k.k]) + k.u; const r = $('#r_' + k.k); if (r && +r.value !== o[k.k]) r.value = o[k.k]; }
+            });
+            $('#comp').innerHTML = E.r.mol.map((m, i) => '<span style="width:' + m + '%;background:' + L.cols[i] + '">' + (m >= 9 ? f1(m) + '%' : '') + '</span>').join('');
+            const liq = $('#liq');
+            if (S.lv < 2) { const a = E.r.mol[0] / 100; liq.style.background = 'rgba(176,92,24,' + (0.12 + 0.88 * a).toFixed(2) + ')'; $('#vcap').textContent = 'NO₂ ' + f1(E.r.mol[0]) + '%'; }
+            else { const p = E.r.y / 100; liq.style.background = 'linear-gradient(0deg,' + L.cols[L.cols.length - (L.species.length === 4 ? 2 : 1)] + ' ' + (p * 100) + '%,' + L.cols[0] + ' ' + (p * 100) + '%)'; $('#vcap').textContent = 'ফলন ' + f1(E.r.y) + '%'; }
+            let all = true;
+            $('#goals').innerHTML = L.goals.map(g => {
+                const v = E.vals[g.id], ok = goalOk(g, v); all = all && ok;
+                return '<div class="goal' + (ok ? ' ok' : '') + '"><span class="ic">' + (ok ? '✔' : '✖') + '</span>' + g.n + ' ' + (g.op === 'ge' ? '≥ ' : '≤ ') + f1(g.v) + g.u + '<em>এখন: ' + f1(v) + g.u + '</em></div>';
+            }).join('');
+            $('#btnDone').disabled = !all || S.done; $('#btnHint').disabled = S.hints <= 0 || S.done;
+            $('#sMoves').textContent = bn(S.moves); $('#sPar').textContent = '(লক্ষ্য ≤ ' + bn(L.par) + ')'; $('#sHint').textContent = bn(S.hints);
+            return E;
+        }
+        /* Le Chatelier ব্যাখ্যা */
+        function explain(k, up, before, after) {
+            const L = LV(), d = after.r.x - before.r.x, dir = Math.abs(d) < 1e-6 ? 0 : d > 0 ? 1 : -1;
+            const arrow = dir > 0 ? '<b>⟶ ডানে সরল</b> (উৎপাদ বাড়ল)' : dir < 0 ? '<b>⟵ বামে সরল</b> (বিক্রিয়ক বাড়ল)' : '<b>সাম্য অপরিবর্তিত</b>';
+            let why = '';
+            if (k === 'T') why = L.dH < 0 ? (up ? 'তাপ বাড়ালে সিস্টেম তাপ শুষতে চায় → তাপগ্রাহী (বাম) দিকে।' : 'তাপ কমালে সিস্টেম তাপ ছাড়তে চায় → তাপমোচী (ডান) দিকে।') : 'তাপমাত্রার প্রভাব ΔH অনুযায়ী।';
+            else if (k === 'P') why = L.dn === 0 ? 'দুই দিকেই গ্যাস-মোল সমান, তাই চাপে ফলন বদলায় না।' : (up ? 'চাপ বাড়ালে সিস্টেম কম গ্যাস-মোলের দিকে যায় (ডানে)।' : 'চাপ কমালে বেশি গ্যাস-মোলের দিকে যায় (বামে)।');
+            else if (k === 'b') why = up ? 'বিক্রিয়ক বাড়ালে সিস্টেম তা খরচ করতে চায় → ডানে।' : 'বিক্রিয়ক কমালে সাম্য বামে ফিরে।';
+            else if (k === 'rem') why = up ? 'উৎপাদ (পানি) সরালে সিস্টেম তা পূরণ করতে চায় → ডানে।' : 'পানি কম সরালে সাম্য আগের দিকে ফিরে।';
+            else if (k === 'cat') why = 'ক্যাটালিস্ট দুই দিকের গতি সমান বাড়ায় — সাম্য বদলায় না, শুধু দ্রুত পৌঁছায়। গতি এখন ' + f1(after.rate) + '।';
+            $('#shift').innerHTML = arrow + (dir ? ' · ফলন ' + (after.r.y >= before.r.y ? '+' : '') + f1(after.r.y - before.r.y) + '%' : '') + '<br>' + why;
+        }
+        function changed(k, val, isToggle) {
+            const before = S.prev; const old = S.o[k]; if (old === val) return;
+            S.o[k] = val; S.moves++; const after = render(); S.prev = after; explain(k, val > old, before, after); sfx.tap();
+        }
+
+        function finish() {
+            S.done = true; sfx.win();
+            const L = LV(), score = S.moves + 3 * (2 - S.hints), st = score <= L.par ? 3 : score <= L.par * 2 ? 2 : 1;
+            if (!stars[S.lv] || st > stars[S.lv]) { stars[S.lv] = st; lsSet('equil-stars', JSON.stringify(stars)); }
+            renderTabs(); render();
+            const last = S.lv === LEVELS.length - 1;
+            $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + L.icon + ' ' + L.name + ' — সফল!</h2><p>পরিবর্তন: <b>' + bn(S.moves) + '</b> · ইঙ্গিত: <b>' + bn(2 - S.hints) + '</b></p><div class="learn">🧠 ' + L.learn + '</div><div class="row">' +
+                (last ? '' : '<button class="btn primary big" data-act="next">পরের লেভেল ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
+            $('#modal').hidden = false;
+        }
+
+        document.addEventListener('input', e => {
+            const r = e.target.closest && e.target.closest('input[data-k]'); if (!r || S.done) return;
+            const k = r.dataset.k, v = +r.value; const out = $('#o_' + k); const kn = LV().knobs.find(x => x.k === k); if (out) out.textContent = f1(v) + kn.u;
+        });
+        document.addEventListener('change', e => {
+            const r = e.target.closest && e.target.closest('input[data-k]'); if (!r || S.done) return;
+            changed(r.dataset.k, +r.value);
+        });
+        document.addEventListener('click', e => {
+            const t = e.target.closest('[data-lv],[data-tog],[data-act],#btnHint,#btnReset,#btnRules,#btnDone'); if (!t) return;
+            if (t.dataset.lv != null) { sfx.tap(); startLevel(+t.dataset.lv); return; }
+            if (t.dataset.tog) { if (!S.done) changed(t.dataset.tog, S.o[t.dataset.tog] ? 0 : 1); return; }
+            if (t.id === 'btnDone') { if (!t.disabled) finish(); return; }
+            if (t.id === 'btnReset') { sfx.tap(); startLevel(S.lv); return; }
+            if (t.id === 'btnHint') { if (S.hints > 0 && !S.done) { S.hints--; sfx.pop(); $('#shift').innerHTML = '💡 ' + LV().hint; render(); } return; }
+            if (t.id === 'btnRules') {
+                $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul><li>স্লাইডার/বাটন দিয়ে তাপ, চাপ, ক্যাটালিস্ট বা বিক্রিয়ক বদলাও।</li><li>প্রতিবার সাম্য কোনদিকে সরল তার কারণ নিচে দেখাবে (Le Chatelier)।</li><li>সব লক্ষ্য ✔ হলে <b>পরীক্ষা সম্পন্ন</b> চাপো।</li><li>কম পরিবর্তন ও কম ইঙ্গিতে বেশি তারা।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>';
+                $('#modal').hidden = false; return;
+            }
+            if (t.dataset.act === 'close') { $('#modal').hidden = true; return; }
+            if (t.dataset.act === 'again') { $('#modal').hidden = true; startLevel(S.lv); return; }
+            if (t.dataset.act === 'next') { $('#modal').hidden = true; startLevel(Math.min(S.lv + 1, LEVELS.length - 1)); return; }
+        });
+        window.__t = { S, LEVELS, solve, rate, evalAll, startLevel, changed, goalOk, finish };
+        startLevel(0);
+    })();
+    </script>
+</body>
+</html>

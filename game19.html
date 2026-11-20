@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#3fc1b0">
+    <title>মেটাল এক্সট্রাকশন | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () { try { var b = localStorage.getItem('metal-bg'); if (b === '2' || b === '3') document.documentElement.setAttribute('data-bg', b); } catch (e) {} })();
+    </script>
+    <style>
+/* ===== NB KIT: sticker / neo-brutalist দৃশ্যরূপ =====
+   প্রতিটি গেম নিজের :root-এ এই টোকেনগুলো বদলে নিজস্ব রং পায়:
+   --o1 --o2 --o3 (বাইরের ব্যাকগ্রাউন্ড), --paper (বোর্ড), --paper2, --ink, --a1 --a2 --a3 (অ্যাকসেন্ট)  */
+:root {
+    color-scheme: light;
+    --o1: #ff6b4a; --o2: #ffd23f; --o3: #5ad1c4;
+    --paper: #fff8ec; --paper2: #ffffff; --ink: #1d1030; --mute: #6a5f80;
+    --a1: #ff6b4a; --a2: #2ec4b6; --a3: #ffd23f; --good: #12a36b; --bad: #e5384d;
+    --bw: 3px; --rad: 16px; --sh: 5px;
+    --display: 'Bricolage Grotesque','Hind Siliguri',system-ui,sans-serif;
+    --body: 'Hind Siliguri','Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+    --pat: radial-gradient(rgba(29,16,48,.20) 1.4px, transparent 1.6px);
+    --pat-size: 22px 22px;
+}
+:root[data-bg="2"] { --o1: #2ec4b6; --o2: #c9f2ee; --o3: #ff6b4a; }
+:root[data-bg="3"] { --o1: #a78bfa; --o2: #ffd6f0; --o3: #ffd23f; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0; min-height: 100vh; color: var(--ink); font-family: var(--body); font-weight: 500; line-height: 1.55;
+    padding: 18px max(14px, env(safe-area-inset-right, 0px)) 30px max(14px, env(safe-area-inset-left, 0px));
+    background-color: var(--o1);
+    background-image: var(--pat), radial-gradient(circle at 12% 6%, var(--o2) 0, transparent 46%), radial-gradient(circle at 94% 96%, var(--o3) 0, transparent 50%);
+    background-size: var(--pat-size), 100% 100%, 100% 100%;
+    background-attachment: fixed; transition: background-color .4s; -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.stage { max-width: 860px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 24px; box-shadow: 9px 9px 0 var(--ink); }
+.credit { width: fit-content; max-width: 100%; margin: 18px auto 0; padding: 6px 14px; text-align: center; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; color: var(--ink); background: var(--paper); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+
+/* উপরের বার */
+.top { display: flex; align-items: center; gap: 10px; }
+.titlebox { margin-right: auto; min-width: 0; }
+.titlebox b { display: inline-block; padding: 3px 12px; font: 800 clamp(1.05rem, 3.6vw, 1.35rem)/1.3 var(--display); color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-1.2deg); }
+.titlebox small { display: block; margin: 5px 0 0 4px; font-size: 12px; font-weight: 700; color: var(--mute); }
+.btn, .back-btn, .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 14px;
+    font: 800 14px/1 var(--body); text-decoration: none; cursor: pointer; color: var(--ink); background: var(--paper2);
+    border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s, background .12s;
+}
+.btn:hover:not(:disabled), .back-btn:hover, .icon-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.btn:active:not(:disabled), .back-btn:active, .icon-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; box-shadow: 2px 2px 0 var(--ink); }
+.btn.primary { background: var(--a1); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.btn.alt { background: var(--a2); }
+.btn.big { min-height: 54px; padding: 0 26px; font-size: 17px; border-radius: 14px; }
+.icon-btn { width: 42px; padding: 0; font-size: 17px; }
+
+/* পিল, ক্যাপসুল, কার্ড */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; font-size: 13px; font-weight: 800; color: var(--ink); background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+.pill b { font-variant-numeric: tabular-nums; }
+.box { padding: 14px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: var(--rad); box-shadow: 5px 5px 0 var(--ink); }
+.sticker { display: inline-block; padding: 3px 11px; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--a3); border: 2.5px solid var(--ink); border-radius: 8px; transform: rotate(-2deg); }
+.meter { height: 16px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 99px; overflow: hidden; }
+.meter i { display: block; height: 100%; width: 100%; background: var(--a1); border-right: 2.5px solid var(--ink); transition: width .25s ease; }
+.hazard { height: 12px; border: 2.5px solid var(--ink); border-radius: 6px; background: repeating-linear-gradient(-45deg, var(--a3) 0 10px, var(--ink) 10px 20px); }
+
+/* মডাল */
+.modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; background: rgba(29,16,48,.58); }
+.sheet { width: min(500px, 100%); max-height: 92%; overflow: auto; padding: 22px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 22px; box-shadow: 9px 9px 0 var(--ink); }
+.sheet h2 { margin: 6px 0 10px; font: 800 22px/1.35 var(--display); }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 18px); transform: translateX(-50%); z-index: 3500; padding: 8px 16px; font-size: 15px; font-weight: 800; color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 99px; box-shadow: 4px 4px 0 var(--ink); opacity: 0; pointer-events: none; }
+.toast.on { animation: nbtoast 1.7s ease forwards; }
+@keyframes nbtoast { 0% { opacity: 0; transform: translate(-50%, -10px); } 12%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+@keyframes nbshake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes nbpop { from { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.12); } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 520px) { .stage { padding: 12px; border-radius: 20px; gap: 12px; box-shadow: 6px 6px 0 var(--ink); } .back-btn .long { display: none; } .titlebox small { display: none; } }
+
+/* ===== মেটাল এক্সট্রাকশন: টিল + তামা রং, হ্যাজার্ড-স্ট্রাইপ প্যাটার্ন ===== */
+:root {
+    --o1: #3fc1b0; --o2: #d6f7ef; --o3: #ffa56b;
+    --paper: #fff4e2; --paper2: #ffffff; --ink: #1c2b33; --mute: #5d6f78;
+    --a1: #d9672b; --a2: #2a9bb0; --a3: #ffc94d;
+    --pat: repeating-linear-gradient(45deg, rgba(28,43,51,.10) 0 2px, transparent 2px 16px);
+    --pat-size: 100% 100%;
+}
+:root[data-bg="2"] { --o1: #ffb347; --o2: #fff1c9; --o3: #3fc1b0; }
+:root[data-bg="3"] { --o1: #8fb8ff; --o2: #e4f0ff; --o3: #ffb4a2; }
+#bgBtn { background: #ffe2c9; }
+.lv { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
+.lvb { flex: 1 1 120px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
+    background: #d4f1ea; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
+.lvb:nth-child(2) { background: #ffe6c7; } .lvb:nth-child(3) { background: #ffd9cf; } .lvb:nth-child(4) { background: #e2dcff; }
+.lvb:hover:not(:disabled) { transform: translateY(-3px); }
+.lvb:active:not(:disabled) { transform: translateY(1px); }
+.lvb b { font: 800 14px/1.3 var(--body); padding-right: 52px; } .lvb small { font-size: 12px; font-weight: 700; color: var(--mute); line-height: 1.3; }
+.lvb i { position: absolute; top: 6px; right: 6px; padding: 1px 7px; font-style: normal; font-size: 12px; letter-spacing: 1px; background: var(--a3); border: 2px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(3deg); }
+.lvb.on { background: #fff; padding-bottom: 12px; box-shadow: 0 -4px 0 var(--a1) inset; }
+.lvb.on small { color: var(--ink); }
+.lvb:disabled { opacity: .55; cursor: default; filter: grayscale(.4); }
+.hud { display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
+.hud .pill:nth-child(1) { background: #c9f3ea; } .hud .pill:nth-child(2) { background: #ffd4c4; } .hud .pill:nth-child(3) { background: #fff0a8; }
+
+.job { padding: 12px 16px; background: #ffe1b8; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 5px 5px 0 var(--ink); }
+.job h2 { margin: 6px 0 4px; font: 800 clamp(1.1rem, 3.6vw, 1.45rem)/1.4 var(--display); }
+.job p { margin: 0; font-size: 13.5px; font-weight: 600; }
+.flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-weight: 800; font-size: 13px; }
+.flow span { padding: 2px 10px; background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 99px; }
+.flow em { font-style: normal; font-weight: 800; }
+
+.line { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
+.slot { display: flex; align-items: stretch; gap: 0; min-height: 52px; border: 2.5px dashed var(--ink); border-radius: 12px; background: repeating-linear-gradient(-45deg, rgba(28,43,51,.05) 0 8px, transparent 8px 16px); }
+.slot .n { display: grid; place-items: center; width: 38px; flex: 0 0 38px; font: 800 16px var(--display); color: var(--mute); border-right: 2.5px dashed var(--ink); }
+.slot .c { flex: 1; padding: 8px 12px; font-size: 13.5px; font-weight: 700; color: var(--mute); display: flex; align-items: center; }
+.slot.next { border-style: solid; background: #fff9d6; } .slot.next .n { color: var(--ink); }
+.slot.done { border-style: solid; background: #d9f5e6; animation: nbpop .3s ease; }
+.slot.done .n { background: var(--good); color: #fff; border-right: 2.5px solid var(--ink); }
+.slot.done .c { flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; color: var(--ink); }
+.slot .f { font: 700 12.5px/1.4 'Plus Jakarta Sans', var(--body); color: #0d5c46; word-break: break-word; }
+.slot .why { font-size: 12px; font-weight: 600; color: #365; }
+.tray { display: flex; flex-wrap: wrap; gap: 9px; }
+.card { flex: 1 1 230px; text-align: left; padding: 10px 13px; font-size: 13.5px; font-weight: 700; line-height: 1.45; cursor: pointer; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+.card:nth-child(3n+1) { background: #fff; } .card:nth-child(3n+2) { background: #e3f7f2; } .card:nth-child(3n) { background: #fff0d6; }
+.card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+.card:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+.card.shake { animation: nbshake .35s; background: #ffd0d6 !important; }
+.card.hint { animation: hintp .8s ease 3; outline: 4px solid var(--a1); outline-offset: 2px; }
+@keyframes hintp { 50% { transform: scale(1.04); } }
+.msg { min-height: 24px; padding: 6px 12px; font-size: 13.5px; font-weight: 700; border-radius: 10px; }
+.msg.good { color: #0b5a3c; background: #d9f5e6; border: 2.5px solid var(--ink); } .msg.bad { color: #7a1020; background: #ffd9de; border: 2.5px solid var(--ink); }
+
+/* ধাপ ৪: সক্রিয়তা সিরিজ */
+.ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.bin { position: relative; min-height: 150px; padding: 10px; text-align: left; cursor: pointer; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s; }
+.bin:nth-child(1) { background: #ffd9cf; } .bin:nth-child(2) { background: #fff0b8; } .bin:nth-child(3) { background: #d4f1ea; }
+.bin:active { transform: translate(2px,2px); }
+.bin h3 { margin: 0 0 2px; font: 800 14px/1.3 var(--body); } .bin small { display: block; margin-bottom: 8px; font-size: 11.5px; font-weight: 700; color: var(--mute); }
+.bin .put { display: flex; flex-wrap: wrap; gap: 5px; }
+.bin.target { outline: 4px solid var(--a1); outline-offset: 2px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 0 10px; font: 800 15px var(--display); cursor: pointer; color: var(--ink); background: #fff; border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); }
+.chip small { font-size: 11px; font-weight: 700; color: var(--mute); }
+.chip.sel { background: var(--a3); transform: translate(-1px,-1px) rotate(-2deg); box-shadow: 4px 4px 0 var(--ink); }
+.chip.shake { animation: nbshake .35s; background: #ffd0d6; }
+.chip.placed { cursor: default; background: #fff; box-shadow: 2px 2px 0 var(--ink); }
+.pool { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 58px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 12px; }
+.axis { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: var(--mute); }
+.sheet { position: relative; text-align: center; padding-top: 0; background: #fffdf3; }
+.sheet::before { content: "LAB LABEL · METAL"; display: block; margin: 0 -22px 14px; padding: 7px 14px; font: 800 12px/1.2 var(--display); letter-spacing: 1.5px; color: #fff; background: var(--a1); border-bottom: var(--bw) solid var(--ink); border-radius: 18px 18px 0 0; }
+.stars { font-size: 38px; letter-spacing: 6px; color: #ffb800; -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--ink); }
+.sheet p { font-size: 14.5px; margin: 6px 0 14px; } .sheet ul { text-align: left; font-size: 14px; padding-left: 22px; }
+.learn { text-align: left; padding: 10px 12px; margin: 10px 0 14px; font-size: 13.5px; font-weight: 600; background: #e3f7f2; border: 2.5px solid var(--ink); border-radius: 10px; }
+@media (max-width: 560px) { .ladder { grid-template-columns: 1fr; } .bin { min-height: 0; } }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <header class="top">
+            <a class="back-btn" href="games.html#adv" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+            <div class="titlebox"><b>⛏️ মেটাল এক্সট্রাকশন</b><small>Advanced Game</small></div>
+            <button class="icon-btn" id="soundBtn" title="সাউন্ড চালু/বন্ধ" aria-label="সাউন্ড চালু বা বন্ধ করো">🔔</button>
+            <button class="icon-btn" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+        </header>
+        <div class="lv" id="lv"></div>
+        <div class="hud">
+            <span class="pill">✅ ধাপ <b id="sProg">০/০</b></span>
+            <span class="pill">❌ ভুল <b id="sMiss">০</b></span>
+            <span class="pill">💡 ইঙ্গিত <b id="sHint">৩</b></span>
+            <button class="btn" id="btnRules" style="margin-left:auto">📖 নিয়ম</button>
+        </div>
+        <section class="job" id="job"></section>
+        <div class="meter"><i id="bar" style="width:0%"></i></div>
+        <div class="msg" id="msg"></div>
+        <section id="play"></section>
+        <div class="row"><button class="btn" id="btnHint">💡 ইঙ্গিত</button><button class="btn" id="btnReset">↺ নতুন করে সাজাও</button></div>
+    </div>
+    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+
+    <script>
+/* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+   ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+   বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+function NBSound(key) {
+    let on = true, ac = null;
+    try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+    function tone(f, t0, dur, type, vol) {
+        if (!on) return;
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+            const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+        } catch (e) {}
+    }
+    const api = {
+        ok() { tone(660, 0, .12); tone(880, .1, .16); },
+        bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+        tap() { tone(520, 0, .06, 'triangle', .1); },
+        pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+        win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+        lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+        get on() { return on; },
+        toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+    };
+    function paint() { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; }
+    document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } });
+    if (document.readyState !== 'loading') { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } }
+    return api;
+}
+
+    (function () {
+        'use strict';
+        let sfx;
+        try { sfx = NBSound('metal'); } catch (e) { sfx = { ok() {}, bad() {}, tap() {}, pop() {}, win() {}, lose() {}, toggle() {} }; }
+        const $ = s => document.querySelector(s);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+        const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+        $('#bgBtn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-bg') || '1';
+            const next = cur === '1' ? '2' : cur === '2' ? '3' : '1';
+            if (next === '1') document.documentElement.removeAttribute('data-bg'); else document.documentElement.setAttribute('data-bg', next);
+            lsSet('metal-bg', next); sfx.tap();
+        });
+
+        /* ধাপগুলো: r = ক্রমের র‍্যাঙ্ক (একই র‍্যাঙ্ক হলে যেকোনো ক্রমে), d = ফাঁদ কার্ড (এই প্রক্রিয়ায় লাগে না) */
+        const STAGES = [
+            { id: 'fe', icon: '🔩', name: 'লোহা', sub: 'ব্লাস্ট ফার্নেস', ore: 'হেমাটাইট Fe₂O₃', end: 'গলিত লোহা (পিগ আয়রন)',
+              intro: 'লোহার আকরিক থেকে ব্লাস্ট ফার্নেসে লোহা বানাও। ধাপগুলো সঠিক ক্রমে সাজাও — দুটো কার্ড ভুল, ওগুলো ব্যবহার করো না!',
+              steps: [
+                { r: 1, t: 'আকরিক (Fe₂O₃), কোক (C) ও চুনাপাথর (CaCO₃) চুল্লির মাথা দিয়ে ঢালো', f: 'Fe₂O₃ + C + CaCO₃', why: 'কোক = জ্বালানি ও বিজারক; চুনাপাথর = ময়লা সরানোর জন্য।' },
+                { r: 2, t: 'নিচ থেকে গরম বাতাস ঢোকাও — কোক পুড়ে তাপ দেয়', f: 'C + O₂ → CO₂ (+ তাপ ≈ 1500°C)', why: 'দহন বিক্রিয়া তাপ দেয় — চুল্লি গরম রাখে।' },
+                { r: 3, t: 'উপরে ওঠা CO₂ গরম কোকের সাথে বিক্রিয়ায় কার্বন মনোক্সাইড বানায়', f: 'CO₂ + C → 2CO', why: 'আসল বিজারক হলো CO গ্যাস।' },
+                { r: 4, t: 'CO দিয়ে আয়রন(III) অক্সাইড বিজারিত হয়ে লোহা তৈরি হয়', f: 'Fe₂O₃ + 3CO → 2Fe + 3CO₂', why: 'অক্সাইড থেকে অক্সিজেন সরে যাওয়াই বিজারণ।' },
+                { r: 5, t: 'চুনাপাথর ভেঙে CaO হয়ে বালি (SiO₂) এর সাথে মিশে স্ল্যাগ বানায়', f: 'CaCO₃ → CaO + CO₂; CaO + SiO₂ → CaSiO₃', why: 'স্ল্যাগ = গলিত আবর্জনা, হালকা বলে লোহার উপরে ভাসে।' },
+                { r: 6, t: 'নিচে জমা গলিত লোহা ও উপরের স্ল্যাগ আলাদা পথে বের করে ঢালাই করো', f: 'Fe(l) ↓  |  CaSiO₃ ↑', why: 'ঘনত্ব বেশি তাই লোহা নিচে, স্ল্যাগ উপরে।' },
+                { d: 1, t: 'আকরিক গলিয়ে তড়িৎ বিশ্লেষণ চালাও', why: 'লোহা মাঝারি সক্রিয়; কার্বন দিয়েই সস্তায় বিজারণ হয়, তড়িৎ বিশ্লেষণ বাড়তি খরচ।' },
+                { d: 1, t: 'গলিত ক্রায়োলাইটে আকরিক গুলে বিদ্যুৎ চালাও', why: 'ক্রায়োলাইট অ্যালুমিনিয়ামের জন্য — লোহায় লাগে না।' }
+              ],
+              learn: 'লোহা মধ্যম সক্রিয় ধাতু (Zn–Pb এর কাছাকাছি), তাই কার্বন/CO দিয়ে অক্সাইড বিজারণ করেই নিষ্কাশন হয়।' },
+            { id: 'al', icon: '🥫', name: 'অ্যালুমিনিয়াম', sub: 'হল–এরুল্ট প্রক্রিয়া', ore: 'বক্সাইট Al₂O₃·২H₂O', end: 'গলিত অ্যালুমিনিয়াম',
+              intro: 'অ্যালুমিনিয়াম খুব সক্রিয়, কার্বন দিয়ে বিজারণ হয় না। তড়িৎ বিশ্লেষণের ধাপগুলো সাজাও — ফাঁদ কার্ড এড়িয়ে চলো।',
+              steps: [
+                { r: 1, t: 'বক্সাইটকে NaOH দিয়ে শোধন করে বিশুদ্ধ অ্যালুমিনা (Al₂O₃) বানাও', f: 'Al₂O₃·2H₂O → Al₂O₃ (বিশুদ্ধ)', why: 'Fe₂O₃ ইত্যাদি অশুদ্ধি আগে সরাতে হয়।' },
+                { r: 2, t: 'অ্যালুমিনাকে গলিত ক্রায়োলাইটে (Na₃AlF₆) দ্রবীভূত করো', f: 'গলনাঙ্ক ২০৫০°C → ≈ ৯৫০°C', why: 'গলনাঙ্ক কমে বলে অনেক শক্তি বাঁচে, পরিবাহিতাও বাড়ে।' },
+                { r: 3, t: 'কার্বন (গ্রাফাইট) ইলেকট্রোডে প্রবল ডিসি বিদ্যুৎ চালাও', f: 'ক্যাথোড (–) ও অ্যানোড (+)', why: 'তড়িৎ বিশ্লেষণের জন্য ডিসি লাগে।' },
+                { r: 4, t: 'ক্যাথোডে Al³⁺ ইলেকট্রন নিয়ে গলিত অ্যালুমিনিয়াম হয়ে নিচে জমে', f: 'Al³⁺ + 3e⁻ → Al', why: 'ক্যাথোডে বিজারণ ঘটে।' },
+                { r: 4, t: 'অ্যানোডে O²⁻ থেকে O₂ তৈরি হয়ে কার্বন অ্যানোড পুড়ে CO₂ হয়; অ্যানোড মাঝে মাঝে বদলাতে হয়', f: '2O²⁻ → O₂ + 4e⁻;  C + O₂ → CO₂', why: 'অ্যানোডে জারণ ঘটে; কার্বন ক্ষয় হয়।' },
+                { r: 5, t: 'গলিত অ্যালুমিনিয়াম নিচের ছিদ্র দিয়ে বের করে ঢালাই করো', f: 'Al (বিশুদ্ধতা ≈ ৯৯.৫%)', why: 'Al ক্যাথোড-পাত্রের নিচে জমে।' },
+                { d: 1, t: 'কোকের সাথে মিশিয়ে ব্লাস্ট ফার্নেসে গরম করো', why: 'Al–O বন্ধন এত শক্ত যে কার্বন বিজারণ পারে না।' },
+                { d: 1, t: 'অ্যালুমিনার জলীয় দ্রবণের তড়িৎ বিশ্লেষণ করো', why: 'জলীয় দ্রবণে Al নয়, H₂ গ্যাস তৈরি হবে।' }
+              ],
+              learn: 'যত বেশি সক্রিয় ধাতু (K, Na, Ca, Mg, Al) তত শক্ত অক্সাইড বন্ধন — তাই গলিত অবস্থায় তড়িৎ বিশ্লেষণই একমাত্র উপায়।' },
+            { id: 'cu', icon: '🟠', name: 'তামা', sub: 'সালফাইড আকরিক', ore: 'কপার পাইরাইটিস CuFeS₂', end: '৯৯.৯৯% বিশুদ্ধ তামা',
+              intro: 'তামার সালফাইড আকরিক থেকে বিশুদ্ধ তামা পর্যন্ত পথটা সাজাও। এখানে প্রতিটি ধাপ আগেরটার সমস্যা মেটায়।',
+              steps: [
+                { r: 1, t: 'আকরিক গুঁড়ো করো (crushing)', f: 'মোটা পাথর → মিহি গুঁড়ো', why: 'ক্ষেত্রফল বাড়লে পরের ধাপ সহজ হয়।' },
+                { r: 2, t: 'ফেনা ভাসন (froth flotation): পানি, তেল ও বাতাসে সালফাইড কণা ফেনায় ভাসে', f: 'সালফাইড ↑ ফেনা | মাটি ↓ তলানি', why: 'সালফাইড তেলে ভেজে, মাটি পানিতে ভেজে।' },
+                { r: 3, t: 'বাতাসে ভাজো (roasting): সালফার SO₂ হয়ে বের হয়ে যায়', f: '2CuFeS₂ + O₂ → Cu₂S + 2FeS + SO₂', why: 'আংশিক জারণ ও সালফার দূর।' },
+                { r: 4, t: 'সিলিকা মিশিয়ে গলাও (smelting): লোহা স্ল্যাগ হয়ে আলাদা, তামার ম্যাট নিচে', f: 'FeO + SiO₂ → FeSiO₃ (স্ল্যাগ)', why: 'Cu₂S + FeS = ম্যাট; Fe সরে যায় স্ল্যাগে।' },
+                { r: 5, t: 'কনভার্টারে বাতাস দিলে ব্লিস্টার কপার (≈ ৯৮% Cu) তৈরি হয়', f: '2Cu₂S + 3O₂ → 2Cu₂O + 2SO₂;  Cu₂S + 2Cu₂O → 6Cu + SO₂', why: 'নিজে নিজে বিজারণ (self-reduction)।' },
+                { r: 6, t: 'তড়িৎ-পরিশোধন: অশুদ্ধ Cu অ্যানোড, বিশুদ্ধ Cu ক্যাথোড, দ্রবণ CuSO₄', f: 'Cu → Cu²⁺ + 2e⁻ (অ্যানোড);  Cu²⁺ + 2e⁻ → Cu (ক্যাথোড)', why: 'অশুদ্ধি অ্যানোড-কাদায় জমে — সোনা, রুপাও মেলে।' },
+                { d: 1, t: 'গলিত ক্রায়োলাইটে গুলে বিদ্যুৎ চালাও', why: 'এটা অ্যালুমিনিয়ামের পদ্ধতি।' },
+                { d: 1, t: 'NaOH দিয়ে আকরিক শোধন করো', why: 'এটা বক্সাইট শোধনের ধাপ; তামার আকরিকে লাগে না।' }
+              ],
+              learn: 'সালফাইড আকরিকে আগে ফ্লোটেশন ও রোস্টিং; শেষে তড়িৎ-পরিশোধনে অশুদ্ধ Cu অ্যানোড থেকে বিশুদ্ধ Cu ক্যাথোডে যায়।' },
+            { id: 'rs', icon: '⚡', name: 'সক্রিয়তা সিরিজ', sub: 'কোন ধাতু কোন পদ্ধতিতে', mode: 'sort',
+              intro: 'ধাতুর সক্রিয়তা দেখে বুঝে নাও — কোনটা তড়িৎ বিশ্লেষণে, কোনটা কার্বন বিজারণে, আর কোনটা তাপে বা প্রকৃতিতে মুক্ত! ধাতু বাছাই করে ঠিক ঘরে বসাও।',
+              bins: [
+                { k: 'e', n: '⚡ তড়িৎ বিশ্লেষণ', s: 'অতি সক্রিয় (K, Na, Ca, Mg, Al)' },
+                { k: 'c', n: '🔥 কার্বন বিজারণ', s: 'মাঝারি সক্রিয় (Zn, Fe, Sn, Pb)' },
+                { k: 'h', n: '✨ তাপ / মুক্ত অবস্থায়', s: 'নিষ্ক্রিয় (Hg, Ag, Au, Pt)' }
+              ],
+              metals: [
+                { s: 'K', n: 'পটাসিয়াম', k: 'e', why: 'খুবই সক্রিয় — কার্বন একে বিজারিত করতে পারে না।' },
+                { s: 'Na', n: 'সোডিয়াম', k: 'e', why: 'গলিত NaCl এর তড়িৎ বিশ্লেষণে (ডাউন্স সেল) পাওয়া যায়।' },
+                { s: 'Ca', n: 'ক্যালসিয়াম', k: 'e', why: 'গলিত CaCl₂ এর তড়িৎ বিশ্লেষণে।' },
+                { s: 'Mg', n: 'ম্যাগনেসিয়াম', k: 'e', why: 'গলিত MgCl₂ এর তড়িৎ বিশ্লেষণে।' },
+                { s: 'Al', n: 'অ্যালুমিনিয়াম', k: 'e', why: 'হল–এরুল্ট প্রক্রিয়ায় তড়িৎ বিশ্লেষণ।' },
+                { s: 'Zn', n: 'জিংক', k: 'c', why: 'ZnO + C → Zn + CO; কার্বন বিজারণ চলে।' },
+                { s: 'Fe', n: 'লোহা', k: 'c', why: 'ব্লাস্ট ফার্নেসে CO/কোক দিয়ে বিজারণ।' },
+                { s: 'Sn', n: 'টিন', k: 'c', why: 'SnO₂ + 2C → Sn + 2CO।' },
+                { s: 'Pb', n: 'সীসা', k: 'c', why: 'ভাজার পর PbO কে কার্বন দিয়ে বিজারণ।' },
+                { s: 'Hg', n: 'পারদ', k: 'h', why: 'সিনাবার (HgS) বাতাসে ভাজলেই Hg মেলে।' },
+                { s: 'Ag', n: 'রুপা', k: 'h', why: 'অত্যন্ত নিষ্ক্রিয়; প্রায়ই মুক্ত বা সামান্য তাপেই পাওয়া যায়।' },
+                { s: 'Au', n: 'সোনা', k: 'h', why: 'প্রকৃতিতে মুক্ত অবস্থায় মেলে।' },
+                { s: 'Pt', n: 'প্ল্যাটিনাম', k: 'h', why: 'প্রকৃতিতে মুক্ত অবস্থায় মেলে।' }
+              ],
+              learn: 'সক্রিয়তা সিরিজের ওপরের দিকের ধাতু = অক্সাইড বন্ধন শক্ত = বেশি শক্তি (তড়িৎ) লাগে; নিচের দিকের ধাতু প্রায় নিজেই মুক্ত।' }
+        ];
+
+        const S = { st: 0, placed: [], miss: 0, hints: 3, done: false, sel: null, binAssign: {}, order: [] };
+        let stars = {}; try { stars = JSON.parse(lsGet('metal-stars') || '{}') || {}; } catch (e) { stars = {}; }
+        const unlocked = i => i === 0 || stars[i - 1] > 0;
+        const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
+        const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const SD = () => STAGES[S.st];
+        const mustSteps = () => SD().steps.filter(x => !x.d);
+
+        function toast(t) { let el = document.querySelector('.toast'); if (!el) { el = document.createElement('div'); el.className = 'toast'; document.body.appendChild(el); } el.textContent = t; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); }
+        function msg(t, k) { const m = $('#msg'); m.textContent = t || ''; m.className = 'msg' + (k ? ' ' + k : ''); }
+
+        function renderTabs() {
+            $('#lv').innerHTML = STAGES.map((L, i) => '<button class="lvb' + (i === S.st ? ' on' : '') + '" data-st="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? L.icon : '🔒') + ' ' + L.name + '</b><small>' + L.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join('');
+        }
+
+        function startStage(i) {
+            S.st = i; S.placed = []; S.miss = 0; S.hints = 3; S.done = false; S.sel = null; S.binAssign = {};
+            const L = SD();
+            S.order = shuffle(L.mode === 'sort' ? L.metals.map((_, k) => k) : L.steps.map((_, k) => k));
+            renderTabs(); renderJob(); renderPlay(); updateHud(); msg('');
+        }
+        function renderJob() {
+            const L = SD();
+            let flow = '';
+            if (L.mode !== 'sort') flow = '<div class="flow"><span>⛏️ ' + L.ore + '</span><em>→</em><span>' + L.icon + ' ' + L.end + '</span></div>';
+            $('#job').innerHTML = '<span class="sticker">ধাপ ' + bn(S.st + 1) + ' / ' + bn(STAGES.length) + '</span><h2>' + L.icon + ' ' + L.name + ' — ' + L.sub + '</h2><p>' + L.intro + '</p>' + flow;
+        }
+        function total() { const L = SD(); return L.mode === 'sort' ? L.metals.length : mustSteps().length; }
+        function progress() { const L = SD(); return L.mode === 'sort' ? Object.keys(S.binAssign).length : S.placed.length; }
+        function updateHud() {
+            $('#sProg').textContent = bn(progress()) + '/' + bn(total()); $('#sMiss').textContent = bn(S.miss); $('#sHint').textContent = bn(S.hints);
+            $('#bar').style.width = (progress() / total() * 100) + '%'; $('#btnHint').disabled = S.hints <= 0 || S.done;
+        }
+        function minRank() { const left = mustSteps().filter(x => !S.placed.includes(x)); return left.length ? Math.min.apply(null, left.map(x => x.r)) : null; }
+
+        function renderPlay() {
+            const L = SD();
+            if (L.mode === 'sort') {
+                const pool = S.order.filter(k => !(L.metals[k].s in S.binAssign));
+                $('#play').innerHTML =
+                    '<div class="axis"><span>▲ বেশি সক্রিয়</span><span>কম সক্রিয় ▼</span></div>' +
+                    '<div class="ladder">' + L.bins.map(b => '<div class="bin' + (S.sel != null ? ' target' : '') + '" data-bin="' + b.k + '" role="button" tabindex="0"><h3>' + b.n + '</h3><small>' + b.s + '</small><div class="put">' +
+                        L.metals.filter(m => S.binAssign[m.s] === b.k).map(m => '<span class="chip placed">' + m.s + '</span>').join('') + '</div></div>').join('') + '</div>' +
+                    '<p style="margin:10px 0 6px;font-weight:800;font-size:13px">নিচের ধাতু বাছো, তারপর ঠিক ঘরে ট্যাপ করো:</p>' +
+                    '<div class="pool">' + (pool.length ? pool.map(k => { const m = L.metals[k]; return '<button class="chip' + (S.sel === k ? ' sel' : '') + '" data-metal="' + k + '">' + m.s + '<small>' + m.n + '</small></button>'; }).join('') : '<b>সব ধাতু বসানো শেষ! 🎉</b>') + '</div>';
+                return;
+            }
+            const must = mustSteps();
+            $('#play').innerHTML = '<div class="line">' + must.map((_, i) => {
+                const p = S.placed[i];
+                if (p) return '<div class="slot done"><span class="n">' + bn(i + 1) + '</span><span class="c"><b>' + esc(p.t) + '</b><span class="f">' + esc(p.f) + '</span><span class="why">💡 ' + esc(p.why) + '</span></span></div>';
+                return '<div class="slot' + (i === S.placed.length ? ' next' : '') + '"><span class="n">' + bn(i + 1) + '</span><span class="c">' + (i === S.placed.length ? 'এখানে কোন ধাপটি বসবে?' : '…') + '</span></div>';
+            }).join('') + '</div>' +
+            '<p style="margin:12px 0 8px;font-weight:800;font-size:13px">ধাপের কার্ড (দুটো ভুল কার্ড আছে!):</p>' +
+            '<div class="tray">' + S.order.filter(k => !S.placed.includes(L.steps[k])).map(k => '<button class="card" data-step="' + k + '">' + esc(L.steps[k].t) + '</button>').join('') + '</div>';
+        }
+
+        function finish() {
+            S.done = true; sfx.win();
+            const L = SD(); const score = S.miss + 2 * (3 - S.hints);
+            const st = score <= 2 ? 3 : score <= 6 ? 2 : 1;
+            if (!stars[S.st] || st > stars[S.st]) { stars[S.st] = st; lsSet('metal-stars', JSON.stringify(stars)); }
+            renderTabs(); updateHud();
+            const last = S.st === STAGES.length - 1;
+            $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + L.icon + ' ' + L.name + (L.mode === 'sort' ? ' — সিরিজ মিলে গেছে!' : ' নিষ্কাশন সম্পূর্ণ!') + '</h2><p>ভুল: <b>' + bn(S.miss) + '</b> · ইঙ্গিত: <b>' + bn(3 - S.hints) + '</b></p><div class="learn">🧠 ' + L.learn + '</div><div class="row">' +
+                (last ? '' : '<button class="btn primary big" data-act="next">পরের ধাপ ▶</button>') + '<button class="btn" data-act="again">↺ আবার খেলি</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
+            $('#modal').hidden = false;
+        }
+        function miss(el, text) { S.miss++; sfx.bad(); if (el) { el.classList.add('shake'); setTimeout(() => el.classList.remove('shake'), 400); } msg(text, 'bad'); updateHud(); }
+
+        function placeStep(k, el) {
+            if (S.done) return;
+            const L = SD(); const c = L.steps[k]; const need = minRank();
+            if (c.d) { miss(el, '❌ ফাঁদ! ' + c.why); return; }
+            if (c.r !== need) { miss(el, '❌ এখন এই ধাপের সময় হয়নি — আগের কোনো ধাপ বাকি আছে।'); return; }
+            S.placed.push(c); sfx.ok(); msg('✔ ' + c.why, 'good'); renderPlay(); updateHud();
+            if (S.placed.length === mustSteps().length) setTimeout(finish, 500);
+        }
+        function placeMetal(bk, el) {
+            if (S.done || S.sel == null) { if (S.sel == null) toast('আগে একটা ধাতু বাছো'); return; }
+            const L = SD(); const m = L.metals[S.sel];
+            if (m.k !== bk) { miss(document.querySelector('[data-metal="' + S.sel + '"]'), '❌ ' + m.s + ' (' + m.n + ') এই ঘরে নয়। এর সক্রিয়তা ভাবো!'); return; }
+            S.binAssign[m.s] = bk; S.sel = null; sfx.ok(); msg('✔ ' + m.s + ': ' + m.why, 'good'); renderPlay(); updateHud();
+            if (progress() === L.metals.length) setTimeout(finish, 500);
+        }
+        function hint() {
+            if (S.hints <= 0 || S.done) return;
+            const L = SD(); S.hints--;
+            if (L.mode === 'sort') {
+                const pool = S.order.filter(k => !(L.metals[k].s in S.binAssign)); const k = S.sel != null ? S.sel : pool[0]; S.sel = k;
+                const m = L.metals[k]; const b = L.bins.find(x => x.k === m.k); renderPlay();
+                msg('💡 ' + m.s + ' → ' + b.n, 'good');
+            } else {
+                const need = minRank(); const k = L.steps.findIndex(x => !x.d && x.r === need && !S.placed.includes(x));
+                renderPlay(); const el = document.querySelector('[data-step="' + k + '"]'); if (el) el.classList.add('hint');
+                msg('💡 হাইলাইট করা কার্ডটাই পরের ধাপ।', 'good');
+            }
+            sfx.pop(); updateHud();
+        }
+
+        document.addEventListener('click', e => {
+            const t = e.target.closest('[data-st],[data-step],[data-metal],[data-bin],[data-act],#btnHint,#btnReset,#btnRules'); if (!t) return;
+            if (t.dataset.st != null) { sfx.tap(); startStage(+t.dataset.st); return; }
+            if (t.dataset.step != null) { placeStep(+t.dataset.step, t); return; }
+            if (t.dataset.metal != null) { S.sel = S.sel === +t.dataset.metal ? null : +t.dataset.metal; sfx.tap(); renderPlay(); return; }
+            if (t.dataset.bin != null) { placeMetal(t.dataset.bin, t); return; }
+            if (t.id === 'btnHint') { hint(); return; }
+            if (t.id === 'btnReset') { sfx.tap(); startStage(S.st); return; }
+            if (t.id === 'btnRules') {
+                $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul><li>ধাপের কার্ড ট্যাপ করে সঠিক ক্রমে বসাও। ভুল ক্রম বা ফাঁদ কার্ডে <b>ভুল</b> গোনা হয়।</li><li>প্রতিটি ধাপ বসালে কারণটা শিখবে (💡)।</li><li>শেষ ধাপে ধাতু বাছো, তারপর ঠিক ঘরে ট্যাপ করো।</li><li>তারা = কম ভুল ও কম ইঙ্গিত।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>';
+                $('#modal').hidden = false; return;
+            }
+            if (t.dataset.act === 'close') { $('#modal').hidden = true; return; }
+            if (t.dataset.act === 'again') { $('#modal').hidden = true; startStage(S.st); return; }
+            if (t.dataset.act === 'next') { $('#modal').hidden = true; startStage(Math.min(S.st + 1, STAGES.length - 1)); return; }
+        });
+        document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.bin')) { e.preventDefault(); placeMetal(e.target.dataset.bin, e.target); } });
+        window.__t = { S, STAGES, startStage, placeStep, placeMetal, finish };
+        startStage(0);
+    })();
+    </script>
+</body>
+</html>
