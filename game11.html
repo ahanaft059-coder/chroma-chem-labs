@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#ff7ac8">
-    <title>কোয়ান্টাম অরবিটাল | Lab Alchemy</title>
+    <meta name="theme-color" content="#62c6ee">
+    <title>আইসোটোপ আইল্যান্ড | Lab Alchemy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-        (function () { try { var b = localStorage.getItem('quantum-bg'); if (b === '2' || b === '3') document.documentElement.setAttribute('data-bg', b); } catch (e) {} })();
+        (function () { try { var b = localStorage.getItem('isle-bg'); if (b === '2' || b === '3') document.documentElement.setAttribute('data-bg', b); } catch (e) {} })();
     </script>
     <style>
 /* ===== NB KIT: sticker / neo-brutalist দৃশ্যরূপ =====
@@ -85,115 +85,125 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px soli
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
 @media (max-width: 520px) { .stage { padding: 12px; border-radius: 20px; gap: 12px; box-shadow: 6px 6px 0 var(--ink); } .back-btn .long { display: none; } .titlebox small { display: none; } }
 
-/* ===== কোয়ান্টাম অরবিটাল: ম্যাজেন্টা + সায়ান, তির্যক গ্রিড ===== */
-:root {
-    --o1: #ff7ac8; --o2: #ffe4f4; --o3: #8ef0ff;
-    --paper: #fff7fc; --paper2: #ffffff; --ink: #2a1038; --mute: #77608a;
-    --a1: #e0338b; --a2: #2f8cff; --a3: #ffe14d;
-    --pat: repeating-linear-gradient(60deg, rgba(42,16,56,.09) 0 1.5px, transparent 1.5px 24px), repeating-linear-gradient(-60deg, rgba(42,16,56,.09) 0 1.5px, transparent 1.5px 24px);
-    --pat-size: 100% 100%;
-}
-:root[data-bg="2"] { --o1: #7fe3ff; --o2: #e0f9ff; --o3: #ffe14d; }
-:root[data-bg="3"] { --o1: #b9ee7a; --o2: #efffd6; --o3: #ff9bd5; }
 
+/* ===== আইসোটোপ আইল্যান্ড: আকাশি-সাগর নীল + বালি + প্রবাল, ঢেউ-রেখার প্যাটার্ন ===== */
+:root {
+    --o1: #62c6ee; --o2: #fff0c9; --o3: #ff9a7b;
+    --paper: #f4fbff; --paper2: #ffffff; --ink: #0d3050; --mute: #4a6d88;
+    --a1: #1c88cc; --a2: #ff6f52; --a3: #ffd57e; --good: #0f9a62; --bad: #e03c4f;
+    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='16'%3E%3Cpath d='M0 8 Q12 0 24 8 T48 8' fill='none' stroke='rgba(13,48,80,.22)' stroke-width='2'/%3E%3C/svg%3E");
+    --pat-size: 48px 16px;
+}
+:root[data-bg="2"] { --o1: #f4d9a0; --o2: #fff4d6; --o3: #62c6ee; }
+:root[data-bg="3"] { --o1: #ff9f84; --o2: #ffe3d6; --o3: #f4d9a0; }
+#bgBtn { background: #d6f0ff; }
 .lv { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
-.lvb { flex: 1 1 110px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
-    background: #eadfff; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
-.lvb:nth-child(2) { background: #ffdcec; } .lvb:nth-child(3) { background: #d5f6ef; } .lvb:nth-child(4) { background: #fff0b8; } .lvb:nth-child(5) { background: #dbe8ff; }
+.lvb { flex: 1 1 108px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
+    background: #d6f0ff; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
+.lvb:nth-child(2) { background: #ffe9bd; } .lvb:nth-child(3) { background: #ffd9cf; } .lvb:nth-child(4) { background: #d3f5ee; } .lvb:nth-child(5) { background: #e3e4ff; } .lvb:nth-child(6) { background: #fff3a8; }
 .lvb:hover:not(:disabled) { transform: translateY(-3px); }
 .lvb b { font: 800 13.5px/1.3 var(--body); padding-right: 50px; } .lvb small { font-size: 11.5px; font-weight: 700; color: var(--mute); line-height: 1.3; }
 .lvb i { position: absolute; top: 6px; right: 6px; padding: 1px 7px; font-style: normal; font-size: 12px; letter-spacing: 1px; background: var(--a3); border: 2px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(3deg); }
-.lvb.on { background: #fff; padding-bottom: 12px; box-shadow: 0 -4px 0 var(--a1) inset; }
+.lvb.on { background: #fff; padding-bottom: 12px; box-shadow: 0 -4px 0 var(--a2) inset; }
 .lvb.on small { color: var(--ink); }
 .lvb:disabled { opacity: .55; cursor: default; filter: grayscale(.4); }
 .hud { display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
-.hud .pill:nth-child(1) { background: #eadfff; } .hud .pill:nth-child(2) { background: #fff0a8; }
+.hud .pill:nth-child(1) { background: #ffd9cf; } .hud .pill:nth-child(2) { background: #fff0b8; } .hud .pill:nth-child(3) { background: #d6f0ff; }
 
-.job { padding: 12px 16px; background: #ffd9ec; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 5px 5px 0 var(--ink); }
-.job h2 { margin: 6px 0 4px; font: 800 clamp(1.1rem, 3.6vw, 1.45rem)/1.4 var(--display); }
+.job { padding: 12px 16px; background: #ffeec2; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 5px 5px 0 var(--ink); }
+.job h2 { margin: 6px 0 4px; font: 800 clamp(1.05rem, 3.6vw, 1.4rem)/1.4 var(--display); }
 .job p { margin: 0; font-size: 13.5px; font-weight: 600; }
-.panel { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.job .ask { margin-top: 8px; padding: 8px 12px; font-size: 15px; font-weight: 800; background: #fff; border: 2.5px solid var(--ink); border-radius: 10px; }
+
+.nu { display: inline-flex; align-items: center; gap: 1px; font: 800 1em/1 'Plus Jakarta Sans', var(--body); white-space: nowrap; }
+.nu .ss { display: inline-flex; flex-direction: column; align-items: flex-end; font-size: .6em; line-height: 1.05; } .nu .ss i { font-style: normal; }
+
+.nuc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.box.vis { display: flex; flex-direction: column; gap: 8px; min-height: 150px; background: #e6f6ff; }
+.dots { display: flex; flex-wrap: wrap; gap: 2px; align-content: flex-start; flex: 1; min-height: 90px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--a2); } .dot.n { background: #fff; }
+.legend { display: flex; gap: 6px 14px; flex-wrap: wrap; font-size: 12px; font-weight: 700; }
+.legend b { display: inline-block; width: 11px; height: 11px; margin-right: 4px; vertical-align: -1px; border: 2px solid var(--ink); border-radius: 50%; }
+.read { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.sym { display: grid; place-items: center; min-width: 96px; padding: 8px 14px; font-size: 40px; background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+.vals { display: grid; gap: 3px; font-size: 14px; font-weight: 800; } .vals small { font-size: 12px; font-weight: 600; color: var(--mute); }
+.vals em { font-style: normal; color: var(--a1); font-variant-numeric: tabular-nums; }
+.ctls { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .ctl { padding: 10px 12px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); }
 .ctl label { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 800; }
 .ctl label output { font-variant-numeric: tabular-nums; color: var(--a1); }
+.ctl .row { margin-top: 8px; gap: 6px; } .ctl .btn { min-height: 38px; padding: 0 11px; }
 .ctl input[type=range] { width: 100%; margin: 8px 0 0; height: 26px; accent-color: var(--a1); cursor: pointer; }
 .ctl small { display: block; font-size: 11.5px; font-weight: 600; color: var(--mute); }
-.tog { width: 100%; margin-top: 6px; }
-.tog.on { background: var(--a3); }
-.goals { display: grid; gap: 7px; }
-.goal { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 13.5px; font-weight: 800; background: #ffe9f2; border: 2.5px solid var(--ink); border-radius: 10px; }
-.goal.ok { background: #d9f5e6; }
-.goal em { font-style: normal; margin-left: auto; font-variant-numeric: tabular-nums; }
-.goal .ic { display: inline-grid; place-items: center; width: 24px; height: 24px; border: 2.5px solid var(--ink); border-radius: 50%; background: #fff; font-size: 13px; flex: 0 0 24px; }
+.refbox { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: #fff8e1; }
+.refbox .nu { font-size: 30px; } .refbox span.t { font-size: 13px; font-weight: 700; }
+
+.pool { display: flex; gap: 10px; flex-wrap: wrap; min-height: 64px; padding: 10px; background: #e6f6ff; border: var(--bw) dashed var(--ink); border-radius: 14px; }
+.pool .none { font-size: 13px; font-weight: 700; color: var(--mute); align-self: center; }
+.card { min-width: 64px; min-height: 52px; padding: 6px 12px; font-size: 24px; cursor: grab; background: #fff; border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transition: transform .12s; }
+.card:hover { transform: translateY(-2px) rotate(-1deg); } .card.sel { background: var(--a3); transform: translateY(-4px) rotate(-2deg); box-shadow: 5px 5px 0 var(--ink); }
+.bins { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.bin { display: flex; flex-direction: column; align-items: stretch; gap: 3px; min-height: 120px; padding: 10px; text-align: left; cursor: pointer; background: #d6f0ff; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+.bin:nth-child(2) { background: #ffe9bd; } .bin:nth-child(3) { background: #ffd9cf; } .bin:nth-child(4) { background: #eef2f5; }
+.bin b { font-size: 14px; font-weight: 800; } .bin small { font-size: 11.5px; font-weight: 700; color: var(--mute); }
+.bin.over, .bin:hover { outline: 4px solid var(--ink); outline-offset: -4px; }
+.bin .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.chip { padding: 2px 8px; font-size: 17px; background: #fff; border: 2px solid var(--ink); border-radius: 8px; animation: nbpop .3s; }
+
+.dc { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+.atoms { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; width: min(250px, 100%); padding: 8px; background: #e6f6ff; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+.atom { aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--ink); background: var(--a1); }
+.atom.gone { background: var(--a3); border-style: dashed; opacity: .85; } .atom.fresh { animation: nbpop .4s; }
+.dcinfo { display: grid; gap: 8px; }
+.dcinfo .nu { font-size: 22px; }
+.tgt { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; font-size: 13.5px; font-weight: 800; background: #fff; border: 2.5px solid var(--ink); border-radius: 10px; }
+.tgt.ok { background: #d9f5e6; } .tgt em { font-style: normal; color: var(--a1); }
+.big-n { font-size: 26px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+.gauge { position: relative; height: 26px; margin: 22px 8px 6px; background: #fff; border: var(--bw) solid var(--ink); border-radius: 99px; }
+.gauge i { position: absolute; top: -9px; bottom: -9px; width: 0; border-left: 4px solid var(--ink); transition: left .15s; }
+.gauge i.t { border-color: var(--a2); } .gauge i span { position: absolute; top: -17px; left: -30px; width: 64px; text-align: center; font-style: normal; font-size: 11.5px; font-weight: 800; }
+.gauge i.c span { top: auto; bottom: -17px; }
+.peaks { display: flex; align-items: flex-end; justify-content: center; gap: 14px; height: 130px; padding: 8px; background: #e6f6ff; border: var(--bw) solid var(--ink); border-radius: 14px; }
+.peak { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; flex: 0 1 90px; font-size: 12px; font-weight: 800; }
+.peak div { width: 100%; min-height: 3px; background: var(--a1); border: 2.5px solid var(--ink); border-bottom: 0; border-radius: 8px 8px 0 0; transition: height .15s; }
+.peak:nth-child(2) div { background: var(--a2); } .peak:nth-child(3) div { background: var(--a3); }
+.sl { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.eqn { padding: 8px 12px; font: 800 clamp(.9rem, 3.2vw, 1.1rem)/1.5 'Plus Jakarta Sans', var(--body); background: #fff; border: var(--bw) solid var(--ink); border-radius: 12px; text-align: center; }
+
 .shift { padding: 8px 12px; min-height: 42px; font-size: 13.5px; font-weight: 700; background: #fff8cf; border: 2.5px solid var(--ink); border-radius: 10px; }
-.shift b { color: var(--a1); }
+.shift.ok { background: #d9f5e6; } .shift.bad { background: #ffe1d8; } .shift b { color: var(--a1); }
 .sheet { position: relative; text-align: center; padding-top: 0; background: #fffdf3; }
-.sheet::before { content: "LAB LABEL"; display: block; margin: 0 -22px 14px; padding: 7px 14px; font: 800 12px/1.2 var(--display); letter-spacing: 1.5px; color: #fff; background: var(--a1); border-bottom: var(--bw) solid var(--ink); border-radius: 18px 18px 0 0; }
+.sheet::before { content: "ISLAND LOG · ISOTOPE"; display: block; margin: 0 -22px 14px; padding: 7px 14px; font: 800 12px/1.2 var(--display); letter-spacing: 1.5px; color: #fff; background: var(--a1); border-bottom: var(--bw) solid var(--ink); border-radius: 18px 18px 0 0; }
 .stars { font-size: 38px; letter-spacing: 6px; color: #ffb800; -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--ink); }
 .sheet p { font-size: 14.5px; margin: 6px 0 14px; } .sheet ul { text-align: left; font-size: 14px; padding-left: 22px; }
-.learn { text-align: left; padding: 10px 12px; margin: 10px 0 14px; font-size: 13.5px; font-weight: 600; background: #eadfff; border: 2.5px solid var(--ink); border-radius: 10px; }
-@media (max-width: 560px) { .lab { grid-template-columns: 1fr; } .vessel { flex-direction: row; justify-content: center; gap: 14px; min-height: 0; } .panel { grid-template-columns: 1fr; } }
-
-#bgBtn { background: #ffd1ec; }
-.lvb { background: #ffd9ee; } .lvb:nth-child(2) { background: #d5f1ff; } .lvb:nth-child(3) { background: #fff3a8; } .lvb:nth-child(4) { background: #e6d9ff; } .lvb:nth-child(5) { background: #d6f7de; }
-.hud .pill:nth-child(1) { background: #ffd9ee; } .hud .pill:nth-child(2) { background: #fff3a8; } .hud .pill:nth-child(3) { background: #d5f1ff; }
-.job { background: #ffd9ee; } .shift { background: #fff6cc; } .learn { background: #ffe0f2; }
-.tray { display: flex; flex-wrap: wrap; gap: 9px; }
-.card { flex: 1 1 100px; text-align: center; padding: 10px 12px; font: 800 17px var(--display); cursor: pointer; background: #fff; border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s; }
-.card small { display: block; font: 700 11.5px var(--body); color: var(--mute); }
-.card:nth-child(3n+2) { background: #d5f1ff; } .card:nth-child(3n) { background: #fff3a8; }
-.card:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
-.card.shake, .box2.shake { animation: nbshake .35s; background: #ffd0d6 !important; }
-.card.hint, .box2.hint { outline: 4px solid var(--a1); outline-offset: 2px; animation: hp .8s ease 3; } @keyframes hp { 50% { transform: scale(1.06); } }
-.line { display: flex; flex-wrap: wrap; gap: 8px; min-height: 52px; padding: 8px; background: repeating-linear-gradient(-45deg, rgba(42,16,56,.05) 0 8px, transparent 8px 16px); border: 2.5px dashed var(--ink); border-radius: 12px; }
-.chipo { display: inline-flex; flex-direction: column; align-items: center; padding: 4px 12px; font: 800 16px var(--display); background: #d6f7de; border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); animation: nbpop .3s; }
-.chipo small { font: 700 11px var(--body); color: var(--mute); }
-.diag { display: flex; flex-wrap: wrap; gap: 10px 14px; padding: 12px; background: #fff; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
-.sub { display: flex; flex-direction: column; gap: 4px; align-items: center; }
-.sub > b { font: 800 14px var(--display); } .sub > div { display: flex; }
-.box2 { width: 46px; height: 52px; display: grid; place-items: center; margin-right: -3px; font: 800 16px/1 var(--body); letter-spacing: 0; cursor: pointer; background: #fff; color: var(--ink); border: 3px solid var(--ink); }
-.box2:hover { background: #fff3a8; } .box2.on { background: #d5f1ff; } .box2.sel { background: var(--a3); outline: 4px solid var(--a1); z-index: 2; }
-.diag.ro .box2 { cursor: default; }
-.q4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.stp { padding: 8px; text-align: center; background: #fff; border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); }
-.stp small { display: block; font-size: 12px; font-weight: 800; color: var(--mute); } .stp b { display: block; margin: 4px 0; font: 800 24px var(--display); }
-.stp .btn { min-height: 36px; padding: 0 12px; }
-.bins { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.bin { min-height: 120px; padding: 10px; cursor: pointer; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); text-align: left; }
-.bin:nth-child(1) { background: #d6f7de; } .bin:nth-child(2) { background: #ffd6de; } .bin h3 { margin: 0 0 6px; font: 800 15px var(--body); }
-.bin.target { outline: 4px solid var(--a1); outline-offset: 2px; }
-.qs { display: inline-flex; align-items: center; padding: 6px 10px; margin: 2px; font: 800 14px 'Plus Jakarta Sans', var(--body); background: #fff; border: 2.5px solid var(--ink); border-radius: 9px; box-shadow: 2px 2px 0 var(--ink); cursor: pointer; }
-.qs.sel { background: var(--a3); transform: rotate(-2deg); } .qs.shake { animation: nbshake .35s; background: #ffd0d6; } .qs.placed { cursor: default; box-shadow: none; }
-.msg { min-height: 24px; padding: 6px 12px; font-size: 13.5px; font-weight: 700; border-radius: 10px; }
-.msg.good { color: #0b5a3c; background: #d9f5e6; border: 2.5px solid var(--ink); } .msg.bad { color: #7a1020; background: #ffd9de; border: 2.5px solid var(--ink); }
-.cfg { font: 800 16px 'Plus Jakarta Sans', var(--body); text-align: center; padding: 8px; background: #fff3a8; border: 2.5px solid var(--ink); border-radius: 10px; }
-@media (max-width: 560px) { .q4 { grid-template-columns: 1fr 1fr; } .bins { grid-template-columns: 1fr; } .box2 { width: 38px; height: 46px; } }
-
+.learn { text-align: left; padding: 10px 12px; margin: 10px 0 14px; font-size: 13.5px; font-weight: 600; background: #d6f0ff; border: 2.5px solid var(--ink); border-radius: 10px; }
+@media (max-width: 640px) { .nuc, .ctls { grid-template-columns: 1fr; } .bins { grid-template-columns: 1fr 1fr; } .dc { grid-template-columns: 1fr; justify-items: center; } .dcinfo { width: 100%; } }
     </style>
 </head>
 <body>
     <div class="stage">
         <header class="top">
             <a class="back-btn" href="games.html#adv" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
-            <div class="titlebox"><b>⚛️ কোয়ান্টাম অরবিটাল</b><small>Advanced Game</small></div>
+            <div class="titlebox"><b>🏝️ আইসোটোপ আইল্যান্ড</b><small>Advanced Game</small></div>
             <button class="icon-btn" id="soundBtn" title="সাউন্ড চালু/বন্ধ" aria-label="সাউন্ড চালু বা বন্ধ করো">🔔</button>
             <button class="icon-btn" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
         </header>
         <div class="lv" id="lv"></div>
         <div class="hud">
-            <span class="pill">✅ অগ্রগতি <b id="sProg">০/০</b></span>
             <span class="pill">❌ ভুল <b id="sMiss">০</b></span>
-            <span class="pill">💡 ইঙ্গিত <b id="sHint">২</b></span>
+            <span class="pill">💡 ইঙ্গিত <b id="sHint">৩</b></span>
+            <span class="pill">🧭 ধাপ <b id="sRound">১/১</b></span>
             <button class="btn" id="btnRules" style="margin-left:auto">📖 নিয়ম</button>
         </div>
         <section class="job" id="job"></section>
-        <div class="meter"><i id="bar" style="width:0%"></i></div>
-        <div class="msg" id="msg"></div>
-        <section id="play" style="display:grid;gap:12px"></section>
-        <div class="row"><button class="btn" id="btnHint">💡 ইঙ্গিত</button><button class="btn" id="btnReset">↺ নতুন করে</button><button class="btn primary big" id="btnGo" hidden>✅ যাচাই</button></div>
+        <section id="arena" style="display:grid;gap:12px"></section>
+        <div class="shift" id="shift" aria-live="polite"></div>
+        <div class="row"><button class="btn" id="btnHint">💡 ইঙ্গিত</button><button class="btn" id="btnReset">↺ শুরুর অবস্থা</button><button class="btn primary big" id="btnDone">✅ জমা দাও</button></div>
     </div>
     <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
     <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+
     <script>
 /* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
    ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
@@ -226,204 +236,309 @@ function NBSound(key) {
     return api;
 }
 
-(function () {
-'use strict';
-let sfx; try { sfx = NBSound('quantum'); } catch (e) { sfx = { ok() {}, bad() {}, tap() {}, pop() {}, win() {}, lose() {}, toggle() {} }; }
-const $ = s => document.querySelector(s);
-const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
-const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
-const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
-const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-$('#bgBtn').addEventListener('click', () => {
-    const cur = document.documentElement.getAttribute('data-bg') || '1'; const next = cur === '1' ? '2' : cur === '2' ? '3' : '1';
-    if (next === '1') document.documentElement.removeAttribute('data-bg'); else document.documentElement.setAttribute('data-bg', next);
-    lsSet('quantum-bg', next); sfx.tap();
-});
-const ORDER = ['1s', '2s', '2p', '3s', '3p', '4s', '3d', '4p'];
-const CAP = { s: 1, p: 3, d: 5 };
-const LN = { s: 0, p: 1, d: 2 };
-const nOf = s => +s[0], lOf = s => LN[s[1]];
-const sup = n => String(n).replace(/\d/g, d => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const ELS = { N: { z: 7, n: 'নাইট্রোজেন' }, O: { z: 8, n: 'অক্সিজেন' }, Cl: { z: 17, n: 'ক্লোরিন' }, Fe: { z: 26, n: 'আয়রন (লোহা)' } };
-const QS = [{ sub: '2p', k: 2, up: false }, { sub: '3d', k: 0, up: true }, { sub: '4s', k: 0, up: false }, { sub: '3p', k: 1, up: true }];
-const SETS = [
- { q: [3, 2, -2, 0.5], ok: true, why: 'n=৩ হলে l=০,১,২ সম্ভব; l=২ হলে mₗ −২…+২; mₛ=±½ — সব ঠিক।' },
- { q: [2, 2, 0, 0.5], ok: false, why: 'l সবসময় n এর চেয়ে ছোট (l ≤ n−1)। n=২ এ l=২ অসম্ভব।' },
- { q: [1, 0, 0, -0.5], ok: true, why: '১s অরবিটাল, spin ডাউন — বৈধ।' },
- { q: [3, 1, 2, 0.5], ok: false, why: 'mₗ এর মান −l থেকে +l; l=১ হলে mₗ=২ অসম্ভব।' },
- { q: [4, 3, -3, 0.5], ok: true, why: 'n=৪ এ f উপস্তর (l=৩), mₗ=−৩ সম্ভব।' },
- { q: [2, 1, 0, 1], ok: false, why: 'mₛ শুধু +½ বা −½ হতে পারে।' },
- { q: [0, 0, 0, 0.5], ok: false, why: 'প্রধান কোয়ান্টাম সংখ্যা n ≥ ১।' },
- { q: [3, 2, 0, -0.5], ok: true, why: '৩d অরবিটাল, mₗ=০, spin ডাউন — বৈধ।' }
-];
-const fmtQ = q => '(' + q[0] + ', ' + q[1] + ', ' + (q[2] > 0 ? '+' : '') + q[2] + ', ' + (q[3] > 0 ? '+½' : q[3] < 0 ? '−½' : q[3]) + ')';
 
-const LEVELS = [
- { type: 'order', name: 'শক্তির ক্রম', sub: 'Aufbau', icon: '🪜',
-   intro: 'ইলেকট্রন সবসময় আগে <b>কম শক্তির</b> উপস্তরে ঢোকে। উপস্তরগুলো শক্তির ক্রমে সাজাও — (n+l) যার কম সে আগে। দুটি কার্ড ভুয়া, ওগুলো এড়াও!',
-   learn: 'Aufbau: ১s → ২s → ২p → ৩s → ৩p → ৪s → ৩d → ৪p। (n+l) সমান হলে কম n আগে। তাই ৪s (৪+০) ৩d (৩+২) এর আগে ভরে।' },
- { type: 'fill', name: 'অরবিটাল পূরণ ১', sub: 'N, O · Hund', icon: '🧱', els: ['N', 'O'],
-   intro: 'ইলেকট্রনগুলো একে একে সঠিক বাক্সে বসাও। নিয়ম: নিচু শক্তি আগে (Aufbau), একই উপস্তরের খালি বাক্সে আগে একটি করে (Hund), একটি বাক্সে সর্বোচ্চ ২টি উল্টো-spin (Pauli)।',
-   learn: 'Hund: সমশক্তির অরবিটালে আগে একটি করে ইলেকট্রন (একই spin), পরে জোড়া। তাই N এ ২p³ তে ৩টি অযুগ্ম, O তে ২টি।' },
- { type: 'fill', name: 'অরবিটাল পূরণ ২', sub: 'Cl, Fe · ৪s আগে', icon: '🏗️', els: ['Cl', 'Fe'],
-   intro: 'এবার বড় পরমাণু! Fe এর বেলায় ৪s আগে ভরবে, তারপর ৩d — খেয়াল রাখো।',
-   learn: '৪s এর শক্তি ৩d এর চেয়ে সামান্য কম, তাই ইলেকট্রন আগে ৪s এ যায়। Fe: ১s² ২s² ২p⁶ ৩s² ৩p⁶ ৪s² ৩d⁶।' },
- { type: 'qn', name: 'কোয়ান্টাম সংখ্যা', sub: 'n, l, mₗ, mₛ', icon: '🔢',
-   intro: 'হাইলাইট করা ইলেকট্রনটির জন্য চারটি কোয়ান্টাম সংখ্যা (n, l, mₗ, mₛ) স্টেপার দিয়ে ঠিক করো। বাক্সগুলো mₗ এর ক্রমে বাঁ থেকে ডানে (−l … +l); ↑ = +½, ↓ = −½।',
-   learn: 'n = কক্ষ, l = উপস্তর (s=০,p=১,d=২), mₗ = অরবিটাল (−l…+l), mₛ = spin (±½)। প্রতিটি ইলেকট্রনের চারটি সংখ্যার সেট অনন্য (Pauli)।' },
- { type: 'sort', name: 'বৈধ না অবৈধ?', sub: 'সেট বাছাই', icon: '🕵️',
-   intro: 'আটটি কোয়ান্টাম সংখ্যার সেট দেওয়া আছে। সেট বাছো, তারপর <b>সম্ভব</b> বা <b>অসম্ভব</b> ঘরে ফেলো। প্রতিটির কারণ শিখবে।',
-   learn: 'বৈধ সেটের শর্ত: n ≥ ১; l = ০…n−১; mₗ = −l…+l; mₛ = ±½। এর কোনো একটি ভাঙলেই সেটটি অসম্ভব।' }
-];
-const S = { lv: 0, hints: 2, miss: 0, done: false, round: 0, boxes: {}, placed: [], order: [], sel: null, binAssign: {}, q: [1, 0, 0, 0.5], qi: 0, hl: null };
-let stars = {}; try { stars = JSON.parse(lsGet('quantum-stars') || '{}') || {}; } catch (e) { stars = {}; }
-const unlocked = i => i === 0 || stars[i - 1] > 0;
-const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
-const L = () => LEVELS[S.lv];
-function msg(t, k) { const m = $('#msg'); m.textContent = t || ''; m.className = 'msg' + (k ? ' ' + k : ''); }
-function renderTabs() { $('#lv').innerHTML = LEVELS.map((l, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? l.icon : '🔒') + ' ' + l.name + '</b><small>' + l.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join(''); }
+    (function () {
+        'use strict';
+        let sfx;
+        try { sfx = NBSound('isle'); } catch (e) { sfx = { ok() {}, bad() {}, tap() {}, pop() {}, win() {}, lose() {}, toggle() {} }; }
+        const $ = s => document.querySelector(s);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const f1 = n => Number(n).toLocaleString('bn-BD', { useGrouping: false, maximumFractionDigits: 2 });
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+        $('#bgBtn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-bg') || '1';
+            const next = cur === '1' ? '2' : cur === '2' ? '3' : '1';
+            if (next === '1') document.documentElement.removeAttribute('data-bg'); else document.documentElement.setAttribute('data-bg', next);
+            lsSet('isle-bg', next); sfx.tap();
+        });
 
-/* ---------- ফিল ---------- */
-function subList() { return ORDER; }
-const boxCount = s => CAP[s[1]];
-function elZ() { return ELS[L().els[S.round]].z; }
-function placedCount() { let c = 0; for (const s in S.boxes) S.boxes[s].forEach(v => c += v); return c; }
-function curSub() { for (const s of ORDER) { const tot = S.boxes[s].reduce((a, b) => a + b, 0); if (tot < boxCount(s) * 2) return s; } return null; }
-function nextBox() { const s = curSub(); if (!s) return null; const b = S.boxes[s]; let k = b.findIndex(v => v === 0); if (k < 0) k = b.findIndex(v => v === 1); return { s, k }; }
-function diagHtml(ro, hl) {
-    return '<div class="diag' + (ro ? ' ro' : '') + '">' + ORDER.map(s => '<div class="sub"><b>' + s + '</b><div>' + Array.from({ length: boxCount(s) }, (_, k) => {
-        const v = ro ? (hl && hl.s === s && hl.k === k ? (hl.up ? 1 : 2) : 0) : (S.boxes[s] ? S.boxes[s][k] : 0);
-        const cls = 'box2' + (v ? ' on' : '') + (ro && hl && hl.s === s && hl.k === k ? ' sel' : '');
-        return '<button class="' + cls + '" data-box="' + s + ':' + k + '">' + (ro ? (hl && hl.s === s && hl.k === k ? (hl.up ? '↑' : '↓') : '') : (v === 1 ? '↑' : v === 2 ? '↑↓' : '')) + '</button>';
-    }).join('') + '</div></div>').join('') + '</div>';
-}
-function cfgText() { return ORDER.filter(s => S.boxes[s].some(v => v)).map(s => s + sup(S.boxes[s].reduce((a, b) => a + b, 0))).join(' '); }
-function startRound() {
-    S.boxes = {}; ORDER.forEach(s => { S.boxes[s] = Array(boxCount(s)).fill(0); });
-}
-function progress() {
-    const l = L();
-    if (l.type === 'order') return [S.placed.length, 8];
-    if (l.type === 'fill') return [S.round * 100 + placedCount(), 0];
-    return [0, 0];
-}
-function updateHud() {
-    const l = L(); let a, b;
-    if (l.type === 'order') { a = S.placed.length; b = 8; }
-    else if (l.type === 'fill') { a = S.round; b = l.els.length; }
-    else if (l.type === 'qn') { a = S.qi; b = QS.length; }
-    else { a = Object.keys(S.binAssign).length; b = SETS.length; }
-    $('#sProg').textContent = bn(a) + '/' + bn(b); $('#sMiss').textContent = bn(S.miss); $('#sHint').textContent = bn(S.hints);
-    let frac = a / b; if (l.type === 'fill') frac = (S.round + placedCount() / elZ()) / l.els.length; $('#bar').style.width = (frac * 100) + '%'; $('#btnHint').disabled = S.hints <= 0 || S.done;
-    $('#btnGo').hidden = l.type !== 'qn';
-}
-function renderPlay() {
-    const l = L(), el = $('#play');
-    if (l.type === 'order') {
-        el.innerHTML = '<div class="line">' + (S.placed.length ? S.placed.map((s, i) => '<span class="chipo">' + s + '<small>n+l=' + (nOf(s) + lOf(s)) + '</small></span>').join('') : '<span style="font-weight:700;color:var(--mute)">নিচ থেকে সবচেয়ে কম শক্তির উপস্তর ট্যাপ করো…</span>') + '</div>' +
-            '<div class="tray">' + S.order.filter(s => !S.placed.includes(s)).map(s => '<button class="card" data-sub="' + s + '">' + s + '<small>' + (/^1p|^2d/.test(s) ? '?' : 'উপস্তর') + '</small></button>').join('') + '</div>';
-    } else if (l.type === 'fill') {
-        const e = ELS[l.els[S.round]], z = e.z;
-        el.innerHTML = '<div class="cfg">' + e.n + ' (Z = ' + bn(z) + ') · বাকি ইলেকট্রন: <b>' + bn(z - placedCount()) + '</b> · ' + (cfgText() || '—') + '</div>' + diagHtml(false);
-    } else if (l.type === 'qn') {
-        const q = QS[S.qi]; const mlv = S.q[2], msv = S.q[3];
-        el.innerHTML = '<div class="cfg">ইলেকট্রন ' + bn(S.qi + 1) + ' / ' + bn(QS.length) + ' — ' + q.sub + ' উপস্তরের ' + bn(q.k + 1) + 'ম বাক্স, spin ' + (q.up ? '↑' : '↓') + '</div>' + diagHtml(true, q) +
-            '<div class="q4">' + [['n', S.q[0]], ['l', S.q[1]], ['mₗ', (mlv > 0 ? '+' : '') + mlv], ['mₛ', msv > 0 ? '+½' : '−½']].map((p, i) => '<div class="stp"><small>' + p[0] + '</small><b>' + p[1] + '</b><button class="btn" data-q="' + i + ':-1" aria-label="কমাও">−</button> <button class="btn" data-q="' + i + ':1" aria-label="বাড়াও">+</button></div>').join('') + '</div>';
-    } else {
-        const pool = S.order.filter(k => !(k in S.binAssign));
-        el.innerHTML = '<div class="bins">' + [['ok', '✅ সম্ভব'], ['no', '🚫 অসম্ভব']].map(b => '<div class="bin' + (S.sel != null ? ' target' : '') + '" data-bin="' + b[0] + '" role="button" tabindex="0"><h3>' + b[1] + '</h3>' + SETS.map((s, i) => S.binAssign[i] === b[0] ? '<span class="qs placed">' + fmtQ(s.q) + '</span>' : '').join('') + '</div>').join('') + '</div>' +
-            '<p style="margin:6px 0;font-weight:800;font-size:13px">(n, l, mₗ, mₛ) সেট বাছো, তারপর ঘরে ট্যাপ করো:</p><div>' + (pool.length ? pool.map(k => '<button class="qs' + (S.sel === k ? ' sel' : '') + '" data-set="' + k + '">' + fmtQ(SETS[k].q) + '</button>').join('') : '<b>সব সাজানো শেষ! 🎉</b>') + '</div>';
-    }
-    updateHud();
-}
-function start(i) {
-    S.lv = i; S.hints = 2; S.miss = 0; S.done = false; S.round = 0; S.placed = []; S.sel = null; S.binAssign = {}; S.qi = 0;
-    const l = L();
-    if (l.type === 'order') S.order = shuffle(ORDER.concat(['1p', '2d']));
-    if (l.type === 'fill') startRound();
-    if (l.type === 'qn') S.q = [1, 0, 0, 0.5];
-    if (l.type === 'sort') S.order = shuffle(SETS.map((_, k) => k));
-    renderTabs(); $('#job').innerHTML = '<span class="sticker">লেভেল ' + bn(i + 1) + ' / ' + bn(LEVELS.length) + '</span><h2>' + l.icon + ' ' + l.name + ' — ' + l.sub + '</h2><p>' + l.intro + '</p>'; msg(''); renderPlay();
-}
-function miss(el, t) { S.miss++; sfx.bad(); if (el) { el.classList.add('shake'); setTimeout(() => el.classList.remove('shake'), 400); } msg(t, 'bad'); updateHud(); }
-function finish() {
-    S.done = true; sfx.win(); const l = L(); const score = S.miss + 2 * (2 - S.hints); const st = score <= 2 ? 3 : score <= 5 ? 2 : 1;
-    if (!stars[S.lv] || st > stars[S.lv]) { stars[S.lv] = st; lsSet('quantum-stars', JSON.stringify(stars)); }
-    renderTabs(); updateHud(); const last = S.lv === LEVELS.length - 1;
-    $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + l.icon + ' ' + l.name + ' — সম্পূর্ণ!</h2><p>ভুল: <b>' + bn(S.miss) + '</b> · ইঙ্গিত: <b>' + bn(2 - S.hints) + '</b></p><div class="learn">🧠 ' + l.learn + '</div><div class="row">' +
-        (last ? '' : '<button class="btn primary big" data-act="next">পরের লেভেল ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
-    $('#modal').hidden = false;
-}
-function placeSub(s, el) {
-    if (S.done) return;
-    if (!ORDER.includes(s)) { miss(el, '❌ ' + s + ' নামে কোনো উপস্তর নেই! ' + (s === '1p' ? 'n=১ এ শুধু s আছে (l ≤ n−1)।' : 'n=২ এ শুধু s ও p আছে; d শুরু n=৩ থেকে।')); return; }
-    const next = ORDER[S.placed.length];
-    if (s !== next) { miss(el, '❌ ' + s + ' (n+l = ' + (nOf(s) + lOf(s)) + ') এখন নয় — আরও কম শক্তির উপস্তর বাকি আছে।'); return; }
-    S.placed.push(s); sfx.ok(); msg('✔ ' + s + ': n+l = ' + (nOf(s) + lOf(s)), 'good'); renderPlay();
-    if (S.placed.length === ORDER.length) setTimeout(finish, 400);
-}
-function tapBox(key, el) {
-    const l = L(); if (S.done || l.type !== 'fill') return; const [s, ks] = key.split(':'), k = +ks; const b = S.boxes[s];
-    const cs = curSub();
-    if (b[k] >= 2) { miss(el, '❌ Pauli: একটি অরবিটালে সর্বোচ্চ ২টি ইলেকট্রন।'); return; }
-    if (s !== cs) { miss(el, '❌ Aufbau: আগে ' + cs + ' পূরণ করতে হবে (' + s + ' এর শক্তি বেশি বা আগেই পূর্ণ)।'); return; }
-    if (b[k] === 1 && b.some(v => v === 0)) { miss(el, '❌ Hund: ' + s + ' এর খালি বাক্সগুলোয় আগে একটি করে ইলেকট্রন দাও।'); return; }
-    b[k]++; sfx.tap(); msg('', ''); renderPlay();
-    if (placedCount() === elZ()) {
-        sfx.ok(); const e = ELS[l.els[S.round]]; const unp = ORDER.reduce((a, s2) => a + S.boxes[s2].filter(v => v === 1).length, 0);
-        msg('✔ ' + e.n + ': ' + cfgText() + ' — অযুগ্ম ইলেকট্রন ' + bn(unp) + 'টি', 'good');
-        if (S.round === l.els.length - 1) { setTimeout(finish, 700); } else { setTimeout(() => { S.round++; startRound(); renderPlay(); }, 1200); }
-    }
-}
-const QDESC = ['n', 'l', 'mₗ', 'mₛ'];
-function stepQ(i, d) {
-    if (S.done) return; const q = S.q;
-    if (i === 3) q[3] = q[3] > 0 ? -0.5 : 0.5; else q[i] += d;
-    q[0] = Math.max(0, Math.min(7, q[0])); q[1] = Math.max(0, Math.min(5, q[1])); q[2] = Math.max(-5, Math.min(5, q[2])); sfx.tap(); renderPlay();
-}
-function checkQ() {
-    if (S.done) return; const t = QS[S.qi], n = nOf(t.sub), l2 = lOf(t.sub), ml = -l2 + t.k, ms = t.up ? 0.5 : -0.5; const q = S.q;
-    if (q[0] !== n) { miss($('#btnGo'), '❌ n ঠিক নয়: ' + t.sub + ' এর প্রথম অংক = n।'); return; }
-    if (q[1] !== l2) { miss($('#btnGo'), '❌ l ঠিক নয়: s=০, p=১, d=২।'); return; }
-    if (q[2] !== ml) { miss($('#btnGo'), '❌ mₗ ঠিক নয়: ' + bn(t.k + 1) + 'ম বাক্স = −l + ' + bn(t.k) + ' (বাক্সগুলো −l থেকে +l ক্রমে)।'); return; }
-    if (q[3] !== ms) { miss($('#btnGo'), '❌ mₛ ঠিক নয়: ↑ = +½, ↓ = −½।'); return; }
-    sfx.ok(); msg('✔ (' + n + ', ' + l2 + ', ' + (ml > 0 ? '+' : '') + ml + ', ' + (ms > 0 ? '+½' : '−½') + ') — নিখুঁত!', 'good');
-    S.qi++; S.q = [1, 0, 0, 0.5]; if (S.qi >= QS.length) { updateHud(); setTimeout(finish, 600); return; } renderPlay();
-}
-function placeSet(bin, el) {
-    if (S.done) return; if (S.sel == null) return; const s = SETS[S.sel];
-    if ((bin === 'ok') !== s.ok) { miss(document.querySelector('[data-set="' + S.sel + '"]'), '❌ ' + fmtQ(s.q) + ' — ' + (s.ok ? 'এটি আসলে বৈধ!' : 'এটি বৈধ নয়: ' + s.why)); return; }
-    S.binAssign[S.sel] = bin; msg('✔ ' + s.why, 'good'); S.sel = null; sfx.ok(); renderPlay();
-    if (Object.keys(S.binAssign).length === SETS.length) setTimeout(finish, 500);
-}
-function hint() {
-    if (S.hints <= 0 || S.done) return; const l = L(); S.hints--; sfx.pop();
-    if (l.type === 'order') { const s = ORDER[S.placed.length]; renderPlay(); const el = document.querySelector('[data-sub="' + s + '"]'); if (el) el.classList.add('hint'); msg('💡 হাইলাইট করা কার্ডটাই পরের ধাপ।', 'good'); }
-    else if (l.type === 'fill') { const nb = nextBox(); renderPlay(); const el = document.querySelector('[data-box="' + nb.s + ':' + nb.k + '"]'); if (el) el.classList.add('hint'); msg('💡 পরের ইলেকট্রন ' + nb.s + ' উপস্তরে যাবে।', 'good'); }
-    else if (l.type === 'qn') { const t = QS[S.qi]; msg('💡 ' + t.sub + ': n=' + nOf(t.sub) + ', l=' + lOf(t.sub) + '। mₗ = −l ' + (t.k ? '+ ' + t.k : '') + '।', 'good'); }
-    else { const k = S.sel != null ? S.sel : S.order.find(x => !(x in S.binAssign)); S.sel = k; renderPlay(); msg('💡 ' + fmtQ(SETS[k].q) + ' → ' + (SETS[k].ok ? 'সম্ভব' : 'অসম্ভব'), 'good'); }
-    updateHud();
-}
-document.addEventListener('click', e => {
-    const t = e.target.closest('[data-lv],[data-sub],[data-box],[data-q],[data-set],[data-bin],[data-act],#btnHint,#btnReset,#btnGo,#btnRules'); if (!t) return;
-    if (t.dataset.lv != null) { sfx.tap(); start(+t.dataset.lv); return; }
-    if (t.dataset.sub != null) { placeSub(t.dataset.sub, t); return; }
-    if (t.dataset.box != null) { tapBox(t.dataset.box, t); return; }
-    if (t.dataset.q != null) { const [i, d] = t.dataset.q.split(':'); stepQ(+i, +d); return; }
-    if (t.dataset.set != null) { S.sel = S.sel === +t.dataset.set ? null : +t.dataset.set; sfx.tap(); renderPlay(); return; }
-    if (t.dataset.bin != null) { if (S.sel == null) { msg('আগে একটি সেট বাছো', ''); return; } placeSet(t.dataset.bin, t); return; }
-    if (t.id === 'btnGo') { checkQ(); return; }
-    if (t.id === 'btnHint') { hint(); return; }
-    if (t.id === 'btnReset') { sfx.tap(); start(S.lv); return; }
-    if (t.id === 'btnRules') { $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul><li><b>Aufbau:</b> কম শক্তির উপস্তর আগে।</li><li><b>Hund:</b> সমশক্তির বাক্সে আগে একটি করে।</li><li><b>Pauli:</b> এক বাক্সে সর্বোচ্চ ২ ইলেকট্রন, উল্টো spin।</li><li>ভুল বসালে কারণ শিখবে; কম ভুল ও কম ইঙ্গিতে বেশি তারা।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>'; $('#modal').hidden = false; return; }
-    if (t.dataset.act === 'close') { $('#modal').hidden = true; return; }
-    if (t.dataset.act === 'again') { $('#modal').hidden = true; start(S.lv); return; }
-    if (t.dataset.act === 'next') { $('#modal').hidden = true; start(Math.min(S.lv + 1, LEVELS.length - 1)); return; }
-});
-window.__t = { S, LEVELS, ORDER, QS, SETS, start, placeSub, tapBox, stepQ, checkQ, placeSet, nextBox, curSub };
-start(0);
-})();
+        const SYM = [null].concat('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U'.split(' '));
+        const NAME = { 1: 'Hydrogen', 5: 'Boron', 6: 'Carbon', 7: 'Nitrogen', 8: 'Oxygen', 11: 'Sodium', 12: 'Magnesium', 17: 'Chlorine', 18: 'Argon', 19: 'Potassium', 20: 'Calcium', 53: 'Iodine', 54: 'Xenon', 92: 'Uranium' };
+        const nu = (Z, A) => '<span class="nu"><span class="ss"><i>' + A + '</i><i>' + Z + '</i></span><span>' + SYM[Z] + '</span></span>';
+        const ZMAX = 92, NMAX = 150;
+
+        /* ধাপ (দ্বীপ) ও রাউন্ড */
+        const STAGES = [
+            { kind: 'build', name: 'নিউক্লাইড গড়ো', sub: 'প্রোটন + নিউট্রন', icon: '🏖️',
+              intro: 'নিউক্লিয়াসে প্রোটন (Z) আর নিউট্রন (N) বসিয়ে লক্ষ্য নিউক্লাইড গড়ো। প্রোটন সংখ্যা Z ঠিক করে কোন মৌল; ভরসংখ্যা A = Z + N।',
+              rules: ['+/− বাটন দিয়ে প্রোটন ও নিউট্রন বাড়াও-কমাও; মৌলের প্রতীক নিজে বদলাবে।', 'লক্ষ্য মিললে <b>জমা দাও</b> চাপো; না মিললে একটি ভুল গোনা হবে।'],
+              learn: 'মৌলের পরিচয় ঠিক করে প্রোটন সংখ্যা (Z)। A = Z + N। H-3-এ N = ২, C-14-এ N = ৮, Cl-37-এ N = ২০।',
+              rounds: [
+                { ask: 'ট্রিটিয়াম (হাইড্রোজেনের তেজস্ক্রিয় আইসোটোপ, H-3) গড়ো।', tZ: 1, tA: 3, start: [1, 0], hint: 'হাইড্রোজেনের Z = ১। ভরসংখ্যা ৩ হলে নিউট্রন = ৩ − ১ = ২।',
+                  fact: 'ট্রিটিয়ামে ১ প্রোটন + ২ নিউট্রন। হাইড্রোজেনের তিন আইসোটোপ: প্রোটিয়াম (নিউট্রন ০), ডিউটেরিয়াম (নিউট্রন ১, ভারী পানি D₂O-তে) ও তেজস্ক্রিয় ট্রিটিয়াম (নিউট্রন ২)।' },
+                { ask: 'কার্বন-১৪ (C-14) গড়ো — প্রাচীন কাঠ ও জীবাশ্মের বয়স মাপার আইসোটোপ।', tZ: 6, tA: 14, start: [1, 0], hint: 'বাঁ পাশের প্রতীকে C খোঁজো (Z = ৬)। নিউট্রন = ১৪ − ৬ = ৮।',
+                  fact: 'C-12 ও C-14 এর প্রোটন সমান (৬), শুধু নিউট্রন আলাদা (৬ বনাম ৮) — এরাই আইসোটোপ।' },
+                { ask: 'ক্লোরিন-৩৭ (Cl-37) গড়ো।', tZ: 17, tA: 37, start: [1, 0], hint: 'Cl-এর প্রোটন সংখ্যা ১৭। নিউট্রন = ৩৭ − ১৭ = ২০।',
+                  fact: 'Cl-35 (নিউট্রন ১৮) আর Cl-37 (নিউট্রন ২০) প্রকৃতিতে প্রায় ৩ : ১ অনুপাতে মেশানো — তাই ক্লোরিনের গড় পারমাণবিক ভর ৩৫.৫।' }] },
+            { kind: 'build', name: 'সম্পর্ক গড়ো', sub: 'আইসোবার · আইসোটোন', icon: '🌴',
+              intro: 'রেফারেন্স নিউক্লাইড থেকে শুরু। আইসোটোপে Z সমান, আইসোবারে A সমান, আইসোটোনে N সমান — সম্পর্ক মেনে নতুন নিউক্লাইড গড়ো।',
+              rules: ['শুরুর অবস্থা রেফারেন্স নিউক্লাইড — তা থেকে প্রোটন/নিউট্রন বদলাও।', 'কোন রাশি অপরিবর্তিত রাখতে হবে তা সম্পর্কের নামেই আছে।'],
+              learn: 'আইসোটোপ: Z সমান। আইসোবার: A সমান। আইসোটোন: N সমান। Ar-40 ও Ca-40 আইসোবার; C-14 ও N-15 আইসোটোন; U-235 ও U-238 আইসোটোপ।',
+              rounds: [
+                { ask: 'Ar-40 এর একটি আইসোবার গড়ো, যার প্রোটন সংখ্যা ২০।', ref: [18, 40], tZ: 20, tA: 40, hint: 'আইসোবারে A সমান (৪০) থাকে। Z ২ বাড়লে N ২ কমাতে হবে।',
+                  fact: 'Ar-40 ও Ca-40 আইসোবার: A সমান (৪০), Z ভিন্ন (১৮ বনাম ২০) তাই মৌল আলাদা। K-40 ক্ষয়ে Ca-40 ও Ar-40 দুটোই তৈরি করে।' },
+                { ask: 'C-14 এর একটি আইসোটোন গড়ো (নিউট্রন সংখ্যা সমান), যার প্রোটন সংখ্যা ৭।', ref: [6, 14], tZ: 7, tA: 15, hint: 'আইসোটোনে N সমান (৮)। Z = ৭ হলে A = ৭ + ৮।',
+                  fact: 'C-14 (N = ৮) ও N-15 (N = ৮) আইসোটোন; এদের Z ও A দুটোই আলাদা।' },
+                { ask: 'U-235 এর একটি আইসোটোপ গড়ো, যার নিউট্রন সংখ্যা ১৪৬।', ref: [92, 235], tZ: 92, tA: 238, hint: 'আইসোটোপে Z সমান (৯২)। A = ৯২ + ১৪৬।',
+                  fact: 'U-235 (নিউট্রন ১৪৩) পারমাণবিক চুল্লির জ্বালানি; U-238 (নিউট্রন ১৪৬) এর আইসোটোপ। ইউরেনিয়াম সমৃদ্ধকরণে U-235 এর অনুপাত বাড়ানো হয়।' }] },
+            { kind: 'sort', name: 'পরিবার বাছাই ১', sub: '¹⁴C এর আত্মীয়', icon: '🧺',
+              intro: 'রেফারেন্স ¹⁴C-এর সঙ্গে প্রতিটি কার্ডের সম্পর্ক বের করে সঠিক ঝুড়িতে রাখো। কার্ডে শুধু A আর Z দেওয়া — N নিজে বের করো (N = A − Z)।',
+              rules: ['কার্ড ট্যাপ (বা টেনে) এনে ঝুড়িতে ফেলো।', 'ভুল ঝুড়ি হলে কারণ দেখাবে ও ভুল গোনা হবে।'],
+              learn: 'তিন সম্পর্কের একটাই রাশি সমান থাকে: Z (আইসোটোপ), A (আইসোবার), N (আইসোটোন)। ¹²C, ¹³C আইসোটোপ; ¹⁴N আইসোবার; ¹⁵N, ¹⁶O আইসোটোন।',
+              rounds: [{ ask: 'সবগুলো কার্ড ¹⁴C-এর সম্পর্ক অনুযায়ী সাজাও।', ref: [6, 14], cards: [[6, 12], [7, 14], [8, 16], [7, 15], [6, 13], [7, 13], [8, 17]], hint: null,
+                  fact: 'C-14 ক্ষয়ে (β⁻) N-14 হয় — আইসোবার! ভরসংখ্যা একই থাকে, শুধু একটি নিউট্রন প্রোটনে বদলায়।' }] },
+            { kind: 'sort', name: 'পরিবার বাছাই ২', sub: '⁴⁰Ar এর আত্মীয়', icon: '⛵',
+              intro: 'এবার রেফারেন্স ⁴⁰Ar। আটটি কার্ড সাজাও — কোনোটার সঙ্গে কোনো মিল না থাকলে “কোনোটিই নয়” ঝুড়িতে।',
+              rules: ['কার্ড ট্যাপ (বা টেনে) এনে ঝুড়িতে ফেলো।', 'N = A − Z; তিনটি রাশির কোনোটি রেফারেন্সের সমান কি না দেখো।'],
+              learn: '³⁶Ar, ³⁸Ar আইসোটোপ; ⁴⁰Ca, ⁴⁰K আইসোবার; ⁴¹K, ⁴²Ca আইসোটোন (N = ২২); ³⁹K ও ³⁵Cl কোনোটিই নয়।',
+              rounds: [{ ask: 'সবগুলো কার্ড ⁴⁰Ar-এর সম্পর্ক অনুযায়ী সাজাও।', ref: [18, 40], cards: [[19, 39], [20, 40], [18, 36], [19, 41], [17, 35], [19, 40], [20, 42], [18, 38]], hint: null,
+                  fact: 'K-40 তেজস্ক্রিয়; এর ক্ষয়ে Ar-40 ও Ca-40 তৈরি হয় — আইসোবার সম্পর্কের বাস্তব উদাহরণ।' }] },
+            { kind: 'decay', name: 'অর্ধায়ুর ঘড়ি', sub: 'Na · I · C এর ক্ষয়', icon: '⏳',
+              intro: '৬৪টি তেজস্ক্রিয় পরমাণুর নমুনা। প্রতি অপেক্ষায় ঠিক এক অর্ধায়ু পার হয় — প্রতিবার অর্ধেক পরমাণু ক্ষয়ে যায়। ঠিক লক্ষ্য পরিমাণে থামাও!',
+              rules: ['<b>এক অর্ধায়ু অপেক্ষা</b> চাপলে অর্ধেক পরমাণু ক্ষয়ে নতুন মৌলে বদলায়।', 'লক্ষ্যে পৌঁছে <b>এখন মাপো</b> চাপো। লক্ষ্য পেরিয়ে গেলে ভুল গোনা হবে, ঘড়ি আবার শুরু।'],
+              learn: 'n অর্ধায়ু পরে অবশিষ্ট = শুরুর ÷ ২ⁿ। Na-24: ১৫ ঘণ্টা, I-131: ≈ ৮ দিন, C-14: ৫৭৩০ বছর। অর্ধায়ু পরমাণু-প্রকৃতির নিজস্ব ধ্রুবক।',
+              rounds: [
+                { iso: 'Na-24', Z: 11, A: 24, dZ: 12, hl: 15, unit: 'ঘণ্টা', start: 64, target: 16, ask: 'Na-24 (অর্ধায়ু ১৫ ঘণ্টা) এর নমুনা থেকে মাত্র ১৬টি পরমাণু অবশিষ্ট থাকতে কত সময় লাগবে? সময় এগিয়ে থামো।', hint: '৬৪ → ৩২ → ১৬। কয় অর্ধায়ু লাগল গুনে নাও।',
+                  fact: 'Na-24 রক্তপ্রবাহ ও রক্তনালীর ব্লকেজ নির্ণয়ে ট্রেসার হিসেবে ব্যবহৃত হয়। এটি ক্ষয়ে Mg-24 হয়।' },
+                { iso: 'I-131', Z: 53, A: 131, dZ: 54, hl: 8, unit: 'দিন', start: 64, target: 4, ask: 'I-131 (অর্ধায়ু ≈ ৮ দিন) — ৬৪টি থেকে ৪টিতে নামতে কত দিন?', hint: '৪ = ৬৪ ÷ ১৬ = ৬৪ ÷ ২⁴, অর্থাৎ চার অর্ধায়ু।',
+                  fact: 'I-131 থাইরয়েড (গলগণ্ড) রোগ নির্ণয় ও চিকিৎসায় লাগে — থাইরয়েড আয়োডিন শোষে। এটি ক্ষয়ে Xe-131 হয়।' },
+                { iso: 'C-14', Z: 6, A: 14, dZ: 7, hl: 5730, unit: 'বছর', start: 64, target: 8, ask: 'একটি প্রাচীন কাঠে জীবিত গাছের তুলনায় C-14 আছে মাত্র ১/৮ (৮টি)। কাঠটি কত বছর পুরোনো? ঘড়ি চালিয়ে বের করো।', hint: '১/৮ = (১/২)³ — তিন অর্ধায়ু।',
+                  fact: 'C-14 ক্ষয়ে N-14 হয়। বায়ুমণ্ডলে নাইট্রোজেন-১৪ + নিউট্রন → C-14 তৈরি হয়; জীবিত গাছ তা নেয়, মরলে নেওয়া বন্ধ — তাই অবশিষ্ট C-14 দিয়ে বয়স মাপা যায়।' }] },
+            { kind: 'mix', name: 'গড় ভরের মিক্সার', sub: 'Cl · B · Mg', icon: '🎚️',
+              intro: 'ভর স্পেকট্রোমিটারের পিক-উচ্চতা স্লাইডারে ঠিক করো। আইসোটোপগুলোর প্রাচুর্যের ওজনযুক্ত গড়ই মৌলের পারমাণবিক ভর — লক্ষ্য গড় মেলাও।',
+              rules: ['স্লাইডার নাড়ালে আইসোটোপের শতকরা অনুপাত ও গড় ভর সঙ্গে সঙ্গে বদলায়।', 'গড় লক্ষ্যের ±০.০৫ এর মধ্যে এলে <b>জমা দাও</b> চাপো।'],
+              learn: 'গড় ভর = Σ (ভরসংখ্যা × প্রাচুর্য%) ÷ ১০০। গড় সবসময় বেশি প্রাচুর্যের আইসোটোপের দিকে ঝোঁকে — তাই Cl = ৩৫.৫ (৩ : ১ অনুপাত), ভগ্নাংশ হয় আইসোটোপের মিশ্রণের কারণে।',
+              rounds: [
+                { el: 'ক্লোরিন', sym: 'Cl', Z: 17, iso: [35, 37], target: 35.5, ask: 'ক্লোরিনের গড় ভর ৩৫.৫ হতে হবে।', hint: '৩৫.৫ হলো ৩৫ আর ৩৭ এর মাঝখানের (৩৬) চেয়ে ৩৫-এর কাছে — তাই Cl-35 বেশি। অনুপাত ৩ : ১।',
+                  fact: 'প্রকৃতিতে Cl-35 ≈ ৭৫% আর Cl-37 ≈ ২৫% — তাই গড় ৩৫.৫। কোনো একটি ক্লোরিন পরমাণুর ভর ৩৫.৫ নয়!' },
+                { el: 'বোরন', sym: 'B', Z: 5, iso: [10, 11], target: 10.8, ask: 'বোরনের গড় ভর ১০.৮ হতে হবে।', hint: '১০.৮ এর অবস্থান ১১-এর কাছে, তাই B-11 প্রায় ৮০%, B-10 প্রায় ২০%।',
+                  fact: 'B-11 প্রায় ৮০% ও B-10 প্রায় ২০% পাওয়া যায়। (সরল হিসাবে ভরসংখ্যা ধরা হয়েছে।)' },
+                { el: 'ম্যাগনেসিয়াম', sym: 'Mg', Z: 12, iso: [24, 25, 26], target: 24.3, ask: 'Mg এর তিন আইসোটোপ মিলিয়ে গড় ভর ২৪.৩ করো।', hint: '২৪.৩ ২৪-এর খুব কাছে: Mg-24 অনেক বেশি (≈ ৭৯%), Mg-25 ও Mg-26 প্রায় ১০–১১% করে।',
+                  fact: 'Mg-24 (≈ ৭৯%), Mg-25 (≈ ১০%), Mg-26 (≈ ১১%) — মিশ্রণের গড় ২৪.৩। ভর স্পেকট্রোমিটার এভাবেই আইসোটোপের ভর ও আপেক্ষিক প্রাচুর্য মাপে।' }] }
+        ];
+        const MAXHINT = 3;
+        const S = { si: 0, ri: 0, miss: 0, hints: MAXHINT, solved: false, st: {} };
+        let stars = {}; try { stars = JSON.parse(lsGet('isle-stars') || '{}') || {}; } catch (e) { stars = {}; }
+        const unlocked = i => i === 0 || stars[i - 1] > 0;
+        const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
+        const ST = () => STAGES[S.si], RD = () => ST().rounds[S.ri];
+        const nOf = c => c[1] - c[0];
+        const relOf = (ref, c) => c[0] === ref[0] && c[1] !== ref[1] ? 'isotope' : c[1] === ref[1] && c[0] !== ref[0] ? 'isobar' : (nOf(c) === nOf(ref) && c[0] !== ref[0]) ? 'isotone' : 'none';
+        const BINS = [['isotope', 'আইসোটোপ', 'Z সমান', 'প্রোটন সংখ্যা Z'], ['isobar', 'আইসোবার', 'A সমান', 'ভরসংখ্যা A'], ['isotone', 'আইসোটোন', 'N সমান', 'নিউট্রন সংখ্যা N'], ['none', 'কোনোটিই নয়', 'কিছুই মেলে না', '']];
+
+        function say(html, cls) { const s = $('#shift'); s.className = 'shift' + (cls ? ' ' + cls : ''); s.innerHTML = html; }
+        function startStage(i) { S.si = i; S.ri = 0; S.miss = 0; S.hints = MAXHINT; startRound(); renderTabs(); }
+        function startRound() {
+            S.solved = false; const R = RD(), k = ST().kind;
+            if (k === 'build') S.st = { Z: (R.ref || R.start)[0], N: R.ref ? R.ref[1] - R.ref[0] : R.start[1] };
+            else if (k === 'sort') S.st = { sel: null, placed: R.cards.map(() => null), hintShown: 0 };
+            else if (k === 'decay') S.st = { alive: Array(R.start).fill(true), steps: 0 };
+            else S.st = { v: R.iso.map(() => 50) };
+            renderAll();
+            say(k === 'build' ? 'প্রোটন ও নিউট্রন বদলিয়ে নিউক্লিয়াস গড়ো। 👀' : k === 'sort' ? 'একটি কার্ড ট্যাপ করো, তারপর ঝুড়ি বেছে নাও।' : k === 'decay' ? 'ঘড়ি চালাও — প্রতি ধাপে অর্ধেক পরমাণু ক্ষয়ে যাবে।' : 'স্লাইডার নাড়াও, গড় ভর লক্ষ্যে আনো।');
+        }
+        function renderTabs() {
+            $('#lv').innerHTML = STAGES.map((L, i) => '<button class="lvb' + (i === S.si ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? L.icon : '🔒') + ' ' + L.name + '</b><small>' + L.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join('');
+        }
+        function renderAll() { renderTabs(); renderJob(); renderArena(); renderHud(); }
+        function renderHud() {
+            const k = ST().kind, n = ST().rounds.length;
+            $('#sMiss').textContent = bn(S.miss); $('#sHint').textContent = bn(S.hints);
+            let prog = bn(S.ri + 1) + '/' + bn(n);
+            if (k === 'sort') { const pl = S.st.placed.filter(x => x).length; prog = bn(pl) + '/' + bn(S.st.placed.length) + ' কার্ড'; }
+            $('#sRound').textContent = prog;
+            const last = S.ri === n - 1;
+            const B = $('#btnDone');
+            if (S.solved) { B.textContent = last ? '🏁 শেষ করো' : 'পরের ধাপ ▶'; B.disabled = false; }
+            else { B.textContent = k === 'build' ? '✅ নিউক্লিয়াস জমা দাও' : k === 'decay' ? '📸 এখন মাপো' : k === 'mix' ? '🧪 নমুনা জমা দাও' : '🧺 সবগুলো সাজাও'; B.disabled = k === 'sort'; }
+            $('#btnHint').disabled = S.hints <= 0 || S.solved;
+        }
+        function renderJob() {
+            const L = ST(), R = RD();
+            $('#job').innerHTML = '<span class="sticker">দ্বীপ ' + bn(S.si + 1) + ' / ' + bn(STAGES.length) + '</span><h2>' + L.icon + ' ' + L.name + ' — ' + L.sub + '</h2><p>' + L.intro + '</p><div class="ask">🎯 ' + R.ask + '</div>';
+        }
+
+        /* ---- আরেনা ---- */
+        function renderArena() {
+            const k = ST().kind, A = $('#arena');
+            if (k === 'build') A.innerHTML = buildHTML();
+            else if (k === 'sort') A.innerHTML = sortHTML();
+            else if (k === 'decay') A.innerHTML = decayHTML();
+            else { A.innerHTML = mixHTML(); updateMix(); }
+        }
+        const ctl = (w, label, v, lim) => '<div class="ctl"><label><span>' + label + '</span><output>' + bn(v) + '</output></label><div class="row">' +
+            [[-10, '−১০'], [-1, '−১'], [1, '+১'], [10, '+১০']].map(d => '<button class="btn" data-adj="' + w + '" data-d="' + d[0] + '"' + ((d[0] < 0 && v + d[0] < lim[0]) || (d[0] > 0 && v + d[0] > lim[1]) || S.solved ? ' disabled' : '') + '>' + d[1] + '</button>').join('') + '</div></div>';
+        function buildHTML() {
+            const R = RD(), { Z, N } = S.st, A = Z + N;
+            const dots = '<span class="dot"></span>'.repeat(Z) + '<span class="dot n"></span>'.repeat(N);
+            return (R.ref ? '<div class="box refbox"><span class="t">রেফারেন্স:</span>' + nu(R.ref[0], R.ref[1]) + '<span class="t">Z = ' + bn(R.ref[0]) + ', N = ' + bn(R.ref[1] - R.ref[0]) + ', A = ' + bn(R.ref[1]) + '</span></div>' : '') +
+                '<div class="nuc"><div class="box vis"><div class="dots" aria-hidden="true">' + dots + '</div><div class="legend"><span><b style="background:var(--a2)"></b>প্রোটন</span><span><b style="background:#fff"></b>নিউট্রন</span></div></div>' +
+                '<div class="box read"><div class="sym">' + nu(Z, A) + '</div><div class="vals"><span>মৌল: <em>' + SYM[Z] + '</em> <small>' + (NAME[Z] || '') + '</small></span><span>Z (প্রোটন) = <em>' + bn(Z) + '</em></span><span>N (নিউট্রন) = <em>' + bn(N) + '</em></span><span>A = Z + N = <em>' + bn(A) + '</em></span><small>নিরপেক্ষ পরমাণুতে ইলেকট্রন = ' + bn(Z) + '</small></div></div>' +
+                '<div class="ctls">' + ctl('Z', '🔴 প্রোটন (Z)', Z, [1, ZMAX]) + ctl('N', '⚪ নিউট্রন (N)', N, [0, NMAX]) + '</div></div>';
+        }
+        function sortHTML() {
+            const R = RD(), ref = R.ref, pl = S.st.placed;
+            const pool = R.cards.map((c, i) => pl[i] ? '' : '<button class="card' + (S.st.sel === i ? ' sel' : '') + '" draggable="true" data-card="' + i + '" aria-pressed="' + (S.st.sel === i) + '" aria-label="কার্ড ' + SYM[c[0]] + ' ভরসংখ্যা ' + c[1] + ' প্রোটন ' + c[0] + '">' + nu(c[0], c[1]) + '</button>').join('');
+            return '<div class="box refbox"><span class="t">রেফারেন্স:</span>' + nu(ref[0], ref[1]) + '<span class="t">Z = ' + bn(ref[0]) + ', A = ' + bn(ref[1]) + ', N = ' + bn(ref[1] - ref[0]) + '</span></div>' +
+                '<div class="pool" id="pool">' + (pool || '<span class="none">সব কার্ড সাজানো হয়ে গেছে 🎉</span>') + '</div>' +
+                '<div class="bins">' + BINS.map(b => '<button class="bin" data-bin="' + b[0] + '"><b>' + b[1] + '</b><small>' + b[2] + '</small><span class="chips">' + R.cards.map((c, i) => pl[i] === b[0] ? '<span class="chip">' + nu(c[0], c[1]) + '</span>' : '').join('') + '</span></button>').join('') + '</div>';
+        }
+        const unitTxt = (R, steps) => bn(R.hl * steps) + ' ' + R.unit;
+        function decayHTML() {
+            const R = RD(), alive = S.st.alive.filter(x => x).length, pct = alive / R.start * 100, st = S.st.steps, hit = alive === R.target;
+            return '<div class="dc"><div class="atoms" aria-hidden="true">' + S.st.alive.map((a, i) => '<span class="atom' + (a ? '' : ' gone') + (S.st.fresh && S.st.fresh.has(i) ? ' fresh' : '') + '"></span>').join('') + '</div>' +
+                '<div class="dcinfo"><div class="box"><div>⚛️ নমুনা: ' + nu(R.Z, R.A) + ' <small>(' + R.iso + ')</small> &nbsp;→&nbsp; ' + nu(R.dZ, R.A) + ' <small>(β⁻ ক্ষয়)</small></div>' +
+                '<div class="legend" style="margin-top:6px"><span><b style="background:var(--a1)"></b>অবশিষ্ট ' + R.iso + '</span><span><b style="background:var(--a3)"></b>ক্ষয়ে তৈরি ' + SYM[R.dZ] + '-' + R.A + '</span></div>' +
+                '<div class="big-n" style="margin-top:8px">' + bn(alive) + ' / ' + bn(R.start) + ' <small style="font-size:14px">(' + f1(pct) + '%)</small></div>' +
+                '<div style="font-weight:700;font-size:13.5px">⏱️ পার হয়েছে: ' + bn(st) + ' অর্ধায়ু = ' + unitTxt(R, st) + '</div></div>' +
+                '<div class="tgt' + (hit ? ' ok' : '') + '">🎯 লক্ষ্য: <em>' + bn(R.target) + 'টি অবশিষ্ট</em> ' + (hit ? '✔' : '') + '</div>' +
+                '<button class="btn alt big" id="btnWait"' + (alive <= 1 || S.solved ? ' disabled' : '') + '>⏳ এক অর্ধায়ু (' + bn(R.hl) + ' ' + R.unit + ') অপেক্ষা</button></div></div>';
+        }
+        function mixCalc() {
+            const R = RD(), v = S.st.v, sum = v.reduce((a, b) => a + b, 0);
+            if (!sum) return { sum, pct: v.map(() => 0), avg: null };
+            const pct = v.map(x => x / sum * 100);
+            return { sum, pct, avg: R.iso.reduce((a, m, i) => a + m * pct[i], 0) / 100 };
+        }
+        function mixHTML() {
+            const R = RD();
+            return '<div class="box"><b>' + R.el + ' (' + R.sym + ')</b> — লক্ষ্য গড় ভর: <b style="color:var(--a2)">' + f1(R.target) + '</b> &nbsp;|&nbsp; এখন: <b id="mAvg"></b>' +
+                '<div class="gauge" id="gauge"><i class="t" id="gT"><span>লক্ষ্য</span></i><i class="c" id="gC"><span>এখন</span></i></div></div>' +
+                '<div class="peaks" id="peaks"></div>' +
+                '<div class="sl">' + R.iso.map((m, i) => '<div class="ctl"><label for="pk' + i + '"><span>' + nu(R.Z, m) + ' পিক</span><output id="po' + i + '"></output></label><input type="range" id="pk' + i + '" data-pk="' + i + '" min="0" max="100" step="1" value="' + S.st.v[i] + '"' + (S.solved ? ' disabled' : '') + '></div>').join('') + '</div>' +
+                '<div class="eqn" id="mEq"></div>';
+        }
+        function updateMix() {
+            const R = RD(), c = mixCalc(), lo = R.iso[0], hi = R.iso[R.iso.length - 1];
+            $('#mAvg').textContent = c.avg == null ? '—' : f1(Math.round(c.avg * 100) / 100);
+            $('#peaks').innerHTML = R.iso.map((m, i) => '<div class="peak"><div style="height:' + Math.max(c.pct[i] * 0.78, 0) + '%"></div><span>' + f1(Math.round(c.pct[i] * 10) / 10) + '%</span></div>').join('');
+            R.iso.forEach((m, i) => { $('#po' + i).textContent = f1(Math.round(c.pct[i] * 10) / 10) + '%'; });
+            const pos = x => Math.min(100, Math.max(0, (x - lo) / (hi - lo) * 100)) + '%';
+            $('#gT').style.left = pos(R.target); if (c.avg != null) $('#gC').style.left = pos(c.avg);
+            $('#gC').style.display = c.avg == null ? 'none' : '';
+            $('#mEq').innerHTML = c.avg == null ? 'অন্তত একটি পিক তোলো' : '(' + R.iso.map((m, i) => m + ' × ' + f1(Math.round(c.pct[i] * 10) / 10)).join(' + ') + ') ÷ ১০০ = ' + f1(Math.round(c.avg * 100) / 100);
+        }
+
+        /* ---- ক্রিয়া ---- */
+        function adjust(w, d) {
+            if (S.solved || ST().kind !== 'build') return;
+            const lim = w === 'Z' ? [1, ZMAX] : [0, NMAX];
+            S.st[w] = Math.min(lim[1], Math.max(lim[0], S.st[w] + d)); sfx.tap(); renderArena();
+        }
+        function place(idx, bin) {
+            if (S.solved || ST().kind !== 'sort') return false;
+            const R = RD(), c = R.cards[idx]; if (!c || S.st.placed[idx]) return false;
+            const ref = R.ref, rel = relOf(ref, c), n = nOf(c), rn = nOf(ref);
+            const facts = 'Z = ' + bn(c[0]) + ' (রেফারেন্স ' + bn(ref[0]) + '), A = ' + bn(c[1]) + ' (' + bn(ref[1]) + '), N = ' + bn(n) + ' (' + bn(rn) + ')';
+            S.st.sel = null;
+            if (bin === rel) {
+                S.st.placed[idx] = bin; sfx.ok();
+                const why = { isotope: 'Z সমান, A আলাদা → আইসোটোপ', isobar: 'A সমান, Z আলাদা → আইসোবার', isotone: 'N সমান, Z ও A আলাদা → আইসোটোন', none: 'Z, A, N কোনোটিই সমান নয় → কোনোটিই নয়' }[rel];
+                if (S.st.placed.every(x => x)) { S.solved = true; say('✔ ' + nu(c[0], c[1]) + ': ' + facts + '<br>' + why + '<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok'); }
+                else say('✔ ' + nu(c[0], c[1]) + ': ' + facts + '<br>' + why, 'ok');
+            } else {
+                S.miss++; sfx.bad();
+                const prop = { isotope: ['Z', c[0], ref[0]], isobar: ['A', c[1], ref[1]], isotone: ['N', n, rn] }[bin];
+                const msg = prop ? (prop[1] === prop[2] ? 'ঐ রাশি সমান হলেও অন্য রাশিও দেখো — ' : '') + BINS.find(b => b[0] === bin)[1] + 'ে ' + prop[0] + ' সমান থাকে, কিন্তু এখানে ' + prop[0] + ' = ' + bn(prop[1]) + ' আর রেফারেন্সে ' + bn(prop[2]) + '।' : 'এর অন্তত একটি রাশি (Z, A বা N) রেফারেন্সের সমান আছে — আবার মেলাও।';
+                say('✖ ' + nu(c[0], c[1]) + ' ' + (bin === 'none' ? '' : '→ ' + BINS.find(b => b[0] === bin)[1]) + ' হয়নি।<br>' + msg + '<br>(N = A − Z = ' + bn(n) + ')', 'bad');
+            }
+            renderAll(); return true;
+        }
+        function wait() {
+            if (S.solved || ST().kind !== 'decay') return;
+            const R = RD(), al = S.st.alive, idx = []; al.forEach((a, i) => { if (a) idx.push(i); });
+            if (idx.length <= 1) return;
+            for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+            const gone = idx.slice(0, Math.floor(idx.length / 2)); gone.forEach(i => { al[i] = false; });
+            S.st.fresh = new Set(gone); S.st.steps++; sfx.pop();
+            const left = al.filter(x => x).length;
+            if (left < R.target) {
+                S.miss++; sfx.bad(); say('😬 বেশি অপেক্ষা করে ফেলেছ! ' + bn(left) + 'টি বাকি, লক্ষ্য ছিল ' + bn(R.target) + 'টি। ঘড়ি আবার শুরু।', 'bad');
+                S.st = { alive: Array(R.start).fill(true), steps: 0 }; renderAll(); return;
+            }
+            say('এক অর্ধায়ু গেল: ' + bn(left * 2) + ' → <b>' + bn(left) + '</b>। মোট ' + unitTxt(R, S.st.steps) + '।'); renderArena(); renderHud();
+        }
+        function submit() {
+            if (S.solved) return next();
+            const k = ST().kind, R = RD();
+            if (k === 'build') {
+                const { Z, N } = S.st, A = Z + N;
+                if (Z === R.tZ && A === R.tA) { S.solved = true; sfx.ok(); say('✔ ঠিক! ' + nu(Z, A) + ' — Z = ' + bn(Z) + ', N = ' + bn(N) + '<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok'); }
+                else {
+                    S.miss++; sfx.bad();
+                    say(Z !== R.tZ ? '✖ মৌল মেলেনি — এখন তোমার প্রতীক <b>' + SYM[Z] + '</b>। মনে রেখো, প্রোটন সংখ্যাই মৌল ঠিক করে।' : '✖ মৌল ঠিক, কিন্তু ভরসংখ্যা A = Z + N = ' + bn(A) + ' আর লক্ষ্য ' + bn(R.tA) + '। নিউট্রন ' + (A < R.tA ? 'বাড়াও' : 'কমাও') + '।', 'bad');
+                }
+            } else if (k === 'decay') {
+                const left = S.st.alive.filter(x => x).length;
+                if (left === R.target) { S.solved = true; sfx.ok(); say('✔ ঠিক সময়ে! ' + bn(S.st.steps) + ' অর্ধায়ু = <b>' + unitTxt(R, S.st.steps) + '</b> (' + bn(R.start) + ' ÷ ২<sup>' + bn(S.st.steps) + '</sup> = ' + bn(R.target) + ')<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok'); }
+                else { S.miss++; sfx.bad(); say('✖ এখনো ' + bn(left) + 'টি বাকি; লক্ষ্য ' + bn(R.target) + 'টি। ' + (left > R.target ? 'আরও অপেক্ষা করো।' : ''), 'bad'); }
+            } else if (k === 'mix') {
+                const c = mixCalc();
+                if (c.avg != null && Math.abs(c.avg - R.target) <= 0.05 + 1e-9) {
+                    S.solved = true; sfx.ok();
+                    say('✔ গড় ভর ' + f1(Math.round(c.avg * 100) / 100) + '!<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok');
+                } else {
+                    S.miss++; sfx.bad();
+                    say(c.avg == null ? '✖ কোনো পিক নেই।' : '✖ গড় ' + f1(Math.round(c.avg * 100) / 100) + ' — লক্ষ্য ' + f1(R.target) + '। গড় ' + (c.avg > R.target ? 'বেশি: হালকা আইসোটোপ বাড়াও।' : 'কম: ভারী আইসোটোপ বাড়াও।'), 'bad');
+                }
+            }
+            renderAll();
+        }
+        function next() {
+            if (S.ri < ST().rounds.length - 1) { S.ri++; startRound(); } else finish();
+        }
+        function hint() {
+            if (S.hints <= 0 || S.solved) return;
+            const k = ST().kind, R = RD(); let h;
+            if (k === 'sort') {
+                const i = S.st.placed.findIndex(x => !x); if (i < 0) return; const c = R.cards[i];
+                h = 'কার্ড ' + nu(c[0], c[1]) + ': Z = ' + bn(c[0]) + ', A = ' + bn(c[1]) + ', N = ' + bn(nOf(c)) + '। রেফারেন্স: Z = ' + bn(R.ref[0]) + ', A = ' + bn(R.ref[1]) + ', N = ' + bn(nOf(R.ref)) + '। কোনটা সমান?';
+                S.st.sel = i;
+            } else h = R.hint;
+            S.hints--; sfx.pop(); renderAll(); say('💡 ' + h);
+        }
+        function finish() {
+            sfx.win();
+            const L = ST(), score = S.miss + 2 * (MAXHINT - S.hints), st = score <= 2 ? 3 : score <= 6 ? 2 : 1;
+            if (!stars[S.si] || st > stars[S.si]) { stars[S.si] = st; lsSet('isle-stars', JSON.stringify(stars)); }
+            renderTabs();
+            const last = S.si === STAGES.length - 1;
+            $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + L.icon + ' ' + L.name + ' — দ্বীপ জয়!</h2><p>ভুল: <b>' + bn(S.miss) + '</b> · ইঙ্গিত: <b>' + bn(MAXHINT - S.hints) + '</b></p><div class="learn">🧠 ' + L.learn + '</div>' +
+                (last ? '<div class="learn">🏆 সব দ্বীপ জয় সম্পূর্ণ! আইসোটোপ = একই Z, ভিন্ন N; আর মৌলের পারমাণবিক ভর আইসোটোপের প্রাচুর্য-গড়।</div>' : '') + '<div class="row">' +
+                (last ? '' : '<button class="btn primary big" data-act="next">পরের দ্বীপ ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
+            $('#modal').hidden = false;
+        }
+
+        document.addEventListener('input', e => {
+            const r = e.target.closest && e.target.closest('input[data-pk]'); if (!r || S.solved) return;
+            S.st.v[+r.dataset.pk] = +r.value; updateMix();
+        });
+        document.addEventListener('dragstart', e => { const c = e.target.closest && e.target.closest('[data-card]'); if (c && e.dataTransfer) { e.dataTransfer.setData('text/plain', c.dataset.card); e.dataTransfer.effectAllowed = 'move'; } });
+        document.addEventListener('dragover', e => { const b = e.target.closest && e.target.closest('[data-bin]'); if (b) { e.preventDefault(); b.classList.add('over'); } });
+        document.addEventListener('dragleave', e => { const b = e.target.closest && e.target.closest('[data-bin]'); if (b) b.classList.remove('over'); });
+        document.addEventListener('drop', e => { const b = e.target.closest && e.target.closest('[data-bin]'); if (!b || !e.dataTransfer) return; e.preventDefault(); b.classList.remove('over'); const i = parseInt(e.dataTransfer.getData('text/plain'), 10); if (!isNaN(i)) place(i, b.dataset.bin); });
+        document.addEventListener('click', e => {
+            const t = e.target.closest('[data-lv],[data-adj],[data-card],[data-bin],[data-act],#btnWait,#btnHint,#btnReset,#btnRules,#btnDone'); if (!t) return;
+            if (t.dataset.lv != null) { sfx.tap(); startStage(+t.dataset.lv); return; }
+            if (t.dataset.adj) { adjust(t.dataset.adj, +t.dataset.d); return; }
+            if (t.dataset.card != null) { if (!S.solved) { const i = +t.dataset.card; S.st.sel = S.st.sel === i ? null : i; sfx.tap(); renderArena(); } return; }
+            if (t.dataset.bin) { if (S.st.sel == null) { say('আগে একটি কার্ড ট্যাপ করো, তারপর ঝুড়ি বেছে নাও।'); } else place(S.st.sel, t.dataset.bin); return; }
+            if (t.id === 'btnWait') { wait(); return; }
+            if (t.id === 'btnDone') { if (!t.disabled) submit(); return; }
+            if (t.id === 'btnReset') { sfx.tap(); startRound(); return; }
+            if (t.id === 'btnHint') { hint(); return; }
+            if (t.id === 'btnRules') {
+                $('#sheet').innerHTML = '<h2>📖 নিয়ম — ' + ST().name + '</h2><ul>' + ST().rules.map(r => '<li>' + r + '</li>').join('') + '<li>ভুল ও ইঙ্গিত কম হলে বেশি তারা (ভুল + ২×ইঙ্গিত ≤ ২ হলে ৩ তারা)।</li><li>একটি দ্বীপে ৩ তারা না পেলেও পরের দ্বীপ খুলবে।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>';
+                $('#modal').hidden = false; return;
+            }
+            if (t.dataset.act === 'close') { $('#modal').hidden = true; return; }
+            if (t.dataset.act === 'again') { $('#modal').hidden = true; startStage(S.si); return; }
+            if (t.dataset.act === 'next') { $('#modal').hidden = true; startStage(Math.min(S.si + 1, STAGES.length - 1)); return; }
+        });
+        window.__t = { S, STAGES, SYM, relOf, startStage, startRound, adjust, place, wait, submit, hint, finish, mixCalc, updateMix, setPeak(i, v) { S.st.v[i] = v; renderArena(); } };
+        startStage(0);
+    })();
     </script>
 </body>
 </html>
