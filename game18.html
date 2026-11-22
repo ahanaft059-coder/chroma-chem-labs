@@ -109,8 +109,8 @@ body {
 .icon-btn { min-width: 42px; }
 
 /* স্টেজ ফোল্ডার-ট্যাব */
-.lv { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
-.lvb { flex: 1 1 150px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
+.lv { display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
+.lvb { flex: 0 0 172px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
     background: #ece4ff; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
 .lvb:nth-child(2) { background: #d4f6ef; } .lvb:nth-child(3) { background: #ffe0ee; }
 .lvb:hover:not(:disabled) { transform: translateY(-3px); }
@@ -178,7 +178,7 @@ body {
     .titlebox b { font-size: 1rem; padding: 3px 9px; }
     .order { padding-left: 22px; } .order h2, .order p { margin-right: 52px; }
     .order { background-image: linear-gradient(90deg, transparent calc(100% - 52px), var(--ink) calc(100% - 52px) calc(100% - 49px), transparent calc(100% - 49px)); }
-    .reactor { padding-left: 30px; } .lvb { flex-basis: 100%; }
+    .reactor { padding-left: 30px; } .lvb { flex-basis: 150px; }
     .lvb { min-height: 52px; }
 }
     </style>
@@ -266,9 +266,23 @@ function NBSound(key) {
             adipic: { f: 'HOOC–(CH₂)₄–COOH', n: 'অ্যাডিপিক অ্যাসিড', u: '–OC–(CH₂)₄–CO–', c: '#ffd0e4', makes: 'নাইলন-৬,৬ (ডায়ামিনের সাথে)' },
             hmda: { f: 'H₂N–(CH₂)₆–NH₂', n: 'হেক্সামিথিলিন ডায়ামিন', u: '–NH–(CH₂)₆–NH–', c: '#c9f0f0', makes: 'নাইলন-৬,৬ (অ্যাডিপিক অ্যাসিডের সাথে)' },
             tpa: { f: 'HOOC–C₆H₄–COOH', n: 'টেরেফথালিক অ্যাসিড', u: '–OC–C₆H₄–CO–', c: '#ffd9b3', makes: 'পলিয়েস্টার (গ্লাইকলের সাথে)' },
+            acn: { f: 'CH₂=CH–CN', n: 'অ্যাক্রিলোনাইট্রাইল', u: '–CH₂–CH(CN)–', c: '#ffe8a8', makes: 'PAN (অরলন)' },
+            mma: { f: 'CH₂=C(CH₃)–COOCH₃', n: 'মিথাইল মেথাক্রিলেট', u: '–CH₂–C(CH₃)(COOCH₃)–', c: '#d3e9ff', makes: 'PMMA (পার্সপেক্স)' },
+            chlp: { f: 'CH₂=CCl–CH=CH₂', n: 'ক্লোরোপ্রিন', u: '–CH₂–CCl=CH–CH₂–', c: '#c9f2d6', makes: 'নিওপ্রিন রাবার' },
+            isop: { f: 'CH₂=C(CH₃)–CH=CH₂', n: 'আইসোপ্রিন', u: '–CH₂–C(CH₃)=CH–CH₂–', c: '#ffd9a8', makes: 'প্রাকৃতিক রাবার' },
+            buta: { f: 'CH₂=CH–CH=CH₂', n: 'বিউটা-১,৩-ডাইইন', u: '–CH₂–CH=CH–CH₂–', c: '#f3d1ff', makes: 'Buna রাবার (স্টাইরিনের সাথে Buna-S)' },
+            phenol: { f: 'C₆H₅OH', n: 'ফেনল', u: '–C₆H₃(OH)–', c: '#ffd0d0', makes: 'বেকেলাইট (ফর্মালডিহাইডের সাথে)' },
+            hcho: { f: 'HCHO', n: 'ফর্মালডিহাইড', u: '–CH₂–', c: '#d9ffd0', makes: 'বেকেলাইট (ফেনলের সাথে)' },
+            ppd: { f: 'H₂N–C₆H₄–NH₂', n: 'p-ফিনাইলিন ডায়ামিন', u: '–NH–C₆H₄–NH–', c: '#cfe0ff', makes: 'কেভলার (টেরেফথালিক অ্যাসিডের সাথে)' },
+            lactic: { f: 'CH₃CH(OH)COOH', n: 'ল্যাকটিক অ্যাসিড', u: '–O–CH(CH₃)–CO–', c: '#fff0b8', makes: 'PLA (পলি-ল্যাকটিক অ্যাসিড)' },
+            acap: { f: 'H₂N–(CH₂)₅–COOH', n: '৬-অ্যামিনোহেক্সানোয়িক অ্যাসিড', u: '–NH–(CH₂)₅–CO–', c: '#ffc9ef', makes: 'নাইলন-৬' },
             eg: { f: 'HO–CH₂CH₂–OH', n: 'ইথিলিন গ্লাইকল', u: '–O–CH₂CH₂–O–', c: '#d4e8a8', makes: 'পলিয়েস্টার (অ্যাসিডের সাথে)' }
         };
         const UNITS = 6;
+        const U = () => (cur() && cur().units) || UNITS;
+        const isCond = o => o.kind === 'cond' || o.kind === 'cond1';
+        const isDouble = o => o.kind === 'cond' || o.kind === 'co';
+        const KTXT = { add: 'অ্যাডিশন পলিমারাইজেশন', cond: 'কনডেনসেশন পলিমারাইজেশন', cond1: 'কনডেনসেশন (একক মনোমার)', co: 'কোপলিমারাইজেশন (পানি নেই)' };
         const ORDERS = [
             { id: 'pe', stage: 0, name: 'পলিথিন', kind: 'add', need: ['ethene'], form: '[–CH₂–CH₂–]ₙ', link: '', uses: 'প্লাস্টিক ব্যাগ, বোতল, পাইপ', fact: 'ইথিনের C=C দ্বিবন্ধন ভেঙে অসংখ্য ইউনিট পরপর যুক্ত হয়ে লম্বা চেইন তৈরি হয়।' },
             { id: 'pvc', stage: 0, name: 'পিভিসি (PVC)', kind: 'add', need: ['vcl'], form: '[–CH₂–CHCl–]ₙ', link: '', uses: 'পানির পাইপ, জানালার ফ্রেম, তারের মোড়ক', fact: 'পলিভিনাইল ক্লোরাইড, এর মনোমার ভিনাইল ক্লোরাইড (CH₂=CHCl)।' },
@@ -281,8 +295,33 @@ function NBSound(key) {
         const STAGES = [
             { name: 'অ্যাডিশন পলিমার ১', desc: 'পলিথিন ও PVC', tray: ['ethene', 'propene', 'vcl'] },
             { name: 'অ্যাডিশন পলিমার ২', desc: 'পলিপ্রোপিন, টেফলন, পলিস্টাইরিন', tray: ['propene', 'tfe', 'styrene', 'vcl'] },
-            { name: 'কনডেনসেশন পলিমার', desc: 'নাইলন ও পলিয়েস্টার', tray: ['adipic', 'hmda', 'tpa', 'eg'] }
+            { name: 'কনডেনসেশন পলিমার', desc: 'নাইলন ও পলিয়েস্টার', tray: ['adipic', 'hmda', 'tpa', 'eg'] },
+            { name: 'অ্যাডিশন ৩', desc: 'PAN, PMMA · ৬টি মনোমারের ভিড়', tray: ['acn', 'mma', 'vcl', 'styrene', 'ethene', 'propene'], h: 2 },
+            { name: 'রাবার', desc: 'নিওপ্রিন ও প্রাকৃতিক রাবার (ডাইইন)', tray: ['chlp', 'isop', 'buta', 'ethene', 'vcl', 'propene'], h: 2 },
+            { name: 'কোপলিমার', desc: 'Buna-S, SAN · দুই মনোমার, পানি নেই', tray: ['buta', 'styrene', 'acn', 'vcl', 'chlp', 'mma'], h: 2 },
+            { name: 'কনডেনসেশন ২', desc: 'কেভলার, নাইলন-৬, PLA', tray: ['tpa', 'ppd', 'acap', 'lactic', 'adipic', 'hmda', 'eg'], h: 2 },
+            { name: 'বেকেলাইট', desc: 'থার্মোসেটিং · ফেনল-ফর্মালডিহাইড', tray: ['phenol', 'hcho', 'ppd', 'tpa', 'eg', 'lactic', 'adipic'], h: 2 },
+            { name: 'রিভার্স ১', desc: 'পলিমার দেখে মনোমার চেনো (অ্যাডিশন)', tray: ['ethene', 'propene', 'vcl', 'tfe', 'styrene', 'mma', 'acn', 'chlp'], h: 2 },
+            { name: 'রিভার্স ২', desc: 'পলিমার দেখে মনোমার চেনো (কনডেনসেশন)', tray: ['adipic', 'hmda', 'tpa', 'eg', 'ppd', 'lactic', 'acap', 'phenol', 'hcho'], h: 1 },
+            { name: 'রিভার্স ৩', desc: 'সব ধরনের পলিমার · ১টি ইঙ্গিত', tray: ['buta', 'styrene', 'acn', 'acap', 'phenol', 'hcho', 'tpa', 'ppd', 'vcl', 'mma', 'lactic', 'isop'], h: 1 },
+            { name: '🏆 চূড়ান্ত পরীক্ষা', desc: '৮ ইউনিটের চেইন · রিভার্স · ইঙ্গিত ০', tray: ['buta', 'styrene', 'acn', 'acap', 'phenol', 'hcho', 'tpa', 'ppd', 'adipic', 'hmda', 'mma', 'lactic', 'eg', 'chlp'], h: 0 }
         ];
+        ORDERS.push(
+            { id: 'pan', stage: 3, name: 'PAN (অরলন)', kind: 'add', need: ['acn'], form: '[–CH₂–CH(CN)–]ₙ', link: '', uses: 'সোয়েটার, কম্বলের কৃত্রিম উল', fact: 'নাইট্রাইল (–C≡N) গ্রুপ থাকায় PAN তন্তু শক্ত ও উলের মতো নরম — একে "কৃত্রিম উল" বলে।' },
+            { id: 'pmma', stage: 3, name: 'PMMA (পার্সপেক্স)', kind: 'add', need: ['mma'], form: '[–CH₂–C(CH₃)(COOCH₃)–]ₙ', link: '', uses: 'স্বচ্ছ কাচের বিকল্প, এক্রিলিক শিট, গাড়ির ল্যাম্প', fact: 'PMMA কাচের চেয়ে হালকা ও ভাঙে না সহজে, তাই "অর্গানিক গ্লাস"। মনোমারে C=C দ্বিবন্ধন ভেঙেই অ্যাডিশন চেইন তৈরি।' },
+            { id: 'neo', stage: 4, name: 'নিওপ্রিন রাবার', kind: 'add', need: ['chlp'], form: '[–CH₂–CCl=CH–CH₂–]ₙ', link: '', uses: 'ওয়েটসুট, তেল-প্রতিরোধী পাইপ, কনভেয়র বেল্ট', fact: 'ক্লোরোপ্রিনের দুটি দ্বিবন্ধনের একটি চেইনে থেকে যায় (১,৪-যোগ) — তাই ইউনিটের মধ্যে C=C আছে, আর রাবারের স্থিতিস্থাপকতা আসে।' },
+            { id: 'nr', stage: 4, name: 'প্রাকৃতিক রাবার', kind: 'add', need: ['isop'], form: '[–CH₂–C(CH₃)=CH–CH₂–]ₙ', link: '', uses: 'টায়ার, গ্লাভস, ইরেজার', fact: 'রাবার গাছের ল্যাটেক্স আসলে পলি-আইসোপ্রিন (cis)। ভালকানাইজেশনে সালফার ক্রসলিংক তৈরি করে একে শক্ত ও টেকসই করা হয়।' },
+            { id: 'bunas', stage: 5, name: 'Buna-S (SBR)', kind: 'co', need: ['buta', 'styrene'], form: '[–CH₂–CH=CH–CH₂–CH₂–CH(C₆H₅)–]ₙ', link: '', uses: 'গাড়ির টায়ার, জুতার সোল', fact: 'দুটি আলাদা মনোমার একসাথে যুক্ত হলে তাকে কোপলিমার বলে। অ্যাডিশন বলে কোনো পানি বেরোয় না। SBR হলো সবচেয়ে বেশি ব্যবহৃত কৃত্রিম রাবার।' },
+            { id: 'san', stage: 5, name: 'SAN কোপলিমার', kind: 'co', need: ['styrene', 'acn'], form: '[–CH₂–CH(C₆H₅)–CH₂–CH(CN)–]ₙ', link: '', uses: 'রান্নাঘরের স্বচ্ছ পাত্র, ব্লেন্ডারের জার', fact: 'স্টাইরিন + অ্যাক্রিলোনাইট্রাইল: পলিস্টাইরিনের স্বচ্ছতার সাথে PAN-এর রাসায়নিক-প্রতিরোধ — দুই মনোমারের গুণ মিলিয়ে নতুন পলিমার।' },
+            { id: 'kevlar', stage: 6, name: 'কেভলার', kind: 'cond', need: ['tpa', 'ppd'], form: '[–OC–C₆H₄–CO–NH–C₆H₄–NH–]ₙ', link: 'অ্যামাইড (–CONH–)', uses: 'বুলেটপ্রুফ জ্যাকেট, হেলমেট', fact: 'অ্যামাইড বন্ধনগুলোর মধ্যে হাইড্রোজেন বন্ধন ও বেনজিন রিং কেভলারকে ইস্পাতের চেয়ে ওজনে ৫ গুণ শক্ত করে।' },
+            { id: 'nylon6', stage: 6, name: 'নাইলন-৬', kind: 'cond1', need: ['acap'], form: '[–NH–(CH₂)₅–CO–]ₙ', link: 'অ্যামাইড (–CONH–)', uses: 'টায়ারের কর্ড, দড়ি, মাছ ধরার জাল', fact: 'একটি মনোমারের দুই প্রান্তে দুই ধরনের গ্রুপ (–NH₂ ও –COOH) থাকলে একই মনোমার বারবার যুক্ত হয়ে কনডেনসেশন ঘটায়; প্রতিবার ১টি H₂O বেরোয়।' },
+            { id: 'pla', stage: 6, name: 'PLA (বায়োপ্লাস্টিক)', kind: 'cond1', need: ['lactic'], form: '[–O–CH(CH₃)–CO–]ₙ', link: 'এস্টার (–COO–)', uses: 'পচনশীল প্যাকেজিং, সার্জারির সুতো', fact: 'ল্যাকটিক অ্যাসিডে –OH ও –COOH দুটোই আছে, তাই নিজেই নিজের সাথে এস্টার গড়ে। ভুট্টা বা আখ থেকে বানানো হয় বলে পরিবেশবান্ধব।' },
+            { id: 'bake', stage: 7, name: 'বেকেলাইট', kind: 'cond', need: ['phenol', 'hcho'], form: '[–C₆H₃(OH)–CH₂–]ₙ', link: '–CH₂– সেতু', uses: 'সুইচ বোর্ড, হ্যান্ডেল, বৈদ্যুতিক কেসিং', fact: 'ফেনল + ফর্মালডিহাইড থেকে পানি বেরিয়ে –CH₂– সেতু তৈরি হয়। ত্রিমাত্রিক জালক বলে এটি একবার শক্ত হলে আর গলে না (থার্মোসেটিং)।' }
+        );
+        /* রিভার্স অর্ডার: পলিমারের সংকেত দেখে মনোমার খুঁজতে হবে */
+        const BASEO = id => ORDERS.find(o => o.id === id);
+        [['pe', 8], ['pvc', 8], ['ptfe', 8], ['pmma', 8], ['nylon', 9], ['pet', 9], ['kevlar', 9], ['pla', 9], ['bunas', 10], ['nylon6', 10], ['bake', 10], ['san', 10], ['pan', 10],
+         ['kevlar', 11, 8], ['bunas', 11, 8], ['pmma', 11, 8], ['bake', 11, 8], ['pla', 11, 8], ['nylon', 11, 8]].forEach(a => ORDERS.push(Object.assign({}, BASEO(a[0]), { stage: a[1], rev: true, units: a[2] || 0 })));
         let stars = {}; try { stars = JSON.parse(lsGet('polymer-stars') || '{}') || {}; } catch (e) { stars = {}; }
         const S = { st: 0, oi: 0, chain: [], water: 0, miss: 0, hints: 3, hintUsed: 0, over: false, tray: [] };
         const unlocked = i => i === 0 || stars[i - 1] > 0;
@@ -292,47 +331,49 @@ function NBSound(key) {
 
         function renderLevels() {
             $('#lv').innerHTML = STAGES.map((L, i) => '<button class="lvb' + (i === S.st ? ' on' : '') + '" data-st="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? '' : '🔒 ') + L.name + '</b><small>' + L.desc + '</small><i>' + starStr(stars[i]) + '</i></button>').join('');
+            const on = $('#lv .on'); if (on) { const c = $('#lv'); c.scrollLeft = Math.max(0, on.offsetLeft - c.clientWidth / 2 + on.offsetWidth / 2); }
         }
         function startStage(i) {
-            S.st = i; S.oi = 0; S.miss = 0; S.hints = 3; S.hintUsed = 0; S.over = false; S.tray = shuffle(STAGES[i].tray);
+            S.st = i; S.oi = 0; S.miss = 0; S.hints = STAGES[i].h != null ? STAGES[i].h : 3; S.hintUsed = 0; S.over = false; S.tray = shuffle(STAGES[i].tray);
             renderLevels(); startOrder();
         }
         function startOrder() {
             S.chain = []; S.water = 0; render();
             const o = cur();
-            setMsg(o.kind === 'add' ? '🧪 ' + bnTxt('একটি মনোমার বেছে নাও, বারবার ট্যাপ করে চেইন বাড়াও।') : '🧪 দুই ধরনের মনোমার লাগবে। পালাক্রমে ট্যাপ করো, প্রতিবার জোড়া লাগলে পানি বেরোবে।', '');
+            setMsg(o.rev ? '🔍 পলিমারের পুনরাবৃত্ত একক দেখে মনোমার চেনো — নাম দেওয়া নেই!' : !isDouble(o) ? '🧪 একটি মনোমার বেছে নাও, বারবার ট্যাপ করে চেইন বাড়াও।' : o.kind === 'co' ? '🧪 দুই ধরনের মনোমার পালাক্রমে ট্যাপ করো — কোপলিমারে পানি বেরোয় না।' : '🧪 দুই ধরনের মনোমার লাগবে। পালাক্রমে ট্যাপ করো, প্রতিবার জোড়া লাগলে পানি বেরোবে।', '');
         }
         const bnTxt = t => t;
         function setMsg(t, c) { const m = $('#msg'); m.textContent = t; m.className = 'msg' + (c ? ' ' + c : ''); }
         function render() {
             const o = cur();
-            $('#order').innerHTML = '<small>' + (o.kind === 'add' ? 'অ্যাডিশন পলিমারাইজেশন' : 'কনডেনসেশন পলিমারাইজেশন') + '</small><h2>অর্ডার: ' + o.name + ' বানাও</h2><p>' +
-                (o.kind === 'add' ? 'সঠিক মনোমার বেছে ' + bn(UNITS) + 'টি ইউনিট জোড়া লাগাও।' : 'দুটি আলাদা মনোমার পালাক্রমে জোড়া লাগিয়ে ' + bn(UNITS) + 'টি ইউনিটের চেইন বানাও।') + '</p>';
+            $('#order').innerHTML = '<small>' + (o.rev ? '🔍 রিভার্স অর্ডার — ধরন নিজে বের করো' : KTXT[o.kind]) + '</small><h2>' + (o.rev ? 'এই পলিমারের মনোমার কী? <span style="font-family:inherit;font-weight:800;word-break:break-all">' + o.form + '</span>' : 'অর্ডার: ' + o.name + ' বানাও') + '</h2><p>' +
+                (o.rev ? 'সংকেতের পুনরাবৃত্ত একক দেখে সঠিক মনোমার (দরকার হলে দুটি) বেছে ' + bn(U()) + 'টি ইউনিটের চেইন গড়ো।' : !isDouble(o) ? 'সঠিক মনোমার বেছে ' + bn(U()) + 'টি ইউনিট জোড়া লাগাও।' : 'দুটি আলাদা মনোমার পালাক্রমে জোড়া লাগিয়ে ' + bn(U()) + 'টি ইউনিটের চেইন বানাও।') + '</p>';
             let ch = '';
-            for (let i = 0; i < UNITS; i++) {
+            for (let i = 0; i < U(); i++) {
                 const k = S.chain[i];
-                if (i > 0) ch += (k && o.kind === 'cond' ? '<span class="drop" title="পানি বেরিয়েছে">💧</span>' : '<span class="bond"></span>');
-                ch += k ? '<span class="bead" style="background:' + MON[k].c + '">' + MON[k].u + '</span>' : '<span class="bead slot">' + (o.kind === 'add' ? '…' : '?') + '</span>';
+                if (i > 0) ch += (k && isCond(o) ? '<span class="drop" title="পানি বেরিয়েছে">💧</span>' : '<span class="bond"></span>');
+                ch += k ? '<span class="bead" style="background:' + MON[k].c + '">' + MON[k].u + '</span>' : '<span class="bead slot">' + (!isDouble(o) ? '…' : '?') + '</span>';
             }
             $('#chain').innerHTML = ch;
-            $('#count').textContent = bn(S.chain.length) + '/' + bn(UNITS) + ' ইউনিট';
-            $('#formula').textContent = S.chain.length === UNITS ? o.form : '';
+            $('#count').textContent = bn(S.chain.length) + '/' + bn(U()) + ' ইউনিট';
+            $('#formula').textContent = S.chain.length === U() ? o.form : '';
             $('#tray').innerHTML = S.tray.map(k => '<button class="mono" data-m="' + k + '" style="background:' + MON[k].c + '"' + (S.over ? ' disabled' : '') + '><b>' + MON[k].n + '</b><code>' + MON[k].f + '</code></button>').join('');
             $('#sOrder').textContent = bn(Math.min(S.oi + 1, orders().length)) + '/' + bn(orders().length);
             $('#sMiss').textContent = bn(S.miss); $('#sHint').textContent = bn(S.hints); $('#sWater').textContent = bn(S.water);
             $('#btnHint').disabled = S.over || S.hints <= 0;
         }
         function addMono(k) {
-            if (S.over || S.chain.length >= UNITS) return;
+            if (S.over || S.chain.length >= U()) return;
             const o = cur(), last = S.chain[S.chain.length - 1];
             let ok, why = '';
-            if (o.kind === 'add') {
+            const reveal = S.st < 3 && !o.rev;
+            if (!isDouble(o)) {
                 ok = k === o.need[0];
-                if (!ok) why = MON[k].n + ' (' + MON[k].f + ') থেকে হয় ' + MON[k].makes + ', ' + o.name + ' নয়। ' + o.name + '-এর জন্য ' + MON[o.need[0]].n + ' (' + MON[o.need[0]].f + ') লাগে।';
+                if (!ok) why = MON[k].n + ' (' + MON[k].f + ') থেকে হয় ' + MON[k].makes + (reveal ? ', ' + o.name + ' নয়। ' + o.name + '-এর জন্য ' + MON[o.need[0]].n + ' (' + MON[o.need[0]].f + ') লাগে।' : '। এটি এই পলিমারের একক নয় — চেইনের ইউনিটের (–…–) গঠনের সাথে মনোমারের সংকেত মেলাও।');
             } else if (!o.need.includes(k)) {
-                ok = false; why = MON[k].n + ' এই পলিমারের অংশ নয়। ' + o.name + '-এর জন্য লাগে ' + MON[o.need[0]].n + ' ও ' + MON[o.need[1]].n + '।';
+                ok = false; why = MON[k].n + ' এই পলিমারের অংশ নয় (এটি থেকে হয় ' + MON[k].makes + ')।' + (reveal ? ' ' + o.name + '-এর জন্য লাগে ' + MON[o.need[0]].n + ' ও ' + MON[o.need[1]].n + '।' : ' দুই প্রান্তের গ্রুপ ও ইউনিট মিলিয়ে সঠিক জোড়া খোঁজো।');
             } else if (k === last) {
-                ok = false; why = 'একই মনোমার পরপর জোড়া লাগে না। কনডেনসেশনে দুই ধরনের মনোমার (দুই প্রান্তে আলাদা গ্রুপ) পালাক্রমে যুক্ত হয়।';
+                ok = false; why = 'একই মনোমার পরপর জোড়া লাগে না। এখানে দুই ধরনের মনোমার পালাক্রমে যুক্ত হয় (কনডেনসেশনে দুই প্রান্তে আলাদা গ্রুপ থাকে)।';
             } else ok = true;
             if (!ok) {
                 S.miss++; render(); sfx.bad();
@@ -340,16 +381,17 @@ function NBSound(key) {
                 setMsg('❌ ' + why, 'bad'); return;
             }
             S.chain.push(k);
-            if (o.kind === 'cond' && S.chain.length > 1) S.water++;
+            if (isCond(o) && S.chain.length > 1) S.water++;
             render(); sfx.pop(); setTimeout(sfx.ok, 110);
-            if (o.kind === 'add') setMsg('✅ ' + MON[k].f + '-এর C=C দ্বিবন্ধন খুলে একক বন্ধন হলো, ইউনিটটি চেইনে যুক্ত হলো। কোনো উপজাত বের হয়নি।', 'ok');
+            if (o.kind === 'co') setMsg('✅ ' + MON[k].n + ' যুক্ত হলো — কোপলিমার, কোনো উপজাত নেই।', 'ok');
+            else if (o.kind === 'add') setMsg('✅ ' + MON[k].f + '-এর C=C দ্বিবন্ধন খুলে একক বন্ধন হলো, ইউনিটটি চেইনে যুক্ত হলো। কোনো উপজাত বের হয়নি।', 'ok');
             else setMsg('✅ ' + MON[k].n + ' যুক্ত হলো।' + (S.chain.length > 1 ? ' 💧 একটি H₂O অণু বেরিয়ে গেল (মোট ' + bn(S.water) + ')।' : ' এখন অন্য মনোমারটি যোগ করো।'), 'ok');
-            if (S.chain.length === UNITS) orderDone();
+            if (S.chain.length === U()) orderDone();
         }
         function useHint() {
             if (S.over || S.hints <= 0) return;
             const o = cur(), last = S.chain[S.chain.length - 1];
-            const want = o.kind === 'add' ? o.need[0] : (last ? o.need.find(x => x !== last) : o.need[0]);
+            const want = !isDouble(o) ? o.need[0] : (last ? o.need.find(x => x !== last) : o.need[0]);
             S.hints--; S.hintUsed++; render(); sfx.tap();
             const b = document.querySelector('[data-m="' + want + '"]'); if (b) { b.classList.add('hint'); setTimeout(() => b.classList.remove('hint'), 2200); }
             setMsg('💡 জ্বলজ্বলে মনোমারটি এখন ঠিক।', '');
@@ -364,13 +406,13 @@ function NBSound(key) {
                 renderLevels(); setTimeout(sfx.win, 260);
             }
             $('#sheet').innerHTML = (lastOrder ? '<div class="stars">' + starStr(st) + '</div>' : '<div style="font-size:42px">🎉</div>') + '<h2>' + o.name + ' তৈরি!</h2><div class="big">' + o.form + '</div>' +
-                '<div class="info"><div><span>ধরন</span><b>' + (o.kind === 'add' ? 'অ্যাডিশন (উপজাত নেই)' : 'কনডেনসেশন (' + o.link + ' বন্ধন)') + '</b></div><div><span>মনোমার</span><b>' + o.need.map(k => MON[k].n).join(' + ') + '</b></div>' +
-                (o.kind === 'cond' ? '<div><span>বেরোনো পানি</span><b>' + bn(S.water) + ' অণু H₂O</b></div>' : '') + '<div><span>ব্যবহার</span><b>' + o.uses + '</b></div></div><p style="margin:0 0 14px;color:var(--mute);font-weight:600;line-height:1.7;font-size:14px">' + o.fact + '</p>' +
+                '<div class="info"><div><span>ধরন</span><b>' + (o.kind === 'add' ? 'অ্যাডিশন (উপজাত নেই)' : o.kind === 'co' ? 'কোপলিমার (উপজাত নেই)' : 'কনডেনসেশন (' + o.link + ' বন্ধন)') + '</b></div><div><span>মনোমার</span><b>' + o.need.map(k => MON[k].n).join(' + ') + '</b></div>' +
+                (isCond(o) ? '<div><span>বেরোনো পানি</span><b>' + bn(S.water) + ' অণু H₂O</b></div>' : '') + '<div><span>ব্যবহার</span><b>' + o.uses + '</b></div></div><p style="margin:0 0 14px;color:var(--mute);font-weight:600;line-height:1.7;font-size:14px">' + o.fact + '</p>' +
                 (lastOrder ? '<div class="info"><div><span>ভুল</span><b>' + bn(S.miss) + '</b></div><div><span>ইঙ্গিত</span><b>' + bn(S.hintUsed) + '</b></div></div><div class="row"><button class="btn" data-a="again">↺ আবার</button>' + (S.st < STAGES.length - 1 ? '<button class="btn primary" data-a="nextstage">পরের স্টেজ ➜</button>' : '') + '</div>' : '<div class="row"><button class="btn primary" data-a="nextorder">পরের অর্ডার ➜</button></div>');
             $('#modal').hidden = false;
         }
         function rules() {
-            $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul class="rules"><li><b>লক্ষ্য:</b> অর্ডারের পলিমার বানাতে সঠিক মনোমার ট্যাপ করে চেইন গড়ো।</li><li><b>অ্যাডিশন:</b> একই মনোমার বারবার। C=C দ্বিবন্ধন খুলে ইউনিট জোড়া লাগে, কোনো উপজাত নেই।</li><li><b>কনডেনসেশন:</b> দুই ধরনের মনোমার পালাক্রমে। প্রতিবার জোড়া লাগলে H₂O বেরোয়। ' + UNITS + 'টি ইউনিটে ' + (UNITS - 1) + 'টি পানির অণু।</li><li><b>ভুল হলে</b> কেন ভুল হলো তা জানানো হবে।</li><li><b>ইঙ্গিত ৩টি।</b> ভুল ও ইঙ্গিত কম হলে ৩ তারা। ১ম স্টেজ শেষ করলে পরেরটি খোলে।</li></ul><div class="row"><button class="btn primary" data-a="close">বুঝেছি</button></div>';
+            $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul class="rules"><li><b>লক্ষ্য:</b> অর্ডারের পলিমার বানাতে সঠিক মনোমার ট্যাপ করে চেইন গড়ো।</li><li><b>অ্যাডিশন:</b> একই মনোমার বারবার। C=C দ্বিবন্ধন খুলে ইউনিট জোড়া লাগে, কোনো উপজাত নেই।</li><li><b>রিভার্স ও কোপলিমার:</b> পলিমারের সংকেত দেখে মনোমার চিনতে হয়; কোপলিমারে দুই মনোমার পালাক্রমে, পানি বেরোয় না। কঠিন স্টেজে ভুল হলে উত্তর বলে দেওয়া হয় না!</li><li><b>কনডেনসেশন:</b> দুই ধরনের মনোমার পালাক্রমে। প্রতিবার জোড়া লাগলে H₂O বেরোয়। n টি ইউনিটে (n−১)টি পানির অণু।</li><li><b>ভুল হলে</b> কেন ভুল হলো তা জানানো হবে।</li><li><b>ইঙ্গিত ৩টি।</b> ভুল ও ইঙ্গিত কম হলে ৩ তারা। ১ম স্টেজ শেষ করলে পরেরটি খোলে।</li></ul><div class="row"><button class="btn primary" data-a="close">বুঝেছি</button></div>';
             $('#modal').hidden = false;
         }
         function act(a) {
