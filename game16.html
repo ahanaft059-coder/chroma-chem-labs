@@ -317,15 +317,31 @@ function NBSound(key) {
             { eq: '2NO + O₂ → 2NO₂', dh: -114, sp: [['NO', 2, 90, -1], ['O₂', 1, 0, -1], ['NO₂', 2, 33, 1]] },
             { eq: 'Fe₂O₃ + 3CO → 2Fe + 3CO₂', dh: -25, sp: [['Fe₂O₃', 1, -824, -1], ['CO', 3, -111, -1], ['Fe', 2, 0, 1], ['CO₂', 3, -394, 1]] }
         ];
-        const CHEAT = '<ul><li><code>q = m × c × ΔT</code> (পানির c ≈ ৪.২ J/g·°C)</li><li><code>ΔH = ΣΔHf(উৎপাদ) − ΣΔHf(বিক্রিয়ক)</code></li><li>হেসের সূত্র: ধাপের ΔH যোগ করো; বিক্রিয়া উল্টালে চিহ্ন উল্টে যায়</li><li>তাপ ছাড়লে ΔH ঋণাত্মক (তাপোৎপাদী); তাপ শুষলে ধনাত্মক (তাপহারী)</li></ul>';
+        const CHEAT = '<ul><li><code>q = m × c × ΔT</code> (পানির c ≈ ৪.২ J/g·°C)</li><li><code>ΔH = ΣΔHf(উৎপাদ) − ΣΔHf(বিক্রিয়ক)</code></li><li>হেসের সূত্র: ধাপের ΔH যোগ করো; বিক্রিয়া উল্টালে চিহ্ন উল্টে যায়</li><li>বন্ধন শক্তি: <code>ΔH = Σ(ভাঙা) − Σ(গড়া)</code></li><li>গিবস: <code>ΔG = ΔH − TΔS</code>; ΔG &lt; ০ হলে স্বতঃস্ফূর্ত; সন্ধিক্ষণ T = ΔH ÷ ΔS (ΔS এর J কে kJ এ আনো)</li><li>দ্রবণ-তাপ: <code>ΔH = ∓(m·c·ΔT) ÷ n</code></li><li>তাপ ছাড়লে ΔH ঋণাত্মক (তাপোৎপাদী); তাপ শুষলে ধনাত্মক (তাপহারী)</li></ul>';
 
         const LEVELS = [
             { n: 6, doors: 3, types: ['sort', 'sort', 'sort'], name: 'শিক্ষানবিস', desc: 'তাপোৎপাদী না তাপহারী সর্ট' },
             { n: 8, doors: 4, types: ['hess', 'cal', 'sort', 'hess'], name: 'গবেষক', desc: 'হেসের ধাঁধা ও ক্যালরিমিটার' },
-            { n: 10, doors: 5, types: ['dhf', 'hess', 'cal', 'dhf', 'cal'], name: 'বিজ্ঞানী', desc: 'ΔHf, হেস ও ক্যালরিমিটার' }
+            { n: 10, doors: 5, types: ['dhf', 'hess', 'cal', 'dhf', 'cal'], name: 'বিজ্ঞানী', desc: 'ΔHf, হেস ও ক্যালরিমিটার' },
+            { n: 10, doors: 5, types: ['bond', 'sort', 'dhf', 'bond', 'cal'], name: 'বন্ধন-ভাঙা', desc: 'বন্ধন শক্তি দিয়ে ΔH', tok: 3 },
+            { n: 10, doors: 6, types: ['gibbs', 'hess', 'bond', 'cal2', 'sort', 'dhf'], name: 'স্বতঃস্ফূর্ততা', desc: 'ΔG = ΔH − TΔS ও দ্রবণ-তাপ', tok: 3, pm: 1.1 },
+            { n: 11, doors: 6, types: ['cal2', 'gibbs', 'hess', 'bond', 'dhf', 'gibbs'], name: 'তাপ-গোয়েন্দা', desc: 'ক্যালরিমিটার ΔH ও ΔG', tok: 3, pm: 1.2 },
+            { n: 11, doors: 7, types: ['hess', 'hess', 'bond', 'gibbs', 'cal2', 'dhf', 'cal'], name: 'বিশেষজ্ঞ', desc: 'সব ধরনের ধাঁধা, দুই গুণ হেস', tok: 2, pm: 1.3 },
+            { n: 12, doors: 7, types: ['bond', 'gibbs', 'cal2', 'hess', 'dhf', 'bond', 'gibbs'], name: 'পরীক্ষাগার-প্রধান', desc: 'কঠিন মান, কম তাপ শক্তি', tok: 2, pm: 1.5, heat: 85 },
+            { n: 12, doors: 8, types: ['hess', 'bond', 'cal2', 'gibbs', 'dhf', 'hess', 'cal2', 'gibbs'], name: 'নোবেল প্রার্থী', desc: '৮টি দরজা, ভুলের জরিমানা বেশি', tok: 2, pm: 1.7, heat: 80 },
+            { n: 12, doors: 8, types: ['gibbs', 'hess', 'bond', 'cal2', 'dhf', 'bond', 'hess', 'gibbs'], name: '🏆 তাপ-সম্রাট', desc: 'চূড়ান্ত গোলকধাঁধা · সর্বোচ্চ জরিমানা', tok: 2, pm: 2, heat: 75 }
         ];
         const HEAT0 = 100, PENALTY = 15, SORT_PEN = 10, TOKEN = 15;
-        const TYPENAME = { sort: 'সর্ট', hess: 'হেসের ধাঁধা', dhf: 'ΔHf চিপ', cal: 'ক্যালরিমিটার' };
+        const TYPENAME = { sort: 'সর্ট', hess: 'হেসের ধাঁধা', dhf: 'ΔHf চিপ', cal: 'ক্যালরিমিটার', bond: 'বন্ধন শক্তি', gibbs: 'স্বতঃস্ফূর্ততা (ΔG)', cal2: 'দ্রবণ-তাপ (ΔH মাপো)' };
+        const BONDS = [
+            { eq: 'CH₄ + 2O₂ → CO₂ + 2H₂O', dh: -814, sp: [['C–H (ভাঙে)', 4, 413, 1], ['O=O (ভাঙে)', 2, 498, 1], ['C=O (গড়ে)', 2, 805, -1], ['O–H (গড়ে)', 4, 463, -1], ['C–C (নেই)', 1, 347, 0]] },
+            { eq: 'H₂ + Cl₂ → 2HCl', dh: -183, sp: [['H–H (ভাঙে)', 1, 436, 1], ['Cl–Cl (ভাঙে)', 1, 243, 1], ['H–Cl (গড়ে)', 2, 431, -1], ['O=O (নেই)', 1, 498, 0]] },
+            { eq: 'N₂ + 3H₂ → 2NH₃', dh: -93, sp: [['N≡N (ভাঙে)', 1, 945, 1], ['H–H (ভাঙে)', 3, 436, 1], ['N–H (গড়ে)', 6, 391, -1], ['C–H (নেই)', 2, 413, 0]] },
+            { eq: 'C₂H₄ + H₂ → C₂H₆', dh: -123, sp: [['C=C (ভাঙে)', 1, 614, 1], ['H–H (ভাঙে)', 1, 436, 1], ['C–C (গড়ে)', 1, 347, -1], ['C–H (গড়ে)', 2, 413, -1], ['O–H (নেই)', 1, 463, 0]] },
+            { eq: '2H₂ + O₂ → 2H₂O', dh: -482, sp: [['H–H (ভাঙে)', 2, 436, 1], ['O=O (ভাঙে)', 1, 498, 1], ['O–H (গড়ে)', 4, 463, -1], ['H–Cl (নেই)', 2, 431, 0]] },
+            { eq: 'CH₄ + Cl₂ → CH₃Cl + HCl', dh: -114, sp: [['C–H (ভাঙে)', 1, 413, 1], ['Cl–Cl (ভাঙে)', 1, 243, 1], ['C–Cl (গড়ে)', 1, 339, -1], ['H–Cl (গড়ে)', 1, 431, -1], ['C–C (নেই)', 1, 347, 0]] },
+            { eq: 'C₂H₄ + H₂O → C₂H₅OH', dh: -41, sp: [['C=C (ভাঙে)', 1, 614, 1], ['O–H (ভাঙে)', 1, 463, 1], ['C–C (গড়ে)', 1, 347, -1], ['C–H (গড়ে)', 1, 413, -1], ['C–O (গড়ে)', 1, 358, -1], ['H–H (নেই)', 1, 436, 0]] }
+        ];
 
         function genHess() {
             const L = 'ABCDEFGH'.split(''); shuffle(L);
@@ -356,6 +372,22 @@ function NBSound(key) {
             const m = [20, 40, 50, 100, 200][rnd(5)], dT = (1 + rnd(8)) * 5, c = 4.2;
             const unknown = rnd(2) ? 'dT' : 'm';
             return { type: 'cal', m, dT, c, q: Math.round(m * c * dT), unknown, val: unknown === 'dT' ? 10 : 100, mistakes: 0, msg: '', done: false, right: false };
+        }
+        function genBond() {
+            const R = BONDS[rnd(BONDS.length)];
+            const tiles = R.sp.map(([t, n, v, role]) => ({ lab: (n > 1 ? n + ' × ' : '') + t.split(' (')[0], sub: t.split(' (')[1] ? 'বন্ধন শক্তি ' + bn(v) + ' kJ/mol' : '', v: n * v, sol: role }));
+            tiles.forEach(t => { t.sub = 'বন্ধন শক্তি ' + bn(t.v) + ' kJ (মোট)'; });
+            return { type: 'bond', title: R.eq, target: R.dh, tiles: shuffle(tiles), states: null, mistakes: 0, msg: '', done: false, right: false };
+        }
+        function genGibbs() {
+            const T = [300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500][rnd(10)], dS = [50, 100, 150, 200, 250][rnd(5)], dH = T * dS / 1000, hot = rnd(2) === 0;
+            return { type: 'gibbs', hot, dH: hot ? dH : -dH, dS: hot ? dS : -dS, ans: T, val: 500, min: 100, max: 2000, steps: [-100, -10, 10, 100], unit: 'K', mistakes: 0, msg: '', done: false, right: false };
+        }
+        function genCal2() {
+            const SUBS = [['NaOH', 40, -1], ['NH₄NO₃', 80, 1], ['KOH', 56, -1], ['CaCl₂', 111, -1], ['NH₄Cl', 53.5, 1]];
+            const sub = SUBS[rnd(SUBS.length)], mw = [50, 100, 200][rnd(3)], dT = [4, 5, 8, 10][rnd(4)], n = [0.05, 0.1, 0.2, 0.25][rnd(4)];
+            const mag = Math.round(mw * 4.2 * dT / n / 1000), g = Math.round(n * sub[1] * 100) / 100;
+            return { type: 'cal2', sub, mw, dT, n, g, ans: sub[2] * mag, val: 0, min: -400, max: 400, steps: [-50, -10, -1, 1, 10, 50], unit: 'kJ/mol', tolr: Math.max(1, Math.round(0.02 * mag)), mistakes: 0, msg: '', done: false, right: false };
         }
         function genSort() {
             for (;;) {
@@ -421,7 +453,7 @@ function NBSound(key) {
                 const deg = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([a, b]) => M.open[r + a][c + b]).length;
                 if (deg === 1) ends.push(r + ',' + c);
             }
-            const tokens = new Set(shuffle(ends).slice(0, 2 + LEVELS.indexOf(L)));
+            const tokens = new Set(shuffle(ends).slice(0, L.tok != null ? L.tok : 2 + LEVELS.indexOf(L)));
             return { M, doors, tokens, total: L.doors, types: LEVELS.indexOf(L) === 0 ? L.types.slice() : shuffle(L.types.slice()) };
         }
 
@@ -446,7 +478,7 @@ function NBSound(key) {
         function showIdle() {
             S.playing = false; S.asking = null; S.B = null; S.level = -1; S.heat = HEAT0; S.score = 0; hud(); hideSheet();
             let h = '<div class="hero">🧪</div><h2>তাপের গোলকধাঁধা পার হও</h2>' +
-                '<p>দরজা (🔒) খুলতে তাপ-রসায়নের ধাঁধা সমাধান করো: সর্ট, হেসের ধাঁধা, ΔHf চিপ ও ক্যালরিমিটার। ভুল করলে তাপ শক্তি কমবে।</p><div class="lvls">';
+                '<p>দরজা (🔒) খুলতে তাপ-রসায়নের ধাঁধা সমাধান করো: সর্ট, হেসের ধাঁধা, ΔHf চিপ, বন্ধন শক্তি, ক্যালরিমিটার ও ΔG = ΔH − TΔS। ভুল করলে তাপ শক্তি কমবে।</p><div class="lvls">';
             LEVELS.forEach((L, i) => {
                 const lock = i + 1 > unlocked;
                 h += '<button class="lvl" data-a="start:' + i + '"' + (lock ? ' disabled' : '') + '><span class="n">' + (lock ? '🔒' : bn(i + 1)) + '</span><span><b>' + L.name + '</b><small>' + L.desc + ' · ' + bn(L.doors) + 'টি দরজা</small></span><em>' + (lock ? 'লক' : 'খেলো') + '</em></button>';
@@ -457,7 +489,7 @@ function NBSound(key) {
         }
         function startLevel(i, fresh) {
             if (fresh) { S.score = 0; S.streak = 0; }
-            S.level = i; S.B = buildLevel(LEVELS[i]); S.r = 1; S.c = 1; S.heat = HEAT0; S.steps = 0; S.pool = []; S.asking = null;
+            S.level = i; S.B = buildLevel(LEVELS[i]); S.r = 1; S.c = 1; S.heat = LEVELS[i].heat || HEAT0; S.steps = 0; S.pool = []; S.asking = null;
             S.startScore = S.score; S.playing = true; hideSheet();
             const T = S.B.M.T;
             let cells = '';
@@ -511,7 +543,8 @@ function NBSound(key) {
         /* ---------- ধাঁধা ---------- */
         function openPuzzle(r, c) {
             const type = S.B.types[S.B.total - S.B.doors.size];
-            const P = type === 'sort' ? genSort() : type === 'hess' ? genHess() : type === 'dhf' ? genDhf() : genCal();
+            const P = type === 'sort' ? genSort() : type === 'hess' ? genHess() : type === 'dhf' ? genDhf() : type === 'bond' ? genBond() : type === 'gibbs' ? genGibbs() : type === 'cal2' ? genCal2() : genCal();
+            if (P.tiles && !P.states) P.states = P.tiles.map(() => 0);
             P.dr = r; P.dc = c; S.asking = P; renderPuzzle();
         }
         const tilesSum = P => P.tiles.reduce((s, t, i) => s + P.states[i] * t.v, 0);
@@ -526,13 +559,18 @@ function NBSound(key) {
                     h += '<div class="card">' + esc(cur[0]) + '</div><div class="meter sm"><i style="width:' + Math.round(P.got / P.total * 100) + '%"></i></div>' +
                         '<div class="opts"><button class="opt hot" data-a="sort:1"><span class="k">←</span><span>🔥 তাপোৎপাদী (তাপ ছাড়ে)</span></button><button class="opt cold" data-a="sort:0"><span>🧊 তাপহারী (তাপ শোষে)</span><span class="k">→</span></button></div>';
                 }
-            } else if (P.type === 'tiles' || P.type === 'hess' || P.type === 'dhf') {
+            } else if (P.type === 'gibbs' || P.type === 'cal2') {
+                if (P.type === 'gibbs') h += '<div class="qtext">ধরো একটি বিক্রিয়ার <b>ΔH = ' + sgn(P.dH) + ' kJ/mol</b> ও <b>ΔS = ' + sgn(P.dS) + ' J/(mol·K)</b>।<br>' + (P.hot ? 'সর্বনিম্ন কত তাপমাত্রা (K) থেকে এটি স্বতঃস্ফূর্ত হবে (ΔG ≤ ০)?' : 'সর্বোচ্চ কত তাপমাত্রা (K) পর্যন্ত এটি স্বতঃস্ফূর্ত থাকবে (ΔG ≤ ০)?') + '<br><small class="sub">সন্ধিক্ষণ T = ΔH ÷ ΔS (ΔS কে kJ এককে আনো)</small></div>';
+                else h += '<div class="qtext"><b>' + esc(P.sub[0]) + '</b> ' + bn(P.g) + ' g (মোলার ভর ' + bn(P.sub[1]) + ' g/mol) <b>' + bn(P.mw) + ' g পানিতে</b> গুললে তাপমাত্রা <b>' + bn(P.dT) + ' °C ' + (P.sub[2] < 0 ? 'বাড়ল' : 'কমল') + '</b>। দ্রবণের c = ৪.২ J/g·°C।<br>দ্রবণ-তাপ ΔH (kJ/mol, চিহ্নসহ) কত?<br><small class="sub">প্রথমে n = ভর ÷ M, তারপর q = m·c·ΔT, তারপর ΔH = ∓q ÷ n</small></div>';
+                h += '<div class="dial wide">' + P.steps.map(d => '<button class="btn" data-a="dial:' + d + '">' + (d > 0 ? '+' : '−') + bn(Math.abs(d)) + '</button>').join('') + '</div><div class="dial"><div class="dv"><b>' + (P.val > 0 && P.type === 'cal2' ? '+' : P.val < 0 ? '−' : '') + bn(Math.abs(P.val)) + '</b><small>' + P.unit + '</small></div></div>' +
+                    (P.done ? '' : '<div class="row"><button class="btn primary" data-a="num">🔓 যাচাই করো</button></div>');
+            } else if (P.type === 'tiles' || P.type === 'hess' || P.type === 'dhf' || P.type === 'bond') {
                 const hess = P.type === 'hess';
                 h += '<div class="qtext">' + esc(P.title) + '<br><small class="sub">' + (hess ? 'মাপা ΔH = ' : 'মাপা ΔH = ') + sgn(P.target) + ' kJ</small></div>' +
                     '<div class="hint">' + (hess ? 'ধাপগুলো ট্যাপ করে বদলাও: বাদ → যেমন আছে → উল্টে নাও (চিহ্ন বদলায়)। যোগফল লক্ষ্যের সমান হলে লক খোলো।' : 'চিপ ট্যাপ করো: বাদ → যোগ (+) → বিয়োগ (−)। কোনটা যোগ, কোনটা বিয়োগ করলে মাপা ΔH আসে?') + '</div><div class="tiles">';
                 P.tiles.forEach((t, i) => {
                     const st = P.states[i];
-                    const lab = st === 0 ? 'বাদ' : st === 1 ? (hess ? 'যেমন আছে' : '＋ যোগ') : (hess ? '⇄ উল্টে' : '− বিয়োগ');
+                    const lab = P.type === 'bond' ? (st === 0 ? 'বাদ' : st === 1 ? '🔨 ভাঙা (+)' : '🔧 গড়া (−)') : st === 0 ? 'বাদ' : st === 1 ? (hess ? 'যেমন আছে' : '＋ যোগ') : (hess ? '⇄ উল্টে' : '− বিয়োগ');
                     h += '<button class="tile s' + (st + 1) + '" data-a="tile:' + i + '"' + (P.done ? ' disabled' : '') + '><b>' + esc(t.lab) + '</b><span>' + (hess ? 'ΔH = ' : '') + (hess ? sgn(t.v) + ' kJ' : esc(t.sub) + ' · মান ' + sgn(t.v)) + '</span><em>' + lab + '</em></button>';
                 });
                 const sum = tilesSum(P);
@@ -544,6 +582,7 @@ function NBSound(key) {
                     '<div class="dial"><button class="btn" data-a="dial:' + (un ? -5 : -50) + '">' + (un ? '−৫' : '−৫০') + '</button><button class="btn" data-a="dial:' + (un ? -1 : -10) + '">' + (un ? '−১' : '−১০') + '</button><div class="dv"><b>' + bn(P.val) + '</b><small>' + (un ? '°C' : 'g') + '</small></div><button class="btn" data-a="dial:' + (un ? 1 : 10) + '">' + (un ? '+১' : '+১০') + '</button><button class="btn" data-a="dial:' + (un ? 5 : 50) + '">' + (un ? '+৫' : '+৫০') + '</button></div>' +
                     (P.done ? '' : '<div class="row"><button class="btn primary" data-a="cal">🔥 গরম করো</button></div>');
             }
+            if (P.type === 'bond') h = h.replace(/<div class="hint">.*?<\/div>/, '<div class="hint">বিক্রিয়কের বন্ধন <b>ভাঙতে</b> শক্তি লাগে (+), উৎপাদে বন্ধন <b>গড়লে</b> শক্তি বেরোয় (−)। ΔH = Σ(ভাঙা) − Σ(গড়া)। যে বন্ধন বিক্রিয়ায় নেই সেটি বাদ দাও।</div>');
             if (P.msg) h += '<div class="why ' + (P.msgGood ? 'good' : 'bad') + '">' + P.msg + '</div>';
             else if (!P.done) h += '<div class="why">ভুল হলে তাপ শক্তি কমবে, তাই ভেবে এগোও।</div>';
             h += '<details class="cheat"><summary>🧮 সূত্র দেখো</summary>' + CHEAT + '</details><div class="row" id="qrow">' +
@@ -551,7 +590,7 @@ function NBSound(key) {
             showSheet(h);
         }
         function penalize(P, n, msg) {
-            sfx.bad(); P.mistakes++; S.heat = Math.max(0, S.heat - n); hud();
+            sfx.bad(); P.mistakes++; n = Math.round(n * ((LEVELS[S.level] && LEVELS[S.level].pm) || 1)); S.heat = Math.max(0, S.heat - n); hud();
             P.msg = msg + ' <b>−' + bn(n) + ' তাপ শক্তি।</b>'; P.msgGood = false;
             if (S.heat <= 0) { P.over = true; P.done = false; }
         }
@@ -582,7 +621,7 @@ function NBSound(key) {
             const P = S.asking; if (!P || !P.tiles || P.done || P.over) return;
             const exact = P.tiles.every((t, i) => t.v === 0 || P.states[i] === t.sol);
             if (exact && tilesSum(P) === P.target) {
-                solved(P, P.type === 'hess' ? 'ধাপ যোগ করে ও উল্টে হেসের সূত্র মিলিয়েছ।' : 'ΔH = ΣΔHf(উৎপাদ) − ΣΔHf(বিক্রিয়ক)।');
+                solved(P, P.type === 'hess' ? 'ধাপ যোগ করে ও উল্টে হেসের সূত্র মিলিয়েছ।' : P.type === 'bond' ? 'ΔH = Σ(ভাঙা বন্ধনের শক্তি) − Σ(গড়া বন্ধনের শক্তি)।' : 'ΔH = ΣΔHf(উৎপাদ) − ΣΔHf(বিক্রিয়ক)।');
             } else if (tilesSum(P) !== P.target) {
                 penalize(P, PENALTY, '<b>❌ যোগফল (' + sgn(tilesSum(P)) + ') লক্ষ্যের সমান নয়।</b>');
             } else {
@@ -592,7 +631,8 @@ function NBSound(key) {
         }
         function tileReset() { const P = S.asking; if (!P || !P.tiles || P.done || P.over) return; sfx.tap(); P.states = P.tiles.map(() => 0); P.msg = ''; renderPuzzle(); }
         function dialMove(d) {
-            const P = S.asking; if (!P || P.type !== 'cal' || P.done || P.over) return;
+            const P = S.asking; if (P && (P.type === 'gibbs' || P.type === 'cal2') && !P.done && !P.over) { sfx.tap(); P.val = Math.max(P.min, Math.min(P.max, P.val + d)); P.msg = ''; renderPuzzle(); return; }
+            if (!P || P.type !== 'cal' || P.done || P.over) return;
             const un = P.unknown === 'dT'; sfx.tap();
             P.val = Math.max(un ? 1 : 10, Math.min(un ? 60 : 400, P.val + d)); P.msg = ''; renderPuzzle();
         }
@@ -601,6 +641,17 @@ function NBSound(key) {
             const given = Math.round(calGiven(P));
             if (given === P.q) solved(P, 'q = m × c × ΔT, তাই ' + (P.unknown === 'dT' ? 'ΔT = ' + bn(P.q) + ' ÷ (' + bn(P.m) + ' × ' + bn(P.c) + ') = ' + bn(P.dT) + ' °C।' : 'm = ' + bn(P.q) + ' ÷ (' + bn(P.c) + ' × ' + bn(P.dT) + ') = ' + bn(P.m) + ' g।'));
             else penalize(P, PENALTY, '<b>❌ ' + (given > P.q ? 'বেশি তাপ' : 'কম তাপ') + '।</b> তোমার মানে ' + bn(given) + ' J লাগত, দরকার ' + bn(P.q) + ' J।');
+            renderPuzzle();
+        }
+        function numSubmit() {
+            const P = S.asking; if (!P || !(P.type === 'gibbs' || P.type === 'cal2') || P.done || P.over) return;
+            if (P.type === 'gibbs') {
+                if (P.val === P.ans) { solved(P, 'T = ΔH ÷ ΔS = ' + bn(Math.abs(P.dH)) + ' ÷ ' + bn(Math.abs(P.dS) / 1000) + ' = ' + bn(P.ans) + ' K। এই তাপমাত্রায় ΔG = ০; ' + (P.hot ? 'এর উপরে ΔS ধনাত্মক হওয়ায় −TΔS প্রাধান্য পায়, বিক্রিয়া স্বতঃস্ফূর্ত।' : 'এর নিচে ΔH ঋণাত্মক হওয়ায় বিক্রিয়া স্বতঃস্ফূর্ত।')); }
+                else { const g = P.dH - P.val * P.dS / 1000; penalize(P, PENALTY, '<b>❌ T = ' + bn(P.val) + ' K এ ΔG = ' + sgn(Math.round(g * 10) / 10) + ' kJ</b> (' + (g < 0 ? 'স্বতঃস্ফূর্ত' : 'স্বতঃস্ফূর্ত নয়') + ')। সন্ধিক্ষণ হলো যেখানে ΔG = ০, অর্থাৎ T = ΔH ÷ ΔS।'); }
+            } else {
+                if (Math.abs(P.val - P.ans) <= P.tolr) solved(P, 'n = ' + bn(P.g) + ' ÷ ' + bn(P.sub[1]) + ' = ' + bn(P.n) + ' mol; q = ' + bn(P.mw) + ' × ৪.২ × ' + bn(P.dT) + ' = ' + bn(Math.round(P.mw * 4.2 * P.dT)) + ' J; ΔH = ' + (P.sub[2] < 0 ? '−' : '+') + 'q ÷ n ≈ ' + sgn(P.ans) + ' kJ/mol। ' + (P.sub[2] < 0 ? 'তাপমাত্রা বাড়ায় তাপ ছেড়েছে, ΔH ঋণাত্মক।' : 'তাপমাত্রা কমায় তাপ শুষেছে, ΔH ধনাত্মক।'));
+                else penalize(P, PENALTY, '<b>❌ মান মেলেনি।</b> ' + (Math.sign(P.val) !== Math.sign(P.ans) && P.val !== 0 ? 'চিহ্ন দেখো: তাপমাত্রা ' + (P.sub[2] < 0 ? 'বাড়লে ΔH ঋণাত্মক' : 'কমলে ΔH ধনাত্মক') + '। ' : '') + 'q = m·c·ΔT, তারপর n দিয়ে ভাগ করে kJ এ আনো।');
+            }
             renderPuzzle();
         }
         function qnext() {
@@ -643,6 +694,7 @@ function NBSound(key) {
                 case 'tsubmit': return tileSubmit();
                 case 'treset': return tileReset();
                 case 'cal': return calSubmit();
+                case 'num': return numSubmit();
                 case 'next': return startLevel(S.level + 1, false);
                 case 'restart': return startLevel(Math.max(0, S.level), false);
                 case 'home': return showIdle();
@@ -655,6 +707,7 @@ function NBSound(key) {
             const t = e.target && e.target.closest ? e.target.closest('[data-a]') : null;
             if (t) act(t.getAttribute('data-a'));
         }
+        window.__t = { S, LEVELS, startLevel, openPuzzle, tileSubmit, numSubmit, calSubmit, sortPick };
         view.addEventListener('click', onClick); sheet.addEventListener('click', onClick);
         let rep = null;
         function stopRep() { if (rep) { clearInterval(rep); rep = null; } }
