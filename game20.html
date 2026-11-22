@@ -148,6 +148,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px soli
 .sheet p { font-size: 14.5px; margin: 6px 0 14px; } .sheet ul { text-align: left; font-size: 14px; padding-left: 22px; }
 .learn { text-align: left; padding: 10px 12px; margin: 10px 0 14px; font-size: 13.5px; font-weight: 600; background: #eadfff; border: 2.5px solid var(--ink); border-radius: 10px; }
 @media (max-width: 560px) { .lab { grid-template-columns: 1fr; } .vessel { flex-direction: row; justify-content: center; gap: 14px; min-height: 0; } .panel { grid-template-columns: 1fr; } }
+.lv { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; } .lvb { flex: 0 0 150px; } .lvb:nth-child(6n+1) { background: #eadfff; } .lvb:nth-child(6n+2) { background: #ffdcec; } .lvb:nth-child(6n+3) { background: #d5f6ef; } .lvb:nth-child(6n+4) { background: #fff0b8; } .lvb:nth-child(6n+5) { background: #dbe8ff; } .lvb:nth-child(6n) { background: #ffe3c9; } .lvb.on { background: #fff !important; }
     </style>
 </head>
 <body>
@@ -165,7 +166,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px soli
             <button class="btn" id="btnRules" style="margin-left:auto">📖 নিয়ম</button>
         </div>
         <section class="job" id="job"></section>
-        <section class="lab">
+        <section class="lab" id="labSec">
             <div class="vessel"><div class="flask" id="flask"><i id="liq"></i><u></u><u></u><u></u></div><div class="cap" id="vcap"></div></div>
             <div><div class="eqn" id="eqn"></div><div class="comp" id="comp"></div><div class="legend" id="legend"></div></div>
         </section>
@@ -289,9 +290,53 @@ function NBSound(key) {
               fixedT: 350, costFn: o => 2 * o.b + o.rem * 0.05 + (o.cat ? 1 : 0),
               goals: [{ id: 'y', n: 'এস্টারের ফলন', op: 'ge', v: 90, u: '%' }, { id: 'rate', n: 'বিক্রিয়ার গতি', op: 'ge', v: 50, u: '' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 9, u: '💰' }],
               hint: 'বিক্রিয়ক বাড়ালে বা উৎপাদ (পানি) সরালে সাম্য ডানে সরে। এখানে তাপ-চাপ বদলে লাভ নেই (ΔH ≈ ০, গ্যাস নেই)।',
-              learn: 'বিক্রিয়ক যোগ করা বা উৎপাদ সরানোই Le Chatelier এর সবচেয়ে সরাসরি কৌশল। অনুঘটক শুধু গতি বাড়ায়, ফলন নয়।' }
+              learn: 'বিক্রিয়ক যোগ করা বা উৎপাদ সরানোই Le Chatelier এর সবচেয়ে সরাসরি কৌশল। অনুঘটক শুধু গতি বাড়ায়, ফলন নয়।' },
+            { name: 'জল-গ্যাস শিফট', sub: 'CO + H₂O · অনুপাত', icon: '💨', par: 5,
+              intro: 'হাইড্রোজেন কারখানা! CO কে স্টিমের সাথে বিক্রিয়ায় H₂ বানাও। গ্যাস-মোল সমান, তাই <b>চাপ কাজ করে না</b> — তাপ, স্টিমের অনুপাত আর ক্যাটালিস্ট ঠিক করো। CO এর রূপান্তর ≥ ৯০% চাই, স্টিম দামি!',
+              eq: 'CO + H₂O ⇌ CO₂ + H₂', dH: -41.2, dn: 0, species: ['CO', 'H₂O', 'CO₂', 'H₂'], cols: ['#ffe08a', '#bfe3ff', '#b6efd9', '#ffc2dc'],
+              rx: { nu: [-1, -1, 1, 1], gas: [1, 1, 1, 1], n0: o => [1, o.b, 0, 0], lnK: T => 41200 / (R * T) - 42 / R, Ea: 70, Tref: 650, dE: 90 },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 450, max: 900, step: 25, v: 850 }, { k: 'b', n: '♨️ স্টিম : CO অনুপাত', u: '×', min: 1, max: 5, step: 0.5, v: 1 }, { k: 'cat', n: '🧲 Fe₂O₃ ক্যাটালিস্ট', v: 0 }],
+              costFn: o => (o.T - 300) / 60 + 1.5 * o.b + (o.cat ? 2 : 0),
+              goals: [{ id: 'y', n: 'CO রূপান্তর', op: 'ge', v: 90, u: '%' }, { id: 'rate', n: 'বিক্রিয়ার গতি', op: 'ge', v: 30, u: '' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 13, u: '💰' }],
+              hint: 'তাপ-ছাড়া বিক্রিয়া ⇒ কম তাপে ফলন ভালো, কিন্তু গতি কমে। স্টিম বাড়ালে সাম্য ডানে সরে, কিন্তু খরচ বাড়ে। মাঝামাঝি তাপ + ক্যাটালিস্ট।',
+              learn: 'Δn = ০ হলে চাপ ফলন বদলায় না। এক বিক্রিয়ক বেশি দিলে অন্যটির রূপান্তর বাড়ে — বাস্তবে শিল্পে দুই ধাপে (উচ্চ ও নিম্ন তাপে) শিফট বিক্রিয়া চালানো হয়।' },
+            { name: 'ভবিষ্যদ্বাণী', sub: 'Le Chatelier · ৮টি প্রশ্ন', icon: '🔮', par: 2, quiz: 'pred',
+              intro: 'এবার সিমুলেশন ছাড়াই বলো! বিক্রিয়ায় একটি পরিবর্তন আনা হলো — সাম্য <b>বামে, ডানে</b> সরবে নাকি <b>অপরিবর্তিত</b> থাকবে? (উত্তর হিসাব করে মেলানো হবে, মুখস্থ নয়)',
+              hint: 'ΔH ও গ্যাস-মোল পরিবর্তন (Δn) দেখো। ক্যাটালিস্ট কখনো সাম্য বদলায় না।',
+              learn: 'তাপ: তাপমোচী ⇒ তাপ বাড়ালে বামে। চাপ: বেশি গ্যাস-মোলের দিকে কম চাপে। বিক্রিয়ক যোগ বা উৎপাদ সরানো ⇒ ডানে। ক্যাটালিস্ট ⇒ অপরিবর্তিত।' },
+            { name: 'NO তৈরি (বজ্রপাত)', sub: 'তাপগ্রাহী · চাপ ফাঁদ', icon: '⚡', par: 5,
+              intro: 'বজ্রপাতে বাতাসের N₂ ও O₂ মিলে NO হয়। বিক্রিয়াটি <b>তাপগ্রাহী</b> আর গ্যাস-মোল সমান। বাজেটের ভেতরে NO ≥ ৬.৫% (মিশ্রণে) আনো। চাপ বাড়ানো কি আসলেই কাজে দেয়? পরখ করো!',
+              eq: 'N₂ + O₂ ⇌ 2NO', dH: 180, dn: 0, species: ['N₂', 'O₂', 'NO'], cols: ['#d9b8ff', '#bfe3ff', '#ffc2dc'], xi: 2,
+              rx: { nu: [-1, -1, 2], gas: [1, 1, 1], n0: o => [1, o.b, 0], lnK: T => -180000 / (R * T) + 25 / R, Ea: 70, Tref: 2000, dE: 0 },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 1500, max: 3500, step: 100, v: 1800 }, { k: 'P', n: '🗜️ চাপ', u: ' atm', min: 1, max: 50, step: 1, v: 20 }, { k: 'b', n: '🫧 O₂ : N₂ অনুপাত', u: '×', min: 0.5, max: 3, step: 0.5, v: 0.5 }],
+              costFn: o => (o.T - 1000) / 250 + o.P / 10 + 0.5 * o.b,
+              goals: [{ id: 'x', n: 'NO (মিশ্রণে)', op: 'ge', v: 6.5, u: '%' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 10, u: '💰' }],
+              hint: 'তাপগ্রাহী বিক্রিয়ায় বেশি তাপ চাই। চাপ কি সাম্য বদলায়? Δn = ০! শুধু খরচ বাড়ে। O₂ কত রাখলে মিশ্রণে NO% সবচেয়ে বেশি?',
+              learn: 'তাপগ্রাহী ⇒ উচ্চ তাপমাত্রায় ফলন বাড়ে (বজ্রপাত বা ইঞ্জিনে ≈ ২০০০ K+ এ NO হয়)। Δn = ০ ⇒ চাপ অকার্যকর — তাই চাপ ফাঁদে পড়া যাবে না।' },
+            { name: 'PCl₅ বিয়োজন', sub: 'তাপগ্রাহী · Δn > ০', icon: '🧯', par: 5,
+              intro: 'PCl₅ ভেঙে PCl₃ ও Cl₂ হয় — তাপগ্রাহী এবং গ্যাস-মোল বাড়ে। বিয়োজন ≥ ৯২% আনো। ভ্যাকুয়াম (কম চাপ) আর তাপ — দুটোই খরচ করে, বাজেট মেনে চলো।',
+              eq: 'PCl₅ ⇌ PCl₃ + Cl₂', dH: 87.9, dn: 1, species: ['PCl₅', 'PCl₃', 'Cl₂'], cols: ['#ffe08a', '#bfe3ff', '#b6efd9'],
+              rx: { nu: [-1, 1, 1], gas: [1, 1, 1], n0: () => [1, 0, 0], lnK: T => -87900 / (R * T) + 170 / R, Ea: 70, Tref: 500, dE: 0 },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 400, max: 700, step: 25, v: 450 }, { k: 'P', n: '🗜️ চাপ', u: ' atm', min: 0.1, max: 5, step: 0.1, v: 3 }],
+              costFn: o => (o.T - 300) / 50 + 1.2 / o.P,
+              goals: [{ id: 'y', n: 'PCl₅ বিয়োজন', op: 'ge', v: 92, u: '%' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 8, u: '💰' }],
+              hint: 'গ্যাস-মোল বাড়ে ⇒ কম চাপে ডানে সরে; তাপগ্রাহী ⇒ বেশি তাপে ডানে। দুটোরই খরচ আছে — সেরা মিশ্রণ খোঁজো।',
+              learn: 'যখন Δn > ০, কম চাপ বিয়োজনকে সাহায্য করে (ভ্যাকুয়াম ডিসটিলেশনের মতো)। তাপগ্রাহী বিক্রিয়ায় তাপ বাড়ালে K বাড়ে।' },
+            { name: 'Q বনাম K', sub: 'দিক নির্ণয় · ৮টি প্রশ্ন', icon: '🧮', par: 2, quiz: 'qk',
+              intro: 'একই তাপমাত্রায় A + B ⇌ C + D এর Kc দেওয়া আছে, সাথে এই মুহূর্তের ঘনমাত্রা। <b>Q = [C][D] ÷ ([A][B])</b> বের করে K এর সাথে তুলনা করো — বিক্রিয়া কোনদিকে এগোবে?',
+              hint: 'Q < K ⇒ ডানে (আরও উৎপাদ), Q > K ⇒ বামে, Q = K ⇒ সাম্য।',
+              learn: 'Q হলো "এখনকার অবস্থা", K হলো "সাম্যের অবস্থা"। Q < K হলে উৎপাদ কম — বিক্রিয়া ডানে চলে। এটিই সাম্যের দিক ঠিক করার সবচেয়ে সরাসরি গাণিতিক উপায়।' },
+            { name: 'হ্যাবার চূড়ান্ত', sub: 'NH₃ তরল করে সরাও', icon: '🏆', par: 7,
+              intro: 'আসল হ্যাবার লুপ: অ্যামোনিয়াকে ঠান্ডা করে তরল হিসেবে প্রতিবার সরিয়ে ফেলা হয়! এখন ফলন ≥ ৮৫%, গতি ≥ ৪০, আর খরচ ≤ ৩৮ — সব একসাথে। আগের হ্যাবার স্তরের চেয়ে অনেক কঠিন!',
+              eq: 'N₂ + 3H₂ ⇌ 2NH₃', dH: -92.4, dn: -2, species: ['N₂', 'H₂', 'NH₃'], cols: ['#d9b8ff', '#bfe3ff', '#ffc2dc'],
+              rx: { nu: [-1, -3, 2], gas: [1, 1, 1], n0: () => [1, 3, 0], lnK: T => 92400 / (R * T) - 212 / R, rem: [0, 0, 1], Ea: 90, Tref: 700, dE: 150 },
+              knobs: [{ k: 'T', n: '🌡️ তাপমাত্রা', u: ' K', min: 500, max: 1000, step: 25, v: 700 }, { k: 'P', n: '🗜️ চাপ', u: ' atm', min: 10, max: 400, step: 10, v: 100 }, { k: 'rem', n: '🧊 NH₃ সরানো (তরল করে)', u: '%', min: 0, max: 90, step: 10, v: 0 }, { k: 'cat', n: '🧲 Fe ক্যাটালিস্ট', v: 0 }],
+              costFn: o => o.P / 20 + (o.T - 300) / 40 + (o.cat ? 2 : 0) + o.rem * 0.1,
+              goals: [{ id: 'y', n: 'NH₃ ফলন', op: 'ge', v: 85, u: '%' }, { id: 'rate', n: 'বিক্রিয়ার গতি', op: 'ge', v: 40, u: '' }, { id: 'cost', n: 'খরচ (বাজেট)', op: 'le', v: 38, u: '💰' }],
+              hint: 'গতির জন্য ≈ ৭০০ K ও ক্যাটালিস্ট দরকার। ফলন বাড়াতে উচ্চ চাপের সাথে উৎপাদ (NH₃) সরানো ব্যবহার করো — তাতে চাপ কমিয়ে খরচ বাঁচে।',
+              learn: 'উৎপাদ সরালে Q কমে ⇒ সাম্য ডানে। তাই শিল্পে প্রতি চক্রে NH₃ তরল করে বের করে অবিক্রিয়ক গ্যাস ফেরত পাঠানো হয় — প্রায় সম্পূর্ণ রূপান্তর সম্ভব।' }
         ];
-        LEVELS.forEach(L => { if (L.rx.Ea == null) { L.rx.Ea = 60; L.rx.Tref = 700; L.rx.dE = 0; } });
+        LEVELS.forEach(L => { if (L.rx && L.rx.Ea == null) { L.rx.Ea = 60; L.rx.Tref = 700; L.rx.dE = 0; } });
 
         const S = { lv: 0, o: {}, moves: 0, hints: 2, done: false, prev: null };
         let stars = {}; try { stars = JSON.parse(lsGet('equil-stars') || '{}') || {}; } catch (e) { stars = {}; }
@@ -304,16 +349,25 @@ function NBSound(key) {
             const L = LV(), o = opts(), r = solve(L.rx, o), rt = rate(L.rx, o);
             let cost = 0;
             if (L.costFn) cost = L.costFn(o); else if (L.cost) cost = o.P / L.cost.p + (o.T - 300) / L.cost.t + (o.cat ? L.cost.c : 0);
-            return { o, r, rate: rt, cost, vals: { no2: r.mol[0], y: r.y, rate: rt, cost } };
+            return { o, r, rate: rt, cost, vals: { no2: r.mol[0], x: r.mol[L.xi || 0], y: r.y, rate: rt, cost } };
         }
         const goalOk = (g, v) => g.op === 'ge' ? v >= g.v - 1e-9 : v <= g.v + 1e-9;
 
         function startLevel(i) {
-            S.lv = i; const L = LV(); S.o = {}; L.knobs.forEach(k => { S.o[k.k] = k.v; }); S.moves = 0; S.hints = 2; S.done = false;
+            S.lv = i; const L = LV(); S.o = {}; S.moves = 0; S.hints = 2; S.done = false;
+            if (L.quiz) {
+                S.q = { i: 0, miss: 0, rounds: buildRounds(L.quiz) };
+                $('#labSec').hidden = true; $('#goals').hidden = true; $('#btnDone').hidden = true; $('#panel').style.gridTemplateColumns = '1fr';
+                renderTabs(); $('#job').innerHTML = '<span class="sticker">লেভেল ' + bn(S.lv + 1) + ' / ' + bn(LEVELS.length) + '</span><h2>' + L.icon + ' ' + L.name + ' — ' + L.sub + '</h2><p>' + L.intro + '</p>';
+                $('#shift').innerHTML = '🧠 ভেবে উত্তর দাও — ভুল হলে কারণ শিখবে।'; renderQuiz(); return;
+            }
+            $('#labSec').hidden = false; $('#goals').hidden = false; $('#btnDone').hidden = false; $('#panel').style.gridTemplateColumns = '';
+            L.knobs.forEach(k => { S.o[k.k] = k.v; });
             S.prev = evalAll(); renderTabs(); renderStatic(); render(); $('#shift').innerHTML = 'স্লাইডার নাড়ো — সাম্য কোনদিকে সরে দেখো। 👀';
         }
         function renderTabs() {
             $('#lv').innerHTML = LEVELS.map((L, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? L.icon : '🔒') + ' ' + L.name + '</b><small>' + L.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join('');
+            const onb = document.querySelector('#lv .on'); if (onb && onb.scrollIntoView) { try { onb.scrollIntoView({ inline: 'center', block: 'nearest' }); } catch (e) {} }
         }
         function renderStatic() {
             const L = LV();
@@ -361,13 +415,82 @@ function NBSound(key) {
             S.o[k] = val; S.moves++; const after = render(); S.prev = after; explain(k, val > old, before, after); sfx.tap();
         }
 
+        /* ===== কুইজ-ধরনের লেভেল: উত্তর সলভার/হিসাব থেকে নির্ধারিত ===== */
+        function buildPred() {
+            const R5 = LEVELS[2].rx, R4 = LEVELS[3].rx, R1 = LEVELS[0].rx, RE = LEVELS[4].rx, RW = LEVELS[5].rx, RN = LEVELS[7].rx, RP = LEVELS[8].rx;
+            const A = (rx, name, eq, dH, dn, base, ch, kind, up, txt) => ({ rx, name, eq, dH, dn, base, ch, kind, up, txt });
+            const H = 'N₂ + 3H₂ ⇌ 2NH₃', W = 'CO + H₂O ⇌ CO₂ + H₂', E = 'CH₃COOH + C₂H₅OH ⇌ এস্টার + H₂O';
+            return [
+                A(R5, 'হ্যাবার', H, -92.4, -2, { T: 700, P: 100 }, { T: 900 }, 'T', 1, 'তাপমাত্রা ৭০০ K → ৯০০ K'),
+                A(R5, 'হ্যাবার', H, -92.4, -2, { T: 700, P: 100 }, { T: 550 }, 'T', 0, 'তাপমাত্রা ৭০০ K → ৫৫০ K'),
+                A(R5, 'হ্যাবার', H, -92.4, -2, { T: 700, P: 100 }, { P: 300 }, 'P', 1, 'চাপ ১০০ → ৩০০ atm'),
+                A(R5, 'হ্যাবার', H, -92.4, -2, { T: 700, P: 100 }, { P: 20 }, 'P', 0, 'চাপ ১০০ → ২০ atm'),
+                A(R5, 'হ্যাবার', H, -92.4, -2, { T: 700, P: 100 }, { cat: 1 }, 'cat', 1, 'Fe ক্যাটালিস্ট যোগ করা'),
+                A({ ...R5, rem: [0, 0, 1] }, 'হ্যাবার', H, -92.4, -2, { T: 700, P: 100, rem: 0 }, { rem: 60 }, 'rem', 1, 'উৎপাদ NH₃ ৬০% তরল করে সরানো'),
+                A(R4, 'কন্টাক্ট', '2SO₂ + O₂ ⇌ 2SO₃', -197, -1, { T: 700, P: 2 }, { T: 850 }, 'T', 1, 'তাপমাত্রা ৭০০ K → ৮৫০ K'),
+                A(R4, 'কন্টাক্ট', '2SO₂ + O₂ ⇌ 2SO₃', -197, -1, { T: 700, P: 2 }, { P: 10 }, 'P', 1, 'চাপ ২ → ১০ atm'),
+                A(R1, 'নাইট্রোজেন ডাই-অক্সাইড', '2NO₂ ⇌ N₂O₄', -57.2, -1, { T: 300, P: 1 }, { T: 250 }, 'T', 0, 'তাপমাত্রা ৩০০ K → ২৫০ K'),
+                A(R1, 'নাইট্রোজেন ডাই-অক্সাইড', '2NO₂ ⇌ N₂O₄', -57.2, -1, { T: 300, P: 2 }, { P: 0.5 }, 'P', 0, 'চাপ ২ → ০.৫ atm'),
+                A(RW, 'জল-গ্যাস শিফট', W, -41.2, 0, { T: 600, P: 1, b: 1 }, { P: 10 }, 'P', 1, 'চাপ ১ → ১০ atm'),
+                A(RW, 'জল-গ্যাস শিফট', W, -41.2, 0, { T: 600, P: 1, b: 1 }, { T: 800 }, 'T', 1, 'তাপমাত্রা ৬০০ K → ৮০০ K'),
+                A(RW, 'জল-গ্যাস শিফট', W, -41.2, 0, { T: 600, P: 1, b: 1 }, { b: 3 }, 'b', 1, 'স্টিম (H₂O) এর পরিমাণ ১× → ৩×'),
+                A(RN, 'NO গঠন', 'N₂ + O₂ ⇌ 2NO', 180, 0, { T: 2000, P: 1, b: 1 }, { T: 2600 }, 'T', 1, 'তাপমাত্রা ২০০০ K → ২৬০০ K'),
+                A(RN, 'NO গঠন', 'N₂ + O₂ ⇌ 2NO', 180, 0, { T: 2000, P: 1, b: 1 }, { P: 20 }, 'P', 1, 'চাপ ১ → ২০ atm'),
+                A(RP, 'PCl₅ বিয়োজন', 'PCl₅ ⇌ PCl₃ + Cl₂', 87.9, 1, { T: 500, P: 1 }, { T: 600 }, 'T', 1, 'তাপমাত্রা ৫০০ K → ৬০০ K'),
+                A(RP, 'PCl₅ বিয়োজন', 'PCl₅ ⇌ PCl₃ + Cl₂', 87.9, 1, { T: 500, P: 1 }, { P: 5 }, 'P', 1, 'চাপ ১ → ৫ atm'),
+                A(RE, 'এস্টার', E, 0, 0, { b: 1, rem: 0 }, { rem: 60 }, 'rem', 1, 'উৎপাদ পানি ৬০% সরানো'),
+                A(RE, 'এস্টার', E, 0, 0, { b: 1, rem: 0 }, { b: 3 }, 'b', 1, 'অ্যালকোহল ১× → ৩×'),
+                A(RE, 'এস্টার', E, 0, 0, { b: 1, rem: 0 }, { cat: 1 }, 'cat', 1, 'H₂SO₄ অনুঘটক যোগ করা')
+            ];
+        }
+        function truth(sc) {
+            const o1 = Object.assign({ T: 300, P: 1, b: 1, rem: 0, cat: 0 }, sc.base), o2 = Object.assign({}, o1, sc.ch);
+            const d = solve(sc.rx, o2).x - solve(sc.rx, o1).x; return Math.abs(d) < 1e-5 ? 'n' : d > 0 ? 'r' : 'l';
+        }
+        function whyPred(sc, tr) {
+            if (sc.kind === 'cat') return 'ক্যাটালিস্ট দুই দিকের গতি সমান বাড়ায় — সাম্য বদলায় না, শুধু দ্রুত পৌঁছায়।';
+            if (sc.kind === 'T') return sc.dH < 0 ? 'এটি তাপমোচী (ΔH = ' + bn(sc.dH) + '); ' + (sc.up ? 'তাপ বাড়ালে সিস্টেম তাপ শুষতে চায় ⇒ বামে।' : 'তাপ কমালে সিস্টেম তাপ ছাড়তে চায় ⇒ ডানে।') : 'এটি তাপগ্রাহী (ΔH = +' + bn(sc.dH) + '); ' + (sc.up ? 'তাপ বাড়ালে সিস্টেম তাপ শুষে ⇒ ডানে।' : 'তাপ কমালে ⇒ বামে।');
+            if (sc.kind === 'P') return sc.dn === 0 ? 'দুই পাশে গ্যাস-মোল সমান (Δn = ০) ⇒ চাপে সাম্য বদলায় না।' : (sc.dn < 0 ? 'ডান দিকে গ্যাস-মোল কম (Δn = ' + bn(sc.dn) + '); ' : 'ডান দিকে গ্যাস-মোল বেশি (Δn = +' + bn(sc.dn) + '); ') + (sc.up ? 'চাপ বাড়ালে কম মোলের দিকে ⇒ ' : 'চাপ কমালে বেশি মোলের দিকে ⇒ ') + (tr === 'r' ? 'ডানে।' : 'বামে।');
+            if (sc.kind === 'rem') return 'উৎপাদ সরালে Q < K হয়ে যায় ⇒ সাম্য ডানে সরে আরও উৎপাদ বানায়।';
+            return 'বিক্রিয়ক বাড়ালে Q < K ⇒ সাম্য ডানে।';
+        }
+        function buildQK() {
+            const items = [[4, [0.5, 0.5, 1, 1]], [4, [1, 1, 0.5, 0.5]], [10, [0.2, 0.5, 2, 2]], [0.25, [1, 2, 0.2, 0.5]], [2, [0.5, 0.5, 0.5, 1]], [50, [0.1, 0.1, 0.5, 1]], [1, [0.4, 0.5, 0.6, 0.5]], [0.1, [2, 1, 0.1, 0.1]]];
+            return items.map(([K, c]) => { const Q = c[2] * c[3] / (c[0] * c[1]); return { K, c, Q, ans: Math.abs(Q - K) < 1e-9 ? 'n' : Q < K ? 'r' : 'l' }; });
+        }
+        function shuffleA(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function buildRounds(kind) {
+            if (kind === 'qk') return shuffleA(buildQK());
+            return shuffleA(buildPred().map(sc => Object.assign(sc, { ans: truth(sc) }))).slice(0, 8);
+        }
+        const dirName = { r: '⟶ ডানে সরবে (উৎপাদ বাড়বে)', l: '⟵ বামে সরবে (বিক্রিয়ক বাড়বে)', n: '＝ অপরিবর্তিত / সাম্যে আছে' };
+        function renderQuiz() {
+            const L = LV(), Q = S.q, r = Q.rounds[Q.i];
+            $('#sMoves').textContent = bn(Math.min(Q.i + 1, Q.rounds.length)) + '/' + bn(Q.rounds.length); $('#sPar').textContent = '(ভুল ' + bn(Q.miss) + ')'; $('#sHint').textContent = bn(S.hints);
+            $('#btnHint').disabled = S.hints <= 0 || S.done;
+            if (!r) return;
+            let body;
+            if (L.quiz === 'qk') body = '<div class="eqn">A + B ⇌ C + D<small>Kc = <b>' + f1(r.K) + '</b></small></div><div class="goal" style="margin-top:8px;background:#fff">এখনকার ঘনমাত্রা (mol/L): [A] = <b>' + f1(r.c[0]) + '</b> · [B] = <b>' + f1(r.c[1]) + '</b> · [C] = <b>' + f1(r.c[2]) + '</b> · [D] = <b>' + f1(r.c[3]) + '</b></div>';
+            else body = '<div class="eqn">' + r.eq + '<small>' + r.name + ' · ' + (r.dH ? (r.dH < 0 ? '🔥 তাপমোচী' : '❄️ তাপগ্রাহী') + ' ΔH = ' + (r.dH > 0 ? '+' : '') + bn(r.dH) + ' kJ' : 'ΔH ≈ ০') + ' · Δn = ' + (r.dn > 0 ? '+' : '') + bn(r.dn) + '</small></div><div class="goal" style="margin-top:8px;background:#fff">🔧 পরিবর্তন: <b>' + r.txt + '</b></div>';
+            $('#panel').innerHTML = '<div class="ctl" style="grid-column:1/-1"><label><span>প্রশ্ন ' + bn(Q.i + 1) + ' / ' + bn(Q.rounds.length) + ' — সাম্য কোনদিকে?</span></label>' + body + '<div class="row" style="margin-top:10px"><button class="btn big" data-ans="l">⟵ বামে</button><button class="btn big" data-ans="n">＝ অপরিবর্তিত</button><button class="btn big" data-ans="r">ডানে ⟶</button></div></div>';
+        }
+        function answerQ(a) {
+            const L = LV(), Q = S.q, r = Q.rounds[Q.i]; if (!r || S.done) return;
+            const why = L.quiz === 'qk' ? 'Q = (' + f1(r.c[2]) + '×' + f1(r.c[3]) + ') ÷ (' + f1(r.c[0]) + '×' + f1(r.c[1]) + ') = <b>' + f1(r.Q) + '</b>, K = ' + f1(r.K) + ' ⇒ ' + (r.ans === 'n' ? 'Q = K, সাম্যে আছে।' : r.ans === 'r' ? 'Q < K ⇒ ডানে।' : 'Q > K ⇒ বামে।') : whyPred(r, r.ans);
+            if (a === r.ans) { sfx.ok(); $('#shift').innerHTML = '✔ ঠিক! ' + why; }
+            else { Q.miss++; sfx.bad(); $('#shift').innerHTML = '❌ সঠিক: ' + dirName[r.ans] + '। ' + why; }
+            Q.i++; S.moves = Q.miss;
+            if (Q.i >= Q.rounds.length) $('#panel').innerHTML = '<div class="ctl" style="grid-column:1/-1;text-align:center"><b>সব প্রশ্ন শেষ!</b><div class="row" style="margin-top:10px"><button class="btn primary big" data-act="fin">ফলাফল দেখো 🏁</button></div></div>';
+            else renderQuiz();
+        }
+
         function finish() {
             S.done = true; sfx.win();
             const L = LV(), score = S.moves + 3 * (2 - S.hints), st = score <= L.par ? 3 : score <= L.par * 2 ? 2 : 1;
             if (!stars[S.lv] || st > stars[S.lv]) { stars[S.lv] = st; lsSet('equil-stars', JSON.stringify(stars)); }
-            renderTabs(); render();
+            renderTabs(); if (!L.quiz) render();
             const last = S.lv === LEVELS.length - 1;
-            $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + L.icon + ' ' + L.name + ' — সফল!</h2><p>পরিবর্তন: <b>' + bn(S.moves) + '</b> · ইঙ্গিত: <b>' + bn(2 - S.hints) + '</b></p><div class="learn">🧠 ' + L.learn + '</div><div class="row">' +
+            $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + L.icon + ' ' + L.name + ' — সফল!</h2><p>' + (L.quiz ? 'ভুল' : 'পরিবর্তন') + ': <b>' + bn(S.moves) + '</b> · ইঙ্গিত: <b>' + bn(2 - S.hints) + '</b></p><div class="learn">🧠 ' + L.learn + '</div><div class="row">' +
                 (last ? '' : '<button class="btn primary big" data-act="next">পরের লেভেল ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
             $('#modal').hidden = false;
         }
@@ -381,12 +504,14 @@ function NBSound(key) {
             changed(r.dataset.k, +r.value);
         });
         document.addEventListener('click', e => {
-            const t = e.target.closest('[data-lv],[data-tog],[data-act],#btnHint,#btnReset,#btnRules,#btnDone'); if (!t) return;
+            const t = e.target.closest('[data-lv],[data-tog],[data-ans],[data-act],#btnHint,#btnReset,#btnRules,#btnDone'); if (!t) return;
             if (t.dataset.lv != null) { sfx.tap(); startLevel(+t.dataset.lv); return; }
+            if (t.dataset.ans) { answerQ(t.dataset.ans); return; }
+            if (t.dataset.act === 'fin') { finish(); return; }
             if (t.dataset.tog) { if (!S.done) changed(t.dataset.tog, S.o[t.dataset.tog] ? 0 : 1); return; }
             if (t.id === 'btnDone') { if (!t.disabled) finish(); return; }
             if (t.id === 'btnReset') { sfx.tap(); startLevel(S.lv); return; }
-            if (t.id === 'btnHint') { if (S.hints > 0 && !S.done) { S.hints--; sfx.pop(); $('#shift').innerHTML = '💡 ' + LV().hint; render(); } return; }
+            if (t.id === 'btnHint') { if (S.hints > 0 && !S.done) { S.hints--; sfx.pop(); const Lh = LV(); let ht = Lh.hint; if (Lh.quiz === 'qk' && S.q.rounds[S.q.i]) ht += ' (Q = ' + f1(S.q.rounds[S.q.i].Q) + ')'; $('#shift').innerHTML = '💡 ' + ht; if (Lh.quiz) { $('#sHint').textContent = bn(S.hints); $('#btnHint').disabled = S.hints <= 0; } else render(); } return; }
             if (t.id === 'btnRules') {
                 $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul><li>স্লাইডার/বাটন দিয়ে তাপ, চাপ, ক্যাটালিস্ট বা বিক্রিয়ক বদলাও।</li><li>প্রতিবার সাম্য কোনদিকে সরল তার কারণ নিচে দেখাবে (Le Chatelier)।</li><li>সব লক্ষ্য ✔ হলে <b>পরীক্ষা সম্পন্ন</b> চাপো।</li><li>কম পরিবর্তন ও কম ইঙ্গিতে বেশি তারা।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>';
                 $('#modal').hidden = false; return;
@@ -395,7 +520,7 @@ function NBSound(key) {
             if (t.dataset.act === 'again') { $('#modal').hidden = true; startLevel(S.lv); return; }
             if (t.dataset.act === 'next') { $('#modal').hidden = true; startLevel(Math.min(S.lv + 1, LEVELS.length - 1)); return; }
         });
-        window.__t = { S, LEVELS, solve, rate, evalAll, startLevel, changed, goalOk, finish };
+        window.__t = { S, LEVELS, buildRounds, truth, answerQ, solve, rate, evalAll, startLevel, changed, goalOk, finish };
         startLevel(0);
     })();
     </script>
