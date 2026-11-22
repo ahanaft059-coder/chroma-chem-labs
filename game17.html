@@ -60,8 +60,8 @@
         .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 8px; background: var(--card); border: 2px solid var(--line); box-shadow: 2px 2px 0 var(--sh); font-size: 13px; font-weight: 700; color: var(--mute); }
         .pill:nth-child(1) { background: #d6fbe7; } .pill:nth-child(2) { background: #ffd9e2; } .pill:nth-child(3) { background: #fff3a8; } .pill:nth-child(4) { background: #dbe4ff; }
         .pill b { color: var(--ink); font-weight: 800; font-variant-numeric: tabular-nums; }
-        .lv { display: flex; gap: 10px; flex-wrap: wrap; }
-        .lvb { flex: 1 1 150px; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 9px 12px 8px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); box-shadow: 3px 3px 0 var(--sh); cursor: pointer; text-align: left; transition: transform .12s, box-shadow .12s, background .12s; }
+        .lv { display: flex; gap: 10px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding-bottom: 6px; }
+        .lvb { flex: 0 0 168px; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 9px 12px 8px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); box-shadow: 3px 3px 0 var(--sh); cursor: pointer; text-align: left; transition: transform .12s, box-shadow .12s, background .12s; }
         .lvb:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--sh); }
         .lvb:active:not(:disabled) { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--sh); }
         .lvb b { font-size: 14.5px; font-weight: 800; } .lvb small { font-size: 12px; color: var(--mute); font-weight: 600; line-height: 1.4; }
@@ -203,19 +203,34 @@
             ['Sc', 'স্ক্যান্ডিয়াম', 'trans', '2,8,9,2'], ['Ti', 'টাইটেনিয়াম', 'trans', '2,8,10,2'], ['V', 'ভ্যানাডিয়াম', 'trans', '2,8,11,2'], ['Cr', 'ক্রোমিয়াম', 'trans', '2,8,13,1'],
             ['Mn', 'ম্যাঙ্গানিজ', 'trans', '2,8,13,2'], ['Fe', 'আয়রন (লোহা)', 'trans', '2,8,14,2'], ['Co', 'কোবাল্ট', 'trans', '2,8,15,2'], ['Ni', 'নিকেল', 'trans', '2,8,16,2'],
             ['Cu', 'কপার (তামা)', 'trans', '2,8,18,1'], ['Zn', 'জিংক (দস্তা)', 'trans', '2,8,18,2'], ['Ga', 'গ্যালিয়াম', 'post', '2,8,18,3'], ['Ge', 'জার্মেনিয়াম', 'meta', '2,8,18,4'],
-            ['As', 'আর্সেনিক', 'meta', '2,8,18,5'], ['Se', 'সেলেনিয়াম', 'non', '2,8,18,6'], ['Br', 'ব্রোমিন', 'hal', '2,8,18,7'], ['Kr', 'ক্রিপ্টন', 'noble', '2,8,18,8']
+            ['As', 'আর্সেনিক', 'meta', '2,8,18,5'], ['Se', 'সেলেনিয়াম', 'non', '2,8,18,6'], ['Br', 'ব্রোমিন', 'hal', '2,8,18,7'], ['Kr', 'ক্রিপ্টন', 'noble', '2,8,18,8'],
+            ['Rb', 'রুবিডিয়াম', 'alkali', '2,8,18,8,1'], ['Sr', 'স্ট্রনশিয়াম', 'earth', '2,8,18,8,2'], ['Y', 'ইট্রিয়াম', 'trans', '2,8,18,9,2'], ['Zr', 'জিরকোনিয়াম', 'trans', '2,8,18,10,2'],
+            ['Nb', 'নাইওবিয়াম', 'trans', '2,8,18,12,1'], ['Mo', 'মলিবডেনাম', 'trans', '2,8,18,13,1'], ['Tc', 'টেকনেশিয়াম', 'trans', '2,8,18,13,2'], ['Ru', 'রুথেনিয়াম', 'trans', '2,8,18,15,1'],
+            ['Rh', 'রোডিয়াম', 'trans', '2,8,18,16,1'], ['Pd', 'প্যালাডিয়াম', 'trans', '2,8,18,18'], ['Ag', 'সিলভার (রুপা)', 'trans', '2,8,18,18,1'], ['Cd', 'ক্যাডমিয়াম', 'trans', '2,8,18,18,2'],
+            ['In', 'ইন্ডিয়াম', 'post', '2,8,18,18,3'], ['Sn', 'টিন (রাং)', 'post', '2,8,18,18,4'], ['Sb', 'অ্যান্টিমনি', 'meta', '2,8,18,18,5'], ['Te', 'টেলুরিয়াম', 'meta', '2,8,18,18,6'],
+            ['I', 'আয়োডিন', 'hal', '2,8,18,18,7'], ['Xe', 'জেনন', 'noble', '2,8,18,18,8']
         ];
         const CAT = { alkali: 'ক্ষার ধাতু', earth: 'মৃৎক্ষার ধাতু', trans: 'ট্রানজিশন ধাতু', post: 'অন্যান্য ধাতু', meta: 'ধাতুকল্প', non: 'অধাতু', hal: 'হ্যালোজেন', noble: 'নিষ্ক্রিয় গ্যাস' };
         function pos(z) {
             if (z === 1) return [1, 1]; if (z === 2) return [1, 18];
             if (z <= 4) return [2, z - 2]; if (z <= 10) return [2, z + 8];
             if (z <= 12) return [3, z - 10]; if (z <= 18) return [3, z];
-            return [4, z - 18];
+            if (z <= 36) return [4, z - 18];
+            return [5, z - 36];
         }
+        const R36 = Array.from({ length: 36 }, (_, i) => i + 1);
         const LEVELS = [
             { name: 'লেভেল ১', desc: 'পারমাণবিক সংখ্যা দেখে (১–২০)', from: 1, max: 20, pre: [], clue: 'z', tip: 'টেবিল পারমাণবিক সংখ্যার ক্রমে বাঁ থেকে ডানে সাজানো। ঘরের ছোট সংখ্যাটা মিলিয়ে নাও।' },
             { name: 'লেভেল ২', desc: 'ইলেকট্রন বিন্যাস দেখে (৩–২০)', from: 3, max: 20, pre: [1, 2], clue: 'cfg', tip: 'শেলের সংখ্যা = পর্যায় (সারি)। শেষ শেলের ইলেকট্রন = গ্রুপ (১ বা ২; ৩ থেকে ৮ হলে ১০ যোগ করো)।' },
             { name: 'লেভেল ৩', desc: 'ট্রানজিশন ধাতু সহ (১–৩৬)', from: 1, max: 36, pre: [], clue: 'name', tip: 'গ্রুপ ৩–১২ ট্রানজিশন ধাতুর। Sc থেকে Zn এই ১০টি ঘরে এক এক করে বসে। ইঙ্গিতে পারমাণবিক সংখ্যা দেখা যায়।' }
+            ,{ name: 'লেভেল ৪', desc: 'পর্যায় ৫ শুরু (Rb–Xe) · Z দেখে', from: 37, max: 54, pre: R36, clue: 'z', h: 3, tip: 'পর্যায় ৫ এ আবার ক্ষার ধাতু (Rb) দিয়ে শুরু, শেষ নোবল গ্যাস Xe (গ্রুপ ১৮)। Z − ৩৬ = গ্রুপ।' },
+            { name: 'লেভেল ৫', desc: 'পর্যায় ৫ · শুধু নাম দেখে', from: 37, max: 54, pre: R36, clue: 'name', h: 3, tip: 'Y থেকে Cd = ট্রানজিশন (৩–১২)। In, Sn গ্রুপ ১৩, ১৪; Sb, Te ধাতুকল্প; I হ্যালোজেন; Xe নোবল গ্যাস।' },
+            { name: 'লেভেল ৬', desc: 'পর্যায় ৫ · বিন্যাস দেখে', from: 37, max: 54, pre: R36, clue: 'cfg', h: 2, tip: 'পাঁচটি শেল = পর্যায় ৫। শেষ শেলের ইলেকট্রন = গ্রুপ (গ্রুপ ১, ২, ১৩–১৮)। Pd (…১৮) ব্যতিক্রম — শেষ শেল খালি!' },
+            { name: 'লেভেল ৭', desc: '১–৩৬ · নাম দেখে · ২ ইঙ্গিত', from: 1, max: 36, pre: [], clue: 'name', h: 2, tip: 'এবার পুরো টেবিল, Z ছাড়া। নাম দেখে গ্রুপ-পর্যায় মনে করো — ইঙ্গিত মাত্র ২টি।' },
+            { name: 'লেভেল ৮', desc: '১–৩৬ · শুধু বিন্যাস দেখে', from: 1, max: 36, pre: [], clue: 'cfg', h: 2, tip: 'শেল সংখ্যা = পর্যায়, শেষ শেলের ইলেকট্রন = গ্রুপ। ট্রানজিশনের জন্য শেষের আগের শেল বাড়ে (Sc: ২,৮,৯,২)।' },
+            { name: 'লেভেল ৯', desc: '১–৫৪ · নাম দেখে', from: 1, max: 54, pre: [], clue: 'name', h: 2, tip: 'পাঁচ পর্যায়, ৫৪টি মৌল! ধাতুর ধরন ও গ্রুপের রং দেখে ঘর ঠিক করো।' },
+            { name: 'লেভেল ১০', desc: '১–৫৪ · শুধু প্রতীক', from: 1, max: 54, pre: [], clue: 'sym', h: 1, tip: 'শুধু প্রতীক (Fe, Zr, Sb…) — নাম বা সংখ্যা নেই! মৌলটি চিনে নিজেই স্থান নির্ণয় করো। ইঙ্গিত মাত্র ১টি।' },
+            { name: '🏆 চূড়ান্ত', desc: '১–৫৪ · বিন্যাস · ইঙ্গিত ০', from: 1, max: 54, pre: [], clue: 'cfg', h: 0, tip: 'শেষ পরীক্ষা: শুধু ইলেকট্রন বিন্যাস, কোনো ইঙ্গিত নেই। শেল গুনে পর্যায়, শেষ শেল গুনে গ্রুপ — ব্যতিক্রম (Cr, Cu, Nb, Mo, Ru, Rh, Pd, Ag) সাবধান!' }
         ];
         let stars = {}; try { stars = JSON.parse(lsGet('ptable-stars') || '{}') || {}; } catch (e) { stars = {}; }
         const S = { lv: 0, placed: {}, tray: [], sel: null, miss: 0, hints: 3, hintUsed: 0, t0: 0, ticker: null, over: false, total: 0 };
@@ -225,13 +240,14 @@
 
         function renderLevels() {
             $('#lv').innerHTML = LEVELS.map((L, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlockedLv(i) ? '' : ' disabled') + '><b>' + (unlockedLv(i) ? '' : '🔒 ') + L.name + '</b><small>' + L.desc + '</small><i>' + starStr(stars[i]) + '</i></button>').join('');
+            const on = $('#lv .on'); if (on) { const c = $('#lv'); c.scrollLeft = Math.max(0, on.offsetLeft - c.clientWidth / 2 + on.offsetWidth / 2); }
         }
         $('#legend').innerHTML = Object.keys(CAT).map(k => '<span class="k-' + k + '">' + CAT[k] + '</span>').join('');
 
         function start(i) {
             clearInterval(S.ticker);
             const L = LEVELS[i];
-            S.lv = i; S.placed = {}; S.sel = null; S.miss = 0; S.hints = 3; S.hintUsed = 0; S.over = false; S.t0 = Date.now();
+            S.lv = i; S.placed = {}; S.sel = null; S.miss = 0; S.hints = L.h != null ? L.h : 3; S.hintUsed = 0; S.over = false; S.t0 = Date.now();
             L.pre.forEach(z => { const p = pos(z); S.placed[key(p[0], p[1])] = z; });
             const zs = []; for (let z = L.from; z <= L.max; z++) zs.push(z);
             S.tray = shuffle(zs); S.total = zs.length;
@@ -249,7 +265,7 @@
         function setMsg(t, c) { const m = $('#msg'); m.textContent = t; m.className = 'msg' + (c ? ' ' + c : ''); }
 
         function renderTable() {
-            const L = LEVELS[S.lv], maxP = L.max > 20 ? 4 : 4;
+            const L = LEVELS[S.lv], maxP = L.max > 36 ? 5 : 4;
             const cells = {};
             for (let z = 1; z <= L.max; z++) { const p = pos(z); cells[key(p[0], p[1])] = z; }
             let h = '<span class="lab"></span>';
@@ -271,7 +287,7 @@
             $('#tray').innerHTML = S.tray.length ? S.tray.map(z => {
                 const e = EL[z - 1];
                 const extra = L.clue === 'z' ? '<em>Z = ' + bn(z) + '</em>' : L.clue === 'cfg' ? '<em>' + e[3].split(',').map(bn).join(', ') + '</em>' : (S.revealed[z] ? '<em>Z = ' + bn(z) + '</em>' : '');
-                return '<button class="tile' + (S.sel === z ? ' sel' : '') + '" data-z="' + z + '"><b>' + e[0] + '</b><span>' + e[1] + '</span>' + extra + '</button>';
+                return '<button class="tile' + (S.sel === z ? ' sel' : '') + '" data-z="' + z + '"><b>' + e[0] + '</b>' + (L.clue === 'sym' ? '' : '<span>' + e[1] + '</span>') + extra + '</button>';
             }).join('') : '<div style="align-self:center;font-weight:700;color:var(--mute)">সব মৌল বসানো হয়ে গেছে 🎉</div>';
         }
 
