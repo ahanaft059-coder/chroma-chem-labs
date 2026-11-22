@@ -145,6 +145,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px soli
 .ro small { display: block; font-size: 11.5px; font-weight: 800; color: var(--mute); } .ro b { font: 800 19px var(--display); font-variant-numeric: tabular-nums; }
 .ro .hid b { color: var(--a1); }
 .ro .ext { grid-column: 1 / -1; display: none; } .ro .ext.on { display: block; }
+.lv { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding-top: 8px; } .lvb { flex: 0 0 138px; }
 .info { padding: 8px 12px; font-size: 13px; font-weight: 700; background: #fff; border: 2.5px dashed var(--ink); border-radius: 10px; }
 @media (max-width: 560px) { .ro { grid-template-columns: repeat(2, 1fr); } .panel { grid-template-columns: 1fr; } }
 
@@ -221,55 +222,80 @@ $('#bgBtn').addEventListener('click', () => {
     lsSet('gaslab-bg', next); sfx.tap();
 });
 const R = 0.0821;
-/* P = nRT/V ; কনটেইনার: knob = চলক */
+/* st(x): x = স্লাইডারের মান → {P,V,T,n}; val(o,x): যা লক্ষ্যের সাথে মেলাতে হবে */
+const N0 = 2 * 5 / (R * 300), N1 = 1 * 6 / (R * 300);
 const LEVELS = [
- { name: 'বয়েলের সূত্র', sub: 'T স্থির', icon: '🗜️', blind: false, tol: 0.03, vmax: 10, cyl: 'piston',
-   intro: 'T = ৩০০ K ও গ্যাসের পরিমাণ স্থির। পিস্টন চেপে চাপ ঠিক <b>৪.০ atm</b> করো। পরীক্ষা করে দেখো P × V কীভাবে বদলায়!',
-   fixed: { T: 300, n: 0.5 }, knob: { k: 'V', n: '🗜️ আয়তন V', u: ' L', min: 1, max: 10, step: 0.1, v: 8 },
-   goal: o => P(o), target: 4.0, unit: ' atm', gname: 'চাপ P',
-   hint: 'P₁V₁ = P₂V₂ (T, n স্থির)। এখন P×V এর মান দেখো — ধ্রুবক! তাহলে V = (P×V) ÷ ৪।',
+ { name: 'বয়েলের সূত্র', sub: 'T স্থির · লাইভ', icon: '🗜️', blind: false, tol: 0.03, vmax: 10, cyl: 'piston', hn: 2,
+   intro: 'T = ৩০০ K ও গ্যাসের পরিমাণ স্থির। পিস্টন চেপে চাপ ঠিক <b>৪.০ atm</b> করো। P × V কীভাবে বদলায় দেখো!',
+   knob: { n: '🗜️ আয়তন V', u: ' L', min: 1, max: 10, step: 0.1, v: 8 }, st: x => ({ V: x, T: 300, n: 0.5, P: 0.5 * R * 300 / x }), val: o => o.P, target: 4, unit: ' atm', gname: 'চাপ P', given: 'T = ৩০০ K, n = ০.৫ mol',
+   hint: 'P₁V₁ = P₂V₂ (T, n স্থির)। এখন P×V এর মান দেখো — ধ্রুবক! তাহলে V = (P×V) ÷ ৪।', live: o => 'P × V = <b>' + fx(o.P * o.V, 2) + '</b>',
    learn: 'T ও n স্থির থাকলে P ∝ 1/V, অর্থাৎ P×V = ধ্রুবক। আয়তন অর্ধেক করলে চাপ দ্বিগুণ — অণুরা দেয়ালে দ্বিগুণ ঘন ঘন ধাক্কা দেয়।' },
- { name: 'চার্লসের সূত্র', sub: 'P স্থির (বেলুন)', icon: '🎈', blind: false, tol: 0.03, vmax: 25, cyl: 'free',
+ { name: 'চার্লসের সূত্র', sub: 'P স্থির (বেলুন)', icon: '🎈', blind: false, tol: 0.03, vmax: 25, cyl: 'free', hn: 2,
    intro: 'পিস্টন মুক্ত, বাইরের চাপ ১ atm স্থির। গ্যাসকে গরম বা ঠান্ডা করে বেলুনের আয়তন ঠিক <b>১৫ L</b> করো।',
-   fixed: { P: 1, n: 0.5 }, knob: { k: 'T', n: '🌡️ তাপমাত্রা T', u: ' K', min: 200, max: 600, step: 5, v: 250 },
-   goal: o => o.V, target: 15, unit: ' L', gname: 'আয়তন V',
-   hint: 'V/T = ধ্রুবক। এখন V/T এর মান দেখো; T = V ÷ (V/T)।',
+   knob: { n: '🌡️ তাপমাত্রা T', u: ' K', min: 200, max: 600, step: 5, v: 250 }, st: x => ({ P: 1, n: 0.5, T: x, V: 0.5 * R * x }), val: o => o.V, target: 15, unit: ' L', gname: 'আয়তন V', given: 'P = ১ atm, n = ০.৫ mol',
+   hint: 'V/T = ধ্রুবক। এখন V/T এর মান দেখো; T = V ÷ (V/T)।', live: o => 'V ÷ T = <b>' + fx(o.V / o.T, 4) + '</b>',
    learn: 'P স্থির থাকলে V ∝ T (কেলভিনে)। গরম অণু দ্রুত ছোটে, পিস্টনকে বেশি ঠেলে — আয়তন বাড়ে।' },
- { name: 'গে-লুসাকের সূত্র', sub: 'V স্থির (বন্ধ ক্যান) · অন্ধ', icon: '🥫', blind: true, tol: 0.03, vmax: 6.5, cyl: 'rigid',
-   intro: 'বন্ধ ক্যানে <b>৩০০ K-এ চাপ ২.০ atm</b>। চাপমাপক যন্ত্র ঢাকা! হিসাব করে তাপমাত্রা ঠিক করো যাতে চাপ <b>৩.০ atm</b> হয়, তারপর পরীক্ষা চালাও।',
-   fixed: { V: 5, n: 2 * 5 / (R * 300) }, knob: { k: 'T', n: '🌡️ তাপমাত্রা T', u: ' K', min: 250, max: 600, step: 5, v: 300 },
-   goal: o => P(o), target: 3.0, unit: ' atm', gname: 'চাপ P',
+ { name: 'গে-লুসাকের সূত্র', sub: 'বন্ধ ক্যান · অন্ধ', icon: '🥫', blind: true, tol: 0.03, vmax: 6.5, cyl: 'rigid', hn: 2,
+   intro: 'বন্ধ ক্যানে <b>৩০০ K-এ চাপ ২.০ atm</b>। চাপমাপক ঢাকা! হিসাব করে তাপমাত্রা ঠিক করো যাতে চাপ <b>৩.০ atm</b> হয়, তারপর পরীক্ষা চালাও।',
+   knob: { n: '🌡️ তাপমাত্রা T', u: ' K', min: 250, max: 600, step: 5, v: 300 }, st: x => ({ V: 5, T: x, n: N0, P: N0 * R * x / 5 }), val: o => o.P, target: 3, unit: ' atm', gname: 'চাপ P', given: 'P₁ = ২.০ atm, T₁ = ৩০০ K, V = ৫ L',
    hint: 'P₁/T₁ = P₂/T₂ ⇒ T₂ = T₁ × P₂/P₁ = ৩০০ × ৩ ÷ ২।',
    learn: 'V স্থির থাকলে P ∝ T। বন্ধ ক্যান আগুনে দিলে তাই বিস্ফোরণের ভয় — চাপ তাপমাত্রার সাথে সরলরেখায় বাড়ে।' },
- { name: 'আদর্শ গ্যাস সমীকরণ', sub: 'PV = nRT · অন্ধ', icon: '⚗️', blind: true, tol: 0.03, vmax: 8, cyl: 'rigid',
+ { name: 'আদর্শ গ্যাস সমীকরণ', sub: 'PV = nRT · অন্ধ', icon: '⚗️', blind: true, tol: 0.03, vmax: 8, cyl: 'rigid', hn: 2,
    intro: 'ট্যাংক ৬ L, তাপমাত্রা ৩৫০ K। কত মোল (n) গ্যাস ভরলে চাপ হবে <b>২.৫ atm</b>? R = ০.০৮২১ L·atm/(mol·K)। চাপমাপক ঢাকা।',
-   fixed: { V: 6, T: 350 }, knob: { k: 'n', n: '⚗️ গ্যাসের পরিমাণ n', u: ' mol', min: 0.1, max: 2, step: 0.01, v: 1 },
-   goal: o => P(o), target: 2.5, unit: ' atm', gname: 'চাপ P',
+   knob: { n: '⚗️ গ্যাসের পরিমাণ n', u: ' mol', min: 0.1, max: 2, step: 0.01, v: 1 }, st: x => ({ V: 6, T: 350, n: x, P: x * R * 350 / 6 }), val: o => o.P, target: 2.5, unit: ' atm', gname: 'চাপ P', given: 'V = ৬ L, T = ৩৫০ K, R = ০.০৮২১',
    hint: 'n = PV ÷ RT = (২.৫ × ৬) ÷ (০.০৮২১ × ৩৫০)।',
    learn: 'PV = nRT — চারটি চলক একসাথে। তিনটি জানা থাকলে চতুর্থটি হিসাব করে বের করা যায়।' },
- { name: 'ডালটনের সূত্র', sub: 'মিশ্র গ্যাস · অন্ধ', icon: '🧪', blind: true, tol: 0.03, vmax: 12, cyl: 'rigid',
+ { name: 'ডালটনের সূত্র', sub: 'মিশ্র গ্যাস · অন্ধ', icon: '🧪', blind: true, tol: 0.03, vmax: 12, cyl: 'rigid', hn: 2, partial: true,
    intro: '১০ L পাত্রে ৩০০ K-এ ০.৩০ mol N₂ আছে। এতে কিছু হিলিয়াম (He) ঢুকিয়ে <b>মোট চাপ ১.৫ atm</b> করো। কত মোল He লাগবে?',
-   fixed: { V: 10, T: 300, n0: 0.3 }, knob: { k: 'n', n: '🎈 যোগ করা He', u: ' mol', min: 0, max: 1, step: 0.01, v: 0.1 },
-   goal: o => P(o), target: 1.5, unit: ' atm', gname: 'মোট চাপ',
+   knob: { n: '🎈 যোগ করা He', u: ' mol', min: 0, max: 1, step: 0.01, v: 0.1 }, st: x => ({ V: 10, T: 300, n: 0.3 + x, P: (0.3 + x) * R * 300 / 10 }), val: o => o.P, target: 1.5, unit: ' atm', gname: 'মোট চাপ', given: 'V = ১০ L, T = ৩০০ K, N₂ = ০.৩০ mol, R = ০.০৮২১',
    hint: 'n মোট = PV ÷ RT = (১.৫ × ১০) ÷ (০.০৮২১ × ৩০০); এরপর He = n মোট − ০.৩০।',
-   learn: 'মিশ্র গ্যাসে মোট চাপ = আংশিক চাপগুলোর যোগফল (P = P₁ + P₂)। প্রতিটি গ্যাস এমনভাবে আচরণ করে যেন সে একাই পাত্রে আছে।' }
+   learn: 'মিশ্র গ্যাসে মোট চাপ = আংশিক চাপগুলোর যোগফল (P = P₁ + P₂)। প্রতিটি গ্যাস এমনভাবে আচরণ করে যেন সে একাই পাত্রে আছে।' },
+ { name: 'সম্মিলিত গ্যাস সূত্র', sub: 'P, V, T তিনটিই বদলায়', icon: '🧮', blind: true, tol: 0.01, vmax: 10, cyl: 'piston', hn: 2,
+   intro: 'গ্যাসের শুরুর অবস্থা: <b>১ atm, ৬ L, ৩০০ K</b>। এখন তাপমাত্রা <b>৪৫০ K</b> করা হয়েছে (n স্থির)। পিস্টন সরিয়ে চাপ <b>২.০ atm</b> করতে হলে আয়তন কত L হবে? (সহনশীলতা ±১%)',
+   knob: { n: '🗜️ নতুন আয়তন V₂', u: ' L', min: 1, max: 10, step: 0.05, v: 8 }, st: x => ({ V: x, T: 450, n: N1, P: N1 * R * 450 / x }), val: o => o.P, target: 2, unit: ' atm', gname: 'চাপ P₂', given: 'P₁ = ১ atm, V₁ = ৬ L, T₁ = ৩০০ K, T₂ = ৪৫০ K',
+   hint: 'P₁V₁/T₁ = P₂V₂/T₂ ⇒ V₂ = P₁V₁T₂ ÷ (T₁P₂) = (১×৬×৪৫০) ÷ (৩০০×২)।',
+   learn: 'P₁V₁/T₁ = P₂V₂/T₂ — বয়েল, চার্লস ও গে-লুসাক একসাথে। T সবসময় কেলভিনে।' },
+ { name: 'STP ও মোলার আয়তন', sub: '২২.৪ L রহস্য', icon: '🧊', blind: true, tol: 0.01, vmax: 14, cyl: 'rigid', hn: 2,
+   intro: '১১.২ L ট্যাংক, তাপমাত্রা <b>২৭৩ K (STP)</b>। কত মোল আদর্শ গ্যাস ভরলে চাপ ঠিক <b>১.০০ atm</b> হবে? (এটাই STP তে মোলার আয়তনের ভিত্তি)',
+   knob: { n: '⚗️ গ্যাসের পরিমাণ n', u: ' mol', min: 0.1, max: 1.5, step: 0.01, v: 0.8 }, st: x => ({ V: 11.2, T: 273, n: x, P: x * R * 273 / 11.2 }), val: o => o.P, target: 1, unit: ' atm', gname: 'চাপ P', given: 'V = ১১.২ L, T = ২৭৩ K, R = ০.০৮২১',
+   hint: 'STP তে ১ mol = ২২.৪ L; ১১.২ L তাই কত mol? অথবা n = PV ÷ RT।',
+   learn: 'STP (০°C, ১ atm) তে যেকোনো আদর্শ গ্যাসের ১ মোল = ২২.৪ L। আবোগাড্রোর নীতি: সমান আয়তনে সমান অণু।' },
+ { name: 'অজানা গ্যাসের ভর', sub: 'ঘনত্ব ও মোলার ভর', icon: '⚖️', blind: true, tol: 0.01, vmax: 3, cyl: 'rigid', hn: 2,
+   intro: '২ L পাত্রে <b>৩.২ g</b> অজানা গ্যাস, ৩০০ K-এ মাপা চাপ <b>১.২৩ atm</b>। গ্যাসটির মোলার ভর (g/mol) বসাও যাতে হিসাব-করা চাপ মাপা চাপের সাথে মেলে।',
+   knob: { n: '🔬 মোলার ভর M', u: ' g/mol', min: 2, max: 100, step: 1, v: 16 }, st: x => ({ V: 2, T: 300, n: 3.2 / x, P: (3.2 / x) * R * 300 / 2 }), val: o => o.P, target: 1.23, unit: ' atm', gname: 'চাপ P', d: 2, given: 'ভর = ৩.২ g, V = ২ L, T = ৩০০ K',
+   hint: 'n = ভর ÷ M; PV = (ভর ÷ M)RT ⇒ M = ভর × RT ÷ (PV)।',
+   learn: 'M = mRT/(PV) বা ঘনত্ব d = PM/(RT)। এভাবে অজানা গ্যাস শনাক্ত করা যায় — এখানে M ≈ ৩২ (O₂)।' },
+ { name: 'গ্রাহামের ব্যাপন সূত্র', sub: 'হালকা গ্যাস দ্রুত', icon: '💨', blind: true, tol: 0.01, vmax: 10, cyl: 'piston', hn: 2,
+   intro: 'গ্যাস X, O₂ (M = ৩২) এর চেয়ে <b>২ গুণ দ্রুত</b> ব্যাপিত হয়। X এর মোলার ভর কত? স্লাইডারে M বসাও — অণুদের গতিও বদলাবে!',
+   knob: { n: '🔬 X এর মোলার ভর', u: ' g/mol', min: 1, max: 100, step: 1, v: 32 }, st: x => ({ V: 4, T: 300, n: 0.5, P: 0.5 * R * 300 / 4, sp: Math.sqrt(32 / x) }), val: (o, x) => Math.sqrt(32 / x), target: 2, unit: '×', gname: 'ব্যাপনের হার (O₂ এর তুলনায়)', d: 2, given: 'M(O₂) = ৩২',
+   hint: 'r₁/r₂ = √(M₂/M₁) ⇒ ২ = √(৩২/M) ⇒ M = ৩২ ÷ ৪।',
+   learn: 'গ্রাহাম: ব্যাপনের হার ∝ 1/√M। হালকা গ্যাস (H₂, He) অনেক দ্রুত ছড়ায় — ২ গুণ দ্রুত মানে ভর ৪ গুণ কম।' },
+ { name: 'পানির উপর গ্যাস সংগ্রহ', sub: 'বাষ্পচাপ বাদ দাও', icon: '🫧', blind: true, tol: 0.01, vmax: 6, cyl: 'rigid', hn: 1,
+   intro: '৪ L পাত্রে ৩০০ K-এ পানির উপর H₂ সংগ্রহ হয়েছে। <b>মোট চাপ ১.০০ atm</b>, পানির বাষ্পচাপ ০.০৩৫ atm। শুষ্ক H₂ এর আংশিক চাপ ০.৯৬৫ atm পেতে কত mol H₂ লাগবে?',
+   knob: { n: '🫧 শুষ্ক H₂ এর পরিমাণ', u: ' mol', min: 0.05, max: 0.5, step: 0.001, v: 0.1 }, st: x => ({ V: 4, T: 300, n: x, P: x * R * 300 / 4 + 0.035 }), val: (o, x) => x * R * 300 / 4, target: 0.965, unit: ' atm', gname: 'H₂ এর আংশিক চাপ', d: 3, given: 'V = ৪ L, T = ৩০০ K, P(মোট) = ১.০০, P(H₂O) = ০.০৩৫',
+   hint: 'P(H₂) = P(মোট) − P(H₂O) = ০.৯৬৫; তারপর n = PV ÷ RT।',
+   learn: 'পানির উপর সংগৃহীত গ্যাস আর্দ্র: P(মোট) = P(গ্যাস) + P(জলীয় বাষ্প) (ডালটন)। শুকনো গ্যাসের মোল পেতে বাষ্পচাপ বাদ দিতে হয়।' },
+ { name: 'মোল-ভগ্নাংশ', sub: 'ত্রি-মিশ্রণ', icon: '🎛️', blind: true, tol: 0.01, vmax: 12, cyl: 'rigid', hn: 1,
+   intro: 'পাত্রে N₂ ০.২৪ mol ও O₂ ০.১২ mol আছে। কত mol He যোগ করলে He এর <b>মোল-ভগ্নাংশ ০.৪০</b> হবে?',
+   knob: { n: '🎈 যোগ করা He', u: ' mol', min: 0, max: 1, step: 0.01, v: 0.1 }, st: x => ({ V: 10, T: 300, n: 0.36 + x, P: (0.36 + x) * R * 300 / 10 }), val: (o, x) => x / (0.36 + x), target: 0.4, unit: '', gname: 'He এর মোল-ভগ্নাংশ', d: 3, given: 'N₂ = ০.২৪ mol, O₂ = ০.১২ mol',
+   hint: 'χ = n(He) ÷ (০.২৪ + ০.১২ + n(He)) = ০.৪। সমীকরণ সমাধান করো।',
+   learn: 'মোল-ভগ্নাংশ χ = n(i)/n(মোট), আর আংশিক চাপ P(i) = χ(i) × P(মোট)। χ এর যোগফল সবসময় ১।' },
+ { name: '🔥 বস লেভেল', sub: 'বহু-ধাপ · ±১%', icon: '👑', blind: true, tol: 0.01, vmax: 9, cyl: 'rigid', hn: 0, partial: true,
+   intro: '৫ L দৃঢ় পাত্রে ০.২০ mol N₂। তাপমাত্রা ৪৫০ K। এখন হিলিয়াম ঢুকিয়ে <b>মোট চাপ ৩.০০ atm</b> করতে হবে। কত mol He? কোনো সূত্র সাহায্য নেই — শুধু হিসাব!',
+   knob: { n: '🎈 যোগ করা He', u: ' mol', min: 0, max: 0.6, step: 0.001, v: 0.1 }, st: x => ({ V: 5, T: 450, n: 0.2 + x, P: (0.2 + x) * R * 450 / 5 }), val: o => o.P, target: 3, unit: ' atm', gname: 'মোট চাপ', given: 'V = ৫ L, T = ৪৫০ K, N₂ = ০.২০ mol, R = ০.০৮২১',
+   hint: '',
+   learn: 'n মোট = PV/RT ≈ ০.৪০৬; He = ০.৪০৬ − ০.২০ ≈ ০.২০৬ mol। তুমি PV = nRT ও ডালটন একসাথে ব্যবহার করলে — দারুণ!' }
 ];
 const S = { lv: 0, v: 0, hints: 2, tries: 0, miss: 0, done: false, fired: false };
 let stars = {}; try { stars = JSON.parse(lsGet('gaslab-stars') || '{}') || {}; } catch (e) { stars = {}; }
 const unlocked = i => i === 0 || stars[i - 1] > 0;
 const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
 const L = () => LEVELS[S.lv];
-function state() {
-    const l = L(), o = Object.assign({ P: 1, V: 4, T: 300, n: 0.5 }, l.fixed); o[l.knob.k] = S.v;
-    if (S.lv === 4) { o.n = o.n0 + S.v; }
-    if (l.knob.k === 'T' && l.cyl === 'free') { /* V = nRT/P */ }
-    if (l.cyl === 'free') o.V = o.n * R * o.T / o.P; else o.P = o.n * R * o.T / o.V;
-    return o;
-}
-function P(o) { return o.n * R * o.T / o.V; }
-function ok(o) { const l = L(), v = l.goal(o); return Math.abs(v - l.target) <= l.tol * l.target; }
+const state = () => L().st(S.v);
+const P = o => o.n * R * o.T / o.V;
+const gv = () => L().val(state(), S.v);
+function ok() { const l = L(); return Math.abs(gv() - l.target) <= l.tol * l.target; }
 
-/* ---- সিমুলেশন ---- */
 const cv = $('#cv'), cx = cv.getContext('2d'); const W = 720, H = 240;
 let parts = [];
 function syncParts(o) {
@@ -280,7 +306,7 @@ function syncParts(o) {
 function geom(o) { const l = L(); const x0 = 24, full = W - 150; const xp = x0 + Math.max(0.04, Math.min(1, o.V / l.vmax)) * full; return { x0, xp, y0: 46, y1: 196 }; }
 function draw(o) {
     const g = geom(o), l = L(); cx.clearRect(0, 0, W, H);
-    const hue = Math.max(0, Math.min(215, 215 - (o.T - 150) / 500 * 215)); const sp = 1.2 * Math.sqrt(o.T / 300) * 2.2;
+    const hue = Math.max(0, Math.min(215, 215 - (o.T - 150) / 500 * 215)); const sp = 1.2 * Math.sqrt(o.T / 300) * 2.2 * (o.sp || 1);
     cx.fillStyle = 'hsla(' + hue + ',90%,92%,1)'; cx.fillRect(g.x0, g.y0, g.xp - g.x0, g.y1 - g.y0);
     parts.forEach(p => {
         p.x += Math.cos(p.a) * sp; p.y += Math.sin(p.a) * sp;
@@ -289,7 +315,6 @@ function draw(o) {
         cx.beginPath(); cx.arc(p.x, p.y, 6, 0, 6.283); cx.fillStyle = 'hsl(' + hue + ',85%,52%)'; cx.fill(); cx.lineWidth = 2; cx.strokeStyle = '#14233b'; cx.stroke();
     });
     cx.lineWidth = 5; cx.strokeStyle = '#14233b'; cx.strokeRect(g.x0, g.y0, g.xp - g.x0, g.y1 - g.y0);
-    /* পিস্টন */
     cx.fillStyle = l.cyl === 'rigid' ? '#8a97b3' : '#ffd54a'; cx.fillRect(g.xp, g.y0 - 8, 22, g.y1 - g.y0 + 16); cx.strokeRect(g.xp, g.y0 - 8, 22, g.y1 - g.y0 + 16);
     if (l.cyl === 'rigid') { cx.fillStyle = '#14233b'; [g.y0 + 8, g.y1 - 8].forEach(y => { cx.beginPath(); cx.arc(g.xp + 11, y, 4, 0, 6.28); cx.fill(); }); }
     else { cx.beginPath(); cx.moveTo(g.xp + 22, H / 2); cx.lineTo(W - 20, H / 2); cx.stroke(); cx.fillStyle = '#ff6a57'; cx.fillRect(W - 44, H / 2 - 34, 28, 68); cx.strokeRect(W - 44, H / 2 - 34, 28, 68); }
@@ -299,49 +324,45 @@ function draw(o) {
 }
 let raf = 0;
 function loop() { const o = state(); syncParts(o); draw(o); raf = requestAnimationFrame(loop); }
-
+const dg = () => L().d == null ? 2 : L().d;
 function readouts() {
     const o = state(), l = L(), hide = l.blind && !S.fired;
     const cell = (lab, val, hid) => '<div' + (hid ? ' class="hid"' : '') + '><small>' + lab + '</small><b>' + val + '</b></div>';
-    let h = cell('P (atm)', hide ? '???' : fx(P(o), 2), hide) + cell('V (L)', fx(o.V, 1)) + cell('T (K)', bn(Math.round(o.T))) + cell('n (mol)', fx(o.n, 2));
-    $('#ro').innerHTML = h; return o;
+    $('#ro').innerHTML = cell('P (atm)', hide ? '???' : fx(P(o), 2), hide) + cell('V (L)', fx(o.V, 1)) + cell('T (K)', bn(Math.round(o.T))) + cell('n (mol)', fx(o.n, 3)); return o;
 }
 function render() {
-    const l = L(), o = readouts(); const k = l.knob;
+    const l = L(), o = readouts(); const k = l.knob; const dd = dg();
     $('#sTry').textContent = bn(S.tries); $('#sHint').textContent = bn(S.hints); $('#pMode').textContent = l.blind ? '🙈 অন্ধ (হিসাব করো)' : '👀 লাইভ';
-    $('#btnHint').disabled = S.hints <= 0 || S.done;
+    $('#btnHint').disabled = S.hints <= 0 || S.done; $('#btnHint').hidden = l.hn === 0;
     $('#btnGo').textContent = l.blind ? '🔥 পরীক্ষা চালাও' : '✅ যাচাই করো';
-    let info = '🎯 লক্ষ্য: <b>' + l.gname + ' = ' + fx(l.target, 1) + l.unit + '</b> (±৩%)';
-    if (!l.blind) {
-        if (S.lv === 0) info += ' · P × V = <b>' + fx(P(o) * o.V, 2) + '</b>';
-        if (S.lv === 1) info += ' · V ÷ T = <b>' + fx(o.V / o.T, 4) + '</b>';
-        info += ' · এখন: <b>' + fx(l.goal(o), 2) + l.unit + '</b>' + (ok(o) ? ' ✔' : '');
-    } else if (S.fired) info += ' · শেষ পরীক্ষায়: <b>' + fx(l.goal(o), 2) + l.unit + '</b>';
-    if (S.lv === 4 && S.fired) { const nt = o.n; info += '<br>আংশিক চাপ: N₂ = ' + fx(o.n0 / nt * P(o), 2) + ' atm, He = ' + fx(S.v / nt * P(o), 2) + ' atm'; }
-    if (S.lv === 2 || S.lv === 3 || S.lv === 4) info += '<br>দেওয়া আছে: ' + ({ 2: 'P₁ = ২.০ atm, T₁ = ৩০০ K, V = ৫ L', 3: 'V = ৬ L, T = ৩৫০ K, R = ০.০৮২১', 4: 'V = ১০ L, T = ৩০০ K, N₂ = ০.৩০ mol, R = ০.০৮২১' }[S.lv]);
+    let info = '🎯 লক্ষ্য: <b>' + l.gname + ' = ' + fx(l.target, dd) + l.unit + '</b> (±' + bn(Math.round(l.tol * 100)) + '%)<br>দেওয়া আছে: ' + l.given;
+    if (!l.blind) { if (l.live) info += ' · ' + l.live(o); info += ' · এখন: <b>' + fx(gv(), dd) + l.unit + '</b>' + (ok() ? ' ✔' : ''); }
+    else if (S.fired) info += '<br>শেষ পরীক্ষায়: <b>' + fx(gv(), dd) + l.unit + '</b>';
+    if (l.partial && S.fired) info += '<br>আংশিক চাপ: N₂ = ' + fx((o.n - S.v) / o.n * P(o), 2) + ' atm, He = ' + fx(S.v / o.n * P(o), 2) + ' atm';
     $('#info').innerHTML = info;
-    $('#panel').innerHTML = '<div class="ctl"><label for="kn"><span>' + k.n + '</span><output id="ko">' + fx(S.v, k.step < 0.1 ? 2 : (k.step < 1 ? 1 : 0)) + k.u + '</output></label><input type="range" id="kn" min="' + k.min + '" max="' + k.max + '" step="' + k.step + '" value="' + S.v + '"></div>';
+    const st = k.step < 0.01 ? 3 : (k.step < 0.1 ? 2 : (k.step < 1 ? 1 : 0));
+    $('#panel').innerHTML = '<div class="ctl"><label for="kn"><span>' + k.n + '</span><output id="ko">' + fx(S.v, st) + k.u + '</output></label><input type="range" id="kn" min="' + k.min + '" max="' + k.max + '" step="' + k.step + '" value="' + S.v + '"></div>';
 }
 function start(i) {
-    S.lv = i; const l = L(); S.v = l.knob.v; S.hints = 2; S.tries = 0; S.miss = 0; S.done = false; S.fired = false; parts = [];
+    S.lv = i; const l = L(); S.v = l.knob.v; S.hints = l.hn; S.tries = 0; S.miss = 0; S.done = false; S.fired = false; parts = [];
     renderTabs(); $('#job').innerHTML = '<span class="sticker">লেভেল ' + bn(i + 1) + ' / ' + bn(LEVELS.length) + '</span><h2>' + l.icon + ' ' + l.name + ' — ' + l.sub + '</h2><p>' + l.intro + '</p>';
     $('#shift').innerHTML = l.blind ? '🧮 আগে খাতায় হিসাব করো, তারপর স্লাইডার সেট করে পরীক্ষা চালাও।' : 'স্লাইডার নাড়িয়ে অণুদের আচরণ দেখো।';
     render();
 }
-function renderTabs() { $('#lv').innerHTML = LEVELS.map((l, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? l.icon : '🔒') + ' ' + l.name + '</b><small>' + l.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join(''); }
+function renderTabs() { $('#lv').innerHTML = LEVELS.map((l, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + bn(i + 1) + '. ' + (unlocked(i) ? l.icon : '🔒') + ' ' + l.name + '</b><small>' + l.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join(''); const a = document.querySelector('.lvb.on'); if (a) $('#lv').scrollLeft = Math.max(0, a.offsetLeft - 24); }
 function finish() {
-    S.done = true; sfx.win(); const l = L(); const score = S.miss + 2 * (2 - S.hints); const st = score <= 1 ? 3 : score <= 3 ? 2 : 1;
+    S.done = true; sfx.win(); const l = L(); const used = l.hn - S.hints; const score = S.miss + 2 * used; const st = score <= 1 ? 3 : score <= 3 ? 2 : 1;
     if (!stars[S.lv] || st > stars[S.lv]) { stars[S.lv] = st; lsSet('gaslab-stars', JSON.stringify(stars)); }
     renderTabs(); render(); const last = S.lv === LEVELS.length - 1;
-    $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + l.icon + ' ' + l.name + ' — মিলে গেছে!</h2><p>পরীক্ষা: <b>' + bn(S.tries) + '</b> · সূত্র দেখেছ: <b>' + bn(2 - S.hints) + '</b></p><div class="learn">🧠 ' + l.learn + '</div><div class="row">' +
-        (last ? '' : '<button class="btn primary big" data-act="next">পরের লেভেল ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
+    $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + l.icon + ' ' + l.name + ' — মিলে গেছে!</h2><p>পরীক্ষা: <b>' + bn(S.tries) + '</b> · সূত্র দেখেছ: <b>' + bn(used) + '</b></p><div class="learn">🧠 ' + l.learn + '</div><div class="row">' +
+        (last ? '<b>🏆 সব লেভেল শেষ! তুমি গ্যাস-মাস্টার।</b>' : '<button class="btn primary big" data-act="next">পরের লেভেল ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
     $('#modal').hidden = false;
 }
 function go() {
-    if (S.done) return; const l = L(); S.tries++; S.fired = true; const o = state();
-    if (ok(o)) { finish(); return; }
-    S.miss++; sfx.bad(); const v = l.goal(o), t = l.target;
-    $('#shift').innerHTML = '❌ ফলাফল <b>' + fx(v, 2) + l.unit + '</b> — লক্ষ্য ' + fx(t, 1) + l.unit + '। ' + (v > t ? 'বেশি হয়ে গেছে, ' : 'কম হয়েছে, ') + 'সূত্র দিয়ে আবার হিসাব মেলাও।';
+    if (S.done) return; const l = L(); S.tries++; S.fired = true;
+    if (ok()) { finish(); return; }
+    S.miss++; sfx.bad(); const v = gv(), t = l.target;
+    $('#shift').innerHTML = '❌ ফলাফল <b>' + fx(v, dg()) + l.unit + '</b> — লক্ষ্য ' + fx(t, dg()) + l.unit + '। ' + (v > t ? 'বেশি হয়ে গেছে, ' : 'কম হয়েছে, ') + 'হিসাব আবার মেলাও।';
     render();
 }
 document.addEventListener('input', e => { if (e.target.id === 'kn') { S.v = +e.target.value; if (L().blind) S.fired = false; render(); sfx.tap(); } });
@@ -350,13 +371,13 @@ document.addEventListener('click', e => {
     if (t.dataset.lv != null) { sfx.tap(); start(+t.dataset.lv); return; }
     if (t.id === 'btnGo') { go(); return; }
     if (t.id === 'btnReset') { sfx.tap(); start(S.lv); return; }
-    if (t.id === 'btnHint') { if (S.hints > 0 && !S.done) { S.hints--; sfx.pop(); $('#shift').innerHTML = '💡 ' + L().hint; render(); } return; }
-    if (t.id === 'btnRules') { $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul><li>স্লাইডার সরিয়ে লক্ষ্যের মান ঠিক (±৩%) করো। অণুদের নাচ দেখো: গরমে দ্রুত, বেশি অণু = বেশি ধাক্কা।</li><li><b>অন্ধ লেভেলে</b> চাপমাপক ঢাকা — হিসাব করে মান বসাও, তারপর পরীক্ষা চালাও।</li><li>ভুল পরীক্ষা ও সূত্র দেখা কমালে বেশি তারা।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>'; $('#modal').hidden = false; return; }
+    if (t.id === 'btnHint') { if (S.hints > 0 && !S.done && L().hint) { S.hints--; sfx.pop(); $('#shift').innerHTML = '💡 ' + L().hint; render(); } return; }
+    if (t.id === 'btnRules') { $('#sheet').innerHTML = '<h2>📖 নিয়ম</h2><ul><li>স্লাইডার সরিয়ে লক্ষ্যের মান ঠিক করো। অণুদের নাচ দেখো: গরমে দ্রুত, বেশি অণু = বেশি ধাক্কা।</li><li><b>অন্ধ লেভেলে</b> চাপমাপক ঢাকা — হিসাব করে মান বসাও, তারপর পরীক্ষা চালাও।</li><li>পরের লেভেলগুলোয় সহনশীলতা ±১% এবং সূত্র-সাহায্য কম।</li><li>ভুল পরীক্ষা ও সূত্র দেখা কমালে বেশি তারা।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>'; $('#modal').hidden = false; return; }
     if (t.dataset.act === 'close') { $('#modal').hidden = true; return; }
     if (t.dataset.act === 'again') { $('#modal').hidden = true; start(S.lv); return; }
     if (t.dataset.act === 'next') { $('#modal').hidden = true; start(Math.min(S.lv + 1, LEVELS.length - 1)); return; }
 });
-window.__t = { S, LEVELS, state, P, ok, start, go, render };
+window.__t = { S, LEVELS, state, P, ok, start, go, render, gv };
 start(0); loop();
 })();
     </script>
