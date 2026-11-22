@@ -1,364 +1,603 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#2fa8bf">
-<title>আইসোটোপ আইল্যান্ড | Lab Alchemy</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&display=swap" rel="stylesheet">
-<script>
-(function () {
-    let t = 'light';
-    try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
-    if (t === 'auto') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', t);
-})();
-</script>
-<style>
-:root{--sky1:#c9f0f7;--sky2:#7fd3e0;--sky3:#2fa8bf;--card:rgba(255,255,255,.94);--text:#08334a;--muted:#3f6a80;--line:rgba(8,51,74,.16);--coral:#ff6b4a;--sand:#f6dfae;--palm:#1f9d6a;--gold:#b45309;--good:#0f8a52;--bad:#d1304a;--sun:#ffd36b;--foam:#fff}
-[data-theme="dark"]{--sky1:#041a26;--sky2:#07384a;--sky3:#0b5568;--card:rgba(10,38,52,.94);--text:#e6f6fb;--muted:#8fb6c4;--line:rgba(255,255,255,.16);--coral:#ff7f61;--sand:#cdb57d;--palm:#3ddc97;--gold:#fbbf24;--good:#4ade9b;--bad:#ff7a98;--sun:#dfe9ff;--foam:#9bd6e6}
-*{box-sizing:border-box}
-html{background:var(--sky3)}
-body{margin:0;min-height:100vh;padding:0 16px 60px;font-family:'Baloo Da 2','Hind Siliguri','Segoe UI',system-ui,sans-serif;font-weight:500;color:var(--text);background:linear-gradient(var(--sky1) 0,var(--sky2) 40%,var(--sky3) 100%) fixed;position:relative;overflow-x:hidden}
-body::before{content:'';position:fixed;top:44px;right:8%;width:78px;height:78px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 14px color-mix(in srgb,var(--sun) 30%,transparent),0 0 60px 20px color-mix(in srgb,var(--sun) 40%,transparent);pointer-events:none}
-[hidden]{display:none!important}
-a:focus-visible,button:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
-.wv{position:fixed;left:0;width:100%;height:44px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 44' preserveAspectRatio='none'%3E%3Cpath d='M0 22 Q75 2 150 22 T300 22 T450 22 T600 22 V44 H0Z' fill='%23fff'/%3E%3C/svg%3E") repeat-x;background-size:600px 44px;opacity:.28;animation:wvm 14s linear infinite}
-.wv.a{bottom:34px}.wv.b{bottom:52px;opacity:.16;animation-duration:22s;animation-direction:reverse}
-@keyframes wvm{to{background-position-x:600px}}
-.top{position:relative;z-index:2;display:flex;align-items:center;gap:8px;max-width:620px;margin:0 auto;padding:14px 0}
-.top .sp{flex:1}
-.lnk{display:inline-flex;align-items:center;min-height:42px;padding:0 16px;font:inherit;font-weight:700;font-size:15px;text-decoration:none;color:var(--text);background:var(--card);border-radius:999px;box-shadow:0 4px 0 rgba(0,0,0,.12)}
-.ib{width:42px;height:42px;font-size:17px;color:var(--text);background:var(--card);border:0;border-radius:50%;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
-.wrap{position:relative;z-index:2;max-width:620px;margin:0 auto}
-.panel{position:relative;padding:26px 22px 24px;background:var(--card);border-radius:30px;box-shadow:0 18px 40px -12px rgba(4,40,60,.5)}
-.hero{text-align:center;margin-bottom:6px}
-.hero .em{display:block;font-size:54px;line-height:1.1;animation:bob 3s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(-6px) rotate(-2deg)}}
-h1{margin:0;font-size:clamp(2rem,8vw,2.7rem);line-height:1.15;font-weight:800;color:var(--text)}
-.sub{margin:6px 0 0;font-size:16px;line-height:1.6;color:var(--muted)}
-.label{margin:20px 0 8px;font-size:14px;font-weight:700;color:var(--muted)}
-.chips{display:flex;gap:10px;flex-wrap:wrap}
-.chip{flex:1 1 0;min-width:104px;padding:10px 12px;text-align:center;font:inherit;cursor:pointer;color:var(--muted);background:transparent;border:2px solid var(--line);border-radius:18px;transition:transform .15s,border-color .15s}
-.chip b{display:block;font-size:16px;font-weight:700;color:var(--text);line-height:1.3}
-.chip small{display:block;font-size:12.5px;line-height:1.3}
-.chip:hover{transform:translateY(-2px);border-color:var(--coral)}
-.chip.on{background:var(--coral);border-color:var(--coral);box-shadow:0 5px 0 #c9482b}
-.chip.on b,.chip.on small{color:#fff}
-.sw-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;font-size:16px;font-weight:600}
-.switch{position:relative;width:54px;height:30px;flex-shrink:0}
-.switch input{position:absolute;inset:0;z-index:2;margin:0;opacity:0;cursor:pointer}
-.switch .tr{position:absolute;inset:0;border-radius:999px;background:var(--line)}
-.switch .tr::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25);transition:transform .2s}
-.switch input:checked~.tr{background:var(--palm)}
-.switch input:checked~.tr::after{transform:translateX(24px)}
-.switch input:focus-visible~.tr{outline:3px solid var(--coral);outline-offset:3px}
-.rules{margin-top:16px;padding:12px 14px;font-size:14.5px;line-height:1.7;color:var(--muted);background:color-mix(in srgb,var(--palm) 10%,transparent);border-radius:16px}
-.sheet{margin-top:12px;font-size:14.5px;line-height:1.8;color:var(--muted)}
-.sheet summary{cursor:pointer;font-weight:700;color:var(--text)}
-.go{display:block;width:100%;margin-top:18px;padding:14px;font:inherit;font-size:19px;font-weight:800;cursor:pointer;color:#fff;background:var(--coral);border:0;border-radius:20px;box-shadow:0 6px 0 #c9482b;transition:transform .1s,box-shadow .1s}
-.go:active{transform:translateY(4px);box-shadow:0 2px 0 #c9482b}
-.go.alt{color:var(--text);background:transparent;border:2px solid var(--line);box-shadow:none;margin-top:10px}
-.go.alt:active{transform:none}
-.best-line{margin-top:12px;text-align:center;font-size:15px;font-weight:700;color:var(--gold)}
-.peb{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.peb div{padding:5px 6px 4px;text-align:center;font-size:12.5px;line-height:1.2;color:var(--muted);background:color-mix(in srgb,var(--sand) 35%,transparent);border-radius:16px}
-.peb b{display:block;font-size:20px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
-.strip{position:relative;height:150px;margin:0 -22px 14px;overflow:hidden;background:linear-gradient(var(--sky2),var(--sky3))}
-.tide{position:absolute;left:0;bottom:0;width:100%;height:0;background:rgba(255,255,255,.34);border-top:4px solid var(--foam);transition:height .2s linear;z-index:4}
-.tide.low{background:rgba(255,107,74,.34);border-top-color:var(--coral)}
-.secs{position:absolute;top:8px;left:12px;z-index:5;padding:2px 12px;font-size:15px;font-weight:800;color:var(--text);background:var(--card);border-radius:999px}
-.track{position:absolute;left:0;right:0;bottom:26px;display:flex;justify-content:center;gap:10px;z-index:3}
-.track.hop{animation:hop .5s ease-out}
-@keyframes hop{from{transform:translateX(70px)}}
-.isl{position:relative;flex:0 0 58px;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;line-height:1;border-radius:50%;background:var(--sand);box-shadow:0 5px 0 rgba(0,0,0,.14),0 0 0 4px rgba(255,255,255,.35)}
-.isl small{margin-top:1px;font-size:11px;font-weight:800;color:#5a4318}
-.isl.ghost{visibility:hidden}
-.isl.far{opacity:.5;transform:scale(.85)}
-.isl.done{background:#9be3b6}
-.isl.now{background:#fff;box-shadow:0 5px 0 rgba(0,0,0,.14),0 0 0 5px var(--coral)}
-.isl.big{flex-basis:70px;height:70px;font-size:30px;margin-top:-12px}
-.isl .boat{position:absolute;top:-34px;left:50%;font-size:30px;transform:translateX(-50%);animation:sail 2.4s ease-in-out infinite}
-@keyframes sail{50%{transform:translateX(-50%) translateY(-4px) rotate(5deg)}}
-.q{margin:0 0 14px;font-size:clamp(1.15rem,4.6vw,1.4rem);font-weight:700;line-height:1.55}
-.qn{margin-bottom:4px;font-size:13px;font-weight:700;color:var(--coral)}
-.opts{display:flex;flex-direction:column;gap:10px}
-.opt{position:relative;display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:8px 14px 8px 8px;text-align:left;font:inherit;font-size:16.5px;font-weight:600;line-height:1.4;cursor:pointer;color:var(--text);background:transparent;border:2px solid var(--line);border-radius:999px;transition:transform .12s,border-color .12s,background .12s}
-.opt .lt{flex:0 0 38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;background:var(--coral);border-radius:50%;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
-.opt:nth-child(2) .lt{background:#f59e0b}.opt:nth-child(3) .lt{background:var(--palm)}.opt:nth-child(4) .lt{background:#3b82f6}
-.opt:hover:not(:disabled){transform:translateX(4px);border-color:var(--coral)}
-.opt:disabled{cursor:default}
-.opt.right{background:var(--good);border-color:var(--good);color:#fff}
-.opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff;animation:shk .35s}
-.opt.right .lt,.opt.wrong .lt{background:rgba(255,255,255,.28)}
-.opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
-@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.life{display:flex;gap:10px;margin-top:14px}
-.lf{flex:1;min-height:44px;padding:0 10px;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;color:var(--text);background:color-mix(in srgb,var(--sand) 40%,transparent);border:2px dashed var(--line);border-radius:16px}
-.lf:disabled{opacity:.4;cursor:default;text-decoration:line-through}
-.msg{margin-top:12px;min-height:26px;font-size:16px;font-weight:700;line-height:1.5}
-.msg.ok{color:var(--good)}.msg.no{color:var(--bad)}
-.pop{position:absolute;left:50%;top:30%;z-index:9;font-size:1.7rem;font-weight:800;color:var(--good);pointer-events:none;opacity:0;white-space:nowrap}
-.pop.go2{animation:pop .95s ease-out}
-@keyframes pop{0%{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-50px)}}
-.log{margin:14px 0;padding:8px 16px;background:color-mix(in srgb,var(--sand) 30%,transparent);border-radius:20px}
-.log p{display:flex;align-items:baseline;gap:6px;margin:0;padding:7px 0;font-size:16px;font-weight:600}
-.log p::after{content:'';order:2;flex:1;border-bottom:2px dotted var(--line);transform:translateY(-4px)}
-.log p span{order:1}.log p b{order:3;font-weight:800}
-.end-t{margin:4px 0 6px;text-align:center;font-size:2rem;font-weight:800;line-height:1.2}
-.end-m{margin:0;text-align:center;font-size:16px;line-height:1.7;color:var(--muted)}
-.miss h3{margin:16px 0 8px;font-size:16px}
-.miss ul{margin:0;padding:0;list-style:none;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-.miss li{padding:9px 12px;font-size:14.5px;line-height:1.55;border:2px solid var(--line);border-radius:14px}
-.miss li b{color:var(--good)}
-.foot{position:fixed;left:0;bottom:0;width:100%;height:34px;z-index:20;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text);background:var(--card)}
-.foot b{margin-left:5px;color:var(--coral)}
-@media(max-width:480px){.panel{padding:22px 16px 20px}.strip{margin:0 -16px 14px}.isl{flex-basis:50px;height:50px;font-size:21px}.isl.big{flex-basis:60px;height:60px}.track{gap:6px}.lnk .long{display:none}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#62c6ee">
+    <title>আইসোটোপ আইল্যান্ড | Lab Alchemy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () { try { var b = localStorage.getItem('isle-bg'); if (b === '2' || b === '3') document.documentElement.setAttribute('data-bg', b); } catch (e) {} })();
+    </script>
+    <style>
+/* ===== NB KIT: sticker / neo-brutalist দৃশ্যরূপ =====
+   প্রতিটি গেম নিজের :root-এ এই টোকেনগুলো বদলে নিজস্ব রং পায়:
+   --o1 --o2 --o3 (বাইরের ব্যাকগ্রাউন্ড), --paper (বোর্ড), --paper2, --ink, --a1 --a2 --a3 (অ্যাকসেন্ট)  */
+:root {
+    color-scheme: light;
+    --o1: #ff6b4a; --o2: #ffd23f; --o3: #5ad1c4;
+    --paper: #fff8ec; --paper2: #ffffff; --ink: #1d1030; --mute: #6a5f80;
+    --a1: #ff6b4a; --a2: #2ec4b6; --a3: #ffd23f; --good: #12a36b; --bad: #e5384d;
+    --bw: 3px; --rad: 16px; --sh: 5px;
+    --display: 'Bricolage Grotesque','Hind Siliguri',system-ui,sans-serif;
+    --body: 'Hind Siliguri','Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+    --pat: radial-gradient(rgba(29,16,48,.20) 1.4px, transparent 1.6px);
+    --pat-size: 22px 22px;
+}
+:root[data-bg="2"] { --o1: #2ec4b6; --o2: #c9f2ee; --o3: #ff6b4a; }
+:root[data-bg="3"] { --o1: #a78bfa; --o2: #ffd6f0; --o3: #ffd23f; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0; min-height: 100vh; color: var(--ink); font-family: var(--body); font-weight: 500; line-height: 1.55;
+    padding: 18px max(14px, env(safe-area-inset-right, 0px)) 30px max(14px, env(safe-area-inset-left, 0px));
+    background-color: var(--o1);
+    background-image: var(--pat), radial-gradient(circle at 12% 6%, var(--o2) 0, transparent 46%), radial-gradient(circle at 94% 96%, var(--o3) 0, transparent 50%);
+    background-size: var(--pat-size), 100% 100%, 100% 100%;
+    background-attachment: fixed; transition: background-color .4s; -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.stage { max-width: 860px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 24px; box-shadow: 9px 9px 0 var(--ink); }
+.credit { width: fit-content; max-width: 100%; margin: 18px auto 0; padding: 6px 14px; text-align: center; font-size: 12.5px; font-weight: 700; letter-spacing: .3px; color: var(--ink); background: var(--paper); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+
+/* উপরের বার */
+.top { display: flex; align-items: center; gap: 10px; }
+.titlebox { margin-right: auto; min-width: 0; }
+.titlebox b { display: inline-block; padding: 3px 12px; font: 800 clamp(1.05rem, 3.6vw, 1.35rem)/1.3 var(--display); color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-1.2deg); }
+.titlebox small { display: block; margin: 5px 0 0 4px; font-size: 12px; font-weight: 700; color: var(--mute); }
+.btn, .back-btn, .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 14px;
+    font: 800 14px/1 var(--body); text-decoration: none; cursor: pointer; color: var(--ink); background: var(--paper2);
+    border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s, background .12s;
+}
+.btn:hover:not(:disabled), .back-btn:hover, .icon-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.btn:active:not(:disabled), .back-btn:active, .icon-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; box-shadow: 2px 2px 0 var(--ink); }
+.btn.primary { background: var(--a1); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.btn.alt { background: var(--a2); }
+.btn.big { min-height: 54px; padding: 0 26px; font-size: 17px; border-radius: 14px; }
+.icon-btn { width: 42px; padding: 0; font-size: 17px; }
+
+/* পিল, ক্যাপসুল, কার্ড */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; font-size: 13px; font-weight: 800; color: var(--ink); background: var(--paper2); border: 2.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+.pill b { font-variant-numeric: tabular-nums; }
+.box { padding: 14px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: var(--rad); box-shadow: 5px 5px 0 var(--ink); }
+.sticker { display: inline-block; padding: 3px 11px; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--a3); border: 2.5px solid var(--ink); border-radius: 8px; transform: rotate(-2deg); }
+.meter { height: 16px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 99px; overflow: hidden; }
+.meter i { display: block; height: 100%; width: 100%; background: var(--a1); border-right: 2.5px solid var(--ink); transition: width .25s ease; }
+.hazard { height: 12px; border: 2.5px solid var(--ink); border-radius: 6px; background: repeating-linear-gradient(-45deg, var(--a3) 0 10px, var(--ink) 10px 20px); }
+
+/* মডাল */
+.modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 16px; background: rgba(29,16,48,.58); }
+.sheet { width: min(500px, 100%); max-height: 92%; overflow: auto; padding: 22px; background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 22px; box-shadow: 9px 9px 0 var(--ink); }
+.sheet h2 { margin: 6px 0 10px; font: 800 22px/1.35 var(--display); }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 18px); transform: translateX(-50%); z-index: 3500; padding: 8px 16px; font-size: 15px; font-weight: 800; color: var(--ink); background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 99px; box-shadow: 4px 4px 0 var(--ink); opacity: 0; pointer-events: none; }
+.toast.on { animation: nbtoast 1.7s ease forwards; }
+@keyframes nbtoast { 0% { opacity: 0; transform: translate(-50%, -10px); } 12%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+@keyframes nbshake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes nbpop { from { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.12); } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 520px) { .stage { padding: 12px; border-radius: 20px; gap: 12px; box-shadow: 6px 6px 0 var(--ink); } .back-btn .long { display: none; } .titlebox small { display: none; } }
+
+
+/* ===== আইসোটোপ আইল্যান্ড: আকাশি-সাগর নীল + বালি + প্রবাল, ঢেউ-রেখার প্যাটার্ন ===== */
+:root {
+    --o1: #62c6ee; --o2: #fff0c9; --o3: #ff9a7b;
+    --paper: #f4fbff; --paper2: #ffffff; --ink: #0d3050; --mute: #4a6d88;
+    --a1: #1c88cc; --a2: #ff6f52; --a3: #ffd57e; --good: #0f9a62; --bad: #e03c4f;
+    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='16'%3E%3Cpath d='M0 8 Q12 0 24 8 T48 8' fill='none' stroke='rgba(13,48,80,.22)' stroke-width='2'/%3E%3C/svg%3E");
+    --pat-size: 48px 16px;
+}
+:root[data-bg="2"] { --o1: #f4d9a0; --o2: #fff4d6; --o3: #62c6ee; }
+:root[data-bg="3"] { --o1: #ff9f84; --o2: #ffe3d6; --o3: #f4d9a0; }
+#bgBtn { background: #d6f0ff; }
+.lv { display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
+.lvb { flex: 0 0 auto; min-width: 128px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer;
+    background: #d6f0ff; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
+.lvb:nth-child(2) { background: #ffe9bd; } .lvb:nth-child(3) { background: #ffd9cf; } .lvb:nth-child(4) { background: #d3f5ee; } .lvb:nth-child(5) { background: #e3e4ff; } .lvb:nth-child(6) { background: #fff3a8; }
+.lvb:nth-child(6n+7) { background: #d6f0ff; } .lvb:nth-child(6n+8) { background: #ffe9bd; } .lvb:nth-child(6n+9) { background: #ffd9cf; } .lvb:nth-child(6n+10) { background: #d3f5ee; } .lvb:nth-child(6n+11) { background: #e3e4ff; } .lvb:nth-child(6n+12) { background: #fff3a8; }
+.lvb:hover:not(:disabled) { transform: translateY(-3px); }
+.lvb b { font: 800 13.5px/1.3 var(--body); padding-right: 50px; } .lvb small { font-size: 11.5px; font-weight: 700; color: var(--mute); line-height: 1.3; }
+.lvb i { position: absolute; top: 6px; right: 6px; padding: 1px 7px; font-style: normal; font-size: 12px; letter-spacing: 1px; background: var(--a3); border: 2px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(3deg); }
+.lvb.on { background: #fff; padding-bottom: 12px; box-shadow: 0 -4px 0 var(--a2) inset; }
+.lvb.on small { color: var(--ink); }
+.lvb:disabled { opacity: .55; cursor: default; filter: grayscale(.4); }
+.hud { display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
+.hud .pill:nth-child(1) { background: #ffd9cf; } .hud .pill:nth-child(2) { background: #fff0b8; } .hud .pill:nth-child(3) { background: #d6f0ff; }
+
+.job { padding: 12px 16px; background: #ffeec2; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 5px 5px 0 var(--ink); }
+.job h2 { margin: 6px 0 4px; font: 800 clamp(1.05rem, 3.6vw, 1.4rem)/1.4 var(--display); }
+.job p { margin: 0; font-size: 13.5px; font-weight: 600; }
+.job .ask { margin-top: 8px; padding: 8px 12px; font-size: 15px; font-weight: 800; background: #fff; border: 2.5px solid var(--ink); border-radius: 10px; }
+
+.nu { display: inline-flex; align-items: center; gap: 1px; font: 800 1em/1 'Plus Jakarta Sans', var(--body); white-space: nowrap; }
+.nu .ss { display: inline-flex; flex-direction: column; align-items: flex-end; font-size: .6em; line-height: 1.05; } .nu .ss i { font-style: normal; }
+
+.nuc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.box.vis { display: flex; flex-direction: column; gap: 8px; min-height: 150px; background: #e6f6ff; }
+.dots { display: flex; flex-wrap: wrap; gap: 2px; align-content: flex-start; flex: 1; min-height: 90px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--a2); } .dot.n { background: #fff; }
+.legend { display: flex; gap: 6px 14px; flex-wrap: wrap; font-size: 12px; font-weight: 700; }
+.legend b { display: inline-block; width: 11px; height: 11px; margin-right: 4px; vertical-align: -1px; border: 2px solid var(--ink); border-radius: 50%; }
+.read { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.sym { display: grid; place-items: center; min-width: 96px; padding: 8px 14px; font-size: 40px; background: var(--a3); border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+.vals { display: grid; gap: 3px; font-size: 14px; font-weight: 800; } .vals small { font-size: 12px; font-weight: 600; color: var(--mute); }
+.vals em { font-style: normal; color: var(--a1); font-variant-numeric: tabular-nums; }
+.ctls { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ctl { padding: 10px 12px; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 var(--ink); }
+.ctl label { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 800; }
+.ctl label output { font-variant-numeric: tabular-nums; color: var(--a1); }
+.ctl .row { margin-top: 8px; gap: 6px; } .ctl .btn { min-height: 38px; padding: 0 11px; }
+.ctl input[type=range] { width: 100%; margin: 8px 0 0; height: 26px; accent-color: var(--a1); cursor: pointer; }
+.ctl small { display: block; font-size: 11.5px; font-weight: 600; color: var(--mute); }
+.refbox { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: #fff8e1; }
+.refbox .nu { font-size: 30px; } .refbox span.t { font-size: 13px; font-weight: 700; }
+
+.pool { display: flex; gap: 10px; flex-wrap: wrap; min-height: 64px; padding: 10px; background: #e6f6ff; border: var(--bw) dashed var(--ink); border-radius: 14px; }
+.pool .none { font-size: 13px; font-weight: 700; color: var(--mute); align-self: center; }
+.card { min-width: 64px; min-height: 52px; padding: 6px 12px; font-size: 24px; cursor: grab; background: #fff; border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transition: transform .12s; }
+.card:hover { transform: translateY(-2px) rotate(-1deg); } .card.sel { background: var(--a3); transform: translateY(-4px) rotate(-2deg); box-shadow: 5px 5px 0 var(--ink); }
+.bins { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.bin { display: flex; flex-direction: column; align-items: stretch; gap: 3px; min-height: 120px; padding: 10px; text-align: left; cursor: pointer; background: #d6f0ff; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+.bin:nth-child(2) { background: #ffe9bd; } .bin:nth-child(3) { background: #ffd9cf; } .bin:nth-child(4) { background: #eef2f5; }
+.bin b { font-size: 14px; font-weight: 800; } .bin small { font-size: 11.5px; font-weight: 700; color: var(--mute); }
+.bin.over, .bin:hover { outline: 4px solid var(--ink); outline-offset: -4px; }
+.bin .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.chip { padding: 2px 8px; font-size: 17px; background: #fff; border: 2px solid var(--ink); border-radius: 8px; animation: nbpop .3s; }
+
+.dc { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+.atoms { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; width: min(250px, 100%); padding: 8px; background: #e6f6ff; border: var(--bw) solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+.atom { aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--ink); background: var(--a1); }
+.atom.gone { background: var(--a3); border-style: dashed; opacity: .85; } .atom.fresh { animation: nbpop .4s; }
+.dcinfo { display: grid; gap: 8px; }
+.dcinfo .nu { font-size: 22px; }
+.tgt { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; font-size: 13.5px; font-weight: 800; background: #fff; border: 2.5px solid var(--ink); border-radius: 10px; }
+.tgt.ok { background: #d9f5e6; } .tgt em { font-style: normal; color: var(--a1); }
+.big-n { font-size: 26px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+.gauge { position: relative; height: 26px; margin: 22px 8px 6px; background: #fff; border: var(--bw) solid var(--ink); border-radius: 99px; }
+.gauge i { position: absolute; top: -9px; bottom: -9px; width: 0; border-left: 4px solid var(--ink); transition: left .15s; }
+.gauge i.t { border-color: var(--a2); } .gauge i span { position: absolute; top: -17px; left: -30px; width: 64px; text-align: center; font-style: normal; font-size: 11.5px; font-weight: 800; }
+.gauge i.c span { top: auto; bottom: -17px; }
+.peaks { display: flex; align-items: flex-end; justify-content: center; gap: 14px; height: 130px; padding: 8px; background: #e6f6ff; border: var(--bw) solid var(--ink); border-radius: 14px; }
+.peak { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; flex: 0 1 90px; font-size: 12px; font-weight: 800; }
+.peak div { width: 100%; min-height: 3px; background: var(--a1); border: 2.5px solid var(--ink); border-bottom: 0; border-radius: 8px 8px 0 0; transition: height .15s; }
+.peak:nth-child(2) div { background: var(--a2); } .peak:nth-child(3) div { background: var(--a3); }
+.sl { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.eqn { padding: 8px 12px; font: 800 clamp(.9rem, 3.2vw, 1.1rem)/1.5 'Plus Jakarta Sans', var(--body); background: #fff; border: var(--bw) solid var(--ink); border-radius: 12px; text-align: center; }
+
+.shift { padding: 8px 12px; min-height: 42px; font-size: 13.5px; font-weight: 700; background: #fff8cf; border: 2.5px solid var(--ink); border-radius: 10px; }
+.shift.ok { background: #d9f5e6; } .shift.bad { background: #ffe1d8; } .shift b { color: var(--a1); }
+.sheet { position: relative; text-align: center; padding-top: 0; background: #fffdf3; }
+.sheet::before { content: "ISLAND LOG · ISOTOPE"; display: block; margin: 0 -22px 14px; padding: 7px 14px; font: 800 12px/1.2 var(--display); letter-spacing: 1.5px; color: #fff; background: var(--a1); border-bottom: var(--bw) solid var(--ink); border-radius: 18px 18px 0 0; }
+.stars { font-size: 38px; letter-spacing: 6px; color: #ffb800; -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--ink); }
+.sheet p { font-size: 14.5px; margin: 6px 0 14px; } .sheet ul { text-align: left; font-size: 14px; padding-left: 22px; }
+.learn { text-align: left; padding: 10px 12px; margin: 10px 0 14px; font-size: 13.5px; font-weight: 600; background: #d6f0ff; border: 2.5px solid var(--ink); border-radius: 10px; }
+@media (max-width: 640px) { .nuc, .ctls { grid-template-columns: 1fr; } .bins { grid-template-columns: 1fr 1fr; } .dc { grid-template-columns: 1fr; justify-items: center; } .dcinfo { width: 100%; } }
+    </style>
 </head>
 <body>
-<div class="wv a"></div><div class="wv b"></div>
-<header class="top">
-    <a class="lnk" href="games.html">← <span class="long">গেম হাব</span></a>
-    <span class="sp"></span>
-    <button type="button" class="ib" id="soundBtn" aria-label="শব্দ চালু/বন্ধ" title="শব্দ">🔔</button>
-    <button type="button" class="ib" id="themeBtn" aria-label="থিম পরিবর্তন" title="দিন/রাত">🌓</button>
-</header>
-<div class="wrap"><main class="panel">
-    <section id="startView">
-        <div class="hero"><span class="em">🏝️</span><h1>আইসোটোপ আইল্যান্ড</h1><p class="sub">সঠিক উত্তর দিয়ে এক দ্বীপ থেকে আরেক দ্বীপে পাড়ি জমাও। জোয়ার আসার আগেই!</p></div>
-        <div class="label">অভিযানের ধরন</div>
-        <div class="chips" id="modeRow" role="group" aria-label="মোড"></div>
-        <div class="label">সমুদ্রের অবস্থা (লেভেল)</div>
-        <div class="chips" id="diffRow" role="group" aria-label="লেভেল"></div>
-        <div class="sw-row"><span>🌊 জোয়ার (সময়ের সীমা)</span><label class="switch"><input type="checkbox" id="timerSw" aria-label="সময়ের সীমা"><span class="tr"></span></label></div>
-        <div class="rules" id="rules"></div>
-        <details class="sheet"><summary>📖 এক নজরে: আইসো-পরিবার</summary>
-            <b>আইসোটোপ:</b> প্রোটন সংখ্যা সমান, ভরসংখ্যা ভিন্ন (¹²C, ¹⁴C)।<br>
-            <b>আইসোবার:</b> ভরসংখ্যা সমান, প্রোটন সংখ্যা ভিন্ন (⁴⁰Ar, ⁴⁰Ca)।<br>
-            <b>আইসোটোন:</b> নিউট্রন সংখ্যা সমান (¹⁴C, ¹⁵N)।<br>
-            <b>ভরসংখ্যা</b> = প্রোটন + নিউট্রন। <b>নিউট্রন</b> = ভরসংখ্যা − পারমাণবিক সংখ্যা।
-        </details>
-        <button type="button" class="go" id="startBtn">নোঙর তোলো ⛵</button>
-        <div class="best-line" id="bestLine"></div>
-    </section>
-
-    <section id="playView" hidden>
-        <div class="peb">
-            <div>স্কোর<b id="score">০</b></div><div>সেরা<b id="best">০</b></div><div>দ্বীপ জয়<b id="isl">০</b></div><div>জীবন<b id="lives" aria-label="জীবন">🛟🛟🛟</b></div>
+    <div class="stage">
+        <header class="top">
+            <a class="back-btn" href="games.html#adv" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+            <div class="titlebox"><b>🏝️ আইসোটোপ আইল্যান্ড</b><small>Advanced Game</small></div>
+            <button class="icon-btn" id="soundBtn" title="সাউন্ড চালু/বন্ধ" aria-label="সাউন্ড চালু বা বন্ধ করো">🔔</button>
+            <button class="icon-btn" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+        </header>
+        <div class="lv" id="lv"></div>
+        <div class="hud">
+            <span class="pill">❌ ভুল <b id="sMiss">০</b></span>
+            <span class="pill">💡 ইঙ্গিত <b id="sHint">৩</b></span>
+            <span class="pill">🧭 ধাপ <b id="sRound">১/১</b></span>
+            <button class="btn" id="btnRules" style="margin-left:auto">📖 নিয়ম</button>
         </div>
-        <div class="strip" aria-hidden="true">
-            <span class="secs" id="secs">🌊 ৩০</span>
-            <div class="track" id="track"></div>
-            <div class="tide" id="tide"></div>
-        </div>
-        <div class="qn" id="qn"></div>
-        <p class="q" id="q" aria-live="polite">--</p>
-        <div class="opts" id="opts" role="group" aria-label="উত্তরের অপশন"></div>
-        <div class="life">
-            <button type="button" class="lf" id="f50">✂️ ৫০:৫০</button>
-            <button type="button" class="lf" id="fT">⏳ +১৫ সেকেন্ড</button>
-        </div>
-        <div class="msg" id="msg" aria-live="polite"></div>
-        <button type="button" class="go" id="nextBtn" hidden>পরের দ্বীপে →</button>
-        <div class="pop" id="pop"></div>
-    </section>
+        <section class="job" id="job"></section>
+        <section id="arena" style="display:grid;gap:12px"></section>
+        <div class="shift" id="shift" aria-live="polite"></div>
+        <div class="row"><button class="btn" id="btnHint">💡 ইঙ্গিত</button><button class="btn" id="btnReset">↺ শুরুর অবস্থা</button><button class="btn primary big" id="btnDone">✅ জমা দাও</button></div>
+    </div>
+    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
 
-    <section id="endView" hidden>
-        <h2 class="end-t" id="endTitle">🏆 রিপোর্ট কার্ড</h2>
-        <p class="end-m" id="endMsg"></p>
-        <div class="log" id="log"></div>
-        <div class="miss" id="missBox" hidden><h3>📖 যে প্রশ্নগুলোতে আটকে গিয়েছিলে</h3><ul id="missList"></ul></div>
-        <button type="button" class="go" id="againBtn">পুনরায় খেলুন 🔄</button>
-        <button type="button" class="go alt" id="menuBtn">সেটিংস বদলাও</button>
-    </section>
-</main></div>
-<div class="foot">Developed &amp; Designed by <b>Ahanaf Abid Omlan</b></div>
-
-<script>
-const $ = id => document.getElementById(id);
-const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
-const sget = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
-const sset = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
-const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-
-const Q = [
- { q: "কার্বনের কোন আইসোটোপটি প্রাচীন জীবাশ্মের বয়স নির্ণয়ে ব্যবহৃত হয়?", options: ["Carbon-12", "Carbon-13", "Carbon-14", "Carbon-11"], answer: "Carbon-14" },
- { q: "হাইড্রোজেনের কোন আইসোটোপটিতে কোনো নিউট্রন নেই?", options: ["প্রোটিয়াম (Protium)", "ডিউটেরিয়াম", "ট্রিটিয়াম", "হাইড্রাইড"], answer: "প্রোটিয়াম (Protium)" },
- { q: "ক্লোরিনের দুটি প্রধান আইসোটোপের ভরসংখ্যা ৩৫ এবং কত?", options: ["৩৭", "৩৬", "৩৮", "৩৯"], answer: "৩৭" },
- { q: "ইউরেনিয়ামের কোন আইসোটোপটি পারমাণবিক চুল্লিতে জ্বালানি হিসেবে ব্যবহৃত হয়?", options: ["U-235", "U-238", "U-234", "U-233"], answer: "U-235" },
- { q: "আইসোটোপসমূহের ক্ষেত্রে নিচের কোন বৈশিষ্ট্যটি সর্বদা সমান থাকে?", options: ["ভরসংখ্যা", "নিউট্রন সংখ্যা", "প্রোটন সংখ্যা", "নিউক্লিয়ন সংখ্যা"], answer: "প্রোটন সংখ্যা" },
- { q: "কোন মৌলের আইসোটোপ সংখ্যা প্রকৃতিতে সবচেয়ে বেশি পাওয়া যায়?", options: ["টিন (Sn)", "কার্বন", "অক্সিজেন", "হাইড্রোজেন"], answer: "টিন (Sn)" },
- { q: "ভারী জলের (Heavy Water) সংকেতে হাইড্রোজেনের কোন আইসোটোপটি ব্যবহৃত হয়?", options: ["ডিউটেরিয়াম", "প্রোটিয়াম", "ট্রিটিয়াম", "কোনোটিই নয়"], answer: "ডিউটেরিয়াম" },
- { q: "হাইড্রোজেনের তেজস্ক্রিয় আইসোটোপ কোনটি?", options: ["ট্রিটিয়াম (Tritium)", "প্রোটিয়াম", "ডিউটেরিয়াম", "নিয়ন"], answer: "ট্রিটিয়াম (Tritium)" },
- { q: "আইসোবার (Isobar)-দের ক্ষেত্রে কোন রাশিটি সমান থাকে?", options: ["প্রোটন সংখ্যা", "ভরসংখ্যা", "নিউট্রন সংখ্যা", "ইলেকট্রন বিন্যাস"], answer: "ভরসংখ্যা" },
- { q: "যেসব পরমাণুর নিউট্রন সংখ্যা সমান কিন্তু ভরসংখ্যা ও প্রোটন সংখ্যা ভিন্ন, তাদেরকে কী বলে?", options: ["আইসোটোন (Isotone)", "আইসোটোপ", "আইসোবার", "আইসোমার"], answer: "আইসোটোন (Isotone)" },
- { q: "কোবাল্টের তেজস্ক্রিয় আইসোটোপ (Co-60) কী চিকিৎসায় ব্যবহৃত হয়?", options: ["ক্যান্সার চিকিৎসায়", "রক্তচাপ নিয়ন্ত্রণে", "হাড়ের চিকিৎসায়", "চোখের চিকিৎসায়"], answer: "ক্যান্সার চিকিৎসায়" },
- { q: "আয়োডিনের কোন আইসোটোপটি গলগণ্ড বা থাইরয়েড রোগ নির্ণয় ও চিকিৎসায় ব্যবহৃত হয়?", options: ["I-131", "I-127", "I-125", "I-133"], answer: "I-131" },
- { q: "ফসফরাসের তেজস্ক্রিয় আইসোটোপ কোথায় ব্যবহৃত হয়?", options: ["লিউকেমিয়া বা রক্তরোগ চিকিৎসায়", "কৃষিতে সার হিসেবে", "ব্যাটারিতে", "গাড়ির ইঞ্জিনে"], answer: "লিউকেমিয়া বা রক্তরোগ চিকিৎসায়" },
- { q: "সোডিয়ামের আইসোটোপ Na-24 মানবদেহের কোথায় ব্যবহৃত হয়?", options: ["রক্তনালীর রক্তপ্রবাহ বা ব্লকেজ নির্ণয়ে", "মস্তিষ্কের স্ক্যানে", "হৃদপিণ্ডের গতি মাপতে", "ফুসফুস পরীক্ষায়"], answer: "রক্তনালীর রক্তপ্রবাহ বা ব্লকেজ নির্ণয়ে" },
- { q: "আইসোমার (Isomer) কি?", options: ["একই আণবিক সংকেত কিন্তু ভিন্ন গঠন", "ভিন্ন প্রোটন কিন্তু একই ভর", "সমান নিউট্রন সংখ্যা", "সমান ইলেকট্রন বিন্যাস"], answer: "একই আণবিক সংকেত কিন্তু ভিন্ন গঠন" },
- { q: "প্রাকৃতিক আইসোটোপের শতকরা পরিমাণকে কী বলা হয়?", options: ["আইসোটোপীয় আবৃত্তি (Abundance)", "পারমাণবিক ভর", "আইসোটোপ অনুপাত", "ভর ত্রুটি"], answer: "আইসোটোপীয় আবৃত্তি (Abundance)" },
- { q: "ক্লোরিনের পারমাণবিক ভর ভগ্নাংশ (35.5) হওয়ার কারণ কী?", options: ["আইসোটোপগুলোর আপেক্ষিক উপস্থিতির গড় মান", "প্রোটন ও নিউট্রনের যোগফল", "পরীক্ষামূলক ভুল", "ইলেকট্রনের ভর যোগ করায়"], answer: "আইসোটোপগুলোর আপেক্ষিক উপস্থিতির গড় মান" },
- { q: "প্রোটিয়ামে নিউট্রন সংখ্যা কত?", options: ["০", "১", "২", "৩"], answer: "০" },
- { q: "ডিউটেরিয়ামে নিউট্রন সংখ্যা কত?", options: ["১", "০", "২", "৩"], answer: "১" },
- { q: "ট্রিটিয়ামে নিউট্রন সংখ্যা কত?", options: ["২", "১", "০", "৩"], answer: "২" },
- { q: "কার্বন ডেটিং পদ্ধতিতে কিসের বয়স মাপা হয়?", options: ["জীবদেহাংশ ও প্রাচীন কাঠ", "পাথর ও মাটি", "লোহার অস্ত্র", "প্লাস্টিক"], answer: "জীবদেহাংশ ও প্রাচীন কাঠ" },
- { q: "যেসব পরমাণুর ইলেকট্রন সংখ্যা সমান কিন্তু ভরসংখ্যা ভিন্ন, তাদেরকে মূলত কী বলে?", options: ["আইসোটোপ", "আইসোবার", "আইসোটোন", "আইসোস্টার"], answer: "আইসোটোপ" },
- { q: "অর্গান (Ar - 40) এবং ক্যালসিয়াম (Ca - 40) পরস্পর কী?", options: ["আইসোবার", "আইসোটোপ", "আইসোটোন", "আইসোমার"], answer: "আইসোবার" },
- { q: "কার্বন-১২ এবং কার্বন-১৪ এর মধ্যে পার্থক্য কোথায়?", options: ["নিউট্রন সংখ্যায়", "প্রোটন সংখ্যায়", "ইলেকট্রন সংখ্যায়", "প্রোটন ও ইলেকট্রন উভয়েই"], answer: "নিউট্রন সংখ্যায়" },
- { q: "তেজস্ক্রিয় আইসোটোপ স্বতঃস্ফূর্তভাবে কী বিকিরণ করে?", options: ["আলফা, বিটা ও গামা রশ্মি", "শুধু এক্স-রে", "অবলোহিত রশ্মি", "শব্দ তরঙ্গ"], answer: "আলফা, বিটা ও গামা রশ্মি" },
- { q: "তেজস্ক্রিয়তা আবিষ্কার করেন কোন বিজ্ঞানী?", options: ["হেনরি বেকেরেল", "ম্যাসকিউরি", "রাদারফোর্ড", "জেমস চ্যাডউইক"], answer: "হেনরি বেকেরেল" },
- { q: "আইসোটোপ শব্দটির প্রবক্তা কে?", options: ["ফ্রেডরিক সোডি", "জন ডাল্টন", "জে জে থমসন", "বোর"], answer: "ফ্রেডরিক সোডি" },
- { q: "পরমাণুর কেন্দ্র বা নিউক্লিয়াসে কি কি থাকে?", options: ["প্রোটন ও নিউট্রন", "প্রোটন ও ইলেকট্রন", "নিউট্রন ও ইলেকট্রন", "শুধু প্রোটন"], answer: "প্রোটন ও নিউট্রন" },
- { q: "হাইড্রোজেনের স্থায়ী আইসোটোপ কয়টি?", options: ["দুটি (প্রোটিয়াম ও ডিউটেরিয়াম)", "একটি", "তিনটি", "চারটি"], answer: "দুটি (প্রোটিয়াম ও ডিউটেরিয়াম)" },
- { q: "তেজস্ক্রিয় সোডিয়াম (Na-24) এর অর্ধায়ু (Half-life) কত?", options: ["১৫ ঘণ্টা", "১ বছর", "৫ দিন", "১০ মিনিট"], answer: "১৫ ঘণ্টা" },
- /* নতুন প্রশ্ন */
- { q: "পরমাণুর ভরসংখ্যা কীসের সমান?", options: ["প্রোটন + নিউট্রন সংখ্যা", "প্রোটন + ইলেকট্রন সংখ্যা", "নিউট্রন − প্রোটন সংখ্যা", "শুধু ইলেকট্রন সংখ্যা"], answer: "প্রোটন + নিউট্রন সংখ্যা" },
- { q: "Cl-35 ও Cl-37 এর প্রাকৃতিক অনুপাত আনুমানিক কত?", options: ["৩ : ১", "১ : ১", "১ : ৩", "২ : ১"], answer: "৩ : ১" },
- { q: "ডিউটেরিয়ামের প্রতীক কোনটি?", options: ["D (²H)", "T (³H)", "H (¹H)", "He"], answer: "D (²H)" },
- { q: "ট্রিটিয়ামের ভরসংখ্যা কত?", options: ["৩", "১", "২", "৪"], answer: "৩" },
- { q: "ইউরেনিয়াম-২৩৮ (পারমাণবিক সংখ্যা ৯২) এ নিউট্রন সংখ্যা কত?", options: ["১৪৬", "১৪৩", "৯২", "২৩৮"], answer: "১৪৬" },
- { q: "ইউরেনিয়াম-২৩৫ (পারমাণবিক সংখ্যা ৯২) এ নিউট্রন সংখ্যা কত?", options: ["১৪৩", "১৪৬", "৯২", "২৩৫"], answer: "১৪৩" },
- { q: "কার্বন-১৪ এ প্রোটন ও নিউট্রন সংখ্যা যথাক্রমে কত?", options: ["৬ ও ৮", "৮ ও ৬", "৬ ও ৬", "১৪ ও ৬"], answer: "৬ ও ৮" },
- { q: "একটি পরমাণুর পারমাণবিক সংখ্যা ১৭ ও ভরসংখ্যা ৩৭। এতে নিউট্রন কয়টি?", options: ["২০", "১৭", "৩৭", "১৮"], answer: "২০" },
- { q: "Mg-24, Mg-25 ও Mg-26 পরস্পর কী?", options: ["আইসোটোপ", "আইসোবার", "আইসোটোন", "আইসোমার"], answer: "আইসোটোপ" },
- { q: "C-14 (নিউট্রন ৮) ও N-15 (নিউট্রন ৮) পরস্পর কী?", options: ["আইসোটোন", "আইসোবার", "আইসোটোপ", "আইসোমার"], answer: "আইসোটোন" },
- { q: "C-14 ও N-14 পরস্পর কী?", options: ["আইসোবার", "আইসোটোপ", "আইসোটোন", "আইসোমার"], answer: "আইসোবার" },
- { q: "তেজস্ক্রিয় পদার্থের ক্ষয়ের হার কোন রাশি দিয়ে প্রকাশ করা হয়?", options: ["অর্ধায়ু", "ঘনত্ব", "ভরত্রুটি", "যোজনী"], answer: "অর্ধায়ু" },
- { q: "কোনো আইসোটোপের অর্ধায়ু ১০ দিন। ৮০ গ্রাম নমুনা ৩০ দিন পরে কত গ্রাম অবশিষ্ট থাকবে?", options: ["১০ গ্রাম", "২০ গ্রাম", "৪০ গ্রাম", "৫ গ্রাম"], answer: "১০ গ্রাম" },
- { q: "কার্বন-১৪ এর অর্ধায়ু প্রায় কত?", options: ["৫৭৩০ বছর", "৫৭ বছর", "৫৭,৩০০ বছর", "৫৭৩ বছর"], answer: "৫৭৩০ বছর" },
- { q: "আয়োডিন-১৩১ এর অর্ধায়ু প্রায় কত?", options: ["৮ দিন", "৮ ঘণ্টা", "৮ বছর", "৮০ দিন"], answer: "৮ দিন" },
- { q: "Co-60 ক্যান্সার কোষ ধ্বংসে কোন রশ্মি ব্যবহার করে?", options: ["গামা রশ্মি", "আলট্রাভায়োলেট রশ্মি", "অবলোহিত রশ্মি", "রেডিও তরঙ্গ"], answer: "গামা রশ্মি" },
- { q: "কৃষিতে রেডিওআইসোটোপ ট্রেসার হিসেবে কী কাজে লাগে?", options: ["সার ও পুষ্টির চলাচল জানতে", "মাটির রং বদলাতে", "পানি জমাতে", "ফসল রং করতে"], answer: "সার ও পুষ্টির চলাচল জানতে" },
- { q: "পরমাণু চুল্লিতে নিউট্রনের গতি কমাতে কোনটি মডারেটর হিসেবে ব্যবহৃত হয়?", options: ["ভারী পানি (D₂O)", "লোহা", "তামা", "সোডিয়াম ক্লোরাইড"], answer: "ভারী পানি (D₂O)" },
- { q: "প্রকৃতিতে হাইড্রোজেনের কোন আইসোটোপটি সবচেয়ে বেশি পাওয়া যায়?", options: ["প্রোটিয়াম", "ডিউটেরিয়াম", "ট্রিটিয়াম", "সমান পরিমাণে"], answer: "প্রোটিয়াম" },
- { q: "ক্লোরিনের গড় পারমাণবিক ভর প্রায় কত?", options: ["৩৫.৫", "৩৫", "৩৭", "৩৬"], answer: "৩৫.৫" },
- { q: "নিচের কোন জোড়াটি আইসোটোপের উদাহরণ?", options: ["¹²C ও ¹⁴C", "¹⁴C ও ¹⁴N", "¹⁴C ও ¹⁵N", "O₂ ও O₃"], answer: "¹²C ও ¹⁴C" },
- { q: "O₂ ও O₃ পরস্পর কী?", options: ["অ্যালোট্রোপ", "আইসোটোপ", "আইসোবার", "আইসোমার"], answer: "অ্যালোট্রোপ" },
- { q: "পরমাণু ভর একক (amu) কোন পরমাণুর ভরের ১/১২ অংশ?", options: ["কার্বন-১২", "কার্বন-১৪", "হাইড্রোজেন-১", "অক্সিজেন-১৬"], answer: "কার্বন-১২" },
- { q: "ভর স্পেকট্রোমিটার কোন কাজে ব্যবহৃত হয়?", options: ["আইসোটোপের ভর ও আপেক্ষিক প্রাচুর্য নির্ণয়ে", "রক্তচাপ মাপতে", "তাপমাত্রা মাপতে", "pH মাপতে"], answer: "আইসোটোপের ভর ও আপেক্ষিক প্রাচুর্য নির্ণয়ে" },
- { q: "ইউরেনিয়াম সমৃদ্ধকরণে কোনটির অনুপাত বাড়ানো হয়?", options: ["U-235", "U-238", "ইলেকট্রন সংখ্যা", "প্রোটন সংখ্যা"], answer: "U-235" },
- { q: "নিচের কোন মৌলের মাত্র একটি স্থায়ী আইসোটোপ আছে?", options: ["ফ্লোরিন", "ক্লোরিন", "কার্বন", "অক্সিজেন"], answer: "ফ্লোরিন" },
- { q: "শিল্পে রেডিওআইসোটোপ ট্রেসার কী কাজে লাগে?", options: ["পাইপলাইনের ফুটো শনাক্তকরণে", "ইস্পাত রং করতে", "কাচ কাটতে", "কাগজ ভাঁজ করতে"], answer: "পাইপলাইনের ফুটো শনাক্তকরণে" },
- { q: "রেডিয়াম ও পোলোনিয়াম আবিষ্কার করেন কারা?", options: ["মেরি কুরি ও পিয়ের কুরি", "রাদারফোর্ড ও সোডি", "বোর ও হাইজেনবার্গ", "ডাল্টন ও থমসন"], answer: "মেরি কুরি ও পিয়ের কুরি" },
- { q: "নিউট্রন আবিষ্কার করেন কোন বিজ্ঞানী?", options: ["জেমস চ্যাডউইক", "রাদারফোর্ড", "জে জে থমসন", "নিলস বোর"], answer: "জেমস চ্যাডউইক" },
- { q: "বায়ুমণ্ডলে কার্বন-১৪ তৈরি হয় নিউট্রনের সঙ্গে কোন নিউক্লিয়াসের বিক্রিয়ায়?", options: ["নাইট্রোজেন-১৪", "অক্সিজেন-১৬", "কার্বন-১২", "হাইড্রোজেন-১"], answer: "নাইট্রোজেন-১৪" },
- { q: "আলফা কণা আসলে কী?", options: ["হিলিয়াম নিউক্লিয়াস", "ইলেকট্রন", "ফোটন", "নিউট্রন"], answer: "হিলিয়াম নিউক্লিয়াস" },
- { q: "বিটা (β⁻) কণা আসলে কী?", options: ["ইলেকট্রন", "প্রোটন", "হিলিয়াম নিউক্লিয়াস", "নিউট্রন"], answer: "ইলেকট্রন" },
- { q: "গামা রশ্মি কী?", options: ["উচ্চশক্তির তড়িৎচুম্বকীয় তরঙ্গ", "ইলেকট্রনের স্রোত", "হিলিয়াম নিউক্লিয়াসের স্রোত", "শব্দতরঙ্গ"], answer: "উচ্চশক্তির তড়িৎচুম্বকীয় তরঙ্গ" }
-];
-const LETTERS = ['ক', 'খ', 'গ', 'ঘ'];
-const MODES = { voyage: { name: 'অভিযান', sub: '৩টি জীবন' }, sudden: { name: 'আকস্মিক', sub: 'একটি ভুলেই শেষ' } };
-const DIFFS = { easy: { name: 'শান্ত সাগর', sub: '৪৫ সেকেন্ড', time: 45 }, mid: { name: 'মাঝারি ঢেউ', sub: '৩০ সেকেন্ড', time: 30 }, hard: { name: 'ঝড়ো সাগর', sub: '২০ সেকেন্ড', time: 20 } };
-let mode = sget('is_mode', 'voyage'); if (!MODES[mode]) mode = 'voyage';
-let diff = sget('is_diff', 'mid'); if (!DIFFS[diff]) diff = 'mid';
-let timerOn = sget('is_timer', '1') === '1', soundOn = sget('is_sound', '1') === '1';
-const bestKey = () => 'is_best_' + mode + '_' + diff, getBest = () => parseInt(sget(bestKey(), '0'), 10) || 0;
-
-let ac = null;
-function tone(f, t0, dur, type, vol) {
-    if (!soundOn) return;
-    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
-        const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .02); } catch (e) {}
-}
-const sfx = { right() { tone(660, 0, .12); tone(880, .1, .16); }, wrong() { tone(220, 0, .22, 'sawtooth', .12); tone(160, .15, .28, 'sawtooth', .12); }, big() { tone(523, 0, .1); tone(659, .1, .1); tone(784, .2, .1); tone(1047, .3, .25); },
-    end() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); }, win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); } };
-$('themeBtn').addEventListener('click', () => { const nx = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('theme', nx); } catch (e) {} document.documentElement.setAttribute('data-theme', nx); });
-const paintSound = () => $('soundBtn').textContent = soundOn ? '🔔' : '🔕';
-$('soundBtn').addEventListener('click', () => { soundOn = !soundOn; sset('is_sound', soundOn ? '1' : '0'); paintSound(); if (soundOn) sfx.right(); });
-paintSound();
-
-function chipRow(rowId, obj, current, onPick) {
-    const row = $(rowId); row.replaceChildren();
-    Object.entries(obj).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === current ? ' on' : ''); b.setAttribute('aria-pressed', String(k === current));
-        const t = document.createElement('b'); t.textContent = d.name; const u = document.createElement('small'); u.textContent = d.sub; b.append(t, u); b.addEventListener('click', () => onPick(k)); row.appendChild(b); });
-}
-function renderSetup() {
-    chipRow('modeRow', MODES, mode, k => { mode = k; sset('is_mode', k); renderSetup(); });
-    chipRow('diffRow', DIFFS, diff, k => { diff = k; sset('is_diff', k); renderSetup(); });
-    $('rules').textContent = '📋 ' + bn(Q.length) + 'টি প্রশ্নের পুরো আর্কিপেলাগো জয় করাই লক্ষ্য। ' + (mode === 'sudden' ? 'একটি ভুল হলেই খেলা শেষ (আসল নিয়ম)।' : '৩টি জীবন, ভুল বা জোয়ারে ডুবলে একটি করে যায়।') + ' প্রতি ৫টি দ্বীপে বড় দ্বীপের বোনাস +২০। সাহায্য: ৫০:৫০ একবার, +১৫ সেকেন্ড একবার।';
-    const b = getBest(); $('bestLine').textContent = b ? '🏆 এই সেটিংসে তোমার সেরা স্কোর: ' + bn(b) : '';
-}
-$('timerSw').checked = timerOn; $('timerSw').addEventListener('change', e => { timerOn = e.target.checked; sset('is_timer', timerOn ? '1' : '0'); });
-const show = id => ['startView', 'playView', 'endView'].forEach(v => $(v).hidden = (v !== id));
-
-let deck, cur, conq, score, lives, combo, bestCombo, correctN, wrongs, locked, limit, deadline, tick, advTimer, used50, usedT, asked;
-const paintLives = () => { $('lives').textContent = lives > 0 ? '🛟'.repeat(lives) : '💔'; $('lives').setAttribute('aria-label', bn(lives) + 'টি জীবন'); };
-const paintStats = () => { $('score').textContent = bn(score); $('isl').textContent = bn(conq); };
-function paintTrack(hop) {
-    const tr = $('track'); tr.replaceChildren(); const n = conq + 1;
-    for (let i = n - 2; i <= n + 3; i++) {
-        const d = document.createElement('div'); d.className = 'isl'; const big = i > 0 && i % 5 === 0;
-        if (i < 1) d.classList.add('ghost'); else if (i < n) { d.classList.add('done'); d.textContent = '🌴'; } else if (i === n) { d.classList.add('now'); d.textContent = big ? '🏝️' : '🌴'; const b = document.createElement('span'); b.className = 'boat'; b.textContent = '⛵'; d.appendChild(b); } else { d.classList.add('far'); d.textContent = big ? '🏝️' : '🌴'; }
-        if (big) d.classList.add('big'); if (i > 0) { const s = document.createElement('small'); s.textContent = bn(i); d.appendChild(s); } tr.appendChild(d);
+    <script>
+/* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+   ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+   বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+function NBSound(key) {
+    let on = true, ac = null;
+    try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+    function tone(f, t0, dur, type, vol) {
+        if (!on) return;
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+            const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+        } catch (e) {}
     }
-    if (hop) { tr.classList.remove('hop'); void tr.offsetWidth; tr.classList.add('hop'); }
+    const api = {
+        ok() { tone(660, 0, .12); tone(880, .1, .16); },
+        bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+        tap() { tone(520, 0, .06, 'triangle', .1); },
+        pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+        win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+        lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+        get on() { return on; },
+        toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+    };
+    function paint() { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; }
+    document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } });
+    if (document.readyState !== 'loading') { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } }
+    return api;
 }
-function startGame() {
-    deck = shuffle(Q.slice()); conq = 0; score = 0; combo = 0; bestCombo = 0; correctN = 0; asked = 0; wrongs = []; used50 = false; usedT = false; locked = false;
-    lives = mode === 'sudden' ? 1 : 3; limit = timerOn ? DIFFS[diff].time : 0;
-    $('best').textContent = bn(getBest()); paintLives(); paintStats(); show('playView'); paintTrack(false); nextQ();
-}
-function nextQ() {
-    clearTimeout(advTimer); clearInterval(tick); $('pop').classList.remove('go2');
-    if (!deck.length) return endGame(true);
-    cur = deck.pop(); asked++; locked = false; $('msg').className = 'msg'; $('msg').textContent = ''; $('nextBtn').hidden = true;
-    $('qn').textContent = '🏝️ দ্বীপ ' + bn(conq + 1) + ' • প্রশ্ন ' + bn(asked) + '/' + bn(Q.length); $('q').textContent = cur.q;
-    const box = $('opts'); box.replaceChildren();
-    shuffle(cur.options.slice()).forEach((o, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.ok = o === cur.answer ? '1' : '';
-        const l = document.createElement('span'); l.className = 'lt'; l.textContent = LETTERS[i]; const t = document.createElement('span'); t.textContent = o; b.append(l, t); b.addEventListener('click', () => answer(o, b)); box.appendChild(b); });
-    $('f50').disabled = used50; $('fT').disabled = usedT || !limit;
-    $('tide').classList.remove('low'); $('tide').style.height = '0'; $('secs').hidden = !limit;
-    if (limit) { deadline = Date.now() + limit * 1000;
-        tick = setInterval(() => { const left = Math.max(0, deadline - Date.now()), frac = left / (limit * 1000); $('tide').style.height = Math.min(88, (1 - frac) * 100) + '%'; $('tide').classList.toggle('low', frac < .3); $('secs').textContent = '🌊 ' + bn(Math.ceil(left / 1000));
-            if (left <= 0) { clearInterval(tick); answer(null, null); } }, 100); }
-}
-function answer(sel, btn) {
-    if (locked) return; locked = true; clearInterval(tick);
-    document.querySelectorAll('#opts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('right'); });
-    $('f50').disabled = true; $('fT').disabled = true; const ok = sel === cur.answer, msg = $('msg');
-    if (ok) {
-        const left = limit ? Math.max(0, deadline - Date.now()) / 1000 : 0; combo++; bestCombo = Math.max(bestCombo, combo); correctN++; conq++;
-        let pts = 10 + (limit ? Math.floor(left / 5) : 0) + (combo >= 3 ? 5 : 0), bigIsl = conq % 5 === 0; if (bigIsl) pts += 20;
-        score += pts; (bigIsl ? sfx.big : sfx.right)(); popText('+' + bn(pts)); paintStats(); paintTrack(true);
-        msg.className = 'msg ok'; msg.textContent = bigIsl ? '🏝️ বড় দ্বীপ জয়! +২০ বোনাস' : '✅ চমৎকার! সঠিক উত্তর।' + (combo >= 3 ? ' 🔥 ' + bn(combo) + ' টানা' : '');
-        advTimer = setTimeout(nextQ, 1400);
-    } else {
-        if (btn) btn.classList.add('wrong'); combo = 0; lives--; wrongs.push(cur); sfx.wrong(); paintLives();
-        msg.className = 'msg no'; msg.textContent = (sel === null ? '🌊 জোয়ারে ডুবে গেলে! ' : '❌ ভুল উত্তর! ') + (lives <= 0 ? 'অভিযান এখানেই শেষ।' : 'সঠিক উত্তরটি সবুজ হয়ে আছে।');
-        if (lives <= 0) advTimer = setTimeout(() => endGame(false), 2200); else { $('nextBtn').hidden = false; $('nextBtn').focus({ preventScroll: true }); }
-    }
-}
-$('f50').addEventListener('click', () => { if (locked || used50) return; used50 = true; $('f50').disabled = true;
-    shuffle([...document.querySelectorAll('#opts .opt')].filter(b => !b.dataset.ok)).slice(0, 2).forEach(b => { b.classList.add('gone'); b.disabled = true; }); });
-$('fT').addEventListener('click', () => { if (locked || usedT || !limit) return; usedT = true; $('fT').disabled = true; deadline += 15000; });
-function popText(t) { const p = $('pop'); p.textContent = t; p.classList.remove('go2'); void p.offsetWidth; p.classList.add('go2'); }
-function endGame(won) {
-    clearInterval(tick); clearTimeout(advTimer); (won ? sfx.win : sfx.end)();
-    const prev = getBest(), record = score > prev; if (record) sset(bestKey(), score);
-    let grade = 'C (উন্নতি প্রয়োজন)'; if (correctN >= 15) grade = 'A+ (আইসোটোপ বিশেষজ্ঞ 🧪)'; else if (correctN >= 8) grade = 'B (দারুণ চেষ্টা 👍)'; else if (correctN >= 3) grade = 'C+ (ভালো)';
-    $('endTitle').textContent = record && score > 0 ? '🏆 নতুন রেকর্ড!' : (won ? '🎉 পুরো দ্বীপপুঞ্জ জয়!' : '🏆 গেম ওভার - রিপোর্ট কার্ড');
-    $('endMsg').textContent = won ? 'সবগুলো প্রশ্নের দ্বীপ পেরিয়ে এলে, অসাধারণ! 🌟' : 'পরের বার আরও দূর যাবে, আবার পাড়ি জমাও! ⛵';
-    const rows = [['মোট স্কোর', bn(score)], ['জয় করা দ্বীপ', bn(conq) + 'টি'], ['সঠিক উত্তর', bn(correctN) + 'টি'], ['সেরা টানা সঠিক', bn(bestCombo)], ['পারফরম্যান্স গ্রেড', grade]];
-    const lg = $('log'); lg.replaceChildren(); rows.forEach(([a, b]) => { const p = document.createElement('p'), s = document.createElement('span'), v = document.createElement('b'); s.textContent = a; v.textContent = b; p.append(s, v); lg.appendChild(p); });
-    const ul = $('missList'); ul.replaceChildren(); wrongs.forEach(w => { const li = document.createElement('li'), b = document.createElement('b'); li.textContent = w.q + ' → '; b.textContent = w.answer; li.appendChild(b); ul.appendChild(li); });
-    $('missBox').hidden = !wrongs.length; show('endView'); $('againBtn').focus({ preventScroll: true });
-}
-$('startBtn').addEventListener('click', startGame); $('againBtn').addEventListener('click', startGame);
-$('menuBtn').addEventListener('click', () => { clearInterval(tick); renderSetup(); show('startView'); });
-$('nextBtn').addEventListener('click', nextQ);
-document.addEventListener('keydown', e => {
-    if ($('playView').hidden) return;
-    if (e.key >= '1' && e.key <= '4' && !locked) { const b = document.querySelectorAll('#opts .opt')[+e.key - 1]; if (b && !b.disabled) b.click(); }
-    else if (e.key === 'Enter' && locked && !$('nextBtn').hidden && document.activeElement !== $('nextBtn')) { e.preventDefault(); nextQ(); }
-});
-let hiddenAt = 0;
-document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && limit && !locked && !$('playView').hidden) { deadline += Date.now() - hiddenAt; hiddenAt = 0; } });
-renderSetup(); show('startView');
-</script>
+
+
+    (function () {
+        'use strict';
+        let sfx;
+        try { sfx = NBSound('isle'); } catch (e) { sfx = { ok() {}, bad() {}, tap() {}, pop() {}, win() {}, lose() {}, toggle() {} }; }
+        const $ = s => document.querySelector(s);
+        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+        const f1 = n => Number(n).toLocaleString('bn-BD', { useGrouping: false, maximumFractionDigits: 2 });
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+        $('#bgBtn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-bg') || '1';
+            const next = cur === '1' ? '2' : cur === '2' ? '3' : '1';
+            if (next === '1') document.documentElement.removeAttribute('data-bg'); else document.documentElement.setAttribute('data-bg', next);
+            lsSet('isle-bg', next); sfx.tap();
+        });
+
+        const SYM = [null].concat('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U'.split(' '));
+        const NAME = { 1: 'Hydrogen', 5: 'Boron', 6: 'Carbon', 7: 'Nitrogen', 8: 'Oxygen', 11: 'Sodium', 12: 'Magnesium', 17: 'Chlorine', 18: 'Argon', 19: 'Potassium', 20: 'Calcium', 53: 'Iodine', 54: 'Xenon', 92: 'Uranium', 90: 'Thorium', 91: 'Protactinium', 86: 'Radon', 83: 'Bismuth', 82: 'Lead', 79: 'Gold', 56: 'Barium', 28: 'Nickel', 26: 'Iron' };
+        const nu = (Z, A) => '<span class="nu"><span class="ss"><i>' + A + '</i><i>' + Z + '</i></span><span>' + SYM[Z] + '</span></span>';
+        const ZMAX = 92, NMAX = 150;
+
+        /* ধাপ (দ্বীপ) ও রাউন্ড */
+        const STAGES = [
+            { kind: 'build', name: 'নিউক্লাইড গড়ো', sub: 'প্রোটন + নিউট্রন', icon: '🏖️',
+              intro: 'নিউক্লিয়াসে প্রোটন (Z) আর নিউট্রন (N) বসিয়ে লক্ষ্য নিউক্লাইড গড়ো। প্রোটন সংখ্যা Z ঠিক করে কোন মৌল; ভরসংখ্যা A = Z + N।',
+              rules: ['+/− বাটন দিয়ে প্রোটন ও নিউট্রন বাড়াও-কমাও; মৌলের প্রতীক নিজে বদলাবে।', 'লক্ষ্য মিললে <b>জমা দাও</b> চাপো; না মিললে একটি ভুল গোনা হবে।'],
+              learn: 'মৌলের পরিচয় ঠিক করে প্রোটন সংখ্যা (Z)। A = Z + N। H-3-এ N = ২, C-14-এ N = ৮, Cl-37-এ N = ২০।',
+              rounds: [
+                { ask: 'ট্রিটিয়াম (হাইড্রোজেনের তেজস্ক্রিয় আইসোটোপ, H-3) গড়ো।', tZ: 1, tA: 3, start: [1, 0], hint: 'হাইড্রোজেনের Z = ১। ভরসংখ্যা ৩ হলে নিউট্রন = ৩ − ১ = ২।',
+                  fact: 'ট্রিটিয়ামে ১ প্রোটন + ২ নিউট্রন। হাইড্রোজেনের তিন আইসোটোপ: প্রোটিয়াম (নিউট্রন ০), ডিউটেরিয়াম (নিউট্রন ১, ভারী পানি D₂O-তে) ও তেজস্ক্রিয় ট্রিটিয়াম (নিউট্রন ২)।' },
+                { ask: 'কার্বন-১৪ (C-14) গড়ো — প্রাচীন কাঠ ও জীবাশ্মের বয়স মাপার আইসোটোপ।', tZ: 6, tA: 14, start: [1, 0], hint: 'বাঁ পাশের প্রতীকে C খোঁজো (Z = ৬)। নিউট্রন = ১৪ − ৬ = ৮।',
+                  fact: 'C-12 ও C-14 এর প্রোটন সমান (৬), শুধু নিউট্রন আলাদা (৬ বনাম ৮) — এরাই আইসোটোপ।' },
+                { ask: 'ক্লোরিন-৩৭ (Cl-37) গড়ো।', tZ: 17, tA: 37, start: [1, 0], hint: 'Cl-এর প্রোটন সংখ্যা ১৭। নিউট্রন = ৩৭ − ১৭ = ২০।',
+                  fact: 'Cl-35 (নিউট্রন ১৮) আর Cl-37 (নিউট্রন ২০) প্রকৃতিতে প্রায় ৩ : ১ অনুপাতে মেশানো — তাই ক্লোরিনের গড় পারমাণবিক ভর ৩৫.৫।' }] },
+            { kind: 'build', name: 'সম্পর্ক গড়ো', sub: 'আইসোবার · আইসোটোন', icon: '🌴',
+              intro: 'রেফারেন্স নিউক্লাইড থেকে শুরু। আইসোটোপে Z সমান, আইসোবারে A সমান, আইসোটোনে N সমান — সম্পর্ক মেনে নতুন নিউক্লাইড গড়ো।',
+              rules: ['শুরুর অবস্থা রেফারেন্স নিউক্লাইড — তা থেকে প্রোটন/নিউট্রন বদলাও।', 'কোন রাশি অপরিবর্তিত রাখতে হবে তা সম্পর্কের নামেই আছে।'],
+              learn: 'আইসোটোপ: Z সমান। আইসোবার: A সমান। আইসোটোন: N সমান। Ar-40 ও Ca-40 আইসোবার; C-14 ও N-15 আইসোটোন; U-235 ও U-238 আইসোটোপ।',
+              rounds: [
+                { ask: 'Ar-40 এর একটি আইসোবার গড়ো, যার প্রোটন সংখ্যা ২০।', ref: [18, 40], tZ: 20, tA: 40, hint: 'আইসোবারে A সমান (৪০) থাকে। Z ২ বাড়লে N ২ কমাতে হবে।',
+                  fact: 'Ar-40 ও Ca-40 আইসোবার: A সমান (৪০), Z ভিন্ন (১৮ বনাম ২০) তাই মৌল আলাদা। K-40 ক্ষয়ে Ca-40 ও Ar-40 দুটোই তৈরি করে।' },
+                { ask: 'C-14 এর একটি আইসোটোন গড়ো (নিউট্রন সংখ্যা সমান), যার প্রোটন সংখ্যা ৭।', ref: [6, 14], tZ: 7, tA: 15, hint: 'আইসোটোনে N সমান (৮)। Z = ৭ হলে A = ৭ + ৮।',
+                  fact: 'C-14 (N = ৮) ও N-15 (N = ৮) আইসোটোন; এদের Z ও A দুটোই আলাদা।' },
+                { ask: 'U-235 এর একটি আইসোটোপ গড়ো, যার নিউট্রন সংখ্যা ১৪৬।', ref: [92, 235], tZ: 92, tA: 238, hint: 'আইসোটোপে Z সমান (৯২)। A = ৯২ + ১৪৬।',
+                  fact: 'U-235 (নিউট্রন ১৪৩) পারমাণবিক চুল্লির জ্বালানি; U-238 (নিউট্রন ১৪৬) এর আইসোটোপ। ইউরেনিয়াম সমৃদ্ধকরণে U-235 এর অনুপাত বাড়ানো হয়।' }] },
+            { kind: 'sort', name: 'পরিবার বাছাই ১', sub: '¹⁴C এর আত্মীয়', icon: '🧺',
+              intro: 'রেফারেন্স ¹⁴C-এর সঙ্গে প্রতিটি কার্ডের সম্পর্ক বের করে সঠিক ঝুড়িতে রাখো। কার্ডে শুধু A আর Z দেওয়া — N নিজে বের করো (N = A − Z)।',
+              rules: ['কার্ড ট্যাপ (বা টেনে) এনে ঝুড়িতে ফেলো।', 'ভুল ঝুড়ি হলে কারণ দেখাবে ও ভুল গোনা হবে।'],
+              learn: 'তিন সম্পর্কের একটাই রাশি সমান থাকে: Z (আইসোটোপ), A (আইসোবার), N (আইসোটোন)। ¹²C, ¹³C আইসোটোপ; ¹⁴N আইসোবার; ¹⁵N, ¹⁶O আইসোটোন।',
+              rounds: [{ ask: 'সবগুলো কার্ড ¹⁴C-এর সম্পর্ক অনুযায়ী সাজাও।', ref: [6, 14], cards: [[6, 12], [7, 14], [8, 16], [7, 15], [6, 13], [7, 13], [8, 17]], hint: null,
+                  fact: 'C-14 ক্ষয়ে (β⁻) N-14 হয় — আইসোবার! ভরসংখ্যা একই থাকে, শুধু একটি নিউট্রন প্রোটনে বদলায়।' }] },
+            { kind: 'sort', name: 'পরিবার বাছাই ২', sub: '⁴⁰Ar এর আত্মীয়', icon: '⛵',
+              intro: 'এবার রেফারেন্স ⁴⁰Ar। আটটি কার্ড সাজাও — কোনোটার সঙ্গে কোনো মিল না থাকলে “কোনোটিই নয়” ঝুড়িতে।',
+              rules: ['কার্ড ট্যাপ (বা টেনে) এনে ঝুড়িতে ফেলো।', 'N = A − Z; তিনটি রাশির কোনোটি রেফারেন্সের সমান কি না দেখো।'],
+              learn: '³⁶Ar, ³⁸Ar আইসোটোপ; ⁴⁰Ca, ⁴⁰K আইসোবার; ⁴¹K, ⁴²Ca আইসোটোন (N = ২২); ³⁹K ও ³⁵Cl কোনোটিই নয়।',
+              rounds: [{ ask: 'সবগুলো কার্ড ⁴⁰Ar-এর সম্পর্ক অনুযায়ী সাজাও।', ref: [18, 40], cards: [[19, 39], [20, 40], [18, 36], [19, 41], [17, 35], [19, 40], [20, 42], [18, 38]], hint: null,
+                  fact: 'K-40 তেজস্ক্রিয়; এর ক্ষয়ে Ar-40 ও Ca-40 তৈরি হয় — আইসোবার সম্পর্কের বাস্তব উদাহরণ।' }] },
+            { kind: 'decay', name: 'অর্ধায়ুর ঘড়ি', sub: 'Na · I · C এর ক্ষয়', icon: '⏳',
+              intro: '৬৪টি তেজস্ক্রিয় পরমাণুর নমুনা। প্রতি অপেক্ষায় ঠিক এক অর্ধায়ু পার হয় — প্রতিবার অর্ধেক পরমাণু ক্ষয়ে যায়। ঠিক লক্ষ্য পরিমাণে থামাও!',
+              rules: ['<b>এক অর্ধায়ু অপেক্ষা</b> চাপলে অর্ধেক পরমাণু ক্ষয়ে নতুন মৌলে বদলায়।', 'লক্ষ্যে পৌঁছে <b>এখন মাপো</b> চাপো। লক্ষ্য পেরিয়ে গেলে ভুল গোনা হবে, ঘড়ি আবার শুরু।'],
+              learn: 'n অর্ধায়ু পরে অবশিষ্ট = শুরুর ÷ ২ⁿ। Na-24: ১৫ ঘণ্টা, I-131: ≈ ৮ দিন, C-14: ৫৭৩০ বছর। অর্ধায়ু পরমাণু-প্রকৃতির নিজস্ব ধ্রুবক।',
+              rounds: [
+                { iso: 'Na-24', Z: 11, A: 24, dZ: 12, hl: 15, unit: 'ঘণ্টা', start: 64, target: 16, ask: 'Na-24 (অর্ধায়ু ১৫ ঘণ্টা) এর নমুনা থেকে মাত্র ১৬টি পরমাণু অবশিষ্ট থাকতে কত সময় লাগবে? সময় এগিয়ে থামো।', hint: '৬৪ → ৩২ → ১৬। কয় অর্ধায়ু লাগল গুনে নাও।',
+                  fact: 'Na-24 রক্তপ্রবাহ ও রক্তনালীর ব্লকেজ নির্ণয়ে ট্রেসার হিসেবে ব্যবহৃত হয়। এটি ক্ষয়ে Mg-24 হয়।' },
+                { iso: 'I-131', Z: 53, A: 131, dZ: 54, hl: 8, unit: 'দিন', start: 64, target: 4, ask: 'I-131 (অর্ধায়ু ≈ ৮ দিন) — ৬৪টি থেকে ৪টিতে নামতে কত দিন?', hint: '৪ = ৬৪ ÷ ১৬ = ৬৪ ÷ ২⁴, অর্থাৎ চার অর্ধায়ু।',
+                  fact: 'I-131 থাইরয়েড (গলগণ্ড) রোগ নির্ণয় ও চিকিৎসায় লাগে — থাইরয়েড আয়োডিন শোষে। এটি ক্ষয়ে Xe-131 হয়।' },
+                { iso: 'C-14', Z: 6, A: 14, dZ: 7, hl: 5730, unit: 'বছর', start: 64, target: 8, ask: 'একটি প্রাচীন কাঠে জীবিত গাছের তুলনায় C-14 আছে মাত্র ১/৮ (৮টি)। কাঠটি কত বছর পুরোনো? ঘড়ি চালিয়ে বের করো।', hint: '১/৮ = (১/২)³ — তিন অর্ধায়ু।',
+                  fact: 'C-14 ক্ষয়ে N-14 হয়। বায়ুমণ্ডলে নাইট্রোজেন-১৪ + নিউট্রন → C-14 তৈরি হয়; জীবিত গাছ তা নেয়, মরলে নেওয়া বন্ধ — তাই অবশিষ্ট C-14 দিয়ে বয়স মাপা যায়।' }] },
+            { kind: 'mix', name: 'গড় ভরের মিক্সার', sub: 'Cl · B · Mg', icon: '🎚️',
+              intro: 'ভর স্পেকট্রোমিটারের পিক-উচ্চতা স্লাইডারে ঠিক করো। আইসোটোপগুলোর প্রাচুর্যের ওজনযুক্ত গড়ই মৌলের পারমাণবিক ভর — লক্ষ্য গড় মেলাও।',
+              rules: ['স্লাইডার নাড়ালে আইসোটোপের শতকরা অনুপাত ও গড় ভর সঙ্গে সঙ্গে বদলায়।', 'গড় লক্ষ্যের ±০.০৫ এর মধ্যে এলে <b>জমা দাও</b> চাপো।'],
+              learn: 'গড় ভর = Σ (ভরসংখ্যা × প্রাচুর্য%) ÷ ১০০। গড় সবসময় বেশি প্রাচুর্যের আইসোটোপের দিকে ঝোঁকে — তাই Cl = ৩৫.৫ (৩ : ১ অনুপাত), ভগ্নাংশ হয় আইসোটোপের মিশ্রণের কারণে।',
+              rounds: [
+                { el: 'ক্লোরিন', sym: 'Cl', Z: 17, iso: [35, 37], target: 35.5, ask: 'ক্লোরিনের গড় ভর ৩৫.৫ হতে হবে।', hint: '৩৫.৫ হলো ৩৫ আর ৩৭ এর মাঝখানের (৩৬) চেয়ে ৩৫-এর কাছে — তাই Cl-35 বেশি। অনুপাত ৩ : ১।',
+                  fact: 'প্রকৃতিতে Cl-35 ≈ ৭৫% আর Cl-37 ≈ ২৫% — তাই গড় ৩৫.৫। কোনো একটি ক্লোরিন পরমাণুর ভর ৩৫.৫ নয়!' },
+                { el: 'বোরন', sym: 'B', Z: 5, iso: [10, 11], target: 10.8, ask: 'বোরনের গড় ভর ১০.৮ হতে হবে।', hint: '১০.৮ এর অবস্থান ১১-এর কাছে, তাই B-11 প্রায় ৮০%, B-10 প্রায় ২০%।',
+                  fact: 'B-11 প্রায় ৮০% ও B-10 প্রায় ২০% পাওয়া যায়। (সরল হিসাবে ভরসংখ্যা ধরা হয়েছে।)' },
+                { el: 'ম্যাগনেসিয়াম', sym: 'Mg', Z: 12, iso: [24, 25, 26], target: 24.3, ask: 'Mg এর তিন আইসোটোপ মিলিয়ে গড় ভর ২৪.৩ করো।', hint: '২৪.৩ ২৪-এর খুব কাছে: Mg-24 অনেক বেশি (≈ ৭৯%), Mg-25 ও Mg-26 প্রায় ১০–১১% করে।',
+                  fact: 'Mg-24 (≈ ৭৯%), Mg-25 (≈ ১০%), Mg-26 (≈ ১১%) — মিশ্রণের গড় ২৪.৩। ভর স্পেকট্রোমিটার এভাবেই আইসোটোপের ভর ও আপেক্ষিক প্রাচুর্য মাপে।' }] },
+            { kind: 'build', name: 'ক্ষয়ের পণ্য', sub: 'α · β⁻ ক্ষয়', icon: '☢️', h: 3,
+              intro: 'রেফারেন্স নিউক্লাইড ক্ষয় হলে নতুন নিউক্লাইড তৈরি হয়। <b>α-ক্ষয়ে</b> ২ প্রোটন + ২ নিউট্রন (He-৪) বেরোয় (Z−২, A−৪)। <b>β⁻-ক্ষয়ে</b> একটি নিউট্রন প্রোটনে বদলায় (Z+১, A একই)। পণ্য গড়ো!',
+              rules: ['রেফারেন্স থেকে শুরু — ক্ষয়ের নিয়ম মেনে Z ও N বদলাও।', 'দুই ধাপের ক্ষয়ে দুবার নিয়ম প্রয়োগ করো।'],
+              learn: 'α: Z−২, A−৪ (N−২)। β⁻: Z+১, N−১, A অপরিবর্তিত। ক্ষয়ের সমীকরণে A ও Z দুই দিকেই সমান হতে হয় (সংরক্ষণ সূত্র)।',
+              rounds: [
+                { ask: 'U-238 α-কণা ছেড়ে ক্ষয় হলে যে নিউক্লাইড হয়, সেটি গড়ো।', ref: [92, 238], tZ: 90, tA: 234, hint: 'α-ক্ষয়: Z = ৯২ − ২ = ৯০, A = ২৩৮ − ৪ = ২৩৪।', fact: 'U-238 → Th-234 + He-৪। এটি ইউরেনিয়াম ক্ষয়-শৃঙ্খলের প্রথম ধাপ; শৃঙ্খলের শেষে স্থিতিশীল Pb-206।' },
+                { ask: 'Th-234 β⁻ ক্ষয়ে কোন নিউক্লাইড হয়?', ref: [90, 234], tZ: 91, tA: 234, hint: 'β⁻: নিউট্রন → প্রোটন; Z + ১ = ৯১, A একই ২৩৪।', fact: 'Th-234 → Pa-234 + e⁻ (β কণা)। ভরসংখ্যা একই থাকায় Th-234 ও Pa-234 আইসোবার।' },
+                { ask: 'Ra-226 α-ক্ষয়ে যে বিখ্যাত তেজস্ক্রিয় গ্যাস (রেডন) তৈরি করে, সেই নিউক্লাইড গড়ো।', ref: [88, 226], tZ: 86, tA: 222, hint: 'α-ক্ষয়: Z−২ = ৮৬, A−৪ = ২২২।', fact: 'Ra-226 → Rn-222 + He-৪। রেডন একটি নিষ্ক্রিয় গ্যাস, বাড়ির বদ্ধ ঘরে জমে স্বাস্থ্যঝুঁকি তৈরি করতে পারে।' },
+                { ask: 'Pb-214 β⁻ ক্ষয়ে কোন নিউক্লাইড হয়?', ref: [82, 214], tZ: 83, tA: 214, hint: 'Z + ১ = ৮৩ (বিসমাথ), A একই।', fact: 'Pb-214 → Bi-214 → Po-214 … শৃঙ্খলে β ও α ক্ষয় একের পর এক চলে।' },
+                { ask: 'U-238 কে প্রথমে ১টি α, তারপর ২টি β⁻ ক্ষয় করানো হলো। শেষ নিউক্লাইড কোনটি?', ref: [92, 238], tZ: 92, tA: 234, hint: 'α: (৯০, ২৩৪)। তারপর ২ × β⁻: Z + ২ = ৯২, A ২৩৪।', fact: 'ফল U-234: Z আবার ৯২ ফিরল, A কমল ৪ — আইসোটোপ! ক্ষয়-শৃঙ্খলে একই মৌলের নতুন আইসোটোপ তৈরি হতে পারে।' }] },
+            { kind: 'sort', name: 'পরিবার বাছাই ৩', sub: '⁵⁶Fe এর আত্মীয়', icon: '🪸', h: 2,
+              intro: 'লোহার আইসোটোপ ⁵⁶Fe রেফারেন্স। নয়টি কার্ড সাজাও — সবগুলো আত্মীয় নয়! কম ইঙ্গিতে (মাত্র ২টি)।',
+              rules: ['কার্ড ট্যাপ (বা টেনে) এনে ঝুড়িতে ফেলো।', 'N = A − Z; তিনটি রাশির কোনোটি রেফারেন্সের সমান কি না দেখো।'],
+              learn: '⁵⁴Fe, ⁵⁷Fe আইসোটোপ (Z = ২৬); ⁵⁶Co, ⁵⁶Ni আইসোবার (A = ৫৬); ⁵⁸Ni, ⁵⁵Mn আইসোটোন (N = ৩০); বাকিরা কেউ নয়।',
+              rounds: [{ ask: 'সবগুলো কার্ড ⁵⁶Fe-এর সম্পর্ক অনুযায়ী সাজাও।', ref: [26, 56], cards: [[26, 54], [27, 56], [28, 58], [25, 55], [24, 52], [29, 63], [28, 56], [26, 57], [27, 59]], hint: null,
+                  fact: 'Fe-56 সবচেয়ে স্থিতিশীল নিউক্লিয়াসের একটি — নক্ষত্রের ভেতরে ফিউশন লোহা পর্যন্ত এসেই থামে।' }] },
+            { kind: 'decay', name: 'অর্ধায়ুর ঘড়ি ২', sub: 'সময় থেকে পরমাণু', icon: '⌛', h: 2,
+              intro: 'এবার লক্ষ্য সরাসরি দেওয়া নেই — <b>পার হওয়া সময়</b> দেওয়া আছে। সময় ÷ অর্ধায়ু = কয়টি অর্ধায়ু, তারপর ৬৪ থেকে কতবার অর্ধেক? নিজে হিসাব করে ঠিক জায়গায় থামো।',
+              rules: ['<b>এক অর্ধায়ু অপেক্ষা</b> চাপলে অর্ধেক পরমাণু ক্ষয়ে যায়।', 'হিসাব করা সংখ্যায় পৌঁছে <b>এখন মাপো</b> চাপো; পেরিয়ে গেলে ভুল।'],
+              learn: 'অবশিষ্ট N = N₀ ÷ ২^(t / t½)। যেমন ২০ বছর ÷ ৫ বছর = ৪ অর্ধায়ু ⇒ ৬৪ ÷ ১৬ = ৪। তেজস্ক্রিয় বর্জ্য কত দিন বিপজ্জনক থাকে, এই হিসাব দিয়েই বোঝা যায়।',
+              rounds: [
+                { iso: 'Co-60', Z: 27, A: 60, dZ: 28, hl: 5, unit: 'বছর', start: 64, target: 4, ask: 'Co-60 (অর্ধায়ু ≈ ৫ বছর)। ২০ বছর পর ৬৪টি থেকে কয়টি অবশিষ্ট থাকবে? সময় চালিয়ে ওই অবস্থায় থামো।', hint: '২০ ÷ ৫ = ৪ অর্ধায়ু ⇒ ৬৪ ÷ ২⁴ = ৪।', fact: 'Co-60 ক্যান্সারের রেডিওথেরাপি ও খাদ্য জীবাণুমুক্তকরণে ব্যবহৃত হয়। এটি ক্ষয়ে Ni-60 হয়।' },
+                { iso: 'Cs-137', Z: 55, A: 137, dZ: 56, hl: 30, unit: 'বছর', start: 64, target: 8, ask: 'Cs-137 (অর্ধায়ু ≈ ৩০ বছর) এর নমুনা ৯০ বছর পর কতটুকু থাকবে? ঘড়ি চালিয়ে দেখাও।', hint: '৯০ ÷ ৩০ = ৩ অর্ধায়ু ⇒ ৬৪ ÷ ৮ = ৮।', fact: 'Cs-137 পারমাণবিক দুর্ঘটনার প্রধান দূষক; ৩০ বছরের অর্ধায়ুর কারণে দূষণ দশকের পর দশক থাকে। এটি ক্ষয়ে Ba-137 হয়।' },
+                { iso: 'P-32', Z: 15, A: 32, dZ: 16, hl: 14, unit: 'দিন', start: 64, target: 4, ask: 'P-32 (অর্ধায়ু ১৪ দিন) ৫৬ দিন পর কয়টি অবশিষ্ট থাকবে?', hint: '৫৬ ÷ ১৪ = ৪ অর্ধায়ু।', fact: 'P-32 উদ্ভিদে সার-শোষণের গতি মাপতে ট্রেসার হিসেবে ব্যবহৃত হয়। এটি ক্ষয়ে S-32 হয়।' },
+                { iso: 'Sr-90', Z: 38, A: 90, dZ: 39, hl: 29, unit: 'বছর', start: 64, target: 2, ask: 'Sr-90 (অর্ধায়ু ≈ ২৯ বছর) এর ১৪৫ বছর পর কয়টি অবশিষ্ট? (১৪৫ ÷ ২৯ কত?)', hint: '১৪৫ ÷ ২৯ = ৫ অর্ধায়ু ⇒ ৬৪ ÷ ৩২ = ২।', fact: 'Sr-90 হাড়ে ক্যালসিয়ামের জায়গা নেয় বলে বিপজ্জনক। এটি ক্ষয়ে Y-90 হয়।' }] },
+            { kind: 'sort', name: 'পরিবার বাছাই ৪', sub: '²³⁸U এর আত্মীয়', icon: '🛰️', h: 1,
+              intro: 'ভারী নিউক্লিয়াস ²³⁸U — এবার সংখ্যাগুলো বড়, ভুলও সহজে হয়! দশটি কার্ড, ইঙ্গিত মাত্র ১টি।',
+              rules: ['কার্ড ট্যাপ (বা টেনে) এনে ঝুড়িতে ফেলো।', 'N = A − Z; তিনটি রাশির কোনোটি রেফারেন্সের সমান কি না দেখো।'],
+              learn: '²³⁵U ও ²³⁴U আইসোটোপ; ²³⁸Pu, ²³⁸Pa আইসোবার; ²³⁹Np, ²³⁶Th, ²³⁵Ac, ²³⁴Ra আইসোটোন (N = ১৪৬); ²⁰⁸Pb, ²²²Rn কোনোটিই নয়।',
+              rounds: [{ ask: 'সবগুলো কার্ড ²³⁸U-এর সম্পর্ক অনুযায়ী সাজাও।', ref: [92, 238], cards: [[92, 235], [92, 234], [94, 238], [91, 238], [93, 239], [90, 236], [89, 235], [88, 234], [82, 208], [86, 222]], hint: null,
+                  fact: 'U-238 (N = ১৪৬) পৃথিবীর বয়সের মতোই দীর্ঘ অর্ধায়ু (≈ ৪৫০ কোটি বছর) নিয়ে ক্ষয় হচ্ছে — তাই এখনো আছে।' }] },
+            { kind: 'mix', name: 'গড় ভরের মিক্সার ২', sub: 'Cu · Br · Li · Ne · Si', icon: '🎛️', h: 2,
+              intro: 'আরও কঠিন মিক্সার: পাঁচটি মৌল, কিছুতে ৩টি আইসোটোপ! লক্ষ্য গড় ভর (±০.০৫) ঠিক করো। মনে রাখো — গড় ভারী আইসোটোপের কাছাকাছি হলে ভারীটাই বেশি।',
+              rules: ['স্লাইডার নাড়ালে শতকরা অনুপাত ও গড় ভর সঙ্গে সঙ্গে বদলায়।', 'গড় লক্ষ্যের ±০.০৫ এর মধ্যে এলে <b>জমা দাও</b> চাপো।'],
+              learn: 'গড় ভর = Σ(ভরসংখ্যা × প্রাচুর্য%) ÷ ১০০। দুই আইসোটোপের ক্ষেত্রে ভারী আইসোটোপের % = (গড় − হালকা) ÷ (ভারী − হালকা) × ১০০ — এই সোজা সূত্রে দ্রুত হিসাব হয়।',
+              rounds: [
+                { el: 'কপার', sym: 'Cu', Z: 29, iso: [63, 65], target: 63.55, ask: 'কপারের গড় ভর ৬৩.৫৫ — Cu-63 ও Cu-65 এর অনুপাত বের করো।', hint: 'Cu-65 এর % = (৬৩.৫৫ − ৬৩) ÷ (৬৫ − ৬৩) = ২৭.৫%।', fact: 'Cu-63 ≈ ৬৯%, Cu-65 ≈ ৩১% — গড় ৬৩.৫৫।' },
+                { el: 'ব্রোমিন', sym: 'Br', Z: 35, iso: [79, 81], target: 79.9, ask: 'ব্রোমিনের গড় ভর ৭৯.৯ হতে হবে।', hint: 'ভারী Br-81 এর % = (৭৯.৯ − ৭৯) ÷ ২ = ৪৫%।', fact: 'Br-79 ও Br-81 প্রায় সমান (≈ ৫০.৭ : ৪৯.৩) — তাই ব্রোমিনের ভর প্রায় ঠিক মাঝামাঝি ৭৯.৯।' },
+                { el: 'লিথিয়াম', sym: 'Li', Z: 3, iso: [6, 7], target: 6.94, ask: 'লিথিয়ামের গড় ভর ৬.৯৪ — কোন আইসোটোপ কত?', hint: 'Li-7 এর % = (৬.৯৪ − ৬) ÷ ১ = ৯৪%।', fact: 'Li-7 ≈ ৯২.৫%, Li-6 ≈ ৭.৫% — Li-6 পারমাণবিক ফিউশন গবেষণায় ট্রিটিয়াম তৈরিতে লাগে।' },
+                { el: 'নিয়ন', sym: 'Ne', Z: 10, iso: [20, 21, 22], target: 20.18, ask: 'নিয়নের তিন আইসোটোপ মিলিয়ে গড় ভর ২০.১৮ করো।', hint: 'প্রায় সবটাই Ne-20 (≈ ৯০%); Ne-21 খুব কম (≈ ০.৩%), Ne-22 প্রায় ৯–১০%।', fact: 'Ne-20 ≈ ৯০.৫%, Ne-21 ≈ ০.৩%, Ne-22 ≈ ৯.২% — গড় ২০.১৮।' },
+                { el: 'সিলিকন', sym: 'Si', Z: 14, iso: [28, 29, 30], target: 28.09, ask: 'সিলিকনের গড় ভর ২৮.০৯ হতে হবে।', hint: 'Si-28 ≈ ৯২%, Si-29 ≈ ৫%, Si-30 ≈ ৩% এর কাছাকাছি।', fact: 'Si-28 ≈ ৯২.২%, Si-29 ≈ ৪.৭%, Si-30 ≈ ৩.১% — কম্পিউটার-চিপের সিলিকন কখনো কখনো বিশুদ্ধ Si-28 দিয়ে বানানো হয়।' }] },
+            { kind: 'build', name: 'চূড়ান্ত গঠন', sub: 'ইঙ্গিত কম · Z ও N বের করো', icon: '👑', h: 1,
+              intro: 'রেফারেন্স নেই! বর্ণনা থেকে Z ও N নিজে বের করো। মৌলের প্রতীক ও প্রোটন সংখ্যা পর্যায় সারণি থেকে মনে করো। ইঙ্গিত মাত্র ১টি।',
+              rules: ['মৌলের প্রোটন সংখ্যা Z; A = Z + N।', 'মৌল মেলাতে বাঁ পাশের প্রতীক দেখো।'],
+              learn: 'নিউক্লাইডের পরিচয় = (Z, A)। N = A − Z। বড় পরমাণুতে N বেশি লাগে — স্থিতিশীল ভারী নিউক্লিয়াসে N/Z ≈ ১.৫।',
+              rounds: [
+                { ask: 'সোনা (Au, Z = ৭৯) এর একমাত্র স্থিতিশীল আইসোটোপ গড়ো, যার নিউট্রন ১১৮।', tZ: 79, tA: 197, start: [1, 0], hint: 'A = ৭৯ + ১১৮ = ১৯৭।', fact: 'Au-197 সোনার একমাত্র স্থিতিশীল আইসোটোপ — প্রতিটি সোনার পরমাণু একই, তাই সোনার পারমাণবিক ভর প্রায় পূর্ণসংখ্যা (১৯৭)।' },
+                { ask: 'প্রোটন সংখ্যা ৮২ ও নিউট্রন সংখ্যা ১২৬ — “ডাবল ম্যাজিক” সিসা গড়ো।', tZ: 82, tA: 208, start: [1, 0], hint: 'Z = ৮২ মানে সিসা (Pb)। A = ৮২ + ১২৬।', fact: 'Pb-208 এর প্রোটন (৮২) ও নিউট্রন (১২৬) দুটিই “ম্যাজিক সংখ্যা” — তাই অত্যন্ত স্থিতিশীল; সবচেয়ে ভারী স্থিতিশীল নিউক্লাইড।' },
+                { ask: 'Cs-137 (Z = ৫৫) β⁻ ক্ষয়ে যে নিউক্লাইড হয় সেটি গড়ো। (শুরুতে কিছু নেই — হিসাব করো!)', tZ: 56, tA: 137, start: [1, 0], hint: 'β⁻: Z + ১ = ৫৬ (বেরিয়াম), A একই ১৩৭।', fact: 'Cs-137 → Ba-137 (+ e⁻)। মনে রেখো, ভরসংখ্যা একই — N = ৮১।' },
+                { ask: 'এমন আইসোটোপ গড়ো যার প্রোটন ৯২ ও ভরসংখ্যা ২৩৫ — পারমাণবিক বোমা ও চুল্লির জ্বালানি।', tZ: 92, tA: 235, start: [1, 0], hint: 'Z = ৯২ মানে ইউরেনিয়াম (U)। N = ২৩৫ − ৯২ = ১৪৩।', fact: 'U-235 ধীর নিউট্রন ধরলে ভাঙে (ফিশন) ও প্রচুর শক্তি ছাড়ে। প্রাকৃতিক ইউরেনিয়ামে মাত্র ০.৭% U-235।' },
+                { ask: 'Fe-56 এর আইসোটোন গড়ো, যার প্রোটন সংখ্যা ২৮ (নিকেল)।', ref: [26, 56], tZ: 28, tA: 58, hint: 'আইসোটোনে N সমান: ৫৬ − ২৬ = ৩০। A = ২৮ + ৩০।', fact: 'Ni-58 (N = ৩০) ও Fe-56 (N = ৩০) আইসোটোন। Ni-62 সবচেয়ে বেশি বন্ধন-শক্তি-প্রতি-নিউক্লিয়নযুক্ত নিউক্লাইড।' }] },
+            { kind: 'sort', name: 'পরিবার বাছাই ৫ 🏆', sub: '¹³⁷Cs · চূড়ান্ত', icon: '🏆', h: 0,
+              intro: 'শেষ পরীক্ষা: ¹³⁷Cs রেফারেন্স, নয়টি কার্ড। কোনো ইঙ্গিত নয় — একাই!',
+              rules: ['কার্ড ট্যাপ (বা টেনে) এনে ঝুড়িতে ফেলো।', 'N = A − Z; তিনটি রাশির কোনোটি রেফারেন্সের সমান কি না দেখো।'],
+              learn: '¹³³Cs, ¹³⁵Cs আইসোটোপ; ¹³⁷Ba আইসোবার; ¹³⁶Xe, ¹³⁸Ba, ¹³⁹La, ¹³⁴Te, ¹⁴⁰Ce আইসোটোন (N = ৮২); বাকিরা কেউ নয়।',
+              rounds: [{ ask: 'সবগুলো কার্ড ¹³⁷Cs-এর সম্পর্ক অনুযায়ী সাজাও।', ref: [55, 137], cards: [[55, 133], [56, 137], [54, 136], [56, 138], [57, 139], [53, 131], [55, 135], [52, 134], [37, 85]], hint: null,
+                  fact: 'Cs-137 ক্ষয়ে Ba-137 হয় — আইসোবার। আইসোবার ক্ষয়ে একই A এর মধ্যেই মৌল বদলায়।' }] }
+        ];
+        const MAXHINT = 3;
+        const S = { h0: 3, si: 0, ri: 0, miss: 0, hints: MAXHINT, solved: false, st: {} };
+        let stars = {}; try { stars = JSON.parse(lsGet('isle-stars') || '{}') || {}; } catch (e) { stars = {}; }
+        const unlocked = i => i === 0 || stars[i - 1] > 0;
+        const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
+        const ST = () => STAGES[S.si], RD = () => ST().rounds[S.ri];
+        const nOf = c => c[1] - c[0];
+        const relOf = (ref, c) => c[0] === ref[0] && c[1] !== ref[1] ? 'isotope' : c[1] === ref[1] && c[0] !== ref[0] ? 'isobar' : (nOf(c) === nOf(ref) && c[0] !== ref[0]) ? 'isotone' : 'none';
+        const BINS = [['isotope', 'আইসোটোপ', 'Z সমান', 'প্রোটন সংখ্যা Z'], ['isobar', 'আইসোবার', 'A সমান', 'ভরসংখ্যা A'], ['isotone', 'আইসোটোন', 'N সমান', 'নিউট্রন সংখ্যা N'], ['none', 'কোনোটিই নয়', 'কিছুই মেলে না', '']];
+
+        function say(html, cls) { const s = $('#shift'); s.className = 'shift' + (cls ? ' ' + cls : ''); s.innerHTML = html; }
+        function startStage(i) { S.si = i; S.ri = 0; S.miss = 0; S.h0 = ST().h != null ? ST().h : MAXHINT; S.hints = S.h0; startRound(); renderTabs(); }
+        function startRound() {
+            S.solved = false; const R = RD(), k = ST().kind;
+            if (k === 'build') S.st = { Z: (R.ref || R.start)[0], N: R.ref ? R.ref[1] - R.ref[0] : R.start[1] };
+            else if (k === 'sort') S.st = { sel: null, placed: R.cards.map(() => null), hintShown: 0 };
+            else if (k === 'decay') S.st = { alive: Array(R.start).fill(true), steps: 0 };
+            else S.st = { v: R.iso.map(() => 50) };
+            renderAll();
+            say(k === 'build' ? 'প্রোটন ও নিউট্রন বদলিয়ে নিউক্লিয়াস গড়ো। 👀' : k === 'sort' ? 'একটি কার্ড ট্যাপ করো, তারপর ঝুড়ি বেছে নাও।' : k === 'decay' ? 'ঘড়ি চালাও — প্রতি ধাপে অর্ধেক পরমাণু ক্ষয়ে যাবে।' : 'স্লাইডার নাড়াও, গড় ভর লক্ষ্যে আনো।');
+        }
+        function renderTabs() {
+            $('#lv').innerHTML = STAGES.map((L, i) => '<button class="lvb' + (i === S.si ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? L.icon : '🔒') + ' ' + L.name + '</b><small>' + L.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join('');
+            const on = $('#lv .on'); if (on) { const c = $('#lv'); c.scrollLeft = Math.max(0, on.offsetLeft - c.clientWidth / 2 + on.offsetWidth / 2); }
+        }
+        function renderAll() { renderTabs(); renderJob(); renderArena(); renderHud(); }
+        function renderHud() {
+            const k = ST().kind, n = ST().rounds.length;
+            $('#sMiss').textContent = bn(S.miss); $('#sHint').textContent = bn(S.hints);
+            let prog = bn(S.ri + 1) + '/' + bn(n);
+            if (k === 'sort') { const pl = S.st.placed.filter(x => x).length; prog = bn(pl) + '/' + bn(S.st.placed.length) + ' কার্ড'; }
+            $('#sRound').textContent = prog;
+            const last = S.ri === n - 1;
+            const B = $('#btnDone');
+            if (S.solved) { B.textContent = last ? '🏁 শেষ করো' : 'পরের ধাপ ▶'; B.disabled = false; }
+            else { B.textContent = k === 'build' ? '✅ নিউক্লিয়াস জমা দাও' : k === 'decay' ? '📸 এখন মাপো' : k === 'mix' ? '🧪 নমুনা জমা দাও' : '🧺 সবগুলো সাজাও'; B.disabled = k === 'sort'; }
+            $('#btnHint').disabled = S.hints <= 0 || S.solved; $('#btnHint').hidden = S.h0 === 0;
+        }
+        function renderJob() {
+            const L = ST(), R = RD();
+            $('#job').innerHTML = '<span class="sticker">দ্বীপ ' + bn(S.si + 1) + ' / ' + bn(STAGES.length) + '</span><h2>' + L.icon + ' ' + L.name + ' — ' + L.sub + '</h2><p>' + L.intro + '</p><div class="ask">🎯 ' + R.ask + '</div>';
+        }
+
+        /* ---- আরেনা ---- */
+        function renderArena() {
+            const k = ST().kind, A = $('#arena');
+            if (k === 'build') A.innerHTML = buildHTML();
+            else if (k === 'sort') A.innerHTML = sortHTML();
+            else if (k === 'decay') A.innerHTML = decayHTML();
+            else { A.innerHTML = mixHTML(); updateMix(); }
+        }
+        const ctl = (w, label, v, lim) => '<div class="ctl"><label><span>' + label + '</span><output>' + bn(v) + '</output></label><div class="row">' +
+            [[-10, '−১০'], [-1, '−১'], [1, '+১'], [10, '+১০']].map(d => '<button class="btn" data-adj="' + w + '" data-d="' + d[0] + '"' + ((d[0] < 0 && v + d[0] < lim[0]) || (d[0] > 0 && v + d[0] > lim[1]) || S.solved ? ' disabled' : '') + '>' + d[1] + '</button>').join('') + '</div></div>';
+        function buildHTML() {
+            const R = RD(), { Z, N } = S.st, A = Z + N;
+            const dots = '<span class="dot"></span>'.repeat(Z) + '<span class="dot n"></span>'.repeat(N);
+            return (R.ref ? '<div class="box refbox"><span class="t">রেফারেন্স:</span>' + nu(R.ref[0], R.ref[1]) + '<span class="t">Z = ' + bn(R.ref[0]) + ', N = ' + bn(R.ref[1] - R.ref[0]) + ', A = ' + bn(R.ref[1]) + '</span></div>' : '') +
+                '<div class="nuc"><div class="box vis"><div class="dots" aria-hidden="true">' + dots + '</div><div class="legend"><span><b style="background:var(--a2)"></b>প্রোটন</span><span><b style="background:#fff"></b>নিউট্রন</span></div></div>' +
+                '<div class="box read"><div class="sym">' + nu(Z, A) + '</div><div class="vals"><span>মৌল: <em>' + SYM[Z] + '</em> <small>' + (NAME[Z] || '') + '</small></span><span>Z (প্রোটন) = <em>' + bn(Z) + '</em></span><span>N (নিউট্রন) = <em>' + bn(N) + '</em></span><span>A = Z + N = <em>' + bn(A) + '</em></span><small>নিরপেক্ষ পরমাণুতে ইলেকট্রন = ' + bn(Z) + '</small></div></div>' +
+                '<div class="ctls">' + ctl('Z', '🔴 প্রোটন (Z)', Z, [1, ZMAX]) + ctl('N', '⚪ নিউট্রন (N)', N, [0, NMAX]) + '</div></div>';
+        }
+        function sortHTML() {
+            const R = RD(), ref = R.ref, pl = S.st.placed;
+            const pool = R.cards.map((c, i) => pl[i] ? '' : '<button class="card' + (S.st.sel === i ? ' sel' : '') + '" draggable="true" data-card="' + i + '" aria-pressed="' + (S.st.sel === i) + '" aria-label="কার্ড ' + SYM[c[0]] + ' ভরসংখ্যা ' + c[1] + ' প্রোটন ' + c[0] + '">' + nu(c[0], c[1]) + '</button>').join('');
+            return '<div class="box refbox"><span class="t">রেফারেন্স:</span>' + nu(ref[0], ref[1]) + '<span class="t">Z = ' + bn(ref[0]) + ', A = ' + bn(ref[1]) + ', N = ' + bn(ref[1] - ref[0]) + '</span></div>' +
+                '<div class="pool" id="pool">' + (pool || '<span class="none">সব কার্ড সাজানো হয়ে গেছে 🎉</span>') + '</div>' +
+                '<div class="bins">' + BINS.map(b => '<button class="bin" data-bin="' + b[0] + '"><b>' + b[1] + '</b><small>' + b[2] + '</small><span class="chips">' + R.cards.map((c, i) => pl[i] === b[0] ? '<span class="chip">' + nu(c[0], c[1]) + '</span>' : '').join('') + '</span></button>').join('') + '</div>';
+        }
+        const unitTxt = (R, steps) => bn(R.hl * steps) + ' ' + R.unit;
+        function decayHTML() {
+            const R = RD(), alive = S.st.alive.filter(x => x).length, pct = alive / R.start * 100, st = S.st.steps, hit = alive === R.target;
+            return '<div class="dc"><div class="atoms" aria-hidden="true">' + S.st.alive.map((a, i) => '<span class="atom' + (a ? '' : ' gone') + (S.st.fresh && S.st.fresh.has(i) ? ' fresh' : '') + '"></span>').join('') + '</div>' +
+                '<div class="dcinfo"><div class="box"><div>⚛️ নমুনা: ' + nu(R.Z, R.A) + ' <small>(' + R.iso + ')</small> &nbsp;→&nbsp; ' + nu(R.dZ, R.A) + ' <small>(β⁻ ক্ষয়)</small></div>' +
+                '<div class="legend" style="margin-top:6px"><span><b style="background:var(--a1)"></b>অবশিষ্ট ' + R.iso + '</span><span><b style="background:var(--a3)"></b>ক্ষয়ে তৈরি ' + SYM[R.dZ] + '-' + R.A + '</span></div>' +
+                '<div class="big-n" style="margin-top:8px">' + bn(alive) + ' / ' + bn(R.start) + ' <small style="font-size:14px">(' + f1(pct) + '%)</small></div>' +
+                '<div style="font-weight:700;font-size:13.5px">⏱️ পার হয়েছে: ' + bn(st) + ' অর্ধায়ু = ' + unitTxt(R, st) + '</div></div>' +
+                '<div class="tgt' + (hit ? ' ok' : '') + '">🎯 লক্ষ্য: <em>' + bn(R.target) + 'টি অবশিষ্ট</em> ' + (hit ? '✔' : '') + '</div>' +
+                '<button class="btn alt big" id="btnWait"' + (alive <= 1 || S.solved ? ' disabled' : '') + '>⏳ এক অর্ধায়ু (' + bn(R.hl) + ' ' + R.unit + ') অপেক্ষা</button></div></div>';
+        }
+        function mixCalc() {
+            const R = RD(), v = S.st.v, sum = v.reduce((a, b) => a + b, 0);
+            if (!sum) return { sum, pct: v.map(() => 0), avg: null };
+            const pct = v.map(x => x / sum * 100);
+            return { sum, pct, avg: R.iso.reduce((a, m, i) => a + m * pct[i], 0) / 100 };
+        }
+        function mixHTML() {
+            const R = RD();
+            return '<div class="box"><b>' + R.el + ' (' + R.sym + ')</b> — লক্ষ্য গড় ভর: <b style="color:var(--a2)">' + f1(R.target) + '</b> &nbsp;|&nbsp; এখন: <b id="mAvg"></b>' +
+                '<div class="gauge" id="gauge"><i class="t" id="gT"><span>লক্ষ্য</span></i><i class="c" id="gC"><span>এখন</span></i></div></div>' +
+                '<div class="peaks" id="peaks"></div>' +
+                '<div class="sl">' + R.iso.map((m, i) => '<div class="ctl"><label for="pk' + i + '"><span>' + nu(R.Z, m) + ' পিক</span><output id="po' + i + '"></output></label><input type="range" id="pk' + i + '" data-pk="' + i + '" min="0" max="100" step="1" value="' + S.st.v[i] + '"' + (S.solved ? ' disabled' : '') + '></div>').join('') + '</div>' +
+                '<div class="eqn" id="mEq"></div>';
+        }
+        function updateMix() {
+            const R = RD(), c = mixCalc(), lo = R.iso[0], hi = R.iso[R.iso.length - 1];
+            $('#mAvg').textContent = c.avg == null ? '—' : f1(Math.round(c.avg * 100) / 100);
+            $('#peaks').innerHTML = R.iso.map((m, i) => '<div class="peak"><div style="height:' + Math.max(c.pct[i] * 0.78, 0) + '%"></div><span>' + f1(Math.round(c.pct[i] * 10) / 10) + '%</span></div>').join('');
+            R.iso.forEach((m, i) => { $('#po' + i).textContent = f1(Math.round(c.pct[i] * 10) / 10) + '%'; });
+            const pos = x => Math.min(100, Math.max(0, (x - lo) / (hi - lo) * 100)) + '%';
+            $('#gT').style.left = pos(R.target); if (c.avg != null) $('#gC').style.left = pos(c.avg);
+            $('#gC').style.display = c.avg == null ? 'none' : '';
+            $('#mEq').innerHTML = c.avg == null ? 'অন্তত একটি পিক তোলো' : '(' + R.iso.map((m, i) => m + ' × ' + f1(Math.round(c.pct[i] * 10) / 10)).join(' + ') + ') ÷ ১০০ = ' + f1(Math.round(c.avg * 100) / 100);
+        }
+
+        /* ---- ক্রিয়া ---- */
+        function adjust(w, d) {
+            if (S.solved || ST().kind !== 'build') return;
+            const lim = w === 'Z' ? [1, ZMAX] : [0, NMAX];
+            S.st[w] = Math.min(lim[1], Math.max(lim[0], S.st[w] + d)); sfx.tap(); renderArena();
+        }
+        function place(idx, bin) {
+            if (S.solved || ST().kind !== 'sort') return false;
+            const R = RD(), c = R.cards[idx]; if (!c || S.st.placed[idx]) return false;
+            const ref = R.ref, rel = relOf(ref, c), n = nOf(c), rn = nOf(ref);
+            const facts = 'Z = ' + bn(c[0]) + ' (রেফারেন্স ' + bn(ref[0]) + '), A = ' + bn(c[1]) + ' (' + bn(ref[1]) + '), N = ' + bn(n) + ' (' + bn(rn) + ')';
+            S.st.sel = null;
+            if (bin === rel) {
+                S.st.placed[idx] = bin; sfx.ok();
+                const why = { isotope: 'Z সমান, A আলাদা → আইসোটোপ', isobar: 'A সমান, Z আলাদা → আইসোবার', isotone: 'N সমান, Z ও A আলাদা → আইসোটোন', none: 'Z, A, N কোনোটিই সমান নয় → কোনোটিই নয়' }[rel];
+                if (S.st.placed.every(x => x)) { S.solved = true; say('✔ ' + nu(c[0], c[1]) + ': ' + facts + '<br>' + why + '<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok'); }
+                else say('✔ ' + nu(c[0], c[1]) + ': ' + facts + '<br>' + why, 'ok');
+            } else {
+                S.miss++; sfx.bad();
+                const prop = { isotope: ['Z', c[0], ref[0]], isobar: ['A', c[1], ref[1]], isotone: ['N', n, rn] }[bin];
+                const msg = prop ? (prop[1] === prop[2] ? 'ঐ রাশি সমান হলেও অন্য রাশিও দেখো — ' : '') + BINS.find(b => b[0] === bin)[1] + 'ে ' + prop[0] + ' সমান থাকে, কিন্তু এখানে ' + prop[0] + ' = ' + bn(prop[1]) + ' আর রেফারেন্সে ' + bn(prop[2]) + '।' : 'এর অন্তত একটি রাশি (Z, A বা N) রেফারেন্সের সমান আছে — আবার মেলাও।';
+                say('✖ ' + nu(c[0], c[1]) + ' ' + (bin === 'none' ? '' : '→ ' + BINS.find(b => b[0] === bin)[1]) + ' হয়নি।<br>' + msg + '<br>(N = A − Z = ' + bn(n) + ')', 'bad');
+            }
+            renderAll(); return true;
+        }
+        function wait() {
+            if (S.solved || ST().kind !== 'decay') return;
+            const R = RD(), al = S.st.alive, idx = []; al.forEach((a, i) => { if (a) idx.push(i); });
+            if (idx.length <= 1) return;
+            for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+            const gone = idx.slice(0, Math.floor(idx.length / 2)); gone.forEach(i => { al[i] = false; });
+            S.st.fresh = new Set(gone); S.st.steps++; sfx.pop();
+            const left = al.filter(x => x).length;
+            if (left < R.target) {
+                S.miss++; sfx.bad(); say('😬 বেশি অপেক্ষা করে ফেলেছ! ' + bn(left) + 'টি বাকি, লক্ষ্য ছিল ' + bn(R.target) + 'টি। ঘড়ি আবার শুরু।', 'bad');
+                S.st = { alive: Array(R.start).fill(true), steps: 0 }; renderAll(); return;
+            }
+            say('এক অর্ধায়ু গেল: ' + bn(left * 2) + ' → <b>' + bn(left) + '</b>। মোট ' + unitTxt(R, S.st.steps) + '।'); renderArena(); renderHud();
+        }
+        function submit() {
+            if (S.solved) return next();
+            const k = ST().kind, R = RD();
+            if (k === 'build') {
+                const { Z, N } = S.st, A = Z + N;
+                if (Z === R.tZ && A === R.tA) { S.solved = true; sfx.ok(); say('✔ ঠিক! ' + nu(Z, A) + ' — Z = ' + bn(Z) + ', N = ' + bn(N) + '<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok'); }
+                else {
+                    S.miss++; sfx.bad();
+                    say(Z !== R.tZ ? '✖ মৌল মেলেনি — এখন তোমার প্রতীক <b>' + SYM[Z] + '</b>। মনে রেখো, প্রোটন সংখ্যাই মৌল ঠিক করে।' : '✖ মৌল ঠিক, কিন্তু ভরসংখ্যা A = Z + N = ' + bn(A) + ' আর লক্ষ্য ' + bn(R.tA) + '। নিউট্রন ' + (A < R.tA ? 'বাড়াও' : 'কমাও') + '।', 'bad');
+                }
+            } else if (k === 'decay') {
+                const left = S.st.alive.filter(x => x).length;
+                if (left === R.target) { S.solved = true; sfx.ok(); say('✔ ঠিক সময়ে! ' + bn(S.st.steps) + ' অর্ধায়ু = <b>' + unitTxt(R, S.st.steps) + '</b> (' + bn(R.start) + ' ÷ ২<sup>' + bn(S.st.steps) + '</sup> = ' + bn(R.target) + ')<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok'); }
+                else { S.miss++; sfx.bad(); say('✖ এখনো ' + bn(left) + 'টি বাকি; লক্ষ্য ' + bn(R.target) + 'টি। ' + (left > R.target ? 'আরও অপেক্ষা করো।' : ''), 'bad'); }
+            } else if (k === 'mix') {
+                const c = mixCalc();
+                if (c.avg != null && Math.abs(c.avg - R.target) <= 0.05 + 1e-9) {
+                    S.solved = true; sfx.ok();
+                    say('✔ গড় ভর ' + f1(Math.round(c.avg * 100) / 100) + '!<br>🌟 <b>জানো কি?</b> ' + R.fact, 'ok');
+                } else {
+                    S.miss++; sfx.bad();
+                    say(c.avg == null ? '✖ কোনো পিক নেই।' : '✖ গড় ' + f1(Math.round(c.avg * 100) / 100) + ' — লক্ষ্য ' + f1(R.target) + '। গড় ' + (c.avg > R.target ? 'বেশি: হালকা আইসোটোপ বাড়াও।' : 'কম: ভারী আইসোটোপ বাড়াও।'), 'bad');
+                }
+            }
+            renderAll();
+        }
+        function next() {
+            if (S.ri < ST().rounds.length - 1) { S.ri++; startRound(); } else finish();
+        }
+        function hint() {
+            if (S.hints <= 0 || S.solved) return;
+            const k = ST().kind, R = RD(); let h;
+            if (k === 'sort') {
+                const i = S.st.placed.findIndex(x => !x); if (i < 0) return; const c = R.cards[i];
+                h = 'কার্ড ' + nu(c[0], c[1]) + ': Z = ' + bn(c[0]) + ', A = ' + bn(c[1]) + ', N = ' + bn(nOf(c)) + '। রেফারেন্স: Z = ' + bn(R.ref[0]) + ', A = ' + bn(R.ref[1]) + ', N = ' + bn(nOf(R.ref)) + '। কোনটা সমান?';
+                S.st.sel = i;
+            } else h = R.hint;
+            S.hints--; sfx.pop(); renderAll(); say('💡 ' + h);
+        }
+        function finish() {
+            sfx.win();
+            const L = ST(), score = S.miss + 2 * (S.h0 - S.hints), st = score <= 2 ? 3 : score <= 6 ? 2 : 1;
+            if (!stars[S.si] || st > stars[S.si]) { stars[S.si] = st; lsSet('isle-stars', JSON.stringify(stars)); }
+            renderTabs();
+            const last = S.si === STAGES.length - 1;
+            $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + L.icon + ' ' + L.name + ' — দ্বীপ জয়!</h2><p>ভুল: <b>' + bn(S.miss) + '</b> · ইঙ্গিত: <b>' + bn(S.h0 - S.hints) + '</b></p><div class="learn">🧠 ' + L.learn + '</div>' +
+                (last ? '<div class="learn">🏆 সব দ্বীপ জয় সম্পূর্ণ! আইসোটোপ = একই Z, ভিন্ন N; আর মৌলের পারমাণবিক ভর আইসোটোপের প্রাচুর্য-গড়।</div>' : '') + '<div class="row">' +
+                (last ? '' : '<button class="btn primary big" data-act="next">পরের দ্বীপ ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
+            $('#modal').hidden = false;
+        }
+
+        document.addEventListener('input', e => {
+            const r = e.target.closest && e.target.closest('input[data-pk]'); if (!r || S.solved) return;
+            S.st.v[+r.dataset.pk] = +r.value; updateMix();
+        });
+        document.addEventListener('dragstart', e => { const c = e.target.closest && e.target.closest('[data-card]'); if (c && e.dataTransfer) { e.dataTransfer.setData('text/plain', c.dataset.card); e.dataTransfer.effectAllowed = 'move'; } });
+        document.addEventListener('dragover', e => { const b = e.target.closest && e.target.closest('[data-bin]'); if (b) { e.preventDefault(); b.classList.add('over'); } });
+        document.addEventListener('dragleave', e => { const b = e.target.closest && e.target.closest('[data-bin]'); if (b) b.classList.remove('over'); });
+        document.addEventListener('drop', e => { const b = e.target.closest && e.target.closest('[data-bin]'); if (!b || !e.dataTransfer) return; e.preventDefault(); b.classList.remove('over'); const i = parseInt(e.dataTransfer.getData('text/plain'), 10); if (!isNaN(i)) place(i, b.dataset.bin); });
+        document.addEventListener('click', e => {
+            const t = e.target.closest('[data-lv],[data-adj],[data-card],[data-bin],[data-act],#btnWait,#btnHint,#btnReset,#btnRules,#btnDone'); if (!t) return;
+            if (t.dataset.lv != null) { sfx.tap(); startStage(+t.dataset.lv); return; }
+            if (t.dataset.adj) { adjust(t.dataset.adj, +t.dataset.d); return; }
+            if (t.dataset.card != null) { if (!S.solved) { const i = +t.dataset.card; S.st.sel = S.st.sel === i ? null : i; sfx.tap(); renderArena(); } return; }
+            if (t.dataset.bin) { if (S.st.sel == null) { say('আগে একটি কার্ড ট্যাপ করো, তারপর ঝুড়ি বেছে নাও।'); } else place(S.st.sel, t.dataset.bin); return; }
+            if (t.id === 'btnWait') { wait(); return; }
+            if (t.id === 'btnDone') { if (!t.disabled) submit(); return; }
+            if (t.id === 'btnReset') { sfx.tap(); startRound(); return; }
+            if (t.id === 'btnHint') { hint(); return; }
+            if (t.id === 'btnRules') {
+                $('#sheet').innerHTML = '<h2>📖 নিয়ম — ' + ST().name + '</h2><ul>' + ST().rules.map(r => '<li>' + r + '</li>').join('') + '<li>ভুল ও ইঙ্গিত কম হলে বেশি তারা (ভুল + ২×ইঙ্গিত ≤ ২ হলে ৩ তারা)।</li><li>একটি দ্বীপে ৩ তারা না পেলেও পরের দ্বীপ খুলবে।</li></ul><div class="row"><button class="btn primary" data-act="close">বুঝেছি</button></div>';
+                $('#modal').hidden = false; return;
+            }
+            if (t.dataset.act === 'close') { $('#modal').hidden = true; return; }
+            if (t.dataset.act === 'again') { $('#modal').hidden = true; startStage(S.si); return; }
+            if (t.dataset.act === 'next') { $('#modal').hidden = true; startStage(Math.min(S.si + 1, STAGES.length - 1)); return; }
+        });
+        window.__t = { S, STAGES, SYM, relOf, startStage, startRound, adjust, place, wait, submit, hint, finish, mixCalc, updateMix, setPeak(i, v) { S.st.v[i] = v; renderArena(); } };
+        startStage(0);
+    })();
+    </script>
 </body>
 </html>
