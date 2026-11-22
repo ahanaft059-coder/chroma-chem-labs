@@ -136,6 +136,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 4px soli
 
 #bgBtn { background: #ffe0b8; }
 .lvb { background: #ffe3bf; } .lvb:nth-child(2) { background: #d6f5dc; } .lvb:nth-child(3) { background: #e4dbff; } .lvb:nth-child(4) { background: #fff0a8; } .lvb:nth-child(5) { background: #ffd6e2; }
+.lvb:nth-child(5n+6) { background: #ffe3bf; } .lvb:nth-child(5n+7) { background: #d6f5dc; } .lvb:nth-child(5n+8) { background: #e4dbff; } .lvb:nth-child(5n+9) { background: #fff0a8; } .lvb:nth-child(5n+10) { background: #ffd6e2; }
+.lv { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; } .lvb { flex: 0 0 auto; min-width: 132px; }
 .hud .pill:nth-child(1) { background: #ffe3bf; } .hud .pill:nth-child(2) { background: #fff0a8; } .hud .pill:nth-child(3) { background: #d6f5dc; }
 .job { background: #ffe3bf; } .goal { background: #ffe9e4; } .goal.ok { background: #d6f5dc; } .shift { background: #fff6cc; } .learn { background: #ffe9cf; }
 .bench { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -253,24 +255,70 @@ const LEVELS = [
  { name: 'টাইট্রেশন', sub: 'HCl বনাম NaOH', icon: '🧫', titr: true, tol: 0.015,
    intro: '২৫.০ mL অজানা ঘনমাত্রার HCl ফ্লাস্কে ফেনলফথ্যালিন দেওয়া আছে। ব্যুরেটে <b>০.১০০ M NaOH</b>। প্রথমে রাফ রিডিং নাও, তারপর শেষ কয়েক mL ফোঁটায় ফোঁটায় দিয়ে <b>প্রথম স্থায়ী গোলাপি</b> রঙে থামো। শেষে HCl এর মোলারিটি হিসাব করে বসাও!',
    hint: 'এন্ডপয়েন্টে মোল সমান: M(NaOH) × V(NaOH) = M(HCl) × ২৫।',
-   learn: 'টাইট্রেশনে এন্ডপয়েন্টে H⁺ ও OH⁻ এর মোল সমান। রাফ রিডিংয়ে আনুমানিক জায়গা জেনে, নির্ভুল রিডিংয়ে শেষ কয়েক mL ফোঁটায় ফোঁটায় দিতে হয়।' }
+   learn: 'টাইট্রেশনে এন্ডপয়েন্টে H⁺ ও OH⁻ এর মোল সমান। রাফ রিডিংয়ে আনুমানিক জায়গা জেনে, নির্ভুল রিডিংয়ে শেষ কয়েক mL ফোঁটায় ফোঁটায় দিতে হয়।' },
+ { name: 'ppm ও ফ্লোরাইড', sub: 'mg/L · অন্ধ', icon: '💧', blind: true, tol: 0.02, color: '#bfe9ff', un: 'ppm', lab: 'ঘনমাত্রা (ppm)', d: 2, dmax: 3, vol: 0,
+   intro: '২০ L পানিতে ফ্লোরাইড (F⁻) এর পরিমাণ <b>১.৫ ppm</b> করতে চাই। সোডিয়াম ফ্লোরাইড (NaF, M = ৪২) ব্যবহার হবে — কত <b>মিলিগ্রাম</b> NaF লাগবে? (F = ১৯; NaF এর সবটা F নয়!)',
+   knob: { n: '⚖️ NaF এর ভর', u: ' mg', min: 0, max: 150, step: 0.5, v: 30 }, M: x => x * (19 / 42) / 20, target: 1.5, given: 'পানি = ২০ L, NaF = ৪২ g/mol, F = ১৯, ১ ppm = ১ mg/L',
+   cell3: () => ['পানি', '২০ L'],
+   hint: 'F⁻ এর ভর = ১.৫ mg/L × ২০ L = ৩০ mg। NaF এর ভর = ৩০ × ৪২/১৯।',
+   learn: 'ppm = mg ÷ L (পাতলা জলীয় দ্রবণে)। যৌগের ভর থেকে আয়নের ভর পেতে ভর-অনুপাত (১৯/৪২) গুণ করতে হয় — তাই পানিতে ফ্লোরাইড মাপা এত সূক্ষ্ম।' },
+ { name: 'মোলালিটি', sub: 'দ্রাবকের ভরে · অন্ধ', icon: '⚖️', blind: true, tol: 0.02, color: '#ffe19a', un: 'm', lab: 'মোলালিটি (m)', d: 2, dmax: 3, vol: 0,
+   intro: '<b>২৫০ g</b> পানিতে ইউরিয়া (CO(NH₂)₂) গুলে <b>১.৫০ molal</b> দ্রবণ বানাতে কত গ্রাম ইউরিয়া লাগবে? (C = ১২, N = ১৪, O = ১৬, H = ১)',
+   knob: { n: '⚖️ ইউরিয়ার ভর', u: ' g', min: 0, max: 60, step: 0.1, v: 10 }, M: x => (x / 60) / 0.25, target: 1.5, given: 'দ্রাবক = ২৫০ g পানি, ইউরিয়া = ৬০ g/mol',
+   cell3: () => ['দ্রাবক', '২৫০ g'],
+   hint: 'মোলালিটি = দ্রবের মোল ÷ দ্রাবকের ভর (kg)। মোল = ১.৫ × ০.২৫; ভর = মোল × ৬০।',
+   learn: 'মোলালিটি (m) = mol ÷ kg দ্রাবক — আয়তন লাগে না, তাই তাপমাত্রা বদলালেও মান বদলায় না। মোলারিটি (M) আয়তনে মাপা, তাই তাপে বদলায়।' },
+ { name: 'মোল-ভগ্নাংশ', sub: 'ইথানল-পানি · অন্ধ', icon: '🍷', blind: true, tol: 0.02, color: '#f3c4ff', un: 'χ', lab: 'χ (ইথানল)', d: 3, dmax: 0.6, vol: 0,
+   intro: '<b>৩৬ g পানিতে</b> কত গ্রাম ইথানল (C₂H₅OH) মেশালে ইথানলের <b>মোল-ভগ্নাংশ ০.২৫</b> হবে? (ইথানল = ৪৬ g/mol, পানি = ১৮ g/mol)',
+   knob: { n: '⚖️ ইথানলের ভর', u: ' g', min: 0, max: 100, step: 0.1, v: 20 }, M: x => (x / 46) / (x / 46 + 2), target: 0.25, given: 'পানি = ৩৬ g (২ mol), ইথানল = ৪৬ g/mol',
+   cell3: () => ['পানি', '২ mol'],
+   hint: 'χ = n(ইথানল) ÷ (n(ইথানল) + ২) = ০.২৫ ⇒ n = ২/৩ mol। ভর = n × ৪৬।',
+   learn: 'মোল-ভগ্নাংশ χ = মোল ÷ মোট মোল (এককহীন, ০ থেকে ১)। রাউল্টের সূত্র ও বাষ্পচাপ হিসাবে এটাই লাগে।' },
+ { name: 'নরম্যালিটি', sub: 'H₂SO₄ · সমতুল্য', icon: '🧪', blind: true, tol: 0.02, color: '#ffc9a8', un: 'N', lab: 'নরম্যালিটি (N)', d: 2, dmax: 0.5, vol: 500,
+   intro: '<b>৫০০ mL, ০.২০ N</b> সালফিউরিক অ্যাসিড (H₂SO₄) দ্রবণ বানাতে কত গ্রাম লাগবে? H₂SO₄ দুই-প্রোটিক (n-factor = ২)। M = ৯৮।',
+   knob: { n: '⚖️ H₂SO₄ এর ভর', u: ' g', min: 0, max: 20, step: 0.05, v: 5 }, M: x => (x / 98) * 2 / 0.5, target: 0.2, given: 'আয়তন = ৫০০ mL, M(H₂SO₄) = ৯৮, n-factor = ২',
+   hint: 'N = M × n-factor ⇒ M = ০.১। মোল = ০.১ × ০.৫ = ০.০৫; ভর = ০.০৫ × ৯৮।',
+   learn: 'নরম্যালিটি N = মোলারিটি × n-factor (H⁺ বা OH⁻ এর সংখ্যা)। অ্যাসিড-ক্ষার বিক্রিয়ায় ১ N অ্যাসিড = ১ N ক্ষার = সমান কার্যকারিতা।' },
+ { name: 'প্রশমন ও অতিরিক্ত', sub: 'বাকি [H⁺] · অন্ধ', icon: '⚗️', blind: true, tol: 0.02, color: '#ffd1d1', un: 'M', lab: '[H⁺] বাকি (M)', d: 3, dmax: 0.1, vol: 0, h: 1,
+   intro: '<b>৫০ mL, ০.২০ M HCl</b>-এ <b>০.১০ M NaOH</b> ঢালা হচ্ছে। মিশ্রণে শেষে <b>[H⁺] = ০.০২০ M</b> (অ্যাসিড তখনও বাকি) রাখতে কত mL NaOH লাগবে?',
+   knob: { n: '🧴 NaOH এর আয়তন', u: ' mL', min: 0, max: 150, step: 0.5, v: 30 }, M: x => Math.max(0, (10 - 0.1 * x) / (50 + x)), target: 0.02, given: 'HCl = ৫০ mL × ০.২০ M = ১০ mmol; NaOH = ০.১০ M',
+   cell3: x => ['মোট আয়তন', bn(50 + x) + ' mL'],
+   hint: 'বাকি H⁺ (mmol) = ১০ − ০.১x; মোট আয়তন = ৫০ + x। (১০ − ০.১x) ÷ (৫০ + x) = ০.০২০।',
+   learn: 'প্রশমনে আগে মোল বিয়োগ করো (অতিরিক্ত কে?), তারপর মোট আয়তন দিয়ে ভাগ। এখানে pH = −log(০.০২) ≈ ১.৭।' },
+ { name: 'টাইট্রেশন ২', sub: 'H₂SO₄ বনাম NaOH', icon: '🧫', titr: true, tol: 0.015, k: 2, acid: 'H₂SO₄', cas: [0.042, 0.048, 0.036, 0.054, 0.03], sl: [0.02, 0.07], h: 1,
+   intro: '২৫.০ mL অজানা H₂SO₄ (ফেনলফথ্যালিন সহ) কে <b>০.১০০ M NaOH</b> দিয়ে টাইট্রেট করো। এবার <b>সমীকরণ ভারসাম্য</b> মনে রেখো: H₂SO₄ + ২NaOH → Na₂SO₄ + ২H₂O। রাফ → নির্ভুল → হিসাব।',
+   hint: 'এন্ডপয়েন্টে: ২ × M(H₂SO₄) × ২৫ = M(NaOH) × V(NaOH) — H₂SO₄ এর মোলের দ্বিগুণ NaOH লাগে।',
+   learn: 'দ্বি-প্রোটিক অ্যাসিডে ১ মোল অ্যাসিডে ২ মোল OH⁻ লাগে। তাই M(A) = M(B)·V(B) ÷ (২ × V(A)); ভারসাম্য সমীকরণ ভুলে গেলে উত্তর দ্বিগুণ ভুল!' },
+ { name: 'ধারাবাহিক লঘুকরণ', sub: 'দুই ধাপ · অন্ধ', icon: '🧬', blind: true, tol: 0.02, color: '#c9f0d0', un: 'M', lab: 'চূড়ান্ত M', d: 4, dmax: 0.01, vol: 0, h: 1,
+   intro: '<b>২.০ M</b> স্টক থেকে x mL নিয়ে <b>১০০ mL</b> এ লঘু করো (ধাপ ১)। এর থেকে <b>৫.০ mL</b> নিয়ে <b>২৫০ mL</b> এ লঘু করো (ধাপ ২)। চূড়ান্ত ঘনমাত্রা <b>০.০০৪০ M</b> করতে x কত?',
+   knob: { n: '🧴 স্টক এর আয়তন (ধাপ ১)', u: ' mL', min: 0, max: 25, step: 0.1, v: 8 }, M: x => 2 * x / 100 * 5 / 250, target: 0.004, given: 'স্টক ২.০ M · ধাপ ১: x → ১০০ mL · ধাপ ২: ৫ mL → ২৫০ mL',
+   cell3: () => ['ধাপ ১ / ২', '১০০ / ২৫০ mL'],
+   hint: 'চূড়ান্ত M = ২.০ × (x/১০০) × (৫/২৫০) = ০.০০৪। ধাপ ২ এ ৫০ গুণ লঘু, তাই ধাপ ১ এর পর M = ০.২ হতে হবে ⇒ x = ১০।',
+   learn: 'ধারাবাহিক লঘুকরণে গুণকগুলো গুণ হয় (১০ × ৫০ = ৫০০ গুণ লঘু)। ল্যাবে খুব পাতলা দ্রবণ (ppm/ppb) বানাতে এই কৌশলই ব্যবহার হয়।' },
+ { name: '🔥 চূড়ান্ত ল্যাব', sub: 'H₂SO₄ + NaOH · ±১%', icon: '👑', blind: true, tol: 0.01, color: '#ffb3c7', un: 'M', lab: '[OH⁻] বাকি (M)', d: 3, dmax: 0.1, vol: 0, h: 0,
+   intro: '<b>১০০ mL, ০.৩০ M H₂SO₄</b> (দ্বি-প্রোটিক!)-এ <b>০.৫০ M NaOH</b> যোগ করে শেষে মিশ্রণে <b>[OH⁻] = ০.০৫০ M</b> বাকি রাখতে হবে। কত mL NaOH? কোনো ইঙ্গিত নেই!',
+   knob: { n: '🧴 NaOH এর আয়তন', u: ' mL', min: 0, max: 300, step: 0.1, v: 100 }, M: x => Math.max(0, (0.5 * x - 60) / (100 + x)), target: 0.05, given: 'H₂SO₄: ১০০ mL × ০.৩০ M, NaOH ০.৫০ M',
+   cell3: x => ['মোট আয়তন', bn(100 + x) + ' mL'],
+   hint: '',
+   learn: 'H⁺ মোল = ২ × ০.৩০ × ১০০ = ৬০ mmol। NaOH = ০.৫x mmol। বাড়তি OH⁻ = (০.৫x − ৬০) ÷ (১০০ + x) = ০.০৫ ⇒ x ≈ ১৪৪.৪ mL। দুই-প্রোটিক অ্যাসিড ও অতিরিক্ত ক্ষার একসাথে!' }
 ];
 const CAS = [0.084, 0.072, 0.096, 0.112, 0.068];
-const S = { lv: 0, v: 0, hints: 2, tries: 0, miss: 0, done: false, fired: false, vol: 0, ca: 0.084, phase: 0, roughs: 0, rough: null, over: false };
+const dd = () => L().d != null ? L().d : 2; const un = () => L().un || 'M';
+const S = { lv: 0, h0: 2, v: 0, hints: 2, tries: 0, miss: 0, done: false, fired: false, vol: 0, ca: 0.084, phase: 0, roughs: 0, rough: null, over: false };
 let stars = {}; try { stars = JSON.parse(lsGet('solu-stars') || '{}') || {}; } catch (e) { stars = {}; }
 const unlocked = i => i === 0 || stars[i - 1] > 0;
 const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
 const L = () => LEVELS[S.lv];
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-function ph() { const nA = 25 * S.ca / 1000, nB = S.vol * 0.1 / 1000, vt = (25 + S.vol) / 1000, d = (nA - nB) / vt; return d > 1e-9 ? -Math.log10(d) : d < -1e-9 ? 14 + Math.log10(-d) : 7; }
+function ph() { const nA = 25 * S.ca * (L().k || 1) / 1000, nB = S.vol * 0.1 / 1000, vt = (25 + S.vol) / 1000, d = (nA - nB) / vt; return d > 1e-9 ? -Math.log10(d) : d < -1e-9 ? 14 + Math.log10(-d) : 7; }
 const pink = () => clamp((ph() - 8.2) / 1.6, 0, 1);
-const ve = () => 25 * S.ca / 0.1;
+const ve = () => 25 * S.ca * (L().k || 1) / 0.1;
 const okCalc = () => { const l = L(); return Math.abs(l.M(S.v) - l.target) <= l.tol * l.target; };
 
-function renderTabs() { $('#lv').innerHTML = LEVELS.map((l, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? l.icon : '🔒') + ' ' + l.name + '</b><small>' + l.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join(''); }
+function renderTabs() { $('#lv').innerHTML = LEVELS.map((l, i) => '<button class="lvb' + (i === S.lv ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? l.icon : '🔒') + ' ' + l.name + '</b><small>' + l.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join(''); const on = $('#lv .on'); if (on) { const c = $('#lv'); c.scrollLeft = Math.max(0, on.offsetLeft - c.clientWidth / 2 + on.offsetWidth / 2); } }
 function start(i) {
-    S.lv = i; const l = L(); S.hints = 2; S.tries = 0; S.miss = 0; S.done = false; S.fired = false; S.vol = 0; S.phase = 0; S.roughs = 0; S.rough = null; S.over = false;
-    if (l.titr) { S.ca = CAS[Math.floor(Math.random() * CAS.length)]; S.v = 0.1; } else S.v = l.knob.v;
+    S.lv = i; const l = L(); S.h0 = l.h != null ? l.h : 2; S.hints = S.h0; S.tries = 0; S.miss = 0; S.done = false; S.fired = false; S.vol = 0; S.phase = 0; S.roughs = 0; S.rough = null; S.over = false;
+    if (l.titr) { const cl = l.cas || CAS; S.ca = cl[Math.floor(Math.random() * cl.length)]; S.v = l.sl ? (l.sl[0] + l.sl[1]) / 2 : 0.1; } else S.v = l.knob.v;
     renderTabs(); $('#job').innerHTML = '<span class="sticker">লেভেল ' + bn(i + 1) + ' / ' + bn(LEVELS.length) + '</span><h2>' + l.icon + ' ' + l.name + ' — ' + l.sub + '</h2><p>' + l.intro + '</p>';
     $('#shift').innerHTML = l.titr ? '🧫 ব্যুরেটের বাটন চেপে NaOH ঢালো। রং দেখো!' : (l.blind ? '🧮 আগে খাতায় হিসাব করো, তারপর স্লাইডার সেট করে পরীক্ষা চালাও।' : 'স্লাইডার নাড়িয়ে মোলারিটির পরিবর্তন দেখো।');
     render();
@@ -280,20 +328,20 @@ function bench() {
     if (l.titr) {
         const a = pink();
         $('#bench').innerHTML = '<div class="glass"><div class="bur"><i style="height:' + (S.vol / 50 * 100) + '%"></i><em></em></div><div class="cap">ব্যুরেট (০.১০০ M NaOH)<br><b>' + fx(S.vol, 2) + ' mL</b> ব্যবহৃত</div></div>' +
-            '<div class="glass"><div class="bk"><i style="height:62%;background:' + (a > 0 ? 'rgba(255,60,150,' + (0.15 + 0.8 * a).toFixed(2) + ')' : '#e8f4ff') + '"></i></div><div class="cap">কনিক্যাল ফ্লাস্ক: ২৫ mL HCl + ফেনলফথ্যালিন<br>' + (a > 0.05 ? '🌸 গোলাপি!' : 'বর্ণহীন') + '</div></div>';
+            '<div class="glass"><div class="bk"><i style="height:62%;background:' + (a > 0 ? 'rgba(255,60,150,' + (0.15 + 0.8 * a).toFixed(2) + ')' : '#e8f4ff') + '"></i></div><div class="cap">কনিক্যাল ফ্লাস্ক: ২৫ mL ' + (l.acid || 'HCl') + ' + ফেনলফথ্যালিন<br>' + (a > 0.05 ? '🌸 গোলাপি!' : 'বর্ণহীন') + '</div></div>';
         $('#ro').innerHTML = '<div><small>ব্যুরেট (mL)</small><b>' + fx(S.vol, 2) + '</b></div><div><small>রাফ রিডিং</small><b>' + (S.rough == null ? '—' : fx(S.rough, 1)) + '</b></div><div><small>চেষ্টা</small><b>' + bn(S.roughs + (S.phase ? 0 : 0)) + '</b></div>';
         return;
     }
     const m = l.M(S.v), hide = l.blind && !S.fired;
     const fill = l.vol ? 70 : clamp((200 + S.v) / 600 * 100, 30, 90);
-    const dens = clamp(m / 2, 0.05, 1);
+    const dens = clamp(m / (l.dmax || 2), 0.05, 1); const c3 = l.cell3 ? l.cell3(S.v) : [l.vol ? 'আয়তন' : 'মোট আয়তন', (l.vol ? bn(l.vol) : bn(200 + S.v)) + ' mL'];
     $('#bench').innerHTML = '<div class="glass"><div class="bk"><i style="height:' + fill + '%;background:' + l.color + ';opacity:' + (0.35 + 0.65 * dens).toFixed(2) + '"></i><em></em></div><div class="cap">' + (l.vol ? 'ফ্লাস্ক ' + bn(l.vol) + ' mL' : 'মিশ্রণ পাত্র') + '</div></div>' +
         '<div class="glass" style="justify-content:center"><div style="font-size:52px">' + l.icon + '</div><div class="cap">' + l.knob.n + '<br><b style="font-size:20px">' + fx(S.v, l.knob.step < 0.1 ? 2 : (l.knob.step < 1 ? 1 : 0)) + l.knob.u + '</b></div></div>';
-    $('#ro').innerHTML = '<div class="' + (hide ? 'hid' : '') + '"><small>মোলারিটি (M)</small><b>' + (hide ? '???' : fx(m, 3)) + '</b></div><div><small>লক্ষ্য M</small><b>' + fx(l.target, 2) + '</b></div><div><small>' + (l.vol ? 'আয়তন' : 'মোট আয়তন') + '</small><b>' + (l.vol ? bn(l.vol) : bn(200 + S.v)) + ' mL</b></div>';
+    $('#ro').innerHTML = '<div class="' + (hide ? 'hid' : '') + '"><small>' + (l.lab || 'মোলারিটি (M)') + '</small><b>' + (hide ? '???' : fx(m, dd() + 1)) + '</b></div><div><small>লক্ষ্য</small><b>' + fx(l.target, dd()) + '</b></div><div><small>' + c3[0] + '</small><b>' + c3[1] + '</b></div>';
 }
 function render() {
     const l = L();
-    $('#sTry').textContent = bn(S.tries); $('#sHint').textContent = bn(S.hints); $('#btnHint').disabled = S.hints <= 0 || S.done;
+    $('#sTry').textContent = bn(S.tries); $('#sHint').textContent = bn(S.hints); $('#btnHint').disabled = S.hints <= 0 || S.done; $('#btnHint').hidden = S.h0 === 0;
     bench();
     if (l.titr) {
         $('#pMode').textContent = S.phase ? '🧮 হিসাব' : '🧫 টাইট্রেশন';
@@ -301,8 +349,8 @@ function render() {
             $('#panel').innerHTML = '<div class="ctl" style="grid-column:1/-1"><label><span>💧 ব্যুরেট নিয়ন্ত্রণ</span></label><div class="drops"><button class="btn" data-add="5">+৫ mL</button><button class="btn" data-add="1">+১ mL</button><button class="btn" data-add="0.1">+০.১ mL</button><button class="btn" data-add="0.05">১ ফোঁটা</button></div></div>';
             $('#btnGo').textContent = '🛑 এন্ডপয়েন্ট পেয়েছি'; $('#info').innerHTML = '🎯 লক্ষ্য: প্রথম স্থায়ী ফিকে গোলাপি রঙে থামো (অতিরিক্ত > ০.১ mL হলে ফেল)।';
         } else {
-            $('#panel').innerHTML = '<div class="ctl" style="grid-column:1/-1"><label for="kn"><span>🧮 HCl এর মোলারিটি</span><output id="ko">' + fx(S.v, 3) + ' M</output></label><input type="range" id="kn" min="0.05" max="0.15" step="0.001" value="' + S.v + '"></div>';
-            $('#btnGo').textContent = '✅ মোলারিটি জমা দাও'; $('#info').innerHTML = 'এন্ডপয়েন্ট রিডিং: <b>' + fx(S.vol, 2) + ' mL</b> NaOH (০.১০০ M) · HCl = ২৫.০ mL';
+            $('#panel').innerHTML = '<div class="ctl" style="grid-column:1/-1"><label for="kn"><span>🧮 ' + (l.acid || 'HCl') + ' এর মোলারিটি</span><output id="ko">' + fx(S.v, 3) + ' M</output></label><input type="range" id="kn" min="' + (l.sl ? l.sl[0] : 0.05) + '" max="' + (l.sl ? l.sl[1] : 0.15) + '" step="0.001" value="' + S.v + '"></div>';
+            $('#btnGo').textContent = '✅ মোলারিটি জমা দাও'; $('#info').innerHTML = 'এন্ডপয়েন্ট রিডিং: <b>' + fx(S.vol, 2) + ' mL</b> NaOH (০.১০০ M) · ' + (l.acid || 'HCl') + ' = ২৫.০ mL';
         }
         return;
     }
@@ -310,13 +358,13 @@ function render() {
     $('#btnGo').textContent = l.blind ? '🔥 পরীক্ষা চালাও' : '✅ যাচাই করো';
     const k = l.knob;
     $('#panel').innerHTML = '<div class="ctl" style="grid-column:1/-1"><label for="kn"><span>' + k.n + '</span><output id="ko">' + fx(S.v, k.step < 0.1 ? 2 : (k.step < 1 ? 1 : 0)) + k.u + '</output></label><input type="range" id="kn" min="' + k.min + '" max="' + k.max + '" step="' + k.step + '" value="' + S.v + '"></div>';
-    $('#info').innerHTML = '🎯 লক্ষ্য: <b>' + fx(l.target, 2) + ' M</b> (±২%) · দেওয়া আছে: ' + l.given + (!l.blind ? ' · এখন: <b>' + fx(l.M(S.v), 3) + ' M</b>' + (okCalc() ? ' ✔' : '') : (S.fired ? ' · শেষ পরীক্ষায়: <b>' + fx(l.M(S.v), 3) + ' M</b>' : ''));
+    $('#info').innerHTML = '🎯 লক্ষ্য: <b>' + fx(l.target, dd()) + ' ' + un() + '</b> (±' + bn(Math.round(l.tol * 100)) + '%) · দেওয়া আছে: ' + l.given + (!l.blind ? ' · এখন: <b>' + fx(l.M(S.v), dd() + 1) + ' ' + un() + '</b>' + (okCalc() ? ' ✔' : '') : (S.fired ? ' · শেষ পরীক্ষায়: <b>' + fx(l.M(S.v), dd() + 1) + ' ' + un() + '</b>' : ''));
 }
 function finish() {
-    S.done = true; sfx.win(); const l = L(); const score = S.miss + 2 * (2 - S.hints); const st = score <= 1 ? 3 : score <= 3 ? 2 : 1;
+    S.done = true; sfx.win(); const l = L(); const score = S.miss + 2 * (S.h0 - S.hints); const st = score <= 1 ? 3 : score <= 3 ? 2 : 1;
     if (!stars[S.lv] || st > stars[S.lv]) { stars[S.lv] = st; lsSet('solu-stars', JSON.stringify(stars)); }
     renderTabs(); render(); const last = S.lv === LEVELS.length - 1;
-    $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + l.icon + ' ' + l.name + ' — সফল!</h2><p>পরীক্ষা: <b>' + bn(S.tries) + '</b> · সূত্র দেখেছ: <b>' + bn(2 - S.hints) + '</b></p><div class="learn">🧠 ' + l.learn + '</div><div class="row">' +
+    $('#sheet').innerHTML = '<div class="stars">' + starStr(st) + '</div><h2>' + l.icon + ' ' + l.name + ' — সফল!</h2><p>পরীক্ষা: <b>' + bn(S.tries) + '</b> · সূত্র দেখেছ: <b>' + bn(S.h0 - S.hints) + '</b></p><div class="learn">🧠 ' + l.learn + '</div><div class="row">' +
         (last ? '' : '<button class="btn primary big" data-act="next">পরের লেভেল ▶</button>') + '<button class="btn" data-act="again">↺ আবার</button><button class="btn" data-act="close">বন্ধ করো</button></div>';
     $('#modal').hidden = false;
 }
@@ -343,12 +391,12 @@ function go() {
             render(); return;
         }
         S.tries++; if (Math.abs(S.v - S.ca) <= L().tol * S.ca) { finish(); return; }
-        S.miss++; sfx.bad(); $('#shift').innerHTML = '❌ হিসাব মেলেনি। সূত্র: M(NaOH)×V(NaOH) = M(HCl)×২৫ — এন্ডপয়েন্টের রিডিংটা ঠিকভাবে বসাও।'; render(); return;
+        S.miss++; sfx.bad(); $('#shift').innerHTML = '❌ হিসাব মেলেনি। সূত্র: M(NaOH)×V(NaOH) = ' + (L().k || 1) + '×M(অ্যাসিড)×২৫ — এন্ডপয়েন্টের রিডিংটা ঠিকভাবে বসাও।'; render(); return;
     }
     S.tries++; S.fired = true;
     if (okCalc()) { finish(); return; }
     S.miss++; sfx.bad(); const m = l.M(S.v);
-    $('#shift').innerHTML = '❌ ফলাফল <b>' + fx(m, 3) + ' M</b> — লক্ষ্য ' + fx(l.target, 2) + ' M। ' + (m > l.target ? 'বেশি ঘন হয়েছে, ' : 'পাতলা হয়েছে, ') + 'আবার হিসাব মেলাও।'; render();
+    $('#shift').innerHTML = '❌ ফলাফল <b>' + fx(m, dd() + 1) + ' ' + un() + '</b> — লক্ষ্য ' + fx(l.target, dd()) + ' ' + un() + '। ' + (m > l.target ? 'বেশি ঘন হয়েছে, ' : 'পাতলা হয়েছে, ') + 'আবার হিসাব মেলাও।'; render();
 }
 document.addEventListener('input', e => { if (e.target.id === 'kn') { S.v = +e.target.value; if (L().blind) S.fired = false; render(); sfx.tap(); } });
 document.addEventListener('click', e => {
