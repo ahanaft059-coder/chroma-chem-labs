@@ -179,6 +179,15 @@ body {
 .center { text-align: center; }
 .center h2 { margin: 0 0 6px; font: 900 clamp(1.4rem, 5vw, 1.9rem)/1.35 var(--display); }
 .center p { margin: 0 auto 6px; max-width: 520px; color: var(--mute); font-weight: 600; line-height: 1.7; }
+.lv { display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 6px 4px 0; border-bottom: var(--bw) solid var(--ink); }
+.lvb { flex: 0 0 auto; min-width: 128px; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 58px; padding: 8px 12px 9px; text-align: left; cursor: pointer; background: #ffe3bf; color: var(--ink); border: var(--bw) solid var(--ink); border-bottom: 0; border-radius: 14px 14px 0 0; margin-bottom: -3px; transition: transform .12s, background .12s; }
+.lvb:nth-child(5n+2) { background: #d6f5dc; } .lvb:nth-child(5n+3) { background: #e4dbff; } .lvb:nth-child(5n+4) { background: #fff0a8; } .lvb:nth-child(5n+5) { background: #ffd6e2; }
+.lvb:hover:not(:disabled) { transform: translateY(-3px); }
+.lvb b { font: 800 13.5px/1.3 var(--body); padding-right: 50px; } .lvb small { font-size: 11.5px; font-weight: 700; color: var(--mute); line-height: 1.3; }
+.lvb i { position: absolute; top: 6px; right: 6px; padding: 1px 7px; font-style: normal; font-size: 12px; letter-spacing: 1px; background: var(--a3); border: 2px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(3deg); }
+.lvb.on { background: #fff !important; padding-bottom: 12px; box-shadow: 0 -4px 0 var(--a1) inset; }
+.lvb:disabled { opacity: .55; cursor: default; filter: grayscale(.4); }
+.mixrow { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 8px 0 12px; } .mixrow span { padding: 3px 10px; font-size: 12.5px; font-weight: 800; background: var(--paper2); border: 2px solid var(--ink); border-radius: 99px; box-shadow: 2px 2px 0 var(--ink); }
 .seg { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 0 16px; }
 .seg button { min-height: 44px; padding: 0 18px; font: 800 14.5px var(--body); cursor: pointer; background: var(--paper2); border: var(--bw) solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
 .seg button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
@@ -263,6 +272,7 @@ body {
             <button class="icon-btn" id="bgBtn" type="button" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
         </header>
 
+        <div class="lv" id="lv"></div>
         <main class="stack" id="game">
             <section class="box" id="trackBox">
                 <div class="hud">
@@ -313,7 +323,7 @@ body {
         });
 
         /* ---------- রেসের টাস্ক (MCQ নয়) ---------- */
-        const TYPES = { sort: 'জারণ না বিজারণ? (সর্ট)', oxn: 'জারণ সংখ্যা মেলাও (ব্যালান্স)', elec: 'ইলেকট্রন ব্যালান্স' };
+        const TYPES = { sort: 'জারণ না বিজারণ? (সর্ট)', oxn: 'জারণ সংখ্যা মেলাও (ব্যালান্স)', elec: 'ইলেকট্রন ব্যালান্স', agent: 'জারক না বিজারক? (সর্ট)', bal: 'ইলেকট্রন ক্রসিং (অনুপাত)' };
         /* সর্ট: [অর্ধ-বিক্রিয়া, জারণ কি না] */
         const SORTS = [
             ['Zn → Zn²⁺ + 2e⁻', true], ['Cu²⁺ + 2e⁻ → Cu', false], ['Fe²⁺ → Fe³⁺ + e⁻', true], ['Fe³⁺ + e⁻ → Fe²⁺', false],
@@ -321,7 +331,26 @@ body {
             ['Mg → Mg²⁺ + 2e⁻', true], ['Ag⁺ + e⁻ → Ag', false], ['Sn²⁺ → Sn⁴⁺ + 2e⁻', true], ['Al → Al³⁺ + 3e⁻', true],
             ['H₂ → 2H⁺ + 2e⁻', true], ['MnO₄⁻ → Mn²⁺\n(Mn: +7 → +2)', false], ['Fe₂O₃ → Fe\n(Fe: +3 → 0)', false],
             ['CO → CO₂\n(C: +2 → +4)', true], ['SO₂ → SO₃\n(S: +4 → +6)', true], ['NO₃⁻ → NO₂\n(N: +5 → +4)', false],
-            ['Cl₂ → Cl⁻\n(Cl: 0 → −1)', false], ['Zn → ZnO\n(Zn: 0 → +2)', true]
+            ['Cl₂ → Cl⁻\n(Cl: 0 → −1)', false], ['Zn → ZnO\n(Zn: 0 → +2)', true],
+            ['H₂O₂ → O₂\n(O: −1 → 0)', true], ['H₂O₂ → H₂O\n(O: −1 → −2)', false], ['Cr₂O₇²⁻ → Cr³⁺\n(Cr: +6 → +3)', false],
+            ['SO₃²⁻ → SO₄²⁻\n(S: +4 → +6)', true], ['MnO₄⁻ → MnO₂\n(Mn: +7 → +4)', false], ['Cl₂ → ClO₃⁻\n(Cl: 0 → +5)', true], ['NH₃ → NO\n(N: −3 → +2)', true],
+            ['2H₂O → O₂ + 4H⁺ + 4e⁻', true], ['I₂ + 2e⁻ → 2I⁻', false], ['C₂O₄²⁻ → 2CO₂ + 2e⁻', true], ['ClO₄⁻ → Cl⁻\n(Cl: +7 → −1)', false]
+        ];
+        /* জারক/বিজারক: [বর্ণনা, জারক কি না] */
+        const AGENTS = [
+            ['Zn + Cu²⁺ → Zn²⁺ + Cu\nএখানে Cu²⁺ কী?', true], ['Zn + Cu²⁺ → Zn²⁺ + Cu\nএখানে Zn কী?', false], ['Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂\nCl₂ কী?', true], ['Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂\nBr⁻ কী?', false],
+            ['H₂ + CuO → Cu + H₂O\nH₂ কী?', false], ['H₂ + CuO → Cu + H₂O\nCuO কী?', true], ['5Fe²⁺ + MnO₄⁻ + 8H⁺ → …\nMnO₄⁻ কী?', true], ['5Fe²⁺ + MnO₄⁻ + 8H⁺ → …\nFe²⁺ কী?', false],
+            ['Fe₂O₃ + 3CO → 2Fe + 3CO₂\nCO কী?', false], ['Fe₂O₃ + 3CO → 2Fe + 3CO₂\nFe₂O₃ কী?', true], ['2Na + Cl₂ → 2NaCl\nNa কী?', false], ['2Mg + O₂ → 2MgO\nO₂ কী?', true],
+            ['যে সবচেয়ে শক্তিশালী জারক: F₂ না Na?\nF₂ কী?', true], ['যে বিজারক ইলেকট্রন ছাড়ে: Li ধাতু?\nLi কী?', false], ['Cr₂O₇²⁻ + 6Fe²⁺ + 14H⁺ → …\nCr₂O₇²⁻ কী?', true], ['SO₂ + 2H₂S → 3S + 2H₂O\nH₂S কী?', false]
+        ];
+        /* ক্রসিং: [বর্ণনা, মোট ইলেকট্রন বিনিময়, প্রতি ইউনিটে] */
+        const BALS = [
+            ['২টি MnO₄⁻ (প্রতিটি ৫e⁻ নেয়) ও Fe²⁺ (প্রতিটি ১e⁻ ছাড়ে)।\nFe²⁺ কয়টি লাগবে?', 10, 1], ['১টি Cr₂O₇²⁻ (৬e⁻ নেয়) ও Fe²⁺ (১e⁻ ছাড়ে)।\nFe²⁺ কয়টি?', 6, 1],
+            ['১টি Cr₂O₇²⁻ (৬e⁻ নেয়) ও Sn²⁺ → Sn⁴⁺ (২e⁻ ছাড়ে)।\nSn²⁺ কয়টি?', 6, 2], ['২টি Al (প্রতিটি ৩e⁻ ছাড়ে) ও Cu²⁺ (২e⁻ নেয়)।\nCu²⁺ কয়টি?', 6, 2],
+            ['২টি MnO₄⁻ (৫e⁻ নেয়) ও C₂O₄²⁻ (২e⁻ ছাড়ে)।\nC₂O₄²⁻ কয়টি?', 10, 2], ['৩টি Zn (২e⁻ ছাড়ে) ও NO₃⁻ → NO (৩e⁻ নেয়)।\nNO₃⁻ কয়টি?', 6, 3],
+            ['১টি Cr₂O₇²⁻ (৬e⁻ নেয়) ও I⁻ → I₂ (১e⁻ প্রতিটি)।\nI⁻ কয়টি?', 6, 1], ['২টি MnO₄⁻ (ক্ষারীয়: ৩e⁻ নেয়) ও SO₃²⁻ (২e⁻ ছাড়ে)।\nSO₃²⁻ কয়টি?', 6, 2],
+            ['৪টি Fe → Fe³⁺ (৩e⁻ ছাড়ে) ও O₂ (৪e⁻ নেয়)।\nO₂ কয়টি?', 12, 4], ['২টি Na (১e⁻ ছাড়ে) ও Cl₂ (২e⁻ নেয়)।\nCl₂ কয়টি?', 2, 2],
+            ['১টি ClO₃⁻ → Cl⁻ (৬e⁻ নেয়) ও Fe²⁺ (১e⁻ ছাড়ে)।\nFe²⁺ কয়টি?', 6, 1], ['২টি MnO₄⁻ (৫e⁻ নেয়) ও H₂O₂ → O₂ (২e⁻ ছাড়ে)।\nH₂O₂ কয়টি লাগবে?', 10, 2]
         ];
         /* জারণ সংখ্যা ব্যালান্স: [সংকেত, চার্জ, [[মৌল, সংখ্যা, জারণ সংখ্যা | null (অজানা)]]] */
         const OXN = [
@@ -330,6 +359,9 @@ body {
             ['HClO₄', 0, [['H', 1, 1], ['Cl', 1, null], ['O', 4, -2]]], ['Fe₂O₃', 0, [['Fe', 2, null], ['O', 3, -2]]],
             ['CO₂', 0, [['C', 1, null], ['O', 2, -2]]], ['CH₄', 0, [['C', 1, null], ['H', 4, 1]]],
             ['NH₃', 0, [['N', 1, null], ['H', 3, 1]]], ['SO₂', 0, [['S', 1, null], ['O', 2, -2]]],
+            ['Na₂S₂O₃', 0, [['Na', 2, 1], ['S', 2, null], ['O', 3, -2]]], ['K₂MnO₄', 0, [['K', 2, 1], ['Mn', 1, null], ['O', 4, -2]]], ['Fe(CN)₆⁴⁻', -4, [['C', 6, 2], ['N', 6, -3], ['Fe', 1, null]]], ['NaBH₄', 0, [['Na', 1, 1], ['B', 1, null], ['H', 4, -1]]],
+            ['Na₂O₂', 0, [['Na', 2, 1], ['O', 2, null]]], ['N₂O', 0, [['N', 2, null], ['O', 1, -2]]], ['KClO₄', 0, [['K', 1, 1], ['Cl', 1, null], ['O', 4, -2]]], ['LiAlH₄', 0, [['Li', 1, 1], ['Al', 1, 3], ['H', 4, null]]],
+            ['ClO₃⁻', -1, [['Cl', 1, null], ['O', 3, -2]]], ['S₂O₃²⁻', -2, [['S', 2, null], ['O', 3, -2]]], ['C₂O₄²⁻', -2, [['C', 2, null], ['O', 4, -2]]], ['IO₃⁻', -1, [['I', 1, null], ['O', 3, -2]]],
             ['H₃PO₄', 0, [['H', 3, 1], ['P', 1, null], ['O', 4, -2]]], ['H₂O₂', 0, [['H', 2, 1], ['O', 2, null]]],
             ['MnO₄⁻', -1, [['Mn', 1, null], ['O', 4, -2]]], ['Cr₂O₇²⁻', -2, [['Cr', 2, null], ['O', 7, -2]]],
             ['SO₄²⁻', -2, [['S', 1, null], ['O', 4, -2]]], ['NO₃⁻', -1, [['N', 1, null], ['O', 3, -2]]],
@@ -343,27 +375,56 @@ body {
             ['Sn²⁺ → Sn⁴⁺ + ?e⁻', 2, 4, 'R'], ['Ag⁺ + ?e⁻ → Ag', 1, 0, 'L'], ['2H⁺ + ?e⁻ → H₂', 2, 0, 'L'],
             ['MnO₄⁻ + 8H⁺ + ?e⁻ → Mn²⁺ + 4H₂O', 7, 2, 'L'], ['Cr₂O₇²⁻ + 14H⁺ + ?e⁻ → 2Cr³⁺ + 7H₂O', 12, 6, 'L'],
             ['O₂ + 4H⁺ + ?e⁻ → 2H₂O', 4, 0, 'L'], ['Fe → Fe³⁺ + ?e⁻', 0, 3, 'R'], ['Mg → Mg²⁺ + ?e⁻', 0, 2, 'R'],
-            ['Fe²⁺ → Fe³⁺ + ?e⁻', 2, 3, 'R']
+            ['Fe²⁺ → Fe³⁺ + ?e⁻', 2, 3, 'R'],
+            ['NO₃⁻ + 4H⁺ + ?e⁻ → NO + 2H₂O', 3, 0, 'L'], ['MnO₄⁻ + 2H₂O + ?e⁻ → MnO₂ + 4OH⁻', -1, -4, 'L'], ['ClO₃⁻ + 6H⁺ + ?e⁻ → Cl⁻ + 3H₂O', 5, -1, 'L'],
+            ['H₂O₂ → O₂ + 2H⁺ + ?e⁻', 0, 2, 'R'], ['SO₃²⁻ + H₂O → SO₄²⁻ + 2H⁺ + ?e⁻', -2, 0, 'R'], ['C₂O₄²⁻ → 2CO₂ + ?e⁻', -2, 0, 'R'],
+            ['Br₂ + ?e⁻ → 2Br⁻', 0, -2, 'L'], ['MnO₄⁻ + ?e⁻ → MnO₄²⁻', -1, -2, 'L'], ['2H₂O → O₂ + 4H⁺ + ?e⁻', 0, 4, 'R'], ['IO₃⁻ + 6H⁺ + ?e⁻ → I⁻ + 3H₂O', 5, -1, 'L']
         ];
         const oxnAns = it => { const fixed = it[2].reduce((s, p) => s + (p[2] === null ? 0 : p[1] * p[2]), 0); const u = it[2].find(p => p[2] === null); return (it[1] - fixed) / u[1]; };
         const elecAns = e => e[3] === 'L' ? e[1] - e[2] : e[2] - e[1];
         const sg = n => (n > 0 ? '+' : n < 0 ? '−' : '') + bn(Math.abs(n));
 
-        const DIFF = {
-            easy:   { label: 'সহজ',   speed: 1.3, time: 15 },
-            normal: { label: 'মাঝারি', speed: 1.7, time: 12 },
-            hard:   { label: 'কঠিন',   speed: 2.2, time: 9 }
-        };
+        const MIXN = { sort: 'জারণ/বিজারণ সর্ট', agent: 'জারক/বিজারক সর্ট', oxn: 'জারণ সংখ্যা', elec: 'ইলেকট্রন ব্যালান্স', bal: 'ইলেকট্রন ক্রসিং' };
+        const OXH = new Set(['Na₂S₂O₃', 'K₂MnO₄', 'Fe(CN)₆⁴⁻', 'NaBH₄', 'Na₂O₂', 'N₂O', 'KClO₄', 'LiAlH₄', 'ClO₃⁻', 'S₂O₃²⁻', 'C₂O₄²⁻', 'IO₃⁻', 'H₂O₂', 'CaH₂', 'MnO₂', 'NaClO₃', 'H₃PO₄']);
+        /* স্তর: speed = রোবটের গতি (%/সে.), time = প্রতি টাস্কের সময়, mix = টাস্কের ওজন, sr/er = সর্ট ও ইলেকট্রন পুলের সীমা, ox = 'e' সহজ / 'h' কঠিন / সব */
+        const LEVELS = [
+            { name: 'শিক্ষানবিশ', sub: 'জারণ বনাম বিজারণ', icon: '🛴', speed: 1.0, time: 15, mix: { sort: 1 }, sr: [0, 12],
+              intro: 'প্রথম রেস! অর্ধ-বিক্রিয়া দেখে বলো — ইলেকট্রন ছাড়ছে (জারণ) না নিচ্ছে (বিজারণ)? OIL RIG মনে রেখো।' },
+            { name: 'জারক-বিজারক', sub: 'কে কাকে জারিত করছে', icon: '🔄', speed: 1.2, time: 14, mix: { sort: 1, agent: 1 }, sr: [0, 20],
+              intro: 'এবার প্রশ্ন একটু ঘোরানো: <b>জারক</b> নিজে বিজারিত হয় (ইলেকট্রন নেয়), <b>বিজারক</b> নিজে জারিত হয়। বিক্রিয়ায় কোন পদার্থ কোনটি?' },
+            { name: 'জারণ সংখ্যা ১', sub: 'সহজ যৌগ', icon: '🔢', speed: 1.3, time: 14, mix: { oxn: 2, sort: 1 }, ox: 'e', sr: [0, 20],
+              intro: 'যৌগে অজানা মৌলের জারণ সংখ্যা বসাও যেন মোট যোগফল চার্জের সমান হয়। H = +১, O = −২ ধরো।' },
+            { name: 'ইলেকট্রন ব্যালান্স', sub: 'অর্ধ-বিক্রিয়ার চার্জ', icon: '⚖️', speed: 1.5, time: 12, mix: { elec: 2, agent: 1, sort: 1 }, er: [0, 15], sr: [0, 20],
+              intro: 'অর্ধ-বিক্রিয়ায় প্রশ্নচিহ্নের জায়গায় ইলেকট্রন সংখ্যা বসাও — দুই পাশের মোট চার্জ সমান হতে হবে।' },
+            { name: 'মিশ্র রেস', sub: 'সব ধরনের টাস্ক', icon: '🏁', speed: 1.7, time: 12, mix: { sort: 1, agent: 1, oxn: 1, elec: 1 }, ox: 'e', er: [0, 15], sr: [0, 20],
+              intro: 'চার ধরনের টাস্ক এলোমেলোভাবে আসবে। স্ট্রিক ধরে রাখলে নাইট্রো!' },
+            { name: 'জারণ সংখ্যা ২', sub: 'জটিল আয়ন ও পারক্সাইড', icon: '🧬', speed: 1.8, time: 12, mix: { oxn: 3, agent: 1 }, ox: 'h', sr: [0, 20],
+              intro: 'কঠিন যৌগ: পারক্সাইড (O = −১), হাইড্রাইড (H = −১), থায়োসালফেট, কমপ্লেক্স আয়ন। অজানা কয়টি পরমাণুর মান — সংখ্যা গুণে হিসাব করো।' },
+            { name: 'জটিল অর্ধ-বিক্রিয়া', sub: 'অম্ল/ক্ষারীয় মাধ্যম', icon: '🧪', speed: 1.9, time: 12, mix: { elec: 3, sort: 1, agent: 1 }, er: [15, 25], sr: [20, 36],
+              intro: 'অম্লীয় ও ক্ষারীয় মাধ্যমের অর্ধ-বিক্রিয়া! H⁺, OH⁻, H₂O সহ চার্জ মিলিয়ে ইলেকট্রন বের করো।' },
+            { name: 'ইলেকট্রন ক্রসিং', sub: 'সমীকরণের অনুপাত', icon: '✖️', speed: 2.0, time: 13, mix: { bal: 3, elec: 1, oxn: 1 }, ox: 'h', er: [0, 25], sr: [0, 36],
+              intro: 'দুটি অর্ধ-বিক্রিয়া জোড়া লাগাতে ইলেকট্রন সমান হতে হয়। জারক যত ইলেকট্রন নেয় = বিজারক যত ছাড়ে — বিজারকের সংখ্যা কত হলে সমান?' },
+            { name: 'টার্বো', sub: 'দ্রুত রোবট', icon: '⚡', speed: 2.2, time: 10, mix: { sort: 1, agent: 1, oxn: 2, elec: 2, bal: 1 }, er: [0, 25], sr: [0, 36],
+              intro: 'রোবট এবার অনেক দ্রুত! সব ধরনের টাস্ক, কম সময় — নির্ভুল ও দ্রুত হও।' },
+            { name: 'প্রফেশনাল', sub: 'কঠিন পুল · কম সময়', icon: '🥈', speed: 2.3, time: 8.5, mix: { agent: 1, oxn: 2, elec: 2, bal: 2 }, ox: 'h', er: [15, 25], sr: [20, 36],
+              intro: 'শুধু কঠিন টাস্ক। সময় মাত্র সামান্য — ভুল করলে স্ট্রিক শেষ, রোবট এগিয়ে যাবে।' },
+            { name: '🏆 গ্র্যান্ড ফাইনাল', sub: 'চ্যাম্পিয়ন রেস', icon: '👑', speed: 2.5, time: 8, mix: { sort: 1, agent: 1, oxn: 2, elec: 2, bal: 2 }, ox: 'h', er: [15, 25], sr: [20, 36],
+              intro: 'চূড়ান্ত রেস! সবচেয়ে দ্রুত রোবট, সবচেয়ে কঠিন টাস্ক। ৯০%+ নির্ভুলতায় জিতলে ৩ তারা।' }
+        ];
+        let cur = 0, stars = {};
+        try { stars = JSON.parse(localStorage.getItem('redox-stars') || '{}') || {}; } catch (e) { stars = {}; }
+        const unlocked = i => i === 0 || stars[i - 1] > 0;
+        const LV = () => LEVELS[cur];
+        const starStr = n => '★'.repeat(n) + '☆'.repeat(3 - n);
+        try { const c = +localStorage.getItem('redox-lv'); if (c >= 0 && c < LEVELS.length && unlocked(c)) cur = c; } catch (e) {}
         const esc = x => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         /* ---------- অবস্থা ---------- */
-        let diff = 'normal';
-        try { const d = localStorage.getItem('redox-diff'); if (DIFF[d]) diff = d; } catch (e) {}
         let S = { phase: 'idle' };
         let raceId = 0, ticker = null, queue = [], paused = false, lastT = 0, aiTimer = 0, nextTimeout = null;
 
         function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-        function bestKey() { return 'redox-best-' + diff; }
+        function bestKey() { return 'redox-best-L' + cur; }
         function getBest() { try { const v = parseFloat(localStorage.getItem(bestKey())); return isFinite(v) && v > 0 ? v : null; } catch (e) { return null; } }
 
         /* ---------- রেন্ডার ---------- */
@@ -382,29 +443,31 @@ body {
             $('#lanes').classList.toggle('racing', S.phase === 'race' && !paused);
         }
 
+        function renderTabs() {
+            $('#lv').innerHTML = LEVELS.map((l, i) => '<button class="lvb' + (i === cur ? ' on' : '') + '" data-lv="' + i + '"' + (unlocked(i) ? '' : ' disabled') + '><b>' + (unlocked(i) ? l.icon : '🔒') + ' ' + l.name + '</b><small>' + l.sub + '</small>' + (stars[i] ? '<i>' + starStr(stars[i]) + '</i>' : '') + '</button>').join('');
+            const on = $('#lv .on'); if (on) { const c = $('#lv'); c.scrollLeft = Math.max(0, on.offsetLeft - c.clientWidth / 2 + on.offsetWidth / 2); }
+        }
+        function selectLevel(i) {
+            if (!unlocked(i)) return;
+            raceId++; clearInterval(ticker); clearTimeout(nextTimeout); paused = false; cur = i; try { localStorage.setItem('redox-lv', String(i)); } catch (e) {}
+            showIdle();
+        }
         function showIdle() {
-            const b = getBest();
+            const b = getBest(), l = LV();
             const panel = $('#panel');
             panel.innerHTML = '';
             const wrap = document.createElement('div'); wrap.className = 'center';
-            wrap.innerHTML = '<h2>🏁 রেস শুরুর জন্য প্রস্তুত?</h2><p>প্রতি রাউন্ডে ছোট একটা টাস্ক: সর্ট করো বা ব্যালান্স মেলাও। ঠিক হলে গাড়ি এগোবে, দ্রুত হলে বেশি। টানা ৩টি ঠিক হলে নাইট্রো বুস্ট!</p>';
-            const seg = document.createElement('div'); seg.className = 'seg'; seg.setAttribute('role', 'group'); seg.setAttribute('aria-label', 'কঠিনতা');
-            Object.keys(DIFF).forEach(k => {
-                const bt = document.createElement('button'); bt.type = 'button'; bt.textContent = DIFF[k].label;
-                bt.setAttribute('aria-pressed', String(k === diff));
-                bt.addEventListener('click', () => { snd('tap'); diff = k; try { localStorage.setItem('redox-diff', k); } catch (e) {} showIdle(); });
-                seg.appendChild(bt);
-            });
+            wrap.innerHTML = '<h2>' + l.icon + ' লেভেল ' + bn(cur + 1) + ' / ' + bn(LEVELS.length) + ' — ' + l.name + '</h2><p>' + l.intro + '</p><div class="mixrow">' + Object.keys(l.mix).map(k => '<span>' + MIXN[k] + '</span>').join('') + '</div><p style="font-size:13px">রোবটের গতি ' + bn(l.speed) + '×ম — প্রতি টাস্কে ' + bn(l.time) + ' সেকেন্ড। জিতলে নির্ভুলতা ≥ ৯০% = ৩ তারা, ≥ ৭৫% = ২ তারা।</p>';
             const row = document.createElement('div'); row.className = 'row';
             const go = document.createElement('button'); go.type = 'button'; go.className = 'btn primary big'; go.id = 'btnStart'; go.textContent = '🚦 রেস শুরু করো';
             go.addEventListener('click', () => { snd('tap'); startRace(); });
             row.appendChild(go);
             const info = document.createElement('div'); info.className = 'best';
-            info.textContent = 'প্রতি টাস্কে সর্বোচ্চ ' + bn(DIFF[diff].time) + ' সেকেন্ড' + (b ? ' · সেরা সময় ' + bn1(b) + ' সে.' : '');
-            wrap.append(seg, row, info);
+            info.textContent = b ? 'এই লেভেলে সেরা সময় ' + bn1(b) + ' সে.' : 'এই লেভেলে এখনো জেতোনি';
+            wrap.append(row, info);
             panel.appendChild(wrap);
             S = { phase: 'idle', you: 0, ai: 0, streak: 0, ok: 0, total: 0, elapsed: 0 };
-            setCars();
+            renderTabs(); setCars();
         }
 
         function showCount(n) {
@@ -414,11 +477,11 @@ body {
 
         function renderQuestion() {
             const q = S.q, panel = $('#panel');
-            let h = '<div class="qhead"><span class="qtag">' + TYPES[q.type] + '</span><span class="qcount">TASK ' + bn(S.total + 1) + '</span></div><div class="qbar"><i id="qfill"></i></div>';
+            let h = '<div class="qhead"><span class="qtag">' + (q.tag || TYPES[q.type]) + '</span><span class="qcount">TASK ' + bn(S.total + 1) + '</span></div><div class="qbar"><i id="qfill"></i></div>';
             if (q.type === 'sort') {
                 h += '<div class="qtext cardtxt" style="white-space:pre-line">' + esc(q.text) + '</div><div class="opts" id="opts">' +
-                    '<button type="button" class="opt" data-a="sort:1"><span class="k">←</span><span>জারণ<small class="sm">ইলেকট্রন ত্যাগ</small></span></button>' +
-                    '<button type="button" class="opt" data-a="sort:0"><span class="k">→</span><span>বিজারণ<small class="sm">ইলেকট্রন গ্রহণ</small></span></button></div>';
+                    '<button type="button" class="opt" data-a="sort:1"><span class="k">←</span><span>' + (q.lab ? q.lab[0] : 'জারণ') + '<small class="sm">' + (q.lab ? q.lab[1] : 'ইলেকট্রন ত্যাগ') + '</small></span></button>' +
+                    '<button type="button" class="opt" data-a="sort:0"><span class="k">→</span><span>' + (q.lab ? q.lab[2] : 'বিজারণ') + '<small class="sm">' + (q.lab ? q.lab[3] : 'ইলেকট্রন গ্রহণ') + '</small></span></button></div>';
             } else if (q.type === 'oxn') {
                 h += '<div class="qtext">' + q.f + '<small class="sm2"> -এ <b>' + esc(q.un) + '</b>-এর জারণ সংখ্যা বসাও যেন যোগফল ঠিক হয়</small></div><div class="chips">';
                 q.parts.forEach(p => { h += p[2] === null ? '<div class="chip unk"><b>' + esc(p[0]) + '</b><span>× ' + bn(p[1]) + '</span><em>?</em></div>' : '<div class="chip"><b>' + esc(p[0]) + '</b><span>× ' + bn(p[1]) + '</span><em>' + sg(p[2]) + '</em></div>'; });
@@ -426,12 +489,13 @@ body {
             } else {
                 h += '<div class="qtext cardtxt">' + esc(q.text) + '</div>' + dialHtml(q) + '<div class="balance" id="bal">' + balHtml(q) + '</div><div class="row"><button type="button" class="btn primary" data-a="lock">🔒 লক করো</button></div>';
             }
-            h += '<div class="why" id="why">' + (q.type === 'sort' ? 'জারণ = ইলেকট্রন ছাড়া। বিজারণ = ইলেকট্রন নেওয়া।' : 'বাটন চেপে মান বদলাও, মিটার সমান হলেই লক করো।') + '</div>';
+            h += '<div class="why" id="why">' + (q.type === 'sort' ? (q.lab ? 'জারক ইলেকট্রন নেয়, বিজারক ইলেকট্রন ছাড়ে।' : 'জারণ = ইলেকট্রন ছাড়া। বিজারণ = ইলেকট্রন নেওয়া।') : 'বাটন চেপে মান বদলাও, মিটার সমান হলেই লক করো।') + '</div>';
             panel.innerHTML = h;
         }
-        function dialHtml(q) { return '<div class="dial"><button type="button" class="btn" data-a="dial:-1">−</button><div class="dv"><b id="dval">' + sg(q.val) + '</b><small>' + (q.type === 'oxn' ? 'জারণ সংখ্যা' : 'ইলেকট্রন') + '</small></div><button type="button" class="btn" data-a="dial:1">+</button></div>'; }
+        function dialHtml(q) { return '<div class="dial"><button type="button" class="btn" data-a="dial:-1">−</button><div class="dv"><b id="dval">' + sg(q.val) + '</b><small>' + (q.type === 'oxn' ? 'জারণ সংখ্যা' : q.type === 'bal' ? 'সংখ্যা' : 'ইলেকট্রন') + '</small></div><button type="button" class="btn" data-a="dial:1">+</button></div>'; }
         function balHtml(q) {
             if (q.type === 'oxn') { const t = q.fixed + q.ucount * q.val; return '<span>মোট জারণ সংখ্যা</span><b class="' + (t === q.charge ? 'eq' : '') + '">' + sg(t) + '</b><span>লক্ষ্য (চার্জ) ' + sg(q.charge) + '</span>'; }
+            if (q.type === 'bal') { const g = q.per * q.val; return '<span>মোট বিনিময় ' + bn(q.tot) + 'e⁻</span><b class="' + (g === q.tot ? 'eq' : '') + '">' + bn(g) + ' ' + (g === q.tot ? '=' : '≠') + ' ' + bn(q.tot) + '</b><span>প্রতিটি ' + bn(q.per) + 'e⁻ × ' + bn(q.val) + '</span>'; }
             const L = q.lc - (q.side === 'L' ? q.val : 0), R = q.rc - (q.side === 'R' ? q.val : 0);
             return '<span>বাম পাশের চার্জ</span><b class="' + (L === R ? 'eq' : '') + '">' + sg(L) + ' ' + (L === R ? '=' : '≠') + ' ' + sg(R) + '</b><span>ডান পাশের চার্জ</span>';
         }
@@ -481,24 +545,34 @@ body {
 
         function askNext() {
             if (S.phase !== 'race') return;
-            const r = Math.random(), kind = r < 0.4 ? 'sort' : r < 0.7 ? 'oxn' : 'elec';
+            const l = LV(); const ks = Object.keys(l.mix); let tot = 0; ks.forEach(k => tot += l.mix[k]); let r = Math.random() * tot, kind = ks[0];
+            for (const k of ks) { if (r < l.mix[k]) { kind = k; break; } r -= l.mix[k]; }
             let q;
             if (kind === 'sort') {
-                const it = pickFrom('sort', SORTS);
+                const sr = l.sr || [0, SORTS.length]; const it = pickFrom('sort' + cur, SORTS.slice(sr[0], sr[1]));
                 q = { type: 'sort', text: it[0], ox: it[1], mult: 0.6,
                     why: it[1] ? 'ইলেকট্রন ছাড়ে বা জারণ সংখ্যা বাড়ে, তাই জারণ।' : 'ইলেকট্রন নেয় বা জারণ সংখ্যা কমে, তাই বিজারণ।' };
+            } else if (kind === 'agent') {
+                const it = pickFrom('agent' + cur, AGENTS);
+                q = { type: 'sort', tag: TYPES.agent, lab: ['জারক', 'নিজে বিজারিত', 'বিজারক', 'নিজে জারিত'], text: it[0], ox: it[1], mult: 0.9,
+                    why: it[1] ? 'এ ইলেকট্রন নেয় (নিজে বিজারিত হয়) — তাই জারক।' : 'এ ইলেকট্রন ছাড়ে (নিজে জারিত হয়) — তাই বিজারক।' };
             } else if (kind === 'oxn') {
-                const it = pickFrom('oxn', OXN), u = it[2].find(p => p[2] === null), ans = oxnAns(it);
+                const pool = OXN.filter(o => l.ox === 'h' ? OXH.has(o[0]) : l.ox === 'e' ? !OXH.has(o[0]) : true);
+                const it = pickFrom('oxn' + cur, pool), u = it[2].find(p => p[2] === null), ans = oxnAns(it);
                 const fixed = it[2].reduce((s, p) => s + (p[2] === null ? 0 : p[1] * p[2]), 0);
-                q = { type: 'oxn', f: it[0], un: u[0], parts: it[2], charge: it[1], fixed, ucount: u[1], ans, val: 0, mult: 1,
+                q = { type: 'oxn', f: it[0], un: u[0], parts: it[2], charge: it[1], fixed, ucount: u[1], ans, val: 0, mult: 1.1,
                     why: u[0] + '-এর জারণ সংখ্যা ' + sg(ans) + ' (' + bn(fixed) + ' + ' + bn(u[1]) + ' × x = ' + bn(it[1]) + ' থেকে)।' };
+            } else if (kind === 'bal') {
+                const it = pickFrom('bal' + cur, BALS), ans = it[1] / it[2];
+                q = { type: 'bal', text: it[0], tot: it[1], per: it[2], ans, val: 0, mult: 1.3,
+                    why: 'মোট ইলেকট্রন ' + bn(it[1]) + ' ÷ প্রতিটিতে ' + bn(it[2]) + ' = ' + bn(ans) + 'টি।' };
             } else {
-                const it = pickFrom('elec', ELEC), ans = elecAns(it);
-                q = { type: 'elec', text: it[0], lc: it[1], rc: it[2], side: it[3], ans, val: 0, mult: 1,
+                const er = l.er || [0, ELEC.length]; const it = pickFrom('elec' + cur, ELEC.slice(er[0], er[1])), ans = elecAns(it);
+                q = { type: 'elec', text: it[0], lc: it[1], rc: it[2], side: it[3], ans, val: 0, mult: 1.1,
                     why: (it[3] === 'R' ? 'ইলেকট্রন ছাড়ছে, এটি জারণ' : 'ইলেকট্রন নিচ্ছে, এটি বিজারণ') + '। ' + bn(ans) + 'টি ইলেকট্রনে দুই পাশের চার্জ সমান হয়।' };
             }
             S.q = q; S.locked = false;
-            S.qMax = DIFF[diff].time * q.mult; S.qLeft = S.qMax;
+            S.qMax = l.time * q.mult; S.qLeft = S.qMax;
             renderQuestion();
             setCars();
         }
@@ -514,7 +588,7 @@ body {
             S.elapsed += dt;
             aiTimer -= dt;
             if (aiTimer <= 0) { S.aiMul = 0.8 + Math.random() * 0.4; aiTimer = 1; }
-            S.ai = Math.min(100, S.ai + DIFF[diff].speed * (S.aiMul || 1) * dt);
+            S.ai = Math.min(100, S.ai + LV().speed * (S.aiMul || 1) * dt);
             if (!S.locked) {
                 S.qLeft -= dt;
                 const f = $('#qfill');
@@ -536,7 +610,7 @@ body {
             if (ok) {
                 snd('ok'); S.ok++; S.streak++; if (S.streak > S.best) S.best = S.streak;
                 const bonus = (q.type === 'sort' ? 3 : 4) * Math.max(0, S.qLeft) / S.qMax;
-                let gain = (q.type === 'sort' ? 6 : 11) + bonus;
+                let gain = (q.type === 'sort' ? (q.lab ? 7 : 6) : 11) + bonus;
                 const nit = S.streak >= 3;
                 if (nit) gain *= 1.5;
                 S.you = Math.min(100, S.you + gain);
@@ -559,6 +633,8 @@ body {
             let newBest = false;
             if (won) { const b = getBest(); if (!b || t < b) { newBest = true; try { localStorage.setItem(bestKey(), String(t)); } catch (e) {} } }
             const acc = S.total ? Math.round(S.ok / S.total * 100) : 0;
+            let st = 0; if (won) { st = acc >= 90 ? 3 : acc >= 75 ? 2 : 1; if (!stars[cur] || st > stars[cur]) { stars[cur] = st; try { localStorage.setItem('redox-stars', JSON.stringify(stars)); } catch (e) {} } }
+            renderTabs();
             setCars();
             snd(won ? 'win' : 'lose');
             $('#panel').innerHTML = '<div class="center"><h2>' + (won ? '🏆 তুমি জিতেছ!' : '🤖 রোবট আগে পৌঁছে গেছে') + '</h2><p>' + (won ? 'দারুণ! জারণ-বিজারণে তোমার দখল পাকা।' : 'আরেকটু দ্রুত আর নির্ভুল হও, পরের বার জিতবে!') + '</p></div>';
@@ -567,10 +643,12 @@ body {
                 '<div><span>সময়</span><span>' + bn1(t) + ' সে.' + (newBest ? ' · নতুন সেরা! 🎉' : '') + '</span></div>' +
                 '<div><span>সঠিক উত্তর</span><span>' + bn(S.ok) + '/' + bn(S.total) + ' (' + bn(acc) + '%)</span></div>' +
                 '<div><span>সর্বোচ্চ স্ট্রিক</span><span>' + bn(S.best) + '</span></div>' +
-                '<div><span>কঠিনতা</span><span>' + DIFF[diff].label + '</span></div></div>' +
-                '<div class="row"><button class="btn" id="mHome" type="button">মেনু</button><button class="btn primary" id="mAgain">🔄 আবার খেলো</button></div>');
+                '<div><span>লেভেল</span><span>' + LV().name + (st ? ' · ' + starStr(st) : '') + '</span></div></div>' +
+                '<div class="row"><button class="btn" id="mHome" type="button">মেনু</button>' + (won && cur < LEVELS.length - 1 ? '<button class="btn primary" id="mNext">পরের লেভেল ▶</button>' : '') + '<button class="btn' + (won && cur < LEVELS.length - 1 ? '' : ' primary') + '" id="mAgain">🔄 আবার খেলো</button></div>');
+            if ($('#mNext')) $('#mNext').onclick = () => { closeModal(); selectLevel(cur + 1); };
             $('#mAgain').onclick = () => { closeModal(); startRace(); };
             $('#mHome').onclick = () => { closeModal(); showIdle(); };
+            renderTabs();
         }
 
         /* ---------- মডাল ও বিরতি ---------- */
@@ -588,6 +666,8 @@ body {
                 '<li><b>ইলেকট্রন</b><span>? এর জায়গায় ইলেকট্রন সংখ্যা বসাও যেন দুই পাশের চার্জ সমান হয়।</span></li>' +
                 '<li><b>এগোনো</b><span>ঠিক হলে গাড়ি এগোয়, দ্রুত হলে বেশি। ভুল বা সময় শেষ হলে এগোয় না।</span></li>' +
                 '<li><b>নাইট্রো</b><span>টানা ৩টি ঠিক উত্তরে এগোনো ×১.৫ হয়ে যায়। ভুল হলেই নাইট্রো শেষ।</span></li>' +
+                '<li><b>জারক / বিজারক</b><span>জারক = যে অন্যকে জারিত করে (নিজে ইলেকট্রন নেয়)। বিজারক = যে অন্যকে বিজারিত করে (নিজে ইলেকট্রন ছাড়ে)।</span></li>' +
+                '<li><b>ক্রসিং</b><span>জারকের মোট নেওয়া ইলেকট্রন = বিজারকের মোট ছাড়া ইলেকট্রন। প্রতিটি বিজারক পরমাণু/আয়ন কয়টি ছাড়ে তা দিয়ে মোটকে ভাগ করো।</span></li>' +
                 '<li><b>OIL RIG</b><span><b>O</b>xidation <b>I</b>s <b>L</b>oss, <b>R</b>eduction <b>I</b>s <b>G</b>ain। জারণ মানে ইলেকট্রন ত্যাগ, বিজারণ মানে ইলেকট্রন গ্রহণ।</span></li>' +
                 '<li><b>জারক</b><span>যে ইলেকট্রন নেয়, নিজে বিজারিত হয়, জারণ সংখ্যা কমে।</span></li>' +
                 '<li><b>বিজারক</b><span>যে ইলেকট্রন ছাড়ে, নিজে জারিত হয়, জারণ সংখ্যা বাড়ে।</span></li>' +
@@ -596,6 +676,7 @@ body {
             $('#rClose').onclick = () => { closeModal(); if (racing) setPaused(false); };
         }
         $('#btnRules').addEventListener('click', () => { snd('tap'); rulesModal(); });
+        $('#lv').addEventListener('click', e => { const t = e.target.closest('[data-lv]'); if (t) { snd('tap'); selectLevel(+t.dataset.lv); } });
 
         /* কীবোর্ড: সর্ট — ← / → ; ব্যালান্স — ↑ ↓ বা + − , Enter = লক */
         document.addEventListener('keydown', e => {
@@ -616,6 +697,7 @@ body {
         function rulesModalPause() { setPaused(true); openModal('<h2>⏸️ রেস থেমে আছে</h2><div class="row"><button class="btn primary" id="rResume">▶️ চালিয়ে যাও</button></div>'); $('#rResume').onclick = () => { closeModal(); setPaused(false); }; }
 
         showIdle();
+        window.__t = { LEVELS, selectLevel, startRace, askNext, resolve, get S() { return S; }, get cur() { return cur; }, showIdle, finish, stars };
     })();
     </script>
 </body>
