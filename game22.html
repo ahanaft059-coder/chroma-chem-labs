@@ -1,228 +1,363 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#07090e">
-    <title>Fusion 2048 | তারার ভেতরের ফিউশন</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <script>
-        /* বাইরের ব্যাকগ্রাউন্ডের পছন্দ (শুধু এই গেমের জন্য) */
-        (function () {
-            try { if (localStorage.getItem('fusion-bg') === 'alt') document.documentElement.setAttribute('data-bg', 'alt'); } catch (e) {}
-        })();
-    </script>
-    <style>
-        /* এই পেজ সম্পূর্ণ আলাদা ডিজাইনের: মূল সাইটের থিমের সাথে মেলে না।
-           মাঝের কালো অংশ (.stage) সবসময় কালোই থাকে; 🌓 বাটন শুধু বাইরের ব্যাকগ্রাউন্ডের রং সামান্য বদলায়। */
-        :root {
-            color-scheme: dark;
-            --page: #06080d; --page2: #0d121b;
-            --bg: #090d13; --panel: #111923; --panel2: #17212d; --line: #263446;
-            --fg: #e8eef6; --mute: #8896a9;
-            --f0: #e5533d; --f1: #eba72b; --f2: #25a872; --f3: #4a86e8;
-            --sans: 'Bricolage Grotesque','Hind Siliguri',system-ui,-apple-system,'Segoe UI',sans-serif;
-            --mono: 'IBM Plex Mono','Hind Siliguri',ui-monospace,SFMono-Regular,Menlo,monospace;
-        }
-        :root[data-bg="alt"] { --page: #1a2231; --page2: #2a3650; }
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            margin: 0; min-height: 100vh; color: var(--fg);
-            font: 400 15px/1.55 var(--sans);
-            padding: 14px max(12px,env(safe-area-inset-right,0px)) 26px max(12px,env(safe-area-inset-left,0px));
-            background-color: var(--page);
-            background-image: radial-gradient(color-mix(in srgb,var(--fg) 8%,transparent) 1px,transparent 1.3px), radial-gradient(ellipse 80% 50% at 50% 0%,var(--page2),transparent 70%);
-            background-size: 24px 24px, 100% 100%;
-            background-attachment: fixed;
-            transition: background-color .45s;
-            -webkit-tap-highlight-color: transparent;
-        }
-        button { font: inherit; color: inherit; }
-        :focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
-        [hidden] { display: none !important; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b10">
+<title>Fusion 2048 | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<script>(function(){try{var b=localStorage.getItem('fusion-bg');if(b==='2'||b==='3')document.documentElement.setAttribute('data-bg',b);}catch(e){}})();</script>
+<style>
+:root{--o-bg:#050507;--o-bg2:#0d0d14;--o-tx:#9a9aae;--st:#101118;--st2:#171925;--st3:#1f2231;--ln:rgba(255,255,255,.09);--ln2:rgba(255,255,255,.16);--tx:#f3f1ea;--mut:#9b9cb0;--gold:#f6c453;--gold2:#ff9f43;--ok:#4ade80;--bad:#ff5d6c;--blue:#5db4ff;--f0:#ff6b6b;--f1:#ffb84d;--f2:#4ade9a;--f3:#6aa8ff;--r:18px;--disp:'Hind Siliguri','Plus Jakarta Sans',system-ui,sans-serif}
+:root[data-bg="2"]{--o-bg:#fff1a8;--o-bg2:#ffe680;--o-tx:#5b4b00}
+:root[data-bg="3"]{--o-bg:#cde7ff;--o-bg2:#a9d4ff;--o-tx:#1d3b5c}
+[hidden]{display:none!important}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--o-bg)}
+body{margin:0;min-height:100vh;font-family:var(--disp);color:var(--tx);background:radial-gradient(1200px 700px at 50% -10%,var(--o-bg2),var(--o-bg) 70%) fixed,var(--o-bg);padding:14px max(14px,env(safe-area-inset-right)) 30px max(14px,env(safe-area-inset-left));transition:background .4s}
+:root[data-bg] body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(rgba(0,0,0,.09) 1.4px,transparent 1.6px);background-size:22px 22px;opacity:.6}
+.stage{position:relative;max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:12px;padding:14px;background:linear-gradient(180deg,var(--st2),var(--st) 40%);border:1px solid var(--ln2);border-radius:26px;box-shadow:0 30px 80px -20px rgba(0,0,0,.65),0 0 0 6px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.07)}
+.credit{text-align:center;margin:16px 0 0;font-size:12.5px;font-weight:600;letter-spacing:.3px;color:var(--o-tx)}
+.bar{display:flex;align-items:center;gap:10px}
+.brand{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}
+.brand b{font-size:20px;font-weight:700;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{font-size:12px;color:var(--mut);font-weight:500}
+.pbtn{font:600 14px var(--disp);color:var(--tx);background:rgba(255,255,255,.06);border:1px solid var(--ln2);border-radius:12px;padding:9px 14px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:transform .12s,background .15s,border-color .15s}
+.pbtn:hover:not(:disabled){background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.pbtn:active:not(:disabled){transform:translateY(1px) scale(.98)}
+.pbtn:disabled{opacity:.4;cursor:default}
+.pbtn.gold{color:#241a00;border-color:transparent;background:linear-gradient(135deg,#ffe08a,var(--gold) 45%,var(--gold2));box-shadow:0 6px 18px -6px rgba(246,196,83,.55)}
+.pbtn.gold:hover:not(:disabled){background:linear-gradient(135deg,#fff0b8,#ffd466 45%,#ffad5a)}
+.pbtn.ico{width:42px;padding:0;font-size:18px}
+.pbtn.big{font-size:17px;padding:13px 22px;border-radius:14px}
+.pbtn .long{display:inline}
+@media(max-width:520px){.pbtn .long{display:none}.brand b{font-size:17px}}
+.pill{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13.5px;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid var(--ln);border-radius:999px;padding:6px 12px}
+.pill b{font-variant-numeric:tabular-nums;color:var(--gold)}
+.pill.warn{border-color:var(--bad);color:#ffd0d4}.pill.warn b{color:var(--bad)}
+.hud{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.panel{background:rgba(255,255,255,.035);border:1px solid var(--ln);border-radius:var(--r);padding:12px}
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(3,3,8,.72);backdrop-filter:blur(7px);overflow:auto}
+.modal[hidden]{display:none}
+.sheet{position:relative;width:min(520px,100%);max-height:92vh;overflow:auto;background:linear-gradient(180deg,#1d2030,#13141d);border:1px solid var(--ln2);border-radius:22px;padding:22px 20px 18px;box-shadow:0 30px 80px -10px #000;animation:sh .28s cubic-bezier(.2,.9,.3,1.2)}
+.sheet::before{content:"";position:absolute;left:22px;right:22px;top:0;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+@keyframes sh{from{transform:translateY(18px) scale(.96);opacity:0}}
+.sheet h2{margin:2px 0 8px;font-size:23px;line-height:1.25}
+.sheet p{margin:0 0 12px;color:var(--mut);line-height:1.65;font-size:14.5px}
+.sheet .mtag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--gold);background:rgba(246,196,83,.1);border:1px solid rgba(246,196,83,.3);border-radius:999px;padding:3px 11px;margin-bottom:8px}
+.row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.grp{margin:12px 0}
+.grp>label{display:block;font-weight:700;font-size:13.5px;color:var(--mut);margin-bottom:7px}
+.seg{display:flex;flex-wrap:wrap;gap:7px}
+.seg button{font:600 14px var(--disp);color:var(--tx);background:rgba(255,255,255,.05);border:1px solid var(--ln2);border-radius:11px;padding:8px 14px;cursor:pointer;min-width:46px;transition:.15s}
+.seg button:hover{background:rgba(255,255,255,.1)}
+.seg button[aria-pressed="true"]{color:#241a00;background:linear-gradient(135deg,#ffe08a,var(--gold));border-color:transparent;box-shadow:0 4px 14px -4px rgba(246,196,83,.6)}
+.seg button:disabled{opacity:.35;cursor:default}
+.note{font-size:12.5px;color:var(--mut);margin-top:6px}
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.rules li{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;line-height:1.55}
+.rules li b{color:var(--gold);white-space:nowrap}
+.rules li span{color:#d8d8e4}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;z-index:70;background:#1b1d2b;border:1px solid var(--gold);color:var(--tx);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;pointer-events:none;max-width:92vw;text-align:center}
+.toast.on{animation:tst 2.2s ease both}
+@keyframes tst{0%{opacity:0;transform:translate(-50%,30px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px)}}
+.shake{animation:shk .38s}
+@keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:90;pointer-events:none}
+.wish{text-align:center;padding:8px 2px 2px}
+.wish .tro{font-size:78px;line-height:1;filter:drop-shadow(0 10px 24px rgba(246,196,83,.6));animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-3deg)}}
+.wish h2{font-size:27px;margin:8px 0 6px;background:linear-gradient(90deg,#fff3b8,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.wish .big{font-size:16.5px;color:#f3f1ea;line-height:1.7;font-weight:500}
+.wish .stat{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0 4px}
+.rank{display:grid;gap:6px;margin:10px 0}
+.rank div{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.05);font-weight:600;font-size:14px}
+.rank div.me{background:rgba(246,196,83,.14);border:1px solid rgba(246,196,83,.4)}
+.rank div b{color:var(--gold)}
+/* ===== JOSS LAYER: premium shine ===== */
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+.stage{isolation:isolate;background:radial-gradient(520px 260px at 8% -4%,rgba(246,196,83,.16),transparent 70%),radial-gradient(520px 300px at 100% 105%,rgba(143,110,255,.16),transparent 70%),radial-gradient(rgba(255,255,255,.045) 1px,transparent 1.2px) 0 0/18px 18px,linear-gradient(180deg,var(--st2),var(--st) 42%)}
+.stage::before,.stage::after{content:"";position:absolute;inset:-2px;border-radius:28px;padding:2px;pointer-events:none;background:conic-gradient(from var(--a),#f6c453,#ff7a59,#c792ff,#4ad8c8,#f6c453);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude;animation:spinA 7s linear infinite;opacity:.9}
+.stage::after{inset:-7px;padding:7px;filter:blur(13px);opacity:.38}
+@keyframes spinA{to{--a:360deg}}
+.brand b{background:linear-gradient(100deg,#ffe9a3,var(--gold),#ff9f43,#ffe9a3);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;animation:shim 5s linear infinite;letter-spacing:.2px}
+@keyframes shim{to{background-position:-240% 0}}
+.pbtn{position:relative;overflow:hidden;backdrop-filter:blur(4px)}
+.pbtn.gold::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);animation:gl 3.4s ease-in-out infinite}
+@keyframes gl{0%,55%{left:-70%}100%{left:130%}}
+.pbtn.gold{box-shadow:0 8px 22px -8px rgba(246,196,83,.75),inset 0 1px 0 rgba(255,255,255,.55)}
+.pbtn.ico#langBtn{font-size:13px;font-weight:800;letter-spacing:.2px;width:46px}
+.pill{background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.sheet{background:radial-gradient(420px 200px at 50% -20%,rgba(246,196,83,.14),transparent 70%),linear-gradient(180deg,#1f2234,#13141d)}
+.sheet h2{letter-spacing:.1px}
+.seg button[aria-pressed="true"]{box-shadow:0 6px 16px -4px rgba(246,196,83,.7),inset 0 1px 0 rgba(255,255,255,.6)}
+.toast{box-shadow:0 10px 30px -8px rgba(246,196,83,.5);background:linear-gradient(180deg,#232638,#171925)}
+.wish{position:relative;isolation:isolate}
+.wish::before{content:"";position:absolute;left:50%;top:-34px;width:360px;height:360px;margin-left:-180px;z-index:-1;background:repeating-conic-gradient(from 0deg,rgba(246,196,83,.22) 0 7deg,transparent 7deg 18deg);-webkit-mask:radial-gradient(circle,#000 8%,transparent 66%);mask:radial-gradient(circle,#000 8%,transparent 66%);animation:ray 18s linear infinite}
+@keyframes ray{to{transform:rotate(360deg)}}
+.wish .tro{font-size:86px}
+.rank div{background:linear-gradient(90deg,rgba(255,255,255,.07),rgba(255,255,255,.03))}
+.rank div.me{box-shadow:0 0 0 1px rgba(246,196,83,.25),0 8px 22px -10px rgba(246,196,83,.6)}
+:root[data-bg="2"] .credit,:root[data-bg="3"] .credit{text-shadow:none}
+@media(max-width:520px){.pbtn.ico#langBtn{width:42px}.bar{gap:7px}}
+@media(prefers-reduced-motion:reduce){.stage::before,.stage::after,.brand b,.pbtn.gold::after,.wish::before,.wish .tro{animation:none}}
 
-        .stage { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; padding: 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 30px 80px -30px #000; }
-        .credit { margin: 14px 0 0; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: .4px; color: color-mix(in srgb,var(--fg) 55%,transparent); }
 
-        /* উপরের বার */
-        .bar { display: flex; align-items: center; gap: 10px; }
-        .brand { display: flex; align-items: center; gap: 9px; margin-right: auto; min-width: 0; }
-        .brand svg { width: 30px; height: 30px; flex: none; color: var(--f1); }
-        .brand b { display: block; font: 700 23px/1.1 var(--sans); letter-spacing: -.02em; }
-        .brand small { display: block; font-size: 12px; font-weight: 500; color: var(--mute); margin-top: 2px; }
-        .btn { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 8px 13px; cursor: pointer; font-weight: 600; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s, border-color .15s, opacity .15s; }
-        .btn:hover:not(:disabled) { background: var(--panel2); border-color: color-mix(in srgb,var(--fg) 30%,var(--line)); }
-        .btn:disabled { opacity: .4; cursor: default; }
-        .btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-        .btn.primary:hover { background: #fff; }
-        .btn.icon { width: 40px; height: 40px; padding: 0; font-size: 16px; }
+.gbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.gbar .sp{flex:1}
+.arena{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;align-items:start}
+.boardwrap{display:grid;gap:10px;justify-items:center}
+.board{position:relative;width:min(100%,540px);aspect-ratio:1;border-radius:20px;background:#0a0b11;border:1px solid var(--ln2);padding:2.2%;box-shadow:inset 0 0 40px rgba(0,0,0,.6);touch-action:none}
+.grid{position:absolute;inset:2.2%;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:2.6%}
+.grid i{background:rgba(255,255,255,.045);border-radius:12px}
+.tiles{position:absolute;inset:2.2%}
+.tile{position:absolute;width:25%;height:25%;left:calc(var(--c)*25%);top:calc(var(--r)*25%);padding:1.3%;transition:left .13s ease,top .13s ease}
+.tile .face{width:100%;height:100%;border-radius:12px;display:grid;place-items:center;position:relative;color:#fff;background:linear-gradient(155deg,var(--c1),var(--c2));border:1.5px solid rgba(255,255,255,.4);box-shadow:0 6px 14px -6px #000,inset 0 1px 0 rgba(255,255,255,.4);overflow:hidden}
+.tile .face::before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,rgba(255,255,255,.25),transparent 45%)}
+.tile.f0{--c1:#ff7f7f;--c2:#b0213b}.tile.f1{--c1:#ffc860;--c2:#b8600b}.tile.f2{--c1:#52e8a6;--c2:#0b7556}.tile.f3{--c1:#7ab9ff;--c2:#2a46c8}
+.tile .z{position:absolute;left:8%;top:5%;font-size:clamp(9px,2.3vw,13px);font-weight:700;opacity:.9}
+.tile .sym{font-size:clamp(20px,7vw,40px);font-weight:800;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tile .nm{position:absolute;bottom:5%;left:0;right:0;text-align:center;font-size:clamp(8px,1.9vw,11px);font-weight:600;opacity:.92}
+.tile .pw{position:absolute;right:8%;top:5%;font-size:clamp(8px,2vw,11px);font-weight:700;opacity:.75}
+.tile.hi .face{box-shadow:0 0 22px rgba(246,196,83,.75),inset 0 1px 0 rgba(255,255,255,.5);border-color:#ffe08a}
+.face.pop{animation:pop .2s ease}.face.merge{animation:mrg .24s ease}
+@keyframes pop{from{transform:scale(.3);opacity:0}}@keyframes mrg{50%{transform:scale(1.18)}}
+.prog{width:min(100%,540px);height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .3s}
+.goalrow{width:min(100%,540px);display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--mut)}
+.goalrow b{color:var(--gold)}
+.ladder{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;width:min(100%,540px)}
+.step{font-size:11px;font-weight:700;padding:3px 7px;border-radius:7px;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.step.q{background:rgba(255,255,255,.05);color:var(--mut);border-color:var(--ln)}
+.step.f0{background:#b0213b}.step.f1{background:#b8600b}.step.f2{background:#0b7556}.step.f3{background:#2a46c8}
+.step.goal-step{outline:2px solid var(--gold);outline-offset:1px}
+.lab{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px dashed var(--ln2);font-size:13.5px;line-height:1.5;width:min(100%,540px)}
+.lsym{flex:none;width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:19px;color:#fff}
+.lab .meta{display:block;color:var(--mut);font-size:12.5px}.lab .eq{display:block;color:var(--gold);font-weight:600}
+.bots{display:grid;gap:10px}
+.rb{padding:10px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--ln);display:grid;gap:7px}
+.rb.dead{opacity:.55}.rb.lead{border-color:var(--gold);box-shadow:0 0 18px -6px rgba(246,196,83,.6)}
+.rb h4{margin:0;display:flex;justify-content:space-between;gap:8px;font-size:13.5px;align-items:center}.rb h4 b{color:var(--gold);font-variant-numeric:tabular-nums}
+.mb{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;aspect-ratio:1;background:#0a0b11;padding:4px;border-radius:10px;width:100%;max-width:170px;margin:0 auto}
+.mb i{border-radius:5px;background:rgba(255,255,255,.05);display:grid;place-items:center;font-style:normal;font-size:10px;font-weight:800;color:#fff;line-height:1}
+.mb i.f0{background:linear-gradient(155deg,#ff7f7f,#b0213b)}.mb i.f1{background:linear-gradient(155deg,#ffc860,#b8600b)}.mb i.f2{background:linear-gradient(155deg,#52e8a6,#0b7556)}.mb i.f3{background:linear-gradient(155deg,#7ab9ff,#2a46c8)}
+.rb small{color:var(--mut);font-size:12px;text-align:center}
+.nobots{padding:16px;border-radius:14px;border:1px dashed var(--ln2);color:var(--mut);font-size:13.5px;line-height:1.6;text-align:center}
+.bigsym{width:84px;height:84px;margin:6px auto 10px;border-radius:20px;display:grid;place-items:center;font-size:38px;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,.4)}
+@media(max-width:780px){.arena{grid-template-columns:1fr}.bots{grid-template-columns:repeat(3,1fr);gap:7px}.rb{padding:7px}.rb h4{font-size:12px;flex-direction:column;align-items:flex-start;gap:1px}.mb i{font-size:8px}}
+@media(max-width:420px){.rb h4 span{font-size:11px}}
 
-        /* স্কোর ও লক্ষ্য */
-        .stats { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; }
-        .stat { display: flex; flex-direction: column; gap: 2px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); min-width: 0; }
-        .stat span { font-size: 12px; font-weight: 600; color: var(--mute); }
-        .stat b { font: 600 20px/1.2 var(--mono); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; }
-        .goal { display: flex; flex-direction: column; justify-content: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); min-width: 0; }
-        .goal div { display: flex; align-items: baseline; gap: 8px; }
-        .goal span { font-size: 12px; font-weight: 600; color: var(--mute); }
-        .goal b { font: 700 20px/1.2 var(--sans); }
-        .goal em { font-style: normal; font-size: 12px; color: var(--mute); margin-left: auto; white-space: nowrap; }
-        .prog { height: 5px; border-radius: 5px; background: var(--panel2); overflow: hidden; }
-        .prog i { display: block; height: 100%; width: 0; border-radius: 5px; background: linear-gradient(90deg,var(--f2),var(--f1)); transition: width .4s ease; }
-
-        /* টুলস */
-        .tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .seg { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-right: auto; }
-        .seg button { border: 0; background: none; padding: 7px 12px; border-radius: 9px; font-size: 13.5px; font-weight: 600; color: var(--mute); cursor: pointer; transition: background .15s, color .15s; }
-        .seg button:hover { color: var(--fg); }
-        .seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
-
-        /* বোর্ড */
-        .board { padding: clamp(6px,2.2vw,12px); border-radius: 22px; background: #0a1018; border: 1px solid var(--line); touch-action: none; user-select: none; -webkit-user-select: none; box-shadow: inset 0 0 60px rgba(0,0,0,.5); }
-        .field { position: relative; width: 100%; aspect-ratio: 1 / 1; --gap: clamp(6px,2.2vw,12px); }
-        .cells { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4,1fr); grid-template-rows: repeat(4,1fr); gap: var(--gap); }
-        .cells i { display: block; border-radius: calc(var(--gap) * 1.1); background: #0e1520; box-shadow: inset 0 0 0 1px #1a2635; }
-        .tiles { position: absolute; inset: 0; }
-        .tile { position: absolute; left: 0; top: 0; width: calc((100% - 3 * var(--gap)) / 4); height: calc((100% - 3 * var(--gap)) / 4);
-            transform: translate(calc(var(--c) * (100% + var(--gap))), calc(var(--r) * (100% + var(--gap))));
-            transition: transform .13s ease-out; container-type: inline-size; }
-        .face { position: absolute; inset: 0; border-radius: calc(var(--gap) * 1.1); color: var(--ink,#fff);
-            background: linear-gradient(155deg,var(--top),var(--end));
-            box-shadow: 0 1px 0 rgba(255,255,255,.28) inset, 0 8px 18px -10px rgba(0,0,0,.9), 0 0 0 1px rgba(0,0,0,.5); }
-        .face::after { content: ""; position: absolute; inset: 5cqw; border: .7cqw solid color-mix(in srgb,var(--ink,#fff) 30%,transparent); border-radius: 9cqw; pointer-events: none; }
-        .tile.f0 { --top: #e85a43; --end: #a82b1a; --ink: #fff; }
-        .tile.f1 { --top: #f6c254; --end: #d9921a; --ink: #1c1304; }
-        .tile.f2 { --top: #22a56f; --end: #0c6444; --ink: #fff; }
-        .tile.f3 { --top: #4a86e8; --end: #1f4ea8; --ink: #fff; }
-        .tile.hi .face { box-shadow: 0 1px 0 rgba(255,255,255,.3) inset, 0 0 26px color-mix(in srgb,var(--top) 60%,transparent), 0 0 0 1px rgba(0,0,0,.5); }
-        .z { position: absolute; left: 11cqw; top: 9cqw; font: 600 13cqw/1 var(--mono); opacity: .9; }
-        .sym { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-56%); text-align: center; font: 700 42cqw/1 var(--sans); letter-spacing: -.04em; font-variation-settings: 'opsz' 96; }
-        .nm { position: absolute; left: 0; right: 0; bottom: 11cqw; text-align: center; font: 650 12.5cqw/1 var(--sans); letter-spacing: .02em; }
-        .face.pop { animation: spawn .2s .1s ease-out backwards; }
-        .face.merge { animation: mergepop .24s .08s ease-out backwards; }
-        @keyframes spawn { from { transform: scale(.4); opacity: 0; } }
-        @keyframes mergepop { 0% { transform: scale(.7); } 60% { transform: scale(1.14); } 100% { transform: scale(1); } }
-
-        /* ল্যাব নোট */
-        .lab { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); min-height: 74px; }
-        .lsym { flex: none; width: 50px; height: 50px; border-radius: 12px; display: grid; place-items: center; font: 700 22px/1 var(--sans); background: var(--panel2); border: 1px solid var(--line); }
-        .lab div { min-width: 0; font-size: 13.5px; line-height: 1.5; }
-        .lab b { font-weight: 700; }
-        .lab .meta { margin-left: 6px; font-size: 12px; color: var(--mute); }
-        .lab .eq { display: block; margin-top: 1px; font: 500 12.5px/1.4 var(--mono); color: var(--f1); }
-        .lab p { margin: 2px 0 0; color: #b9c4d2; }
-
-        /* আবিষ্কারের সিঁড়ি */
-        .coll { display: grid; gap: 8px; }
-        .collhead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-        .collhead b { font-size: 14px; font-weight: 700; }
-        .collhead span { font-size: 12.5px; color: var(--mute); }
-        .ladder { display: flex; flex-wrap: wrap; gap: 6px; }
-        .step { display: grid; place-items: center; min-width: 38px; height: 34px; padding: 0 6px; border-radius: 9px; font: 700 13.5px/1 var(--sans); color: #fff; border: 1px solid transparent; }
-        .step.f0 { background: linear-gradient(155deg,#e85a43,#a82b1a); }
-        .step.f1 { background: linear-gradient(155deg,#f6c254,#d9921a); color: #1c1304; }
-        .step.f2 { background: linear-gradient(155deg,#22a56f,#0c6444); }
-        .step.f3 { background: linear-gradient(155deg,#4a86e8,#1f4ea8); }
-        .step.q { background: var(--panel); border-color: var(--line); color: var(--mute); font-weight: 500; }
-        .step.goal-step { outline: 2px solid var(--fg); outline-offset: 2px; }
-
-        /* মডাল */
-        .modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(4,7,11,.76); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-        .sheet { width: min(460px,100%); max-height: 92%; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: 0 30px 80px -20px #000; }
-        .sheet h2 { margin: 6px 0 12px; font: 700 21px/1.4 var(--sans); }
-        .sheet p { margin: 0 0 12px; color: #b9c4d2; }
-        .mtag { display: inline-block; font-size: 12.5px; font-weight: 700; color: var(--mute); padding: 4px 11px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel2); }
-        .bigsym { display: grid; place-items: center; width: 84px; height: 84px; margin: 12px 0 4px; border-radius: 18px; font: 700 38px/1 var(--sans); color: #fff; box-shadow: 0 0 40px -6px var(--glow); }
-        .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-        .rules { display: grid; gap: 10px; margin: 0 0 16px; padding: 0; list-style: none; }
-        .rules li { display: grid; grid-template-columns: 96px 1fr; gap: 10px; font-size: 14px; line-height: 1.6; color: #c4cedb; }
-        .rules li b { color: var(--fg); font-weight: 700; }
-        .score { display: grid; gap: 6px; margin: 0 0 16px; font-size: 13.5px; color: var(--mute); }
-        .score div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
-
-        .toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top,0px) + 22px); transform: translateX(-50%); z-index: 45; max-width: calc(100% - 24px); font-size: 15px; font-weight: 800; background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 99px; opacity: 0; pointer-events: none; text-align: center; }
-        .toast.on { animation: toast 1.8s ease forwards; }
-        @keyframes toast { 0% { opacity: 0; transform: translate(-50%,-8px); } 12%,80% { opacity: 1; transform: translate(-50%,0); } 100% { opacity: 0; } }
-        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
-        @media (max-width: 480px) {
-            body { padding-top: 8px; }
-            .stage { padding: 10px; border-radius: 20px; gap: 10px; }
-            .btn .long { display: none; }
-            .brand small { display: none; }
-            .stats { grid-template-columns: 1fr 1fr; }
-            .goal { grid-column: 1 / -1; }
-            .rules li { grid-template-columns: 1fr; gap: 2px; }
-        }
-    </style>
+</style>
 </head>
 <body>
-    <div class="stage">
-        <header class="bar">
-            <a class="btn" href="games.html#premium" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
-            <div class="brand">
-                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="16" r="5.2" fill="currentColor" stroke="none"/><path d="M16 3v4.5M16 24.5V29M3 16h4.5M24.5 16H29M6.8 6.8l3.2 3.2M22 22l3.2 3.2M25.2 6.8 22 10M10 22l-3.2 3.2"/></svg>
-                <div><b>Fusion 2048</b><small>তারার ভেতরের ফিউশন</small></div>
-            </div>
-            <button class="btn icon" id="bgBtn" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
-        </header>
+<div class="stage">
+<header class="bar">
+<a class="pbtn" href="games.html#premium" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+<div class="brand"><b>Fusion 2048</b><small>তারার ভেতরের ফিউশন · রোবট রেস</small></div>
+<button class="pbtn ico" id="langBtn" type="button" title="ভাষা / Language" aria-label="ভাষা বদলাও / Change language">EN</button>
+<button class="pbtn ico" id="soundBtn" type="button" title="শব্দ চালু/বন্ধ" aria-label="শব্দ চালু বা বন্ধ">🔔</button>
+<button class="pbtn ico" id="bgBtn" type="button" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+</header>
 
-        <section class="stats" aria-label="স্কোর">
-            <div class="stat"><span>পয়েন্ট</span><b id="score">০</b></div>
-            <div class="stat"><span>সেরা</span><b id="best">০</b></div>
-            <div class="goal">
-                <div><span>লক্ষ্য</span><b id="goalSym">Ti</b><em id="goalName"></em></div>
-                <div class="prog" aria-hidden="true"><i id="prog"></i></div>
-            </div>
-        </section>
+<div class="gbar">
+<span class="pill">🎯 লক্ষ্য <b id="goalSym">—</b></span>
+<span class="pill">⭐ <b id="score">০</b></span>
+<span class="pill">🏅 সেরা <b id="best">০</b></span>
+<span class="pill" id="pTimer" hidden>⏱ <b id="tmv">০</b></span>
+<span class="sp"></span>
+<button class="pbtn" id="btnUndo">↶</button>
+<button class="pbtn" id="btnRules">নিয়ম</button>
+<button class="pbtn" id="btnNew">⚙ নতুন খেলা</button>
+</div>
+<div class="arena">
+<div class="boardwrap">
+<div class="goalrow"><span id="goalTxt"></span><span id="found"></span></div>
+<div class="prog"><i id="prog"></i></div>
+<div class="board" id="board"><div class="grid" id="gridbg"></div><div class="tiles" id="tiles"></div></div>
+<div class="ladder" id="ladder"></div>
+<div class="lab" id="lab"></div>
+</div>
+<aside class="bots" id="bots" aria-label="রোবট প্রতিপক্ষ"></aside>
+</div>
 
-        <div class="tools">
-            <div class="seg" role="group" aria-label="কঠিনতা">
-                <button type="button" data-mode="easy" aria-pressed="false">সহজ</button>
-                <button type="button" data-mode="normal" aria-pressed="true">মাঝারি</button>
-                <button type="button" data-mode="hard" aria-pressed="false">কঠিন</button>
-            </div>
-            <button class="btn" id="btnUndo">↶ পূর্বাবস্থা</button>
-            <button class="btn" id="btnRules">নিয়ম</button>
-            <button class="btn" id="btnNew">নতুন খেলা</button>
-        </div>
+</div>
+<p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+<div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<script>
+/* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+   ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+   বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+function NBSound(key) {
+    let on = true, ac = null;
+    try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+    function tone(f, t0, dur, type, vol) {
+        if (!on) return;
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+            const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+        } catch (e) {}
+    }
+    const api = {
+        ok() { tone(660, 0, .12); tone(880, .1, .16); },
+        bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+        tap() { tone(520, 0, .06, 'triangle', .1); },
+        pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+        win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+        lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+        get on() { return on; },
+        toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+    };
+    function paint() { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; }
+    document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } });
+    if (document.readyState !== 'loading') { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } }
+    return api;
+}
 
-        <div class="board" id="board" aria-label="গেম বোর্ড">
-            <div class="field">
-                <div class="cells" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                <div class="tiles" id="tiles"></div>
-            </div>
-        </div>
+/* ===== PREM KIT: সাউন্ড · ব্যাকগ্রাউন্ড · কনফেত্তি · উইশ · সেটআপ · টাইমার ===== */
 
-        <section class="lab" id="lab" aria-live="polite"></section>
+/* ===== ভাষা: বাংলা ⇄ English ===== */
+const LANG = { v: 'bn' };
+try { LANG.v = localStorage.getItem('prem-lang') === 'en' ? 'en' : 'bn'; } catch (e) {}
+const L = (b, e) => LANG.v === 'en' ? e : b;
+const EN_DICT = {"কী অসাধারণ জয়!": "What a brilliant win!", "তুমিই চ্যাম্পিয়ন!": "You are the champion!", "(কোণার বৃত্তের সংখ্যা) মেলাও।": "(the number in the corner circle).", "কোনোটাই মেলে না।": "neither matches.", "-এর He শিল্ড": "'s He shield", "-এর দান": "'s turn", "-এর পয়েন্ট −৪": "'s points −4", "-এর পালা": "'s turn", "-এর বিস্ফোরণ আটকাল!": "'s blast!", "-এর হাত": "'s hand", "-এর হাতে চুরি করার কার্ড নেই": " has no cards to steal", "-এর ১টি কার্ড চুরি": "'s 1 card stolen", "-এর": "'s", "-কে দাও। অন্যরা চোখ সরিয়ে নাও! প্রস্তুত হলে নিচের বাটন চাপো।": ". Everyone else, look away! When ready, press the button below.", ": সময় শেষ — একটি কার্ড উঠল, দান গেল।": ": time's up — a card was drawn and the turn is lost.", "Ar (সহজ)": "Ar (easy)", "Ti (মাঝারি)": "Ti (medium)", "Fe (কঠিন)": "Fe (hard)", "Catalyst · অনুঘটক": "Catalyst", "DNA, ATP ও সারের জন্য অপরিহার্য।": "Essential for DNA, ATP and fertilisers.", "HCl ও NaOH দুটোই বানালে একবার +৫।": "Make both HCl and NaOH for a one-time +5.", "H₂SO₄ কোন যৌগের সংকেত?": "H₂SO₄ is the formula of which compound?", "MOLE! বলতে ভুলে গেছ — ২টি কার্ড তুলতে হলো।": "You forgot to call MOLE! — you draw 2 cards.", "Na⁺ আর Cl⁻ আয়ন আয়নিক বন্ধনে যুক্ত হয়ে খাদ্য লবণ গঠন করে।": "Na⁺ and Cl⁻ ions join by an ionic bond to form table salt.", "p-ব্লক ও নিষ্ক্রিয় গ্যাস": "p-block, noble gas", "p-ব্লক ও নিষ্ক্রিয়": "p-block, noble", "যোজনী": "Valence", "অক্সাইড": "Oxide", "অক্সিজেন": "Oxygen", "অতি অল্প পরিমাণে প্রয়োজনীয়; আলোয় এর পরিবাহিতা বদলায়।": "Needed in tiny amounts; its conductivity changes with light.", "অথবা একই": "or the same", "অধঃক্ষেপ": "Precipitate", "অধাতু ও হ্যালোজেন": "Nonmetal & halogen", "অধাতু": "Nonmetal", "অনুঘটক কী করে?": "What does a catalyst do?", "অনুঘটক: ২টি বাড়তি কার্ড": "Catalyst: 2 extra cards", "অনুঘটক": "Catalyst", "অন্তর্বর্তী ধাতু": "Transition metal", "অন্তহীন মোড": "Endless mode", "অন্তহীন": "Endless", "অভিনন্দন,": "Congratulations,", "অ্যানায়ন": "Anion", "অ্যামোনিয়ার সংকেত কোনটি?": "Which is the formula of ammonia?", "অ্যালুমিনিয়াম": "Aluminium", "অ্যাসিটিক অ্যাসিড": "Acetic acid", "অ্যাসিড বৃষ্টি তখনই খেলা যায় যখন হাতে সক্রিয় পরিবারের কোনো কার্ড নেই।": "Acid Rain can be played only when you hold no card of the active family.", "অ্যাসিড-ক্ষার কম্বো +৫": "Acid-base combo +5", "অ্যাসিড/ক্ষার নষ্ট": "Acid/base destroyed", "অ্যাসিডে নীল লিটমাস কাগজ কী রং ধারণ করে?": "What colour does blue litmus paper turn in acid?", "অ্যাসিড বৃষ্টি": "Acid Rain", "অ্যাসিড": "Acid", "অ্যাস্টাটিন": "Astatine", "আইসোটোপ": "Isotope", "আইসোবার": "Isobar", "আইসোমার": "Isomer", "আজকের লড়াইয়ে তুমি ছিলে অপ্রতিরোধ্য! এই জয় তোমার মেধা ও পরিশ্রমের পুরস্কার। এভাবেই এগিয়ে যাও — আকাশ ছোঁয়া সাফল্য তোমার অপেক্ষায়। শুভেচ্ছা অফুরান! ✨": "You were unstoppable in today's battle! This win is the reward of your talent and hard work. Keep going like this — sky-high success is waiting for you. Endless best wishes! ✨", "আটকাও": "to block", "আটকে গেল!": "got blocked!", "আটকে গেলে": "If stuck", "আতশবাজিতে টকটকে লাল রং দেয়।": "Gives fireworks a deep red colour.", "আধুনিক পর্যায় সারণি কিসের ক্রমবর্ধমান মান অনুযায়ী সাজানো?": "The modern periodic table is arranged by increasing what?", "আবিষ্কৃত": "discovered", "আয়নিক বন্ধন": "Ionic bond", "আয়রন (লোহা)": "Iron (Fe)", "আয়রন": "Iron", "আয়োডিন": "Iodine", "আর কোনো চাল বাকি নেই": "No moves left", "আর চাল নেই! রোবটদের খেলা শেষ হওয়া দেখো…": "No moves left! Watch the robots finish…", "আর্গন": "Argon", "ইলেকট্রন জোড় শেয়ার করে গঠিত বন্ধনকে কী বলে?": "A bond formed by sharing an electron pair is called?", "ইস্পাতকে শক্ত করে; পারম্যাঙ্গানেট আয়ন গাঢ় বেগুনি।": "Hardens steel; the permanganate ion is deep purple.", "ইস্পাতের মূল উপাদান; হিমোগ্লোবিনে অক্সিজেন বহন করে।": "Main component of steel; carries oxygen in haemoglobin.", "উত্তর না দিয়ে": "Without answering", "উদ্ভিদের জন্য অপরিহার্য; তাপসহ বোরোসিলিকেট কাচ তৈরি করে।": "Essential for plants; makes heat-resistant borosilicate glass.", "উপরের রেসিপিতে লাগা মৌলের কার্ড হাতে থাকলে রেসিপিতে ট্যাপ করো — পয়েন্ট পাবে।": "If you hold the element cards a recipe above needs, tap the recipe — you score points.", "উৎপাদের ভর কমিয়ে দেয়": "Reduces the mass of the product", "ঊর্ধ্বপাতন": "Sublimation", "এই দান মিস": "skips this turn", "এই রেসিপির জন্য কার্ড যথেষ্ট নয়।": "Not enough cards for this recipe.", "এইমাত্র তোলা কার্ডটিই খেলতে পারো, নয়তো রেখে দাও।": "You may play only the card you just drew, or keep it.", "এক মোলে প্রায় কতটি কণা থাকে?": "About how many particles are in one mole?", "একই ডিভাইসে পালা করে খেলবে; প্রতি দানের আগে হাতবদলের পর্দা আসবে।": "Take turns on the same device; a hand-over screen appears before every turn.", "একই দুটি মৌল ধাক্কা খেলে পরের মৌল হয় (H+H→He)।": "Two identical elements that collide become the next element (H+H→He).", "একই মৌলের ভিন্ন নিউট্রন সংখ্যার পরমাণুকে কী বলে?": "Atoms of the same element with different neutron numbers are called?", "একজন মানুষ খেললে +২/+৪ আসার সময় ১৫ সেকেন্ডে রসায়নের প্রশ্নের সঠিক উত্তর দিলে শাস্তি আটকে যায়।": "With one human, when a +2/+4 hits you, answer a chemistry question correctly within 15 seconds to block the penalty.", "একটি কার্ড তুলল।": "drew a card.", "একটি যোজনী ইলেকট্রন থাকে": "Has one valence electron", "একমাত্র অধাতু যা ঘরের তাপমাত্রায় তরল।": "The only nonmetal that is liquid at room temperature.", "একমাত্র ধাতু যা ঘরের তাপমাত্রায় তরল।": "The only metal that is liquid at room temperature.", "একাধিক মানুষ": "Several humans", "এখনো আবিষ্কার হয়নি": "Not discovered yet", "এখানে এসে তারার ভেতরের ফিউশন থেমে যায়, কারণ এরপর ফিউশনে আর শক্তি পাওয়া যায় না।": "Fusion inside stars stops here, because fusing further no longer releases energy.", "ওয়াইল্ড +৪; হাতে সক্রিয় পরিবারের কার্ড না থাকলেই খেলা যায়।": "Wild +4; playable only when you hold no card of the active family.", "ওয়াইল্ড — সক্রিয় পরিবার বেছে নাও।": "Wild — choose the active family.", "কখনো মরিচা ধরে না; কেবল অ্যাকুয়া রেজিয়ায় দ্রবীভূত হয়।": "Never rusts; dissolves only in aqua regia.", "কঠিন পদার্থ সরাসরি গ্যাসে পরিণত হওয়াকে কী বলে?": "A solid turning directly into gas is called?", "কঠিন": "Hard", "কপার (তামা)": "Copper (Cu)", "কম্বো": "Combo", "কাচ ও সিরামিককে গাঢ় নীল রং দেয়।": "Gives glass and ceramics a deep blue colour.", "কার্ড ফেলা হয়েছে। এবার দান শেষ করো।": "Card discarded. Now end your turn.", "কার্ডটি রেখে দাও": "Keep the card", "কার্ডটি রেখে দিল।": "kept the card.", "কার্বন ডাই-অক্সাইড": "Carbon dioxide", "কার্বনের কোন রূপ বিদ্যুৎ সুপরিবাহী?": "Which form of carbon conducts electricity well?", "কার্বনের যোজনী ইলেকট্রন সংখ্যা কত?": "How many valence electrons does carbon have?", "কার্বনের সাথে আরেকটি হিলিয়াম যুক্ত হয়ে অক্সিজেন হয়। বাতাসের প্রায় ২১%।": "Another helium joins carbon to make oxygen. About 21% of air.", "কার্বন": "Carbon", "কী দুর্দান্ত খেলা! তোমার বুদ্ধি, ধৈর্য আর কৌশলের কাছে সবাই হার মানল। রসায়নের মঞ্চে আজ তোমারই রাজত্ব — শুভকামনা রইল সামনের প্রতিটি জয়ের জন্য! 🎉": "What a game! Everyone bowed to your brains, patience and strategy. Today the chemistry stage is yours — best wishes for every win ahead! 🎉", "কীভাবে খেলবে": "How to play", "কুইক লাইমের সংকেত কোনটি?": "Which is the formula of quicklime?", "কোন গ্যাস চুনের পানিকে ঘোলা করে?": "Which gas turns limewater milky?", "কোন মৌলের তড়িৎঋণাত্মকতা সবচেয়ে বেশি?": "Which element has the highest electronegativity?", "কোনটি ট্রানজিশন ধাতু?": "Which is a transition metal?", "কোনটি দ্বি-পরমাণুক অণু হিসেবে থাকে?": "Which exists as a diatomic molecule?", "কোনটি নিষ্ক্রিয় গ্যাস?": "Which is a noble gas?", "কোনো মৌলের পারমাণবিক সংখ্যা কিসের সমান?": "An element's atomic number equals its?", "কোবাল্ট": "Cobalt", "ক্যাটায়ন": "Cation", "ক্যালসিয়াম অক্সাইড": "Calcium oxide", "ক্যালসিয়াম কার্বনেট": "Calcium carbonate", "ক্যালসিয়াম": "Calcium", "ক্রিপ্টন": "Krypton", "ক্রোমিয়াম": "Chromium", "ক্লোরিন": "Chlorine", "ক্ষার ও ক্ষারীয় মৃত্তিকা ধাতু": "Alkali & alkaline-earth metal", "ক্ষার ধাতুগুলো পর্যায় সারণির কোন গ্রুপে থাকে?": "In which group of the periodic table are the alkali metals?", "ক্ষার ধাতু": "Alkali metal", "ক্ষার": "Base", "খনিজ": "Mineral", "খাদ্য লবণের রাসায়নিক সংকেত কোনটি?": "Which is the chemical formula of table salt?", "খাদ্য লবণ": "Table salt", "খাবারের কৌটায় প্রলেপ দেয়; তামার সাথে মিশে ব্রোঞ্জ হয়।": "Coats food cans; alloyed with copper it makes bronze.", "খুব ভারী বলে": "Because it is very heavy", "খেলা শেষ।": "Game over.", "খেলা শেষ": "Game over", "খেলার দিক উল্টে যায়।": "The play direction reverses.", "খেলার দিক উল্টে যায়": "Reverses the play direction", "খেলার দিক →": "Direction →", "খেলার দিক": "Direction", "খেলার সেটিংস": "Game settings", "খেলোয়াড়": "Player", "খোলা রেসিপি": "Open recipes", "গলন": "Melting", "গাড়ির এক্সজস্ট কনভার্টারে অনুঘটক হিসেবে কাজ করে।": "Works as a catalyst in car exhaust converters.", "গাড়ির হেডল্যাম্প ও আয়ন ইঞ্জিনে ব্যবহৃত হয়।": "Used in car headlamps and ion engines.", "গেম হাবে ফিরে যাও": "Back to the game hub", "গেম হাব": "Game Hub", "গোল্ড (সোনা)": "Gold (Au)", "গ্যালিয়াম": "Gallium", "গ্যাস": "Gas", "গ্রাফাইট": "Graphite", "গ্রুপ ১৭": "Group 17", "গ্রুপ ১৮": "Group 18", "গ্রুপ ১": "Group 1", "গ্রুপ ২": "Group 2", "ঘন ও বিষাক্ত; একসময় পাইপ ও পেট্রোলে ব্যবহৃত হতো।": "Dense and toxic; once used in pipes and petrol.", "ঘনত্ব": "Density", "ঘনীভবন": "Condensation", "ঘরের তাপমাত্রায় কোন ধাতু তরল?": "Which metal is liquid at room temperature?", "চক": "Chalk", "চমৎকার বিদ্যুৎ পরিবাহী; বাতাসে সবুজ আস্তরণ পড়ে।": "An excellent conductor; forms a green coating in air.", "চালনা": "Controls", "চালাবে? লাল ঘেরা খেলোয়াড়কে ট্যাপ করো (বাতিল: কার্ডে আবার ট্যাপ)।": "Play it on whom? Tap a red-outlined player (cancel: tap the card again).", "চালু থাকলে সময় শেষে দান নিজে থেকে শেষ হবে।": "If on, your turn ends automatically when time runs out.", "চালু থাকলে সময় শেষে নিজে থেকে ১টি কার্ড উঠে দান শেষ হয়।": "If on, when time runs out a card is drawn and the turn ends automatically.", "চালু থাকলে সময় শেষে বেশি পয়েন্টধারী জেতে।": "If on, whoever has more points when time runs out wins.", "চুনাপাথর, মার্বেল ও ঝিনুকের খোলসের প্রধান উপাদান।": "Main component of limestone, marble and seashells.", "চুনাপাথর": "Limestone", "চুনের পানিকে ঘোলা করে। উদ্ভিদ সালোকসংশ্লেষণে এই গ্যাস ব্যবহার করে।": "Turns limewater milky. Plants use this gas in photosynthesis.", "চ্যাম্পিয়ন": "Champion", "ছিল। আবার চেষ্টা করলেই হারিয়ে দিতে পারবে!": "Try again and you can beat them!", "ছিল। কৌশল বদলে আবার চেষ্টা করলেই হারানো যাবে!": "Change your tactics and try again — you can win!", "জন (২–৫)": "players (2–5)", "জয় তোমারই,": "The win is yours,", "জিঙ্ক (দস্তা)": "Zinc (Zn)", "জিতেছে!": "wins!", "জেনন": "Xenon", "জৈব": "Organic", "জ্বলার সময় চোখ ধাঁধানো সাদা আলো দেয়। ক্লোরোফিলের কেন্দ্রে থাকে।": "Burns with a dazzling white light. Sits at the centre of chlorophyll.", "জ্বলার সময় চোখ ধাঁধানো সাদা আলো দেয়।": "Burns with a dazzling white light.", "টাইটানিয়াম": "Titanium", "টাইমার": "Timer", "টি করে কার্ড পেয়েছে। পরিবারের রং বা যোজনী মিলিয়ে খেলো।": " cards each. Match the family colour or valence to play.", "টি কার্ড; বেশি হলে ফেলতে হবে।": " cards; discard if you have more.", "টি কার্ড নষ্ট": " cards destroyed", "টি কার্ড নাও": " cards — take them", "টি কার্ড রাখা যায়! একটি কার্ড ফেলো।": " cards allowed! Discard one card.", "টি কার্ড": " cards", "টি বাকি": " left", "টিন (রাঙ)": "Tin (Sn)", "টিন": "Tin", "টেবিলের উপরের কার্ডের মতো একই": "The same as the top card on the table:", "টেবিল": "Table", "ট্রানজিশন ধাতু": "Transition metal", "ড. অ্যাটম": "Dr. Atom", "ডা. ক্যাটালিস্ট": "Dr. Catalyst", "ডাল্টন": "Dalton", "ডিভাইস হাতবদল": "Device hand-over", "ডিভাইসটি": "Pass the device to", "ডেক থেকে একটি কার্ড তোলো; মিললে খেলো, নয়তো রেখে দাও।": "Draw a card from the deck; play it if it matches, otherwise keep it.", "ডেক থেকে কার্ড তোলো": "Draw a card from the deck", "ডেক ·": "Deck ·", "তড়িৎ বিশ্লেষণ:": "Electrolysis:", "তড়িৎ বিশ্লেষণ": "Electrolysis", "তারার ফিউশন — সেটিংস": "Star Fusion — Settings", "তারার ভেতরের ফিউশন · রোবট রেস": "Fusion inside stars · Robot race", "তারার মতো মৌল জুড়ে রোবটদের হারাও": "Fuse elements like a star and beat the robots", "তিনটি হিলিয়াম মিলে কার্বন তৈরি হয় (ট্রিপল-আলফা প্রক্রিয়া)। প্রাণের ভিত্তি।": "Three heliums fuse into carbon (triple-alpha process). The basis of life.", "তীব্র অ্যাসিড। আমাদের পাকস্থলীতেও লঘু HCl থাকে এবং খাবার হজমে সাহায্য করে।": "A strong acid. Dilute HCl is in our stomach too and helps digest food.", "তীব্র ক্ষার, কস্টিক সোডা নামেও পরিচিত। সাবান তৈরিতে ব্যবহৃত হয়।": "A strong base, also known as caustic soda. Used to make soap.", "তীরচিহ্ন / W A S D / বোর্ডে সোয়াইপ।": "Arrow keys / W A S D / swipe on the board.", "তীরচিহ্ন বা সোয়াইপ দিয়ে একই মৌল মিলিয়ে পরের মৌল বানাও। রোবটরা নিজের বোর্ডে একই সময়ে খেলবে — কে আগে লক্ষ্যে পৌঁছায়?": "Use arrows or swipe to merge identical elements into the next one. The robots play on their own boards at the same time — who reaches the goal first?", "তুমি আগে": "You reached", "তুমি": "You", "তেজস্ক্রিয় ও অত্যন্ত দুর্লভ; কয়েক মিনিটেই ক্ষয় হয়ে যায়।": "Radioactive and extremely rare; decays within minutes.", "তেজস্ক্রিয় গ্যাস, যা মাটি ও পাথর থেকে বেরোয়।": "A radioactive gas that seeps out of soil and rock.", "তেজস্ক্রিয় ধাতু; কুরি দম্পতি এটি আবিষ্কার করেন।": "A radioactive metal; discovered by the Curies.", "তোমার দান! ১টি কার্ড উঠেছে। রেসিপির সাথে মিলিয়ে যৌগ বানাও বা অ্যাকশন কার্ড খেলো।": "Your turn! 1 card was drawn. Match recipes to craft compounds, or play an action card.", "তোমার দান": "Your turn", "তোমার প্রতিটি চালে ছিল প্রতিভার ছোঁয়া। এই বিজয় তোমার গর্বের — আমরাও গর্বিত! আরও একবার খেলে নিজের রেকর্ড ভাঙবে নাকি? অভিনন্দন চ্যাম্পিয়ন! 🔥": "Every move of yours had a touch of genius. This victory is yours to be proud of — and we are proud too! Want to play once more and break your own record? Congratulations, champion! 🔥", "তোমার হাত ·": "Your hand ·", "তোমার হাত": "Your hand", "থাইরয়েডের জন্য দরকার; ঊর্ধ্বপাতিত হয়ে বেগুনি বাষ্প দেয়।": "Needed for the thyroid; sublimes into purple vapour.", "দস্তার সাথে লঘু অ্যাসিডের বিক্রিয়ায় কোন গ্যাস পাওয়া যায়?": "Which gas is produced when zinc reacts with dilute acid?", "দহন ও শ্বাসক্রিয়ায় প্রয়োজন; বাতাসের প্রায় ২১%।": "Needed for combustion and respiration; about 21% of air.", "দুটি হাইড্রোজেন ও একটি অক্সিজেন পরমাণু সমযোজী বন্ধনে যুক্ত হয়ে পানি হয়। একে সার্বজনীন দ্রাবক বলা হয়।": "Two hydrogen atoms and one oxygen atom join by covalent bonds to make water. It is called the universal solvent.", "দ্বিতীয় হালকা মৌল; বেলুন ভরে ও MRI চুম্বক ঠান্ডা রাখে।": "The second-lightest element; fills balloons and cools MRI magnets.", "ধনাত্মক আধানযুক্ত আয়নকে কী বলে?": "A positively charged ion is called?", "ধাতব বন্ধন": "Metallic bond", "নতুন খেলা": "New game", "নতুন মৌল আবিষ্কার:": "New element discovered:", "নম্বরে।": ".", "নরম রূপালি ধাতু; বাতাসে নিজে থেকেই জ্বলে উঠতে পারে।": "A soft silvery metal; can ignite on its own in air.", "নষ্ট (−": "destroyed (−", "নাইট্রিক অ্যাসিড": "Nitric acid", "নাইট্রোজেন": "Nitrogen", "নামের অর্থ ‘গোপন’; ফ্ল্যাশ ল্যাম্পে ব্যবহৃত হয়।": "Its name means 'hidden'; used in flash lamps.", "নিউক্লিয়ন সংখ্যা": "Nucleon number", "নিউট্রন সংখ্যা": "Neutron number", "নিকেল": "Nickel", "নিখুঁত চাল, ঠান্ডা মাথা আর সেরা কৌশল — এটাই বিজয়ীর লক্ষণ! তুমি প্রমাণ করলে সত্যিকারের মাস্টার কাকে বলে। অনেক অনেক অভিনন্দন ও ভালোবাসা! 💛": "Perfect moves, a cool head and top strategy — the mark of a winner! You proved what a true master looks like. Heartfelt congratulations and lots of love! 💛", "নিজে ক্ষয় না হয়ে বিক্রিয়ার গতি বাড়ায়": "Speeds up the reaction without being used up", "নিয়ন": "Neon", "নিয়ম": "Rules", "নিরপেক্ষ": "Neutral", "নিষ্ক্রিয় গ্যাস সাধারণত বিক্রিয়া করে না কেন?": "Why do noble gases usually not react?", "নিষ্ক্রিয় গ্যাস": "Noble gas", "নিষ্ক্রিয়": "Noble", "পটাসিয়ামের প্রতীক কোনটি?": "Which is the symbol of potassium?", "পটাসিয়াম": "Potassium", "পয়েন্ট ছুঁয়ে ল্যাবের দখল নিয়েছ!": "points and took over the lab!", "পয়েন্টে তুমি": "By points you are #", "পয়েন্ট": " points", "পরিবার বা যোজনী": "family or valence", "পরিবার বেছে নাও; পরের জন ৪টি কার্ড তোলে": "Choose a family; the next player draws 4 cards", "পরিবারের রং": "family colour", "পরিবার": " family", "পরের খেলোয়াড়ের দান বাদ।": "The next player's turn is skipped.", "পরের খেলোয়াড়ের দান বাদ": "Skips the next player's turn", "পরের জন ২টি কার্ড তোলে ও দান হারায়।": "The next player draws 2 cards and loses their turn.", "পরের জন ২টি কার্ড তোলে": "The next player draws 2 cards", "পানির সাথে তীব্র বিক্রিয়া করে বলে কেরোসিনে ডুবিয়ে রাখা হয়।": "Reacts violently with water, so it is stored under kerosene.", "পানি": "Water", "পারমাণবিক ঘড়িতে ব্যবহৃত হয়, যা দিয়ে এক সেকেন্ডের সংজ্ঞা দেওয়া হয়।": "Used in atomic clocks, which define the second.", "পারমাণবিক ভর": "Atomic mass", "পারমাণবিক সংখ্যা": "Atomic number", "পিরিয়ডিক কার্ড ব্যাটল": "Periodic Card Battle", "পূর্বাবস্থা": "Undo", "পোড়াচুন বা কুইক লাইম নামেও পরিচিত। পানির সাথে মিশলে প্রচুর তাপ ছাড়ে।": "Also known as quicklime. Releases a lot of heat when mixed with water.", "প্রকৃতিতে পাওয়া সবচেয়ে দুর্লভ মৌল।": "The rarest element found in nature.", "প্রতি খেলায় ৩ বার চাল ফেরাতে পারবে।": "You can undo moves 3 times per game.", "প্রতি দানের শুরুতে ১টি কার্ড আপনি উঠবে। যতবার পারো যৌগ বানাও, অ্যাকশন খেলো, তারপর “দান শেষ”।": "At the start of each turn 1 card is drawn automatically. Craft as many compounds and play as many actions as you can, then press “End turn”.", "প্রতিপক্ষের অ্যাসিড/ক্ষার যৌগ নষ্ট, নইলে −৪ পয়েন্ট।": "Destroys an opponent's acid/base compound, otherwise −4 points.", "প্রতিপক্ষের ১টি কার্ড চুরি।": "Steals 1 card from an opponent.", "প্রতিপক্ষের ২ কার্ড নষ্ট": "Destroys 2 opponent cards", "প্রতিপক্ষের ২টি কার্ড নষ্ট; তার হাতে He (🛡) থাকলে সেটি শিল্ড হয়ে আটকায়।": "Destroys 2 of an opponent's cards; if they hold He (🛡) it works as a shield and blocks it.", "প্রতিপক্ষ": "Opponent", "প্রত্যেকে": "Everyone got", "প্রত্যেকের দানের আগে ডিভাইস হাতবদলের পর্দা আসে, যাতে অন্যের কার্ড দেখা না যায়।": "A hand-over screen appears before each turn so nobody sees another's cards.", "প্রফেসর মোল": "Professor Mole", "প্রশমন:": "Neutralisation:", "প্রশমন": "Neutralisation", "প্রায় ৩০ °C-এ হাতের তালুতেই গলে যায়।": "Melts in the palm of your hand at about 30 °C.", "প্রোটন + ইলেকট্রন": "Protons + electrons", "প্রোটন + নিউট্রন": "Protons + neutrons", "প্রোটন সংখ্যা": "Proton number", "প্ল্যাটিনাম": "Platinum", "ফসফরাস": "Phosphorus", "ফিউশন এখানেই থামল। চাইলে পূর্বাবস্থায় ফিরে আরেকবার চেষ্টা করো, নয়তো নতুন খেলা।": "Fusion stops here. Undo and try again, or start a new game.", "ফেলে দিলে": " discarded", "ফ্রান্সিয়াম": "Francium", "ফ্লুরিন": "Fluorine", "বড় তারার ভেতরে তৈরি হয়। বিজ্ঞাপনের সাইনে লালচে-কমলা আলো দেয়।": "Forged inside big stars. Gives a reddish-orange glow in advertising signs.", "বন্ধ করো": "Close", "বন্ধ": "Off", "বর্ণহীন": "Colourless", "বা যোজনী": "or valence", "বাইরের ব্যাকগ্রাউন্ডের রং বদলাও": "Change the outer background colour", "বাতাসে তৃতীয় সর্বাধিক গ্যাস; বাল্বে ভরা হয়।": "Third most abundant gas in air; fills light bulbs.", "বাতাসে তৃতীয় সর্বাধিক গ্যাস। বৈদ্যুতিক বাল্বে ভরা হয়।": "Third most abundant gas in air. Fills electric bulbs.", "বাতাসের প্রায় ৭৮% কোন গ্যাস?": "Which gas makes up about 78% of air?", "বাতাসের প্রায় ৭৮% নাইট্রোজেন।": "About 78% of air is nitrogen.", "বাতিল": "Cancel", "বানিয়ে ফেলেছে!": "built it first!", "বানিয়েছ +": "You crafted +", "বালু ও কম্পিউটার চিপের মূল উপাদান।": "Main component of sand and computer chips.", "বাষ্পীভবন": "Evaporation", "বাহ,": "Wow,", "বিজ্ঞাপনের সাইনে লালচে-কমলা আলো দেয়।": "Gives a reddish-orange glow in advertising signs.", "বিষাক্ত হলুদাভ-সবুজ গ্যাস; পানি জীবাণুমুক্ত করে।": "A toxic yellowish-green gas; disinfects water.", "বিস্ফোরণ:": "Blast:", "বিস্ফোরণ": "Blast", "বুঝেছি": "Got it", "বেকিং সোডার সংকেত কোনটি?": "Which is the formula of baking soda?", "বেরিয়াম মিল খেলে এক্স-রেতে পরিপাকতন্ত্র দেখা যায়।": "A barium meal makes the digestive tract visible on X-rays.", "বেরিয়াম": "Barium", "বেরিলিয়াম": "Beryllium", "বোরন": "Boron", "ব্রোমিন": "Bromine", "ভরসংখ্যা কিসের সমষ্টি?": "Mass number is the sum of what?", "ভরের নিত্যতা সূত্রের জন্য কে পরিচিত?": "Who is known for the law of conservation of mass?", "ভাবছে…": "is thinking…", "মহাবিশ্বের সবচেয়ে হালকা ও সবচেয়ে প্রাচুর্যপূর্ণ মৌল। তারার প্রধান জ্বালানি।": "The lightest and most abundant element in the universe. The main fuel of stars.", "মাঝারি": "Normal", "মানুষ খেলোয়াড় ১–৩ জন, বাকিরা রোবট। বিরতি ছাড়া যতবার খুশি খেলো — জিতলে বিশেষ শুভেচ্ছা পাবে!": "1–3 human players, the rest are robots. Play as many times as you like — win and get a special wish!", "মানুষের পাকস্থলীতে কোন অ্যাসিড থাকে?": "Which acid is found in the human stomach?", "মার্কারি (পারদ)": "Mercury (Hg)", "মাস্টার কেমিস্ট": "Master Chemist", "মিথেন": "Methane", "মুদ্রা ও রিচার্জেবল ব্যাটারিতে ব্যবহৃত হয়।": "Used in coins and rechargeable batteries.", "মূলক": "Radical", "মৃত্তিকা ধাতু": "Earth metal", "মেন্ডেলিভ": "Mendeleev", "মেরি কুরি": "Marie Curie", "মেলাও। না মিললে ডেক থেকে কার্ড তোলো।": "— match it, or draw from the deck.", "মেলানো": "Matching", "মোট খেলোয়াড়": "Total:", "ম্যাগনেসিয়ামের যোজনী কত?": "What is the valency of magnesium?", "ম্যাগনেসিয়াম": "Magnesium", "ম্যাঙ্গানিজ": "Manganese", "যে আগে পৌঁছাবে সে জিতবে। একা খেললে জিতেও খেলা চালিয়ে যেতে পারো।": "Whoever gets there first wins. Playing solo, you can keep playing even after winning.", "যোজনী ইলেকট্রন সংখ্যা": "Number of valence electrons", "যৌগ বানিয়ে সবার আগে লক্ষ্যে পৌঁছাও": "Craft compounds and reach the goal first", "যৌগ": "Compound", "যৌগের লড়াই · রোবটের সাথে": "Compound Clash · vs robots", "যৌগের লড়াই — সেটিংস": "Compound Clash — Settings", "রাদারফোর্ড": "Rutherford", "রুবিডিয়াম": "Rubidium", "রূপভেদ (এলোট্রোপ)": "Allotrope", "রেডন": "Radon", "রেডিয়াম": "Radium", "রেস": "Race", "রোবট কুরি": "Robot Curie", "রোবট নিউটন": "Robot Newton", "রোবট প্রতিপক্ষ": "Robot opponents", "রোবট বোর": "Robot Bohr", "রোবটদের সাথে রসায়নের ল্যাবে লড়াই! জিতলে বিশেষ শুভেচ্ছা, আর যতবার খুশি আবার খেলতে পারবে।": "Battle the robots in the chemistry lab! Win for a special wish, and play again as many times as you like.", "রোবটদের হারিয়ে সবার আগে": "Beat the robots and be first to make", "রোবটরা নিজের বোর্ডে একই সময়ে খেলে; যে আগে লক্ষ্য মৌল বানায় সে জেতে।": "The robots play on their own boards at the same time; whoever makes the target element first wins.", "রোবটের বুদ্ধি": "Robot skill:", "লক্ষ্য নেই — আটকে না যাওয়া পর্যন্ত খেলো।": "No goal — play until you get stuck.", "লক্ষ্য:": "Goal:", "লক্ষ্যের রেসে রোবট জিতেছে। তুমি তৈরি করেছ সর্বোচ্চ": "A robot won the race to the goal. The highest you made was", "লবণ": "Salt", "লাল": "Red", "লিথিয়াম": "Lithium", "লেড (সিসা)": "Lead (Pb)", "লেড": "Lead", "লোহায় গ্যালভানাইজিং করে মরিচা রোধ করে।": "Galvanises iron to stop rust.", "লোহায় মরিচা পড়তে অক্সিজেনের সাথে আর কী লাগে?": "Besides oxygen, what else does iron need to rust?", "ল্যাভয়সিয়ে": "Lavoisier", "শক্ত, হালকা ও মরিচা-প্রতিরোধী; শরীরের ইমপ্লান্টে ব্যবহৃত হয়।": "Strong, light and rust-resistant; used in body implants.", "শক্ত, হালকা ও মরিচা-প্রতিরোধী। শরীরের ইমপ্লান্টে ব্যবহৃত হয়।": "Strong, light and rust-resistant. Used in body implants.", "শব্দ চালু বা বন্ধ": "Sound on or off", "শব্দ চালু/বন্ধ": "Sound on/off", "শিখায় বেগুনি আভা দেয়; স্নায়ু সংকেত পরিবহনে গুরুত্বপূর্ণ।": "Gives a violet tint to flames; important for nerve signals.", "শিল্ড টেস্ট · +": "Shield test · +", "শিল্ড টেস্টে পাস": "passed the shield test", "শিল্ড টেস্ট": "Shield test", "শুধু ইলেকট্রন": "Electrons only", "শুধু তুমি; বাকিরা রোবট।": "Only you; the rest are robots.", "শুধু নিউট্রন": "Neutrons only", "শুধু বিক্রিয়া ধীর করে": "Only slows the reaction", "শেষ হবে সময়ে বা চাল ফুরোলে — যার পয়েন্ট বেশি সে জিতবে।": "Ends when time or moves run out — the one with more points wins.", "সক্রিয় ধাতু": "Reactive metal", "সক্রিয় পরিবার বেছে নাও": "Choose the active family", "সক্রিয় পরিবারের সাথে মেলে না।": "doesn't match the active family.", "সব ধাতুর মধ্যে সবচেয়ে ভালো বিদ্যুৎ পরিবাহী।": "The best electrical conductor of all metals.", "সবগুলো তরল বলে": "Because all are liquid", "সবচেয়ে তড়িৎঋণাত্মক মৌল; ফ্লুরাইড দাঁত রক্ষা করে।": "The most electronegative element; fluoride protects teeth.", "সবচেয়ে সরল হাইড্রোকার্বন। প্রাকৃতিক গ্যাসের প্রধান উপাদান।": "The simplest hydrocarbon. Main component of natural gas.", "সবচেয়ে হালকা ধাতু; রিচার্জেবল ব্যাটারিতে ব্যবহৃত হয়।": "The lightest metal; used in rechargeable batteries.", "সবচেয়ে হালকা মৌল এবং মহাবিশ্বে সবচেয়ে বেশি প্রাচুর্যপূর্ণ।": "The lightest element and the most abundant in the universe.", "সবচেয়ে হালকা মৌল কোনটি?": "Which is the lightest element?", "সবসময় সম্পূর্ণ ব্যবহৃত হয়ে যায়": "Is always fully consumed", "সবাই আটকে গেলেও পয়েন্টে তুমিই সেরা!": "Everyone is stuck, but you lead on points!", "সবার আগে তৈরি করো": "— be first to make it", "সবার আগে হাত খালি করে তুমি জিতেছ!": "You emptied your hand first and won!", "সবার আগে হাত খালি করেছে!": "emptied their hand first!", "সবার আগে হাতের সব কার্ড শেষ করো": "Be first to empty your hand", "সবুজ": "Green", "সময় শেষ!": "Time's up!", "সময় শেষে পয়েন্টে এগিয়ে থাকলে জয়।": "Win by leading on points when time runs out.", "সময় শেষে সবচেয়ে বেশি পয়েন্ট তোমার!": "You have the most points at time-up!", "সমযোজী বন্ধন": "Covalent bond", "সর্বশেষ শক্তিস্তর পূর্ণ থাকে": "Its outermost shell is full", "সর্বোচ্চ:": "Highest:", "সর্বোচ্চ": "Highest", "সহজ": "Easy", "সাম্যাবস্থা বদলে গেল — খেলার দিক উল্টে গেল।": "Equilibrium shifted — the direction reversed.", "সাম্যাবস্থা": "Equilibrium", "সালফার": "Sulphur", "সালফিউরাস অ্যাসিড": "Sulphurous acid", "সালফিউরিক অ্যাসিড": "Sulphuric acid", "সিঁড়ি": "Ladder", "সিজিয়াম": "Caesium", "সিলভার (রুপা)": "Silver (Ag)", "সিলিকন": "Silicon", "সূর্যের কেন্দ্রে হাইড্রোজেন ফিউশন হয়ে হিলিয়াম তৈরি হয়। এটি একটি নিষ্ক্রিয় গ্যাস।": "Hydrogen fuses into helium at the Sun's core. It is a noble gas.", "সেটিংসে রোবট প্রতিপক্ষ যোগ করে রেস দিতে পারো!": "Add robot opponents in Settings to race them!", "সেরা তুমিই,": "You are the best,", "সেলেনিয়াম": "Selenium", "সোডিয়াম হাইড্রক্সাইড": "Sodium hydroxide", "সোডিয়াম": "Sodium", "সোনার প্রতীক কোনটি?": "Which is the symbol of gold?", "স্টেইনলেস স্টিল ও ক্রোম প্লেটিংয়ের উজ্জ্বলতার কারণ।": "The reason stainless steel and chrome plating shine.", "স্ট্রনশিয়াম": "Strontium", "হলুদ কঠিন পদার্থ; সালফিউরিক অ্যাসিডের উৎস।": "A yellow solid; the source of sulphuric acid.", "হলুদ কঠিন পদার্থ। সালফিউরিক অ্যাসিডের উৎস।": "A yellow solid. The source of sulphuric acid.", "হলুদ": "Yellow", "হাইড্রোক্লোরিক অ্যাসিড": "Hydrochloric acid", "হাইড্রোজেন বন্ধন": "Hydrogen bond", "হাইড্রোজেন": "Hydrogen", "হাড় ও দাঁত গঠন করে; চুনাপাথরের প্রধান উপাদান।": "Builds bones and teeth; main component of limestone.", "হাড় ও দাঁত গঠন করে। চুনাপাথরের প্রধান উপাদান।": "Builds bones and teeth. Main component of limestone.", "হাতে সর্বোচ্চ": "You can hold at most", "হাতে ১টি কার্ড থাকলে ২ সেকেন্ডে MOLE! চাপো, নয়তো ২টি কার্ড তুলতে হবে।": "With 1 card left, press MOLE! within 2 seconds or draw 2 cards.", "হাতের সীমা": "Hand limit", "হাত": "Hand", "হালকা ও প্রচুর পাওয়া ধাতু; অক্সাইডের স্তর একে রক্ষা করে।": "A light, abundant metal; its oxide layer protects it.", "হালকা ও শক্ত ধাতু; এর ধুলা বিষাক্ত।": "A light, hard metal; its dust is toxic.", "হিলিয়াম": "Helium", "হীরা ও গ্রাফাইট দুটোই বিশুদ্ধ কার্বন।": "Diamond and graphite are both pure carbon.", "হীরা": "Diamond", "হ্যালোজেনের সর্বশেষ শক্তিস্তরে কতটি ইলেকট্রন থাকে?": "How many electrons are in a halogen's outermost shell?", "হ্যালোজেন": "Halogen", "০ (একা)": "0 (solo)", "২০ (ছোট)": "20 (short)", "৫০ (লম্বা)": "50 (long)", "১ জন": "1 player", "২ জন": "2 players", "৩ জন": "3 players", "১টি কার্ড চুরি": "1 card stolen", "২টি বাড়তি কার্ড।": "2 extra cards.", "২টি বাড়তি কার্ড": "2 extra cards", "সে.": " s", "মিনিট": " min", "— সক্রিয় পরিবার এখন": " — the active family is now", "— সবচেয়ে বেশি পয়েন্ট জেতে": " — most points wins", "↶ পূর্বাবস্থা (": "↶ Undo (", "∞ অন্তহীন": "∞ Endless", "⏰ সময় শেষ!": "⏰ Time's up!", "⏱ দানের টাইমার": "⏱ Turn timer", "⏱ সময়সীমা": "⏱ Time limit", "▶ আবার খেলো": "▶ Play again", "▶ খেলা শুরু": "▶ Start game", "▶ চলছে": "▶ Playing", "⚙ নতুন খেলা": "⚙ New game", "⚙ সেটিংস": "⚙ Settings", "⚡ অ্যাসিড-ক্ষার কম্বো! +৫ —": "⚡ Acid-base combo! +5 —", "⚡ তড়িৎ বিশ্লেষণ": "⚡ Electrolysis", "✔ আমি প্রস্তুত": "✔ I'm ready", "✔ দান শেষ": "✔ End turn", "✖ ফেলা বাতিল": "✖ Cancel discard", "⭐ পয়েন্ট": "⭐ Points", "🃏 ডেক বাকি": "🃏 Deck left", "🃏 ডেক": "🃏 Deck", "🃏 শুরুর কার্ড": "🃏 Starting cards", "🎯 কার ওপর": "🎯 On whom", "🎯 জিততে পয়েন্ট": "🎯 Points to win", "🎯 লক্ষ্য মৌল": "🎯 Target element", "🎯 লক্ষ্য": "🎯 Goal", "🏅 সেরা": "🏅 Best", "🏆 জয়ী": "🏆 Winner", "👤 তুমি": "👤 You", "👤 মানুষ খেলোয়াড়": "👤 Human players", "💀 আটকে গেছে": "💀 Stuck", "💥 বিস্ফোরণ": "💥 Blast", "💧 প্রশমন": "💧 Neutralise", "🗑 কার্ড ফেলো": "🗑 Discard a card", "🚀 একা খেলা চলছে।": "🚀 Playing solo.", "🛡 শিল্ড পাস": "🛡 Shield passes", "🤖 রোবট জিতেছে": "🤖 Robot won", "🤖 রোবট প্রতিপক্ষ": "🤖 Robot opponents", "🧠 রোবটের বুদ্ধি": "🧠 Robot skill", "🧪 অনুঘটক": "🧪 Catalyst", "🧪 যৌগ": "🧪 Compounds", "🧪 সর্বোচ্চ": "🧪 Highest", ", যোজনী": ", valence", "· যোজনী": "· valence", ") · যোজনী": ") · valence", "🌐 ভাষা": "🌐 Language", "বাংলা": "বাংলা", "১০ মিনিট": "10 min", "৩ মিনিট": "3 min", "৫ মিনিট": "5 min", "২০ সে.": "20 s", "৩০ সে.": "30 s", "৪০ সে.": "40 s", "৬০ সে.": "60 s", "৯০ সে.": "90 s", "২৫ °C তাপমাত্রায় নিরপেক্ষ দ্রবণের pH কত?": "What is the pH of a neutral solution at 25 °C?", "সময় শেষ — একটি কার্ড উঠল": "time's up — a card was drawn", "টি": ""};
+const BNL = 'ঀ-৥ৰ-৿', HAS_BN = /[ঀ-৿]/;
+const EN_RE = new RegExp('(?:' + Object.keys(EN_DICT).sort((a, b) => b.length - a.length).map(k => (new RegExp('^[' + BNL + ']').test(k) ? '(?<![' + BNL + '])' : '') + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?![' + BNL + '])', 'g');
+function trEn(s) {
+    if (!HAS_BN.test(s)) return s;
+    let o = s.replace(EN_RE, m => EN_DICT[m]);
+    o = o.replace(/[০-৯]/g, d => String(d.charCodeAt(0) - 0x09E6)).replace(/।/g, '.').replace(/ {2,}/g, ' ').replace(/ +([.,!?:;)])/g, '$1').replace(/You wins!/g, 'You win!').replace(/([^\s]) '(s )/g, "$1'$2");
+    return o;
+}
+const T_ORIG = new WeakMap(), T_OUT = new WeakMap(), ATTRS = ['title', 'aria-label', 'placeholder', 'alt'];
+function trNode(n) { if (LANG.v !== 'en' || T_OUT.get(n) === n.data) return; const o = trEn(n.data); if (o !== n.data) { T_ORIG.set(n, n.data); T_OUT.set(n, o); n.data = o; } }
+function trAttrs(el) {
+    if (LANG.v !== 'en' || !el.getAttribute) return;
+    ATTRS.forEach(a => { const v = el.getAttribute(a); if (v && HAS_BN.test(v)) { const o = trEn(v); if (o !== v) { (el.__to = el.__to || {})[a] = [v, o]; el.setAttribute(a, o); } } });
+}
+function trTree(root) {
+    if (root.nodeType === 3) { trNode(root); return; }
+    if (root.nodeType !== 1) return;
+    trAttrs(root);
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    let n; while ((n = w.nextNode())) { n.nodeType === 3 ? trNode(n) : trAttrs(n); }
+}
+function untr(root) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    let n; while ((n = w.nextNode())) {
+        if (n.nodeType === 3) { if (T_ORIG.has(n) && T_OUT.get(n) === n.data) { n.data = T_ORIG.get(n); T_OUT.delete(n); } }
+        else if (n.__to) { for (const a in n.__to) { if (n.getAttribute(a) === n.__to[a][1]) n.setAttribute(a, n.__to[a][0]); } n.__to = null; }
+    }
+}
+let langMO = null;
+function applyLang() {
+    document.documentElement.lang = LANG.v === 'en' ? 'en' : 'bn';
+    const lb = document.getElementById('langBtn'); if (lb) lb.textContent = LANG.v === 'en' ? 'বাং' : 'EN';
+    if (!document.body) return;
+    if (LANG.v === 'en') {
+        trTree(document.body);
+        if (!langMO) { langMO = new MutationObserver(ms => { if (LANG.v !== 'en') return; ms.forEach(m => { if (m.type === 'characterData') trNode(m.target); else if (m.type === 'attributes') trAttrs(m.target); else m.addedNodes.forEach(trTree); }); }); langMO.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS }); }
+        document.title = trEn(document.title);
+    } else { untr(document.body); }
+}
+function setLang(v) {
+    if (v === LANG.v) return; LANG.v = v; try { localStorage.setItem('prem-lang', v); } catch (e) {}
+    if (document.title.indexOf('|') > -1) { const t = document.title; document.title = v === 'en' ? trEn(t) : (window.__bnTitle || t); }
+    applyLang();
+    try { if (typeof render === 'function' && window.__t && window.__t.G) render(); } catch (e) {}
+}
+window.__bnTitle = document.title;
+document.addEventListener('DOMContentLoaded', () => { const lb = document.getElementById('langBtn'); if (lb) lb.addEventListener('click', () => setLang(LANG.v === 'en' ? 'bn' : 'en')); applyLang(); });
+applyLang();
 
-        <section class="coll" aria-label="আবিষ্কৃত মৌল">
-            <div class="collhead"><b>মৌলের সিঁড়ি</b><span id="found"></span></div>
-            <div class="ladder" id="ladder"></div>
-        </section>
-    </div>
-    <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
-
-    <div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
-    <div class="toast" id="toast" role="status"></div>
-
-    <script>
-    (function () {
-        'use strict';
-        var $ = function (s) { return document.querySelector(s); };
-        var bn = function (n) { return Number(n).toLocaleString('bn-BD', { useGrouping: false }); };
-
-        /* 🌓 বাটন শুধু বাইরের ব্যাকগ্রাউন্ডের রং বদলায়; মাঝের কালো অংশ একই থাকে */
-        $('#bgBtn').addEventListener('click', function () {
-            var root = document.documentElement;
-            var next = root.getAttribute('data-bg') === 'alt' ? 'dark' : 'alt';
-            if (next === 'alt') root.setAttribute('data-bg', 'alt'); else root.removeAttribute('data-bg');
-            try { localStorage.setItem('fusion-bg', next); } catch (e) {}
+const PREM = (function () {
+    const $ = s => document.querySelector(s);
+    const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+    const store = {
+        get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+        set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    };
+    function bg(key) {
+        const b = $('#bgBtn'); if (!b) return;
+        b.addEventListener('click', () => {
+            const root = document.documentElement, cur = root.getAttribute('data-bg');
+            const next = cur === '2' ? '3' : cur === '3' ? '1' : '2';
+            if (next === '1') root.removeAttribute('data-bg'); else root.setAttribute('data-bg', next);
+            try { localStorage.setItem(key + '-bg', next); } catch (e) {}
         });
+    }
+    /* কনফেত্তি */
+    let fxRaf = 0, parts = [];
+    function confetti(opts) {
+        opts = opts || {}; const cv = $('#fx'); if (!cv) return;
+        const ctx = cv.getContext('2d'); const dpr = Math.min(2, window.devicePixelRatio || 1);
+        cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const cols = ['#f6c453', '#ff9f43', '#ff6b6b', '#4ade9a', '#6aa8ff', '#c792ff', '#ffffff'];
+        const burst = (x, y, n) => { for (let i = 0; i < n; i++) { const a = Math.random() * 6.283, v = 4 + Math.random() * 9; parts.push({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 5, g: .22 + Math.random() * .12, w: 5 + Math.random() * 7, h: 3 + Math.random() * 5, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[(Math.random() * cols.length) | 0], life: 110 + Math.random() * 70 }); } };
+        const rounds = opts.rounds || 6; let k = 0;
+        const iv = setInterval(() => { burst(innerWidth * (.15 + Math.random() * .7), innerHeight * (.15 + Math.random() * .35), 70); if (++k >= rounds) clearInterval(iv); }, 330);
+        burst(innerWidth / 2, innerHeight * .4, 120);
+        cancelAnimationFrame(fxRaf);
+        (function tick() {
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            parts = parts.filter(p => p.life > 0);
+            parts.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += p.g; p.vx *= .985; p.r += p.vr; p.life--; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.min(1, p.life / 40); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); });
+            if (parts.length || k < rounds) fxRaf = requestAnimationFrame(tick); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+        })();
+    }
+    const WISH = [
+        n => ['🏆', 'অভিনন্দন, ' + n + '! তুমিই চ্যাম্পিয়ন!', 'কী দুর্দান্ত খেলা! তোমার বুদ্ধি, ধৈর্য আর কৌশলের কাছে সবাই হার মানল। রসায়নের মঞ্চে আজ তোমারই রাজত্ব — শুভকামনা রইল সামনের প্রতিটি জয়ের জন্য! 🎉'],
+        n => ['👑', 'জয় তোমারই, ' + n + '!', 'নিখুঁত চাল, ঠান্ডা মাথা আর সেরা কৌশল — এটাই বিজয়ীর লক্ষণ! তুমি প্রমাণ করলে সত্যিকারের মাস্টার কাকে বলে। অনেক অনেক অভিনন্দন ও ভালোবাসা! 💛'],
+        n => ['🥇', 'সেরা তুমিই, ' + n + '! 🎊', 'আজকের লড়াইয়ে তুমি ছিলে অপ্রতিরোধ্য! এই জয় তোমার মেধা ও পরিশ্রমের পুরস্কার। এভাবেই এগিয়ে যাও — আকাশ ছোঁয়া সাফল্য তোমার অপেক্ষায়। শুভেচ্ছা অফুরান! ✨'],
+        n => ['🌟', 'বাহ, ' + n + '! কী অসাধারণ জয়!', 'তোমার প্রতিটি চালে ছিল প্রতিভার ছোঁয়া। এই বিজয় তোমার গর্বের — আমরাও গর্বিত! আরও একবার খেলে নিজের রেকর্ড ভাঙবে নাকি? অভিনন্দন চ্যাম্পিয়ন! 🔥']
+    ];
+    let wishI = 0;
+    function wish(o) { /* o: {name, line, stats:[], onAgain, onSetup} */
+        const w = WISH[(wishI++ + (Math.random() * WISH.length | 0)) % WISH.length](o.name || 'চ্যাম্পিয়ন');
+        const sh = $('#sheet');
+        sh.innerHTML = '<div class="wish"><div class="tro">' + w[0] + '</div><h2>' + w[1] + '</h2><div class="big">' + w[2] + '</div>' + (o.line ? '<p style="margin:10px 0 0;color:#ffe9a8;font-weight:600">' + o.line + '</p>' : '') +
+            (o.stats ? '<div class="stat">' + o.stats.map(s => '<span class="pill">' + s[0] + ' <b>' + s[1] + '</b></span>').join('') + '</div>' : '') +
+            (o.rank ? '<div class="rank">' + o.rank.map(r => '<div class="' + (r[2] ? 'me' : '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>').join('') + '</div>' : '') +
+            '<div class="row"><button class="pbtn gold big" id="wAgain">▶ আবার খেলো</button><button class="pbtn" id="wSetup">⚙ সেটিংস</button><button class="pbtn" id="wClose">বন্ধ করো</button></div></div>';
+        $('#modal').hidden = false; confetti({ rounds: 8 });
+        $('#wAgain').onclick = () => { $('#modal').hidden = true; o.onAgain && o.onAgain(); };
+        $('#wSetup').onclick = () => { o.onSetup && o.onSetup(); };
+        $('#wClose').onclick = () => { $('#modal').hidden = true; };
+    }
+    /* সেটআপ শিট: groups:[{k,label,opts:[[v,label]],note?,def}] */
+    function setup(o) {
+        const cfg = Object.assign({}, o.saved || {}); cfg.lang = LANG.v;
+        o.groups = o.groups.filter(g => g.k !== 'lang'); o.groups.unshift({ k: 'lang', label: '🌐 ভাষা', opts: [['bn', 'বাংলা'], ['en', 'English']], def: LANG.v });
+        o.groups.forEach(g => { if (cfg[g.k] === undefined || !g.opts.some(p => p[0] === cfg[g.k])) cfg[g.k] = g.def; });
+        const sh = $('#sheet');
+        function draw() {
+            if (o.fix) o.fix(cfg);
+            sh.innerHTML = '<span class="mtag">' + (o.tag || 'নতুন খেলা') + '</span><h2>' + o.title + '</h2>' + (o.intro ? '<p>' + o.intro + '</p>' : '') +
+                o.groups.map(g => { const dis = g.disabled ? g.disabled(cfg) : []; return '<div class="grp"><label>' + g.label + '</label><div class="seg" data-g="' + g.k + '">' + g.opts.map(p => '<button type="button" data-v="' + p[0] + '" aria-pressed="' + (cfg[g.k] === p[0]) + '"' + (dis.indexOf(p[0]) >= 0 ? ' disabled' : '') + '>' + p[1] + '</button>').join('') + '</div>' + (g.note ? '<div class="note">' + (typeof g.note === 'function' ? g.note(cfg) : g.note) + '</div>' : '') + '</div>'; }).join('') +
+                '<div class="row"><button class="pbtn gold big" id="sGo">▶ খেলা শুরু</button>' + (o.cancel ? '<button class="pbtn" id="sCancel">বাতিল</button>' : '') + '</div>';
+            sh.querySelectorAll('.seg').forEach(sg => sg.querySelectorAll('button').forEach(b => b.onclick = () => { const g = o.groups.find(x => x.k === sg.dataset.g); cfg[g.k] = typeof g.opts[0][0] === 'number' ? +b.dataset.v : b.dataset.v; if (g.k === 'lang') setLang(cfg.lang); draw(); }));
+            $('#sGo').onclick = () => { $('#modal').hidden = true; o.onStart(cfg); };
+            if (o.cancel) $('#sCancel').onclick = () => { $('#modal').hidden = true; };
+        }
+        draw(); $('#modal').hidden = false;
+    }
+    /* কাউন্টডাউন */
+    function countdown(sec, onTick, onEnd) {
+        let left = sec, h = null, dead = false;
+        const api = { stop() { dead = true; clearInterval(h); }, get left() { return left; }, add(n) { left += n; }, pause: false };
+        onTick && onTick(left);
+        h = setInterval(() => { if (dead || api.pause) return; left--; onTick && onTick(left); if (left <= 0) { dead = true; clearInterval(h); onEnd && onEnd(); } }, 1000);
+        return api;
+    }
+    const mmss = s => bn(Math.floor(s / 60)) + ':' + (s % 60 < 10 ? '০' : '') + bn(s % 60);
+    function toast(t) { const e = $('#toast'); if (!e) return; e.textContent = t; e.classList.remove('on'); void e.offsetWidth; e.classList.add('on'); }
+    return { L, setLang, trEn, get lang() { return LANG.v; }, $, bn, store, bg, confetti, wish, setup, countdown, mmss, toast };
+})();
 
-        /* ---------- ডেটা: তারার ভেতরের ফিউশন সিঁড়ি ---------- */
         var FAM = ['সক্রিয় ধাতু', 'ট্রানজিশন ধাতু', 'অধাতু', 'p-ব্লক ও নিষ্ক্রিয় গ্যাস'];
         var FAMCOL = ['var(--f0)', 'var(--f1)', 'var(--f2)', 'var(--f3)'];
         var EL = [null,
@@ -241,256 +376,217 @@
             { z: 26, sym: 'Fe', en: 'Iron',      bn: 'আয়রন (লোহা)',  fam: 1, fact: 'এখানে এসে তারার ভেতরের ফিউশন থেমে যায়, কারণ এরপর ফিউশনে আর শক্তি পাওয়া যায় না।' }
         ];
         var MAXLV = EL.length - 1;
-        var MODES = { easy: { lv: 9, label: 'সহজ' }, normal: { lv: 11, label: 'মাঝারি' }, hard: { lv: 13, label: 'কঠিন' } };
 
-        /* ---------- অবস্থা ---------- */
-        var tilesEl = $('#tiles');
-        var G = null, nextId = 1;
-        var found = {}, best = 0, mode = 'normal';
-        try {
-            var arr = JSON.parse(localStorage.getItem('fusion-found') || '[]');
-            if (Array.isArray(arr)) arr.forEach(function (n) { if (n >= 1 && n <= MAXLV) found[n] = true; });
-            best = parseInt(localStorage.getItem('fusion-best'), 10) || 0;
-            var sm = localStorage.getItem('fusion-mode');
-            if (sm && MODES[sm]) mode = sm;
-        } catch (e) {}
+(function () {
+'use strict';
+const $ = PREM.$, bn = PREM.bn;
+const sfx = (function () { try { return NBSound('fusion'); } catch (e) { const n = () => {}; return { ok: n, bad: n, tap: n, pop: n, win: n, lose: n }; } })();
+PREM.bg('fusion');
+const BOTN = [['রোবট নিউটন', '🤖'], ['রোবট বোর', '🦾'], ['রোবট কুরি', '🧪']];
+const SK = { easy: { ms: 950, label: 'সহজ' }, normal: { ms: 640, label: 'মাঝারি' }, hard: { ms: 430, label: 'কঠিন' } };
+const GOALS = { ar: 9, ti: 11, fe: 13, none: 0 };
+let CFG = PREM.store.get('fusion-cfg', { bots: 2, skill: 'normal', goal: 'ti', timer: 0 });
+let found = {}, best = PREM.store.get('fusion-best', 0), G = null, nextId = 1, clock = null, botTimers = [];
+(PREM.store.get('fusion-found', []) || []).forEach(n => { if (n >= 1 && n <= MAXLV) found[n] = true; });
+const tilesEl = $('#tiles');
+$('#gridbg').innerHTML = '<i></i>'.repeat(16);
+const goalLv = () => GOALS[CFG.goal] || 0;
+function save() { PREM.store.set('fusion-found', Object.keys(found).map(Number)); PREM.store.set('fusion-best', best); }
 
-        function save() {
-            try {
-                localStorage.setItem('fusion-found', JSON.stringify(Object.keys(found).map(Number)));
-                localStorage.setItem('fusion-best', String(best));
-                localStorage.setItem('fusion-mode', mode);
-            } catch (e) {}
+/* ---------- সংখ্যা-ইঞ্জিন (রোবটের জন্য) ---------- */
+function lineIdx(dir, i) { const o = []; for (let k = 0; k < 4; k++) { if (dir === 3) o.push(i * 4 + k); else if (dir === 1) o.push(i * 4 + 3 - k); else if (dir === 0) o.push(k * 4 + i); else o.push((3 - k) * 4 + i); } return o; }
+function mergeNums(a) { const t = a.filter(x => x), out = []; let gain = 0; for (let i = 0; i < t.length; i++) { if (i + 1 < t.length && t[i] === t[i + 1] && t[i] < MAXLV) { out.push(t[i] + 1); gain += Math.pow(2, t[i] + 1); i++; } else out.push(t[i]); } while (out.length < 4) out.push(0); return { out: out, gain: gain }; }
+function simMove(b, dir) { const nb = b.slice(); let moved = false, gain = 0, mx = 0; for (let i = 0; i < 4; i++) { const idx = lineIdx(dir, i), r = mergeNums(idx.map(j => b[j])); gain += r.gain; idx.forEach((j, k) => { if (nb[j] !== r.out[k]) moved = true; nb[j] = r.out[k]; }); } return { b: nb, moved: moved, gain: gain }; }
+function heur(b) {
+    let empty = 0, mx = 0; b.forEach(v => { if (!v) empty++; if (v > mx) mx = v; });
+    let mono = 0, smooth = 0;
+    for (let i = 0; i < 4; i++) {
+        let l = 0, r = 0, u = 0, d = 0;
+        for (let k = 0; k < 3; k++) {
+            const a = b[i * 4 + k], c = b[i * 4 + k + 1]; if (a > c) l += a - c; else r += c - a; smooth += Math.abs(a - c);
+            const a2 = b[k * 4 + i], c2 = b[(k + 1) * 4 + i]; if (a2 > c2) u += a2 - c2; else d += c2 - a2; smooth += Math.abs(a2 - c2);
         }
-        function goalLv() { return MODES[mode].lv; }
-        function maxLv() { var m = 0; G.cells.forEach(function (t) { if (t && t.lv > m) m = t.lv; }); return m; }
-        function toast(t) { var e = $('#toast'); e.textContent = t; e.classList.remove('on'); void e.offsetWidth; e.classList.add('on'); }
+        mono += Math.min(l, r) + Math.min(u, d);
+    }
+    const corner = (b[0] === mx || b[3] === mx || b[12] === mx || b[15] === mx) ? 1.8 : 0;
+    return empty * 2.7 - mono * 1.0 - smooth * 0.12 + mx * 1.1 + corner;
+}
+function botMove(b, sk) {
+    const opts = []; for (let d = 0; d < 4; d++) { const r = simMove(b, d); if (r.moved) opts.push({ d: d, r: r }); }
+    if (!opts.length) return -1;
+    if (sk === 'easy' && Math.random() < 0.35) return opts[Math.floor(Math.random() * opts.length)].d;
+    let best = -1e9, bd = opts[0].d;
+    opts.forEach(o => {
+        let s = heur(o.r.b) + o.r.gain * 0.002;
+        if (sk === 'hard') {
+            const empt = []; o.r.b.forEach((v, i) => { if (!v) empt.push(i); });
+            const samp = empt.length > 6 ? empt.sort(() => Math.random() - .5).slice(0, 6) : empt; let tot = 0, w = 0;
+            samp.forEach(ci => [[1, .9], [2, .1]].forEach(p => { const nb = o.r.b.slice(); nb[ci] = p[0]; let bb = -1e9; for (let d2 = 0; d2 < 4; d2++) { const r2 = simMove(nb, d2); if (r2.moved) bb = Math.max(bb, heur(r2.b)); } if (bb < -1e8) bb = -50; tot += bb * p[1]; w += p[1]; }));
+            if (w) s = tot / w + o.r.gain * 0.002;
+        }
+        if (s > best) { best = s; bd = o.d; }
+    });
+    return bd;
+}
+const spawnLv = () => Math.random() < 0.9 ? 1 : 2;
+function emptyCells(b) { const e = []; b.forEach((v, i) => { if (!v) e.push(i); }); return e; }
+const canMoveNums = b => { for (let d = 0; d < 4; d++) if (simMove(b, d).moved) return true; return false; };
 
-        /* ---------- টাইল ---------- */
-        function place(t) { t.el.style.setProperty('--r', t.r); t.el.style.setProperty('--c', t.c); }
-        function makeTile(lv, r, c, anim) {
-            var e = EL[lv];
-            var el = document.createElement('div');
-            el.className = 'tile f' + e.fam + (lv >= 11 ? ' hi' : '');
-            el.dataset.lv = lv;
-            el.style.setProperty('--r', r);
-            el.style.setProperty('--c', c);
-            el.innerHTML = '<div class="face' + (anim ? ' ' + anim : '') + '"><span class="z">' + e.z + '</span><b class="sym">' + e.sym + '</b><span class="nm">' + e.en + '</span></div>';
-            tilesEl.appendChild(el);
-            return { id: nextId++, lv: lv, r: r, c: c, el: el };
-        }
-        function spawn() {
-            var empty = [];
-            for (var i = 0; i < 16; i++) if (!G.cells[i]) empty.push(i);
-            if (!empty.length) return;
-            var idx = empty[Math.floor(Math.random() * empty.length)];
-            var lv = Math.random() < 0.9 ? 1 : 2;
-            G.cells[idx] = makeTile(lv, Math.floor(idx / 4), idx % 4, 'pop');
-            if (lv === 2 && !found[2]) { found[2] = true; save(); renderLadder(); }
-        }
-
-        /* ---------- চালনা ---------- */
-        function snapshot() { return { lv: G.cells.map(function (t) { return t ? t.lv : 0; }), score: G.score }; }
-        function restore(s) {
-            tilesEl.innerHTML = '';
-            G.cells = s.lv.map(function (lv, i) { return lv ? makeTile(lv, Math.floor(i / 4), i % 4, '') : null; });
-            G.score = s.score;
-            G.over = false;
-        }
-        function move(dir) {
-            if (!G || G.over) return;
-            var before = snapshot();
-            var moved = false, gained = 0, newest = 0;
-            for (var i = 0; i < 4; i++) {
-                var pos = [];
-                for (var k = 0; k < 4; k++) {
-                    var r, c;
-                    if (dir === 3) { r = i; c = k; } else if (dir === 1) { r = i; c = 3 - k; } else if (dir === 0) { r = k; c = i; } else { r = 3 - k; c = i; }
-                    pos.push([r, c]);
-                }
-                var tiles = [];
-                pos.forEach(function (p) { var t = G.cells[p[0] * 4 + p[1]]; if (t) tiles.push(t); });
-                var placed = [];
-                for (var t = 0; t < tiles.length; t++) {
-                    var a = tiles[t], b = tiles[t + 1];
-                    if (b && a.lv === b.lv && a.lv < MAXLV) { placed.push({ merge: [a, b] }); t++; }
-                    else placed.push({ tile: a });
-                }
-                pos.forEach(function (p) { G.cells[p[0] * 4 + p[1]] = null; });
-                placed.forEach(function (item, idx) {
-                    var rr = pos[idx][0], cc = pos[idx][1];
-                    if (item.tile) {
-                        var tt = item.tile;
-                        if (tt.r !== rr || tt.c !== cc) { moved = true; tt.r = rr; tt.c = cc; place(tt); }
-                        G.cells[rr * 4 + cc] = tt;
-                    } else {
-                        moved = true;
-                        var a2 = item.merge[0], b2 = item.merge[1];
-                        [a2, b2].forEach(function (x) { x.r = rr; x.c = cc; place(x); });
-                        var nt = makeTile(a2.lv + 1, rr, cc, 'merge');
-                        G.cells[rr * 4 + cc] = nt;
-                        gained += Math.pow(2, nt.lv);
-                        if (nt.lv > newest) newest = nt.lv;
-                        setTimeout(function () { a2.el.remove(); b2.el.remove(); }, 150);
-                    }
-                });
-            }
-            if (!moved) return;
-            G.hist.push(before);
-            if (G.hist.length > 10) G.hist.shift();
-            G.score += gained;
-            if (G.score > best) { best = G.score; save(); }
-            spawn();
-            if (newest) discover(newest);
-            updateHUD();
-            checkEnd();
-        }
-        function canMove() {
-            for (var i = 0; i < 16; i++) {
-                var t = G.cells[i];
-                if (!t) return true;
-                var r = Math.floor(i / 4), c = i % 4;
-                if (c < 3 && G.cells[i + 1] && G.cells[i + 1].lv === t.lv && t.lv < MAXLV) return true;
-                if (r < 3 && G.cells[i + 4] && G.cells[i + 4].lv === t.lv && t.lv < MAXLV) return true;
-            }
-            return false;
-        }
-        function checkEnd() {
-            if (!G.won && maxLv() >= goalLv()) { G.won = true; showWin(); return; }
-            if (!canMove()) { G.over = true; showOver(); }
-        }
-        function undo() {
-            if (!G || !G.hist.length || G.undos <= 0) return;
-            closeModal();
-            restore(G.hist.pop());
-            G.undos--;
-            updateHUD();
-        }
-
-        /* ---------- দেখানো ---------- */
-        function discover(lv) {
-            showEl(lv);
-            if (!found[lv]) {
-                found[lv] = true; save(); renderLadder();
-                toast('নতুন মৌল আবিষ্কার: ' + EL[lv].sym + ' · ' + EL[lv].bn);
-            }
-        }
-        function showEl(lv) {
-            var e = EL[lv], p = EL[lv - 1];
-            var eq = lv > 1 ? '<span class="eq">' + p.sym + ' + ' + p.sym + ' → ' + e.sym + '</span>' : '<span class="eq">সব মৌলের শুরু</span>';
-            $('#lab').innerHTML = '<span class="lsym" style="color:' + FAMCOL[e.fam] + '">' + e.sym + '</span><div><b>' + e.bn + '</b><span class="meta">' + e.en + ' · Z ' + e.z + ' · ' + FAM[e.fam] + '</span>' + eq + '<p>' + e.fact + '</p></div>';
-        }
-        function renderLadder() {
-            var n = 0, html = '';
-            for (var lv = 1; lv <= MAXLV; lv++) {
-                var e = EL[lv], has = !!found[lv];
-                if (has) n++;
-                html += '<span class="step ' + (has ? 'f' + e.fam : 'q') + (lv === goalLv() ? ' goal-step' : '') + '" title="' + (has ? e.bn + ' (' + e.en + ')' : 'এখনো আবিষ্কার হয়নি') + '">' + (has ? e.sym : '?') + '</span>';
-            }
-            $('#ladder').innerHTML = html;
-            $('#found').textContent = bn(n) + '/' + bn(MAXLV) + ' আবিষ্কৃত';
-        }
-        function updateHUD() {
-            $('#score').textContent = bn(G.score);
-            $('#best').textContent = bn(best);
-            var g = EL[goalLv()];
-            $('#goalSym').textContent = g.sym;
-            $('#goalName').textContent = g.bn;
-            $('#prog').style.width = Math.min(100, Math.round(maxLv() / goalLv() * 100)) + '%';
-            var u = $('#btnUndo');
-            u.textContent = '↶ পূর্বাবস্থা (' + bn(G.undos) + ')';
-            u.disabled = !(G.hist.length && G.undos > 0);
-            document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === mode)); });
-            renderLadder();
-        }
-
-        /* ---------- মডাল ---------- */
-        function openModal(html) { $('#sheet').innerHTML = html; $('#modal').hidden = false; }
-        function closeModal() { $('#modal').hidden = true; $('#sheet').innerHTML = ''; }
-        function showWin() {
-            var e = EL[goalLv()];
-            openModal('<span class="mtag">🎉 লক্ষ্য পূর্ণ!</span><div class="bigsym" style="background:linear-gradient(155deg,' + FAMCOL[e.fam] + ',#0b1118);--glow:' + FAMCOL[e.fam] + '">' + e.sym + '</div>' +
-                '<h2>তুমি ' + e.bn + ' (' + e.sym + ') তৈরি করেছ!</h2><p>' + e.fact + '</p>' +
-                '<div class="row"><button class="btn" id="cont">খেলা চালিয়ে যাও</button><button class="btn primary" id="again">নতুন খেলা</button></div>');
-            $('#cont').onclick = function () { closeModal(); checkEnd(); };
-            $('#again').onclick = newGame;
-        }
-        function showOver() {
-            var e = EL[maxLv()];
-            openModal('<span class="mtag">ফিউশন থেমে গেছে</span><h2>আর কোনো চাল বাকি নেই</h2>' +
-                '<div class="score"><div><span>পয়েন্ট</span><span>' + bn(G.score) + '</span></div><div><span>সেরা পয়েন্ট</span><span>' + bn(best) + '</span></div><div><span>সবচেয়ে ভারী মৌল</span><span>' + e.sym + ' · ' + e.bn + '</span></div></div>' +
-                '<div class="row">' + (G.undos > 0 && G.hist.length ? '<button class="btn" id="undoBtn">↶ পূর্বাবস্থা (' + bn(G.undos) + ')</button>' : '') + '<button class="btn primary" id="again">আবার খেলো</button></div>');
-            if ($('#undoBtn')) $('#undoBtn').onclick = undo;
-            $('#again').onclick = newGame;
-        }
-        function rulesModal() {
-            openModal('<span class="mtag">কীভাবে খেলবে</span><h2>তারার মতো মৌল জুড়ে লক্ষ্যে পৌঁছাও</h2>' +
-                '<ul class="rules">' +
-                '<li><b>চালনা</b><span>কীবোর্ডের তীর চিহ্ন বা W A S D চাপো। ফোনে বোর্ডে সোয়াইপ করো।</span></li>' +
-                '<li><b>মেলানো</b><span>একই দুটি মৌল ধাক্কা খেলে মিলে পরের ধাপের মৌল হয়। যেমন H + H → He।</span></li>' +
-                '<li><b>সিঁড়ি</b><span>H → He → C → O → Ne → Mg → Si → S → Ar → Ca → Ti → Cr → Fe</span></li>' +
-                '<li><b>বিজ্ঞান</b><span>তারার ভেতরে হাইড্রোজেন থেকে হিলিয়াম হয়, তারপর হিলিয়াম যুক্ত হতে হতে ভারী মৌল তৈরি হয়। খেলার সুবিধার জন্য ধাপগুলো সরল করা হয়েছে।</span></li>' +
-                '<li><b>লোহা (Fe)</b><span>এরপর ফিউশনে আর শক্তি পাওয়া যায় না, তাই Fe আর অন্য Fe-র সাথে মেলে না।</span></li>' +
-                '<li><b>লক্ষ্য</b><span>সহজ: Ar, মাঝারি: Ti, কঠিন: Fe। খেলার মাঝেও কঠিনতা বদলাতে পারো।</span></li>' +
-                '<li><b>পূর্বাবস্থা</b><span>প্রতি খেলায় ৩ বার শেষ চাল ফেরাতে পারবে।</span></li>' +
-                '</ul><div class="row"><button class="btn primary" id="rClose">বুঝেছি</button></div>');
-            $('#rClose').onclick = closeModal;
-        }
-
-        /* ---------- নতুন খেলা ---------- */
-        function newGame() {
-            closeModal();
-            tilesEl.innerHTML = '';
-            G = { cells: new Array(16).fill(null), score: 0, hist: [], undos: 3, won: false, over: false };
-            spawn(); spawn();
-            found[1] = true; save();
-            showEl(1);
-            updateHUD();
-        }
-
-        /* ---------- ইনপুট ---------- */
-        var KEYS = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3, W: 0, D: 1, S: 2, A: 3 };
-        document.addEventListener('keydown', function (e) {
-            if (!$('#modal').hidden) return;
-            if (e.ctrlKey || e.metaKey || e.altKey) return;
-            if (Object.prototype.hasOwnProperty.call(KEYS, e.key)) { e.preventDefault(); move(KEYS[e.key]); }
+/* ---------- মানুষের বোর্ড (টাইল-অবজেক্ট) ---------- */
+function place(t) { t.el.style.setProperty('--r', t.r); t.el.style.setProperty('--c', t.c); }
+function makeTile(lv, r, c, anim, hasPw) {
+    const e = EL[lv], el = document.createElement('div');
+    el.className = 'tile f' + e.fam + (lv >= 11 ? ' hi' : ''); el.style.setProperty('--r', r); el.style.setProperty('--c', c);
+    el.innerHTML = '<div class="face' + (anim ? ' ' + anim : '') + '"><span class="z">' + e.z + '</span><b class="sym">' + e.sym + '</b><span class="nm">' + e.en + '</span>' + (hasPw ? '<span class="pw">' + Math.pow(2, lv) + '</span>' : '') + '</div>';
+    tilesEl.appendChild(el); return { id: nextId++, lv: lv, r: r, c: c, el: el };
+}
+function spawnH() {
+    const empty = []; for (let i = 0; i < 16; i++) if (!G.cells[i]) empty.push(i); if (!empty.length) return;
+    const idx = empty[Math.floor(Math.random() * empty.length)], lv = spawnLv();
+    G.cells[idx] = makeTile(lv, Math.floor(idx / 4), idx % 4, 'pop', false);
+    if (lv === 2 && !found[2]) { found[2] = true; save(); renderLadder(); }
+}
+const numsOf = () => G.cells.map(t => t ? t.lv : 0);
+function maxLvH() { let m = 0; G.cells.forEach(t => { if (t && t.lv > m) m = t.lv; }); return m; }
+function snapshot() { return { lv: numsOf(), score: G.score }; }
+function restore(s) { tilesEl.innerHTML = ''; G.cells = s.lv.map((lv, i) => lv ? makeTile(lv, Math.floor(i / 4), i % 4, '', false) : null); G.score = s.score; G.stuck = false; }
+function move(dir) {
+    if (!G || G.over || G.stuck || !$('#modal').hidden) return;
+    const before = snapshot(); let moved = false, gained = 0, newest = 0;
+    for (let i = 0; i < 4; i++) {
+        const idx = lineIdx(dir, i), tiles = []; idx.forEach(j => { const t = G.cells[j]; if (t) tiles.push(t); });
+        const placed = []; for (let t = 0; t < tiles.length; t++) { const a = tiles[t], b = tiles[t + 1]; if (b && a.lv === b.lv && a.lv < MAXLV) { placed.push({ merge: [a, b] }); t++; } else placed.push({ tile: a }); }
+        idx.forEach(j => { G.cells[j] = null; });
+        placed.forEach((item, k) => {
+            const j = idx[k], rr = Math.floor(j / 4), cc = j % 4;
+            if (item.tile) { const tt = item.tile; if (tt.r !== rr || tt.c !== cc) { moved = true; tt.r = rr; tt.c = cc; place(tt); } G.cells[j] = tt; }
+            else { moved = true; const a2 = item.merge[0], b2 = item.merge[1]; [a2, b2].forEach(x => { x.r = rr; x.c = cc; place(x); }); const nt = makeTile(a2.lv + 1, rr, cc, 'merge', true); G.cells[j] = nt; gained += Math.pow(2, nt.lv); if (nt.lv > newest) newest = nt.lv; setTimeout(() => { a2.el.remove(); b2.el.remove(); }, 140); }
         });
-        var sx = 0, sy = 0, sid = null, board = $('#board');
-        board.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; sid = e.pointerId; });
-        window.addEventListener('pointerup', function (e) {
-            if (sid === null) return;
-            sid = null;
-            if (!$('#modal').hidden) return;
-            var dx = e.clientX - sx, dy = e.clientY - sy;
-            if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
-            if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 1 : 3); else move(dy > 0 ? 2 : 0);
-        });
-        window.addEventListener('pointercancel', function () { sid = null; });
+    }
+    if (!moved) return;
+    G.hist.push(before); if (G.hist.length > 10) G.hist.shift();
+    G.score += gained; if (G.score > best) { best = G.score; save(); }
+    const isNew = newest && !found[newest];
+    spawnH(); if (newest) discover(newest);
+    if (gained) { if (isNew) sfx.ok(); else sfx.pop(); } else sfx.tap();
+    G.maxlv = Math.max(G.maxlv, maxLvH());
+    updateHUD(); checkHuman();
+}
+function checkHuman() {
+    const g = goalLv();
+    if (g && G.maxlv >= g && !G.won) { G.won = true; finish(0, 'goal'); return; }
+    if (!canMoveNums(numsOf())) { G.stuck = true; updateHUD(); if (G.bots.every(b => b.dead) || CFG.bots === 0) finish(null, 'stuck'); else { PREM.toast('আর চাল নেই! রোবটদের খেলা শেষ হওয়া দেখো…'); } }
+}
+function undo() { if (!G || G.over || !G.hist.length || G.undos <= 0) return; restore(G.hist.pop()); G.undos--; updateHUD(); }
 
-        document.querySelectorAll('.seg button').forEach(function (b) {
-            b.addEventListener('click', function () {
-                mode = b.dataset.mode; save();
-                var reached = maxLv() >= goalLv();
-                if (reached && !G.won) { G.won = true; updateHUD(); showWin(); return; }
-                if (!reached) G.won = false;
-                updateHUD();
-            });
-        });
-        $('#btnUndo').addEventListener('click', undo);
-        $('#btnRules').addEventListener('click', rulesModal);
-        var newTimer = null;
-        $('#btnNew').addEventListener('click', function () {
-            var b = $('#btnNew');
-            if (G.score === 0 || G.over || newTimer) {
-                if (newTimer) { clearTimeout(newTimer); newTimer = null; b.textContent = 'নতুন খেলা'; }
-                newGame(); return;
-            }
-            b.textContent = 'নিশ্চিত? আবার চাপো';
-            newTimer = setTimeout(function () { newTimer = null; b.textContent = 'নতুন খেলা'; }, 2500);
-        });
+/* ---------- রোবট ---------- */
+function startBots() {
+    botTimers.forEach(clearInterval); botTimers = [];
+    G.bots.forEach((B, bi) => {
+        const t = setInterval(() => {
+            if (!G || G.over || B.dead) return;
+            const d = botMove(B.b, CFG.skill);
+            if (d < 0) { B.dead = true; renderBots(); checkAllDone(); return; }
+            const r = simMove(B.b, d); B.b = r.b; B.score += r.gain;
+            const e = emptyCells(B.b); if (e.length) B.b[e[Math.floor(Math.random() * e.length)]] = spawnLv();
+            B.max = Math.max(B.max, Math.max.apply(null, B.b));
+            renderBots();
+            const g = goalLv(); if (g && B.max >= g && !G.over) finish(bi + 1, 'goal');
+            if (!canMoveNums(B.b)) { B.dead = true; renderBots(); checkAllDone(); }
+        }, SK[CFG.skill].ms * (0.85 + Math.random() * 0.3));
+        botTimers.push(t);
+    });
+}
+function checkAllDone() { if (G && !G.over && G.stuck && G.bots.every(b => b.dead)) finish(null, 'stuck'); }
+function renderBots() {
+    const el = $('#bots'); if (!G) return;
+    if (!G.bots.length) { el.innerHTML = '<div class="nobots">🚀 একা খেলা চলছে।<br>সেটিংসে রোবট প্রতিপক্ষ যোগ করে রেস দিতে পারো!</div>'; return; }
+    const top = Math.max.apply(null, G.bots.map(b => b.score).concat([G.score]));
+    el.innerHTML = G.bots.map(B => '<div class="rb' + (B.dead ? ' dead' : '') + (B.score === top && B.score > 0 ? ' lead' : '') + '"><h4><span>' + B.ico + ' ' + B.name + '</span><b>' + bn(B.score) + '</b></h4><div class="mb">' + B.b.map(v => v ? '<i class="f' + EL[v].fam + '">' + EL[v].sym + '</i>' : '<i></i>').join('') + '</div><small>' + (B.dead ? '💀 আটকে গেছে' : 'সর্বোচ্চ: ' + EL[B.max].sym) + '</small></div>').join('');
+}
 
-        newGame();
-    })();
-    </script>
+/* ---------- শেষ ও জয় ---------- */
+function stopAll() { botTimers.forEach(clearInterval); botTimers = []; if (clock) { clock.stop(); clock = null; } $('#pTimer').hidden = true; }
+function ranking() {
+    const arr = [{ n: 'তুমি', s: G.score, me: true }].concat(G.bots.map(b => ({ n: b.ico + ' ' + b.name, s: b.score })));
+    arr.sort((a, b) => b.s - a.s); return arr;
+}
+function finish(who, why) {
+    if (G.over) return; G.over = true; stopAll(); updateHUD();
+    const rk = ranking(), meFirst = rk[0].me;
+    const rows = rk.map((r, i) => [(i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : '🥉 ') + r.n, bn(r.s) + ' পয়েন্ট', !!r.me]);
+    const g = goalLv(), e = g ? EL[g] : null;
+    let win = false, line = '';
+    if (why === 'goal') { win = who === 0; line = win ? (CFG.bots ? L('রোবটদের হারিয়ে সবার আগে ' + e.bn + ' (' + e.sym + ') তৈরি করেছ!', 'You beat the robots and built ' + e.bn + ' (' + e.sym + ') first!') : L(e.bn + ' (' + e.sym + ') তৈরি করেছ!', 'You built ' + e.bn + ' (' + e.sym + ')!')) : ''; if (win && e) line += ' ' + e.fact; }
+    else win = meFirst && CFG.bots > 0 ? true : (CFG.bots === 0 && false);
+    if (why === 'time') { win = meFirst; line = 'সময় শেষে সবচেয়ে বেশি পয়েন্ট তোমার!'; }
+    if (why === 'stuck' && CFG.bots > 0) { win = meFirst; line = meFirst ? 'সবাই আটকে গেলেও পয়েন্টে তুমিই সেরা!' : ''; }
+    if (win) { sfx.win(); PREM.wish({ name: 'চ্যাম্পিয়ন', line: line, stats: [['⭐ পয়েন্ট', bn(G.score)], ['🧪 সর্বোচ্চ', EL[G.maxlv].sym]], rank: CFG.bots ? rows : null, onAgain: newGame, onSetup: () => openSetup(false) }); return; }
+    sfx.lose();
+    let title = why === 'goal' ? L(G.bots[who - 1].name + ' আগে ' + e.sym + ' বানিয়ে ফেলেছে!', G.bots[who - 1].name + ' built ' + e.sym + ' first!') : why === 'time' ? 'সময় শেষ!' : 'আর কোনো চাল বাকি নেই';
+    const sub = why === 'goal' ? 'লক্ষ্যের রেসে রোবট জিতেছে। তুমি তৈরি করেছ সর্বোচ্চ ' + EL[G.maxlv].sym + '।' : (CFG.bots ? 'পয়েন্টে তুমি ' + bn(rk.findIndex(r => r.me) + 1) + ' নম্বরে।' : 'ফিউশন এখানেই থামল। চাইলে পূর্বাবস্থায় ফিরে আরেকবার চেষ্টা করো, নয়তো নতুন খেলা।');
+    $('#sheet').innerHTML = '<span class="mtag">' + (why === 'goal' ? '🤖 রোবট জিতেছে' : 'খেলা শেষ') + '</span><h2>' + title + '</h2><p>' + sub + '</p><div class="rank">' + rows.map(r => '<div class="' + (r[2] ? 'me' : '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>').join('') + '</div><div class="row">' + (why === 'stuck' && G.undos > 0 && G.hist.length ? '<button class="pbtn" id="undoB">↶ পূর্বাবস্থা (' + bn(G.undos) + ')</button>' : '') + '<button class="pbtn gold big" id="again">▶ আবার খেলো</button><button class="pbtn" id="setupB">⚙ সেটিংস</button></div>';
+    $('#modal').hidden = false; $('#again').onclick = newGame; $('#setupB').onclick = () => openSetup(false);
+    if ($('#undoB')) $('#undoB').onclick = () => { $('#modal').hidden = true; G.over = false; undo(); startBots(); startClock(); };
+}
+
+/* ---------- HUD ---------- */
+function discover(lv) { showEl(lv); if (!found[lv]) { found[lv] = true; save(); renderLadder(); PREM.toast('নতুন মৌল আবিষ্কার: ' + EL[lv].sym + ' · ' + EL[lv].bn); } }
+function showEl(lv) {
+    const e = EL[lv], p = EL[lv - 1];
+    $('#lab').innerHTML = '<span class="lsym" style="background:' + FAMCOL[e.fam] + '">' + e.sym + '</span><div><b>' + e.bn + '</b><span class="meta">' + e.en + ' · Z ' + e.z + ' · ' + FAM[e.fam] + '</span>' + (lv > 1 ? '<span class="eq">' + p.sym + ' + ' + p.sym + ' → ' + e.sym + '</span>' : '') + '<span>' + e.fact + '</span></div>';
+}
+function renderLadder() {
+    let n = 0, h = ''; for (let lv = 1; lv <= MAXLV; lv++) { const e = EL[lv], has = !!found[lv]; if (has) n++; h += '<span class="step ' + (has ? 'f' + e.fam : 'q') + (lv === goalLv() ? ' goal-step' : '') + '" title="' + (has ? e.bn : 'এখনো আবিষ্কার হয়নি') + '">' + (has ? e.sym : '?') + '</span>'; }
+    $('#ladder').innerHTML = h; $('#found').textContent = bn(n) + '/' + bn(MAXLV) + ' আবিষ্কৃত';
+}
+function updateHUD() {
+    $('#score').textContent = bn(G.score); $('#best').textContent = bn(best);
+    const g = goalLv(); $('#goalSym').textContent = g ? EL[g].sym : '∞';
+    $('#goalTxt').innerHTML = g ? 'লক্ষ্য: <b>' + EL[g].bn + ' (' + EL[g].sym + ')</b> সবার আগে তৈরি করো' : '<b>অন্তহীন মোড</b> — সবচেয়ে বেশি পয়েন্ট জেতে';
+    $('#prog').style.width = g ? Math.min(100, Math.round(G.maxlv / g * 100)) + '%' : Math.min(100, Math.round(G.maxlv / MAXLV * 100)) + '%';
+    const u = $('#btnUndo'); u.textContent = '↶ ' + bn(G.undos); u.disabled = !(G.hist.length && G.undos > 0 && !G.over);
+    renderLadder(); renderBots();
+}
+function startClock() {
+    if (clock) { clock.stop(); clock = null; } if (!CFG.timer || !G || G.over) { $('#pTimer').hidden = true; return; }
+    $('#pTimer').hidden = false;
+    clock = PREM.countdown(G.left != null ? G.left : CFG.timer, s => { G.left = s; $('#tmv').textContent = PREM.mmss(Math.max(0, s)); $('#pTimer').className = 'pill' + (s <= 15 ? ' warn' : ''); }, () => { if (G && !G.over) finish(null, 'time'); });
+}
+/* ---------- সেটআপ ও নতুন খেলা ---------- */
+function openSetup(first) {
+    PREM.setup({
+        tag: 'Fusion 2048', title: 'তারার ফিউশন — সেটিংস', saved: CFG, cancel: !first && !!G && !G.over,
+        intro: 'তীরচিহ্ন বা সোয়াইপ দিয়ে একই মৌল মিলিয়ে পরের মৌল বানাও। রোবটরা নিজের বোর্ডে একই সময়ে খেলবে — কে আগে লক্ষ্যে পৌঁছায়?',
+        groups: [
+            { k: 'bots', label: '🤖 রোবট প্রতিপক্ষ', def: 2, opts: [[0, '০ (একা)'], [1, '১'], [2, '২'], [3, '৩']] },
+            { k: 'skill', label: '🧠 রোবটের বুদ্ধি', def: 'normal', opts: [['easy', 'সহজ'], ['normal', 'মাঝারি'], ['hard', 'কঠিন']] },
+            { k: 'goal', label: '🎯 লক্ষ্য মৌল', def: 'ti', opts: [['ar', 'Ar (সহজ)'], ['ti', 'Ti (মাঝারি)'], ['fe', 'Fe (কঠিন)'], ['none', '∞ অন্তহীন']], note: c => c.goal === 'none' ? 'শেষ হবে সময়ে বা চাল ফুরোলে — যার পয়েন্ট বেশি সে জিতবে।' : 'যে আগে পৌঁছাবে সে জিতবে। একা খেললে জিতেও খেলা চালিয়ে যেতে পারো।' },
+            { k: 'timer', label: '⏱ সময়সীমা', def: 0, opts: [[0, 'বন্ধ'], [180, '৩ মিনিট'], [300, '৫ মিনিট'], [600, '১০ মিনিট']], note: 'সময় শেষে পয়েন্টে এগিয়ে থাকলে জয়।' }
+        ],
+        onStart: c => { CFG = c; PREM.store.set('fusion-cfg', c); newGame(); }
+    });
+}
+function newGame() {
+    stopAll(); $('#modal').hidden = true; tilesEl.innerHTML = '';
+    G = { cells: new Array(16).fill(null), score: 0, hist: [], undos: 3, won: false, over: false, stuck: false, maxlv: 1, left: null, bots: [] };
+    for (let i = 0; i < CFG.bots; i++) { const b = new Array(16).fill(0); const e = []; while (e.length < 2) { const k = Math.floor(Math.random() * 16); if (e.indexOf(k) < 0) e.push(k); } e.forEach(k => { b[k] = spawnLv(); }); G.bots.push({ name: BOTN[i][0], ico: BOTN[i][1], b: b, score: 0, max: 2, dead: false }); }
+    spawnH(); spawnH(); found[1] = true; save(); showEl(1); updateHUD(); startBots(); startClock();
+}
+/* ---------- ইনপুট ---------- */
+const KEYS = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3, W: 0, D: 1, S: 2, A: 3 };
+document.addEventListener('keydown', e => { if (!$('#modal').hidden || e.ctrlKey || e.metaKey || e.altKey) return; if (Object.prototype.hasOwnProperty.call(KEYS, e.key)) { e.preventDefault(); move(KEYS[e.key]); } });
+let sx = 0, sy = 0, sid = null; const board = $('#board');
+board.addEventListener('pointerdown', e => { sx = e.clientX; sy = e.clientY; sid = e.pointerId; });
+window.addEventListener('pointerup', e => { if (sid === null) return; sid = null; if (!$('#modal').hidden) return; const dx = e.clientX - sx, dy = e.clientY - sy; if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return; if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 1 : 3); else move(dy > 0 ? 2 : 0); });
+window.addEventListener('pointercancel', () => { sid = null; });
+$('#btnUndo').addEventListener('click', undo);
+$('#btnRules').addEventListener('click', () => { $('#sheet').innerHTML = '<span class="mtag">কীভাবে খেলবে</span><h2>তারার মতো মৌল জুড়ে রোবটদের হারাও</h2><ul class="rules"><li><b>চালনা</b><span>তীরচিহ্ন / W A S D / বোর্ডে সোয়াইপ।</span></li><li><b>মেলানো</b><span>একই দুটি মৌল ধাক্কা খেলে পরের মৌল হয় (H+H→He)।</span></li><li><b>সিঁড়ি</b><span>H → He → C → O → Ne → Mg → Si → S → Ar → Ca → Ti → Cr → Fe</span></li><li><b>রেস</b><span>রোবটরা নিজের বোর্ডে একই সময়ে খেলে; যে আগে লক্ষ্য মৌল বানায় সে জেতে।</span></li><li><b>টাইমার</b><span>চালু থাকলে সময় শেষে বেশি পয়েন্টধারী জেতে।</span></li><li><b>অন্তহীন</b><span>লক্ষ্য নেই — আটকে না যাওয়া পর্যন্ত খেলো।</span></li><li><b>পূর্বাবস্থা</b><span>প্রতি খেলায় ৩ বার চাল ফেরাতে পারবে।</span></li></ul><div class="row"><button class="pbtn gold" id="rClose">বুঝেছি</button></div>'; $('#modal').hidden = false; $('#rClose').onclick = () => { $('#modal').hidden = true; }; });
+$('#btnNew').addEventListener('click', () => openSetup(false));
+window.__t = { get G() { return G; }, move, CFG: () => CFG, newGame, setCfg: c => { CFG = Object.assign(CFG, c); }, botMove, simMove, MAXLV: MAXLV };
+openSetup(true);
+})();
+
+</script>
 </body>
 </html>
