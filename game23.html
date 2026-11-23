@@ -1,1160 +1,360 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#070b14">
-    <title>CHEM-CLASH | যৌগের লড়াই</title>
-    <!-- ফন্ট: ইংরেজি ও বাংলা দুটোর জন্য -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=JetBrains+Mono:wght@600;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-obsidian: #070b14;
-            --bg-slate: #0f172a;
-            --panel-glass: rgba(15, 23, 42, 0.72);
-            --border-subtle: rgba(148, 163, 184, 0.16);
-            --accent-cyan: #06b6d4;
-            --accent-emerald: #10b981;
-            --accent-amber: #f59e0b;
-            --accent-rose: #f43f5e;
-            --accent-purple: #a855f7;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Outfit', 'Hind Siliguri', sans-serif;
-            background-color: var(--bg-obsidian);
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.14) 0%, transparent 55%),
-                radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 15% 85%, rgba(168, 85, 247, 0.09) 0%, transparent 50%),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            user-select: none;
-        }
-
-        /* ================= TOP HUD BAR ================= */
-        .top-hud {
-            width: 100%;
-            max-width: 1280px;
-            margin: 12px auto 0;
-            padding: 0 14px;
-            z-index: 20;
-        }
-
-        .hud-inner {
-            background: var(--panel-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 10px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #06b6d4, #10b981);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #041019;
-            font-weight: 900;
-            font-size: 20px;
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
-        }
-
-        .brand-title {
-            font-weight: 900;
-            font-size: 1.15rem;
-            letter-spacing: 0.5px;
-            background: linear-gradient(90deg, #67e8f9, #6ee7b7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .brand-sub {
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-        }
-
-        /* Scoreboard */
-        .scoreboard {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex: 1;
-            max-width: 480px;
-        }
-
-        .score-box {
-            flex: 1;
-        }
-
-        .score-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .progress-track {
-            height: 9px;
-            background: rgba(15, 23, 42, 0.9);
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: 999px;
-            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .fill-player {
-            background: linear-gradient(90deg, #06b6d4, #10b981);
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
-        }
-
-        .fill-ai {
-            background: linear-gradient(90deg, #f43f5e, #f59e0b);
-            box-shadow: 0 0 12px rgba(244, 63, 94, 0.6);
-        }
-
-        .vs-pill {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--text-secondary);
-            background: rgba(30, 41, 59, 0.8);
-            padding: 4px 8px;
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        /* HUD Buttons */
-        .hud-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-hud {
-            background: rgba(30, 41, 59, 0.85);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-hud:hover {
-            background: rgba(51, 65, 85, 0.95);
-            border-color: rgba(56, 189, 248, 0.45);
-            transform: translateY(-1px);
-        }
-
-        .btn-hud.amber {
-            background: rgba(245, 158, 11, 0.14);
-            border-color: rgba(245, 158, 11, 0.35);
-            color: #fcd34d;
-        }
-
-        /* ================= MAIN GAME TABLE ================= */
-        .table-arena {
-            width: 100%;
-            max-width: 1280px;
-            margin: 12px auto;
-            padding: 0 14px 18px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 12px;
-            position: relative;
-        }
-
-        /* Opponent Zone */
-        .opponent-zone {
-            background: var(--panel-glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 10px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .ai-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .ai-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(244, 63, 94, 0.22), rgba(245, 158, 11, 0.15));
-            border: 1px solid rgba(244, 63, 94, 0.45);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .crafted-strip {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .compound-chip {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 6px;
-            background: rgba(6, 182, 212, 0.15);
-            border: 1px solid rgba(6, 182, 212, 0.35);
-            color: #67e8f9;
-        }
-
-        .compound-chip.ai {
-            background: rgba(244, 63, 94, 0.15);
-            border-color: rgba(244, 63, 94, 0.35);
-            color: #fda4af;
-        }
-
-        /* Realistic Card Backs for AI Hand */
-        .ai-hand-cards {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .card-back-mini {
-            width: 38px;
-            height: 54px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #1e1b4b, #0f172a);
-            border: 1.5px solid rgba(244, 63, 94, 0.5);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .card-back-mini::before {
-            content: "";
-            position: absolute;
-            inset: 3px;
-            border-radius: 5px;
-            border: 1px dashed rgba(244, 63, 94, 0.35);
-            background-image: radial-gradient(rgba(244, 63, 94, 0.25) 1px, transparent 1px);
-            background-size: 6px 6px;
-        }
-
-        /* ================= DYNAMIC GUIDANCE BANNER ================= */
-        .guidance-bar {
-            background: linear-gradient(90deg, rgba(6, 182, 212, 0.12), rgba(16, 185, 129, 0.16), rgba(6, 182, 212, 0.12));
-            border: 1px solid rgba(56, 189, 248, 0.32);
-            border-radius: 14px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.12);
-        }
-
-        .guidance-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #e0f2fe;
-        }
-
-        .pulse-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #10b981;
-            box-shadow: 0 0 10px #10b981;
-            animation: pulseDot 1.4s infinite;
-        }
-
-        @keyframes pulseDot {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.45); opacity: 0.5; }
-        }
-
-        .combo-pill {
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: rgba(245, 158, 11, 0.15);
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            color: #fcd34d;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* ================= CENTER LAB WORKBENCH ================= */
-        .workbench {
-            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.85) 0%, rgba(9, 13, 24, 0.92) 100%);
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            border-radius: 24px;
-            padding: 18px;
-            display: grid;
-            grid-template-columns: 150px 1fr;
-            gap: 20px;
-            align-items: center;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6), 0 12px 36px rgba(0, 0, 0, 0.45);
-        }
-
-        /* Tactile Draw Deck */
-        .deck-zone {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .draw-deck-card {
-            width: 112px;
-            height: 154px;
-            border-radius: 16px;
-            background: linear-gradient(145deg, #0f172a, #1e293b);
-            border: 2px solid rgba(56, 189, 248, 0.55);
-            box-shadow: 
-                0 4px 0 #090d16,
-                0 7px 0 #1e293b,
-                0 10px 0 #090d16,
-                0 16px 28px rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .draw-deck-card::after {
-            content: "";
-            position: absolute;
-            inset: 6px;
-            border-radius: 10px;
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            pointer-events: none;
-        }
-
-        .draw-deck-card:hover {
-            transform: translateY(-5px) scale(1.03);
-            border-color: #38bdf8;
-            box-shadow: 
-                0 6px 0 #090d16,
-                0 10px 0 #1e293b,
-                0 22px 34px rgba(6, 182, 212, 0.35);
-        }
-
-        .draw-deck-card.needs-draw {
-            animation: deckPulse 1.5s infinite;
-            border-color: #10b981;
-        }
-
-        @keyframes deckPulse {
-            0%, 100% { box-shadow: 0 4px 0 #090d16, 0 0 15px rgba(16, 185, 129, 0.5); }
-            50% { box-shadow: 0 4px 0 #090d16, 0 0 32px rgba(16, 185, 129, 0.95); }
-        }
-
-        /* 3 Active Compound Recipes */
-        .recipes-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-        }
-
-        .recipe-card {
-            background: linear-gradient(160deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95));
-            border: 1.5px solid rgba(148, 163, 184, 0.2);
-            border-radius: 18px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .recipe-card.craftable {
-            border-color: #10b981;
-            background: linear-gradient(160deg, rgba(6, 78, 59, 0.55), rgba(15, 23, 42, 0.95));
-            box-shadow: 0 0 26px rgba(16, 185, 129, 0.35);
-            transform: translateY(-3px);
-        }
-
-        .recipe-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .pts-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            font-weight: 800;
-            padding: 3px 9px;
-            border-radius: 8px;
-            background: rgba(245, 158, 11, 0.18);
-            border: 1px solid rgba(245, 158, 11, 0.45);
-            color: #fbbf24;
-        }
-
-        .recipe-tag {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-secondary);
-            font-weight: 700;
-        }
-
-        .recipe-formula {
-            font-size: 1.85rem;
-            font-weight: 900;
-            color: #ffffff;
-            margin: 8px 0 2px;
-            letter-spacing: 0.5px;
-        }
-
-        .recipe-name {
-            font-size: 0.82rem;
-            color: #cbd5e1;
-            margin-bottom: 10px;
-        }
-
-        .req-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-
-        .req-pill {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 7px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.25);
-            color: #94a3b8;
-            transition: all 0.2s;
-        }
-
-        .req-pill.met {
-            border-color: #10b981;
-            color: #6ee7b7;
-            background: rgba(16, 185, 129, 0.15);
-        }
-
-        .btn-synthesize {
-            width: 100%;
-            padding: 9px 12px;
-            border-radius: 11px;
-            border: none;
-            font-family: inherit;
-            font-size: 0.82rem;
-            font-weight: 800;
-            cursor: not-allowed;
-            background: rgba(30, 41, 59, 0.85);
-            color: #64748b;
-            transition: all 0.25s ease;
-        }
-
-        .btn-synthesize.ready {
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            color: #03151e;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45);
-        }
-
-        .btn-synthesize.ready:hover {
-            transform: scale(1.03);
-            filter: brightness(1.08);
-        }
-
-        /* ================= PLAYER HAND ZONE ================= */
-        .player-zone {
-            background: var(--panel-glass);
-            backdrop-filter: blur(14px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 22px;
-            padding: 14px 18px;
-        }
-
-        .player-toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .hand-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-discard-toggle {
-            background: rgba(30, 41, 59, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            color: #cbd5e1;
-            padding: 8px 14px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-discard-toggle.active {
-            background: rgba(244, 63, 94, 0.22);
-            border-color: #f43f5e;
-            color: #fda4af;
-        }
-
-        .btn-end-turn {
-            background: linear-gradient(135deg, #06b6d4, #10b981);
-            border: none;
-            color: #04131c;
-            padding: 9px 18px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 0.85rem;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 4px 18px rgba(6, 182, 212, 0.35);
-            transition: all 0.2s;
-        }
-
-        .btn-end-turn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.5);
-        }
-
-        .btn-end-turn:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-        }
-
-        /* Realistic Physical Element & Action Cards */
-        .player-hand-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            min-height: 162px;
-            padding-top: 6px;
-        }
-
-        .chem-card {
-            width: 116px;
-            height: 160px;
-            border-radius: 16px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.25);
-            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
-            overflow: hidden;
-        }
-
-        .chem-card:hover {
-            transform: translateY(-16px) scale(1.06);
-            z-index: 25;
-            box-shadow: 0 18px 32px rgba(6, 182, 212, 0.45);
-        }
-
-        /* Subtle Metallic/Holographic Sheen */
-        .chem-card::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                115deg,
-                transparent 40%,
-                rgba(255, 255, 255, 0.12) 48%,
-                rgba(255, 255, 255, 0.24) 50%,
-                rgba(255, 255, 255, 0.12) 52%,
-                transparent 60%
-            );
-            transform: rotate(25deg);
-            transition: transform 0.6s ease;
-            pointer-events: none;
-        }
-
-        .chem-card:hover::before {
-            transform: translateX(35%) rotate(25deg);
-        }
-
-        /* Category Card Themes */
-        .theme-nonmetal { background: linear-gradient(155deg, #065f46, #022c22); border-color: #10b981; }
-        .theme-alkali   { background: linear-gradient(155deg, #9a3412, #431407); border-color: #f97316; }
-        .theme-alkaline { background: linear-gradient(155deg, #854d0e, #422006); border-color: #eab308; }
-        .theme-halogen  { background: linear-gradient(155deg, #155e75, #083344); border-color: #06b6d4; }
-        .theme-noble    { background: linear-gradient(155deg, #581c87, #2e1065); border-color: #c084fc; }
-        .theme-action   { background: linear-gradient(155deg, #9f1239, #4c0519); border-color: #fb7185; }
-
-        .chem-card.discard-highlight {
-            border-color: #f43f5e;
-            box-shadow: 0 0 20px rgba(244, 63, 94, 0.75);
-            animation: wiggle 0.6s infinite alternate;
-        }
-
-        @keyframes wiggle {
-            from { transform: rotate(-1.5deg); }
-            to { transform: rotate(1.5deg); }
-        }
-
-        .card-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.74rem;
-            font-weight: 800;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .valency-tag {
-            background: rgba(0, 0, 0, 0.35);
-            padding: 2px 6px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .card-center {
-            text-align: center;
-            margin: auto 0;
-        }
-
-        .element-symbol {
-            font-size: 2.3rem;
-            font-weight: 900;
-            line-height: 1;
-            color: #ffffff;
-            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
-        }
-
-        .element-name {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.92);
-            margin-top: 4px;
-        }
-
-        .card-footer-tag {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.35);
-            padding: 4px 6px;
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        /* ================= CINEMATIC FLOATING BANNER & PARTICLES ================= */
-        .cinematic-toast {
-            position: fixed;
-            top: 84px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: rgba(9, 14, 28, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1.5px solid #38bdf8;
-            color: #ffffff;
-            padding: 12px 24px;
-            border-radius: 999px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.75), 0 0 24px rgba(56, 189, 248, 0.35);
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            white-space: nowrap;
-        }
-
-        .cinematic-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Particle Burst Canvas */
-        #fx-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 90;
-        }
-
-        /* Screen Shake Effect */
-        @keyframes arenaShake {
-            0%, 100% { transform: translate(0, 0); }
-            20% { transform: translate(-8px, 4px); }
-            40% { transform: translate(8px, -4px); }
-            60% { transform: translate(-6px, -3px); }
-            80% { transform: translate(6px, 3px); }
-        }
-        .shake-active {
-            animation: arenaShake 0.45s ease-in-out;
-        }
-
-        /* ================= MODALS ================= */
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(3, 7, 18, 0.85);
-            backdrop-filter: blur(10px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            z-index: 150;
-        }
-
-        .modal-backdrop.open {
-            display: flex;
-        }
-
-        .modal-card {
-            background: linear-gradient(165deg, #0f172a, #090d16);
-            border: 1.5px solid rgba(56, 189, 248, 0.35);
-            border-radius: 26px;
-            max-width: 580px;
-            width: 100%;
-            max-height: 88vh;
-            overflow-y: auto;
-            padding: 26px;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
-        }
-
-        .modal-title {
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: #67e8f9;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .rule-block {
-            background: rgba(30, 41, 59, 0.55);
-            border: 1px solid rgba(148, 163, 184, 0.15);
-            border-radius: 14px;
-            padding: 12px 14px;
-            margin-bottom: 12px;
-            font-size: 0.88rem;
-            line-height: 1.55;
-            color: #e2e8f0;
-        }
-
-        .rule-block h4 {
-            color: #34d399;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-        }
-
-        .btn-primary-full {
-            width: 100%;
-            padding: 13px;
-            border-radius: 14px;
-            border: none;
-            background: linear-gradient(135deg, #06b6d4, #10b981);
-            color: #03151e;
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 900;
-            cursor: pointer;
-            margin-top: 8px;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
-        }
-
-        /* ================= RESPONSIVE ADAPTATIONS ================= */
-        @media (max-width: 900px) {
-            .workbench {
-                grid-template-columns: 1fr;
-            }
-            .deck-zone {
-                flex-direction: row;
-                justify-content: center;
-            }
-            .recipes-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .hud-inner {
-                flex-wrap: wrap;
-                padding: 10px 12px;
-            }
-            .scoreboard {
-                order: 3;
-                max-width: 100%;
-                width: 100%;
-            }
-            .chem-card {
-                width: 98px;
-                height: 142px;
-                padding: 8px;
-            }
-            .element-symbol {
-                font-size: 1.9rem;
-            }
-            .cinematic-toast {
-                font-size: 0.82rem;
-                padding: 10px 16px;
-                max-width: 92vw;
-                white-space: normal;
-                text-align: center;
-            }
-        }
-
-        /* ================= ADDITIONS: বাংলা UI, ল্যাব নোট, ফেরার বাটন ================= */
-        a.btn-hud { text-decoration: none; }
-        .btn-hud:focus-visible, .btn-synthesize:focus-visible, .btn-end-turn:focus-visible,
-        .btn-discard-toggle:focus-visible, .chem-card:focus-visible, .draw-deck-card:focus-visible,
-        .btn-primary-full:focus-visible { outline: 3px solid #22d3ee; outline-offset: 2px; }
-
-        .lab-note {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--panel-glass);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 9px 16px;
-            font-size: 0.86rem;
-            line-height: 1.5;
-            color: #cbd5e1;
-        }
-        .lab-note .note-ico { font-size: 1.5rem; flex: none; }
-        .lab-note b { color: #fbbf24; font-weight: 800; }
-        .lab-note .note-en { color: var(--text-secondary); font-size: 0.78rem; }
-        .lab-note p { margin: 2px 0 0; color: #94a3b8; }
-
-        .element-bn {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.78);
-            margin-top: 1px;
-        }
-
-        .credit {
-            text-align: center;
-            font-size: 0.74rem;
-            font-weight: 600;
-            letter-spacing: 0.4px;
-            color: rgba(148, 163, 184, 0.75);
-            margin-top: 2px;
-        }
-
-        @media (max-width: 600px) {
-            .hide-sm { display: none; }
-            .recipe-formula { font-size: 1.6rem; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b10">
+<title>CHEM-CLASH | Lab Alchemy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<script>(function(){try{var b=localStorage.getItem('chem-bg');if(b==='2'||b==='3')document.documentElement.setAttribute('data-bg',b);}catch(e){}})();</script>
+<style>
+:root{--o-bg:#050507;--o-bg2:#0d0d14;--o-tx:#9a9aae;--st:#101118;--st2:#171925;--st3:#1f2231;--ln:rgba(255,255,255,.09);--ln2:rgba(255,255,255,.16);--tx:#f3f1ea;--mut:#9b9cb0;--gold:#f6c453;--gold2:#ff9f43;--ok:#4ade80;--bad:#ff5d6c;--blue:#5db4ff;--f0:#ff6b6b;--f1:#ffb84d;--f2:#4ade9a;--f3:#6aa8ff;--r:18px;--disp:'Hind Siliguri','Plus Jakarta Sans',system-ui,sans-serif}
+:root[data-bg="2"]{--o-bg:#fff1a8;--o-bg2:#ffe680;--o-tx:#5b4b00}
+:root[data-bg="3"]{--o-bg:#cde7ff;--o-bg2:#a9d4ff;--o-tx:#1d3b5c}
+[hidden]{display:none!important}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--o-bg)}
+body{margin:0;min-height:100vh;font-family:var(--disp);color:var(--tx);background:radial-gradient(1200px 700px at 50% -10%,var(--o-bg2),var(--o-bg) 70%) fixed,var(--o-bg);padding:14px max(14px,env(safe-area-inset-right)) 30px max(14px,env(safe-area-inset-left));transition:background .4s}
+:root[data-bg] body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(rgba(0,0,0,.09) 1.4px,transparent 1.6px);background-size:22px 22px;opacity:.6}
+.stage{position:relative;max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:12px;padding:14px;background:linear-gradient(180deg,var(--st2),var(--st) 40%);border:1px solid var(--ln2);border-radius:26px;box-shadow:0 30px 80px -20px rgba(0,0,0,.65),0 0 0 6px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.07)}
+.credit{text-align:center;margin:16px 0 0;font-size:12.5px;font-weight:600;letter-spacing:.3px;color:var(--o-tx)}
+.bar{display:flex;align-items:center;gap:10px}
+.brand{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}
+.brand b{font-size:20px;font-weight:700;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{font-size:12px;color:var(--mut);font-weight:500}
+.pbtn{font:600 14px var(--disp);color:var(--tx);background:rgba(255,255,255,.06);border:1px solid var(--ln2);border-radius:12px;padding:9px 14px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:transform .12s,background .15s,border-color .15s}
+.pbtn:hover:not(:disabled){background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.pbtn:active:not(:disabled){transform:translateY(1px) scale(.98)}
+.pbtn:disabled{opacity:.4;cursor:default}
+.pbtn.gold{color:#241a00;border-color:transparent;background:linear-gradient(135deg,#ffe08a,var(--gold) 45%,var(--gold2));box-shadow:0 6px 18px -6px rgba(246,196,83,.55)}
+.pbtn.gold:hover:not(:disabled){background:linear-gradient(135deg,#fff0b8,#ffd466 45%,#ffad5a)}
+.pbtn.ico{width:42px;padding:0;font-size:18px}
+.pbtn.big{font-size:17px;padding:13px 22px;border-radius:14px}
+.pbtn .long{display:inline}
+@media(max-width:520px){.pbtn .long{display:none}.brand b{font-size:17px}}
+.pill{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13.5px;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid var(--ln);border-radius:999px;padding:6px 12px}
+.pill b{font-variant-numeric:tabular-nums;color:var(--gold)}
+.pill.warn{border-color:var(--bad);color:#ffd0d4}.pill.warn b{color:var(--bad)}
+.hud{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.panel{background:rgba(255,255,255,.035);border:1px solid var(--ln);border-radius:var(--r);padding:12px}
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(3,3,8,.72);backdrop-filter:blur(7px);overflow:auto}
+.modal[hidden]{display:none}
+.sheet{position:relative;width:min(520px,100%);max-height:92vh;overflow:auto;background:linear-gradient(180deg,#1d2030,#13141d);border:1px solid var(--ln2);border-radius:22px;padding:22px 20px 18px;box-shadow:0 30px 80px -10px #000;animation:sh .28s cubic-bezier(.2,.9,.3,1.2)}
+.sheet::before{content:"";position:absolute;left:22px;right:22px;top:0;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+@keyframes sh{from{transform:translateY(18px) scale(.96);opacity:0}}
+.sheet h2{margin:2px 0 8px;font-size:23px;line-height:1.25}
+.sheet p{margin:0 0 12px;color:var(--mut);line-height:1.65;font-size:14.5px}
+.sheet .mtag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--gold);background:rgba(246,196,83,.1);border:1px solid rgba(246,196,83,.3);border-radius:999px;padding:3px 11px;margin-bottom:8px}
+.row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.grp{margin:12px 0}
+.grp>label{display:block;font-weight:700;font-size:13.5px;color:var(--mut);margin-bottom:7px}
+.seg{display:flex;flex-wrap:wrap;gap:7px}
+.seg button{font:600 14px var(--disp);color:var(--tx);background:rgba(255,255,255,.05);border:1px solid var(--ln2);border-radius:11px;padding:8px 14px;cursor:pointer;min-width:46px;transition:.15s}
+.seg button:hover{background:rgba(255,255,255,.1)}
+.seg button[aria-pressed="true"]{color:#241a00;background:linear-gradient(135deg,#ffe08a,var(--gold));border-color:transparent;box-shadow:0 4px 14px -4px rgba(246,196,83,.6)}
+.seg button:disabled{opacity:.35;cursor:default}
+.note{font-size:12.5px;color:var(--mut);margin-top:6px}
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.rules li{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;line-height:1.55}
+.rules li b{color:var(--gold);white-space:nowrap}
+.rules li span{color:#d8d8e4}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;z-index:70;background:#1b1d2b;border:1px solid var(--gold);color:var(--tx);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;pointer-events:none;max-width:92vw;text-align:center}
+.toast.on{animation:tst 2.2s ease both}
+@keyframes tst{0%{opacity:0;transform:translate(-50%,30px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px)}}
+.shake{animation:shk .38s}
+@keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:90;pointer-events:none}
+.wish{text-align:center;padding:8px 2px 2px}
+.wish .tro{font-size:78px;line-height:1;filter:drop-shadow(0 10px 24px rgba(246,196,83,.6));animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-3deg)}}
+.wish h2{font-size:27px;margin:8px 0 6px;background:linear-gradient(90deg,#fff3b8,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.wish .big{font-size:16.5px;color:#f3f1ea;line-height:1.7;font-weight:500}
+.wish .stat{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0 4px}
+.rank{display:grid;gap:6px;margin:10px 0}
+.rank div{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.05);font-weight:600;font-size:14px}
+.rank div.me{background:rgba(246,196,83,.14);border:1px solid rgba(246,196,83,.4)}
+.rank div b{color:var(--gold)}
+/* ===== JOSS LAYER: premium shine ===== */
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+.stage{isolation:isolate;background:radial-gradient(520px 260px at 8% -4%,rgba(246,196,83,.16),transparent 70%),radial-gradient(520px 300px at 100% 105%,rgba(143,110,255,.16),transparent 70%),radial-gradient(rgba(255,255,255,.045) 1px,transparent 1.2px) 0 0/18px 18px,linear-gradient(180deg,var(--st2),var(--st) 42%)}
+.stage::before,.stage::after{content:"";position:absolute;inset:-2px;border-radius:28px;padding:2px;pointer-events:none;background:conic-gradient(from var(--a),#f6c453,#ff7a59,#c792ff,#4ad8c8,#f6c453);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude;animation:spinA 7s linear infinite;opacity:.9}
+.stage::after{inset:-7px;padding:7px;filter:blur(13px);opacity:.38}
+@keyframes spinA{to{--a:360deg}}
+.brand b{background:linear-gradient(100deg,#ffe9a3,var(--gold),#ff9f43,#ffe9a3);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;animation:shim 5s linear infinite;letter-spacing:.2px}
+@keyframes shim{to{background-position:-240% 0}}
+.pbtn{position:relative;overflow:hidden;backdrop-filter:blur(4px)}
+.pbtn.gold::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);animation:gl 3.4s ease-in-out infinite}
+@keyframes gl{0%,55%{left:-70%}100%{left:130%}}
+.pbtn.gold{box-shadow:0 8px 22px -8px rgba(246,196,83,.75),inset 0 1px 0 rgba(255,255,255,.55)}
+.pbtn.ico#langBtn{font-size:13px;font-weight:800;letter-spacing:.2px;width:46px}
+.pill{background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.sheet{background:radial-gradient(420px 200px at 50% -20%,rgba(246,196,83,.14),transparent 70%),linear-gradient(180deg,#1f2234,#13141d)}
+.sheet h2{letter-spacing:.1px}
+.seg button[aria-pressed="true"]{box-shadow:0 6px 16px -4px rgba(246,196,83,.7),inset 0 1px 0 rgba(255,255,255,.6)}
+.toast{box-shadow:0 10px 30px -8px rgba(246,196,83,.5);background:linear-gradient(180deg,#232638,#171925)}
+.wish{position:relative;isolation:isolate}
+.wish::before{content:"";position:absolute;left:50%;top:-34px;width:360px;height:360px;margin-left:-180px;z-index:-1;background:repeating-conic-gradient(from 0deg,rgba(246,196,83,.22) 0 7deg,transparent 7deg 18deg);-webkit-mask:radial-gradient(circle,#000 8%,transparent 66%);mask:radial-gradient(circle,#000 8%,transparent 66%);animation:ray 18s linear infinite}
+@keyframes ray{to{transform:rotate(360deg)}}
+.wish .tro{font-size:86px}
+.rank div{background:linear-gradient(90deg,rgba(255,255,255,.07),rgba(255,255,255,.03))}
+.rank div.me{box-shadow:0 0 0 1px rgba(246,196,83,.25),0 8px 22px -10px rgba(246,196,83,.6)}
+:root[data-bg="2"] .credit,:root[data-bg="3"] .credit{text-shadow:none}
+@media(max-width:520px){.pbtn.ico#langBtn{width:42px}.bar{gap:7px}}
+@media(prefers-reduced-motion:reduce){.stage::before,.stage::after,.brand b,.pbtn.gold::after,.wish::before,.wish .tro{animation:none}}
+
+
+.gbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.gbar .sp{flex:1}
+.recipes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rc{position:relative;text-align:left;font-family:var(--disp);color:var(--tx);padding:11px 11px 10px;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--ln2);cursor:pointer;display:grid;gap:5px;transition:.18s}
+.rc .f{font-size:24px;font-weight:800;letter-spacing:.5px}.rc .n{font-size:12.5px;color:var(--mut);line-height:1.3}
+.rc .pt{position:absolute;right:10px;top:9px;font-weight:800;font-size:13px;color:#241a00;background:linear-gradient(135deg,#ffe08a,var(--gold));border-radius:999px;padding:2px 9px}
+.rc .req{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.rq{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--ln)}
+.rq.ok{background:rgba(74,222,128,.18);border-color:var(--ok);color:#caffdc}
+.rc.can{border-color:var(--ok);box-shadow:0 0 0 2px rgba(74,222,128,.2),0 0 24px -6px rgba(74,222,128,.6);animation:glow 1.4s ease-in-out infinite alternate}
+@keyframes glow{to{box-shadow:0 0 0 2px rgba(74,222,128,.35),0 0 30px -2px rgba(74,222,128,.8)}}
+.rc.can:hover{transform:translateY(-3px)}
+.rc .tg{font-size:11px;color:var(--gold);font-weight:700}
+.opps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}
+.op{padding:10px;border-radius:15px;background:rgba(255,255,255,.04);border:1px solid var(--ln);display:grid;gap:6px;text-align:left;font-family:var(--disp);color:var(--tx);position:relative}
+.op.turn{border-color:var(--gold);box-shadow:0 0 22px -6px rgba(246,196,83,.6);background:rgba(246,196,83,.06)}
+.op.tgt{cursor:pointer;border-color:var(--bad);animation:tg .7s infinite alternate}
+@keyframes tg{to{box-shadow:0 0 0 3px rgba(255,93,108,.5)}}
+.op h4{margin:0;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.op h4 b{font-size:20px;color:var(--gold);font-variant-numeric:tabular-nums}
+.bar2{height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}.bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s}
+.op small{color:var(--mut);font-size:12px;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.cr{display:flex;flex-wrap:wrap;gap:3px;min-height:20px}.cr span{font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:6px;background:rgba(255,255,255,.08)}
+.status{font-weight:600;font-size:15.5px;line-height:1.55;min-height:26px;padding:10px 12px;border-radius:14px;background:rgba(246,196,83,.07);border:1px solid rgba(246,196,83,.25)}
+.log{font-size:12.5px;color:var(--mut);display:grid;gap:2px;min-height:18px}
+.handbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;color:var(--mut);font-weight:600;font-size:14px}
+.hand{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:6px 0}
+.cd{--w:clamp(70px,20vw,96px);width:var(--w);aspect-ratio:5/7;border-radius:calc(var(--w)*.15);position:relative;color:#fff;border:1.5px solid rgba(255,255,255,.4);box-shadow:0 10px 20px -10px #000,inset 0 1px 0 rgba(255,255,255,.4);background:linear-gradient(155deg,var(--c1),var(--c2));display:grid;place-items:center;font-family:var(--disp);overflow:hidden;cursor:default;transition:transform .16s,box-shadow .16s;padding:0}
+.cd::before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,rgba(255,255,255,.26),transparent 45%);pointer-events:none}
+.cd .az{position:absolute;left:8%;top:6%;font-size:calc(var(--w)*.14);font-weight:700;opacity:.9}.cd .vl{position:absolute;right:8%;top:6%;font-size:calc(var(--w)*.14);font-weight:700;background:rgba(0,0,0,.32);border-radius:999px;padding:0 6px}
+.cd .sy{font-size:calc(var(--w)*.42);font-weight:800;line-height:1;text-shadow:0 3px 10px rgba(0,0,0,.4)}
+.cd .bnm{position:absolute;bottom:6%;left:0;right:0;text-align:center;font-size:calc(var(--w)*.125);font-weight:600;line-height:1.2;padding:0 3px}
+.cd.nonmetal{--c1:#52e8a6;--c2:#0b7556}.cd.alkali{--c1:#ff7f7f;--c2:#b0213b}.cd.alkaline{--c1:#ffc860;--c2:#b8600b}.cd.halogen{--c1:#e8e04c;--c2:#8a7d00}.cd.noble{--c1:#7ab9ff;--c2:#2a46c8}
+.cd.act{--c1:#2a2d44;--c2:#12131f;border-color:rgba(246,196,83,.6);cursor:pointer}
+.cd.act .ic{font-size:calc(var(--w)*.38);line-height:1}
+.cd.act .tgx{position:absolute;bottom:22%;left:0;right:0;text-align:center;font-size:calc(var(--w)*.1);color:var(--gold);padding:0 3px;line-height:1.2}
+.cd.act:hover{transform:translateY(-8px);box-shadow:0 16px 28px -10px #000,0 0 22px rgba(246,196,83,.6)}
+.cd.sel{outline:3px solid var(--bad);outline-offset:2px}
+.cd.disc{cursor:pointer;animation:dsc .6s infinite alternate}
+@keyframes dsc{to{transform:translateY(-6px) rotate(-2deg);box-shadow:0 0 0 2px var(--bad)}}
+.cd.new{animation:nw .5s ease}@keyframes nw{from{transform:translateY(-30px) scale(.7);opacity:0}}
+.mono{font-feature-settings:"tnum"}
+@media(max-width:560px){.recipes{grid-template-columns:1fr}.rc{grid-template-columns:1fr}.rc .f{font-size:21px}}
+
+</style>
 </head>
 <body>
+<div class="stage">
+<header class="bar">
+<a class="pbtn" href="games.html#premium" aria-label="গেম হাবে ফিরে যাও">←<span class="long">গেম হাব</span></a>
+<div class="brand"><b>CHEM-CLASH</b><small>যৌগের লড়াই · রোবটের সাথে</small></div>
+<button class="pbtn ico" id="langBtn" type="button" title="ভাষা / Language" aria-label="ভাষা বদলাও / Change language">EN</button>
+<button class="pbtn ico" id="soundBtn" type="button" title="শব্দ চালু/বন্ধ" aria-label="শব্দ চালু বা বন্ধ">🔔</button>
+<button class="pbtn ico" id="bgBtn" type="button" title="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও" aria-label="বাইরের ব্যাকগ্রাউন্ডের রং বদলাও">🌓</button>
+</header>
 
-    <!-- কণা-বিস্ফোরণের ক্যানভাস -->
-    <canvas id="fx-canvas"></canvas>
+<div class="gbar">
+<span class="pill">🎯 লক্ষ্য <b id="tgt">৩০</b></span>
+<span class="pill" id="pDeck">🃏 ডেক <b id="deckN">০</b></span>
+<span class="pill" id="pTimer" hidden>⏱ <b id="tmv">০</b></span>
+<span class="sp"></span>
+<button class="pbtn" id="btnRules">নিয়ম</button>
+<button class="pbtn" id="btnNew">⚙ নতুন খেলা</button>
+</div>
+<section class="recipes" id="recipes" aria-label="খোলা রেসিপি"></section>
+<section class="opps" id="opps" aria-label="খেলোয়াড়"></section>
+<div class="status" id="status" aria-live="polite"></div>
+<div class="log" id="log"></div>
+<section>
+<div class="handbar"><span id="handInfo"></span><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="pbtn" id="btnDisc">🗑 কার্ড ফেলো</button><button class="pbtn gold" id="btnEnd">✔ দান শেষ</button></span></div>
+<div class="hand" id="hand"></div>
+</section>
 
-    <!-- ভাসমান বার্তা -->
-    <div id="cinematic-toast" class="cinematic-toast" role="status" aria-live="polite">
-        <span id="toast-icon">⚗️</span>
-        <span id="toast-msg">CHEM-CLASH-এ স্বাগতম!</span>
-    </div>
+</div>
+<p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
+<div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<script>
+/* ===== NB SOUND: শূন্য-নির্ভরতার WebAudio সাউন্ড ইফেক্ট =====
+   ব্যবহার: const sfx = NBSound('গেমের-কী'); sfx.ok(); sfx.bad(); sfx.win(); sfx.lose(); sfx.tap(); sfx.pop();
+   বাটন: #soundBtn থাকলে সেটি নিজে নিজে 🔔/🔕 টগল করে (localStorage '<কী>-sound') */
+function NBSound(key) {
+    let on = true, ac = null;
+    try { on = localStorage.getItem(key + '-sound') !== '0'; } catch (e) {}
+    function tone(f, t0, dur, type, vol) {
+        if (!on) return;
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+            const t = ac.currentTime + t0; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol || .16, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.start(t); o.stop(t + dur + .03);
+        } catch (e) {}
+    }
+    const api = {
+        ok() { tone(660, 0, .12); tone(880, .1, .16); },
+        bad() { tone(220, 0, .2, 'sawtooth', .1); tone(160, .14, .26, 'sawtooth', .1); },
+        tap() { tone(520, 0, .06, 'triangle', .1); },
+        pop() { tone(440, 0, .08, 'square', .06); tone(740, .06, .1, 'square', .06); },
+        win() { tone(523, 0, .12); tone(659, .12, .12); tone(784, .24, .12); tone(1047, .36, .3); },
+        lose() { tone(392, 0, .2); tone(330, .2, .2); tone(262, .4, .4); },
+        get on() { return on; },
+        toggle() { on = !on; try { localStorage.setItem(key + '-sound', on ? '1' : '0'); } catch (e) {} paint(); if (on) api.ok(); }
+    };
+    function paint() { const b = document.getElementById('soundBtn'); if (b) b.textContent = on ? '🔔' : '🔕'; }
+    document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } });
+    if (document.readyState !== 'loading') { const b = document.getElementById('soundBtn'); if (b) { paint(); b.addEventListener('click', api.toggle); } }
+    return api;
+}
 
-    <!-- উপরের HUD -->
-    <header class="top-hud">
-        <div class="hud-inner">
-            <div class="brand">
-                <div class="brand-logo">⚗️</div>
-                <div>
-                    <div class="brand-title">CHEM-CLASH</div>
-                    <div class="brand-sub">যৌগের লড়াই • লক্ষ্য: ৩০ পয়েন্ট</div>
-                </div>
-            </div>
+/* ===== PREM KIT: সাউন্ড · ব্যাকগ্রাউন্ড · কনফেত্তি · উইশ · সেটআপ · টাইমার ===== */
 
-            <div class="scoreboard">
-                <div class="score-box">
-                    <div class="score-meta">
-                        <span style="color: #67e8f9;">তুমি</span>
-                        <span id="player-score-lbl">০ / ৩০</span>
-                    </div>
-                    <div class="progress-track">
-                        <div id="player-bar" class="progress-fill fill-player"></div>
-                    </div>
-                </div>
+/* ===== ভাষা: বাংলা ⇄ English ===== */
+const LANG = { v: 'bn' };
+try { LANG.v = localStorage.getItem('prem-lang') === 'en' ? 'en' : 'bn'; } catch (e) {}
+const L = (b, e) => LANG.v === 'en' ? e : b;
+const EN_DICT = {"কী অসাধারণ জয়!": "What a brilliant win!", "তুমিই চ্যাম্পিয়ন!": "You are the champion!", "(কোণার বৃত্তের সংখ্যা) মেলাও।": "(the number in the corner circle).", "কোনোটাই মেলে না।": "neither matches.", "-এর He শিল্ড": "'s He shield", "-এর দান": "'s turn", "-এর পয়েন্ট −৪": "'s points −4", "-এর পালা": "'s turn", "-এর বিস্ফোরণ আটকাল!": "'s blast!", "-এর হাত": "'s hand", "-এর হাতে চুরি করার কার্ড নেই": " has no cards to steal", "-এর ১টি কার্ড চুরি": "'s 1 card stolen", "-এর": "'s", "-কে দাও। অন্যরা চোখ সরিয়ে নাও! প্রস্তুত হলে নিচের বাটন চাপো।": ". Everyone else, look away! When ready, press the button below.", ": সময় শেষ — একটি কার্ড উঠল, দান গেল।": ": time's up — a card was drawn and the turn is lost.", "Ar (সহজ)": "Ar (easy)", "Ti (মাঝারি)": "Ti (medium)", "Fe (কঠিন)": "Fe (hard)", "Catalyst · অনুঘটক": "Catalyst", "DNA, ATP ও সারের জন্য অপরিহার্য।": "Essential for DNA, ATP and fertilisers.", "HCl ও NaOH দুটোই বানালে একবার +৫।": "Make both HCl and NaOH for a one-time +5.", "H₂SO₄ কোন যৌগের সংকেত?": "H₂SO₄ is the formula of which compound?", "MOLE! বলতে ভুলে গেছ — ২টি কার্ড তুলতে হলো।": "You forgot to call MOLE! — you draw 2 cards.", "Na⁺ আর Cl⁻ আয়ন আয়নিক বন্ধনে যুক্ত হয়ে খাদ্য লবণ গঠন করে।": "Na⁺ and Cl⁻ ions join by an ionic bond to form table salt.", "p-ব্লক ও নিষ্ক্রিয় গ্যাস": "p-block, noble gas", "p-ব্লক ও নিষ্ক্রিয়": "p-block, noble", "যোজনী": "Valence", "অক্সাইড": "Oxide", "অক্সিজেন": "Oxygen", "অতি অল্প পরিমাণে প্রয়োজনীয়; আলোয় এর পরিবাহিতা বদলায়।": "Needed in tiny amounts; its conductivity changes with light.", "অথবা একই": "or the same", "অধঃক্ষেপ": "Precipitate", "অধাতু ও হ্যালোজেন": "Nonmetal & halogen", "অধাতু": "Nonmetal", "অনুঘটক কী করে?": "What does a catalyst do?", "অনুঘটক: ২টি বাড়তি কার্ড": "Catalyst: 2 extra cards", "অনুঘটক": "Catalyst", "অন্তর্বর্তী ধাতু": "Transition metal", "অন্তহীন মোড": "Endless mode", "অন্তহীন": "Endless", "অভিনন্দন,": "Congratulations,", "অ্যানায়ন": "Anion", "অ্যামোনিয়ার সংকেত কোনটি?": "Which is the formula of ammonia?", "অ্যালুমিনিয়াম": "Aluminium", "অ্যাসিটিক অ্যাসিড": "Acetic acid", "অ্যাসিড বৃষ্টি তখনই খেলা যায় যখন হাতে সক্রিয় পরিবারের কোনো কার্ড নেই।": "Acid Rain can be played only when you hold no card of the active family.", "অ্যাসিড-ক্ষার কম্বো +৫": "Acid-base combo +5", "অ্যাসিড/ক্ষার নষ্ট": "Acid/base destroyed", "অ্যাসিডে নীল লিটমাস কাগজ কী রং ধারণ করে?": "What colour does blue litmus paper turn in acid?", "অ্যাসিড বৃষ্টি": "Acid Rain", "অ্যাসিড": "Acid", "অ্যাস্টাটিন": "Astatine", "আইসোটোপ": "Isotope", "আইসোবার": "Isobar", "আইসোমার": "Isomer", "আজকের লড়াইয়ে তুমি ছিলে অপ্রতিরোধ্য! এই জয় তোমার মেধা ও পরিশ্রমের পুরস্কার। এভাবেই এগিয়ে যাও — আকাশ ছোঁয়া সাফল্য তোমার অপেক্ষায়। শুভেচ্ছা অফুরান! ✨": "You were unstoppable in today's battle! This win is the reward of your talent and hard work. Keep going like this — sky-high success is waiting for you. Endless best wishes! ✨", "আটকাও": "to block", "আটকে গেল!": "got blocked!", "আটকে গেলে": "If stuck", "আতশবাজিতে টকটকে লাল রং দেয়।": "Gives fireworks a deep red colour.", "আধুনিক পর্যায় সারণি কিসের ক্রমবর্ধমান মান অনুযায়ী সাজানো?": "The modern periodic table is arranged by increasing what?", "আবিষ্কৃত": "discovered", "আয়নিক বন্ধন": "Ionic bond", "আয়রন (লোহা)": "Iron (Fe)", "আয়রন": "Iron", "আয়োডিন": "Iodine", "আর কোনো চাল বাকি নেই": "No moves left", "আর চাল নেই! রোবটদের খেলা শেষ হওয়া দেখো…": "No moves left! Watch the robots finish…", "আর্গন": "Argon", "ইলেকট্রন জোড় শেয়ার করে গঠিত বন্ধনকে কী বলে?": "A bond formed by sharing an electron pair is called?", "ইস্পাতকে শক্ত করে; পারম্যাঙ্গানেট আয়ন গাঢ় বেগুনি।": "Hardens steel; the permanganate ion is deep purple.", "ইস্পাতের মূল উপাদান; হিমোগ্লোবিনে অক্সিজেন বহন করে।": "Main component of steel; carries oxygen in haemoglobin.", "উত্তর না দিয়ে": "Without answering", "উদ্ভিদের জন্য অপরিহার্য; তাপসহ বোরোসিলিকেট কাচ তৈরি করে।": "Essential for plants; makes heat-resistant borosilicate glass.", "উপরের রেসিপিতে লাগা মৌলের কার্ড হাতে থাকলে রেসিপিতে ট্যাপ করো — পয়েন্ট পাবে।": "If you hold the element cards a recipe above needs, tap the recipe — you score points.", "উৎপাদের ভর কমিয়ে দেয়": "Reduces the mass of the product", "ঊর্ধ্বপাতন": "Sublimation", "এই দান মিস": "skips this turn", "এই রেসিপির জন্য কার্ড যথেষ্ট নয়।": "Not enough cards for this recipe.", "এইমাত্র তোলা কার্ডটিই খেলতে পারো, নয়তো রেখে দাও।": "You may play only the card you just drew, or keep it.", "এক মোলে প্রায় কতটি কণা থাকে?": "About how many particles are in one mole?", "একই ডিভাইসে পালা করে খেলবে; প্রতি দানের আগে হাতবদলের পর্দা আসবে।": "Take turns on the same device; a hand-over screen appears before every turn.", "একই দুটি মৌল ধাক্কা খেলে পরের মৌল হয় (H+H→He)।": "Two identical elements that collide become the next element (H+H→He).", "একই মৌলের ভিন্ন নিউট্রন সংখ্যার পরমাণুকে কী বলে?": "Atoms of the same element with different neutron numbers are called?", "একজন মানুষ খেললে +২/+৪ আসার সময় ১৫ সেকেন্ডে রসায়নের প্রশ্নের সঠিক উত্তর দিলে শাস্তি আটকে যায়।": "With one human, when a +2/+4 hits you, answer a chemistry question correctly within 15 seconds to block the penalty.", "একটি কার্ড তুলল।": "drew a card.", "একটি যোজনী ইলেকট্রন থাকে": "Has one valence electron", "একমাত্র অধাতু যা ঘরের তাপমাত্রায় তরল।": "The only nonmetal that is liquid at room temperature.", "একমাত্র ধাতু যা ঘরের তাপমাত্রায় তরল।": "The only metal that is liquid at room temperature.", "একাধিক মানুষ": "Several humans", "এখনো আবিষ্কার হয়নি": "Not discovered yet", "এখানে এসে তারার ভেতরের ফিউশন থেমে যায়, কারণ এরপর ফিউশনে আর শক্তি পাওয়া যায় না।": "Fusion inside stars stops here, because fusing further no longer releases energy.", "ওয়াইল্ড +৪; হাতে সক্রিয় পরিবারের কার্ড না থাকলেই খেলা যায়।": "Wild +4; playable only when you hold no card of the active family.", "ওয়াইল্ড — সক্রিয় পরিবার বেছে নাও।": "Wild — choose the active family.", "কখনো মরিচা ধরে না; কেবল অ্যাকুয়া রেজিয়ায় দ্রবীভূত হয়।": "Never rusts; dissolves only in aqua regia.", "কঠিন পদার্থ সরাসরি গ্যাসে পরিণত হওয়াকে কী বলে?": "A solid turning directly into gas is called?", "কঠিন": "Hard", "কপার (তামা)": "Copper (Cu)", "কম্বো": "Combo", "কাচ ও সিরামিককে গাঢ় নীল রং দেয়।": "Gives glass and ceramics a deep blue colour.", "কার্ড ফেলা হয়েছে। এবার দান শেষ করো।": "Card discarded. Now end your turn.", "কার্ডটি রেখে দাও": "Keep the card", "কার্ডটি রেখে দিল।": "kept the card.", "কার্বন ডাই-অক্সাইড": "Carbon dioxide", "কার্বনের কোন রূপ বিদ্যুৎ সুপরিবাহী?": "Which form of carbon conducts electricity well?", "কার্বনের যোজনী ইলেকট্রন সংখ্যা কত?": "How many valence electrons does carbon have?", "কার্বনের সাথে আরেকটি হিলিয়াম যুক্ত হয়ে অক্সিজেন হয়। বাতাসের প্রায় ২১%।": "Another helium joins carbon to make oxygen. About 21% of air.", "কার্বন": "Carbon", "কী দুর্দান্ত খেলা! তোমার বুদ্ধি, ধৈর্য আর কৌশলের কাছে সবাই হার মানল। রসায়নের মঞ্চে আজ তোমারই রাজত্ব — শুভকামনা রইল সামনের প্রতিটি জয়ের জন্য! 🎉": "What a game! Everyone bowed to your brains, patience and strategy. Today the chemistry stage is yours — best wishes for every win ahead! 🎉", "কীভাবে খেলবে": "How to play", "কুইক লাইমের সংকেত কোনটি?": "Which is the formula of quicklime?", "কোন গ্যাস চুনের পানিকে ঘোলা করে?": "Which gas turns limewater milky?", "কোন মৌলের তড়িৎঋণাত্মকতা সবচেয়ে বেশি?": "Which element has the highest electronegativity?", "কোনটি ট্রানজিশন ধাতু?": "Which is a transition metal?", "কোনটি দ্বি-পরমাণুক অণু হিসেবে থাকে?": "Which exists as a diatomic molecule?", "কোনটি নিষ্ক্রিয় গ্যাস?": "Which is a noble gas?", "কোনো মৌলের পারমাণবিক সংখ্যা কিসের সমান?": "An element's atomic number equals its?", "কোবাল্ট": "Cobalt", "ক্যাটায়ন": "Cation", "ক্যালসিয়াম অক্সাইড": "Calcium oxide", "ক্যালসিয়াম কার্বনেট": "Calcium carbonate", "ক্যালসিয়াম": "Calcium", "ক্রিপ্টন": "Krypton", "ক্রোমিয়াম": "Chromium", "ক্লোরিন": "Chlorine", "ক্ষার ও ক্ষারীয় মৃত্তিকা ধাতু": "Alkali & alkaline-earth metal", "ক্ষার ধাতুগুলো পর্যায় সারণির কোন গ্রুপে থাকে?": "In which group of the periodic table are the alkali metals?", "ক্ষার ধাতু": "Alkali metal", "ক্ষার": "Base", "খনিজ": "Mineral", "খাদ্য লবণের রাসায়নিক সংকেত কোনটি?": "Which is the chemical formula of table salt?", "খাদ্য লবণ": "Table salt", "খাবারের কৌটায় প্রলেপ দেয়; তামার সাথে মিশে ব্রোঞ্জ হয়।": "Coats food cans; alloyed with copper it makes bronze.", "খুব ভারী বলে": "Because it is very heavy", "খেলা শেষ।": "Game over.", "খেলা শেষ": "Game over", "খেলার দিক উল্টে যায়।": "The play direction reverses.", "খেলার দিক উল্টে যায়": "Reverses the play direction", "খেলার দিক →": "Direction →", "খেলার দিক": "Direction", "খেলার সেটিংস": "Game settings", "খেলোয়াড়": "Player", "খোলা রেসিপি": "Open recipes", "গলন": "Melting", "গাড়ির এক্সজস্ট কনভার্টারে অনুঘটক হিসেবে কাজ করে।": "Works as a catalyst in car exhaust converters.", "গাড়ির হেডল্যাম্প ও আয়ন ইঞ্জিনে ব্যবহৃত হয়।": "Used in car headlamps and ion engines.", "গেম হাবে ফিরে যাও": "Back to the game hub", "গেম হাব": "Game Hub", "গোল্ড (সোনা)": "Gold (Au)", "গ্যালিয়াম": "Gallium", "গ্যাস": "Gas", "গ্রাফাইট": "Graphite", "গ্রুপ ১৭": "Group 17", "গ্রুপ ১৮": "Group 18", "গ্রুপ ১": "Group 1", "গ্রুপ ২": "Group 2", "ঘন ও বিষাক্ত; একসময় পাইপ ও পেট্রোলে ব্যবহৃত হতো।": "Dense and toxic; once used in pipes and petrol.", "ঘনত্ব": "Density", "ঘনীভবন": "Condensation", "ঘরের তাপমাত্রায় কোন ধাতু তরল?": "Which metal is liquid at room temperature?", "চক": "Chalk", "চমৎকার বিদ্যুৎ পরিবাহী; বাতাসে সবুজ আস্তরণ পড়ে।": "An excellent conductor; forms a green coating in air.", "চালনা": "Controls", "চালাবে? লাল ঘেরা খেলোয়াড়কে ট্যাপ করো (বাতিল: কার্ডে আবার ট্যাপ)।": "Play it on whom? Tap a red-outlined player (cancel: tap the card again).", "চালু থাকলে সময় শেষে দান নিজে থেকে শেষ হবে।": "If on, your turn ends automatically when time runs out.", "চালু থাকলে সময় শেষে নিজে থেকে ১টি কার্ড উঠে দান শেষ হয়।": "If on, when time runs out a card is drawn and the turn ends automatically.", "চালু থাকলে সময় শেষে বেশি পয়েন্টধারী জেতে।": "If on, whoever has more points when time runs out wins.", "চুনাপাথর, মার্বেল ও ঝিনুকের খোলসের প্রধান উপাদান।": "Main component of limestone, marble and seashells.", "চুনাপাথর": "Limestone", "চুনের পানিকে ঘোলা করে। উদ্ভিদ সালোকসংশ্লেষণে এই গ্যাস ব্যবহার করে।": "Turns limewater milky. Plants use this gas in photosynthesis.", "চ্যাম্পিয়ন": "Champion", "ছিল। আবার চেষ্টা করলেই হারিয়ে দিতে পারবে!": "Try again and you can beat them!", "ছিল। কৌশল বদলে আবার চেষ্টা করলেই হারানো যাবে!": "Change your tactics and try again — you can win!", "জন (২–৫)": "players (2–5)", "জয় তোমারই,": "The win is yours,", "জিঙ্ক (দস্তা)": "Zinc (Zn)", "জিতেছে!": "wins!", "জেনন": "Xenon", "জৈব": "Organic", "জ্বলার সময় চোখ ধাঁধানো সাদা আলো দেয়। ক্লোরোফিলের কেন্দ্রে থাকে।": "Burns with a dazzling white light. Sits at the centre of chlorophyll.", "জ্বলার সময় চোখ ধাঁধানো সাদা আলো দেয়।": "Burns with a dazzling white light.", "টাইটানিয়াম": "Titanium", "টাইমার": "Timer", "টি করে কার্ড পেয়েছে। পরিবারের রং বা যোজনী মিলিয়ে খেলো।": " cards each. Match the family colour or valence to play.", "টি কার্ড; বেশি হলে ফেলতে হবে।": " cards; discard if you have more.", "টি কার্ড নষ্ট": " cards destroyed", "টি কার্ড নাও": " cards — take them", "টি কার্ড রাখা যায়! একটি কার্ড ফেলো।": " cards allowed! Discard one card.", "টি কার্ড": " cards", "টি বাকি": " left", "টিন (রাঙ)": "Tin (Sn)", "টিন": "Tin", "টেবিলের উপরের কার্ডের মতো একই": "The same as the top card on the table:", "টেবিল": "Table", "ট্রানজিশন ধাতু": "Transition metal", "ড. অ্যাটম": "Dr. Atom", "ডা. ক্যাটালিস্ট": "Dr. Catalyst", "ডাল্টন": "Dalton", "ডিভাইস হাতবদল": "Device hand-over", "ডিভাইসটি": "Pass the device to", "ডেক থেকে একটি কার্ড তোলো; মিললে খেলো, নয়তো রেখে দাও।": "Draw a card from the deck; play it if it matches, otherwise keep it.", "ডেক থেকে কার্ড তোলো": "Draw a card from the deck", "ডেক ·": "Deck ·", "তড়িৎ বিশ্লেষণ:": "Electrolysis:", "তড়িৎ বিশ্লেষণ": "Electrolysis", "তারার ফিউশন — সেটিংস": "Star Fusion — Settings", "তারার ভেতরের ফিউশন · রোবট রেস": "Fusion inside stars · Robot race", "তারার মতো মৌল জুড়ে রোবটদের হারাও": "Fuse elements like a star and beat the robots", "তিনটি হিলিয়াম মিলে কার্বন তৈরি হয় (ট্রিপল-আলফা প্রক্রিয়া)। প্রাণের ভিত্তি।": "Three heliums fuse into carbon (triple-alpha process). The basis of life.", "তীব্র অ্যাসিড। আমাদের পাকস্থলীতেও লঘু HCl থাকে এবং খাবার হজমে সাহায্য করে।": "A strong acid. Dilute HCl is in our stomach too and helps digest food.", "তীব্র ক্ষার, কস্টিক সোডা নামেও পরিচিত। সাবান তৈরিতে ব্যবহৃত হয়।": "A strong base, also known as caustic soda. Used to make soap.", "তীরচিহ্ন / W A S D / বোর্ডে সোয়াইপ।": "Arrow keys / W A S D / swipe on the board.", "তীরচিহ্ন বা সোয়াইপ দিয়ে একই মৌল মিলিয়ে পরের মৌল বানাও। রোবটরা নিজের বোর্ডে একই সময়ে খেলবে — কে আগে লক্ষ্যে পৌঁছায়?": "Use arrows or swipe to merge identical elements into the next one. The robots play on their own boards at the same time — who reaches the goal first?", "তুমি আগে": "You reached", "তুমি": "You", "তেজস্ক্রিয় ও অত্যন্ত দুর্লভ; কয়েক মিনিটেই ক্ষয় হয়ে যায়।": "Radioactive and extremely rare; decays within minutes.", "তেজস্ক্রিয় গ্যাস, যা মাটি ও পাথর থেকে বেরোয়।": "A radioactive gas that seeps out of soil and rock.", "তেজস্ক্রিয় ধাতু; কুরি দম্পতি এটি আবিষ্কার করেন।": "A radioactive metal; discovered by the Curies.", "তোমার দান! ১টি কার্ড উঠেছে। রেসিপির সাথে মিলিয়ে যৌগ বানাও বা অ্যাকশন কার্ড খেলো।": "Your turn! 1 card was drawn. Match recipes to craft compounds, or play an action card.", "তোমার দান": "Your turn", "তোমার প্রতিটি চালে ছিল প্রতিভার ছোঁয়া। এই বিজয় তোমার গর্বের — আমরাও গর্বিত! আরও একবার খেলে নিজের রেকর্ড ভাঙবে নাকি? অভিনন্দন চ্যাম্পিয়ন! 🔥": "Every move of yours had a touch of genius. This victory is yours to be proud of — and we are proud too! Want to play once more and break your own record? Congratulations, champion! 🔥", "তোমার হাত ·": "Your hand ·", "তোমার হাত": "Your hand", "থাইরয়েডের জন্য দরকার; ঊর্ধ্বপাতিত হয়ে বেগুনি বাষ্প দেয়।": "Needed for the thyroid; sublimes into purple vapour.", "দস্তার সাথে লঘু অ্যাসিডের বিক্রিয়ায় কোন গ্যাস পাওয়া যায়?": "Which gas is produced when zinc reacts with dilute acid?", "দহন ও শ্বাসক্রিয়ায় প্রয়োজন; বাতাসের প্রায় ২১%।": "Needed for combustion and respiration; about 21% of air.", "দুটি হাইড্রোজেন ও একটি অক্সিজেন পরমাণু সমযোজী বন্ধনে যুক্ত হয়ে পানি হয়। একে সার্বজনীন দ্রাবক বলা হয়।": "Two hydrogen atoms and one oxygen atom join by covalent bonds to make water. It is called the universal solvent.", "দ্বিতীয় হালকা মৌল; বেলুন ভরে ও MRI চুম্বক ঠান্ডা রাখে।": "The second-lightest element; fills balloons and cools MRI magnets.", "ধনাত্মক আধানযুক্ত আয়নকে কী বলে?": "A positively charged ion is called?", "ধাতব বন্ধন": "Metallic bond", "নতুন খেলা": "New game", "নতুন মৌল আবিষ্কার:": "New element discovered:", "নম্বরে।": ".", "নরম রূপালি ধাতু; বাতাসে নিজে থেকেই জ্বলে উঠতে পারে।": "A soft silvery metal; can ignite on its own in air.", "নষ্ট (−": "destroyed (−", "নাইট্রিক অ্যাসিড": "Nitric acid", "নাইট্রোজেন": "Nitrogen", "নামের অর্থ ‘গোপন’; ফ্ল্যাশ ল্যাম্পে ব্যবহৃত হয়।": "Its name means 'hidden'; used in flash lamps.", "নিউক্লিয়ন সংখ্যা": "Nucleon number", "নিউট্রন সংখ্যা": "Neutron number", "নিকেল": "Nickel", "নিখুঁত চাল, ঠান্ডা মাথা আর সেরা কৌশল — এটাই বিজয়ীর লক্ষণ! তুমি প্রমাণ করলে সত্যিকারের মাস্টার কাকে বলে। অনেক অনেক অভিনন্দন ও ভালোবাসা! 💛": "Perfect moves, a cool head and top strategy — the mark of a winner! You proved what a true master looks like. Heartfelt congratulations and lots of love! 💛", "নিজে ক্ষয় না হয়ে বিক্রিয়ার গতি বাড়ায়": "Speeds up the reaction without being used up", "নিয়ন": "Neon", "নিয়ম": "Rules", "নিরপেক্ষ": "Neutral", "নিষ্ক্রিয় গ্যাস সাধারণত বিক্রিয়া করে না কেন?": "Why do noble gases usually not react?", "নিষ্ক্রিয় গ্যাস": "Noble gas", "নিষ্ক্রিয়": "Noble", "পটাসিয়ামের প্রতীক কোনটি?": "Which is the symbol of potassium?", "পটাসিয়াম": "Potassium", "পয়েন্ট ছুঁয়ে ল্যাবের দখল নিয়েছ!": "points and took over the lab!", "পয়েন্টে তুমি": "By points you are #", "পয়েন্ট": " points", "পরিবার বা যোজনী": "family or valence", "পরিবার বেছে নাও; পরের জন ৪টি কার্ড তোলে": "Choose a family; the next player draws 4 cards", "পরিবারের রং": "family colour", "পরিবার": " family", "পরের খেলোয়াড়ের দান বাদ।": "The next player's turn is skipped.", "পরের খেলোয়াড়ের দান বাদ": "Skips the next player's turn", "পরের জন ২টি কার্ড তোলে ও দান হারায়।": "The next player draws 2 cards and loses their turn.", "পরের জন ২টি কার্ড তোলে": "The next player draws 2 cards", "পানির সাথে তীব্র বিক্রিয়া করে বলে কেরোসিনে ডুবিয়ে রাখা হয়।": "Reacts violently with water, so it is stored under kerosene.", "পানি": "Water", "পারমাণবিক ঘড়িতে ব্যবহৃত হয়, যা দিয়ে এক সেকেন্ডের সংজ্ঞা দেওয়া হয়।": "Used in atomic clocks, which define the second.", "পারমাণবিক ভর": "Atomic mass", "পারমাণবিক সংখ্যা": "Atomic number", "পিরিয়ডিক কার্ড ব্যাটল": "Periodic Card Battle", "পূর্বাবস্থা": "Undo", "পোড়াচুন বা কুইক লাইম নামেও পরিচিত। পানির সাথে মিশলে প্রচুর তাপ ছাড়ে।": "Also known as quicklime. Releases a lot of heat when mixed with water.", "প্রকৃতিতে পাওয়া সবচেয়ে দুর্লভ মৌল।": "The rarest element found in nature.", "প্রতি খেলায় ৩ বার চাল ফেরাতে পারবে।": "You can undo moves 3 times per game.", "প্রতি দানের শুরুতে ১টি কার্ড আপনি উঠবে। যতবার পারো যৌগ বানাও, অ্যাকশন খেলো, তারপর “দান শেষ”।": "At the start of each turn 1 card is drawn automatically. Craft as many compounds and play as many actions as you can, then press “End turn”.", "প্রতিপক্ষের অ্যাসিড/ক্ষার যৌগ নষ্ট, নইলে −৪ পয়েন্ট।": "Destroys an opponent's acid/base compound, otherwise −4 points.", "প্রতিপক্ষের ১টি কার্ড চুরি।": "Steals 1 card from an opponent.", "প্রতিপক্ষের ২ কার্ড নষ্ট": "Destroys 2 opponent cards", "প্রতিপক্ষের ২টি কার্ড নষ্ট; তার হাতে He (🛡) থাকলে সেটি শিল্ড হয়ে আটকায়।": "Destroys 2 of an opponent's cards; if they hold He (🛡) it works as a shield and blocks it.", "প্রতিপক্ষ": "Opponent", "প্রত্যেকে": "Everyone got", "প্রত্যেকের দানের আগে ডিভাইস হাতবদলের পর্দা আসে, যাতে অন্যের কার্ড দেখা না যায়।": "A hand-over screen appears before each turn so nobody sees another's cards.", "প্রফেসর মোল": "Professor Mole", "প্রশমন:": "Neutralisation:", "প্রশমন": "Neutralisation", "প্রায় ৩০ °C-এ হাতের তালুতেই গলে যায়।": "Melts in the palm of your hand at about 30 °C.", "প্রোটন + ইলেকট্রন": "Protons + electrons", "প্রোটন + নিউট্রন": "Protons + neutrons", "প্রোটন সংখ্যা": "Proton number", "প্ল্যাটিনাম": "Platinum", "ফসফরাস": "Phosphorus", "ফিউশন এখানেই থামল। চাইলে পূর্বাবস্থায় ফিরে আরেকবার চেষ্টা করো, নয়তো নতুন খেলা।": "Fusion stops here. Undo and try again, or start a new game.", "ফেলে দিলে": " discarded", "ফ্রান্সিয়াম": "Francium", "ফ্লুরিন": "Fluorine", "বড় তারার ভেতরে তৈরি হয়। বিজ্ঞাপনের সাইনে লালচে-কমলা আলো দেয়।": "Forged inside big stars. Gives a reddish-orange glow in advertising signs.", "বন্ধ করো": "Close", "বন্ধ": "Off", "বর্ণহীন": "Colourless", "বা যোজনী": "or valence", "বাইরের ব্যাকগ্রাউন্ডের রং বদলাও": "Change the outer background colour", "বাতাসে তৃতীয় সর্বাধিক গ্যাস; বাল্বে ভরা হয়।": "Third most abundant gas in air; fills light bulbs.", "বাতাসে তৃতীয় সর্বাধিক গ্যাস। বৈদ্যুতিক বাল্বে ভরা হয়।": "Third most abundant gas in air. Fills electric bulbs.", "বাতাসের প্রায় ৭৮% কোন গ্যাস?": "Which gas makes up about 78% of air?", "বাতাসের প্রায় ৭৮% নাইট্রোজেন।": "About 78% of air is nitrogen.", "বাতিল": "Cancel", "বানিয়ে ফেলেছে!": "built it first!", "বানিয়েছ +": "You crafted +", "বালু ও কম্পিউটার চিপের মূল উপাদান।": "Main component of sand and computer chips.", "বাষ্পীভবন": "Evaporation", "বাহ,": "Wow,", "বিজ্ঞাপনের সাইনে লালচে-কমলা আলো দেয়।": "Gives a reddish-orange glow in advertising signs.", "বিষাক্ত হলুদাভ-সবুজ গ্যাস; পানি জীবাণুমুক্ত করে।": "A toxic yellowish-green gas; disinfects water.", "বিস্ফোরণ:": "Blast:", "বিস্ফোরণ": "Blast", "বুঝেছি": "Got it", "বেকিং সোডার সংকেত কোনটি?": "Which is the formula of baking soda?", "বেরিয়াম মিল খেলে এক্স-রেতে পরিপাকতন্ত্র দেখা যায়।": "A barium meal makes the digestive tract visible on X-rays.", "বেরিয়াম": "Barium", "বেরিলিয়াম": "Beryllium", "বোরন": "Boron", "ব্রোমিন": "Bromine", "ভরসংখ্যা কিসের সমষ্টি?": "Mass number is the sum of what?", "ভরের নিত্যতা সূত্রের জন্য কে পরিচিত?": "Who is known for the law of conservation of mass?", "ভাবছে…": "is thinking…", "মহাবিশ্বের সবচেয়ে হালকা ও সবচেয়ে প্রাচুর্যপূর্ণ মৌল। তারার প্রধান জ্বালানি।": "The lightest and most abundant element in the universe. The main fuel of stars.", "মাঝারি": "Normal", "মানুষ খেলোয়াড় ১–৩ জন, বাকিরা রোবট। বিরতি ছাড়া যতবার খুশি খেলো — জিতলে বিশেষ শুভেচ্ছা পাবে!": "1–3 human players, the rest are robots. Play as many times as you like — win and get a special wish!", "মানুষের পাকস্থলীতে কোন অ্যাসিড থাকে?": "Which acid is found in the human stomach?", "মার্কারি (পারদ)": "Mercury (Hg)", "মাস্টার কেমিস্ট": "Master Chemist", "মিথেন": "Methane", "মুদ্রা ও রিচার্জেবল ব্যাটারিতে ব্যবহৃত হয়।": "Used in coins and rechargeable batteries.", "মূলক": "Radical", "মৃত্তিকা ধাতু": "Earth metal", "মেন্ডেলিভ": "Mendeleev", "মেরি কুরি": "Marie Curie", "মেলাও। না মিললে ডেক থেকে কার্ড তোলো।": "— match it, or draw from the deck.", "মেলানো": "Matching", "মোট খেলোয়াড়": "Total:", "ম্যাগনেসিয়ামের যোজনী কত?": "What is the valency of magnesium?", "ম্যাগনেসিয়াম": "Magnesium", "ম্যাঙ্গানিজ": "Manganese", "যে আগে পৌঁছাবে সে জিতবে। একা খেললে জিতেও খেলা চালিয়ে যেতে পারো।": "Whoever gets there first wins. Playing solo, you can keep playing even after winning.", "যোজনী ইলেকট্রন সংখ্যা": "Number of valence electrons", "যৌগ বানিয়ে সবার আগে লক্ষ্যে পৌঁছাও": "Craft compounds and reach the goal first", "যৌগ": "Compound", "যৌগের লড়াই · রোবটের সাথে": "Compound Clash · vs robots", "যৌগের লড়াই — সেটিংস": "Compound Clash — Settings", "রাদারফোর্ড": "Rutherford", "রুবিডিয়াম": "Rubidium", "রূপভেদ (এলোট্রোপ)": "Allotrope", "রেডন": "Radon", "রেডিয়াম": "Radium", "রেস": "Race", "রোবট কুরি": "Robot Curie", "রোবট নিউটন": "Robot Newton", "রোবট প্রতিপক্ষ": "Robot opponents", "রোবট বোর": "Robot Bohr", "রোবটদের সাথে রসায়নের ল্যাবে লড়াই! জিতলে বিশেষ শুভেচ্ছা, আর যতবার খুশি আবার খেলতে পারবে।": "Battle the robots in the chemistry lab! Win for a special wish, and play again as many times as you like.", "রোবটদের হারিয়ে সবার আগে": "Beat the robots and be first to make", "রোবটরা নিজের বোর্ডে একই সময়ে খেলে; যে আগে লক্ষ্য মৌল বানায় সে জেতে।": "The robots play on their own boards at the same time; whoever makes the target element first wins.", "রোবটের বুদ্ধি": "Robot skill:", "লক্ষ্য নেই — আটকে না যাওয়া পর্যন্ত খেলো।": "No goal — play until you get stuck.", "লক্ষ্য:": "Goal:", "লক্ষ্যের রেসে রোবট জিতেছে। তুমি তৈরি করেছ সর্বোচ্চ": "A robot won the race to the goal. The highest you made was", "লবণ": "Salt", "লাল": "Red", "লিথিয়াম": "Lithium", "লেড (সিসা)": "Lead (Pb)", "লেড": "Lead", "লোহায় গ্যালভানাইজিং করে মরিচা রোধ করে।": "Galvanises iron to stop rust.", "লোহায় মরিচা পড়তে অক্সিজেনের সাথে আর কী লাগে?": "Besides oxygen, what else does iron need to rust?", "ল্যাভয়সিয়ে": "Lavoisier", "শক্ত, হালকা ও মরিচা-প্রতিরোধী; শরীরের ইমপ্লান্টে ব্যবহৃত হয়।": "Strong, light and rust-resistant; used in body implants.", "শক্ত, হালকা ও মরিচা-প্রতিরোধী। শরীরের ইমপ্লান্টে ব্যবহৃত হয়।": "Strong, light and rust-resistant. Used in body implants.", "শব্দ চালু বা বন্ধ": "Sound on or off", "শব্দ চালু/বন্ধ": "Sound on/off", "শিখায় বেগুনি আভা দেয়; স্নায়ু সংকেত পরিবহনে গুরুত্বপূর্ণ।": "Gives a violet tint to flames; important for nerve signals.", "শিল্ড টেস্ট · +": "Shield test · +", "শিল্ড টেস্টে পাস": "passed the shield test", "শিল্ড টেস্ট": "Shield test", "শুধু ইলেকট্রন": "Electrons only", "শুধু তুমি; বাকিরা রোবট।": "Only you; the rest are robots.", "শুধু নিউট্রন": "Neutrons only", "শুধু বিক্রিয়া ধীর করে": "Only slows the reaction", "শেষ হবে সময়ে বা চাল ফুরোলে — যার পয়েন্ট বেশি সে জিতবে।": "Ends when time or moves run out — the one with more points wins.", "সক্রিয় ধাতু": "Reactive metal", "সক্রিয় পরিবার বেছে নাও": "Choose the active family", "সক্রিয় পরিবারের সাথে মেলে না।": "doesn't match the active family.", "সব ধাতুর মধ্যে সবচেয়ে ভালো বিদ্যুৎ পরিবাহী।": "The best electrical conductor of all metals.", "সবগুলো তরল বলে": "Because all are liquid", "সবচেয়ে তড়িৎঋণাত্মক মৌল; ফ্লুরাইড দাঁত রক্ষা করে।": "The most electronegative element; fluoride protects teeth.", "সবচেয়ে সরল হাইড্রোকার্বন। প্রাকৃতিক গ্যাসের প্রধান উপাদান।": "The simplest hydrocarbon. Main component of natural gas.", "সবচেয়ে হালকা ধাতু; রিচার্জেবল ব্যাটারিতে ব্যবহৃত হয়।": "The lightest metal; used in rechargeable batteries.", "সবচেয়ে হালকা মৌল এবং মহাবিশ্বে সবচেয়ে বেশি প্রাচুর্যপূর্ণ।": "The lightest element and the most abundant in the universe.", "সবচেয়ে হালকা মৌল কোনটি?": "Which is the lightest element?", "সবসময় সম্পূর্ণ ব্যবহৃত হয়ে যায়": "Is always fully consumed", "সবাই আটকে গেলেও পয়েন্টে তুমিই সেরা!": "Everyone is stuck, but you lead on points!", "সবার আগে তৈরি করো": "— be first to make it", "সবার আগে হাত খালি করে তুমি জিতেছ!": "You emptied your hand first and won!", "সবার আগে হাত খালি করেছে!": "emptied their hand first!", "সবার আগে হাতের সব কার্ড শেষ করো": "Be first to empty your hand", "সবুজ": "Green", "সময় শেষ!": "Time's up!", "সময় শেষে পয়েন্টে এগিয়ে থাকলে জয়।": "Win by leading on points when time runs out.", "সময় শেষে সবচেয়ে বেশি পয়েন্ট তোমার!": "You have the most points at time-up!", "সমযোজী বন্ধন": "Covalent bond", "সর্বশেষ শক্তিস্তর পূর্ণ থাকে": "Its outermost shell is full", "সর্বোচ্চ:": "Highest:", "সর্বোচ্চ": "Highest", "সহজ": "Easy", "সাম্যাবস্থা বদলে গেল — খেলার দিক উল্টে গেল।": "Equilibrium shifted — the direction reversed.", "সাম্যাবস্থা": "Equilibrium", "সালফার": "Sulphur", "সালফিউরাস অ্যাসিড": "Sulphurous acid", "সালফিউরিক অ্যাসিড": "Sulphuric acid", "সিঁড়ি": "Ladder", "সিজিয়াম": "Caesium", "সিলভার (রুপা)": "Silver (Ag)", "সিলিকন": "Silicon", "সূর্যের কেন্দ্রে হাইড্রোজেন ফিউশন হয়ে হিলিয়াম তৈরি হয়। এটি একটি নিষ্ক্রিয় গ্যাস।": "Hydrogen fuses into helium at the Sun's core. It is a noble gas.", "সেটিংসে রোবট প্রতিপক্ষ যোগ করে রেস দিতে পারো!": "Add robot opponents in Settings to race them!", "সেরা তুমিই,": "You are the best,", "সেলেনিয়াম": "Selenium", "সোডিয়াম হাইড্রক্সাইড": "Sodium hydroxide", "সোডিয়াম": "Sodium", "সোনার প্রতীক কোনটি?": "Which is the symbol of gold?", "স্টেইনলেস স্টিল ও ক্রোম প্লেটিংয়ের উজ্জ্বলতার কারণ।": "The reason stainless steel and chrome plating shine.", "স্ট্রনশিয়াম": "Strontium", "হলুদ কঠিন পদার্থ; সালফিউরিক অ্যাসিডের উৎস।": "A yellow solid; the source of sulphuric acid.", "হলুদ কঠিন পদার্থ। সালফিউরিক অ্যাসিডের উৎস।": "A yellow solid. The source of sulphuric acid.", "হলুদ": "Yellow", "হাইড্রোক্লোরিক অ্যাসিড": "Hydrochloric acid", "হাইড্রোজেন বন্ধন": "Hydrogen bond", "হাইড্রোজেন": "Hydrogen", "হাড় ও দাঁত গঠন করে; চুনাপাথরের প্রধান উপাদান।": "Builds bones and teeth; main component of limestone.", "হাড় ও দাঁত গঠন করে। চুনাপাথরের প্রধান উপাদান।": "Builds bones and teeth. Main component of limestone.", "হাতে সর্বোচ্চ": "You can hold at most", "হাতে ১টি কার্ড থাকলে ২ সেকেন্ডে MOLE! চাপো, নয়তো ২টি কার্ড তুলতে হবে।": "With 1 card left, press MOLE! within 2 seconds or draw 2 cards.", "হাতের সীমা": "Hand limit", "হাত": "Hand", "হালকা ও প্রচুর পাওয়া ধাতু; অক্সাইডের স্তর একে রক্ষা করে।": "A light, abundant metal; its oxide layer protects it.", "হালকা ও শক্ত ধাতু; এর ধুলা বিষাক্ত।": "A light, hard metal; its dust is toxic.", "হিলিয়াম": "Helium", "হীরা ও গ্রাফাইট দুটোই বিশুদ্ধ কার্বন।": "Diamond and graphite are both pure carbon.", "হীরা": "Diamond", "হ্যালোজেনের সর্বশেষ শক্তিস্তরে কতটি ইলেকট্রন থাকে?": "How many electrons are in a halogen's outermost shell?", "হ্যালোজেন": "Halogen", "০ (একা)": "0 (solo)", "২০ (ছোট)": "20 (short)", "৫০ (লম্বা)": "50 (long)", "১ জন": "1 player", "২ জন": "2 players", "৩ জন": "3 players", "১টি কার্ড চুরি": "1 card stolen", "২টি বাড়তি কার্ড।": "2 extra cards.", "২টি বাড়তি কার্ড": "2 extra cards", "সে.": " s", "মিনিট": " min", "— সক্রিয় পরিবার এখন": " — the active family is now", "— সবচেয়ে বেশি পয়েন্ট জেতে": " — most points wins", "↶ পূর্বাবস্থা (": "↶ Undo (", "∞ অন্তহীন": "∞ Endless", "⏰ সময় শেষ!": "⏰ Time's up!", "⏱ দানের টাইমার": "⏱ Turn timer", "⏱ সময়সীমা": "⏱ Time limit", "▶ আবার খেলো": "▶ Play again", "▶ খেলা শুরু": "▶ Start game", "▶ চলছে": "▶ Playing", "⚙ নতুন খেলা": "⚙ New game", "⚙ সেটিংস": "⚙ Settings", "⚡ অ্যাসিড-ক্ষার কম্বো! +৫ —": "⚡ Acid-base combo! +5 —", "⚡ তড়িৎ বিশ্লেষণ": "⚡ Electrolysis", "✔ আমি প্রস্তুত": "✔ I'm ready", "✔ দান শেষ": "✔ End turn", "✖ ফেলা বাতিল": "✖ Cancel discard", "⭐ পয়েন্ট": "⭐ Points", "🃏 ডেক বাকি": "🃏 Deck left", "🃏 ডেক": "🃏 Deck", "🃏 শুরুর কার্ড": "🃏 Starting cards", "🎯 কার ওপর": "🎯 On whom", "🎯 জিততে পয়েন্ট": "🎯 Points to win", "🎯 লক্ষ্য মৌল": "🎯 Target element", "🎯 লক্ষ্য": "🎯 Goal", "🏅 সেরা": "🏅 Best", "🏆 জয়ী": "🏆 Winner", "👤 তুমি": "👤 You", "👤 মানুষ খেলোয়াড়": "👤 Human players", "💀 আটকে গেছে": "💀 Stuck", "💥 বিস্ফোরণ": "💥 Blast", "💧 প্রশমন": "💧 Neutralise", "🗑 কার্ড ফেলো": "🗑 Discard a card", "🚀 একা খেলা চলছে।": "🚀 Playing solo.", "🛡 শিল্ড পাস": "🛡 Shield passes", "🤖 রোবট জিতেছে": "🤖 Robot won", "🤖 রোবট প্রতিপক্ষ": "🤖 Robot opponents", "🧠 রোবটের বুদ্ধি": "🧠 Robot skill", "🧪 অনুঘটক": "🧪 Catalyst", "🧪 যৌগ": "🧪 Compounds", "🧪 সর্বোচ্চ": "🧪 Highest", ", যোজনী": ", valence", "· যোজনী": "· valence", ") · যোজনী": ") · valence", "🌐 ভাষা": "🌐 Language", "বাংলা": "বাংলা", "১০ মিনিট": "10 min", "৩ মিনিট": "3 min", "৫ মিনিট": "5 min", "২০ সে.": "20 s", "৩০ সে.": "30 s", "৪০ সে.": "40 s", "৬০ সে.": "60 s", "৯০ সে.": "90 s", "২৫ °C তাপমাত্রায় নিরপেক্ষ দ্রবণের pH কত?": "What is the pH of a neutral solution at 25 °C?", "সময় শেষ — একটি কার্ড উঠল": "time's up — a card was drawn", "টি": ""};
+const BNL = 'ঀ-৥ৰ-৿', HAS_BN = /[ঀ-৿]/;
+const EN_RE = new RegExp('(?:' + Object.keys(EN_DICT).sort((a, b) => b.length - a.length).map(k => (new RegExp('^[' + BNL + ']').test(k) ? '(?<![' + BNL + '])' : '') + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?![' + BNL + '])', 'g');
+function trEn(s) {
+    if (!HAS_BN.test(s)) return s;
+    let o = s.replace(EN_RE, m => EN_DICT[m]);
+    o = o.replace(/[০-৯]/g, d => String(d.charCodeAt(0) - 0x09E6)).replace(/।/g, '.').replace(/ {2,}/g, ' ').replace(/ +([.,!?:;)])/g, '$1').replace(/You wins!/g, 'You win!').replace(/([^\s]) '(s )/g, "$1'$2");
+    return o;
+}
+const T_ORIG = new WeakMap(), T_OUT = new WeakMap(), ATTRS = ['title', 'aria-label', 'placeholder', 'alt'];
+function trNode(n) { if (LANG.v !== 'en' || T_OUT.get(n) === n.data) return; const o = trEn(n.data); if (o !== n.data) { T_ORIG.set(n, n.data); T_OUT.set(n, o); n.data = o; } }
+function trAttrs(el) {
+    if (LANG.v !== 'en' || !el.getAttribute) return;
+    ATTRS.forEach(a => { const v = el.getAttribute(a); if (v && HAS_BN.test(v)) { const o = trEn(v); if (o !== v) { (el.__to = el.__to || {})[a] = [v, o]; el.setAttribute(a, o); } } });
+}
+function trTree(root) {
+    if (root.nodeType === 3) { trNode(root); return; }
+    if (root.nodeType !== 1) return;
+    trAttrs(root);
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    let n; while ((n = w.nextNode())) { n.nodeType === 3 ? trNode(n) : trAttrs(n); }
+}
+function untr(root) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    let n; while ((n = w.nextNode())) {
+        if (n.nodeType === 3) { if (T_ORIG.has(n) && T_OUT.get(n) === n.data) { n.data = T_ORIG.get(n); T_OUT.delete(n); } }
+        else if (n.__to) { for (const a in n.__to) { if (n.getAttribute(a) === n.__to[a][1]) n.setAttribute(a, n.__to[a][0]); } n.__to = null; }
+    }
+}
+let langMO = null;
+function applyLang() {
+    document.documentElement.lang = LANG.v === 'en' ? 'en' : 'bn';
+    const lb = document.getElementById('langBtn'); if (lb) lb.textContent = LANG.v === 'en' ? 'বাং' : 'EN';
+    if (!document.body) return;
+    if (LANG.v === 'en') {
+        trTree(document.body);
+        if (!langMO) { langMO = new MutationObserver(ms => { if (LANG.v !== 'en') return; ms.forEach(m => { if (m.type === 'characterData') trNode(m.target); else if (m.type === 'attributes') trAttrs(m.target); else m.addedNodes.forEach(trTree); }); }); langMO.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS }); }
+        document.title = trEn(document.title);
+    } else { untr(document.body); }
+}
+function setLang(v) {
+    if (v === LANG.v) return; LANG.v = v; try { localStorage.setItem('prem-lang', v); } catch (e) {}
+    if (document.title.indexOf('|') > -1) { const t = document.title; document.title = v === 'en' ? trEn(t) : (window.__bnTitle || t); }
+    applyLang();
+    try { if (typeof render === 'function' && window.__t && window.__t.G) render(); } catch (e) {}
+}
+window.__bnTitle = document.title;
+document.addEventListener('DOMContentLoaded', () => { const lb = document.getElementById('langBtn'); if (lb) lb.addEventListener('click', () => setLang(LANG.v === 'en' ? 'bn' : 'en')); applyLang(); });
+applyLang();
 
-                <div class="vs-pill">VS</div>
+const PREM = (function () {
+    const $ = s => document.querySelector(s);
+    const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
+    const store = {
+        get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+        set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    };
+    function bg(key) {
+        const b = $('#bgBtn'); if (!b) return;
+        b.addEventListener('click', () => {
+            const root = document.documentElement, cur = root.getAttribute('data-bg');
+            const next = cur === '2' ? '3' : cur === '3' ? '1' : '2';
+            if (next === '1') root.removeAttribute('data-bg'); else root.setAttribute('data-bg', next);
+            try { localStorage.setItem(key + '-bg', next); } catch (e) {}
+        });
+    }
+    /* কনফেত্তি */
+    let fxRaf = 0, parts = [];
+    function confetti(opts) {
+        opts = opts || {}; const cv = $('#fx'); if (!cv) return;
+        const ctx = cv.getContext('2d'); const dpr = Math.min(2, window.devicePixelRatio || 1);
+        cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const cols = ['#f6c453', '#ff9f43', '#ff6b6b', '#4ade9a', '#6aa8ff', '#c792ff', '#ffffff'];
+        const burst = (x, y, n) => { for (let i = 0; i < n; i++) { const a = Math.random() * 6.283, v = 4 + Math.random() * 9; parts.push({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 5, g: .22 + Math.random() * .12, w: 5 + Math.random() * 7, h: 3 + Math.random() * 5, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[(Math.random() * cols.length) | 0], life: 110 + Math.random() * 70 }); } };
+        const rounds = opts.rounds || 6; let k = 0;
+        const iv = setInterval(() => { burst(innerWidth * (.15 + Math.random() * .7), innerHeight * (.15 + Math.random() * .35), 70); if (++k >= rounds) clearInterval(iv); }, 330);
+        burst(innerWidth / 2, innerHeight * .4, 120);
+        cancelAnimationFrame(fxRaf);
+        (function tick() {
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            parts = parts.filter(p => p.life > 0);
+            parts.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += p.g; p.vx *= .985; p.r += p.vr; p.life--; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.min(1, p.life / 40); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); });
+            if (parts.length || k < rounds) fxRaf = requestAnimationFrame(tick); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+        })();
+    }
+    const WISH = [
+        n => ['🏆', 'অভিনন্দন, ' + n + '! তুমিই চ্যাম্পিয়ন!', 'কী দুর্দান্ত খেলা! তোমার বুদ্ধি, ধৈর্য আর কৌশলের কাছে সবাই হার মানল। রসায়নের মঞ্চে আজ তোমারই রাজত্ব — শুভকামনা রইল সামনের প্রতিটি জয়ের জন্য! 🎉'],
+        n => ['👑', 'জয় তোমারই, ' + n + '!', 'নিখুঁত চাল, ঠান্ডা মাথা আর সেরা কৌশল — এটাই বিজয়ীর লক্ষণ! তুমি প্রমাণ করলে সত্যিকারের মাস্টার কাকে বলে। অনেক অনেক অভিনন্দন ও ভালোবাসা! 💛'],
+        n => ['🥇', 'সেরা তুমিই, ' + n + '! 🎊', 'আজকের লড়াইয়ে তুমি ছিলে অপ্রতিরোধ্য! এই জয় তোমার মেধা ও পরিশ্রমের পুরস্কার। এভাবেই এগিয়ে যাও — আকাশ ছোঁয়া সাফল্য তোমার অপেক্ষায়। শুভেচ্ছা অফুরান! ✨'],
+        n => ['🌟', 'বাহ, ' + n + '! কী অসাধারণ জয়!', 'তোমার প্রতিটি চালে ছিল প্রতিভার ছোঁয়া। এই বিজয় তোমার গর্বের — আমরাও গর্বিত! আরও একবার খেলে নিজের রেকর্ড ভাঙবে নাকি? অভিনন্দন চ্যাম্পিয়ন! 🔥']
+    ];
+    let wishI = 0;
+    function wish(o) { /* o: {name, line, stats:[], onAgain, onSetup} */
+        const w = WISH[(wishI++ + (Math.random() * WISH.length | 0)) % WISH.length](o.name || 'চ্যাম্পিয়ন');
+        const sh = $('#sheet');
+        sh.innerHTML = '<div class="wish"><div class="tro">' + w[0] + '</div><h2>' + w[1] + '</h2><div class="big">' + w[2] + '</div>' + (o.line ? '<p style="margin:10px 0 0;color:#ffe9a8;font-weight:600">' + o.line + '</p>' : '') +
+            (o.stats ? '<div class="stat">' + o.stats.map(s => '<span class="pill">' + s[0] + ' <b>' + s[1] + '</b></span>').join('') + '</div>' : '') +
+            (o.rank ? '<div class="rank">' + o.rank.map(r => '<div class="' + (r[2] ? 'me' : '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>').join('') + '</div>' : '') +
+            '<div class="row"><button class="pbtn gold big" id="wAgain">▶ আবার খেলো</button><button class="pbtn" id="wSetup">⚙ সেটিংস</button><button class="pbtn" id="wClose">বন্ধ করো</button></div></div>';
+        $('#modal').hidden = false; confetti({ rounds: 8 });
+        $('#wAgain').onclick = () => { $('#modal').hidden = true; o.onAgain && o.onAgain(); };
+        $('#wSetup').onclick = () => { o.onSetup && o.onSetup(); };
+        $('#wClose').onclick = () => { $('#modal').hidden = true; };
+    }
+    /* সেটআপ শিট: groups:[{k,label,opts:[[v,label]],note?,def}] */
+    function setup(o) {
+        const cfg = Object.assign({}, o.saved || {}); cfg.lang = LANG.v;
+        o.groups = o.groups.filter(g => g.k !== 'lang'); o.groups.unshift({ k: 'lang', label: '🌐 ভাষা', opts: [['bn', 'বাংলা'], ['en', 'English']], def: LANG.v });
+        o.groups.forEach(g => { if (cfg[g.k] === undefined || !g.opts.some(p => p[0] === cfg[g.k])) cfg[g.k] = g.def; });
+        const sh = $('#sheet');
+        function draw() {
+            if (o.fix) o.fix(cfg);
+            sh.innerHTML = '<span class="mtag">' + (o.tag || 'নতুন খেলা') + '</span><h2>' + o.title + '</h2>' + (o.intro ? '<p>' + o.intro + '</p>' : '') +
+                o.groups.map(g => { const dis = g.disabled ? g.disabled(cfg) : []; return '<div class="grp"><label>' + g.label + '</label><div class="seg" data-g="' + g.k + '">' + g.opts.map(p => '<button type="button" data-v="' + p[0] + '" aria-pressed="' + (cfg[g.k] === p[0]) + '"' + (dis.indexOf(p[0]) >= 0 ? ' disabled' : '') + '>' + p[1] + '</button>').join('') + '</div>' + (g.note ? '<div class="note">' + (typeof g.note === 'function' ? g.note(cfg) : g.note) + '</div>' : '') + '</div>'; }).join('') +
+                '<div class="row"><button class="pbtn gold big" id="sGo">▶ খেলা শুরু</button>' + (o.cancel ? '<button class="pbtn" id="sCancel">বাতিল</button>' : '') + '</div>';
+            sh.querySelectorAll('.seg').forEach(sg => sg.querySelectorAll('button').forEach(b => b.onclick = () => { const g = o.groups.find(x => x.k === sg.dataset.g); cfg[g.k] = typeof g.opts[0][0] === 'number' ? +b.dataset.v : b.dataset.v; if (g.k === 'lang') setLang(cfg.lang); draw(); }));
+            $('#sGo').onclick = () => { $('#modal').hidden = true; o.onStart(cfg); };
+            if (o.cancel) $('#sCancel').onclick = () => { $('#modal').hidden = true; };
+        }
+        draw(); $('#modal').hidden = false;
+    }
+    /* কাউন্টডাউন */
+    function countdown(sec, onTick, onEnd) {
+        let left = sec, h = null, dead = false;
+        const api = { stop() { dead = true; clearInterval(h); }, get left() { return left; }, add(n) { left += n; }, pause: false };
+        onTick && onTick(left);
+        h = setInterval(() => { if (dead || api.pause) return; left--; onTick && onTick(left); if (left <= 0) { dead = true; clearInterval(h); onEnd && onEnd(); } }, 1000);
+        return api;
+    }
+    const mmss = s => bn(Math.floor(s / 60)) + ':' + (s % 60 < 10 ? '০' : '') + bn(s % 60);
+    function toast(t) { const e = $('#toast'); if (!e) return; e.textContent = t; e.classList.remove('on'); void e.offsetWidth; e.classList.add('on'); }
+    return { L, setLang, trEn, get lang() { return LANG.v; }, $, bn, store, bg, confetti, wish, setup, countdown, mmss, toast };
+})();
 
-                <div class="score-box">
-                    <div class="score-meta">
-                        <span style="color: #fda4af;">ড. অ্যাটম (AI)</span>
-                        <span id="ai-score-lbl">০ / ৩০</span>
-                    </div>
-                    <div class="progress-track">
-                        <div id="ai-bar" class="progress-fill fill-ai"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hud-actions">
-                <a class="btn-hud" href="games.html#premium" title="গেম হাবে ফিরে যাও" aria-label="গেম হাবে ফিরে যাও">←<span class="hide-sm">গেম হাব</span></a>
-                <button class="btn-hud" id="sound-toggle-btn" onclick="toggleAudio()" title="শব্দ চালু/বন্ধ" aria-label="শব্দ চালু বা বন্ধ করো">
-                    <span id="sound-emoji">🔊</span>
-                </button>
-                <button class="btn-hud amber" onclick="toggleModal('rules-modal', true)">
-                    <span>📖 নিয়ম</span>
-                </button>
-                <button class="btn-hud" onclick="startNewGame()">
-                    <span>🔄 নতুন</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- প্রধান অ্যারেনা -->
-    <main id="main-arena" class="table-arena">
-
-        <!-- প্রতিপক্ষ -->
-        <section class="opponent-zone">
-            <div class="ai-profile">
-                <div class="ai-avatar">🤖</div>
-                <div>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <strong style="font-size:0.95rem; color:#fda4af;">ড. অ্যাটম (AI)</strong>
-                        <span id="ai-thinking-pill" style="display:none; font-size:0.7rem; background:#f43f5e; color:#fff; padding:2px 8px; border-radius:99px; font-weight:800;">ভাবছে…</span>
-                    </div>
-                    <div id="ai-crafted-strip" class="crafted-strip">
-                        <span style="font-size:0.75rem; color:#64748b;">এখনো কোনো যৌগ তৈরি হয়নি</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ai-hand-cards" id="ai-hand-visual" title="ড. অ্যাটমের হাত"></div>
-        </section>
-
-        <!-- দিকনির্দেশনা -->
-        <section class="guidance-bar">
-            <div class="guidance-text">
-                <span class="pulse-dot" id="guidance-dot"></span>
-                <span id="guidance-prompt">তোমার দান! যৌগ তৈরি করো, অ্যাকশন কার্ড খেলো, অথবা দান শেষ করো।</span>
-            </div>
-
-            <div class="combo-pill" title="HCl আর NaOH দুটোই তৈরি করলে +৫ বোনাস!">
-                <span>⚡ অ্যাসিড-ক্ষার কম্বো (+৫):</span>
-                <span id="combo-hcl" style="opacity:0.5;">HCl</span>
-                <span>+</span>
-                <span id="combo-naoh" style="opacity:0.5;">NaOH</span>
-            </div>
-        </section>
-
-        <!-- ল্যাব নোট -->
-        <section class="lab-note" id="lab-note" aria-live="polite"></section>
-
-        <!-- ল্যাব ওয়ার্কবেঞ্চ -->
-        <section class="workbench">
-            <div class="deck-zone">
-                <div id="draw-deck-btn" class="draw-deck-card" onclick="handleDeckClick()" role="button" tabindex="0" aria-label="কার্ডের ডেক">
-                    <div style="font-size:2rem; margin-bottom:4px;">⚛️</div>
-                    <div style="font-size:0.72rem; font-weight:800; letter-spacing:1px; color:#67e8f9;">কার্ড ডেক</div>
-                    <div id="deck-count-lbl" style="font-family:'JetBrains Mono','Hind Siliguri',monospace; font-size:0.72rem; color:#94a3b8; margin-top:4px;"></div>
-                </div>
-            </div>
-
-            <div class="recipes-grid" id="recipes-container"></div>
-        </section>
-
-        <!-- তোমার হাত -->
-        <section class="player-zone">
-            <div class="player-toolbar">
-                <div>
-                    <div style="font-size:0.9rem; font-weight:800; color:#67e8f9;">
-                        🧪 তোমার ল্যাব হাত (<span id="hand-count-lbl">০</span>/৭ কার্ড)
-                    </div>
-                    <div id="player-crafted-strip" class="crafted-strip"></div>
-                </div>
-
-                <div class="hand-controls">
-                    <button id="discard-btn" class="btn-discard-toggle" onclick="toggleDiscardMode()">
-                        🗑️ কার্ড ফেলো
-                    </button>
-                    <button id="end-turn-btn" class="btn-end-turn" onclick="endPlayerTurn()">
-                        দান শেষ ➜
-                    </button>
-                </div>
-            </div>
-
-            <div class="player-hand-grid" id="player-hand-grid"></div>
-        </section>
-
-        <p class="credit">Developed &amp; Designed by Ahanaf Abid Omlan</p>
-    </main>
-
-    <!-- নিয়মের মডাল -->
-    <div id="rules-modal" class="modal-backdrop" onclick="if(event.target===this) toggleModal('rules-modal', false)">
-        <div class="modal-card" role="dialog" aria-modal="true" aria-label="CHEM-CLASH-এর নিয়ম">
-            <div class="modal-title">
-                <span>⚗️ CHEM-CLASH কীভাবে খেলবে</span>
-                <button class="btn-hud" onclick="toggleModal('rules-modal', false)" aria-label="বন্ধ করো">✕</button>
-            </div>
-
-            <div class="rule-block">
-                <h4>🎯 মূল লক্ষ্য (Objective)</h4>
-                হাতের <strong>এলিমেন্ট কার্ড</strong> দিয়ে ল্যাব ওয়ার্কবেঞ্চের <strong>যৌগের রেসিপি</strong> তৈরি করো। যে আগে <strong>৩০ পয়েন্ট</strong> পাবে, সে-ই জিতবে!
-            </div>
-
-            <div class="rule-block">
-                <h4>🔄 দানের নিয়ম (Turn Flow)</h4>
-                <ul style="padding-left:18px; margin-top:4px;">
-                    <li>প্রতিটি দানের শুরুতে <strong>১টি কার্ড আপনা-আপনি</strong> তোমার হাতে আসে।</li>
-                    <li>রেসিপির সব উপাদান হাতে থাকলে কার্ডটি সবুজ হয়ে জ্বলে ওঠে। তখন <strong>তৈরি করো</strong> চেপে পয়েন্ট নাও। এক দানে একাধিক যৌগও বানাতে পারো।</li>
-                    <li>লাল <strong>অ্যাকশন কার্ডে</strong> ক্লিক করলেই তার বিশেষ বিক্রিয়া ঘটবে।</li>
-                    <li>দান শেষে হাতে সর্বোচ্চ <strong>৭টি কার্ড</strong> রাখা যাবে। বেশি হলে একটি কার্ড ফেলে দিতে হবে।</li>
-                </ul>
-            </div>
-
-            <div class="rule-block">
-                <h4>⚡ অ্যাকশন কার্ড ও নোবেল শিল্ড</h4>
-                <ul style="padding-left:18px; margin-top:4px;">
-                    <li><strong>Catalyst (অনুঘটক):</strong> সাথে সাথে ২টি বাড়তি কার্ড তোলো।</li>
-                    <li><strong>Exothermic Blast (তাপমোচী বিস্ফোরণ):</strong> প্রতিপক্ষের ২টি এলোমেলো কার্ড নষ্ট করে, তবে <strong>He (নিষ্ক্রিয় গ্যাস)</strong> থাকলে সেটি শিল্ড হয়ে আটকে দেয়।</li>
-                    <li><strong>Electrolysis (তড়িৎ বিশ্লেষণ):</strong> প্রতিপক্ষের হাত থেকে ১টি এলোমেলো কার্ড চুরি করো।</li>
-                    <li><strong>Neutralization (প্রশমন):</strong> প্রতিপক্ষের সর্বশেষ তৈরি অ্যাসিড বা ক্ষার নষ্ট করে দেয়। না থাকলে তার ৪ পয়েন্ট কমে।</li>
-                    <li><strong>অ্যাসিড-ক্ষার কম্বো:</strong> <strong>HCl</strong> আর <strong>NaOH</strong> দুটোই তৈরি করলে <strong>+৫ বোনাস</strong>!</li>
-                </ul>
-            </div>
-
-            <button class="btn-primary-full" onclick="toggleModal('rules-modal', false)">বুঝেছি, লড়াই শুরু!</button>
-        </div>
-    </div>
-
-    <!-- জয়/পরাজয়ের মডাল -->
-    <div id="endgame-modal" class="modal-backdrop">
-        <div class="modal-card" style="text-align:center;" role="dialog" aria-modal="true" aria-label="খেলার ফলাফল">
-            <div id="endgame-emoji" style="font-size:3.5rem; margin-bottom:8px;">🏆</div>
-            <h2 id="endgame-title" style="font-size:1.75rem; font-weight:900; color:#fff; margin-bottom:6px;">জয়!</h2>
-            <p id="endgame-desc" style="color:#cbd5e1; font-size:0.95rem; margin-bottom:18px;"></p>
-
-            <div style="display:flex; justify-content:center; gap:16px; margin-bottom:20px;">
-                <div style="background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.35); padding:12px 22px; border-radius:16px;">
-                    <div style="font-size:0.75rem; color:#94a3b8;">তোমার পয়েন্ট</div>
-                    <div id="final-you" style="font-size:1.6rem; font-weight:900; color:#67e8f9;">৩০</div>
-                </div>
-                <div style="background:rgba(244,63,94,0.12); border:1px solid rgba(244,63,94,0.35); padding:12px 22px; border-radius:16px;">
-                    <div style="font-size:0.75rem; color:#94a3b8;">ড. অ্যাটম</div>
-                    <div id="final-ai" style="font-size:1.6rem; font-weight:900; color:#fda4af;">১৮</div>
-                </div>
-            </div>
-
-            <button class="btn-primary-full" onclick="startNewGame();">
-                🔄 আবার খেলো
-            </button>
-            <a class="btn-hud" href="games.html#premium" style="margin-top:10px; justify-content:center; width:100%; padding:11px;">← গেম হাবে ফিরে যাও</a>
-        </div>
-    </div>
-
-    <script>
-        /* =========================================================================
-           1. রসায়নের ডেক ও যৌগের রেসিপি
-           ========================================================================= */
-        const bn = n => Number(n).toLocaleString('bn-BD', { useGrouping: false });
-        const WIN_SCORE = 30;
-        const HAND_LIMIT = 7;
         const THEME_LABEL = { nonmetal: 'অধাতু', alkali: 'ক্ষার ধাতু', alkaline: 'মৃত্তিকা ধাতু', halogen: 'হ্যালোজেন', noble: 'নিষ্ক্রিয় গ্যাস' };
 
         const ELEMENTS = {
@@ -1186,698 +386,182 @@
             { id: 'NaOH',  formula: 'NaOH',  name: 'Sodium Hydroxide',  bn: 'সোডিয়াম হাইড্রক্সাইড',  points: 12, req: { Na: 1, O: 1, H: 1 }, tag: 'Base',    tagBn: 'ক্ষার',     fact: 'তীব্র ক্ষার, কস্টিক সোডা নামেও পরিচিত। সাবান তৈরিতে ব্যবহৃত হয়।' }
         ];
 
-        /* =========================================================================
-           2. ZERO-DEPENDENCY WEB AUDIO SYNTHESIZER
-           ========================================================================= */
-        let audioCtx = null;
-        let soundOn = true;
-
-        function playSfx(type) {
-            if (!soundOn) return;
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-
-                const now = audioCtx.currentTime;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                if (type === 'draw') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(520, now);
-                    osc.frequency.exponentialRampToValueAtTime(780, now + 0.08);
-                    gain.gain.setValueAtTime(0.08, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-                    osc.start(now);
-                    osc.stop(now + 0.09);
-                } else if (type === 'craft') {
-                    // Harmonic Alchemy Chime
-                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-                        const o = audioCtx.createOscillator();
-                        const g = audioCtx.createGain();
-                        o.type = 'triangle';
-                        o.frequency.setValueAtTime(freq, now + i * 0.06);
-                        g.gain.setValueAtTime(0.1, now + i * 0.06);
-                        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.35);
-                        o.connect(g);
-                        g.connect(audioCtx.destination);
-                        o.start(now + i * 0.06);
-                        o.stop(now + i * 0.06 + 0.36);
-                    });
-                } else if (type === 'blast') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(140, now);
-                    osc.frequency.exponentialRampToValueAtTime(38, now + 0.32);
-                    gain.gain.setValueAtTime(0.18, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
-                    osc.start(now);
-                    osc.stop(now + 0.35);
-                } else if (type === 'shield') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(880, now);
-                    osc.frequency.setValueAtTime(1174.66, now + 0.08);
-                    gain.gain.setValueAtTime(0.12, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-                    osc.start(now);
-                    osc.stop(now + 0.26);
-                } else if (type === 'win') {
-                    [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, i) => {
-                        const o = audioCtx.createOscillator();
-                        const g = audioCtx.createGain();
-                        o.type = 'triangle';
-                        o.frequency.setValueAtTime(freq, now + i * 0.09);
-                        g.gain.setValueAtTime(0.12, now + i * 0.09);
-                        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.5);
-                        o.connect(g);
-                        g.connect(audioCtx.destination);
-                        o.start(now + i * 0.09);
-                        o.stop(now + i * 0.09 + 0.52);
-                    });
-                }
-            } catch (e) {}
-        }
-
-        function toggleAudio() {
-            soundOn = !soundOn;
-            document.getElementById('sound-emoji').textContent = soundOn ? '🔊' : '🔇';
-        }
-
-        /* =========================================================================
-           3. PARTICLE BURST ENGINE (Chemical Reaction Visuals)
-           ========================================================================= */
-        const canvas = document.getElementById('fx-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        function spawnParticles(x, y, color = '#10b981', count = 32) {
-            for (let i = 0; i < count; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 2 + Math.random() * 6;
-                particles.push({
-                    x, y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed - 1.5,
-                    radius: 2.5 + Math.random() * 4,
-                    color,
-                    alpha: 1,
-                    decay: 0.018 + Math.random() * 0.02
-                });
-            }
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.12; // subtle gravity
-                p.alpha -= p.decay;
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                } else {
-                    ctx.save();
-                    ctx.globalAlpha = p.alpha;
-                    ctx.fillStyle = p.color;
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-            }
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        /* =========================================================================
-           4. খেলার অবস্থা ও মূল যুক্তি
-           ========================================================================= */
-        let game = {};
-        let gameSeq = 0;
-        const wait = ms => new Promise(r => setTimeout(r, ms));
-
-        function createShuffledDeck() {
-            const deck = [];
-            let uid = 1;
-            Object.values(ELEMENTS).forEach(el => {
-                for (let i = 0; i < el.count; i++) deck.push({ uid: uid++, kind: 'element', ...el });
-            });
-            ACTIONS.forEach(act => {
-                for (let i = 0; i < act.count; i++) deck.push({ uid: uid++, kind: 'action', ...act });
-            });
-            return shuffle(deck);
-        }
-
-        function shuffle(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        /* খোলা রেসিপির মধ্যে একই রেসিপি যেন দুবার না আসে */
-        function nextRecipe() {
-            for (let t = 0; t < 12; t++) {
-                if (game.recipeDeck.length === 0) game.recipeDeck = shuffle([...RECIPES, ...RECIPES]);
-                const r = game.recipeDeck.pop();
-                if (!game.openRecipes.some(o => o && o.id === r.id)) return r;
-                game.recipeDeck.unshift(r);
-            }
-            return game.recipeDeck.pop() || RECIPES[0];
-        }
-
-        function startNewGame() {
-            gameSeq++;
-            game = {
-                id: gameSeq,
-                deck: createShuffledDeck(),
-                recipeDeck: shuffle([...RECIPES, ...RECIPES]),
-                openRecipes: [],
-                playerHand: [],
-                aiHand: [],
-                playerScore: 0,
-                aiScore: 0,
-                playerCrafted: [],
-                aiCrafted: [],
-                playerCombo: false,
-                aiCombo: false,
-                turn: 'player',
-                drawnThisTurn: true,
-                discardMode: false,
-                over: false,
-                lastNote: null
-            };
-
-            for (let i = 0; i < 3; i++) game.openRecipes.push(nextRecipe());
-            for (let i = 0; i < 6; i++) game.playerHand.push(drawCard());
-            game.playerHand.push(drawCard()); /* দানের শুরুর আপনা-আপনি ১টি কার্ড */
-            for (let i = 0; i < 6; i++) game.aiHand.push(drawCard());
-
-            toggleModal('endgame-modal', false);
-            showBanner('⚗️', 'লড়াই শুরু! ১টি কার্ড আপনা-আপনি উঠেছে। যৌগ তৈরি করো বা অ্যাকশন কার্ড খেলো।');
-            render();
-        }
-
-        function drawCard() {
-            if (game.deck.length === 0) game.deck = createShuffledDeck();
-            return game.deck.pop();
-        }
-
-        function countElements(hand) {
-            const map = {};
-            hand.forEach(c => {
-                if (c.kind === 'element') map[c.symbol] = (map[c.symbol] || 0) + 1;
-            });
-            return map;
-        }
-
-        function canSynthesize(hand, recipe) {
-            const counts = countElements(hand);
-            return Object.entries(recipe.req).every(([sym, qty]) => (counts[sym] || 0) >= qty);
-        }
-
-        function synthesize(recipeIdx, who = 'player', btnEl = null) {
-            if (game.over) return;
-            if (who === 'player' && game.turn !== 'player') return;
-
-            const recipe = game.openRecipes[recipeIdx];
-            const hand = who === 'player' ? game.playerHand : game.aiHand;
-
-            if (!recipe || !canSynthesize(hand, recipe)) return;
-
-            /* প্রয়োজনীয় এলিমেন্ট কার্ড সরানো */
-            Object.entries(recipe.req).forEach(([sym, qty]) => {
-                let left = qty;
-                for (let i = hand.length - 1; i >= 0 && left > 0; i--) {
-                    if (hand[i].kind === 'element' && hand[i].symbol === sym) {
-                        hand.splice(i, 1);
-                        left--;
-                    }
-                }
-            });
-
-            if (btnEl) {
-                const rect = btnEl.getBoundingClientRect();
-                spawnParticles(rect.left + rect.width / 2, rect.top, '#10b981', 38);
-            } else {
-                spawnParticles(window.innerWidth / 2, window.innerHeight * 0.42, '#f59e0b', 34);
-            }
-
-            playSfx('craft');
-            game.lastNote = recipe;
-
-            if (who === 'player') {
-                game.playerScore += recipe.points;
-                game.playerCrafted.push(recipe);
-                showBanner('✨', `+${bn(recipe.points)} পয়েন্ট! তুমি ${recipe.formula} (${recipe.bn}) তৈরি করেছ!`);
-                checkAcidBaseCombo('player');
-            } else {
-                game.aiScore += recipe.points;
-                game.aiCrafted.push(recipe);
-                showBanner('🤖', `ড. অ্যাটম ${recipe.formula} (${recipe.bn}) তৈরি করল (+${bn(recipe.points)} পয়েন্ট)!`);
-                checkAcidBaseCombo('ai');
-            }
-
-            /* ব্যবহৃত রেসিপির জায়গায় নতুন রেসিপি */
-            game.openRecipes[recipeIdx] = null;
-            game.openRecipes[recipeIdx] = nextRecipe();
-
-            render();
-            evaluateWin();
-        }
-
-        function checkAcidBaseCombo(who) {
-            const crafted = who === 'player' ? game.playerCrafted : game.aiCrafted;
-            const hasHCl = crafted.some(r => r.id === 'HCl');
-            const hasNaOH = crafted.some(r => r.id === 'NaOH');
-            const id = game.id;
-
-            if (who === 'player' && hasHCl && hasNaOH && !game.playerCombo) {
-                game.playerCombo = true;
-                game.playerScore += 5;
-                spawnParticles(window.innerWidth / 2, window.innerHeight * 0.3, '#fbbf24', 50);
-                setTimeout(() => { if (game.id === id) showBanner('⚡', 'অ্যাসিড-ক্ষার কম্বো! +৫ বোনাস পয়েন্ট!'); }, 1100);
-            } else if (who === 'ai' && hasHCl && hasNaOH && !game.aiCombo) {
-                game.aiCombo = true;
-                game.aiScore += 5;
-                setTimeout(() => { if (game.id === id) showBanner('⚡', 'ড. অ্যাটম অ্যাসিড-ক্ষার কম্বো পেল (+৫ পয়েন্ট)!'); }, 1100);
-            }
-        }
-
-        function executeAction(handIdx, who = 'player') {
-            if (game.over) return;
-            const hand = who === 'player' ? game.playerHand : game.aiHand;
-            const oppHand = who === 'player' ? game.aiHand : game.playerHand;
-            const card = hand[handIdx];
-            if (!card || card.kind !== 'action') return;
-
-            hand.splice(handIdx, 1);
-
-            if (card.id === 'catalyst') {
-                hand.push(drawCard(), drawCard());
-                playSfx('draw');
-                spawnParticles(window.innerWidth / 2, window.innerHeight * 0.6, '#38bdf8', 28);
-                showBanner('🧪', who === 'player' ? 'অনুঘটক! তুমি ২টি বাড়তি কার্ড তুললে!' : 'ড. অ্যাটম অনুঘটক ব্যবহার করল (+২ কার্ড)!');
-            }
-            else if (card.id === 'blast') {
-                const shieldIdx = oppHand.findIndex(c => c.symbol === 'He');
-                if (shieldIdx !== -1) {
-                    oppHand.splice(shieldIdx, 1);
-                    playSfx('shield');
-                    spawnParticles(window.innerWidth / 2, window.innerHeight * 0.45, '#c084fc', 36);
-                    showBanner('🛡️', who === 'player'
-                        ? 'ড. অ্যাটমের নিষ্ক্রিয় গ্যাস (He) তোমার বিস্ফোরণ আটকে দিল!'
-                        : 'তোমার নিষ্ক্রিয় গ্যাস শিল্ড (He) ড. অ্যাটমের বিস্ফোরণ আটকে দিল!');
-                } else {
-                    playSfx('blast');
-                    triggerScreenShake();
-                    spawnParticles(window.innerWidth / 2, window.innerHeight * 0.45, '#f43f5e', 45);
-                    let removed = 0;
-                    for (let i = 0; i < 2 && oppHand.length > 0; i++) {
-                        oppHand.splice(Math.floor(Math.random() * oppHand.length), 1);
-                        removed++;
-                    }
-                    showBanner('💥', who === 'player'
-                        ? `বিস্ফোরণ! ড. অ্যাটমের ${bn(removed)}টি কার্ড নষ্ট হলো!`
-                        : `বিস্ফোরণ! ড. অ্যাটম তোমার ${bn(removed)}টি কার্ড নষ্ট করল!`);
-                }
-            }
-            else if (card.id === 'electrolysis') {
-                if (oppHand.length > 0) {
-                    const stolen = oppHand.splice(Math.floor(Math.random() * oppHand.length), 1)[0];
-                    hand.push(stolen);
-                    playSfx('draw');
-                    spawnParticles(window.innerWidth / 2, window.innerHeight * 0.5, '#06b6d4', 30);
-                    showBanner('⚡', who === 'player'
-                        ? `তড়িৎ বিশ্লেষণ! তুমি ${stolen.kind === 'element' ? stolen.bn + ' (' + stolen.symbol + ')' : stolen.bn} চুরি করলে!`
-                        : 'তড়িৎ বিশ্লেষণ! ড. অ্যাটম তোমার হাত থেকে ১টি কার্ড চুরি করল!');
-                } else {
-                    showBanner('⚡', 'তড়িৎ বিশ্লেষণ ব্যবহার হলো, কিন্তু প্রতিপক্ষের হাতে চুরি করার মতো কার্ড নেই!');
-                }
-            }
-            else if (card.id === 'neutralization') {
-                playSfx('blast');
-                const oppCrafted = who === 'player' ? game.aiCrafted : game.playerCrafted;
-                const acidBaseIdx = [...oppCrafted].reverse().findIndex(c => c.tag === 'Acid' || c.tag === 'Base');
-
-                if (acidBaseIdx !== -1) {
-                    const actualIdx = oppCrafted.length - 1 - acidBaseIdx;
-                    const destroyed = oppCrafted.splice(actualIdx, 1)[0];
-                    if (who === 'player') game.aiScore = Math.max(0, game.aiScore - destroyed.points);
-                    else game.playerScore = Math.max(0, game.playerScore - destroyed.points);
-                    showBanner('💧', `প্রশমন! ${destroyed.formula} নষ্ট হলো (−${bn(destroyed.points)} পয়েন্ট)!`);
-                } else {
-                    if (who === 'player') game.aiScore = Math.max(0, game.aiScore - 4);
-                    else game.playerScore = Math.max(0, game.playerScore - 4);
-                    showBanner('💧', who === 'player'
-                        ? 'প্রশমন! ড. অ্যাটমের পয়েন্ট ৪ কমে গেল!'
-                        : 'প্রশমন! ড. অ্যাটম তোমার পয়েন্ট ৪ কমিয়ে দিল!');
-                }
-            }
-
-            render();
-            evaluateWin();
-        }
-
-        /* =========================================================================
-           5. খেলোয়াড়ের চাল ও AI-এর দান
-           ========================================================================= */
-        function onPlayerCardClick(idx) {
-            if (game.turn !== 'player' || game.over) return;
-
-            if (game.discardMode) {
-                const discarded = game.playerHand.splice(idx, 1)[0];
-                game.discardMode = false;
-                playSfx('draw');
-                showBanner('🗑️', `${discarded.bn} ফেলে দেওয়া হলো।`);
-                render();
-                return;
-            }
-
-            const card = game.playerHand[idx];
-            if (!card) return;
-            if (card.kind === 'action') {
-                executeAction(idx, 'player');
-            } else {
-                showBanner('⚛️', `${card.bn} (${card.symbol}) · যোজনী ${card.valency}। উপরের জ্বলন্ত রেসিপির সাথে মিলিয়ে যৌগ তৈরি করো!`);
-            }
-        }
-
-        function handleDeckClick() {
-            if (game.turn !== 'player' || game.over) return;
-            if (game.drawnThisTurn) {
-                showBanner('ℹ️', 'এই দানের শুরুতেই তুমি ১টি কার্ড তুলেছ!');
-            } else {
-                game.playerHand.push(drawCard());
-                game.drawnThisTurn = true;
-                playSfx('draw');
-                render();
-            }
-        }
-
-        function toggleDiscardMode() {
-            if (game.turn !== 'player' || game.over) return;
-            game.discardMode = !game.discardMode;
-            render();
-        }
-
-        function endPlayerTurn() {
-            if (game.turn !== 'player' || game.over) return;
-
-            if (game.playerHand.length > HAND_LIMIT) {
-                game.discardMode = true;
-                showBanner('⚠️', `হাতে সর্বোচ্চ ${bn(HAND_LIMIT)}টি কার্ড রাখা যায়! দান শেষ করার আগে একটি কার্ড ফেলো।`);
-                render();
-                return;
-            }
-
-            game.discardMode = false;
-            game.turn = 'ai';
-            render();
-            const id = game.id;
-            setTimeout(() => { if (game.id === id) executeAiTurn(); }, 850);
-        }
-
-        /* AI-এর সিদ্ধান্ত: সবচেয়ে বেশি পয়েন্টের যৌগ, তারপর কাজে লাগে এমন অ্যাকশন */
-        function bestAiRecipe() {
-            let bestIdx = -1, bestPts = -1;
-            game.openRecipes.forEach((rec, i) => {
-                if (canSynthesize(game.aiHand, rec) && rec.points > bestPts) { bestPts = rec.points; bestIdx = i; }
-            });
-            return bestIdx;
-        }
-
-        function pickAiAction() {
-            const h = game.aiHand;
-            const playerHasAcidBase = game.playerCrafted.some(c => c.tag === 'Acid' || c.tag === 'Base');
-            const order = [
-                ['neutralization', () => playerHasAcidBase || game.playerScore >= 8],
-                ['electrolysis',   () => game.playerHand.length > 0],
-                ['blast',          () => game.playerHand.length >= 3],
-                ['catalyst',       () => h.length <= 5]
-            ];
-            for (const [id, ok] of order) {
-                const i = h.findIndex(c => c.kind === 'action' && c.id === id);
-                if (i !== -1 && ok()) return i;
-            }
-            return -1;
-        }
-
-        /* ফেলার মতো কার্ড: রেসিপির প্রয়োজনের চেয়ে যা বেশি আছে (He একটি রেখে দেয়) */
-        function aiDiscardIndex() {
-            const needed = { He: 1 };
-            game.openRecipes.forEach(r => Object.entries(r.req).forEach(([s, q]) => { needed[s] = Math.max(needed[s] || 0, q); }));
-            const counts = countElements(game.aiHand);
-            let best = -1, bestSurplus = -99;
-            game.aiHand.forEach((c, i) => {
-                if (c.kind !== 'element') return;
-                const surplus = counts[c.symbol] - (needed[c.symbol] || 0);
-                if (surplus > bestSurplus) { bestSurplus = surplus; best = i; }
-            });
-            return best !== -1 ? best : 0;
-        }
-
-        async function executeAiTurn() {
-            const id = game.id;
-            const alive = () => game.id === id && !game.over && game.turn === 'ai';
-            if (!alive()) return;
-
-            /* ধাপ ১: ১টি কার্ড তোলা */
-            game.aiHand.push(drawCard());
-            playSfx('draw');
-            render();
-            await wait(800); if (!alive()) return;
-
-            /* ধাপ ২: যতগুলো যৌগ বানানো যায় (সর্বোচ্চ ৩টি) */
-            for (let n = 0; n < 3; n++) {
-                const idx = bestAiRecipe();
-                if (idx === -1) break;
-                synthesize(idx, 'ai');
-                await wait(900); if (!alive()) return;
-            }
-
-            /* ধাপ ৩: কাজে লাগে এমন অ্যাকশন (সর্বোচ্চ ২টি) */
-            for (let played = 0; played < 2; played++) {
-                const aIdx = pickAiAction();
-                if (aIdx === -1) break;
-                executeAction(aIdx, 'ai');
-                await wait(900); if (!alive()) return;
-
-                const idx = bestAiRecipe();
-                if (idx !== -1) {
-                    synthesize(idx, 'ai');
-                    await wait(900); if (!alive()) return;
-                }
-            }
-
-            /* ধাপ ৪: হাতের সীমা মানা এবং দান ফেরত দেওয়া */
-            while (game.aiHand.length > HAND_LIMIT) game.aiHand.splice(aiDiscardIndex(), 1);
-
-            game.turn = 'player';
-            game.playerHand.push(drawCard());
-            game.drawnThisTurn = true;
-            playSfx('draw');
-            render();
-        }
-
-        function evaluateWin() {
-            if (game.over) return;
-            if (game.playerScore >= WIN_SCORE || game.aiScore >= WIN_SCORE) {
-                game.over = true;
-                const won = game.playerScore >= game.aiScore;
-                playSfx('win');
-                if (won) spawnParticles(window.innerWidth / 2, window.innerHeight / 2, '#10b981', 80);
-
-                document.getElementById('endgame-emoji').textContent = won ? '🏆' : '🤖';
-                document.getElementById('endgame-title').textContent = won ? 'জয়! তুমি মাস্টার কেমিস্ট!' : 'ড. অ্যাটম জিতেছে!';
-                document.getElementById('endgame-desc').textContent = won
-                    ? `তুমি আগে ${bn(WIN_SCORE)} পয়েন্ট ছুঁয়ে ল্যাবের দখল নিয়েছ!`
-                    : `ড. অ্যাটম আগে ${bn(WIN_SCORE)} পয়েন্টে পৌঁছেছে। আবার চেষ্টা করবে?`;
-                document.getElementById('final-you').textContent = bn(game.playerScore);
-                document.getElementById('final-ai').textContent = bn(game.aiScore);
-                toggleModal('endgame-modal', true);
-            }
-        }
-
-        /* =========================================================================
-           6. রেন্ডারিং ও ভিজ্যুয়াল সাহায্যকারী
-           ========================================================================= */
-        function render() {
-            document.getElementById('player-score-lbl').textContent = `${bn(game.playerScore)} / ${bn(WIN_SCORE)}`;
-            document.getElementById('ai-score-lbl').textContent = `${bn(game.aiScore)} / ${bn(WIN_SCORE)}`;
-            document.getElementById('player-bar').style.width = `${Math.min(100, (game.playerScore / WIN_SCORE) * 100)}%`;
-            document.getElementById('ai-bar').style.width = `${Math.min(100, (game.aiScore / WIN_SCORE) * 100)}%`;
-
-            document.getElementById('deck-count-lbl').textContent = `${bn(game.deck.length)}টি কার্ড`;
-
-            const aiHandEl = document.getElementById('ai-hand-visual');
-            aiHandEl.innerHTML = game.aiHand.map(() => `<div class="card-back-mini">⚛️</div>`).join('');
-
-            const aiStrip = document.getElementById('ai-crafted-strip');
-            aiStrip.innerHTML = game.aiCrafted.length
-                ? game.aiCrafted.map(c => `<span class="compound-chip ai">${c.formula} (+${bn(c.points)})</span>`).join('')
-                : `<span style="font-size:0.75rem; color:#64748b;">এখনো কোনো যৌগ তৈরি হয়নি</span>`;
-
-            const pStrip = document.getElementById('player-crafted-strip');
-            pStrip.innerHTML = game.playerCrafted.map(c => `<span class="compound-chip">${c.formula} (+${bn(c.points)})</span>`).join('');
-
-            const hasHCl = game.playerCrafted.some(c => c.id === 'HCl');
-            const hasNaOH = game.playerCrafted.some(c => c.id === 'NaOH');
-            document.getElementById('combo-hcl').style.opacity = hasHCl ? '1' : '0.45';
-            document.getElementById('combo-naoh').style.opacity = hasNaOH ? '1' : '0.45';
-
-            const note = document.getElementById('lab-note');
-            note.innerHTML = game.lastNote
-                ? `<span class="note-ico">🔬</span><div><b>${game.lastNote.formula}</b> · ${game.lastNote.bn} <span class="note-en">(${game.lastNote.name})</span><p>${game.lastNote.fact}</p></div>`
-                : `<span class="note-ico">🔬</span><div><b>ল্যাব নোট</b><p>কোনো যৌগ তৈরি হলে এখানে তার বিজ্ঞান-তথ্য দেখা যাবে।</p></div>`;
-
-            const promptEl = document.getElementById('guidance-prompt');
-            const dotEl = document.getElementById('guidance-dot');
-            const aiPill = document.getElementById('ai-thinking-pill');
-            const endBtn = document.getElementById('end-turn-btn');
-            const discBtn = document.getElementById('discard-btn');
-
-            discBtn.classList.toggle('active', game.discardMode);
-
-            if (game.turn === 'player') {
-                aiPill.style.display = 'none';
-                endBtn.disabled = false;
-                dotEl.style.background = '#10b981';
-
-                const anyCraftable = game.openRecipes.some(r => canSynthesize(game.playerHand, r));
-                if (game.discardMode) {
-                    promptEl.textContent = 'ফেলার মোড: হাতের যেকোনো কার্ডে ক্লিক করলে সেটি ফেলে দেওয়া হবে।';
-                    dotEl.style.background = '#f43f5e';
-                } else if (game.playerHand.length > HAND_LIMIT) {
-                    promptEl.textContent = `হাতে ${bn(game.playerHand.length)}টি কার্ড (সর্বোচ্চ ${bn(HAND_LIMIT)})। যৌগ তৈরি করো, অ্যাকশন খেলো, অথবা ১টি কার্ড ফেলো।`;
-                    dotEl.style.background = '#f59e0b';
-                } else if (anyCraftable) {
-                    promptEl.textContent = 'বিক্রিয়া প্রস্তুত! উপরে জ্বলন্ত যৌগের "তৈরি করো" বাটনে ক্লিক করো!';
-                } else {
-                    promptEl.textContent = 'তোমার দান: অ্যাকশন কার্ড খেলো, অথবা "দান শেষ" চেপে পরের রাউন্ডে যাও।';
-                }
-            } else {
-                aiPill.style.display = 'inline-block';
-                endBtn.disabled = true;
-                dotEl.style.background = '#f43f5e';
-                promptEl.textContent = 'ড. অ্যাটমের দান: অণুর সম্ভাব্য সংযোজন বিশ্লেষণ করছে…';
-            }
-
-            const counts = countElements(game.playerHand);
-            const recContainer = document.getElementById('recipes-container');
-            recContainer.innerHTML = game.openRecipes.map((rec, idx) => {
-                const ready = game.turn === 'player' && !game.over && canSynthesize(game.playerHand, rec);
-                const reqHtml = Object.entries(rec.req).map(([sym, qty]) => {
-                    const met = (counts[sym] || 0) >= qty;
-                    return `<span class="req-pill ${met ? 'met' : ''}">${qty}× ${sym}</span>`;
-                }).join('');
-
-                return `
-                    <div class="recipe-card ${ready ? 'craftable' : ''}">
-                        <div>
-                            <div class="recipe-header">
-                                <span class="pts-badge">+${bn(rec.points)} পয়েন্ট</span>
-                                <span class="recipe-tag">${rec.tagBn}</span>
-                            </div>
-                            <div class="recipe-formula">${rec.formula}</div>
-                            <div class="recipe-name">${rec.bn} · ${rec.name}</div>
-                        </div>
-                        <div>
-                            <div class="req-list">${reqHtml}</div>
-                            <button class="btn-synthesize ${ready ? 'ready' : ''}" ${!ready ? 'disabled' : ''} onclick="synthesize(${idx}, 'player', this)">
-                                ${ready ? '✨ তৈরি করো' : 'উপাদান লাগবে'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('hand-count-lbl').textContent = bn(game.playerHand.length);
-            const handGrid = document.getElementById('player-hand-grid');
-            handGrid.innerHTML = game.playerHand.map((card, idx) => {
-                const discClass = game.discardMode ? 'discard-highlight' : '';
-                if (card.kind === 'element') {
-                    return `
-                        <div class="chem-card theme-${card.theme} ${discClass}" role="button" tabindex="0" aria-label="${card.bn} (${card.symbol})" onclick="onPlayerCardClick(${idx})">
-                            <div class="card-top-row">
-                                <span>${card.atomic}</span>
-                                <span class="valency-tag" title="যোজনী">${card.valency}</span>
-                            </div>
-                            <div class="card-center">
-                                <div class="element-symbol">${card.symbol}</div>
-                                <div class="element-name">${card.name}</div>
-                                <div class="element-bn">${card.bn}</div>
-                            </div>
-                            <div class="card-footer-tag">
-                                ${card.symbol === 'He' ? '🛡️ বিস্ফোরণ শিল্ড' : THEME_LABEL[card.theme]}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    return `
-                        <div class="chem-card theme-action ${discClass}" role="button" tabindex="0" aria-label="অ্যাকশন কার্ড: ${card.bn}" onclick="onPlayerCardClick(${idx})">
-                            <div class="card-top-row">
-                                <span>অ্যাকশন</span>
-                                <span>${card.icon}</span>
-                            </div>
-                            <div class="card-center">
-                                <div class="element-symbol" style="font-size:1.55rem;">${card.icon}</div>
-                                <div class="element-name" style="font-size:0.78rem;">${card.name}</div>
-                                <div class="element-bn">${card.bn}</div>
-                            </div>
-                            <div class="card-footer-tag" style="color:#fecdd3;">
-                                ${card.tag}
-                            </div>
-                        </div>
-                    `;
-                }
-            }).join('');
-        }
-
-        let toastTimeout;
-        function showBanner(icon, message) {
-            const toast = document.getElementById('cinematic-toast');
-            document.getElementById('toast-icon').textContent = icon;
-            document.getElementById('toast-msg').textContent = message;
-            toast.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3200);
-        }
-
-        function triggerScreenShake() {
-            const arena = document.getElementById('main-arena');
-            arena.classList.add('shake-active');
-            setTimeout(() => arena.classList.remove('shake-active'), 460);
-        }
-
-        function toggleModal(id, open) {
-            const el = document.getElementById(id);
-            if (open) el.classList.add('open');
-            else el.classList.remove('open');
-        }
-
-        /* কীবোর্ড: Enter/Space দিয়ে কার্ড বা ডেক চালানো, Esc দিয়ে নিয়ম বন্ধ করা */
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { toggleModal('rules-modal', false); return; }
-            if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.getAttribute && e.target.getAttribute('role') === 'button' && e.target.tagName !== 'BUTTON') {
-                e.preventDefault();
-                e.target.click();
-            }
-        });
-
-        window.onload = startNewGame;
-    </script>
+(function () {
+'use strict';
+const $ = PREM.$, bn = PREM.bn;
+const sfx = (function () { try { return NBSound('chemclash'); } catch (e) { const n = () => {}; return { ok: n, bad: n, tap: n, pop: n, win: n, lose: n }; } })();
+PREM.bg('chem');
+const HAND_LIMIT = 7;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const BOTN = [['ড. অ্যাটম', '🤖'], ['প্রফেসর মোল', '🧪'], ['ডা. ক্যাটালিস্ট', '⚗️']];
+const SK = { easy: { think: 1100, label: 'সহজ' }, normal: { think: 850, label: 'মাঝারি' }, hard: { think: 650, label: 'কঠিন' } };
+let CFG = PREM.store.get('chem-cfg', { bots: 1, skill: 'normal', target: 30, timer: 0 });
+let G = null, seq = 0, clock = null;
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
+function createDeck() { const d = []; let uid = 1; Object.values(ELEMENTS).forEach(el => { for (let i = 0; i < el.count; i++) d.push(Object.assign({ uid: uid++, kind: 'element' }, el)); }); ACTIONS.forEach(a => { for (let i = 0; i < a.count; i++) d.push(Object.assign({ uid: uid++, kind: 'action' }, a)); }); return shuffle(d); }
+const drawCard = () => { if (!G.deck.length) G.deck = createDeck(); return G.deck.pop(); };
+function nextRecipe() { for (let t = 0; t < 12; t++) { if (!G.rdeck.length) G.rdeck = shuffle(RECIPES.concat(RECIPES)); const r = G.rdeck.pop(); if (!G.open.some(o => o && o.id === r.id)) return r; G.rdeck.unshift(r); } return G.rdeck.pop() || RECIPES[0]; }
+function counts(h) { const m = {}; h.forEach(c => { if (c.kind === 'element') m[c.symbol] = (m[c.symbol] || 0) + 1; }); return m; }
+const canSyn = (h, r) => { const c = counts(h); return Object.keys(r.req).every(s => (c[s] || 0) >= r.req[s]); };
+const me = () => G.players[0];
+const isHumanTurn = () => G.turn === 0 && !G.over;
+function log(t) { G.log.unshift(t); if (G.log.length > 4) G.log.pop(); }
+function say(t) { G.msg = t; }
+
+/* ---------- ক্রিয়া ---------- */
+function synthesize(pi, ri) {
+    const P = G.players[pi], r = G.open[ri]; if (!r || !canSyn(P.hand, r)) return false;
+    Object.keys(r.req).forEach(sym => { let left = r.req[sym]; for (let i = P.hand.length - 1; i >= 0 && left > 0; i--) if (P.hand[i].kind === 'element' && P.hand[i].symbol === sym) { P.hand.splice(i, 1); left--; } });
+    P.score += r.points; P.crafted.push(r); sfx.ok();
+    log(L((pi === 0 ? 'তুমি ' : P.name + ' ') + r.formula + ' (' + r.bn + ') বানালে +' + bn(r.points), (pi === 0 ? 'You' : P.name) + ' crafted ' + r.formula + ' (' + r.bn + ') +' + r.points)); PREM.toast(L('✨ ' + (pi === 0 ? 'তুমি' : P.name) + ' ' + r.formula + ' বানিয়েছ +' + bn(r.points), '✨ ' + (pi === 0 ? 'You' : P.name) + ' crafted ' + r.formula + ' +' + r.points));
+    if (r.id === 'HCl' || r.id === 'NaOH') { const has = id => P.crafted.some(x => x.id === id); if (has('HCl') && has('NaOH') && !P.combo) { P.combo = true; P.score += 5; log('⚡ ' + P.name + ' অ্যাসিড-ক্ষার কম্বো +৫'); setTimeout(() => PREM.toast('⚡ অ্যাসিড-ক্ষার কম্বো! +৫ — ' + P.name), 900); } }
+    G.open[ri] = nextRecipe(); G.lastFact = r; render(); checkWin(); return true;
+}
+function doAction(pi, hi, ti) {
+    const P = G.players[pi], card = P.hand[hi]; if (!card || card.kind !== 'action') return;
+    const T = ti != null ? G.players[ti] : null; P.hand.splice(hi, 1); const who = pi === 0 ? 'তুমি' : P.name;
+    if (card.id === 'catalyst') { P.hand.push(drawCard(), drawCard()); sfx.pop(); log('🧪 ' + who + ' অনুঘটক: ২টি বাড়তি কার্ড'); }
+    else if (card.id === 'blast') {
+        const si = T.hand.findIndex(c => c.symbol === 'He');
+        if (si !== -1) { T.hand.splice(si, 1); sfx.ok(); log(L('🛡️ ' + T.name + '-এর He শিল্ড ' + who + '-এর বিস্ফোরণ আটকাল!', '🛡️ ' + T.name + "'s He shield blocked " + (who === 'তুমি' ? 'your' : who + "'s") + ' blast!')); }
+        else { sfx.bad(); let rm = 0; for (let i = 0; i < 2 && T.hand.length; i++) { T.hand.splice(Math.floor(Math.random() * T.hand.length), 1); rm++; } log('💥 ' + who + ' বিস্ফোরণ: ' + T.name + '-এর ' + bn(rm) + 'টি কার্ড নষ্ট'); document.querySelector('.stage').classList.add('shake'); setTimeout(() => document.querySelector('.stage').classList.remove('shake'), 400); }
+    } else if (card.id === 'electrolysis') {
+        if (T.hand.length) { const st = T.hand.splice(Math.floor(Math.random() * T.hand.length), 1)[0]; P.hand.push(st); sfx.pop(); log('⚡ ' + who + ' তড়িৎ বিশ্লেষণ: ' + T.name + '-এর ১টি কার্ড চুরি' + (pi === 0 ? ' (' + (st.kind === 'element' ? st.bn : st.bn) + ')' : '')); }
+        else log('⚡ ' + T.name + '-এর হাতে চুরি করার কার্ড নেই');
+    } else if (card.id === 'neutralization') {
+        sfx.bad(); const idx = T.crafted.map(c => c.tag).lastIndexOf('Acid') > T.crafted.map(c => c.tag).lastIndexOf('Base') ? T.crafted.map(c => c.tag).lastIndexOf('Acid') : T.crafted.map(c => c.tag).lastIndexOf('Base');
+        if (idx !== -1) { const d = T.crafted.splice(idx, 1)[0]; T.score = Math.max(0, T.score - d.points); log('💧 ' + who + ' প্রশমন: ' + T.name + '-এর ' + d.formula + ' নষ্ট (−' + bn(d.points) + ')'); }
+        else { T.score = Math.max(0, T.score - 4); log('💧 ' + who + ' প্রশমন: ' + T.name + '-এর পয়েন্ট −৪'); }
+    }
+    render(); checkWin();
+}
+const needsTarget = c => c.id !== 'catalyst';
+function nextTurn() {
+    if (G.over) return; G.turn = (G.turn + 1) % G.players.length; startTurn();
+}
+function startTurn() {
+    const id = G.id, P = G.players[G.turn]; P.hand.push(drawCard()); if (G.turn === 0) { G.newUid = P.hand[P.hand.length - 1].uid; sfx.tap(); }
+    G.pending = null; G.discardMode = false; render();
+    if (P.human) { say('তোমার দান! ১টি কার্ড উঠেছে। রেসিপির সাথে মিলিয়ে যৌগ বানাও বা অ্যাকশন কার্ড খেলো।'); render(); startClock(id); }
+    else { stopClock(); say(P.name + ' ভাবছে…'); render(); setTimeout(() => { if (G.id === id) botTurn(id); }, SK[CFG.skill].think); }
+}
+function endTurn() {
+    if (!isHumanTurn()) return; const P = me();
+    if (P.hand.length > HAND_LIMIT) { G.discardMode = true; say('হাতে সর্বোচ্চ ' + bn(HAND_LIMIT) + 'টি কার্ড রাখা যায়! একটি কার্ড ফেলো।'); render(); return; }
+    stopClock(); G.discardMode = false; G.pending = null; nextTurn();
+}
+function startClock(id) {
+    stopClock(); if (!CFG.timer) return; $('#pTimer').hidden = false;
+    clock = PREM.countdown(CFG.timer, s => { $('#tmv').textContent = bn(Math.max(0, s)); $('#pTimer').className = 'pill' + (s <= 8 ? ' warn' : ''); }, () => { if (G && G.id === id && isHumanTurn()) { PREM.toast('⏰ সময় শেষ!'); sfx.bad(); const P = me(); while (P.hand.length > HAND_LIMIT) P.hand.splice(Math.floor(Math.random() * P.hand.length), 1); G.pending = null; G.discardMode = false; stopClock(); nextTurn(); } });
+}
+function stopClock() { if (clock) { clock.stop(); clock = null; } $('#pTimer').hidden = true; }
+
+/* ---------- রোবট ---------- */
+function opponentsOf(pi) { return G.players.map((p, i) => i).filter(i => i !== pi); }
+function pickTarget(pi, kind, sk) {
+    const ops = opponentsOf(pi); if (!ops.length) return null;
+    if (sk === 'easy') return ops[Math.floor(Math.random() * ops.length)];
+    const byScore = ops.slice().sort((a, b) => G.players[b].score - G.players[a].score);
+    if (kind === 'neutralization') { const ab = byScore.find(i => G.players[i].crafted.some(c => c.tag === 'Acid' || c.tag === 'Base')); return ab != null ? ab : byScore[0]; }
+    if (kind === 'electrolysis') return ops.slice().sort((a, b) => G.players[b].hand.length - G.players[a].hand.length)[0];
+    if (kind === 'blast') { const t = byScore.find(i => G.players[i].hand.length >= 3 && (sk !== 'hard' || !G.players[i].hand.some(c => c.symbol === 'He'))); return t != null ? t : byScore[0]; }
+    return byScore[0];
+}
+function bestRecipe(P) { let bi = -1, bp = -1; G.open.forEach((r, i) => { if (canSyn(P.hand, r) && r.points > bp) { bp = r.points; bi = i; } }); return bi; }
+function pickAct(pi, sk) {
+    const P = G.players[pi], ops = opponentsOf(pi).map(i => G.players[i]); const lead = Math.max.apply(null, ops.map(o => o.score).concat([0]));
+    const rules = [['neutralization', () => ops.some(o => o.crafted.some(c => c.tag === 'Acid' || c.tag === 'Base')) || lead >= 8], ['electrolysis', () => ops.some(o => o.hand.length > 0)], ['blast', () => ops.some(o => o.hand.length >= 3)], ['catalyst', () => P.hand.length <= (sk === 'hard' ? 6 : 5)]];
+    if (sk === 'easy' && Math.random() < 0.45) return -1;
+    for (const r of rules) { const i = P.hand.findIndex(c => c.kind === 'action' && c.id === r[0]); if (i !== -1 && r[1]()) return i; }
+    return -1;
+}
+function discardIdx(P) {
+    const need = { He: 1 }; G.open.forEach(r => Object.keys(r.req).forEach(s => { need[s] = Math.max(need[s] || 0, r.req[s]); })); const c = counts(P.hand); let bi = -1, bs = -99;
+    P.hand.forEach((x, i) => { if (x.kind !== 'element') return; const sp = c[x.symbol] - (need[x.symbol] || 0); if (sp > bs) { bs = sp; bi = i; } }); return bi !== -1 ? bi : 0;
+}
+async function botTurn(id) {
+    const pi = G.turn, P = G.players[pi], sk = CFG.skill, alive = () => G.id === id && !G.over && G.turn === pi, gap = sk === 'hard' ? 650 : 850;
+    for (let n = 0; n < 3; n++) { const ri = bestRecipe(P); if (ri === -1 || (sk === 'easy' && n > 0 && Math.random() < .5)) break; synthesize(pi, ri); await sleep(gap); if (!alive()) return; }
+    for (let k = 0; k < 2; k++) {
+        const ai = pickAct(pi, sk); if (ai === -1) break; const card = P.hand[ai], t = needsTarget(card) ? pickTarget(pi, card.id, sk) : null;
+        doAction(pi, ai, t); await sleep(gap); if (!alive()) return;
+        const ri = bestRecipe(P); if (ri !== -1) { synthesize(pi, ri); await sleep(gap); if (!alive()) return; }
+    }
+    while (P.hand.length > HAND_LIMIT) P.hand.splice(discardIdx(P), 1);
+    render(); nextTurn();
+}
+
+/* ---------- জয় ---------- */
+function checkWin() {
+    if (G.over) return; const hit = G.players.map((p, i) => i).filter(i => G.players[i].score >= CFG.target); if (!hit.length) return;
+    const w = hit.sort((a, b) => G.players[b].score - G.players[a].score)[0]; endGame(w, 'score');
+}
+function endGame(w, why) {
+    G.over = true; stopClock(); render(); const W = G.players[w];
+    const rk = G.players.map((p, i) => [(p.human ? '👤 তুমি' : p.ico + ' ' + p.name), bn(p.score) + ' পয়েন্ট', i === w, p.score]).sort((a, b) => b[3] - a[3]);
+    const rows = rk.map((r, i) => [(i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : '🥉 ') + r[0], r[1], r[2]]);
+    if (W.human) { sfx.win(); PREM.wish({ name: 'মাস্টার কেমিস্ট', line: 'তুমি আগে ' + bn(CFG.target) + ' পয়েন্ট ছুঁয়ে ল্যাবের দখল নিয়েছ!', stats: [['⭐ পয়েন্ট', bn(me().score)], ['🧪 যৌগ', bn(me().crafted.length)]], rank: rows, onAgain: newGame, onSetup: () => openSetup(false) }); return; }
+    sfx.lose();
+    $('#sheet').innerHTML = '<span class="mtag">খেলা শেষ</span><h2>' + W.ico + ' ' + W.name + ' জিতেছে!</h2><p>রোবটের বুদ্ধি ' + SK[CFG.skill].label + ' ছিল। কৌশল বদলে আবার চেষ্টা করলেই হারানো যাবে!</p><div class="rank">' + rows.map(r => '<div class="' + (r[2] ? 'me' : '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>').join('') + '</div><div class="row"><button class="pbtn gold big" id="again">▶ আবার খেলো</button><button class="pbtn" id="setupB">⚙ সেটিংস</button></div>';
+    $('#modal').hidden = false; $('#again').onclick = newGame; $('#setupB').onclick = () => openSetup(false);
+}
+
+/* ---------- রেন্ডার ---------- */
+function cardHtml(c, i, mode) {
+    if (c.kind === 'element') return '<div class="cd ' + c.theme + (c.uid === G.newUid ? ' new' : '') + (mode === 'disc' ? ' disc' : '') + '" data-i="' + i + '" title="' + c.bn + ' · ' + THEME_LABEL[c.theme] + '"><span class="az">' + c.atomic + '</span><span class="vl">' + c.valency + '</span><b class="sy">' + c.symbol + '</b><span class="bnm">' + c.bn + (c.symbol === 'He' ? ' 🛡' : '') + '</span></div>';
+    return '<button class="cd act' + (mode === 'disc' ? ' disc' : '') + (G.pending && G.pending.hi === i ? ' sel' : '') + (c.uid === G.newUid ? ' new' : '') + '" data-i="' + i + '" title="' + c.name + '"><span class="ic">' + c.icon + '</span><span class="tgx">' + c.tag + '</span><span class="bnm">' + c.bn + '</span></button>';
+}
+function render() {
+    if (!G) return; const P = me(), human = isHumanTurn(), cnt = counts(P.hand);
+    $('#tgt').textContent = bn(CFG.target); $('#deckN').textContent = bn(G.deck.length);
+    $('#recipes').innerHTML = G.open.map((r, i) => { const can = human && canSyn(P.hand, r); return '<button class="rc' + (can ? ' can' : '') + '" data-r="' + i + '"><span class="pt">+' + bn(r.points) + '</span><span class="f">' + r.formula + '</span><span class="n">' + r.bn + ' · <span class="tg">' + r.tagBn + '</span></span><span class="req">' + Object.keys(r.req).map(s => '<span class="rq' + ((cnt[s] || 0) >= r.req[s] ? ' ok' : '') + '">' + s + ' ' + bn(Math.min(cnt[s] || 0, r.req[s])) + '/' + bn(r.req[s]) + '</span>').join('') + '</span></button>'; }).join('');
+    $('#opps').innerHTML = G.players.map((p, i) => '<div class="op' + (G.turn === i && !G.over ? ' turn' : '') + (G.pending && i !== 0 ? ' tgt' : '') + '" data-p="' + i + '"><h4><span>' + (p.human ? '👤 তুমি' : p.ico + ' ' + p.name) + '</span><b>' + bn(p.score) + '</b></h4><div class="bar2"><i style="width:' + Math.min(100, Math.round(p.score / CFG.target * 100)) + '%"></i></div><small><span>🃏 ' + bn(p.hand.length) + 'টি</span><span>' + (G.turn === i && !G.over ? '▶ চলছে' : '') + '</span></small><div class="cr">' + p.crafted.map(c => '<span title="' + c.bn + '">' + c.formula + '</span>').join('') + '</div></div>').join('');
+    $('#status').textContent = G.over ? 'খেলা শেষ।' : G.pending ? L('🎯 কার ওপর ' + G.pending.card.bn + ' চালাবে? লাল ঘেরা খেলোয়াড়কে ট্যাপ করো (বাতিল: কার্ডে আবার ট্যাপ)।', '🎯 Play ' + G.pending.card.bn + ' on whom? Tap a red-outlined player (cancel: tap the card again).') : (G.msg || '');
+    $('#log').innerHTML = G.log.map(l => '<div>• ' + l + '</div>').join('');
+    $('#hand').innerHTML = P.hand.map((c, i) => cardHtml(c, i, G.discardMode ? 'disc' : '')).join('');
+    G.newUid = null;
+    $('#handInfo').textContent = 'তোমার হাত · ' + bn(P.hand.length) + '/' + bn(HAND_LIMIT) + 'টি কার্ড';
+    $('#btnEnd').disabled = !human; $('#btnDisc').disabled = !human || !P.hand.length; $('#btnDisc').textContent = G.discardMode ? '✖ ফেলা বাতিল' : '🗑 কার্ড ফেলো';
+}
+/* ---------- ইনপুট ---------- */
+$('#recipes').addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (!b || !isHumanTurn() || G.discardMode) return; const ri = +b.dataset.r; if (!synthesize(0, ri)) { sfx.bad(); PREM.toast('এই রেসিপির জন্য কার্ড যথেষ্ট নয়।'); } });
+$('#hand').addEventListener('click', e => {
+    const el = e.target.closest('[data-i]'); if (!el || !isHumanTurn()) return; const i = +el.dataset.i, c = me().hand[i]; if (!c) return;
+    if (G.discardMode) { const d = me().hand.splice(i, 1)[0]; log('🗑 ' + d.bn + ' ফেলে দিলে'); G.discardMode = false; sfx.tap(); say('কার্ড ফেলা হয়েছে। এবার দান শেষ করো।'); render(); return; }
+    if (c.kind === 'element') { PREM.toast(c.bn + ' (' + c.symbol + ') · যোজনী ' + c.valency + ' · ' + THEME_LABEL[c.theme]); return; }
+    if (G.pending && G.pending.hi === i) { G.pending = null; render(); return; }
+    if (!needsTarget(c)) { doAction(0, i, null); return; }
+    const ops = opponentsOf(0); if (ops.length === 1) { doAction(0, i, ops[0]); return; }
+    G.pending = { hi: i, card: c }; sfx.tap(); render();
+});
+$('#opps').addEventListener('click', e => { const el = e.target.closest('[data-p]'); if (!el || !G.pending || !isHumanTurn()) return; const ti = +el.dataset.p; if (ti === 0) return; const hi = G.pending.hi; G.pending = null; doAction(0, hi, ti); });
+$('#btnEnd').addEventListener('click', endTurn);
+$('#btnDisc').addEventListener('click', () => { if (!isHumanTurn()) return; G.discardMode = !G.discardMode; G.pending = null; render(); });
+$('#btnRules').addEventListener('click', () => { $('#sheet').innerHTML = '<span class="mtag">কীভাবে খেলবে</span><h2>যৌগ বানিয়ে সবার আগে লক্ষ্যে পৌঁছাও</h2><ul class="rules"><li><b>দান</b><span>প্রতি দানের শুরুতে ১টি কার্ড আপনি উঠবে। যতবার পারো যৌগ বানাও, অ্যাকশন খেলো, তারপর “দান শেষ”।</span></li><li><b>যৌগ</b><span>উপরের রেসিপিতে লাগা মৌলের কার্ড হাতে থাকলে রেসিপিতে ট্যাপ করো — পয়েন্ট পাবে।</span></li><li><b>💥 বিস্ফোরণ</b><span>প্রতিপক্ষের ২টি কার্ড নষ্ট; তার হাতে He (🛡) থাকলে সেটি শিল্ড হয়ে আটকায়।</span></li><li><b>⚡ তড়িৎ বিশ্লেষণ</b><span>প্রতিপক্ষের ১টি কার্ড চুরি।</span></li><li><b>💧 প্রশমন</b><span>প্রতিপক্ষের অ্যাসিড/ক্ষার যৌগ নষ্ট, নইলে −৪ পয়েন্ট।</span></li><li><b>🧪 অনুঘটক</b><span>২টি বাড়তি কার্ড।</span></li><li><b>কম্বো</b><span>HCl ও NaOH দুটোই বানালে একবার +৫।</span></li><li><b>হাতের সীমা</b><span>সর্বোচ্চ ' + bn(HAND_LIMIT) + 'টি কার্ড; বেশি হলে ফেলতে হবে।</span></li><li><b>টাইমার</b><span>চালু থাকলে সময় শেষে দান নিজে থেকে শেষ হবে।</span></li></ul><div class="row"><button class="pbtn gold" id="rClose">বুঝেছি</button></div>'; $('#modal').hidden = false; $('#rClose').onclick = () => { $('#modal').hidden = true; }; });
+$('#btnNew').addEventListener('click', () => openSetup(false));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && G && G.pending) { G.pending = null; render(); } });
+function openSetup(first) {
+    PREM.setup({ tag: 'CHEM-CLASH', title: 'যৌগের লড়াই — সেটিংস', saved: CFG, cancel: !first && !!G && !G.over, intro: 'রোবটদের সাথে রসায়নের ল্যাবে লড়াই! জিতলে বিশেষ শুভেচ্ছা, আর যতবার খুশি আবার খেলতে পারবে।',
+        groups: [
+            { k: 'bots', label: '🤖 রোবট প্রতিপক্ষ', def: 1, opts: [[1, '১'], [2, '২'], [3, '৩']] },
+            { k: 'skill', label: '🧠 রোবটের বুদ্ধি', def: 'normal', opts: [['easy', 'সহজ'], ['normal', 'মাঝারি'], ['hard', 'কঠিন']] },
+            { k: 'target', label: '🎯 জিততে পয়েন্ট', def: 30, opts: [[20, '২০ (ছোট)'], [30, '৩০'], [50, '৫০ (লম্বা)']] },
+            { k: 'timer', label: '⏱ দানের টাইমার', def: 0, opts: [[0, 'বন্ধ'], [30, '৩০ সে.'], [60, '৬০ সে.'], [90, '৯০ সে.']] }
+        ], onStart: c => { CFG = c; PREM.store.set('chem-cfg', c); newGame(); } });
+}
+function newGame() {
+    stopClock(); seq++; $('#modal').hidden = true;
+    G = { id: seq, deck: createDeck(), rdeck: shuffle(RECIPES.concat(RECIPES)), open: [], players: [], turn: 0, over: false, pending: null, discardMode: false, msg: '', log: [], newUid: null };
+    G.players.push({ name: 'তুমি', human: true, hand: [], score: 0, crafted: [], combo: false });
+    for (let i = 0; i < CFG.bots; i++) G.players.push({ name: BOTN[i][0], ico: BOTN[i][1], hand: [], score: 0, crafted: [], combo: false });
+    for (let i = 0; i < 3; i++) G.open.push(nextRecipe());
+    G.players.forEach(p => { for (let k = 0; k < 6; k++) p.hand.push(drawCard()); });
+    startTurn();
+}
+window.__t = { get G() { return G; }, CFG: () => CFG, newGame, synthesize, doAction, endTurn, canSyn, setCfg: c => { CFG = Object.assign(CFG, c); }, bestRecipe };
+openSetup(true);
+})();
+
+</script>
 </body>
 </html>
