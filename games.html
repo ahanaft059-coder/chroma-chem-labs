@@ -161,6 +161,30 @@
         [data-theme="light"] .credit-bar { background: rgba(255,255,255,.88); color: #475569; border-top-color: rgba(15,23,42,.1); }
         .credit-bar span { margin-left: 5px; font-weight: 700; background: linear-gradient(90deg,#22d3ee,#a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+        /* ---- হাব আপগ্রেড: স্ট্রিপ, ফিল্টার, প্রিয়, ব্যাজ ---- */
+        .strip { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; margin: 12px 0 4px; }
+        .strip .box { flex: 1 1 220px; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 18px; background: var(--card-bg); border: 1.5px solid var(--section-border); backdrop-filter: blur(10px); text-decoration: none; color: var(--text-color); font-weight: 700; font-size: 14px; line-height: 1.45; cursor: pointer; font-family: inherit; text-align: left; transition: transform .2s, border-color .2s, box-shadow .2s; }
+        .strip a.box:hover, .strip button.box:hover { transform: translateY(-3px); border-color: rgba(34,211,238,.9); box-shadow: 0 14px 28px -14px rgba(34,211,238,.5); }
+        .strip .box .em { font-size: 28px; flex: none; }
+        .strip .box small { display: block; font-weight: 600; color: var(--text-muted); font-size: 12px; }
+        .strip .stat { flex: 1.4 1 260px; flex-direction: column; align-items: stretch; gap: 8px; cursor: default; }
+        .bar { height: 9px; border-radius: 6px; background: var(--border-color); overflow: hidden; }
+        .bar i { display: block; height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg,#22d3ee,#a855f7,#f59e0b); transition: width .6s ease; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+        .chip { font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 7px 14px; border-radius: 999px; cursor: pointer; color: var(--text-color); background: var(--card-bg); border: 1.5px solid var(--border-color); transition: .15s; }
+        .chip:hover { border-color: #a855f7; }
+        .chip[aria-pressed="true"] { color: #fff; border-color: transparent; background: var(--gradient-primary); box-shadow: 0 8px 18px -8px var(--gradient-glow); }
+        .fav { position: absolute !important; top: 12px; left: 14px; z-index: 2; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border-color); background: var(--card-solid); color: var(--text-muted); font-size: 17px; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: transform .15s; }
+        .fav:hover { transform: scale(1.12); }
+        .fav.on { color: #f59e0b; border-color: #f59e0b; background: rgba(245,158,11,.14); }
+        .badge { display: inline-block; font-size: 11.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+        .badge.new { color: #06222b; background: linear-gradient(135deg,#22d3ee,#a78bfa); }
+        .badge.done { color: #16a34a; background: rgba(34,197,94,.14); border: 1px solid rgba(34,197,94,.4); }
+        .game.prem { border-color: rgba(34,211,238,.45); }
+        .game.prem:hover { border-color: rgba(34,211,238,.95); box-shadow: 0 24px 44px -16px rgba(34,211,238,.4); }
+        .game.prem h3 { color: #22d3ee; } [data-theme="light"] .game.prem h3 { color: #0e7490; }
+        .game.prem .play { color: #06222b; background: linear-gradient(135deg,#22d3ee,#a78bfa); }
+        .game .tagrow { margin: 0 0 8px; padding-left: 34px; min-height: 22px; }
     </style>
 </head>
 <body>
@@ -185,6 +209,8 @@
         <div class="tools">
             <input class="search" id="q" type="search" placeholder="গেম খোঁজো… (যেমন: মোল, IUPAC, গ্যাস)" aria-label="গেম খোঁজো" autocomplete="off">
         </div>
+        <div class="chips" id="chips" role="group" aria-label="ফিল্টার"></div>
+        <div class="strip" id="strip"></div>
         <div class="count" id="count" aria-live="polite"></div>
 
         <div class="cats" id="cats"></div>
@@ -222,9 +248,11 @@
             ['⚖️', 'কেমিক্যাল ইকুইলিব্রিয়াম', '১১ লেভেল: তাপ, চাপ ও ক্যাটালিস্টে সাম্য সরাও, Q বনাম K ভবিষ্যদ্বাণী করো।', 'game20.html']
         ];
         const PREMIUM = [
-            ['🃏', 'Elementa — পিরিয়ডিক কার্ড ব্যাটল', 'Uno-এর মতো কার্ড গেম: যোজনী মেলাও, অ্যাকশন কার্ড খেলো আর শিল্ড টেস্টে পেনাল্টি আটকাও!', 'game21.html'],
-            ['🔥', 'Fusion 2048 — তারার ভেতরের ফিউশন', 'একই মৌল মিলিয়ে হাইড্রোজেন থেকে লোহা পর্যন্ত ভারী মৌল তৈরি করো, ঠিক তারার ভেতরের মতো!', 'game22.html'],
-            ['⚗️', 'CHEM-CLASH — যৌগের লড়াই', 'এলিমেন্ট কার্ড মিলিয়ে H₂O, NaCl, CO₂-এর মতো যৌগ বানাও আর AI ড. অ্যাটমকে হারিয়ে ৩০ পয়েন্ট ছোঁও!', 'game23.html']
+            ['🃏', 'Elementa — পিরিয়ডিক কার্ড ব্যাটল', 'প্রিমিয়াম • Uno-এর মতো কার্ড গেম: ১/২/৩ জন মানুষ + রোবট, টাইমার, চিরকাল খেলা যায়!', 'game21.html'],
+            ['🔥', 'Fusion 2048 — তারার ভেতরের ফিউশন', 'প্রিমিয়াম • রোবটদের সাথে রেস করে হাইড্রোজেন থেকে লোহা বানাও — লেভেল নেই, টাইমার ঐচ্ছিক!', 'game22.html'],
+            ['⚗️', 'CHEM-CLASH — যৌগের লড়াই', 'প্রিমিয়াম • ১–৩ রোবটের বিরুদ্ধে যৌগ বানাও, টাইমার ঐচ্ছিক, জিতলে আবার খেলো!', 'game23.html'],
+            ['💎', 'Element Match — ৩-মেলাও চেইন', 'প্রিমিয়াম • মৌল সাজিয়ে H₂O, CO₂, NH₃-এর মতো যৌগ বানাও, অর্ডার পূরণ করো; ১–৩ রোবটের সাথে রেস, সীমা ঐচ্ছিক!', 'game24.html'],
+            ['♟️', 'Element Chess — মৌলের দাবা', 'প্রিমিয়াম • আসল দাবা, প্রতিটি ঘুঁটি একটি মৌল — ঘুঁটি ধরতে মৌল নিয়ে কেমিস্ট্রি কুইজ! রোবটের সাথে বা ২ জনে, ঘড়ি ঐচ্ছিক।', 'game25.html']
         ];
         /* তিনটি ক্যাটাগরি: নতুন ক্যাটাগরি যোগ করতে এখানে একটি অবজেক্ট আর নিচে GAMES-এ একটি লাইন যোগ করো */
         const CATS = [
@@ -239,6 +267,32 @@
         ADV.forEach((g, i) => GAMES.push({ n: CORE.length + i + 1, icon: g[0], t: g[1], d: g[2], href: g[3], kind: 'adv' }));
         PREMIUM.forEach((g, i) => GAMES.push({ n: CORE.length + ADV.length + i + 1, icon: g[0], t: g[1], d: g[2], href: g[3], kind: 'premium' }));
         const catOf = key => CATS.find(c => c.key === key);
+        /* ---- সেভ করা তথ্য: প্রিয় ও খেলার ইতিহাস ---- */
+        const store = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+        let favs = store.get('hub-fav', []), played = store.get('hub-played', {}), filt = 'all';
+        const NEW_HREFS = ['game24.html', 'game25.html'];
+        const isFav = g => favs.indexOf(g.href) >= 0, isPlayed = g => !!played[g.href], isNew = g => NEW_HREFS.indexOf(g.href) >= 0;
+        const toggleFav = g => { favs = isFav(g) ? favs.filter(x => x !== g.href) : favs.concat([g.href]); store.set('hub-fav', favs); };
+        const markPlayed = g => { played[g.href] = Date.now(); store.set('hub-played', played); };
+        const FILTERS = [['all', 'সব গেম', () => true], ['fav', '⭐ প্রিয়', g => isFav(g)], ['new', '🆕 নতুন', g => isNew(g)], ['robot', '🤖 রোবটের সাথে', g => g.kind === 'premium'], ['todo', '🎯 এখনো খেলিনি', g => !!g.href && !isPlayed(g)]];
+        const pass = g => FILTERS.find(f => f[0] === filt)[2](g);
+        function renderChips() {
+            const el = $('chips'); el.replaceChildren();
+            FILTERS.forEach(f => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = f[1]; b.setAttribute('aria-pressed', String(filt === f[0])); b.addEventListener('click', () => { filt = filt === f[0] ? 'all' : f[0]; render(false); }); el.appendChild(b); });
+        }
+        function renderStrip() {
+            const el = $('strip'); el.replaceChildren();
+            const playable = GAMES.filter(g => g.href), done = playable.filter(isPlayed);
+            const last = done.sort((a, b) => played[b.href] - played[a.href])[0];
+            if (last) { const a = document.createElement('a'); a.className = 'box'; a.href = last.href; a.innerHTML = '<span class="em"></span><span><span class="t1"></span><small>▶ আবার খেলো — যেখানে ছেড়েছিলে</small></span>'; a.querySelector('.em').textContent = last.icon; a.querySelector('.t1').textContent = last.t; a.addEventListener('click', () => markPlayed(last)); el.appendChild(a); }
+            const pool = playable.filter(g => !isPlayed(g)); const pick = (pool.length ? pool : playable);
+            const r = document.createElement('button'); r.type = 'button'; r.className = 'box'; r.innerHTML = '<span class="em">🎲</span><span>যেকোনো একটি খেলো<small>' + (pool.length ? 'এখনো না-খেলা গেম থেকে বেছে নেবে' : 'সব খেলে ফেলেছ! আবার যেকোনো একটি') + '</small></span>';
+            r.addEventListener('click', () => { const g = pick[Math.floor(Math.random() * pick.length)]; markPlayed(g); location.href = g.href; }); el.appendChild(r);
+            const st = document.createElement('div'); st.className = 'box stat';
+            const pc = playable.length ? Math.round(done.length * 100 / playable.length) : 0;
+            st.innerHTML = '<span>🏆 তোমার অগ্রগতি: <b></b><small></small></span><div class="bar"><i></i></div>'; st.querySelector('b').textContent = bn(done.length) + '/' + bn(playable.length) + 'টি গেম খেলেছ'; st.querySelector('small').textContent = bn(favs.length) + 'টি প্রিয় ⭐ · ' + bn(pc) + '% সম্পন্ন'; el.appendChild(st);
+            requestAnimationFrame(() => { const i = st.querySelector('.bar i'); if (i) i.style.width = pc + '%'; });
+        }
 
         /* লগইন থাকলে ড্যাশবোর্ডে ফেরার লিংক; পেজটি সবার জন্য খোলা */
         try {
@@ -265,14 +319,18 @@
             el.className = 'game' + (cat.cls ? ' ' + cat.cls : '') + (locked ? ' locked' : '');
             const no = document.createElement('span'); no.className = 'no'; no.textContent = 'গেম ' + bn(g.n);
             const top = document.createElement('div');
+            const tg = document.createElement('div'); tg.className = 'tagrow';
+            if (isNew(g)) { const b = document.createElement('span'); b.className = 'badge new'; b.textContent = '🆕 নতুন'; tg.appendChild(b); }
+            if (!locked && isPlayed(g)) { const b = document.createElement('span'); b.className = 'badge done'; b.textContent = '✓ খেলেছ'; tg.appendChild(b); }
+            const fv = document.createElement('button'); fv.type = 'button'; fv.className = 'fav' + (isFav(g) ? ' on' : ''); fv.textContent = isFav(g) ? '★' : '☆'; fv.title = isFav(g) ? 'প্রিয় থেকে সরাও' : 'প্রিয় করো'; fv.setAttribute('aria-label', fv.title); fv.setAttribute('aria-pressed', String(isFav(g))); fv.addEventListener('click', () => { toggleFav(g); render(false); });
             const ic = document.createElement('div'); ic.className = 'icon'; ic.textContent = g.icon; ic.setAttribute('aria-hidden', 'true');
             const h = document.createElement('h3'); h.textContent = g.t;
             const p = document.createElement('p'); p.textContent = g.d;
-            top.append(ic, h, p);
+            top.append(tg, ic, h, p);
             const a = document.createElement('a'); a.className = 'play';
             if (locked) { a.textContent = 'শীঘ্রই আসছে 🔒'; a.setAttribute('aria-disabled', 'true'); a.tabIndex = -1; a.href = '#'; a.addEventListener('click', e => e.preventDefault()); }
-            else { a.href = g.href; a.textContent = cat.btn; a.setAttribute('aria-label', g.t + ' খেলুন'); }
-            el.append(no, top, a);
+            else { a.href = g.href; a.addEventListener('click', () => markPlayed(g)); a.textContent = cat.btn; a.setAttribute('aria-label', g.t + ' খেলুন'); }
+            el.append(fv, no, top, a);
             return el;
         }
         function block(cat, list, closable) {
@@ -304,8 +362,8 @@
             const go = document.createElement('span'); go.className = 'go'; go.textContent = 'গেমগুলো দেখো ▼';
             b.append(ic, h, p, meta, go);
             b.addEventListener('click', () => {
-                const wasOpen = !query && open === cat.key;
-                if (query) { $('q').value = ''; query = ''; }
+                const wasOpen = !query && filt === 'all' && open === cat.key;
+                if (query || filt !== 'all') { $('q').value = ''; query = ''; filt = 'all'; }
                 setOpen(wasOpen ? null : cat.key, true);
             });
             return b;
@@ -316,11 +374,12 @@
             render(scroll);
         }
         function render(scroll) {
-            const q = norm(query.trim());
+            const q = norm(query.trim()), active = !!q || filt !== 'all';
+            renderChips(); renderStrip();
             const catsEl = $('cats');
             if (!catsEl.children.length) CATS.forEach(cat => catsEl.appendChild(catCard(cat)));
             catsEl.querySelectorAll('.cat').forEach(el => {
-                const on = !q && el.dataset.key === open;
+                const on = !active && el.dataset.key === open;
                 el.classList.toggle('open', on);
                 el.setAttribute('aria-expanded', String(on));
                 el.querySelector('.go').textContent = on ? 'বন্ধ করো ▲' : 'গেমগুলো দেখো ▼';
@@ -330,11 +389,11 @@
             const inner = $('panelInner'), panel = $('panel');
             let shown = [];
             clearTimeout(closeTimer);
-            if (q || open) {
+            if (active || open) {
                 inner.replaceChildren();
-                if (q) {
+                if (active) {
                     CATS.forEach(cat => {
-                        const list = GAMES.filter(g => g.kind === cat.key && norm(g.t + ' ' + g.d).includes(q));
+                        const list = GAMES.filter(g => g.kind === cat.key && pass(g) && (!q || norm(g.t + ' ' + g.d).includes(q)));
                         if (list.length) { inner.appendChild(block(cat, list, false)); shown = shown.concat(list); }
                     });
                 } else {
@@ -347,13 +406,14 @@
                 panel.classList.remove('show');
                 closeTimer = setTimeout(() => inner.replaceChildren(), 480);
             }
-            $('empty').classList.toggle('show', !!q && !shown.length);
-            if (q || open) $('count').textContent = bn(shown.length) + 'টি গেম দেখানো হচ্ছে · ' + bn(shown.filter(g => g.href).length) + 'টি খেলার উপযোগী';
+            $('empty').classList.toggle('show', active && !shown.length);
+            if (active || open) $('count').textContent = bn(shown.length) + 'টি গেম দেখানো হচ্ছে · ' + bn(shown.filter(g => g.href).length) + 'টি খেলার উপযোগী';
             else $('count').textContent = bn(CATS.length) + 'টি ক্যাটাগরি · মোট ' + bn(GAMES.length) + 'টি গেম · ক্লিক করে গেমগুলো দেখো';
-            if (scroll && open && !q) setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+            if (scroll && open && !active) setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
         }
         $('q').addEventListener('input', e => { query = e.target.value; render(false); });
         window.addEventListener('hashchange', () => { open = keyFromHash(); render(true); });
+        window.addEventListener('pageshow', e => { if (e.persisted) { favs = store.get('hub-fav', []); played = store.get('hub-played', {}); render(false); } });
         open = keyFromHash();
         render(!!open);
     </script>
